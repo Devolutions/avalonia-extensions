@@ -194,6 +194,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="TreeDataGrid" ApplicableTo="" />
+          </TabItem.Header>
+          <demoPages:TreeDataGridDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress" />
           </TabItem.Header>
           <demoPages:TreeViewDemo />

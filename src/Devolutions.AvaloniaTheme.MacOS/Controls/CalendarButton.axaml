@@ -83,7 +83,8 @@
     <Style Selector="^:inactive">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
     </Style>
-     
+
+    <!-- CalendarButton doesn't actually support the :blackout PseudoClass. Leaving the code in, in case they fix that omission. (AMP, Jul 2025)  -->
     <Style Selector="^:blackout /template/ Rectangle#Blackout">
       <Setter Property="IsVisible" Value="True" />
     </Style> 

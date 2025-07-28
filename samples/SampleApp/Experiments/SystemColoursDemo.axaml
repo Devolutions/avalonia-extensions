@@ -2,9 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sampleApp="clr-namespace:SampleApp"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Experiments.SystemColoursDemo">
-  <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30, Auto">
+  <StackPanel>
+    <TextBlock Margin="0 10" TextWrapping="Wrap">System accent colours are exposed by the operating system and retrieved through Avalonia Fluent (<HyperlinkButton HorizontalAlignment="Center" Margin="0" Padding="0" NavigateUri="https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs">SystemAccentColors.cs</HyperlinkButton>)
+      where lighter and darker variants are also calculated. </TextBlock>
+    <TextBlock Margin="0 0 0 10"
+               TextWrapping="Wrap"
+               IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=Linux - Yaru}">
+      However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
+      </TextBlock>
+    <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">
     <TextBlock Grid.Row="0" Grid.Column="0">SystemAccentColorLight3</TextBlock>
     <TextBlock Grid.Row="1" Grid.Column="0">SystemAccentColorLight2</TextBlock>
     <TextBlock Grid.Row="2" Grid.Column="0">SystemAccentColorLight1</TextBlock>
@@ -12,13 +24,6 @@
     <TextBlock Grid.Row="4" Grid.Column="0">SystemAccentColorDark1</TextBlock>
     <TextBlock Grid.Row="5" Grid.Column="0">SystemAccentColorDark2</TextBlock>
     <TextBlock Grid.Row="6" Grid.Column="0">SystemAccentColorDark3</TextBlock>
-    <TextBlock Grid.Row="0" Grid.Column="2">#CEE5FF</TextBlock>
-    <TextBlock Grid.Row="1" Grid.Column="2">#8CC3FF</TextBlock>
-    <TextBlock Grid.Row="2" Grid.Column="2">#4EA3FF</TextBlock>
-    <TextBlock Grid.Row="3" Grid.Column="2">#007AFF</TextBlock>
-    <TextBlock Grid.Row="4" Grid.Column="2">#005FC6</TextBlock>
-    <TextBlock Grid.Row="5" Grid.Column="2">#004B9D</TextBlock>
-    <TextBlock Grid.Row="6" Grid.Column="2">#00336A</TextBlock>
     <Rectangle Grid.Row="0" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight3}" Width="20"
                Height="20" />
     <Rectangle Grid.Row="1" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight2}" Width="20"
@@ -34,4 +39,5 @@
     <Rectangle Grid.Row="6" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark3}" Width="20"
                Height="20" />
   </Grid>
+  </StackPanel>
 </UserControl>

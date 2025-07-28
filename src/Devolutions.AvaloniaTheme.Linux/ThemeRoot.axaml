@@ -3,7 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!-- Using Fluent Theme as a fallback for anything not defined in Linux theme -->
-  <FluentTheme />
+  <FluentTheme>
+    <!-- Linux doesn't support Avalonia's way of retrieving system colours. 
+         Setting it here to the default orange, so we can use the standard 
+         SystemAccentColor resources (lighter & darker variants are calculated automatically). -->
+    <FluentTheme.Palettes>
+      <ColorPaletteResources x:Key="Light" Accent="#D85E33" />
+      <ColorPaletteResources x:Key="Dark" Accent="#D85E33"/>
+    </FluentTheme.Palettes>
+  </FluentTheme>
+
 
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
 

@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaTheme.Linux;
 
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 
 /// <summary>
@@ -15,5 +16,9 @@ public class DevolutionsLinuxYaruTheme : Styles
     public DevolutionsLinuxYaruTheme(IServiceProvider? sp = null)
     {
         AvaloniaXamlLoader.Load(sp, this);
+#if DEBUG
+        Uri themePreviewerUri = new("avares://Devolutions.AvaloniaTheme.Linux/Design/ThemePreviewer.axaml");
+        this.Resources.MergedDictionaries.Add(new ResourceInclude(themePreviewerUri) { Source = themePreviewerUri });
+#endif
     }
 }

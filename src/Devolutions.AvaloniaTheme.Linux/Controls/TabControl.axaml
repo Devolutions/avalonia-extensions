@@ -4,9 +4,11 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <Border Width="400">
       <TabControl>
         <TabItem Header="Arch">
@@ -20,6 +22,7 @@
         <TabItem Header="Disabled" IsEnabled="False" />
       </TabControl>
     </Border>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 0</Thickness>

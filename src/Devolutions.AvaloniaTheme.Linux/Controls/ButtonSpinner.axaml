@@ -6,44 +6,47 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="using:System"
                     xmlns:avaloniaConverters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
   <Design.PreviewWith>
-    <ThemeVariantScope RequestedThemeVariant="Light">
-      <StackPanel Spacing="20">
-        <ButtonSpinner Content="Right spinner" />
-        <ButtonSpinner
-          Content="Right spinner half-disabled"
-          ValidSpinDirection="Increase" />
-        <ButtonSpinner ButtonSpinnerLocation="Left"
-                       Content="Left spinner" />
-        <ButtonSpinner ButtonSpinnerLocation="Left"
-                       Content="Left spinner" />
-        <ButtonSpinner BorderThickness="2"
-                       BorderBrush="Blue"
-                       Content="Right Border" />
-        <ButtonSpinner ButtonSpinnerLocation="Left"
-                       BorderThickness="2"
-                       BorderBrush="Blue"
-                       Content="Left Border" />
-        <ButtonSpinner Content="Right disabled"
-                       AllowSpin="False" />
-        <ButtonSpinner ButtonSpinnerLocation="Left"
-                       Content="Left disabled"
-                       AllowSpin="False" />
-        <ButtonSpinner ShowButtonSpinner="False"
-                       Content="Hide spinner" />
-        <ButtonSpinner Content="Error">
-          <DataValidationErrors.Error>
-            <sys:Exception>
-              <x:Arguments>
-                <x:String>Error</x:String>
-              </x:Arguments>
-            </sys:Exception>
-          </DataValidationErrors.Error>
-        </ButtonSpinner>
-      </StackPanel>
-    </ThemeVariantScope>
+    <design:ThemePreviewer>
+      <ThemeVariantScope RequestedThemeVariant="Light">
+        <StackPanel Spacing="20">
+          <ButtonSpinner Content="Right spinner" />
+          <ButtonSpinner
+            Content="Right spinner half-disabled"
+            ValidSpinDirection="Increase" />
+          <ButtonSpinner ButtonSpinnerLocation="Left"
+                         Content="Left spinner" />
+          <ButtonSpinner ButtonSpinnerLocation="Left"
+                         Content="Left spinner" />
+          <ButtonSpinner BorderThickness="2"
+                         BorderBrush="Blue"
+                         Content="Right Border" />
+          <ButtonSpinner ButtonSpinnerLocation="Left"
+                         BorderThickness="2"
+                         BorderBrush="Blue"
+                         Content="Left Border" />
+          <ButtonSpinner Content="Right disabled"
+                         AllowSpin="False" />
+          <ButtonSpinner ButtonSpinnerLocation="Left"
+                         Content="Left disabled"
+                         AllowSpin="False" />
+          <ButtonSpinner ShowButtonSpinner="False"
+                         Content="Hide spinner" />
+          <ButtonSpinner Content="Error">
+            <DataValidationErrors.Error>
+              <sys:Exception>
+                <x:Arguments>
+                  <x:String>Error</x:String>
+                </x:Arguments>
+              </sys:Exception>
+            </DataValidationErrors.Error>
+          </ButtonSpinner>
+        </StackPanel>
+      </ThemeVariantScope>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <avaloniaConverters:MarginMultiplierConverter x:Key="ButtonSpinnerLeftThickness" Indent="1" Left="True" />

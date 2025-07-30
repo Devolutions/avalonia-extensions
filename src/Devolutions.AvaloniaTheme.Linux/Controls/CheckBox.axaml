@@ -4,9 +4,11 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <CheckBox>Unchecked</CheckBox>
@@ -15,6 +17,7 @@
         <CheckBox Width="120">Checkbox should wrap its text</CheckBox>
       </StackPanel>
     </Border>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <StreamGeometry x:Key="CheckMarkPathData">M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z</StreamGeometry>

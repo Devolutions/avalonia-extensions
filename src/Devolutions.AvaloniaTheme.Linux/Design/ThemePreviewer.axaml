@@ -1,0 +1,142 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="10">
+      <TextBlock Text="test" />
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="ThemePreviewer_TabItem" TargetType="TabItem">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="#555" />
+    <Setter Property="Padding" Value="2 2" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="PART_LayoutRoot"
+          Background="#1c1c1c"
+          BorderBrush="#030303"
+          BorderThickness="1 1 1 0"
+          CornerRadius="5 5 0 0"
+          Padding="{TemplateBinding Padding}">
+          <Panel>
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+              Content="{TemplateBinding Header}"
+              ContentTemplate="{TemplateBinding HeaderTemplate}"
+              Padding="10, 0"
+              RecognizesAccessKey="True" />
+            <Border Name="PART_SelectedPipe"
+                    Background="{DynamicResource TabItemHeaderSelectedPipeFill}"
+                    CornerRadius="0"
+                    IsVisible="False" />
+          </Panel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:selected">
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Setter Property="Margin" Value="-1 0 0 0" />
+    <Style Selector="^:nth-child(1)">
+      <Setter Property="Margin" Value="0 0 0 0" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="ThemePreviewer_TabControl" TargetType="TabControl">
+    <Setter Property="ItemContainerTheme" Value="{StaticResource ThemePreviewer_TabItem}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border BorderThickness="0"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Background="{TemplateBinding Background}"
+                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalAlignment}">
+          <DockPanel>
+            <Border Name="PART_ItemsPresenterBorder"
+                    DockPanel.Dock="{TemplateBinding TabStripPlacement}"
+                    Padding="0, 0, 0, 0"
+                    HorizontalAlignment="Center"
+                    CornerRadius="0">
+              <ItemsPresenter Name="PART_ItemsPresenter"
+                              ItemsPanel="{TemplateBinding ItemsPanel}" />
+            </Border>
+            <Border
+              BorderBrush="#030303"
+              BorderThickness="1">
+              <ContentPresenter Name="PART_SelectedContentHost"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding SelectedContent}"
+                                ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+            </Border>
+          </DockPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type design:ThemePreviewer}" TargetType="design:ThemePreviewer">
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="120" />
+    <Setter Property="Background" Value="#181818" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <TabControl
+          Name="PART_TabControl"
+          Background="{TemplateBinding Background}"
+          Theme="{StaticResource ThemePreviewer_TabControl}">
+          <TabItem Header="Dark" Name="PART_DarkTab">
+            <ThemeVariantScope RequestedThemeVariant="Dark">
+              <ThemeVariantScope.Resources>
+                <ResourceDictionary>
+                  <ResourceDictionary.MergedDictionaries>
+                    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+                  </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+              </ThemeVariantScope.Resources>
+
+              <Border
+                Name="PART_ContentContainer_Dark"
+                Background="#212121"
+                Padding="{TemplateBinding Padding}">
+                <ContentPresenter
+                  Name="PART_ContentPresenter"
+                  Content="{TemplateBinding Content}"
+                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                  Margin="0"
+                  Padding="0" />
+              </Border>
+            </ThemeVariantScope>
+          </TabItem>
+
+          <TabItem Header="Light" Name="PART_LightTab" IsSelected="True">
+            <ThemeVariantScope RequestedThemeVariant="Light">
+              <ThemeVariantScope.Resources>
+                <ResourceDictionary>
+                  <ResourceDictionary.MergedDictionaries>
+                    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+                  </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+              </ThemeVariantScope.Resources>
+
+              <Border
+                Name="PART_ContentContainer_Light"
+                Background="#fff"
+                Padding="{TemplateBinding Padding}" />
+            </ThemeVariantScope>
+          </TabItem>
+        </TabControl>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

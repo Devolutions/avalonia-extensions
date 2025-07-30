@@ -5,9 +5,11 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
   x:ClassModifier="internal">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <TabItem Header="Leaf" />
@@ -15,6 +17,7 @@
         <TabItem Header="Background" Background="Yellow" />
       </StackPanel>
     </Border>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <x:Double x:Key="TabItemMinHeight">37</x:Double>

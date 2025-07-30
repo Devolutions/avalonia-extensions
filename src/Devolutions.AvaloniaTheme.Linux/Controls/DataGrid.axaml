@@ -4,9 +4,11 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     xmlns:collections="using:Avalonia.Collections">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <DataGrid
       Width="200"
       Height="200">
@@ -21,6 +23,7 @@
         <DataGridTextColumn Header="B" x:DataType="Color" Binding="{Binding B}" />
       </DataGrid.Columns>
     </DataGrid>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="{DynamicResource DataGridColumnHeaderForegroundColor}" />

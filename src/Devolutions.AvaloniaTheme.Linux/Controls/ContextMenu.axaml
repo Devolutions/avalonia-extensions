@@ -4,9 +4,11 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <Border Background="{DynamicResource SystemAccentColor}"
             Margin="16"
             Padding="48"
@@ -33,6 +35,7 @@
       </Border.ContextMenu>
       <TextBlock Text="Defined in XAML" />
     </Border>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

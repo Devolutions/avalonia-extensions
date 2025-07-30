@@ -4,9 +4,11 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
   <Design.PreviewWith>
+    <design:ThemePreviewer>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <TextBox>Left</TextBox>
@@ -19,6 +21,7 @@
         <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>
       </StackPanel>
     </Border>
+  </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="TextBoxTopHeaderMargin">0,0,0,4</Thickness>

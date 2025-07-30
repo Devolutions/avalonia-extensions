@@ -4,7 +4,7 @@
   <ControlTheme x:Key="{x:Type EmbeddableControlRoot}" TargetType="EmbeddableControlRoot">
     <Setter Property="Background" Value="{DynamicResource Background}" />
     <Setter Property="TopLevel.SystemBarColor" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHigh}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
     <Setter Property="FontFamily" Value="{StaticResource DefaultFontFamily}" />
     <Setter Property="Template">

@@ -29,6 +29,8 @@
       <Color x:Key='RepeatButtonBackgroundPressedColor'>#e6e6e6</Color>
       <Color x:Key='RepeatButtonBackgroundDisabledColor'>#ffffff</Color>
 
+      <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
+
       <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#fafafa" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#f2f6fb" />
     </ResourceDictionary>
@@ -53,7 +55,7 @@
 
       <Color x:Key='ButtonBackgroundColor'>#373737</Color>
       <Color x:Key='ButtonBackgroundHoverColor'>#3c3c3c</Color>
-      <Color x:Key='ButtonBackgroundActiveColor'>#151515</Color>
+      <Color x:Key='ButtonBackgroundActiveColor'>#212121</Color>
 
       <Color x:Key='RepeatButtonIconShadowColor'>#090909</Color>
       <Color x:Key='RepeatButtonBackgroundHoverColor'>#313131</Color>
@@ -62,6 +64,8 @@
 
       <Color x:Key='DataGridColumnHeaderBackgroundColor'>#1f1f1f</Color>
       <Color x:Key='DataGridColumnHeaderForegroundColor'>#f5f5f5</Color>
+
+      <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorDark1}" />
 
       <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#252525" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#2c2c2c" />
@@ -77,7 +81,8 @@
   <SolidColorBrush x:Key='ScrollControlBackground' Color="{DynamicResource ScrollControlBackgroundColor}" />
   <SolidColorBrush x:Key='ScrollControlBorder' Color="{DynamicResource Border}" />
 
-  <SolidColorBrush x:Key='ForegroundHigh' Color="{DynamicResource ForegroundHighColor}" />
+  <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundHighColor}" />
+  <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
 
   <SolidColorBrush x:Key='Background' Color="{DynamicResource BackgroundColor}" />
@@ -100,6 +105,8 @@
   <SolidColorBrush x:Key='ButtonBackground' Color="{DynamicResource ButtonBackgroundColor}" />
   <SolidColorBrush x:Key='ButtonBackgroundPointerOver' Color="{DynamicResource ButtonBackgroundHoverColor}" />
   <SolidColorBrush x:Key='ButtonBackgroundPressed' Color="{DynamicResource ButtonBackgroundActiveColor}" />
+  <SolidColorBrush x:Key='AccentButtonBackgroundDisabled' Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
+  <SolidColorBrush x:Key='AccentButtonBackgroundHover' Color="{DynamicResource SystemAccentColor}" Opacity="0.85" />
   <StaticResource x:Key='ButtonBackgroundDisabled' ResourceKey='InputDisabledBackground' />
   <StaticResource x:Key='ButtonForegroundDisabled' ResourceKey='InputDisabledForeground' />
   <StaticResource x:Key='ButtonBorderDisabled' ResourceKey='InputBorder' />
@@ -124,11 +131,14 @@
 
   <Thickness x:Key='TabItemMargin'>10</Thickness>
 
-  <Thickness x:Key='ButtonPadding'>12,6</Thickness>
+  <Thickness x:Key='ButtonPadding'>12,0</Thickness>
+  <Thickness x:Key='ButtonBorderThickness'>1</Thickness>
+  <Thickness x:Key='ButtonBorderFocusedThickness'>2</Thickness>
   <CornerRadius x:Key="ControlCornerRadius">5</CornerRadius>
   <x:Double x:Key="InputDefaultHeight">34</x:Double>
 
   <x:Double x:Key="NumericUpDownMinWidth">96</x:Double>
+  <x:Double x:Key="TextControlMinHeight">34</x:Double>
 
   <!-- DEVELOPMENT ONLY -->
   <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->

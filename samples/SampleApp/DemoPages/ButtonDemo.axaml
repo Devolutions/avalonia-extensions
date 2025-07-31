@@ -8,13 +8,15 @@
 
   <StackPanel>
     <Border Margin="20 0">
-      <Grid ColumnDefinitions="100, 72, Auto" RowDefinitions="50, 50, 50" Margin="20">
+      <Grid ColumnDefinitions="100, 72, Auto" RowDefinitions="50, 50, 50, 50" Margin="20">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
         <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Cancel" />
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">accent</TextBlock>
-        <Button Grid.Row="1" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
-        <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False">Cancel</Button>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
+        <Button Grid.Row="2" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
+        <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+        <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
                     IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
                    Path=Name,
@@ -30,7 +32,7 @@
       <Grid ColumnDefinitions="100, 72, 40, 72, Auto" RowDefinitions="50, 50, 50" Margin="20">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
         <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">Cancel</Button>
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">accent</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
         <Button Grid.Row="1" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
         <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>

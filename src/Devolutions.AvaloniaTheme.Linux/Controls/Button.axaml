@@ -1,27 +1,122 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <Design.PreviewWith>
-    <Button />
+    <design:ThemePreviewer>
+      <StackPanel Margin="10" Spacing="10">
+        <Button>Cancel</Button>
+        <Button IsEnabled="False">Disabled</Button>
+        <Button Classes="accent">Accent</Button>
+        <Button Classes="accent" IsEnabled="False">Accent</Button>
+      </StackPanel>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type Button}" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+
+  <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
     <Setter Property="MinHeight" Value="{DynamicResource TextControlMinHeight}" />
+    <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="BackgroundElement"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontWeight="{TemplateBinding FontWeight}" />
+          <Border Name="FocusBorderElement"
+                  BorderThickness="2"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
 
-    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
+    <Style Selector="^:pointerover /template/ Border#BackgroundElement">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHoverColor}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     </Style>
 
-    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
+    <!-- Tabbing focus -->
+    <Style Selector="^:focus-visible /template/ Border#FocusBorderElement">
+      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+    </Style>
+    <Style Selector="^:focus /template/ Border#FocusBorderElement">
+      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
     </Style>
 
-    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
+    <Style Selector="^:pressed">
+      <Style Selector="^ /template/ Border#BackgroundElement">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+      </Style>
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+      </Style>
+      <Style Selector="^ /template/ Border#BackgroundElement">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^.accent">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#BackgroundElement">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+      </Style>
+
+      <Style Selector="^:pointerover /template/ Border#BackgroundElement">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundHover}" />
+      </Style>
+      <Style Selector="^:pressed">
+        <Style Selector="^ /template/ Border#BackgroundElement">
+          <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
+        </Style>
+      </Style>
+
+      <Style Selector="^:disabled">
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+        </Style>
+        <Style Selector="^ /template/ Border#BackgroundElement">
+          <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
+        </Style>
+      </Style>
     </Style>
   </ControlTheme>
 

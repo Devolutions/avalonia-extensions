@@ -9,33 +9,33 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-    <Border Background="{DynamicResource SystemAccentColor}"
-            Margin="16"
-            Padding="48"
-            Width="400"
-            Height="200">
-      <Border.ContextMenu>
-        <ContextMenu>
-          <MenuItem Header="Standard _Menu Item" />
-          <MenuItem Header="Disabled" IsEnabled="False" />
-          <Separator />
-          <MenuItem Header="Menu with _Submenu">
-            <MenuItem Header="Submenu _1" />
-            <MenuItem Header="Submenu _2" />
-          </MenuItem>
-          <MenuItem Header="Menu Item with _Icon" />
-          <MenuItem Header="Menu Item with _Checkbox">
-            <MenuItem.Icon>
-              <CheckBox BorderThickness="0"
-                        IsHitTestVisible="False"
-                        IsChecked="True" />
-            </MenuItem.Icon>
-          </MenuItem>
-        </ContextMenu>
-      </Border.ContextMenu>
-      <TextBlock Text="Defined in XAML" />
-    </Border>
-  </design:ThemePreviewer>
+      <Border Background="{DynamicResource SystemAccentColor}"
+              Margin="16"
+              Padding="48"
+              Width="400"
+              Height="200">
+        <Border.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Standard _Menu Item" />
+            <MenuItem Header="Disabled" IsEnabled="False" />
+            <Separator />
+            <MenuItem Header="Menu with _Submenu">
+              <MenuItem Header="Submenu _1" />
+              <MenuItem Header="Submenu _2" />
+            </MenuItem>
+            <MenuItem Header="Menu Item with _Icon" />
+            <MenuItem Header="Menu Item with _Checkbox">
+              <MenuItem.Icon>
+                <CheckBox BorderThickness="0"
+                          IsHitTestVisible="False"
+                          IsChecked="True" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </ContextMenu>
+        </Border.ContextMenu>
+        <TextBlock Text="Defined in XAML" />
+      </Border>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
@@ -43,7 +43,7 @@
 
   <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}">
     <Setter Property="Margin" Value="0" />
-    <Setter Property="Background" Value="{DynamicResource Border}" />
+    <Setter Property="Background" Value="{DynamicResource BorderColor}" />
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
@@ -52,7 +52,7 @@
 
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu" BasedOn="{StaticResource {x:Type ContextMenu}}">
     <Setter Property="Background" Value="{DynamicResource ScrollControlBackground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource Border}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     <!-- <Setter Property="FontSize" Value="13" /> -->
     <Setter Property="FontFamily" Value="{DynamicResource OpenSans}" />
   </ControlTheme>

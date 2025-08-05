@@ -14,7 +14,7 @@
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Margin="10" Spacing="10">
-        <Button>Cancel</Button>
+        <Button Tag="noFocus">Cancel</Button>
         <Button IsEnabled="False">Disabled</Button>
         <Button Classes="accent">Accent</Button>
         <Button Classes="accent" IsEnabled="False">Accent</Button>
@@ -34,6 +34,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Tag" Value="" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>

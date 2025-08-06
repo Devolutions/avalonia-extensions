@@ -527,7 +527,7 @@
               </DataGridRowsPresenter.GestureRecognizers>
             </DataGridRowsPresenter>
             <Rectangle Name="PART_BottomRightCorner"
-                       Fill="{DynamicResource DataGridScrollBarsSeparatorBackground}"
+                       Fill="{DynamicResource ScrollBarBackgroundBrush}"
                        Grid.Column="2"
                        Grid.Row="2" />
             <ScrollBar Name="PART_VerticalScrollbar"

@@ -102,6 +102,25 @@
             <DataGridTextColumn Header="Last Modified" Binding="{Binding LastModified}" IsReadOnly="True" />
           </DataGrid.Columns>
         </DataGrid>
+        
+        <DataGrid ItemsSource="{Binding Items}"
+                  Height="150"
+                  Width="300">
+          <DataGrid.Columns>
+            <DataGridTemplateColumn Header="">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <Svg Path="/Assets/Computer.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="Type" Binding="{Binding ItemType}" />
+            <DataGridTextColumn Header="Common Name" Binding="{Binding CommonName}" />
+            <DataGridTextColumn Header="Account Name" Binding="{Binding AccountName}" />
+            <DataGridTextColumn Header="Last Modified" Binding="{Binding LastModified}" IsReadOnly="True" />
+          </DataGrid.Columns>
+        </DataGrid>
+
       </StackPanel>
     </TabItem>
   </TabControl>

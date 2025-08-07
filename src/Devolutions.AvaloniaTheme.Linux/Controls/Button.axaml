@@ -53,6 +53,8 @@
                             FontSize="{TemplateBinding FontSize}"
                             FontWeight="{TemplateBinding FontWeight}" />
           <Border Name="FocusBorderElement"
+                  IsVisible="False"
+                  BorderBrush="{DynamicResource InputFocusedBorder}"
                   BorderThickness="2"
                   CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>
@@ -66,10 +68,13 @@
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible /template/ Border#FocusBorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+      <Setter Property="IsVisible" Value="True" />
     </Style>
     <Style Selector="^:focus /template/ Border#FocusBorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[Tag=noFocus] /template/ Border#FocusBorderElement">
+      <Setter Property="IsVisible" Value="False" />
     </Style>
 
     <Style Selector="^:pressed">
@@ -77,7 +82,7 @@
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
       </Style>
       <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+        <Setter Property="IsVisible" Value="True" />
       </Style>
     </Style>
 

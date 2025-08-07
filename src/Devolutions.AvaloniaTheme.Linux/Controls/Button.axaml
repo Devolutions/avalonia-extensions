@@ -7,9 +7,9 @@
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
-  <!-- <ResourceDictionary.MergedDictionaries> -->
-  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
-  <!-- </ResourceDictionary.MergedDictionaries> -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
@@ -26,7 +26,7 @@
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
     <Setter Property="MinHeight" Value="{DynamicResource TextControlMinHeight}" />
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -93,7 +93,7 @@
 
     <Style Selector="^.accent">
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundHighBrush}" />
+        <Setter Property="Foreground" Value="{WindowActiveResourceToggler AccentForegroundHighBrush, AccentForegroundInactiveBrush}" />
       </Style>
       <Style Selector="^ /template/ Border#BackgroundElement">
         <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />

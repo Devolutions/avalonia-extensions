@@ -112,7 +112,7 @@
                         VerticalAlignment="Center"
                         Data="{DynamicResource ChevronPath}"
                         Stretch="Uniform"
-                        Fill="{DynamicResource CalendarButtonColor}">
+                        Fill="{DynamicResource CalendarNavButtonColor}">
                     <Path.RenderTransform>
                       <RotateTransform Angle="-90" />
                     </Path.RenderTransform>
@@ -137,7 +137,7 @@
                         VerticalAlignment="Center"
                         Data="{DynamicResource ChevronPath}"
                         Stretch="Uniform"
-                        Fill="{DynamicResource CalendarButtonColor}">
+                        Fill="{DynamicResource CalendarNavButtonColor}">
                     <Path.RenderTransform>
                       <RotateTransform Angle="90" />
                     </Path.RenderTransform>

@@ -45,6 +45,7 @@
 
   <!-- Custom Button allows us to pass DatePicker state through the TextBox to the Button-->
   <ControlTheme x:Key="CalendarButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <!-- Switch colour depending on watermark or actual date -->
     <Setter Property="Foreground" Value="{Binding $parent[TextBox].Foreground}" />
     <Setter Property="Tag" Value="{Binding $parent[TextBox].Tag}" />
     <Setter Property="Content">
@@ -133,7 +134,7 @@
                 <Border Name="FocusBorderElement"
                         IsVisible="False"
                         BorderThickness="2"
-                        BorderBrush="{DynamicResource InputFocusedBorder}"
+                        BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
                         CornerRadius="{DynamicResource ControlCornerRadius}" />
               </Panel>
               <Popup Name="PART_Popup"

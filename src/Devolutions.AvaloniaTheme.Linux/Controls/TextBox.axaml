@@ -9,19 +9,19 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-    <Border Padding="20">
-      <StackPanel Spacing="20">
-        <TextBox>Left</TextBox>
-        <TextBox TextAlignment="Center">Center</TextBox>
-        <TextBox Classes="clearButton">Clear</TextBox>
-        <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
-        <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
-        <TextBox Watermark="Watermark" />
-        <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True" />
-        <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>
-      </StackPanel>
-    </Border>
-  </design:ThemePreviewer>
+      <Border Padding="20">
+        <StackPanel Spacing="20">
+          <TextBox>Left</TextBox>
+          <TextBox TextAlignment="Center">Center</TextBox>
+          <TextBox Classes="clearButton">Clear</TextBox>
+          <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
+          <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
+          <TextBox Watermark="Watermark" />
+          <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True" />
+          <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>
+        </StackPanel>
+      </Border>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="TextBoxTopHeaderMargin">0,0,0,4</Thickness>
@@ -98,7 +98,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TextBox}" TargetType="TextBox">
-    <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
     <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorder}" />

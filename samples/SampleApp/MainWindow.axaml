@@ -38,7 +38,7 @@
       </TabItem>
       <TabItem IsSelected="True">
         <TabItem.Header>
-          <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:CalendarDatePickerDemo />
       </TabItem>

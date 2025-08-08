@@ -2,14 +2,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <Styles.Resources>
-    <x:Double x:Key="H1FontSize">16</x:Double>
-    <FontWeight x:Key="H1FontWeight">Bold</FontWeight>
-    <Thickness x:Key="H1Margins">0,0,0,10</Thickness>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="AlternativeBackgroundBrush" Color="#2d2d2d" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Default">
+          <SolidColorBrush x:Key="AlternativeBackgroundBrush" Color="#f0f0f0" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
 
-    <FontFamily x:Key="CodeFontFamily">"Courier New, Courier, monospace"</FontFamily>
-    <Color x:Key="CodeFontColor">#3597A5</Color>
+      <x:Double x:Key="H1FontSize">16</x:Double>
+      <FontWeight x:Key="H1FontWeight">Bold</FontWeight>
+      <Thickness x:Key="H1Margins">0,0,0,10</Thickness>
+
+      <FontFamily x:Key="CodeFontFamily">"Courier New, Courier, monospace"</FontFamily>
+      <Color x:Key="CodeFontColor">#3597A5</Color>
+    </ResourceDictionary>
   </Styles.Resources>
 
+  <Style Selector="Border.alternativeBackground">
+    <Setter Property="Background" Value="{DynamicResource AlternativeBackgroundBrush}" />
+  </Style>  
+  
   <Style Selector="Panel.mainControl">
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
   </Style>

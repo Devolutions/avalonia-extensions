@@ -7,14 +7,14 @@
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
-  <!-- <ResourceDictionary.MergedDictionaries> -->
-  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
-  <!-- </ResourceDictionary.MergedDictionaries> -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Margin="10" Spacing="10">
-        <Button>Cancel</Button>
+        <Button Tag="noFocus">Cancel</Button>
         <Button IsEnabled="False">Disabled</Button>
         <Button Classes="accent">Accent</Button>
         <Button Classes="accent" IsEnabled="False">Accent</Button>
@@ -26,7 +26,7 @@
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
     <Setter Property="MinHeight" Value="{DynamicResource TextControlMinHeight}" />
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -34,6 +34,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Tag" Value="" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -52,6 +53,8 @@
                             FontSize="{TemplateBinding FontSize}"
                             FontWeight="{TemplateBinding FontWeight}" />
           <Border Name="FocusBorderElement"
+                  IsVisible="False"
+                  BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
                   BorderThickness="2"
                   CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>
@@ -65,10 +68,13 @@
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible /template/ Border#FocusBorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+      <Setter Property="IsVisible" Value="True" />
     </Style>
     <Style Selector="^:focus /template/ Border#FocusBorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[Tag=noFocus] /template/ Border#FocusBorderElement">
+      <Setter Property="IsVisible" Value="False" />
     </Style>
 
     <Style Selector="^:pressed">
@@ -76,7 +82,7 @@
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
       </Style>
       <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource InputFocusedBorder}" />
+        <Setter Property="IsVisible" Value="True" />
       </Style>
     </Style>
 
@@ -92,7 +98,7 @@
 
     <Style Selector="^.accent">
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundHighBrush}" />
+        <Setter Property="Foreground" Value="{WindowActiveResourceToggler AccentForegroundHighBrush, AccentForegroundInactiveBrush}" />
       </Style>
       <Style Selector="^ /template/ Border#BackgroundElement">
         <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />

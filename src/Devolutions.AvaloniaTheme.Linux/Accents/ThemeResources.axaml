@@ -4,9 +4,9 @@
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key='Light'>
       <Color x:Key='ForegroundHighColor'>#050505</Color>
-      <Color x:Key='BackgroundColor'>#fafafa</Color>
+      <Color x:Key='BackgroundColor'>#ffffff</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#fcfcfc</Color>
-      <Color x:Key='Border'>#d1d1d1</Color>
+      <Color x:Key='BorderColor'>#d1d1d1</Color>
 
       <Color x:Key="ErrorTextColor">#C50500</Color>
 
@@ -29,10 +29,18 @@
       <Color x:Key='RepeatButtonBackgroundPressedColor'>#e6e6e6</Color>
       <Color x:Key='RepeatButtonBackgroundDisabledColor'>#ffffff</Color>
 
+      <Color x:Key='CalendarNavButtonColor'>#b0b0b0</Color>
+      <Color x:Key='CalendarPopupBorderColor'>#d1d1d1</Color>
+
+      <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#fafafa" />
+
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
 
       <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#fafafa" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#f2f6fb" />
+
+      <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#cbcbcb" />
+
     </ResourceDictionary>
 
     <ResourceDictionary x:Key='Dark'>
@@ -42,7 +50,7 @@
       <Color x:Key='ForegroundHighColor'>#fcfcfc</Color>
       <Color x:Key='BackgroundColor'>#2c2c2c</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#272727</Color>
-      <Color x:Key='Border'>#181818</Color>
+      <Color x:Key='BorderColor'>#181818</Color>
 
       <Color x:Key="ErrorTextColor">#ed7083</Color>
 
@@ -65,10 +73,18 @@
       <Color x:Key='DataGridColumnHeaderBackgroundColor'>#1f1f1f</Color>
       <Color x:Key='DataGridColumnHeaderForegroundColor'>#f5f5f5</Color>
 
+      <Color x:Key='CalendarNavButtonColor'>#7c7c7c</Color>
+      <Color x:Key='CalendarPopupBorderColor'>#454545</Color>
+
+      <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#1d1d1d" />
+
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorDark1}" />
 
       <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#252525" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#2c2c2c" />
+
+      <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#202020" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -78,17 +94,23 @@
   <Thickness x:Key="TextControlThemePadding">8,6,6,5</Thickness>
   <x:Double x:Key="TextControlThemeMinHeight">34</x:Double>
 
+  <SolidColorBrush x:Key='TransparentBrush' Color="Transparent" />
+
   <SolidColorBrush x:Key='ScrollControlBackground' Color="{DynamicResource ScrollControlBackgroundColor}" />
-  <SolidColorBrush x:Key='ScrollControlBorder' Color="{DynamicResource Border}" />
+  <SolidColorBrush x:Key='ScrollControlBorder' Color="{DynamicResource BorderColor}" />
 
   <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundHighColor}" />
+  <SolidColorBrush x:Key='ForegroundLowBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
+  <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
   <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
+  <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.6" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
 
-  <SolidColorBrush x:Key='Background' Color="{DynamicResource BackgroundColor}" />
+  <SolidColorBrush x:Key='BackgroundBrush' Color="{DynamicResource BackgroundColor}" />
 
   <SolidColorBrush x:Key='InputBackground' Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key='InputBorder' Color="{DynamicResource InputBorderColor}" />
+  <SolidColorBrush x:Key='InputFocusedInactiveBorder' Color="Transparent" />
   <SolidColorBrush x:Key='InputDisabledBackground' Color="{DynamicResource InputDisabledBackgroundColor}" />
   <SolidColorBrush x:Key='InputDisabledForeground' Color="{DynamicResource InputDisabledForegroundColor}" />
 
@@ -129,11 +151,15 @@
 
   <SolidColorBrush x:Key='TableBorder' Color="{DynamicResource InputBorderColor}" />
 
+  <BoxShadows x:Key="PopupShadow">0 0 1 0 #66000000</BoxShadows>
+
   <Thickness x:Key='TabItemMargin'>10</Thickness>
 
   <Thickness x:Key='ButtonPadding'>12,0</Thickness>
   <Thickness x:Key='ButtonBorderThickness'>1</Thickness>
   <Thickness x:Key='ButtonBorderFocusedThickness'>2</Thickness>
+  <Thickness x:Key='InputBorderThickness'>1</Thickness>
+  <Thickness x:Key='InputFocusedBorderThickness'>2</Thickness>
   <CornerRadius x:Key="ControlCornerRadius">5</CornerRadius>
   <x:Double x:Key="InputDefaultHeight">34</x:Double>
 
@@ -143,9 +169,9 @@
   <!-- DEVELOPMENT ONLY -->
   <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->
 
-  <!-- <SolidColorBrush x:Key="TestGreen" Color="Green" Opacity="0.84" /> -->
-  <!-- <SolidColorBrush x:Key="TestRed" Color="Red" /> -->
-  <!-- <SolidColorBrush x:Key="TestBlue" Color="Blue" /> -->
-  <!-- <SolidColorBrush x:Key="TestYellow" Color="Yellow" /> -->
+  <SolidColorBrush x:Key="TestGreen" Color="Green" Opacity="0.84" />
+  <SolidColorBrush x:Key="TestRed" Color="Red" />
+  <SolidColorBrush x:Key="TestBlue" Color="Blue" />
+  <SolidColorBrush x:Key="TestYellow" Color="Yellow" />
 
 </ResourceDictionary>

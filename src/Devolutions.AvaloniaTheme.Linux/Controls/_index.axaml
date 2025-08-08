@@ -4,6 +4,11 @@
   <ResourceDictionary.MergedDictionaries>
     <MergeResourceInclude Source="Button.axaml" />
     <MergeResourceInclude Source="ButtonSpinner.axaml" />
+    <MergeResourceInclude Source="Calendar.axaml" />
+    <MergeResourceInclude Source="CalendarButton.axaml" />
+    <MergeResourceInclude Source="CalendarDatePicker.axaml" />
+    <MergeResourceInclude Source="CalendarDayButton.axaml" />
+    <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />

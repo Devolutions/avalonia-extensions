@@ -1,0 +1,145 @@
+<!--
+  Based off:
+  https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml
+-->
+
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Margin="20" Spacing="20" Width="230">
+        <CalendarDatePicker />
+        <CalendarDatePicker SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}"
+                            IsDropDownOpen="False" />
+        <CalendarDatePicker SelectedDateFormat="Long" SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
+        <CalendarDatePicker SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}"
+                            IsEnabled="False" />
+        <TextBlock Text="HorizontalAlignment: Left" Classes="section-title" />
+        <CalendarDatePicker HorizontalAlignment="Left" />
+        <CalendarDatePicker HorizontalAlignment="Left" SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
+        <CalendarDatePicker HorizontalAlignment="Left" SelectedDateFormat="Long" SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
+        <CalendarDatePicker HorizontalAlignment="Left" VerticalAlignment="Top">
+          <DataValidationErrors.Error>
+            <sys:Exception>
+              <x:Arguments>
+                <x:String>Error</x:String>
+              </x:Arguments>
+            </sys:Exception>
+          </DataValidationErrors.Error>
+        </CalendarDatePicker>
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+
+  <ControlTheme x:Key="{x:Type CalendarDatePicker}" TargetType="CalendarDatePicker">
+    <Setter Property="IsTodayHighlighted" Value="True" />
+    <Setter Property="MinWidth" Value="132" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors ClipToBounds="False">
+          <Panel x:Name="LayoutRoot"
+                 ClipToBounds="False"
+                 HorizontalAlignment="Stretch">
+            <Panel ClipToBounds="False">
+              <!-- The TextBox#PART_TextBox is required by CalendarDatePicker to hold the selected date. 
+                    Since Yaru just displays a button, a custom button is placed in place of the hidden TextBox, 
+                    and bound to the TextBox properties set based on DatePicker state. -->
+              <TextBox Name="PART_TextBox"
+                       Focusable="False"
+                       IsVisible="False"
+                       IsReadOnly="True"
+                       Background="Transparent"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       HorizontalContentAlignment="Center" />
+              <Button Name="PART_Button"
+                      Foreground="{Binding Path=#PART_TextBox.Foreground}">
+                <Button.Content>
+                  <MultiBinding Converter="{x:Static DevoMultiConverters.FirstNonEmptyStringMultiConverter}">
+                    <Binding Path="#PART_TextBox.Text" />
+                    <Binding Path="#PART_TextBox.Watermark" />
+                  </MultiBinding>
+                </Button.Content>
+              </Button>
+              <Border Name="ErrorBorderElement"
+                      IsVisible="False"
+                      BorderThickness="1"
+                      BorderBrush="{DynamicResource SystemControlErrorTextForegroundBrush}"
+                      CornerRadius="{DynamicResource ControlCornerRadius}" />
+            </Panel>
+            <Popup Name="PART_Popup"
+                   PlacementTarget="{TemplateBinding}"
+                   Placement="Bottom"
+                   WindowManagerAddShadowHint="False"
+                   IsLightDismissEnabled="True"
+                   ClipToBounds="False">
+              <Panel>
+                <Border
+                  ClipToBounds="False"
+                  BorderThickness="1 "
+                  BorderBrush="{DynamicResource CalendarPopupBorderColor}"
+                  Background="{DynamicResource LayoutBackgroundHighBrush}"
+                  CornerRadius="8 "
+                  Margin="2 12 2 5"
+                  Padding="7"
+                  BoxShadow="0 1 1 1 #33000000">
+                  <Calendar
+                    Name="PART_Calendar"
+                    Margin="0"
+                    BorderBrush="{DynamicResource InputBorder}"
+                    BorderThickness="1 "
+                    FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
+                    IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
+                    SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
+                    DisplayDate="{TemplateBinding DisplayDate}"
+                    DisplayDateStart="{TemplateBinding DisplayDateStart}"
+                    DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
+                </Border>
+                <!-- TODO: Figure out how to detect popup placement (when it opens _above_ the control) -->
+                <Panel Name="SpeechBubblePointerUp"
+                       Margin="0 2 0 0 ">
+                  <Polygon Points="0,12 0,10 10,0 20,10 20,12"
+                           Fill="{DynamicResource LayoutBackgroundHighBrush}"
+                           HorizontalAlignment="Center" />
+                  <Polyline Points="0,10 10,0 20,10"
+                            Stroke="{DynamicResource CalendarPopupBorderColor}"
+                            HorizontalAlignment="Center" />
+                </Panel>
+              </Panel>
+            </Popup>
+          </Panel>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:flyout-open /template/ Button#PART_Button">
+      <Setter Property="Tag" Value="noFocus" />
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CalendarButtonOpenBorderBrush}" />
+    </Style>
+
+    <Style Selector="^ /template/ TextBox:empty">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+    </Style>
+
+    <!-- Error State -->
+    <Style Selector="^:error /template/ Border#ErrorBorderElement">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

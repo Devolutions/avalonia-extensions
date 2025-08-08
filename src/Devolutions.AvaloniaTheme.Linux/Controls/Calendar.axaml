@@ -1,0 +1,48 @@
+<!--
+  Based off:
+  https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/Calendar.xaml
+-->
+
+<!--
+    // (c) Copyright Microsoft Corporation.
+    // This source is subject to the Microsoft Public License (Ms-PL).
+    // Please see https://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    // All other rights reserved.
+-->
+
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <Border Padding="20">
+        <Calendar />
+      </Border>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type Calendar}" TargetType="Calendar">
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FontSize" Value="{DynamicResource CalendarFontSize}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel
+          Name="PART_Root"
+          HorizontalAlignment="Center"
+          ClipToBounds="True">
+          <CalendarItem
+            Name="PART_CalendarItem"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="{TemplateBinding CornerRadius}"
+            HeaderBackground="{TemplateBinding HeaderBackground}" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

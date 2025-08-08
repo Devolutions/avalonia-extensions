@@ -100,7 +100,7 @@
   <ControlTheme x:Key="{x:Type TextBox}" TargetType="TextBox">
     <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-    <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
+    <Setter Property="CaretBrush" Value="{WindowActiveResourceToggler TextControlForeground, TransparentBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorder}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
     <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
@@ -212,8 +212,8 @@
 
       <Style Selector="^ /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="{DynamicResource TextControlBackgroundFocused}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+        <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler InputFocusedBorder, InputBorder}" />
+        <Setter Property="BorderThickness" Value="{WindowActiveResourceToggler InputFocusedBorderThickness, InputBorderThickness}" />
       </Style>
     </Style>
 

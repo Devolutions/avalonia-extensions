@@ -94,14 +94,16 @@
   <Thickness x:Key="TextControlThemePadding">8,6,6,5</Thickness>
   <x:Double x:Key="TextControlThemeMinHeight">34</x:Double>
 
+  <SolidColorBrush x:Key='TransparentBrush' Color="Transparent" />
+
   <SolidColorBrush x:Key='ScrollControlBackground' Color="{DynamicResource ScrollControlBackgroundColor}" />
   <SolidColorBrush x:Key='ScrollControlBorder' Color="{DynamicResource BorderColor}" />
 
   <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundHighColor}" />
   <SolidColorBrush x:Key='ForegroundLowBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
-  <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.7" />
+  <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
   <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
-  <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.7" />
+  <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.6" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
 
   <SolidColorBrush x:Key='BackgroundBrush' Color="{DynamicResource BackgroundColor}" />
@@ -156,6 +158,8 @@
   <Thickness x:Key='ButtonPadding'>12,0</Thickness>
   <Thickness x:Key='ButtonBorderThickness'>1</Thickness>
   <Thickness x:Key='ButtonBorderFocusedThickness'>2</Thickness>
+  <Thickness x:Key='InputBorderThickness'>1</Thickness>
+  <Thickness x:Key='InputFocusedBorderThickness'>2</Thickness>
   <CornerRadius x:Key="ControlCornerRadius">5</CornerRadius>
   <x:Double x:Key="InputDefaultHeight">34</x:Double>
 

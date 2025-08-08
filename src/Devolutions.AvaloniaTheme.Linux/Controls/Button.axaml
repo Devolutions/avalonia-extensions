@@ -54,7 +54,7 @@
                             FontWeight="{TemplateBinding FontWeight}" />
           <Border Name="FocusBorderElement"
                   IsVisible="False"
-                  BorderBrush="{DynamicResource InputFocusedBorder}"
+                  BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
                   BorderThickness="2"
                   CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>

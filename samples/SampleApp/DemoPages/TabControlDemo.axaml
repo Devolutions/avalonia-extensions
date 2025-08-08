@@ -2,12 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TabControlDemo">
 
-  <StackPanel Orientation="Vertical" Spacing="20">
+
+  <StackPanel Orientation="Vertical" Spacing="20" Margin="5">
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">
-      <Border Width="500">
+      <Border Width="400">
         <TabControl TabStripPlacement="Left">
           <TabItem Header="Tab 1">
             <TextBlock Text="Vertical tab view" VerticalAlignment="Top" />
@@ -19,7 +20,8 @@
         </TabControl>
       </Border>
 
-      <Border Width="500">
+      <StackPanel Spacing="20" Margin="5">
+        <Border Width="500" Padding="20">
         <TabControl TabStripPlacement="Top">
           <TabItem Header="General">
             <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
@@ -32,13 +34,28 @@
             <TextBlock Text="Content 3" VerticalAlignment="Top" />
           </TabItem>
         </TabControl>
+        </Border>
+        <Border Width="500" Classes="alternativeBackground" Padding="20">
+          <TabControl TabStripPlacement="Top">
+            <TabItem Header="General">
+              <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
+            </TabItem>
+            <TabItem Header="Settings">
+              <TextBlock Text="Content 2" VerticalAlignment="Top" />
+            </TabItem>
+            <TabItem Header="Disabled Tab" IsEnabled="False" />
+            <TabItem Header="Advanced">
+              <TextBlock Text="Content 3" VerticalAlignment="Top" />
+            </TabItem>
+          </TabControl>
       </Border>
+    </StackPanel>
     </StackPanel>
 
     <TextBlock Classes="section-title" Margin="0 50 0 0" Text="TabPane" />
     <TextBlock>Custom control <TextBlock Classes="code" Text="TabPane" /> - use exactly like <TextBlock Classes="code" Text="TabControl" /></TextBlock>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">
-      <Border Width="500">
+      <Border Width="400">
         <TabPane TabStripPlacement="Left">
           <TabItem Header="Tab 1">
             <TextBlock Text="Vertical TabPane" />
@@ -50,7 +67,8 @@
         </TabPane>
       </Border>
 
-      <Border Width="500">
+      <StackPanel>
+        <Border Width="500" Padding="20">
         <TabPane TabStripPlacement="Top">
           <TabItem Header="General">
             <TextBlock Text="Horizontal TabPane" />
@@ -64,6 +82,21 @@
           </TabItem>
         </TabPane>
       </Border>
+        <Border Width="500" Classes="alternativeBackground" Padding="20">
+          <TabPane TabStripPlacement="Top">
+            <TabItem Header="General">
+              <TextBlock Text="Horizontal TabPane" />
+            </TabItem>
+            <TabItem Header="Settings">
+              <TextBlock Text="Content 2" />
+            </TabItem>
+            <TabItem Header="Disabled Tab" IsEnabled="False" />
+            <TabItem Header="Advanced">
+              <TextBlock Text="Content 3" />
+            </TabItem>
+          </TabPane>
+        </Border>
+    </StackPanel>
     </StackPanel>
   </StackPanel>
 </UserControl>

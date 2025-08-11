@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.ListBoxDemo">
+
+  <StackPanel Margin="20">
+    <TextBlock Margin="0 5">Simplest ListBox, single selection:</TextBlock>
+    <ListBox x:Name="animals1" />
+
+    <TextBlock Margin="0 5">ListBox with simple ItemsTemplate, multiple selection:</TextBlock>
+    <ListBox x:Name="animals2" SelectionMode="Multiple" Width="500">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <!-- TODO: Move some of the props to be default (but overridable) -->
+          <TextBlock Text="{Binding }" MinWidth="140" MaxWidth="240"
+                     VerticalAlignment="Center" TextAlignment="Center" IsHitTestVisible="False" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ListBox>
+  </StackPanel>
+</UserControl>

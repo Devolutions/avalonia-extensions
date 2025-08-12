@@ -33,6 +33,8 @@ the Avalonia community to add more DevExpress-style controls.
     - [ComboBox](#combobox)
       - [ComboBoxItem](#comboboxitem)
     - [DataGrid](#datagrid)
+    - [ListBox](#listbox)
+      - [ListBoxItem](#listboxitem)
     - [NumericUpDown](#numericupdown)
       - [ButtonSpinner](#buttonspinner)
     - [ScrollViewer](#scrollviewer)
@@ -50,7 +52,8 @@ the Avalonia community to add more DevExpress-style controls.
      - SplitButton
      - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
-    - CalendarDatePicker
+    - RadioButton
+    - vertical tabs
 
 ## Installation
 
@@ -130,10 +133,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 |||
 || <h3>Label</h3> |
 |||
-|| <h3>ListBox</h3> |
-|||
-|| <h3>ListBoxItem</h3> |
-|||
+|✅ | <h3>ListBox</h3> <h4>ListBoxItem</h4>|
+|| <img src="https://github.com/user-attachments/assets/2571edc4-4893-4a0d-b31e-b229d866a824" alt="ListBox demo" style="width: 480px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/56cce1f9-6c52-4c6a-bdc1-e77e2ba23d2a" alt="ListBox demo (darkmode)" style="width: 480px; max-width: 100%;" /> |
 || <h3>ManagedFileChooser</h3> |
 |||
 || <h3>Menu</h3> |

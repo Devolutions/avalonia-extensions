@@ -113,9 +113,6 @@
           <Setter Property="Background" Value="Transparent" />
         </Style>
       </Style>
-      <Style Selector="^ /template/ Border#SingleColumnListBox_SelectionHighlight">
-        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
-      </Style>
     </Style>
 
     <!--  Disabled state  -->

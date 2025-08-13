@@ -1,7 +1,17 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Converters">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
+  
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="10">
       <StackPanel>
@@ -19,36 +29,57 @@
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-
+    <Setter Property="MinWidth"
+            Value="{BindingToggler
+                                      {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
+                                      {DynamicResource MultiColumnListItemDefaultWidth},
+                                      {DynamicResource ComboBoxItemMinWidth}}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border
-          Name="LayoutRoot"
-          Background="Transparent"
-          MinHeight="{DynamicResource ComboBoxItemMinHeight}"
-          CornerRadius="{TemplateBinding CornerRadius}"
-          Padding="{DynamicResource ComboBoxItemBorderPadding}">
-          <StackPanel Orientation="Horizontal">
-            <Border
-              Name="SelectionHighlight"
-              Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
-              Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
-              VerticalAlignment="Stretch"
-              Background="Transparent"
-              Padding="{TemplateBinding Padding}"
-              CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
-            <ContentPresenter
-              Name="PART_ContentPresenter"
-              FontSize="{TemplateBinding FontSize}"
-              Background="{TemplateBinding Background}"
-              Foreground="{TemplateBinding Foreground}"
-              ContentTemplate="{TemplateBinding ContentTemplate}"
-              Content="{TemplateBinding Content}"
-              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-          </StackPanel>
-        </Border>
+        <Panel
+          Margin="{BindingToggler
+                                      {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
+                                      {DynamicResource MultiColumnListBoxItemBorderMargin},
+                                      {DynamicResource ComboBoxItemBorderMargin}}">
+          <Border
+            Name="LayoutRoot"
+            Background="Transparent"
+            MinHeight="{DynamicResource ComboBoxItemMinHeight}"
+            CornerRadius="{TemplateBinding CornerRadius}"
+            Padding="{BindingToggler
+                        {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
+                        {DynamicResource MultiColumnListBoxBorderPadding},
+                        {DynamicResource ComboBoxItemBorderPadding}}">
+            
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Stretch">
+              <Border
+                Name="SingleColumnListBox_SelectionHighlight"
+                IsVisible="{Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsNotMultiColumnListBox}}"
+                Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+                Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
+    
+              <ContentPresenter
+                Name="PART_ContentPresenter"
+                FontSize="{TemplateBinding FontSize}"
+                Background="{TemplateBinding Background}"
+                Foreground="{TemplateBinding Foreground}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                Content="{TemplateBinding Content}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </StackPanel>
+          </Border>
+          <Border Name="MultiColumnListBox_SelectionBorder"
+                  IsVisible="{Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}}"
+                  BorderBrush="Transparent"
+                  BorderThickness="2"
+                  CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
+        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -57,23 +88,20 @@
       <Style Selector="^ /template/ Border#LayoutRoot">
         <Setter
           Property="Background"
-          Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
-                  {DynamicResource ComboBoxItemBackgroundBrush},
-                  {DynamicResource ControlBackgroundSelectedBrush}
-               }" />
+          Value="{DynamicResource ControlBackgroundSelectedBrush}" />
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">
           <Setter Property="Background" Value="Transparent" />
         </Style>
       </Style>
-      <Style Selector="^ /template/ Border#SelectionHighlight">
+      <Style Selector="^ /template/ Border#SingleColumnListBox_SelectionHighlight">
         <Setter
           Property="Background"
-          Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
-                  {DynamicResource TransparentBrush},
-                  {DynamicResource ControlBorderSelectedBrush}
-               }" />
+          Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#MultiColumnListBox_SelectionBorder">
+        <Setter
+          Property="BorderBrush"
+          Value="{DynamicResource ControlBorderSelectedBrush}" />
       </Style>
     </Style>
 
@@ -85,7 +113,7 @@
           <Setter Property="Background" Value="Transparent" />
         </Style>
       </Style>
-      <Style Selector="^ /template/ Border#SelectionHighlight">
+      <Style Selector="^ /template/ Border#SingleColumnListBox_SelectionHighlight">
         <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
       </Style>
     </Style>

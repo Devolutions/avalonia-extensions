@@ -18,6 +18,7 @@
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="Label.axaml" />
+    <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />

@@ -36,7 +36,7 @@
         </TabItem.Header>
         <demoPages:ButtonDemo />
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
@@ -91,6 +91,12 @@
           <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacOS" />
         </TabItem.Header>
         <demoPages:GridSplitterDemo />
+      </TabItem>
+      <TabItem IsSelected="True">
+        <TabItem.Header>
+          <controls:SampleItemHeader Title="ListBox" ApplicableTo="Windows - DevExpress" />
+        </TabItem.Header>
+        <demoPages:ListBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>

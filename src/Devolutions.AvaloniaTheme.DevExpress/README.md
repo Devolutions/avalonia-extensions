@@ -134,7 +134,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 || <h3>Label</h3> |
 |||
 |✅ | <h3>ListBox</h3> <h4>ListBoxItem</h4>|
-|| <img src="https://github.com/user-attachments/assets/2571edc4-4893-4a0d-b31e-b229d866a824" alt="ListBox demo" style="width: 480px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/56cce1f9-6c52-4c6a-bdc1-e77e2ba23d2a" alt="ListBox demo (darkmode)" style="width: 480px; max-width: 100%;" /> |
+|| <img src="https://github.com/user-attachments/assets/2571edc4-4893-4a0d-b31e-b229d866a824" alt="ListBox demo" style="width: 464px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/56cce1f9-6c52-4c6a-bdc1-e77e2ba23d2a" alt="ListBox demo (darkmode)" style="width: 464px; max-width: 100%;" /> |
 || <h3>ManagedFileChooser</h3> |
 |||
 || <h3>Menu</h3> |
@@ -148,7 +148,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 || <h3>NotificationCard</h3> |
 |||
 |✅ | <h3>NumericUpDown</h3> <h4>ButtonSpinner</h4> |
-|| <img src="https://github.com/user-attachments/assets/57f30484-dd75-452b-9d52-d6b2fce1a1ac" alt="NumericUpDown demo" style="width: 215px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/30666c61-2929-427b-9347-ae4e8e4fe2a6" alt="NumericUpDown demo (darkmode)" style="width: 225px; max-width: 100%;" /> |
+|| <img src="https://github.com/user-attachments/assets/32764a11-e893-498a-acd9-2c9938f03f40" alt="NumericUpDown demo" style="width: 215px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/e32f8a0a-1a60-4070-a71b-c68deea8e527" alt="NumericUpDown demo (darkmode)" style="width: 225px; max-width: 100%;" /> |
 || <h3>OverlayPopupHost</h3> |
 |||
 || <h3>PathIcon</h3> |

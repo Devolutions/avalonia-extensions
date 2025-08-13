@@ -29,6 +29,13 @@
     <Setter Property="MinHeight" Value="1" />
     <Setter Property="Height" Value="26" />
     <Setter Property="Padding" Value="10 2" />
+    
+    <Style Selector="^:pointerover">
+
+      <Style Selector="^ /template/ Border#SingleColumnListBox_SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type AutoCompleteBox}" TargetType="AutoCompleteBox">

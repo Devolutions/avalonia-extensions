@@ -21,7 +21,7 @@
           <TabItem Header="Disabled" IsEnabled="False" />
         </TabControl>
 
-        <TabControl TabStripPlacement="Left" Margin="5" Height="200">
+        <TabControl TabStripPlacement="Left" Margin="5" Height="200" Classes="NavBar">
           <TabItem Header="General">
             <StackPanel Orientation="Horizontal" Spacing="30">
               <TextBlock Text="Company" VerticalAlignment="Center" />
@@ -40,25 +40,99 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
+  <ControlTheme x:Key="Default_TabItem" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+    <!-- Can't figure out how to reference the default TabItem in TabItem.axaml, so this is just a shortcut -->
+  </ControlTheme>
+
+  <ControlTheme x:Key="Devo_NavBar_TabItem" TargetType="TabItem">
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="PART_LayoutRoot"
+          Background="{TemplateBinding Background}"
+          MinHeight="28">
+          <Panel>
+            <Border Name="SelectionHighlight"
+                    IsVisible="False"
+                    Background="{DynamicResource BackgroundBrush}">
+              <Border Background="{DynamicResource SelectionHighlightTransparentBrush}" />
+            </Border>
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              FontFamily="{TemplateBinding FontFamily}"
+              FontSize="{StaticResource ControlFontSize}"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"
+              Content="{TemplateBinding Header}"
+              Padding="12 0 20 0"
+              ContentTemplate="{TemplateBinding HeaderTemplate}"
+              RecognizesAccessKey="True" />
+          </Panel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:selected /template/ Border#SelectionHighlight">
+      <Setter Property="IsVisible" Value="True" />
+      </Style>
+
+    <!--  PointerOver state  -->
+    <Style Selector="^:pointerover /template/ Border#SelectionHighlight">
+      <Setter Property="IsVisible" Value="True" />
+
+    </Style>
+
+    <!--  Disabled state  -->
+    <Style Selector="^:disabled /template/ Border#PART_LayoutRoot">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource TabItemHeaderForegroundDisabled}" />
+    </Style>
+
+    <!-- Search highlight -->
+    <Style Selector="^.search-highlight /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SearchHighlightBackground}" />
+      <Setter Property="Foreground" Value="{DynamicResource SearchHighlightForeground}" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="^.secondary-search-highlight /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SecondarySearchHighlightBackground}" />
+      <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+  </ControlTheme>
+
+  
   <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Padding" Value="25 20" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
+    <Setter Property="VerticalContentAlignment" Value="Top" />
+    <Setter Property="ItemContainerTheme"
+            Value="{BindingToggler {Binding $self.Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=NavBar},
+                                 {DynamicResource Devo_NavBar_TabItem},
+                                 {DynamicResource Default_TabItem}}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border
-          BorderThickness="{TemplateBinding BorderThickness}"
-          CornerRadius="{TemplateBinding CornerRadius}"
-          Background="{TemplateBinding Background}"
-          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-          VerticalAlignment="{TemplateBinding VerticalAlignment}">
+        <Border Name="RootBorder"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Background="{TemplateBinding Background}"
+                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalAlignment}">
           <DockPanel>
             <Grid DockPanel.Dock="{TemplateBinding TabStripPlacement}"
                   ColumnDefinitions="Auto, *"
                   ZIndex="2">
               <ItemsPresenter Name="PART_ItemsPresenter"
+                              Margin="{DynamicResourceToggler {Binding $parent[TabControl].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=NavBar}, 
+                                NavBarTabsContainerMargin, 
+                                TabsContainerMargin}"
                               Grid.Column="0"
                               VerticalAlignment="Top"
                               ItemsPanel="{TemplateBinding ItemsPanel}"
@@ -88,8 +162,7 @@
 
     <Style Selector="^[TabStripPlacement=Left]">
       <Style Selector="^ /template/ Border#CardBorderBeyondTheTabs">
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Margin" Value="0 " />
+        <Setter Property="IsVisible" Value="False" />
       </Style>
       <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">
         <Setter Property="Orientation" Value="Vertical" />
@@ -98,6 +171,17 @@
       <Style Selector="^ /template/ ContentPresenter#PART_SelectedContentHost">
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="0 1 1 0" />
+      </Style>
+
+      <Style Selector="^.NavBar">
+        <Style Selector="^ /template/ Border#RootBorder">
+          <Setter Property="BorderThickness" Value="1" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_SelectedContentHost">
+          <Setter Property="BorderThickness" Value="1 0 0 0" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
+        </Style>
       </Style>
     </Style>
 

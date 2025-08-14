@@ -33,6 +33,7 @@
       <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.07" />
       <SolidColorBrush x:Key="ControlBackgroundPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
+      <SolidColorBrush x:Key="SelectionHighlightTransparentBrush" Color="{DynamicResource SystemAccentColorLight3}" Opacity="0.57" />
 
       <Color x:Key="EditableComboBoxItemHoverForegroundColor">#0067c0</Color>
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
@@ -92,8 +93,9 @@
 
       <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.11" />
       <SolidColorBrush x:Key="ControlBackgroundPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
-      <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}"
-                       Opacity="0.13" />
+      <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
+      <SolidColorBrush x:Key="SelectionHighlightTransparentBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.12" />
+      
       <Color x:Key="EditableComboBoxItemHoverForegroundColor">#387ec4</Color>
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
       <SolidColorBrush x:Key="EditableComboBoxGlyphHoverBrush">#3c3c3c</SolidColorBrush>
@@ -127,6 +129,7 @@
   <x:Double x:Key="DefaultLineHeight">15</x:Double>
   <x:Double x:Key="DefaultFontSize">12</x:Double>
   <x:Double x:Key="ControlFontSize">12</x:Double>
+  <x:Double x:Key="TabItemSelectedFontSize">13</x:Double>
   <x:Double x:Key="PasswordHiddenFontSize">10</x:Double>
 
   <SolidColorBrush x:Key="Foreground" Color="{DynamicResource ForegroundColor}" />
@@ -209,6 +212,8 @@
 
   <Thickness x:Key="TabItemHeaderPadding">4 0</Thickness>
   <Thickness x:Key="FirstTabItemHeaderPadding">6 0 4 0</Thickness>
+  <Thickness x:Key="TabsContainerMargin">0</Thickness>
+  <Thickness x:Key="NavBarTabsContainerMargin">5 10 10 10</Thickness>
 
   <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
 

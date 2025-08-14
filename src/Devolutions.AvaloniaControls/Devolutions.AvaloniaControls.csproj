@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.2.0,)" />
+    <PackageReference Include="Xaml.Behaviors" Version="[11.2.0,)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />
   </ItemGroup>

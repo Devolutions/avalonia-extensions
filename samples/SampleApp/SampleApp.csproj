@@ -53,6 +53,7 @@
   <!-- Temporary link for development. 
        (To use the published nuget, uncomment PackageReference above (update version) or install with Nuget manager) -->
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />

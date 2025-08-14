@@ -1,6 +1,7 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors"
   x:ClassModifier="internal">
   <Design.PreviewWith>
     <Panel Width="400" Height="400">
@@ -8,7 +9,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Watermark="test">
-        <EditableComboBoxItem Value="tesfsdfast df asdf asdf as fd" />
+        <EditableComboBoxItem Value="test" />
         <EditableComboBoxItem Value="search highlight" Classes="search-highlight" />
         <EditableComboBoxItem Value="secondary search highlight" Classes="secondary-search-highlight" />
       </EditableComboBox>
@@ -322,41 +323,34 @@
               IsLightDismissEnabled="True"
               OverlayDismissEventPassThrough="True"
               InheritsTransform="True">
-              <Panel>
-                <Border
-                  x:Name="PopupBorder"
-                  Background="{DynamicResource ComboBoxDropDownBackground}"
-                  BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                  BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-                  Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
-                  HorizontalAlignment="Stretch"
-                  CornerRadius="{DynamicResource OverlayCornerRadius}">
-                  <ScrollViewer
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                    IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                      ItemsPanel="{TemplateBinding ItemsPanel}" />
-                  </ScrollViewer>
-                </Border>
-                <Border
-                  x:Name="PopupTabMask"
-                  Background="{x:Null}"
-                  BorderBrush="{DynamicResource ComboBoxDropDownBackground}"
-                  Margin="{
-                              Binding PopupBorderMaskMargin,
-                              RelativeSource={RelativeSource TemplatedParent}
-                           }"
-                  Width="{
-                              Binding PopupBorderMaskWidth,
-                              RelativeSource={RelativeSource TemplatedParent}
-                           }"
-                  Padding="0"
-                  HorizontalAlignment="Left"
-                  CornerRadius="0" />
-              </Panel>
+              <Interaction.Behaviors>
+                <behaviors:PositionedPopupBehavior
+                  PositionToTemplatedParent="True"
+                  InjectFusionMask="True"
+                  PopupBorderThickness="{
+                    Binding FocusedBorderThickness, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+                  }" />
+              </Interaction.Behaviors>
+
+              <Border
+                x:Name="PopupBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                HorizontalAlignment="Stretch"
+                CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                  IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
+                  <ItemsPresenter
+                    Name="PART_ItemsPresenter"
+                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+              </Border>
             </Popup>
           </Grid>
         </DataValidationErrors>
@@ -389,7 +383,7 @@
             }" />
     </Style>
 
-    <Style Selector="^:is-split-between-screens /template/ Border#HighlightBackground">
+    <Style Selector="^:is-cut-by-screen-edge /template/ Border#HighlightBackground">
       <Setter Property="BorderThickness"
               Value="{
                 Binding FocusedBorderThickness, 
@@ -427,7 +421,7 @@
     </Style>
 
     <Style
-      Selector="^:is-split-between-screens /template/ Border#Background, ^:is-split-between-screens /template/ Border#HighlightBackground">
+      Selector="^:is-cut-by-screen-edge /template/ Border#Background, ^:is-cut-by-screen-edge /template/ Border#HighlightBackground">
       <Setter Property="CornerRadius"
               Value="{
                         Binding CornerRadius,
@@ -538,42 +532,12 @@
                     }" />
     </Style>
 
-    <Style Selector="^:is-split-between-screens /template/ Border#PopupBorder">
+    <Style Selector="^:is-cut-by-screen-edge /template/ Border#PopupBorder">
       <Setter Property="CornerRadius"
               Value="{
                         Binding CornerRadius, 
                         RelativeSource={RelativeSource TemplatedParent}
                     }" />
-    </Style>
-
-    <Style Selector="^:dropdownopen:not(:dropdown-open-from-top) /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent},
-               Converter={x:Static DevoConverters.ThicknessExtractor}, 
-               ConverterParameter={x:Static ThicknessSubset.Top}
-            }" />
-    </Style>
-    <Style Selector="^:dropdownopen:dropdown-open-from-top /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent},
-               Converter={x:Static DevoConverters.ThicknessExtractor}, 
-               ConverterParameter={x:Static ThicknessSubset.Bottom}
-            }" />
-    </Style>
-
-    <Style Selector="^:is-split-between-screens /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent}
-            }" />
     </Style>
   </ControlTheme>
 

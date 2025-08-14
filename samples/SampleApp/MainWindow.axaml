@@ -124,7 +124,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TabControl / TabPane" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:TabControlDemo />
       </TabItem>

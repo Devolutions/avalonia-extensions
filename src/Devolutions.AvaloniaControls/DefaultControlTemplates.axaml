@@ -4,11 +4,21 @@
   <Styles.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="Controls/InnerIconButton.axaml" />
         <MergeResourceInclude Source="Controls/SearchHighlightTextBlock.axaml" />
         <MergeResourceInclude Source="Controls/EditableComboBox/EditableComboBox.axaml" />
+        <MergeResourceInclude Source="Controls/CheckBoxListBox/InnerCheckBoxListBox.axaml" />
+        <MergeResourceInclude Source="Controls/CheckBoxListBox/CheckBoxListBoxItem.axaml" />
+
+        <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxParts.axaml" />
+        <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBox.axaml" /> -->
+        <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxItem.axaml" /> -->
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
-    
+
     <StaticResource x:Key="{x:Type TabPane}" ResourceKey="{x:Type TabControl}" />
   </Styles.Resources>
+
+  <!-- <semi:SemiTheme Locale="en-US" /> -->
+  <!-- <u-semi:SemiTheme Locale="en-US" /> -->
 </Styles>

@@ -1,0 +1,147 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors"
+  x:ClassModifier="internal">
+
+  <Design.PreviewWith>
+    <StackPanel Width="150" Height="500">
+      <MultiComboBox>
+        <ListBoxItem>single 1</ListBoxItem>
+        <ListBoxItem>single 2</ListBoxItem>
+        <ListBoxItem>single 3</ListBoxItem>
+      </MultiComboBox>
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
+    <Setter Property="Background" Value="{DynamicResource InputBackground}" />
+
+    <Setter Property="Padding" Value="10 0 0 0" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="MinWidth" Value="{DynamicResource EditableComboBoxMinWidth}" />
+    <Setter Property="Height" Value="{DynamicResource EditableComboBoxHeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <Grid ColumnDefinitions="Auto,*,32,Auto" HorizontalAlignment="Stretch">
+            <Border x:Name="Background"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
+            <Border x:Name="HighlightBackground"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Background="Transparent"
+                    BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushFocused}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    IsVisible="False" />
+
+            <ItemsControl
+              Name="PART_InnerLeftContent"
+              Grid.Column="0"
+              ItemsSource="{TemplateBinding InnerLeftContent}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerLeftContentPanel" Orientation="Horizontal"
+                              Margin="2 2 0 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <ContentPresenter x:Name="PART_TextBoxPresenter"
+                              Grid.Column="1" />
+
+            <Border x:Name="DropDownOverlay"
+                    Grid.Column="2"
+                    Background="Transparent"
+                    Margin="0,1,1,1"
+                    Width="30"
+                    IsVisible="False"
+                    HorizontalAlignment="Right" />
+
+            <PathIcon x:Name="DropDownGlyph"
+                      Grid.Column="2"
+                      UseLayoutRounding="False"
+                      IsHitTestVisible="False"
+                      Height="12"
+                      Width="12"
+                      Margin="0,0,10,0"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Foreground="{TemplateBinding Foreground}"
+                      Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+
+            <ItemsControl
+              Grid.Column="3"
+              Name="PART_InnerRightContent"
+              ItemsSource="{TemplateBinding InnerRightContent}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel
+                    Name="PART_InnerRightContentPanel" Orientation="Horizontal"
+                    Margin="0 2 3 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- ReSharper disable once Xaml.MissingGridIndex -->
+            <Popup
+              Name="PART_Popup"
+              WindowManagerAddShadowHint="False"
+              IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+              PlacementTarget="Background"
+              IsLightDismissEnabled="True"
+              OverlayDismissEventPassThrough="True">
+              <Interaction.Behaviors>
+                <behaviors:PositionedPopupBehavior
+                  PositionToTemplatedParent="True"
+                  InjectFusionMask="True"
+                  PopupBorderThickness="{
+                    Binding FocusedBorderThickness,
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=MultiComboBox}
+                  }" />
+              </Interaction.Behaviors>
+
+              <Border
+                x:Name="PopupBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                HorizontalAlignment="Stretch"
+                CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                  IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
+                  <CheckBoxListBox
+                    Name="PART_CheckBoxListBox"
+                    ItemsSource="{TemplateBinding ItemsSource}" />
+                </ScrollViewer>
+              </Border>
+            </Popup>
+          </Grid>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <!--  PointerOver State  -->
+    <Style Selector="^:pointerover /template/ Border#Background">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

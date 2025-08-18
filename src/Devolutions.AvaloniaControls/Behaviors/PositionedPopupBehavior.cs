@@ -123,7 +123,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
                     this.popupChildBoundSubscription = null;
                 }
 
-                this.popupChildBoundSubscription = child?.GetObservable(Visual.BoundsProperty).Subscribe(b => { this.UpdateDropdownOverflowPseudoClass(null, b); });
+                this.popupChildBoundSubscription = child?.GetObservable(Visual.BoundsProperty).Subscribe(b => this.UpdateDropdownOverflowPseudoClass(null, b));
                 if (this.popupChildBoundSubscription is not null)
                 {
                     disposable.Add(this.popupChildBoundSubscription);
@@ -139,7 +139,10 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         this.UpdatePseudoClasses();
 
-        if (this.AssociatedObject.Child?.GetVisualRoot() is PopupRoot popupRoot) popupRoot.PositionChanged += this.OnPositionChanged;
+        if (this.AssociatedObject.Child?.GetVisualRoot() is PopupRoot popupRoot)
+        {
+            popupRoot.PositionChanged += this.OnPositionChanged;
+        }
     }
 
     private void OnClosed(object? sender, EventArgs e)
@@ -148,7 +151,10 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         this.RemoveTargetPseudoClass(":dropdown-overflow-left");
         this.RemoveTargetPseudoClass(":dropdown-overflow-right");
 
-        if (this.AssociatedObject?.Child?.GetVisualRoot() is PopupRoot popupRoot) popupRoot.PositionChanged -= this.OnPositionChanged;
+        if (this.AssociatedObject?.Child?.GetVisualRoot() is PopupRoot popupRoot)
+        {
+            popupRoot.PositionChanged -= this.OnPositionChanged;
+        }
     }
 
     private void OnPositionChanged(object? sender, PixelPointEventArgs e) => this.UpdatePseudoClasses();

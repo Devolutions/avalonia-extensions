@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>13</LangVersion>
     <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
+    <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,9 +26,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.2.0,)" />
+    <PackageReference Include="Avalonia" Version="[11.2.1,)" />
     <PackageReference Include="Xaml.Behaviors" Version="[11.2.0,)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />
+
+    <PackageReference Include="Irihi.Ursa" Version="1.12.0" />
   </ItemGroup>
+
+  <!--  <ItemGroup Condition="'$(DevolutionsAvaloniaIncludeUrsa)' == 'true'">-->
+  <!--    <PackageReference Include="Irihi.Ursa" Version="1.12.0" />-->
+  <!--    &lt;!&ndash;    <PackageReference Include="Semi.Avalonia" Version="11.2.1.9" />&ndash;&gt;-->
+  <!--    &lt;!&ndash;    <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.12.0" />&ndash;&gt;-->
+  <!--  </ItemGroup>-->
+
+  <!--  <ItemGroup Condition="'$(DevolutionsAvaloniaIncludeUrsa)' != 'true'">-->
+  <!--    <AvaloniaXaml Remove="Controls\MultiSelectComboBoxBak\MultiSelectComboBoxBak.axaml" />-->
+  <!--    <AvaloniaXaml Remove="Controls\MultiSelectComboBox\MultiSelectComboBox.axaml" />-->
+  <!--    <AvaloniaXaml Remove="Controls\MultiSelectComboBox\MultiSelectComboBoxItem.axaml" />-->
+  <!--    <AvaloniaXaml Remove="Controls\MultiSelectComboBox\MultiSelectComboBoxParts.axaml" />-->
+  <!--    &lt;!&ndash;    <Link Include="Controls\MultiSelectComboBoxBak\MultiSelectComboBoxBak.axaml" />&ndash;&gt;-->
+  <!--    &lt;!&ndash;    <Link Include="Controls\MultiSelectComboBox\MultiSelectComboBox.axaml" />&ndash;&gt;-->
+  <!--    &lt;!&ndash;    <Link Include="Controls\MultiSelectComboBox\MultiSelectComboBoxItem.axaml" />&ndash;&gt;-->
+  <!--    &lt;!&ndash;    <Link Include="Controls\MultiSelectComboBox\MultiSelectComboBoxParts.axaml" />&ndash;&gt;-->
+
+  <!--    <AvaloniaXaml Remove="UrsaControlTemplates.axaml" />-->
+  <!--    &lt;!&ndash;    <Link Include="UrsaControlTemplates.axaml" />&ndash;&gt;-->
+  <!--  </ItemGroup>-->
+
+  <!--  <ItemGroup>-->
+  <!--    <None Include="Controls\MultiSelectComboBoxBak\MultiSelectComboBoxBak.axaml" />-->
+  <!--    <None Include="Controls\MultiSelectComboBox\MultiSelectComboBox.axaml" />-->
+  <!--    <None Include="Controls\MultiSelectComboBox\MultiSelectComboBoxItem.axaml" />-->
+  <!--    <None Include="Controls\MultiSelectComboBox\MultiSelectComboBoxParts.axaml" />-->
+
+  <!--    &lt;!&ndash;    <Link Include="UrsaControlTemplates.axaml" />&ndash;&gt;-->
+  <!--  </ItemGroup>-->
 </Project>

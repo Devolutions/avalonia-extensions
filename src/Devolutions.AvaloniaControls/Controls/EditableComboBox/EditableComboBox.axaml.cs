@@ -13,6 +13,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 
+[TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
 [PseudoClasses(PC_DropdownOpen, PC_Pressed)]
 public partial class EditableComboBox : ItemsControl, IInputElement
@@ -134,9 +135,9 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         };
 
         this.BindProperty(this.innerComboBox, ComboBox.IsDropDownOpenProperty, twoWay: true);
-        this.BindProperty(this.innerComboBox, InnerComboBox.FocusedBorderThicknessProperty, twoWay: false);
-        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownWidthProperty, twoWay: false);
-        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownHeightProperty, twoWay: false);
+        this.BindProperty(this.innerComboBox, InnerComboBox.FocusedBorderThicknessProperty);
+        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownWidthProperty);
+        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownHeightProperty);
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
         this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);

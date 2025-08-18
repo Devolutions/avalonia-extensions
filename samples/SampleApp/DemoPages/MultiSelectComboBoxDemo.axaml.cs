@@ -2,9 +2,9 @@ namespace SampleApp.DemoPages;
 
 using Avalonia.Controls;
 
-public partial class EditableComboBoxDemo : UserControl
+public partial class MultiSelectComboBoxDemo : UserControl
 {
-    public EditableComboBoxDemo()
+    public MultiSelectComboBoxDemo()
     {
         this.InitializeComponent();
     }

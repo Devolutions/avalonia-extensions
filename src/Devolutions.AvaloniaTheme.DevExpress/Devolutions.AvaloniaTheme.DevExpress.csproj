@@ -25,14 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.2.0,)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.2.0,)" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.2.0,)" />
+    <PackageReference Include="Avalonia" Version="[11.2.1,)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.2.1,)" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.2.1,)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.8.8,)"/>
+    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.8.8,)" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />

@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.MultiSelectComboBoxDemo"
+             x:DataType="vm:MultiSelectComboBoxViewModel">
+
+  <Design.DataContext>
+    <vm:MultiSelectComboBoxViewModel />
+  </Design.DataContext>
+
+  <Border Margin="20" Padding="20" HorizontalAlignment="Stretch">
+    <StackPanel Orientation="Vertical">
+      <MultiComboBox HorizontalAlignment="Left" Watermark="select...">
+        <MultiComboBoxItem>Item 1</MultiComboBoxItem>
+        <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+        <MultiComboBoxItem>Item 3</MultiComboBoxItem>
+      </MultiComboBox>
+
+      <Separator Margin="0 10" />
+
+      <MultiComboBox HorizontalAlignment="Left"
+                     ItemsSource="{Binding Items}"
+                     SelectedItems="{Binding SelectedItems}" />
+
+      <!-- <MultiSelectComboBox HorizontalAlignment="Left" -->
+      <!--                      ItemsSource="{Binding Items}" /> -->
+
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Selected: " />
+        <TextBlock Text="{Binding SelectedText}" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

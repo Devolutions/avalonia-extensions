@@ -5,6 +5,15 @@
              xmlns:sampleApp="clr-namespace:SampleApp"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Experiments.SystemColoursDemo">
+
+  <UserControl.Styles>
+    <Style Selector="Border#top:pointerover">
+      <Setter Property="BorderBrush" Value="{DynamicResource TestBlueCco}" />
+      <Setter Property="BorderThickness" Value="0 0  0 50" />
+    </Style>
+  </UserControl.Styles>
+  
+  
   <StackPanel>
     <TextBlock Margin="0 10" TextWrapping="Wrap">System accent colours are exposed by the operating system and retrieved through Avalonia Fluent (<HyperlinkButton HorizontalAlignment="Center" Margin="0" Padding="0" NavigateUri="https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs">SystemAccentColors.cs</HyperlinkButton>)
       where lighter and darker variants are also calculated. </TextBlock>
@@ -39,5 +48,25 @@
     <Rectangle Grid.Row="6" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark3}" Width="20"
                Height="20" />
   </Grid>
+
+    <Grid ColumnDefinitions="Auto, 100, 100" RowDefinitions="100, 100">
+
+
+      <TextBlock>
+        On pointerover <LineBreak />
+        <TextBlock Classes="code">{ChangeColorOpacity {DynamicResource SystemAccentColorLight3}, 0.2}"</TextBlock>
+      </TextBlock>
+      
+      <TextBlock Grid.Row="1" Grid.Column="0" Classes="code">{DynamicResource SystemAccentColorLight3} Opacity=&quot;0.2&quot;"</TextBlock>
+
+      <!-- Background vertical split: left white, right gray -->
+      <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="White" />
+      <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Background="{DynamicResource AlternativeBackgroundBrush}" />
+
+      <!-- Brush test, horizontal split -->
+      <!-- <Border Background="{DynamicResource TestBlueCco}" /> -->
+      <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="top" Background="Transparent"/>
+      <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource TestBlueO}" />
+    </Grid>
   </StackPanel>
 </UserControl>

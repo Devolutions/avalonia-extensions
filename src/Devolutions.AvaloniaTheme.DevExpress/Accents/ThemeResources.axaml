@@ -246,4 +246,11 @@
   <SolidColorBrush x:Key="TestBlue" Color="Blue" />
   <SolidColorBrush x:Key="TestYellow" Color="Yellow" />
 
+
+  <!-- ChangeColorOpacity doesn't seem to work with any colour except the system colours and that only if the resulting brushes are applied in styles rather than directly on a control -->
+  <Color x:Key='TestTranspBlue'>#990000f0</Color>
+  <Color x:Key='TestOpaqueBlue'>#0000f0</Color>
+
+  <SolidColorBrush x:Key="TestBlueCco" Color="{ChangeColorOpacity {DynamicResource SystemAccentColorLight3}, 0.2}" />
+  <SolidColorBrush x:Key="TestBlueO" Color="{DynamicResource SystemAccentColorLight3}" Opacity="0.2" />
 </ResourceDictionary>

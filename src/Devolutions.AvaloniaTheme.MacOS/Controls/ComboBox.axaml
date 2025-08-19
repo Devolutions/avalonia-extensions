@@ -31,6 +31,16 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <Thickness x:Key="PopUpToggleButtonPadding">0.6 0.6 0 0</Thickness>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <Thickness x:Key="PopUpToggleButtonPadding">0.6 0 0 0</Thickness>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
     <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
@@ -38,20 +48,41 @@
     <Setter Property="CornerRadius" Value="{StaticResource SelectionCornerRadius}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <ContentPresenter
-          Name="PART_ContentPresenter"
+        <Border
+          Name="PART_Border"
           Background="{TemplateBinding Background}"
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="{TemplateBinding BorderThickness}"
           CornerRadius="{TemplateBinding CornerRadius}"
-          Content="{TemplateBinding Content}"
-          ContentTemplate="{TemplateBinding ContentTemplate}"
-          Padding="{TemplateBinding Padding}"
-          RecognizesAccessKey="True"
-          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}">
+          <StackPanel
+            Name="PART_StackPanel"
+            VerticalAlignment="Center"
+            Spacing="2"
+            Margin="{DynamicResource PopUpToggleButtonPadding}">
+            <Path Width="9"
+                  Height="4.4"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="{DynamicResource ChevronPath}"
+                  Stretch="Uniform"
+                  Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
+
+            <Path Width="9"
+                  Height="4.4"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="{DynamicResource ChevronPath}"
+                  Stretch="Uniform"
+                  Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}">
+              <Path.RenderTransform>
+                <ScaleTransform ScaleY="-1" />
+              </Path.RenderTransform>
+            </Path>
+          </StackPanel>
+        </Border>
       </ControlTemplate>
     </Setter>
+
     <Style Selector="^:disabled">
       <Setter Property="BorderThickness" Value="0" />
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
@@ -115,35 +146,8 @@
                 Padding="3"
                 ClickMode="Press"
                 Focusable="False"
-                IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}">
-                <StackPanel VerticalAlignment="Center" Spacing="2">
-                  <StackPanel.RenderTransform>
-                    <TransformGroup>
-                      <TranslateTransform X="1" />
-                      <TranslateTransform Y="-1" />
-                    </TransformGroup>
-                  </StackPanel.RenderTransform>
-                  <Path Width="9"
-                        Height="4.4"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Data="{DynamicResource ChevronPath}"
-                        Stretch="Uniform"
-                        Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
+                IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
 
-                  <Path Width="9"
-                        Height="4.4"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Data="{DynamicResource ChevronPath}"
-                        Stretch="Uniform"
-                        Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}">
-                    <Path.RenderTransform>
-                      <ScaleTransform ScaleY="-1" />
-                    </Path.RenderTransform>
-                  </Path>
-                </StackPanel>
-              </ToggleButton>
             </Grid>
           </Border>
           <Border Name="FocusBorderElement"
@@ -194,7 +198,9 @@
           </Popup>
         </Panel>
       </ControlTemplate>
-    </Setter><!-- Tabbing focus -->
+    </Setter>
+
+    <!-- Tabbing focus -->
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#FocusBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />

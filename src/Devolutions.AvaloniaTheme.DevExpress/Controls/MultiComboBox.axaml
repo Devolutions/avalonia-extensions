@@ -29,7 +29,7 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
+  <ControlTheme x:Key="{x:Type u:MultiComboBox}" TargetType="u:MultiComboBox">
     <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
@@ -101,7 +101,7 @@
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="{x:Null}"
                   Margin="1 0"
-                  HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">
                   <u:MultiComboBoxSelectedItemList
@@ -241,5 +241,9 @@
       <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
       <Setter Property="FontWeight" Value="Bold" />
     </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox" BasedOn="{StaticResource {x:Type u:MultiComboBox}}">
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="{Binding ScrollbarVisibility, RelativeSource={RelativeSource Self}}" />
   </ControlTheme>
 </ResourceDictionary>

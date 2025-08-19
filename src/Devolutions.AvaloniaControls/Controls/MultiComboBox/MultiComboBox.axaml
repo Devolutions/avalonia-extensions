@@ -106,7 +106,7 @@
                 MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                 Background="{x:Null}"
                 HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                VerticalScrollBarVisibility="Hidden"
+                VerticalScrollBarVisibility="Disabled"
                 HorizontalWheelBehavior.Enable="True"
                 Margin="1">
                 <u:MultiComboBoxSelectedItemList

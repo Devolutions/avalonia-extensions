@@ -8,8 +8,8 @@
         <TabControl TabStripPlacement="Top" Margin="5">
           <TabItem Header="General">
             <StackPanel Orientation="Horizontal" Spacing="30">
-              <TextBlock Text="Company" VerticalAlignment="Center" />
-              <TextBox Width="200" VerticalAlignment="Center" />
+              <TextBlock Text="Company" />
+              <TextBox Width="200" />
             </StackPanel>
           </TabItem>
           <TabItem Header="Communication">
@@ -24,8 +24,8 @@
         <TabControl TabStripPlacement="Left" Margin="5" Height="200" Classes="NavBar">
           <TabItem Header="General">
             <StackPanel Orientation="Horizontal" Spacing="30">
-              <TextBlock Text="Company" VerticalAlignment="Center" />
-              <TextBox Width="200" VerticalAlignment="Center" />
+              <TextBlock Text="Company" />
+              <TextBox Width="200" />
             </StackPanel>
           </TabItem>
           <TabItem Header="Communication">
@@ -112,7 +112,7 @@
     <Setter Property="Padding" Value="25 20" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
-    <Setter Property="VerticalContentAlignment" Value="Top" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
     <Setter Property="ItemContainerTheme"
             Value="{BindingToggler {Binding $self.Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=NavBar},
                                  {DynamicResource Devo_NavBar_TabItem},

@@ -5,30 +5,36 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ListBoxDemo">
 
-  <StackPanel Margin="20" Spacing="20">
-    <StackPanel Orientation="Horizontal" Spacing="20">
+  <StackPanel Margin="20" Spacing="20" VerticalAlignment="Stretch">
+
+    <!-- Top row of simple ListBoxes -->
+    <StackPanel Orientation="Horizontal" Spacing="20" Height="140">
       <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:</TextBlock>
     <ListBox x:Name="animals1" />
-
+  
     <TextBlock VerticalAlignment="Top" Margin="0 5">Multiple selection:</TextBlock>
     <ListBox x:Name="animals2" SelectionMode="Multiple" />
+
+    <TextBlock VerticalAlignment="Top" Margin="0 5">Fewer entries:</TextBlock>
+    <ListBox x:Name="animals3" />
+
+    <TextBlock VerticalAlignment="Top" Margin="0 5" TextWrapping="Wrap" Width="80">More entries: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
+    <ListBox x:Name="animals6" Width="100" />
     </StackPanel>
 
+    <!-- Bottom row of multi-column ListBoxes -->
     <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *">
       <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">Multi-column ListBox (with WrapPanel as ItemsTemplate), multiple selection:</TextBlock>
-      <StackPanel Grid.Row="1" Grid.Column="0">
-        <TextBlock Margin="20  0 0 2" TextWrapping="Wrap">Default (with an arbitrary MinWidth=90 to make it  work out of the box):</TextBlock>
-        <ListBox x:Name="animals3" SelectionMode="Multiple" Width="280" HorizontalAlignment="Left" Margin="20 0">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-        </ListBox>
-      </StackPanel>
-      <StackPanel Grid.Row="1" Grid.Column="1">
-        <TextBlock Margin="20  0 0 2" TextWrapping="Wrap">To override default MinWidth, alignment, etc. use a custom ItemTemplate:</TextBlock>
-        <ListBox x:Name="animals4" SelectionMode="Multiple" Width="280" HorizontalAlignment="Left" Margin="20 0">
+      <TextBlock Grid.Row="1" Grid.Column="0" Margin="10 0 0 0" TextWrapping="Wrap">Default (with an arbitrary MinWidth=90 to make it  work out of the box):</TextBlock>
+      <ListBox Grid.Row="2" Grid.Column="0" x:Name="animals4" SelectionMode="Multiple" Margin="10 0 0 0">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ListBox>
+      <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap">To override default MinWidth, alignment, etc. use a custom ItemTemplate:</TextBlock>
+      <ListBox Grid.Row="2" Grid.Column="1" x:Name="animals5" SelectionMode="Multiple" VerticalAlignment="Stretch">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" />
@@ -42,7 +48,6 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ListBox>
-  </StackPanel>
     </Grid>
   </StackPanel>
 

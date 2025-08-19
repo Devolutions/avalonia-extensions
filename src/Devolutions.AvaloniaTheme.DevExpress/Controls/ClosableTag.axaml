@@ -1,22 +1,16 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa">
-
-  <ResourceDictionary.MergedDictionaries>
-    <ResourceInclude Source="./MultiComboBox.axaml" />
-    <ResourceInclude Source="./MultiComboBoxItem.axaml" />
-  </ResourceDictionary.MergedDictionaries>
+  xmlns:u="https://irihi.tech/ursa"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
   <Design.PreviewWith>
-    <StackPanel Height="300">
-      <MultiComboBox Width="190" Watermark="fill" Margin="10">
-        <MultiComboBoxItem Content="Option 1" />
-        <MultiComboBoxItem Content="Option 2" />
-        <MultiComboBoxItem Content="Option 3" />
-        <MultiComboBoxItem Content="Option 4" />
-      </MultiComboBox>
-    </StackPanel>
+    <design:ThemePreviewer Padding="20" Height="100" Width="300">
+      <StackPanel>
+        <u:ClosableTag>test</u:ClosableTag>
+        <ClosableTag>test 2</ClosableTag>
+      </StackPanel>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <StaticResource x:Key="ClosableTagCloseIconGlyph" ResourceKey="DefaultCloseIcon" />
@@ -30,14 +24,14 @@
     <Setter Property="Foreground" Value="{DynamicResource ClosableTagForeground}" />
     <Setter Property="Background" Value="{DynamicResource ClosableTagBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ClosableTagBorder}" />
-    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="MinHeight" Value="16" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">
       <ControlTemplate TargetType="u:ClosableTag">
         <Border
           Margin="1"
-          Padding="8,4,4,4"
+          Padding="8,0,4,0"
           Background="{TemplateBinding Background}"
           BorderBrush="{TemplateBinding BorderBrush}"
           BorderThickness="{TemplateBinding BorderThickness}"
@@ -63,4 +57,5 @@
       </ControlTemplate>
     </Setter>
   </ControlTheme>
+  <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
 </ResourceDictionary>

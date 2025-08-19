@@ -14,15 +14,12 @@
         <MergeResourceInclude Source="Controls/SmallScrollBar.axaml" />
         <MergeResourceInclude Source="Controls/SmallScrollViewer.axaml" />
 
-        <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBoxParts.axaml" />
-        <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBox.axaml" /> -->
-        <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxItem.axaml" /> -->
+        <MergeResourceInclude Source="Controls/ClosableTag.axaml" />
+        <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBox.axaml" />
+        <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBoxItem.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 
     <StaticResource x:Key="{x:Type TabPane}" ResourceKey="{x:Type TabControl}" />
   </Styles.Resources>
-
-  <!-- <semi:SemiTheme Locale="en-US" /> -->
-  <!-- <u-semi:SemiTheme Locale="en-US" /> -->
 </Styles>

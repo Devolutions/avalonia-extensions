@@ -1,16 +1,23 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:u="https://irihi.tech/ursa">
 
   <Design.PreviewWith>
-    <StackPanel Height="100">
+    <StackPanel Height="200">
       <MultiComboBoxItem Content="Option 1" />
       <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
       <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
+
+      <Separator Margin="0 5" />
+
+      <u:MultiComboBoxItem Content="Option 1" />
+      <u:MultiComboBoxItem Content="Option 2" IsEnabled="False" />
+      <u:MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
     </StackPanel>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type MultiComboBoxItem}" TargetType="MultiComboBoxItem">
+  <ControlTheme x:Key="{x:Type u:MultiComboBoxItem}" TargetType="u:MultiComboBoxItem">
     <Setter Property="Padding" Value="6 0 12 0" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
@@ -20,7 +27,7 @@
     <Setter Property="MinHeight" Value="32" />
     <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
     <Setter Property="Template">
-      <ControlTemplate TargetType="MultiComboBoxItem">
+      <ControlTemplate>
         <Border
           x:Name="RootBorder"
           Padding="{TemplateBinding Padding}"
@@ -55,4 +62,5 @@
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
     </Style>
   </ControlTheme>
+  <StaticResource x:Key="{x:Type MultiComboBoxItem}" ResourceKey="{x:Type u:MultiComboBoxItem}" />
 </ResourceDictionary>

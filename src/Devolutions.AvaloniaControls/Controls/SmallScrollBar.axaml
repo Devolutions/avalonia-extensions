@@ -5,9 +5,9 @@
     <Border Padding="20">
       <StackPanel Orientation="Horizontal" Spacing="20">
         <StackPanel Spacing="20">
-          <SmallScrollBar Orientation="Horizontal" AllowAutoHide="True" VerticalAlignment="Center" Width="100" />
+          <SmallScrollBar Orientation="Horizontal" VerticalAlignment="Center" Width="100" BorderBrush="Black" />
         </StackPanel>
-        <SmallScrollBar Orientation="Vertical" AllowAutoHide="True" HorizontalAlignment="Center" Height="100" />
+        <SmallScrollBar Orientation="Vertical" HorizontalAlignment="Center" Height="100" />
       </StackPanel>
     </Border>
   </Design.PreviewWith>
@@ -52,9 +52,10 @@
         <ControlTemplate>
           <Grid x:Name="Root">
             <Border x:Name="VerticalRoot"
+                    VerticalAlignment="Bottom"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}">
-              <Panel>
+              <Panel VerticalAlignment="Bottom">
                 <Rectangle x:Name="TrackRect"
                            Fill="{DynamicResource ScrollBarTrackFill}"
                            Stroke="{DynamicResource ScrollBarTrackStroke}"
@@ -74,14 +75,14 @@
                   DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
                   ViewportSize="{TemplateBinding ViewportSize}"
                   Orientation="{TemplateBinding Orientation}"
-                  IsDirectionReversed="True">
+                  IsDirectionReversed="True"
+                  HorizontalAlignment="Right">
 
                   <Thumb
                     Theme="{StaticResource FluentScrollBarThumb}"
-                    Width="{DynamicResource ScrollBarSize}"
+                    Width="3"
                     MinHeight="{DynamicResource ScrollBarSize}"
-                    RenderTransform="{DynamicResource VerticalSmallScrollThumbScaleTransform}"
-                    RenderTransformOrigin="100%,50%" />
+                    CornerRadius="3" />
                 </Track>
               </Panel>
             </Border>
@@ -94,15 +95,18 @@
       <Setter Property="Template">
         <ControlTemplate>
           <Panel x:Name="Root">
-            <Border x:Name="HorizontalRoot"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}">
-              <Panel>
-                <Rectangle x:Name="TrackRect"
-                           Fill="{DynamicResource ScrollBarTrackFill}"
-                           Stroke="{DynamicResource ScrollBarTrackStroke}"
-                           StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}"
-                           Opacity="0">
+            <Border
+              x:Name="HorizontalRoot"
+              VerticalAlignment="Bottom"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}">
+              <Panel VerticalAlignment="Bottom">
+                <Rectangle
+                  x:Name="TrackRect"
+                  Fill="{DynamicResource ScrollBarTrackFill}"
+                  Stroke="{DynamicResource ScrollBarTrackStroke}"
+                  StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}"
+                  Opacity="0">
                   <Rectangle.Transitions>
                     <Transitions>
                       <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
@@ -116,13 +120,13 @@
                   Value="{TemplateBinding Value, Mode=TwoWay}"
                   DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
                   ViewportSize="{TemplateBinding ViewportSize}"
-                  Orientation="{TemplateBinding Orientation}">
+                  Orientation="{TemplateBinding Orientation}"
+                  VerticalAlignment="Bottom">
                   <Thumb
                     Theme="{StaticResource FluentScrollBarThumb}"
-                    Height="{DynamicResource ScrollBarSize}"
+                    Height="3"
                     MinWidth="{DynamicResource ScrollBarSize}"
-                    RenderTransform="{DynamicResource HorizontalSmallScrollThumbScaleTransform}"
-                    RenderTransformOrigin="50%,100%" />
+                    CornerRadius="3" />
                 </Track>
               </Panel>
             </Border>

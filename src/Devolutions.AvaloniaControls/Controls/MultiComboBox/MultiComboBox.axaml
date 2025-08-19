@@ -1,8 +1,7 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
-  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors">
+  xmlns:u="https://irihi.tech/ursa">
 
   <Design.PreviewWith>
     <StackPanel Height="300">
@@ -20,10 +19,28 @@
         <MultiComboBoxItem Content="Option 3" />
         <MultiComboBoxItem Content="Option 4" />
       </MultiComboBox>
+
+      <Separator />
+      <TextBlock>Ursa</TextBlock>
+
+      <u:MultiComboBox Width="300" Watermark="fill" Margin="10">
+        <u:MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <u:MultiComboBoxItem Content="Option 2" IsEnabled="False" />
+        <u:MultiComboBoxItem Content="Option 3" IsEnabled="False" IsSelected="True" />
+        <u:MultiComboBoxItem Content="Option 4" />
+        <u:MultiComboBoxItem Content="Option 5" />
+      </u:MultiComboBox>
+
+      <u:MultiComboBox Watermark="fill" Margin="10">
+        <u:MultiComboBoxItem Content="Option 1" />
+        <u:MultiComboBoxItem Content="Option 2" />
+        <u:MultiComboBoxItem Content="Option 3" />
+        <u:MultiComboBoxItem Content="Option 4" />
+      </u:MultiComboBox>
     </StackPanel>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
+  <ControlTheme x:Key="{x:Type u:MultiComboBox}" TargetType="u:MultiComboBox">
     <Setter Property="Focusable" Value="True" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="Background" Value="{DynamicResource InputBackground}" />
@@ -34,10 +51,11 @@
     <Setter Property="MinHeight" Value="32" />
     <Setter Property="Padding" Value="12 4" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
     <Setter Property="Template">
-      <ControlTemplate TargetType="MultiComboBox">
+      <ControlTemplate>
         <DataValidationErrors>
           <Panel>
             <Grid Name="PART_RootGrid" ColumnDefinitions="Auto, *, Auto, Auto, Auto, AUto">
@@ -87,8 +105,10 @@
                 Grid.ColumnSpan="2"
                 MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                 Background="{x:Null}"
-                Margin="1"
-                HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}">
+                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                VerticalScrollBarVisibility="Hidden"
+                HorizontalWheelBehavior.Enable="True"
+                Margin="1">
                 <u:MultiComboBoxSelectedItemList
                   VerticalAlignment="Center"
                   ItemTemplate="{TemplateBinding SelectedItemTemplate}"
@@ -110,16 +130,7 @@
                 Content="{TemplateBinding InnerRightContent}"
                 Foreground="{DynamicResource TextBoxInnerForeground}"
                 IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
-              <!-- <PathIcon -->
-              <!--   x:Name="DropDownGlyph" -->
-              <!--   Grid.Column="4" -->
-              <!--   IsVisible="{Binding #ClearButton.IsVisible, Converter={x:Static BoolConverters.Not}}" -->
-              <!--   Theme="{DynamicResource InnerPathIcon}" -->
-              <!--   Width="{DynamicResource ComboBoxIconWidth}" -->
-              <!--   Data="{DynamicResource ComboBoxIcon}" -->
-              <!--   Foreground="{DynamicResource ComboBoxIconDefaultForeground}" -->
-              <!--   IsHitTestVisible="False" -->
-              <!--   UseLayoutRounding="False" /> -->
+
               <Button
                 Name="ClearButton"
                 Grid.Column="4"
@@ -129,17 +140,18 @@
                 IsVisible="False"
                 Theme="{DynamicResource InnerIconButton}" />
 
-              <PathIcon x:Name="DropDownGlyph"
-                        Grid.Column="5"
-                        UseLayoutRounding="False"
-                        IsHitTestVisible="False"
-                        Height="12"
-                        Width="12"
-                        Margin="10,0,10,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Foreground="{TemplateBinding Foreground}"
-                        Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+              <PathIcon
+                x:Name="DropDownGlyph"
+                Grid.Column="5"
+                UseLayoutRounding="False"
+                IsHitTestVisible="False"
+                Height="12"
+                Width="12"
+                Margin="10,0,10,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Foreground="{TemplateBinding Foreground}"
+                Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
             </Grid>
 
             <Popup
@@ -153,7 +165,6 @@
               Placement="AnchorAndGravity"
               PlacementAnchor="BottomLeft"
               PlacementGravity="BottomRight"
-              TakesFocusFromNativeControl="False"
               HorizontalAlignment="Stretch"
               HorizontalOffset="0"
               VerticalOffset="0"
@@ -161,19 +172,12 @@
               OverlayDismissEventPassThrough="True"
               InheritsTransform="True">
               <Interaction.Behaviors>
-                <behaviors:PositionedPopupBehavior
+                <PositionedPopupBehavior
                   PositionToTemplatedParent="True"
                   InjectFusionMask="True"
                   PopupBorderThickness="2" />
               </Interaction.Behaviors>
-              <!-- <Popup -->
-              <!--   MaxHeight="{TemplateBinding MaxDropDownHeight}" -->
-              <!--   IsLightDismissEnabled="True" -->
-              <!--   IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropDownOpen, Mode=TwoWay}" -->
-              <!--   PlacementTarget="PART_RootGrid" -->
-              <!--   Placement="AnchorAndGravity" -->
-              <!--   PlacementAnchor="BottomLeft" -->
-              <!--   PlacementGravity="BottomRight"> -->
+
               <Border
                 x:Name="PopupBorder"
                 Background="{TemplateBinding Background}"
@@ -202,12 +206,6 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
-    <Style Selector="^.Large">
-      <Setter Property="MinHeight" Value="{DynamicResource ComboBoxLargeHeight}" />
-    </Style>
-    <Style Selector="^.Small">
-      <Setter Property="MinHeight" Value="{DynamicResource ComboBoxSmallHeight}" />
-    </Style>
 
     <Style Selector="^.clearButton, ^.ClearButton">
       <Style Selector="^:pointerover:not(:selection-empty) /template/ Button#ClearButton">
@@ -400,6 +398,10 @@
         <BrushTransition Property="Background" Duration="0:0:0.05" />
       </Transitions>
     </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox" BasedOn="{StaticResource {x:Type u:MultiComboBox}}">
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="{Binding ScrollbarVisibility, RelativeSource={RelativeSource Self}}" />
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type u:MultiComboBoxSelectedItemList}" TargetType="u:MultiComboBoxSelectedItemList">

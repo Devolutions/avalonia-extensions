@@ -42,6 +42,7 @@
                 IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}" />
             </ScrollContentPresenter.GestureRecognizers>
           </ScrollContentPresenter>
+
           <SmallScrollBar
             Name="PART_HorizontalScrollBar"
             Orientation="Horizontal"

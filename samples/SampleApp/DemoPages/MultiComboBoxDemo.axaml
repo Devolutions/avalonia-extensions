@@ -13,7 +13,7 @@
 
   <Border Margin="20" Padding="20" HorizontalAlignment="Stretch">
     <StackPanel Orientation="Vertical">
-      <MultiComboBox HorizontalAlignment="Left" Watermark="select...">
+      <MultiComboBox Width="200" Watermark="select...">
         <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
         <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
         <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>

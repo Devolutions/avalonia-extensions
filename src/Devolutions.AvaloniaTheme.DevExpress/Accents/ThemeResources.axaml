@@ -37,7 +37,7 @@
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
       <SolidColorBrush x:Key="EditableComboBoxGlyphHoverBrush" Color="{ChangeColorOpacity {DynamicResource SystemAccentColorLight2}, 0.25}" />
       <SolidColorBrush x:Key="EditableComboBoxGlyphPressedBrush" Color="{ChangeColorOpacity {DynamicResource SystemAccentColorLight3}, 0.2}" />
-      <BoxShadows x:Key='EditableComboBoxBoxShadow'>0 0 5 0 #88666666</BoxShadows>
+      <BoxShadows x:Key='ComboBoxBoxShadow'>0 0 3 0 #33101010</BoxShadows>
 
       <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" Opacity="0.2" />
       <SolidColorBrush x:Key="SelectionInInactiveWindow" Color="{StaticResource ForegroundColor}" Opacity="0.15" />
@@ -90,14 +90,13 @@
 
       <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.11" />
       <SolidColorBrush x:Key="ControlBackgroundPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
-      <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}"
-                       Opacity="0.13" />
+      <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
       <Color x:Key="EditableComboBoxItemHoverForegroundColor">#387ec4</Color>
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
       <SolidColorBrush x:Key="EditableComboBoxGlyphHoverBrush">#3c3c3c</SolidColorBrush>
       <SolidColorBrush x:Key="EditableComboBoxGlyphPressedBrush" Color="#363636" />
       <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#404040" />
-      <BoxShadows x:Key='EditableComboBoxBoxShadow'>0 0 4 0 #88010101</BoxShadows>
+      <BoxShadows x:Key='ComboBoxBoxShadow'>0 0 5 2 #99101010</BoxShadows>
 
       <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource ForegroundColor}" Opacity="0.13" />
       <SolidColorBrush x:Key="SelectionInInactiveWindow" Color="{StaticResource ForegroundColor}" Opacity="0.13" />
@@ -130,6 +129,8 @@
   <SolidColorBrush x:Key="Foreground" Color="{DynamicResource ForegroundColor}" />
   <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}" />
+
+  <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
 
   <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.90" />
   <SolidColorBrush x:Key="ForegroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
@@ -190,10 +191,10 @@
   <Thickness x:Key="ComboBoxSelectionHighlightMargin">0 1 6 1</Thickness>
   <CornerRadius x:Key="ComboBoxSelectionHighlightRadius">2</CornerRadius>
   <Thickness x:Key="DropdownButtonMargin">2 0</Thickness>
-  <x:Double x:Key="DropdownButtonWidth">20</x:Double>
+  <x:Double x:Key="DropdownButtonWidth">18</x:Double>
   <x:Double x:Key="DropdownButtonHeight">17</x:Double>
   <x:Double x:Key="DropdownButtonIconWidth">9</x:Double>
-  
+
 
   <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="CheckBoxForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.56" />

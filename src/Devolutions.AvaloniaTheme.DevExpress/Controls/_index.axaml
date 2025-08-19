@@ -11,11 +11,14 @@
     <MergeResourceInclude Source="CalendarDayButton.axaml" />
     <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
+    <MergeResourceInclude Source="ClosableTag.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
+    <MergeResourceInclude Source="MultiComboBox.axaml" />
+    <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="Label.axaml" />
     <MergeResourceInclude Source="ListBoxItem.axaml" />

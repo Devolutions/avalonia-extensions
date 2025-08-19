@@ -14,7 +14,7 @@ public partial class MultiSelectComboBoxViewModel : ObservableObject
 
     public MultiSelectComboBoxViewModel()
     {
-        this.selectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.SelectedText));
+        this.selectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(this.SelectedText);
     }
 
     public string SelectedText => this.SelectedItems.Count > 0 ? string.Join(", ", this.SelectedItems) : "None";

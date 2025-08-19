@@ -14,7 +14,7 @@
         <MergeResourceInclude Source="Controls/SmallScrollBar.axaml" />
         <MergeResourceInclude Source="Controls/SmallScrollViewer.axaml" />
 
-        <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxParts.axaml" />
+        <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBoxParts.axaml" />
         <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBox.axaml" /> -->
         <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxItem.axaml" /> -->
       </ResourceDictionary.MergedDictionaries>

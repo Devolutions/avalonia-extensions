@@ -89,11 +89,17 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         this.AssociatedObject.Opened += this.OnOpened;
         this.AssociatedObject.Closed += this.OnClosed;
 
+        disposable.Add(this.PositionTo.GetObservable(Visual.BoundsProperty).Subscribe(b =>
+        {
+            this.UpdateDropdownOverflowPseudoClass(b, null);
+            this.CalculatePopupBorderMask(null, b);
+        }));
+
         if (this.InjectFusionMask && this.PositionTo is TemplatedControl { Background: var background })
         {
             this.fusionMask ??= new Border
             {
-                Name = "PopupPositionClassesBehavior_Panel",
+                Name = "PopupPositionClassesBehavior_FusionBorder",
                 BorderBrush = background,
                 Padding = new Thickness(0),
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -104,6 +110,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             this.AssociatedObject.Child = null;
             this.fusionMaskPanel = new Panel
             {
+                Name = "PopupPositionClassesBehavior_Panel",
                 Children =
                 {
                     this.originalPopupContent,
@@ -111,6 +118,11 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
                 },
             };
             this.AssociatedObject.Child = this.fusionMaskPanel;
+
+            disposable.Add(this.PositionTo.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
+            {
+                this.fusionMask.BorderBrush = newBg;
+            }));
         }
 
         this.popupChildSubscription = this.AssociatedObject.GetObservable(Popup.ChildProperty)
@@ -250,7 +262,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             {
                 offsetLeft ??= this.CalculateOffsetLeft();
                 this.fusionMask.Margin = new Thickness(
-                    this.fusionMask.Margin.Left + (int)offsetLeft!,
+                    this.fusionMask.Margin.Left + (offsetLeft ?? 0),
                     this.fusionMask.Margin.Top,
                     this.fusionMask.Margin.Right,
                     this.fusionMask.Margin.Bottom);

@@ -10,7 +10,7 @@ public partial class MultiSelectComboBoxViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SelectedText))]
-    private ObservableCollection<string> selectedItems = [];
+    private ObservableCollection<string> selectedItems = ["item 2"];
 
     public MultiSelectComboBoxViewModel()
     {

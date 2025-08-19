@@ -5,12 +5,20 @@
     <ResourceDictionary x:Key='Light'>
       <Color x:Key="TextForegroundColor">#000</Color>
 
-      <Color x:Key="ClosableTagBackground">#DDD</Color>
+      <Color x:Key="ClosableTagBackgroundColor">#f0f0f0</Color>
+
+      <Color x:Key="DefaultInnerIconForegroundColor">#aaa</Color>
+      <Color x:Key="DefaultInnerIconPointerOverForegroundColor">#595959</Color>
+      <Color x:Key="DefaultInnerIconPressedForegroundColor">#000</Color>
     </ResourceDictionary>
     <ResourceDictionary x:Key='Dark'>
       <Color x:Key="TextForegroundColor">#FFF</Color>
 
-      <Color x:Key="ClosableTagBackground">#333</Color>
+      <Color x:Key="ClosableTagBackgroundColor">#333</Color>
+
+      <Color x:Key="DefaultInnerIconForegroundColor">#d0d0d0</Color>
+      <Color x:Key="DefaultInnerIconPointerOverForegroundColor">#fff</Color>
+      <Color x:Key="DefaultInnerIconPressedForegroundColor">#999</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

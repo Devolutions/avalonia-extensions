@@ -14,9 +14,9 @@
   </StreamGeometry>
 
   <x:Double x:Key="DefaultInnerIconSize">12</x:Double>
-  <SolidColorBrush x:Key="DefaultInnerIconForeground" Color="#ccc" />
-  <SolidColorBrush x:Key="DefaultInnerIconPointerOverForeground" Color="#393939" />
-  <SolidColorBrush x:Key="DefaultInnerIconPressedForeground" Color="#000" />
+  <SolidColorBrush x:Key="DefaultInnerIconForeground" Color="{DynamicResource DefaultInnerIconForegroundColor}" />
+  <SolidColorBrush x:Key="DefaultInnerIconPointerOverForeground" Color="{DynamicResource DefaultInnerIconPointerOverForegroundColor}" />
+  <SolidColorBrush x:Key="DefaultInnerIconPressedForeground" Color="{DynamicResource DefaultInnerIconPressedForegroundColor}" />
 
   <ControlTheme x:Key="InnerPathIcon" TargetType="PathIcon">
     <Setter Property="Height" Value="16" />

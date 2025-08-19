@@ -1,0 +1,58 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Design.PreviewWith>
+    <StackPanel Height="100">
+      <MultiComboBoxItem Content="Option 1" />
+      <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
+      <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type MultiComboBoxItem}" TargetType="MultiComboBoxItem">
+    <Setter Property="Padding" Value="6 0 12 0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="MultiComboBoxItem">
+        <Border
+          x:Name="RootBorder"
+          Padding="{TemplateBinding Padding}"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="{TemplateBinding CornerRadius}">
+          <Border.Transitions>
+            <Transitions>
+              <BrushTransition Property="Background" Duration="0:0:0.03" />
+            </Transitions>
+          </Border.Transitions>
+          <CheckBox
+            Content="{TemplateBinding Content}"
+            IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ListBoxItemDisabledForeground}" />
+      <Setter Property="Background" Value="{DynamicResource ListBoxItemDisabledBackground}" />
+      <Style Selector="^:selected">
+        <Setter Property="Background" Value="{DynamicResource ListBoxItemSelectedDisabledBackground}" />
+      </Style>
+    </Style>
+
+    <!--  PointerOver state  -->
+    <Style Selector="^:pointerover /template/ Border#RootBorder">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

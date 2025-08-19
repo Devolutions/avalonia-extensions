@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SampleApp.DemoPages.MultiSelectComboBoxDemo"
+             x:Class="SampleApp.DemoPages.MultiComboBoxDemo"
              x:DataType="vm:MultiSelectComboBoxViewModel">
 
   <Design.DataContext>
@@ -14,9 +14,11 @@
   <Border Margin="20" Padding="20" HorizontalAlignment="Stretch">
     <StackPanel Orientation="Vertical">
       <MultiComboBox HorizontalAlignment="Left" Watermark="select...">
-        <MultiComboBoxItem>Item 1</MultiComboBoxItem>
-        <MultiComboBoxItem>Item 2</MultiComboBoxItem>
-        <MultiComboBoxItem>Item 3</MultiComboBoxItem>
+        <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
+        <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
+        <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+        <MultiComboBoxItem>Item 4</MultiComboBoxItem>
+        <MultiComboBoxItem>Item 5</MultiComboBoxItem>
       </MultiComboBox>
 
       <Separator Margin="0 10" />

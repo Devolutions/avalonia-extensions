@@ -38,6 +38,36 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
 
     public ScrollBarVisibility ScrollbarVisibility { get; private set; } = ScrollBarVisibility.Auto;
 
+    protected override void OnInitialized()
+    {
+        this.FixInitializationFromAxamlItems();
+        base.OnInitialized();
+    }
+
+    private void FixInitializationFromAxamlItems()
+    {
+        var isCleared = false;
+
+        foreach (var item in this.Items)
+        {
+            if (item is MultiComboBoxItem multiComboBoxItem)
+            {
+                if (!isCleared)
+                {
+                    this.Selection.Clear();
+                    this.SelectedItems?.Clear();
+                    isCleared = true;
+                }
+
+                multiComboBoxItem.DataContext = multiComboBoxItem.Content;
+                if (multiComboBoxItem.IsSelected)
+                {
+                    this.SelectedItems?.Add(multiComboBoxItem.DataContext);
+                }
+            }
+        }
+    }
+
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
         recycleKey = item;

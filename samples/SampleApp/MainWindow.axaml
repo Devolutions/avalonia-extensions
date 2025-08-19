@@ -88,23 +88,13 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
-        <demoPages:CheckBoxListBoxDemo>
-          <demoPages:CheckBoxListBoxDemo.DataContext>
-            <vm:CheckBoxListBoxViewModel />
-          </demoPages:CheckBoxListBoxDemo.DataContext>
-        </demoPages:CheckBoxListBoxDemo>
-      </TabItem>
-      <TabItem>
-        <TabItem.Header>
-          <controls:SampleItemHeader Title="MultiSelectComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
-        </TabItem.Header>
-        <demoPages:MultiSelectComboBoxDemo>
-          <demoPages:MultiSelectComboBoxDemo.DataContext>
+        <demoPages:MultiComboBoxDemo>
+          <demoPages:MultiComboBoxDemo.DataContext>
             <vm:MultiSelectComboBoxViewModel />
-          </demoPages:MultiSelectComboBoxDemo.DataContext>
-        </demoPages:MultiSelectComboBoxDemo>
+          </demoPages:MultiComboBoxDemo.DataContext>
+        </demoPages:MultiComboBoxDemo>
       </TabItem>
       <TabItem>
         <TabItem.Header>

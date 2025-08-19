@@ -3,37 +3,34 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa">
 
-  <Design.PreviewWith>
-    <Border Padding="5" Background="Black">
-      <StackPanel Height="300" Width="200" Background="White">
-        <u:ClosableTag>close me</u:ClosableTag>
-      </StackPanel>
-    </Border>
-  </Design.PreviewWith>
-
   <ResourceDictionary.MergedDictionaries>
-    <MergeResourceInclude Source="/Controls/MultiSelectComboBox/MultiComboBox.axaml" />
-    <MergeResourceInclude Source="/Controls/MultiSelectComboBox/MultiComboBoxItem.axaml" />
+    <ResourceInclude Source="./MultiComboBox.axaml" />
+    <ResourceInclude Source="./MultiComboBoxItem.axaml" />
   </ResourceDictionary.MergedDictionaries>
 
-  <StaticResource x:Key="ClosableTagCloseIconGlyph" ResourceKey="DefaultCloseIcon" />
-  <StaticResource x:Key="ClosableTagBorder" ResourceKey="InputBorder" />
-  <StaticResource x:Key="ClosableTagBackground" ResourceKey="InputBorder" />
-  <StaticResource x:Key="ClosableTagForeground" ResourceKey="TextControlForeground" />
+  <Design.PreviewWith>
+    <StackPanel Height="300">
+      <MultiComboBox Width="190" Watermark="fill" Margin="10">
+        <MultiComboBoxItem Content="Option 1" />
+        <MultiComboBoxItem Content="Option 2" />
+        <MultiComboBoxItem Content="Option 3" />
+        <MultiComboBoxItem Content="Option 4" />
+      </MultiComboBox>
+    </StackPanel>
+  </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type u:MultiComboBoxSelectedItemList}" TargetType="u:MultiComboBoxSelectedItemList">
-    <Setter Property="Template">
-      <ControlTemplate TargetType="u:MultiComboBoxSelectedItemList">
-        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
+  <StaticResource x:Key="ClosableTagCloseIconGlyph" ResourceKey="DefaultCloseIcon" />
+
+  <SolidColorBrush x:Key="ClosableTagBorder" Color="{DynamicResource InputBorderColor}" />
+  <SolidColorBrush x:Key="ClosableTagBackground" Color="{DynamicResource ClosableTagBackgroundColor}" />
+  <SolidColorBrush x:Key="ClosableTagForeground" Color="{DynamicResource TextForegroundColor}" />
 
   <ControlTheme x:Key="{x:Type u:ClosableTag}" TargetType="u:ClosableTag">
     <Setter Property="VerticalAlignment" Value="Stretch" />
     <Setter Property="Foreground" Value="{DynamicResource ClosableTagForeground}" />
     <Setter Property="Background" Value="{DynamicResource ClosableTagBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ClosableTagBorder}" />
+    <Setter Property="MinHeight" Value="30" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">

@@ -4,11 +4,15 @@
   <Styles.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="Colors.axaml" />
+
         <MergeResourceInclude Source="Controls/InnerIconButton.axaml" />
         <MergeResourceInclude Source="Controls/SearchHighlightTextBlock.axaml" />
         <MergeResourceInclude Source="Controls/EditableComboBox/EditableComboBox.axaml" />
         <MergeResourceInclude Source="Controls/CheckBoxListBox/InnerCheckBoxListBox.axaml" />
         <MergeResourceInclude Source="Controls/CheckBoxListBox/CheckBoxListBoxItem.axaml" />
+        <MergeResourceInclude Source="Controls/SmallScrollBar.axaml" />
+        <MergeResourceInclude Source="Controls/SmallScrollViewer.axaml" />
 
         <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBoxParts.axaml" />
         <!-- <MergeResourceInclude Source="Controls/MultiSelectComboBox/MultiComboBox.axaml" /> -->

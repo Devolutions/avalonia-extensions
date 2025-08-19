@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key='Light'>
+      <Color x:Key="TextForegroundColor">#000</Color>
+
+      <Color x:Key="ClosableTagBackground">#DDD</Color>
+    </ResourceDictionary>
+    <ResourceDictionary x:Key='Dark'>
+      <Color x:Key="TextForegroundColor">#FFF</Color>
+
+      <Color x:Key="ClosableTagBackground">#333</Color>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <SolidColorBrush x:Key="TextForeground" Color="{DynamicResource TextForegroundColor}" />
+</ResourceDictionary>

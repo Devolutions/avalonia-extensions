@@ -68,12 +68,12 @@
                   Opacity="0.3"
                   Text="{TemplateBinding Watermark}" />
 
-                <ScrollViewer
+                <SmallScrollViewer
                   Grid.Column="1"
                   Grid.ColumnSpan="2"
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="{x:Null}"
-                  HorizontalScrollBarVisibility="Disabled">
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}">
                   <u:MultiComboBoxSelectedItemList
                     VerticalAlignment="Center"
                     ItemTemplate="{TemplateBinding SelectedItemTemplate}"
@@ -85,7 +85,7 @@
                       </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                   </u:MultiComboBoxSelectedItemList>
-                </ScrollViewer>
+                </SmallScrollViewer>
 
                 <ContentPresenter
                   Grid.Column="3"
@@ -94,8 +94,7 @@
                   IsHitTestVisible="False"
                   Content="{TemplateBinding InnerRightContent}"
                   Foreground="{DynamicResource TextBoxInnerForeground}"
-                  IsVisible="{TemplateBinding InnerRightContent,
-                                                                Converter={x:Static ObjectConverters.IsNotNull}}" />
+                  IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 <!-- <PathIcon -->
                 <!--   x:Name="DropDownGlyph" -->
                 <!--   Grid.Column="4" -->
@@ -121,7 +120,7 @@
                           IsHitTestVisible="False"
                           Height="12"
                           Width="12"
-                          Margin="0,0,10,0"
+                          Margin="10,0,10,0"
                           HorizontalAlignment="Right"
                           VerticalAlignment="Center"
                           Foreground="{TemplateBinding Foreground}"
@@ -136,9 +135,11 @@
               MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
               PlacementTarget="PART_RootGrid"
+              OverlayInputPassThroughElement="{Binding #PART_RootGrid}"
               Placement="AnchorAndGravity"
               PlacementAnchor="BottomLeft"
               PlacementGravity="BottomRight"
+              TakesFocusFromNativeControl="False"
               HorizontalAlignment="Stretch"
               HorizontalOffset="0"
               VerticalOffset="0"
@@ -216,7 +217,7 @@
     <!--   <Setter Property="Foreground" Value="{DynamicResource ComboBoxIconPointeroverForeground}" /> -->
     <!-- </Style> -->
     <!--  PointerOver State  -->
-    <Style Selector="^:pointerover">
+    <Style Selector="^:pointerover:not(:dropdownopen)">
       <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}" />
     </Style>
@@ -273,5 +274,19 @@
         <Setter Property="BorderBrush" Value="{DynamicResource DataValidationErrorsSelectedBorderBrush}" />
       </Style>
     </Style>
+
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.05" />
+      </Transitions>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type u:MultiComboBoxSelectedItemList}" TargetType="u:MultiComboBoxSelectedItemList">
+    <Setter Property="Template">
+      <ControlTemplate TargetType="u:MultiComboBoxSelectedItemList">
+        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+      </ControlTemplate>
+    </Setter>
   </ControlTheme>
 </ResourceDictionary>

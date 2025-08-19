@@ -15,6 +15,7 @@
     <PackageReleaseNotes>
       See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.DevExpress/CHANGELOG.md
 
+      BREAKING: 2025.08.19 - `TabControl`'s `VerticalContentAlignment` changed from `Top` to `Stretch`
       BREAKING: 2025.07.14 - changes to input controls' and `TextBox` layout behaviour (no vertical stretch, no default margins, vertically centered)
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

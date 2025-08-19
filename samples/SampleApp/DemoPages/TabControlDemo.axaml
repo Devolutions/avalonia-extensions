@@ -8,14 +8,17 @@
 
 
   <StackPanel Orientation="Vertical" Spacing="20" Margin="5">
+    <TextBlock TextWrapping="Wrap">Note that the whole TabControl will not automatically grow to the height of the longest Tab contents, so unless you set to a specific height or stretch, the height will jump when switching tabs. </TextBlock>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">
       <StackPanel Width="400" Spacing="20" Margin="5">
-        <TabControl TabStripPlacement="Left">
+        <TabControl TabStripPlacement="Left" Height="100">
           <TabItem Header="Tab 1">
             <TextBlock Text="Vertical tab view" VerticalAlignment="Top" />
           </TabItem>
           <TabItem Header="Tab 2">
-            <TextBlock Text="Content 2" VerticalAlignment="Top" />
+            <TextBlock VerticalAlignment="Top">
+              Some slightly longer text <LineBreak /> that will require more space <LineBreak /> that will require more space <LineBreak /> that will require more space
+            </TextBlock>
           </TabItem>
           <TabItem Header="Tab 3" IsEnabled="False" />
         </TabControl>
@@ -56,7 +59,9 @@
             <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
           </TabItem>
           <TabItem Header="Settings">
-            <TextBlock Text="Content 2" VerticalAlignment="Top" />
+            <TextBlock VerticalAlignment="Top">
+              Some slightly longer text <LineBreak /> that will require more space <LineBreak /> that will require more space <LineBreak /> that will require more space
+            </TextBlock>
           </TabItem>
           <TabItem Header="Disabled Tab" IsEnabled="False" />
           <TabItem Header="Advanced">

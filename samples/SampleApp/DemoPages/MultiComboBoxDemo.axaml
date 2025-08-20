@@ -33,6 +33,15 @@
         <TextBlock Text="Selected: " />
         <TextBlock Text="{Binding SelectedText}" />
       </StackPanel>
+
+      <Separator Margin="0 10" />
+
+      <MultiComboBox
+        HorizontalAlignment="Left"
+        Watermark="With select all"
+        SelectAllLabel="Select All"
+        ItemsSource="{Binding Items}"
+        SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
     </StackPanel>
   </Border>
 </UserControl>

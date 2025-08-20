@@ -21,6 +21,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type u:MultiComboBoxItem}" TargetType="u:MultiComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Padding" Value="4 1" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -41,15 +42,32 @@
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
             Margin="0"
             Padding="0"
+            IsTabStop="False"
+            Focusable="False"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch" />
         </Border>
       </ControlTemplate>
     </Setter>
+
     <Style Selector="^:selected /template/ Path#CheckMark">
       <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
     </Style>
+
     <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^:selected /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
       <Style Selector="^ /template/ Border#RootPanel">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
       </Style>

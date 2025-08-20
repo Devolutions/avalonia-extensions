@@ -40,6 +40,8 @@
             <Button
               Name="{x:Static u:ClosableTag.PART_CloseButton}"
               Theme="{DynamicResource InnerIconButton}"
+              IsTabStop="False"
+              Focusable="False"
               DockPanel.Dock="Right"
               Margin="4,0,0,0"
               Command="{TemplateBinding Command}"

@@ -21,6 +21,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type u:MultiComboBoxItem}" TargetType="u:MultiComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
@@ -48,6 +49,8 @@
 
             <CheckBox
               Content="{TemplateBinding Content}"
+              IsTabStop="False"
+              Focusable="False"
               IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Stretch" />
@@ -68,6 +71,19 @@
 
     <!--  PointerOver state  -->
     <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+      <Style Selector="^ /template/ Border#SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
       <Style Selector="^ /template/ Border#LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">

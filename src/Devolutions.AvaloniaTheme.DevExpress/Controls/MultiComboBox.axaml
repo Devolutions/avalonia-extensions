@@ -98,6 +98,7 @@
                   IsVisible="False" />
 
                 <SmallScrollViewer
+                  Name="PART_SelectionScrollViewer"
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="{x:Null}"
                   Margin="1 0"
@@ -160,6 +161,7 @@
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                     <ItemsPresenter
                       Name="PART_ItemsPresenter"
+                      KeyboardNavigation.TabNavigation="None"
                       Margin="{DynamicResource ComboBoxDropdownContentMargin}"
                       HorizontalAlignment="Stretch"
                       ItemsPanel="{TemplateBinding ItemsPanel}" />

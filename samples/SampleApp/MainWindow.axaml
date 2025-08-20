@@ -92,7 +92,7 @@
         </TabItem.Header>
         <demoPages:MultiComboBoxDemo>
           <demoPages:MultiComboBoxDemo.DataContext>
-            <vm:MultiSelectComboBoxViewModel />
+            <vm:MultiComboBoxViewModel />
           </demoPages:MultiComboBoxDemo.DataContext>
         </demoPages:MultiComboBoxDemo>
       </TabItem>

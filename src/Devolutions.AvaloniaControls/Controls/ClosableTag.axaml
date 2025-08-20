@@ -39,6 +39,8 @@
               Theme="{DynamicResource InnerIconButton}"
               DockPanel.Dock="Right"
               Margin="4,0,0,0"
+              IsTabStop="False"
+              Focusable="False"
               Command="{TemplateBinding Command}"
               CommandParameter="{TemplateBinding}"
               Content="{StaticResource ClosableTagCloseIconGlyph}" />

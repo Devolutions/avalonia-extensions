@@ -3,7 +3,7 @@ namespace SampleApp.ViewModels;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-public partial class MultiSelectComboBoxViewModel : ObservableObject
+public partial class MultiComboBoxViewModel : ObservableObject
 {
     [ObservableProperty]
     private string[] items = ["item 1", "item 2", "item 3"];
@@ -12,9 +12,9 @@ public partial class MultiSelectComboBoxViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(SelectedText))]
     private ObservableCollection<string> selectedItems = ["item 2"];
 
-    public MultiSelectComboBoxViewModel()
+    public MultiComboBoxViewModel()
     {
-        this.selectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(this.SelectedText);
+        this.selectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.SelectedText));
     }
 
     public string SelectedText => this.SelectedItems.Count > 0 ? string.Join(", ", this.SelectedItems) : "None";

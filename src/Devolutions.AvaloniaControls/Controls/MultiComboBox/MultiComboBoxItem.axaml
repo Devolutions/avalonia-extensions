@@ -8,6 +8,7 @@
       <MultiComboBoxItem Content="Option 1" />
       <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
       <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
+      <MultiComboBoxItem Content="Focused 4" IsFocused="True" />
 
       <Separator Margin="0 5" />
 
@@ -18,6 +19,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type u:MultiComboBoxItem}" TargetType="u:MultiComboBoxItem">
+    <Setter Property="IsTabStop" Value="True" />
     <Setter Property="Padding" Value="6 0 12 0" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
@@ -25,6 +27,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="MinHeight" Value="32" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -44,7 +47,8 @@
             Content="{TemplateBinding Content}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
             HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch" />
+            HorizontalContentAlignment="Stretch"
+            IsTabStop="False" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -60,6 +64,14 @@
     <Style Selector="^:pointerover /template/ Border#RootBorder">
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
+      <Style Selector="^ /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
+      </Style>
     </Style>
   </ControlTheme>
   <StaticResource x:Key="{x:Type MultiComboBoxItem}" ResourceKey="{x:Type u:MultiComboBoxItem}" />

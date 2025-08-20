@@ -31,9 +31,9 @@
   <Application.Styles>
     <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
 
-    <DevolutionsMacOsTheme />
+    <!-- <DevolutionsMacOsTheme /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
-    <!-- <DevolutionsLinuxYaruTheme /> -->
+    <DevolutionsLinuxYaruTheme />
 
     <StyleInclude Source="/Styles.axaml" />
   </Application.Styles>

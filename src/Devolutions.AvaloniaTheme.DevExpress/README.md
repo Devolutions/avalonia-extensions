@@ -33,6 +33,8 @@ the Avalonia community to add more DevExpress-style controls.
     - [ComboBox](#combobox)
       - [ComboBoxItem](#comboboxitem)
     - [DataGrid](#datagrid)
+    - [ListBox](#listbox)
+      - [ListBoxItem](#listboxitem)
     - [NumericUpDown](#numericupdown)
       - [ButtonSpinner](#buttonspinner)
     - [ScrollViewer](#scrollviewer)
@@ -50,7 +52,8 @@ the Avalonia community to add more DevExpress-style controls.
      - SplitButton
      - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
-    - CalendarDatePicker
+    - RadioButton
+    - vertical tabs
 
 ## Installation
 
@@ -130,10 +133,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 |||
 || <h3>Label</h3> |
 |||
-|| <h3>ListBox</h3> |
-|||
-|| <h3>ListBoxItem</h3> |
-|||
+|✅ | <h3>ListBox</h3> <h4>ListBoxItem</h4>|
+|| <img src="https://github.com/user-attachments/assets/2571edc4-4893-4a0d-b31e-b229d866a824" alt="ListBox demo" style="width: 464px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/56cce1f9-6c52-4c6a-bdc1-e77e2ba23d2a" alt="ListBox demo (darkmode)" style="width: 464px; max-width: 100%;" /> |
 || <h3>ManagedFileChooser</h3> |
 |||
 || <h3>Menu</h3> |
@@ -147,7 +148,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 || <h3>NotificationCard</h3> |
 |||
 |✅ | <h3>NumericUpDown</h3> <h4>ButtonSpinner</h4> |
-|| <img src="https://github.com/user-attachments/assets/57f30484-dd75-452b-9d52-d6b2fce1a1ac" alt="NumericUpDown demo" style="width: 215px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/30666c61-2929-427b-9347-ae4e8e4fe2a6" alt="NumericUpDown demo (darkmode)" style="width: 225px; max-width: 100%;" /> |
+|| <img src="https://github.com/user-attachments/assets/32764a11-e893-498a-acd9-2c9938f03f40" alt="NumericUpDown demo" style="width: 215px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/e32f8a0a-1a60-4070-a71b-c68deea8e527" alt="NumericUpDown demo (darkmode)" style="width: 225px; max-width: 100%;" /> |
 || <h3>OverlayPopupHost</h3> |
 |||
 || <h3>PathIcon</h3> |
@@ -177,7 +178,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 || <h3>SplitView</h3> |
 |||
 |✅ | <h3>TabControl</h3> <h4>TabItem<h4> |
-|| <img src="https://github.com/user-attachments/assets/21864dbb-1058-4656-99dd-c24fde76d4e4" alt="TabControl demo" style="width: 585px; max-width: 100%;" /> |
+|| <img src="https://github.com/user-attachments/assets/21864dbb-1058-4656-99dd-c24fde76d4e4" alt="TabControl demo" style="width: 585px; max-width: 100%;" /><br /><img src="https://github.com/user-attachments/assets/0719abae-6a4d-4934-a698-8dc651159035" alt="Regular vertical tabs" style="width: 420px; max-width: 100%;" /><br /><img src="https://github.com/user-attachments/assets/183f17e3-fd77-4ab0-949f-c363812ed0a5" alt="Vertical TabControl 'NavBar' style" style="width: 430px; max-width: 100%;" /> |
 |✅ | <h3>TabPane</h3> ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)) |
 || <img alt="TabPane" src="https://github.com/user-attachments/assets/9388973f-d286-41d4-83a3-bc56ea2f87a8" style="width: 447px; max-width: 100%;" /> |
 || <h3>TabStrip</h3> |

@@ -2,23 +2,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sampleApp="clr-namespace:SampleApp"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TabControlDemo">
 
 
   <StackPanel Orientation="Vertical" Spacing="20" Margin="5">
+    <TextBlock TextWrapping="Wrap">Note that the whole TabControl will not automatically grow to the height of the longest Tab contents, so unless you set to a specific height or stretch, the height will jump when switching tabs. </TextBlock>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">
-      <Border Width="400">
-        <TabControl TabStripPlacement="Left">
+      <StackPanel Width="400" Spacing="20" Margin="5">
+        <TabControl TabStripPlacement="Left" Height="100">
           <TabItem Header="Tab 1">
             <TextBlock Text="Vertical tab view" VerticalAlignment="Top" />
           </TabItem>
           <TabItem Header="Tab 2">
-            <TextBlock Text="Content 2" VerticalAlignment="Top" />
+            <TextBlock VerticalAlignment="Top">
+              Some slightly longer text <LineBreak /> that will require more space <LineBreak /> that will require more space <LineBreak /> that will require more space
+            </TextBlock>
           </TabItem>
-          <TabItem Header="Tab3" IsEnabled="False" />
+          <TabItem Header="Tab 3" IsEnabled="False" />
         </TabControl>
-      </Border>
+        <StackPanel
+          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=Windows - DevExpress}">
+          <TextBlock Margin="0 10 0 2">Vertical NavBar (<TextBlock Classes="code">TabControl Classes="NavBar"</TextBlock>)</TextBlock>
+          <Border Classes="alternativeBackground" Padding="20">
+            <TabControl TabStripPlacement="Left" Classes="NavBar">
+              <TabItem Header="Tab 1">
+                <StackPanel>
+                  <TextBlock VerticalAlignment="Top" TextWrapping="Wrap">To make the NavBar wider than the longest TabItem Header:</TextBlock>
+                  <TextBlock Classes="code" Text="&lt;TabControl.ItemsPanel&gt;" />
+                  <TextBlock Classes="code" Text="    &lt;ItemsPanelTemplate&gt;" />
+                  <TextBlock Classes="code" Text="        &lt;StackPanel Width=&quot;150&quot; /&gt;" />
+                  <TextBlock Classes="code" Text="    &lt;/ItemsPanelTemplate &gt;" />
+                  <TextBlock Classes="code" Text="&lt;/TabControl.ItemsPanel &gt;" />
+                </StackPanel>
+              </TabItem>
+              <TabItem Header="Tab 2">
+                <TextBlock Text="Content 2" VerticalAlignment="Top" />
+              </TabItem>
+              <TabItem Header="Tab 3">
+                <TextBlock Text="Content 2" VerticalAlignment="Top" />
+              </TabItem>
+              <TabItem Header="Tab 4" IsEnabled="False" />
+            </TabControl>
+          </Border>
+        </StackPanel>
+      </StackPanel>
 
       <StackPanel Spacing="20" Margin="5">
         <Border Width="500" Padding="20">
@@ -27,7 +59,9 @@
             <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
           </TabItem>
           <TabItem Header="Settings">
-            <TextBlock Text="Content 2" VerticalAlignment="Top" />
+            <TextBlock VerticalAlignment="Top">
+              Some slightly longer text <LineBreak /> that will require more space <LineBreak /> that will require more space <LineBreak /> that will require more space
+            </TextBlock>
           </TabItem>
           <TabItem Header="Disabled Tab" IsEnabled="False" />
           <TabItem Header="Advanced">

@@ -165,10 +165,10 @@
                 <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
                 <ScrollViewer
                   Grid.IsSharedSizeScope="True"
-                  Margin="4 0"
+                  Margin="0"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                  <StackPanel Orientation="Vertical" Margin="{DynamicResource ComboBoxDropdownContentMargin}">
+                  <StackPanel Orientation="Vertical" Margin="0">
                     <MultiComboBoxSelectAllItem
                       Name="PART_SelectAllItem"
                       IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"

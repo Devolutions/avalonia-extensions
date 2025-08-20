@@ -22,7 +22,7 @@
 
   <ControlTheme x:Key="{x:Type u:MultiComboBoxItem}" TargetType="u:MultiComboBoxItem">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="Padding" Value="4 1" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -40,8 +40,7 @@
           <CheckBox
             Content="{TemplateBinding Content}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
-            Margin="0"
-            Padding="0"
+            Margin="4 0 6 0"
             IsTabStop="False"
             Focusable="False"
             HorizontalAlignment="Stretch"
@@ -88,7 +87,7 @@
 
   <ControlTheme x:Key="{x:Type MultiComboBoxSelectAllItem}" TargetType="MultiComboBoxSelectAllItem">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="Padding" Value="4 1" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -106,7 +105,7 @@
           <CheckBox
             Content="{TemplateBinding Content}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
-            Margin="0"
+            Margin="4 0 6 0"
             Padding="0"
             IsThreeState="True"
             IsTabStop="False"

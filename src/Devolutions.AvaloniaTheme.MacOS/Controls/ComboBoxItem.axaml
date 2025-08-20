@@ -38,15 +38,16 @@
                   Fill="Transparent"
                   FlowDirection="LeftToRight"
                   Stretch="Fill" />
-            <ContentPresenter Name="PART_ContentPresenter"
-                              Padding="4 0"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              Foreground="{TemplateBinding Foreground}"
-                              BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="{TemplateBinding BorderThickness}"
-                              Content="{TemplateBinding Content}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              Padding="4 0"
+              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+              Foreground="{TemplateBinding Foreground}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}" />
           </StackPanel>
         </Border>
       </ControlTemplate>

@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.LogicalTree;
 
 public class MultiComboBoxItem : Ursa.Controls.MultiComboBoxItem { }
@@ -58,6 +59,11 @@ public class MultiComboBoxSelectAllItem : ContentControl
         {
             this.parent?.DeselectAll();
         }
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        this.IsSelected = this.IsSelected is null or false;
     }
 
     internal void UpdateSelection()

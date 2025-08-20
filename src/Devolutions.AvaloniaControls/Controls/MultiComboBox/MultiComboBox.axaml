@@ -13,6 +13,22 @@
         <MultiComboBoxItem Content="Option 5" />
       </MultiComboBox>
 
+      <MultiComboBox Width="300" Watermark="fill" Margin="10">
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+      </MultiComboBox>
+
+      <MultiComboBox Width="300" Watermark="fill" Margin="10" OverflowMode="Wrap">
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+      </MultiComboBox>
+
       <MultiComboBox Watermark="fill" Margin="10">
         <MultiComboBoxItem Content="Option 1" />
         <MultiComboBoxItem Content="Option 2" />
@@ -27,23 +43,9 @@
         <MultiComboBoxItem Content="Option 4" />
       </MultiComboBox>
 
-      <!-- <Separator /> -->
-      <!-- <TextBlock>Ursa</TextBlock> -->
-      <!-- -->
-      <!-- <u:MultiComboBox Width="300" Watermark="fill" Margin="10"> -->
-      <!--   <u:MultiComboBoxItem Content="Option 1" IsSelected="True" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 2" IsEnabled="False" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 3" IsEnabled="False" IsSelected="True" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 4" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 5" /> -->
-      <!-- </u:MultiComboBox> -->
-      <!-- -->
-      <!-- <u:MultiComboBox Watermark="fill" Margin="10"> -->
-      <!--   <u:MultiComboBoxItem Content="Option 1" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 2" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 3" /> -->
-      <!--   <u:MultiComboBoxItem Content="Option 4" /> -->
-      <!-- </u:MultiComboBox> -->
+      <MultiComboBox Watermark="disabled" Margin="10" IsEnabled="False">
+        <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+      </MultiComboBox>
     </StackPanel>
   </Design.PreviewWith>
 
@@ -58,7 +60,6 @@
     <Setter Property="MinHeight" Value="32" />
     <Setter Property="Padding" Value="12 4" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
     <Setter Property="Template">
@@ -93,6 +94,7 @@
                 Content="{TemplateBinding InnerLeftContent}"
                 Foreground="{DynamicResource TextBoxInnerForeground}"
                 IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
               <TextBlock
                 x:Name="PlaceholderTextBlock"
                 Grid.Column="1"
@@ -177,7 +179,7 @@
               HorizontalOffset="0"
               VerticalOffset="0"
               IsLightDismissEnabled="True"
-              OverlayDismissEventPassThrough="True"
+              OverlayDismissEventPassThrough="False"
               InheritsTransform="True">
               <Interaction.Behaviors>
                 <PositionedPopupBehavior
@@ -318,6 +320,12 @@
       </Style>
     </Style>
     <!-- End Focus Border -->
+
+    <Style Selector="^:disabled">
+      <Style Selector="^ /template/ SmallScrollViewer#PART_SelectionScrollViewer">
+        <Setter Property="Opacity" Value="0.5" />
+      </Style>
+    </Style>
 
     <!--  Popup styling -->
     <Style Selector="^:dropdownopen /template/ Border#PopupBorder">

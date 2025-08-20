@@ -15,6 +15,22 @@
           <MultiComboBoxItem Content="Option 5" />
         </MultiComboBox>
 
+        <MultiComboBox Width="300" Watermark="fill" Margin="10">
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        </MultiComboBox>
+
+        <MultiComboBox Width="300" Watermark="fill" Margin="10" OverflowMode="Wrap">
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+        </MultiComboBox>
+
         <MultiComboBox Watermark="fill" Margin="10">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
@@ -22,15 +38,15 @@
           <MultiComboBoxItem Content="Option 4" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="fill" Margin="10" IsEnabled="False">
-          <MultiComboBoxItem Content="Option 1" />
-        </MultiComboBox>
-
         <MultiComboBox Watermark="Select All" Margin="10" SelectAllLabel="Select All">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
           <MultiComboBoxItem Content="Option 3" />
           <MultiComboBoxItem Content="Option 4" />
+        </MultiComboBox>
+
+        <MultiComboBox Watermark="Select All" Margin="10" IsEnabled="False">
+          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
         </MultiComboBox>
       </StackPanel>
     </design:ThemePreviewer>
@@ -49,7 +65,7 @@
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
-    <Setter Property="MaxSelectionBoxHeight" Value="19" />
+    <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Template">
@@ -108,7 +124,8 @@
                   Name="PART_SelectionScrollViewer"
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="{x:Null}"
-                  Margin="1 0"
+                  Margin="1"
+                  MinHeight="21"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">
@@ -145,7 +162,7 @@
               HorizontalOffset="-6"
               VerticalOffset="-6"
               IsLightDismissEnabled="True"
-              OverlayDismissEventPassThrough="True"
+              OverlayDismissEventPassThrough="False"
               Margin="50"
               InheritsTransform="True">
 
@@ -251,6 +268,10 @@
       </Style>
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}" />
+      </Style>
+
+      <Style Selector="^ /template/ SmallScrollViewer#PART_SelectionScrollViewer">
+        <Setter Property="Opacity" Value="0.5" />
       </Style>
     </Style>
 

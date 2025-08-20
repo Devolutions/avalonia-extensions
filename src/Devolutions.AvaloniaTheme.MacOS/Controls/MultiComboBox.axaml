@@ -25,11 +25,18 @@
         <MultiComboBox Watermark="fill" Margin="10" IsEnabled="False">
           <MultiComboBoxItem Content="Option 1" />
         </MultiComboBox>
+
+        <MultiComboBox Watermark="With Select All" Margin="10" SelectAllLabel="Select All">
+          <MultiComboBoxItem Content="Option 1" />
+          <MultiComboBoxItem Content="Option 2" />
+          <MultiComboBoxItem Content="Option 3" />
+          <MultiComboBoxItem Content="Option 4" />
+        </MultiComboBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type u:MultiComboBox}" TargetType="u:MultiComboBox">
+  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
@@ -40,7 +47,6 @@
     <Setter Property="Padding" Value="8 1 6 2" />
     <Setter Property="MinHeight" Value="22" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
@@ -96,7 +102,7 @@
                 MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                 Background="{x:Null}"
                 Margin="1 0"
-                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
                 HorizontalWheelBehavior.Enable="True"
                 VerticalScrollBarVisibility="Disabled">
                 <u:MultiComboBoxSelectedItemList
@@ -162,12 +168,23 @@
                   Margin="4 0"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                  <ItemsPresenter
-                    Name="PART_ItemsPresenter"
-                    KeyboardNavigation.TabNavigation="None"
-                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                    HorizontalAlignment="Stretch"
-                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                  <StackPanel Orientation="Vertical" Margin="{DynamicResource ComboBoxDropdownContentMargin}">
+                    <MultiComboBoxSelectAllItem
+                      Name="PART_SelectAllItem"
+                      IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      Focusable="True"
+                      IsTabStop="False"
+                      Content="{TemplateBinding SelectAllLabel}" />
+
+                    <Separator IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                    <ItemsPresenter
+                      Name="PART_ItemsPresenter"
+                      KeyboardNavigation.TabNavigation="None"
+                      Margin="0"
+                      HorizontalAlignment="Stretch"
+                      ItemsPanel="{TemplateBinding ItemsPanel}" />
+                  </StackPanel>
                 </ScrollViewer>
               </DockPanel>
             </Border>
@@ -197,9 +214,5 @@
         <Setter Property="Fill" Value="{DynamicResource ForegroundLowBrush}" />
       </Style>
     </Style>
-  </ControlTheme>
-
-  <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox" BasedOn="{StaticResource {x:Type u:MultiComboBox}}">
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="{Binding ScrollbarVisibility, RelativeSource={RelativeSource Self}}" />
   </ControlTheme>
 </ResourceDictionary>

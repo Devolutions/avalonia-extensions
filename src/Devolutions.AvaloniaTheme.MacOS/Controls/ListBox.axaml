@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -17,10 +18,10 @@
         <ListBoxItem>Test</ListBoxItem>
         <ListBoxItem>Test</ListBoxItem>
       </ListBox>
-      <ListBox Height="80">
+      <ListBox Width="240">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <WrapPanel Width="220" />
+            <WrapPanel />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ListBoxItem>Monkey</ListBoxItem>
@@ -43,19 +44,21 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="Background" Value="{DynamicResource ScrollControlBackground}" />
+    <!-- <Setter Property="Background" Value="{DynamicResource ScrollControlBackground}" /> -->
+    <!-- <Setter Property="Background" -->
+    <!--         Value="{BindingToggler -->
+    <!--                 {Binding $parent[TemplatedControl], Converter={x:Static converters:MacOSConverters.IsMultiColumnListBox}}, -->
+    <!--                 {DynamicResource TestBlue}, -->
+    <!--                 {DynamicResource TestRed}}" /> -->
+    <!-- <Setter Property="Tag" Value="Help" /> -->
+    <!-- <Setter Property="Tag" Value="{Binding #PART_ItemsPresenterProbe.Tag}" /> -->
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="Padding" Value="{DynamicResource PopupPadding}" />
+    <!-- <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" /> -->
+    <!-- <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" /> -->
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
-    <!-- <Setter Property="MinWidth" -->
-    <!--         Value="{BindingToggler -->
-    <!--                 {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsMultiColumnListBox}}, -->
-    <!--                 {DynamicResource MultiColumnListItemDefaultWidth}, -->
-    <!--                 {DynamicResource ComboBoxItemMinWidth}}" /> -->
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="border"
@@ -67,19 +70,51 @@
           <ScrollViewer Name="PART_ScrollViewer"
                         VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
                         HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
-                        HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
-                        VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                         IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                         IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
                         IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                         BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
-            <ItemsPresenter Name="PART_ItemsPresenter"
-                            ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="{TemplateBinding Padding}" />
+            <!-- TODO: see if these can now be used with the converter, instead of moving them to styles -->
+            <!-- HorizontalScrollBarVisibility="Disabled" -->
+            <!-- VerticalScrollBarVisibility="Disabled" -->
+            <Panel HorizontalAlignment="Left">
+              <ItemsPresenter Name="PART_ItemsPresenterProbe"
+                              HorizontalAlignment="Left"
+                              Opacity="0"
+                              IsHitTestVisible="False"
+                              IsVisible="True"
+                              Tag="34" />
+              <ItemsPresenter Name="PART_ItemsPresenter"
+                              ItemsPanel="{TemplateBinding ItemsPanel}"
+                              Margin="{TemplateBinding Padding}"
+                              Tag="{Binding #PART_ItemsPresenterProbe.DesiredSize.Width}" />
+              <!-- Tag="{Binding #PART_ItemsPresenterProbe.DesiredSize.Width, Converter={x:Static converters:MacOSConverters.DoubleToStringConverter}}" /> -->
+            </Panel>
           </ScrollViewer>
         </Border>
       </ControlTemplate>
     </Setter>
+    <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
+      <Setter Property="Background" Value="Brown" />
+      <Setter Property="HorizontalScrollBarVisibility"
+              Value="{BindingToggler
+            {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+            {DynamicResource ScrollBarVisibilityAuto},
+            {DynamicResource ScrollBarVisibilityDisabled}}" />
+      <Setter Property="VerticalScrollBarVisibility"
+              Value="{BindingToggler
+            {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+            {DynamicResource ScrollBarVisibilityDisabled},
+            {DynamicResource ScrollBarVisibilityAuto}}" />
+    </Style>
+    <!-- <Style Selector="^"> -->
+    <!--   <Setter Property="Tag" Value="{Binding $templatedParent #PART_ItemsPresenterProbe.Tag}" /> -->
+    <!-- </Style> -->
+    <!-- <Setter Property="Background" -->
+    <!--         Value="{BindingToggler -->
+    <!--                 {Binding #PART_ItemsPresenter.Panel, Converter={x:Static converters:MacOSConverters.IsMultiColumnListBox}}, -->
+    <!--                 {DynamicResource TestBlue}, -->
+    <!--                 {DynamicResource TestRed}}" /> -->
   </ControlTheme>
 </ResourceDictionary>

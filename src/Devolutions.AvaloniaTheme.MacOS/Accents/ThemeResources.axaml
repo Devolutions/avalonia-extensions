@@ -371,9 +371,13 @@
   <Thickness x:Key="ComboBoxItemPadding">5 3</Thickness>
   <x:Int32 x:Key="ComboBoxItemHeight">22</x:Int32>
   <x:Double x:Key="ComboBoxItemMinWidth">22</x:Double>
-  <x:Double x:Key="MultiColumnListItemDefaultWidth">90</x:Double>
+  <x:Double x:Key="MultiColumnListItemDefaultWidth">100</x:Double>
   <Thickness x:Key="ComboBoxShadowMargin">4</Thickness>
 
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
+
+  <!-- TODO: Use Bindings to named item properties & AddBinding to encode these dependencies more securely -->
   <!-- InitialFirstItemDistance must match ComboBoxShadowMargin.bottom + PopupPadding.top -->
   <x:Int32 x:Key="InitialFirstItemDistance">9</x:Int32>
   <x:Int32 x:Key="PopupTrimHeight">30</x:Int32> <!-- includes Margin, Padding, Shadow -->

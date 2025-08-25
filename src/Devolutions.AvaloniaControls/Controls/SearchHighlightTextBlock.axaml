@@ -1,14 +1,13 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
-    <controls:SearchHighlightTextBlock
+    <SearchHighlightTextBlock
       Search="t wi"
       Content="Test with some stuff" />
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type controls:SearchHighlightTextBlock}" TargetType="controls:SearchHighlightTextBlock">
+  <ControlTheme x:Key="{x:Type SearchHighlightTextBlock}" TargetType="SearchHighlightTextBlock">
     <Setter Property="HighlightBackground" Value="#66FFFF00" />
     <Setter Property="HighlightForeground" Value="{DynamicResource TextControlButtonForeground}" />
     <Setter Property="Template">

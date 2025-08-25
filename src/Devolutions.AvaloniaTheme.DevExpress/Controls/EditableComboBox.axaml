@@ -295,7 +295,7 @@
                   BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                   Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                   HorizontalAlignment="Stretch"
-                  BoxShadow="{DynamicResource EditableComboBoxBoxShadow}"
+                  BoxShadow="{DynamicResource ComboBoxBoxShadow}"
                   Margin="6 0 6 6"
                   CornerRadius="0">
                   <ScrollViewer

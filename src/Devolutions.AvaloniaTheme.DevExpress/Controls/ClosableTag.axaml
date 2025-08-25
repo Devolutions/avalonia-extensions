@@ -1,0 +1,63 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:u="https://irihi.tech/ursa"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="20" Height="100" Width="300">
+      <StackPanel>
+        <u:ClosableTag>test</u:ClosableTag>
+        <ClosableTag>test 2</ClosableTag>
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <StaticResource x:Key="ClosableTagCloseIconGlyph" ResourceKey="DefaultCloseIcon" />
+
+  <SolidColorBrush x:Key="ClosableTagBorder" Color="{DynamicResource InputBorderColor}" />
+  <SolidColorBrush x:Key="ClosableTagBackground" Color="{DynamicResource ClosableTagBackgroundColor}" />
+  <SolidColorBrush x:Key="ClosableTagForeground" Color="{DynamicResource TextForegroundColor}" />
+
+  <ControlTheme x:Key="{x:Type u:ClosableTag}" TargetType="u:ClosableTag">
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="Foreground" Value="{DynamicResource ClosableTagForeground}" />
+    <Setter Property="Background" Value="{DynamicResource ClosableTagBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ClosableTagBorder}" />
+    <Setter Property="MinHeight" Value="21" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="u:ClosableTag">
+        <Border
+          Margin="1"
+          Padding="8,0,4,0"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="3">
+          <DockPanel LastChildFill="True">
+            <Button
+              Name="{x:Static u:ClosableTag.PART_CloseButton}"
+              Theme="{DynamicResource InnerIconButton}"
+              IsTabStop="False"
+              Focusable="False"
+              DockPanel.Dock="Right"
+              Margin="4,0,0,0"
+              Command="{TemplateBinding Command}"
+              CommandParameter="{TemplateBinding}"
+              Content="{StaticResource ClosableTagCloseIconGlyph}" />
+            <ContentPresenter
+              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
+              FontSize="12"
+              Foreground="{TemplateBinding Foreground}"
+              TextTrimming="CharacterEllipsis" />
+          </DockPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+  <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
+</ResourceDictionary>

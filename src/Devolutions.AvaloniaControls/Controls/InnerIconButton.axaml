@@ -1,0 +1,86 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Design.PreviewWith>
+    <Border Padding="5" Background="white">
+      <Button
+        Theme="{DynamicResource InnerIconButton}"
+        Content="{StaticResource DefaultCloseIcon}" />
+    </Border>
+  </Design.PreviewWith>
+
+  <StreamGeometry x:Key="DefaultCloseIcon">
+    M17.66 19.78a1.5 1.5 0 0 0 2.12-2.12L14.12 12l5.66-5.66a1.5 1.5 0 0 0-2.12-2.12L12 9.88 6.34 4.22a1.5 1.5 0 1 0-2.12 2.12L9.88 12l-5.66 5.66a1.5 1.5 0 0 0 2.12 2.12L12 14.12l5.66 5.66Z
+  </StreamGeometry>
+
+  <x:Double x:Key="DefaultInnerIconSize">12</x:Double>
+  <SolidColorBrush x:Key="DefaultInnerIconForeground" Color="{DynamicResource DefaultInnerIconForegroundColor}" />
+  <SolidColorBrush x:Key="DefaultInnerIconPointerOverForeground" Color="{DynamicResource DefaultInnerIconPointerOverForegroundColor}" />
+  <SolidColorBrush x:Key="DefaultInnerIconPressedForeground" Color="{DynamicResource DefaultInnerIconPressedForegroundColor}" />
+
+  <ControlTheme x:Key="InnerPathIcon" TargetType="PathIcon">
+    <Setter Property="Height" Value="16" />
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="PathIcon">
+        <Border Background="{TemplateBinding Background}">
+          <Viewbox
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}">
+            <Path
+              Name="PART_Path"
+              Width="24"
+              Height="24"
+              Data="{TemplateBinding Data}"
+              Fill="{TemplateBinding Foreground}" />
+          </Viewbox>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^.Active /template/ Path#PART_Path">
+      <Setter Property="Fill" Value="{Binding BorderBrush,RelativeSource={RelativeSource TemplatedParent}}" />
+    </Style>
+    <Style Selector="^.ExtraSmall">
+      <Setter Property="Height" Value="8" />
+      <Setter Property="Width" Value="8" />
+    </Style>
+    <Style Selector="^.Small">
+      <Setter Property="Height" Value="12" />
+      <Setter Property="Width" Value="12" />
+    </Style>
+    <Style Selector="^.Large">
+      <Setter Property="Height" Value="20" />
+      <Setter Property="Width" Value="20" />
+    </Style>
+    <Style Selector="^.ExtraLarge">
+      <Setter Property="Height" Value="24" />
+      <Setter Property="Width" Value="24" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="InnerIconButton" TargetType="Button">
+    <Setter Property="Width" Value="{DynamicResource DefaultInnerIconSize}" />
+    <Setter Property="Height" Value="{DynamicResource DefaultInnerIconSize}" />
+    <Setter Property="Foreground" Value="{DynamicResource DefaultInnerIconForeground}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="Button">
+        <PathIcon
+          Theme="{DynamicResource InnerPathIcon}"
+          Width="{TemplateBinding Width}"
+          Height="{TemplateBinding Height}"
+          Data="{TemplateBinding Content}"
+          Foreground="{TemplateBinding Foreground}"
+          Background="{TemplateBinding Background}" />
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource DefaultInnerIconPointerOverForeground}" />
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Foreground" Value="{DynamicResource DefaultInnerIconPressedForeground}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

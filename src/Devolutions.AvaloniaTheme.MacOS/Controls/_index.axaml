@@ -11,6 +11,7 @@
     <MergeResourceInclude Source="CalendarDayButton.axaml" />
     <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
+    <MergeResourceInclude Source="ClosableTag.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
@@ -22,6 +23,8 @@
     <MergeResourceInclude Source="Menu.axaml" />
     <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
+    <MergeResourceInclude Source="MultiComboBox.axaml" />
+    <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />

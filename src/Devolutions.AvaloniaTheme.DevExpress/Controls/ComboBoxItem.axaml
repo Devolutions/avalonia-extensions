@@ -5,23 +5,12 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="300">
-      <StackPanel Spacing="10" Width="200">
-        <ComboBox PlaceholderText="Select an option" SelectedIndex="1">
-          <ComboBoxItem>External</ComboBoxItem>
-          <ComboBoxItem>Embedded (tabbed)</ComboBoxItem>
-          <ComboBoxItem>Undocked</ComboBoxItem>
-          <ComboBoxItem Classes="search-highlight">Search Highlight</ComboBoxItem>
-          <ComboBoxItem Classes="secondary-search-highlight">Secondary Search Highlight</ComboBoxItem>
-        </ComboBox>
-
-        <ComboBox
-          IsEnabled="False"
-          Width="200"
-          SelectedIndex="1"
-          HorizontalContentAlignment="Center">
-          <ComboBoxItem>Item 1</ComboBoxItem>
-          <ComboBoxItem>Disabled</ComboBoxItem>
-        </ComboBox>
+      <StackPanel Spacing="0" Width="200">
+        <ComboBoxItem>External</ComboBoxItem>
+        <ComboBoxItem>Embedded (tabbed)</ComboBoxItem>
+        <ComboBoxItem>Undocked</ComboBoxItem>
+        <ComboBoxItem Classes="search-highlight">Search Highlight</ComboBoxItem>
+        <ComboBoxItem Classes="secondary-search-highlight">Secondary Search Highlight</ComboBoxItem>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>

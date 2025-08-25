@@ -17,18 +17,18 @@
 
         <MultiComboBox Width="300" Watermark="fill" Margin="10">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 2" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 3" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 4" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 5" IsSelected="True" />
         </MultiComboBox>
 
         <MultiComboBox Width="300" Watermark="fill" Margin="10" OverflowMode="Wrap">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
-          <MultiComboBoxItem Content="Option 1" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 2" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 3" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 4" IsSelected="True" />
+          <MultiComboBoxItem Content="Option 5" IsSelected="True" />
         </MultiComboBox>
 
         <MultiComboBox Watermark="fill" Margin="10">
@@ -139,13 +139,8 @@
                   VerticalAlignment="Center"
                   ItemTemplate="{TemplateBinding SelectedItemTemplate}"
                   ItemsSource="{TemplateBinding SelectedItems}"
-                  RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel Orientation="Horizontal" Background="Transparent" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                </u:MultiComboBoxSelectedItemList>
+                  RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
+                  ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
               </SmallScrollViewer>
 
               <ContentPresenter

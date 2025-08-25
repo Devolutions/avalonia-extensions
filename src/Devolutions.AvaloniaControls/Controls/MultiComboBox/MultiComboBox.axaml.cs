@@ -1,12 +1,20 @@
+// ReSharper disable InconsistentNaming
+
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Metadata;
+using Irihi.Avalonia.Shared.Helpers;
 
 public enum MultiComboBoxOverflowMode
 {
@@ -16,36 +24,125 @@ public enum MultiComboBoxOverflowMode
 
 [TemplatePart("PART_SelectionScrollViewer", typeof(ScrollViewer))]
 [TemplatePart("PART_SelectAllItem", typeof(MultiComboBoxSelectAllItem))]
-public class MultiComboBox : Ursa.Controls.MultiComboBox
+[TemplatePart(PART_BackgroundBorder, typeof(Border))]
+[PseudoClasses(PC_DropDownOpen, PC_Empty)]
+public class MultiComboBox : SelectingItemsControl
 {
+    public const string PART_BackgroundBorder = "PART_BackgroundBorder";
+    public const string PC_DropDownOpen = ":dropdownopen";
+    public const string PC_Empty = ":selection-empty";
+
     public static readonly StyledProperty<MultiComboBoxOverflowMode> OverflowModeProperty =
         AvaloniaProperty.Register<MultiComboBox, MultiComboBoxOverflowMode>(nameof(OverflowMode));
 
     public static readonly StyledProperty<string?> SelectAllLabelProperty =
         AvaloniaProperty.Register<MultiComboBox, string?>(nameof(SelectAllLabel));
 
+    public static readonly StyledProperty<bool> IsDropDownOpenProperty =
+        ComboBox.IsDropDownOpenProperty.AddOwner<MultiComboBox>();
+
+    public static readonly StyledProperty<double> MaxDropDownHeightProperty =
+        AvaloniaProperty.Register<MultiComboBox, double>(
+            nameof(MaxDropDownHeight));
+
+    public static readonly StyledProperty<double> MaxSelectionBoxHeightProperty =
+        AvaloniaProperty.Register<MultiComboBox, double>(
+            nameof(MaxSelectionBoxHeight));
+
+    public new static readonly StyledProperty<IList?> SelectedItemsProperty =
+        AvaloniaProperty.Register<MultiComboBox, IList?>(
+            nameof(SelectedItems));
+
+    public static readonly StyledProperty<object?> InnerLeftContentProperty =
+        AvaloniaProperty.Register<MultiComboBox, object?>(
+            nameof(InnerLeftContent));
+
+    public static readonly StyledProperty<object?> InnerRightContentProperty =
+        AvaloniaProperty.Register<MultiComboBox, object?>(
+            nameof(InnerRightContent));
+
+
+    public static readonly StyledProperty<IDataTemplate?> SelectedItemTemplateProperty =
+        AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(
+            nameof(SelectedItemTemplate));
+
+    public static readonly StyledProperty<string?> WatermarkProperty =
+        TextBox.WatermarkProperty.AddOwner<MultiComboBox>();
+
+    public static readonly StyledProperty<object?> PopupInnerTopContentProperty =
+        AvaloniaProperty.Register<MultiComboBox, object?>(
+            nameof(PopupInnerTopContent));
+
+    public static readonly StyledProperty<object?> PopupInnerBottomContentProperty =
+        AvaloniaProperty.Register<MultiComboBox, object?>(
+            nameof(PopupInnerBottomContent));
+
+    public static readonly StyledProperty<ITemplate<Panel>?> SelectedItemsPanelProperty =
+        AvaloniaProperty.Register<MultiComboBox, ITemplate<Panel>?>(nameof(SelectedItemsPanel));
+
     public static readonly DirectProperty<MultiComboBox, ScrollBarVisibility> ScrollbarVisibilityProperty =
-        AvaloniaProperty.RegisterDirect<MultiComboBox, ScrollBarVisibility>(nameof(OverflowMode),
+        AvaloniaProperty.RegisterDirect<MultiComboBox, ScrollBarVisibility>(nameof(ScrollbarVisibility),
             o => o.ScrollbarVisibility,
             (o, v) => o.ScrollbarVisibility = v);
+
+    public static readonly DirectProperty<MultiComboBox, ITemplate<Panel>> EffectiveSelectedItemsPanelProperty =
+        AvaloniaProperty.RegisterDirect<MultiComboBox, ITemplate<Panel>>(nameof(EffectiveSelectedItemsPanel),
+            o => o.EffectiveSelectedItemsPanel,
+            (o, v) => o.EffectiveSelectedItemsPanel = v);
+
+    private static readonly ITemplate<Panel> DefaultSelectedItemsPanel =
+        new FuncTemplate<Panel>(() => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
+
+
+    private static readonly ITemplate<Panel> DefaultSelectedItemsWrapPanel =
+        new FuncTemplate<Panel>(() => new WrapPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
+
+
+    private static readonly ITemplate<Panel?> DefaultPanel =
+        new FuncTemplate<Panel?>(() => new VirtualizingStackPanel());
+
+    private Border? rootBorder;
 
     private MultiComboBoxSelectAllItem? selectAllItem;
 
     private ScrollViewer? selectionScrollViewer;
 
+    private bool updateInternal;
+
     static MultiComboBox()
     {
+        FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
+        ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
+        IsDropDownOpenProperty.AffectsPseudoClass<MultiComboBox>(PC_DropDownOpen);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>((box, args) => box.OnSelectedItemsChanged(args));
     }
 
     public MultiComboBox()
     {
-        this.GetObservable(OverflowModeProperty).Subscribe(visibility => this.ScrollbarVisibility = visibility switch
-        {
-            MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
-            MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
-            _ => ScrollBarVisibility.Auto,
-        });
+        this.SelectedItems = new AvaloniaList<object>();
+
+        ObservableExtensions.Subscribe(this.GetObservable(OverflowModeProperty),
+            visibility =>
+            {
+                this.ScrollbarVisibility = visibility switch
+                {
+                    MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
+                    MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
+                    _ => ScrollBarVisibility.Auto,
+                };
+                this.EffectiveSelectedItemsPanel = this.SelectedItemsPanel ?? visibility switch
+                {
+                    MultiComboBoxOverflowMode.Scroll => DefaultSelectedItemsPanel,
+                    MultiComboBoxOverflowMode.Wrap => DefaultSelectedItemsWrapPanel,
+                    _ => DefaultSelectedItemsPanel,
+                };
+            });
+    }
+
+    public ITemplate<Panel>? SelectedItemsPanel
+    {
+        get => this.GetValue(SelectedItemsPanelProperty);
+        set => this.SetValue(SelectedItemsPanelProperty, value);
     }
 
     public MultiComboBoxOverflowMode OverflowMode
@@ -60,25 +157,155 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
         set => this.SetValue(SelectAllLabelProperty, value);
     }
 
+    public bool IsDropDownOpen
+    {
+        get => this.GetValue(IsDropDownOpenProperty);
+        set => this.SetValue(IsDropDownOpenProperty, value);
+    }
+
+    public double MaxDropDownHeight
+    {
+        get => this.GetValue(MaxDropDownHeightProperty);
+        set => this.SetValue(MaxDropDownHeightProperty, value);
+    }
+
+    public double MaxSelectionBoxHeight
+    {
+        get => this.GetValue(MaxSelectionBoxHeightProperty);
+        set => this.SetValue(MaxSelectionBoxHeightProperty, value);
+    }
+
+    public new IList? SelectedItems
+    {
+        get => this.GetValue(SelectedItemsProperty);
+        set => this.SetValue(SelectedItemsProperty, value);
+    }
+
+    [InheritDataTypeFromItems(nameof(SelectedItems))]
+    public IDataTemplate? SelectedItemTemplate
+    {
+        get => this.GetValue(SelectedItemTemplateProperty);
+        set => this.SetValue(SelectedItemTemplateProperty, value);
+    }
+
+    public string? Watermark
+    {
+        get => this.GetValue(WatermarkProperty);
+        set => this.SetValue(WatermarkProperty, value);
+    }
+
+    public object? InnerLeftContent
+    {
+        get => this.GetValue(InnerLeftContentProperty);
+        set => this.SetValue(InnerLeftContentProperty, value);
+    }
+
+    public object? InnerRightContent
+    {
+        get => this.GetValue(InnerRightContentProperty);
+        set => this.SetValue(InnerRightContentProperty, value);
+    }
+
+    public object? PopupInnerTopContent
+    {
+        get => this.GetValue(PopupInnerTopContentProperty);
+        set => this.SetValue(PopupInnerTopContentProperty, value);
+    }
+
+    public object? PopupInnerBottomContent
+    {
+        get => this.GetValue(PopupInnerBottomContentProperty);
+        set => this.SetValue(PopupInnerBottomContentProperty, value);
+    }
+
     public ScrollBarVisibility ScrollbarVisibility { get; private set; } = ScrollBarVisibility.Auto;
+
+    public ITemplate<Panel> EffectiveSelectedItemsPanel { get; private set; } = DefaultSelectedItemsPanel;
+
+    public void Remove(object? o)
+    {
+        if (o is StyledElement s)
+        {
+            var data = s.DataContext;
+            this.SelectedItems?.Remove(data);
+            var item = this.Items.FirstOrDefault(a => ReferenceEquals(a, data));
+            if (item is not null)
+            {
+                var container = this.ContainerFromItem(item);
+                if (container is MultiComboBoxItem t) t.IsSelected = false;
+            }
+        }
+    }
 
     public void SelectAll()
     {
         if (this.SelectedItems is null) return;
 
+        this.updateInternal = true;
+        this.selectAllItem?.BeginUpdate();
+
         this.SelectedItems.Clear();
+
+        foreach (var item in this.Items)
+        {
+            if (item is MultiComboBoxItem multiComboBoxItem)
+            {
+                multiComboBoxItem.BeginUpdate();
+            }
+            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
+            {
+                multiComboBoxItem2.BeginUpdate();
+            }
+        }
+
         foreach (var item in this.Items)
         {
             if (item is MultiComboBoxItem multiComboBoxItem)
             {
                 this.SelectedItems.Add(multiComboBoxItem.DataContext);
-                multiComboBoxItem.IsSelected = true;
+                multiComboBoxItem.Select();
+            }
+            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
+            {
+                this.SelectedItems.Add(multiComboBoxItem2.DataContext);
+                multiComboBoxItem2.Select();
             }
             else
             {
                 this.SelectedItems.Add(item);
             }
         }
+
+        foreach (var item in this.Items)
+        {
+            if (item is MultiComboBoxItem multiComboBoxItem)
+            {
+                multiComboBoxItem.EndUpdate();
+            }
+            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
+            {
+                multiComboBoxItem2.EndUpdate();
+            }
+        }
+
+        this.selectAllItem?.EndUpdate();
+
+        this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
+        this.selectAllItem?.UpdateSelection();
+
+        var containers = this.Presenter?.Panel?.Children;
+        if (containers is not null)
+        {
+            foreach (var container in containers)
+            {
+                if (container is MultiComboBoxItem i)
+                {
+                    i.Select();
+                }
+            }
+        }
+
+        this.updateInternal = false;
     }
 
     public void DeselectAll()
@@ -88,11 +315,12 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
 
     protected override void OnInitialized()
     {
-        if (this.SelectedItems is INotifyCollectionChanged c) c.CollectionChanged += this.OnSelectedItemsCollectionChanged;
+        base.OnInitialized();
+
         this.FixInitializationFromAxamlItems();
         this.selectAllItem?.UpdateSelection();
-        base.OnInitialized();
     }
+
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -100,17 +328,30 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
 
-        this.selectAllItem?.GetObservable(IsSelectedProperty).Subscribe(isSelected =>
+        this.selectAllItem?.UpdateSelection();
+
+        PointerPressedEvent.RemoveHandler(this.OnBackgroundPointerPressed, this.rootBorder);
+        this.rootBorder = e.NameScope.Find<Border>(PART_BackgroundBorder);
+        PointerPressedEvent.AddHandler(this.OnBackgroundPointerPressed, this.rootBorder);
+        this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count == 0);
+
+        if (this.selectAllItem is { } sai)
         {
-            if (isSelected)
-            {
-                this.Selection.SelectAll();
-            }
-            else
-            {
-                this.Selection.Clear();
-            }
-        });
+            ObservableExtensions.Subscribe(sai.GetObservable(IsSelectedProperty),
+                isSelected =>
+                {
+                    if (this.updateInternal) return;
+
+                    if (isSelected)
+                    {
+                        this.Selection.SelectAll();
+                    }
+                    else
+                    {
+                        this.Selection.Clear();
+                    }
+                });
+        }
     }
 
     private void FixInitializationFromAxamlItems()
@@ -136,6 +377,11 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
         }
     }
 
+    private void OnBackgroundPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        this.SetCurrentValue(IsDropDownOpenProperty, !this.IsDropDownOpen);
+    }
+
     private void OnSelectedItemsChanged(AvaloniaPropertyChangedEventArgs<IList?> args)
     {
         if (args.OldValue.Value is INotifyCollectionChanged old)
@@ -151,6 +397,26 @@ public class MultiComboBox : Ursa.Controls.MultiComboBox
 
     private void OnSelectedItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        this.ApplyCurrentSelectionState();
+    }
+
+    private void ApplyCurrentSelectionState()
+    {
+        if (this.updateInternal) return;
+        this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
+
+        var containers = this.Presenter?.Panel?.Children;
+        if (containers is not null)
+        {
+            foreach (var container in containers)
+            {
+                if (container is MultiComboBoxItem i)
+                {
+                    i.UpdateSelection();
+                }
+            }
+        }
+
         this.selectAllItem?.UpdateSelection();
     }
 

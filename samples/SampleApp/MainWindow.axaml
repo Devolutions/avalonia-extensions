@@ -114,7 +114,7 @@
       </TabItem>
       <TabItem IsSelected="True">
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ListBox" ApplicableTo="Windows - DevExpress" />
+          <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacOS, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:ListBoxDemo />
       </TabItem>

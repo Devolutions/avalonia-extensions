@@ -1,24 +1,53 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+  
   <Design.PreviewWith>
-    <Border Padding="20">
-      <ListBox>
+    <StackPanel Margin="20" Spacing="10">
+      <ListBox Width="80" HorizontalAlignment="Left">
         <ListBoxItem>Test</ListBoxItem>
         <ListBoxItem>Test</ListBoxItem>
         <ListBoxItem>Test</ListBoxItem>
         <ListBoxItem>Test</ListBoxItem>
       </ListBox>
-    </Border>
+      <ListBox Width="240">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ListBoxItem>Monkey</ListBoxItem>
+        <ListBoxItem>Whale</ListBoxItem>
+        <ListBoxItem>Cat</ListBoxItem>
+        <ListBoxItem>Chameleon</ListBoxItem>
+        <ListBoxItem>Lion</ListBoxItem>
+        <ListBoxItem>Tiger</ListBoxItem>
+        <ListBoxItem>Elephant</ListBoxItem>
+        <ListBoxItem>Test8</ListBoxItem>
+        <ListBoxItem>Test2</ListBoxItem>
+        <ListBoxItem>Test3</ListBoxItem>
+        <ListBoxItem>Test4</ListBoxItem>
+        <ListBoxItem>Test5</ListBoxItem>
+        <ListBoxItem>Test6</ListBoxItem>
+        <ListBoxItem>Test7</ListBoxItem>
+        <ListBoxItem>Test8</ListBoxItem>
+      </ListBox>
+    </StackPanel>
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
-    <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-    <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ListBoxBorderThemeThickness}" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="{DynamicResource PopupPadding}" />
+
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
     <Setter Property="Template">
@@ -32,13 +61,19 @@
           <ScrollViewer Name="PART_ScrollViewer"
                         VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
                         HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
-                        HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
-                        VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                         IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                         IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
                         IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
-                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
+                        HorizontalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityAuto},
+                              {DynamicResource ScrollBarVisibilityDisabled}}"
+                        VerticalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityDisabled},
+                              {DynamicResource ScrollBarVisibilityAuto}}">
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
                             Margin="{TemplateBinding Padding}" />

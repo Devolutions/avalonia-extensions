@@ -28,6 +28,7 @@
 
       <Color x:Key="ScrollBarTrackColor">#fbfbfb</Color>
       <Color x:Key="ScrollBarTrackBorderColor">#d6d6d6</Color>
+      <SolidColorBrush x:Key='ScrollControlBorder'>#dddddd</SolidColorBrush>
 
       <Color x:Key="DefaultIconColor">#000000</Color>
       <Color x:Key="CalendarIconColor">#7b7b7b</Color>
@@ -142,7 +143,8 @@
 
       <Color x:Key="ScrollBarTrackColor">#2c2c2c</Color>
       <Color x:Key="ScrollBarTrackBorderColor">#3f3f3f</Color>
-
+      <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>
+      
       <Color x:Key="DefaultIconColor">#b8b8b8</Color>
       <Color x:Key="CalendarIconColor">#9f9f9f</Color>
       <Color x:Key="CalendarSelectedBackgroundColor">#454545</Color>
@@ -368,6 +370,10 @@
   <x:Int32 x:Key="ComboBoxItemHeight">22</x:Int32>
   <Thickness x:Key="ComboBoxShadowMargin">4</Thickness>
 
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
+
+  <!-- TODO: Use Bindings to named item properties & AddBinding to encode these dependencies more securely -->
   <!-- InitialFirstItemDistance must match ComboBoxShadowMargin.bottom + PopupPadding.top -->
   <x:Int32 x:Key="InitialFirstItemDistance">9</x:Int32>
   <x:Int32 x:Key="PopupTrimHeight">30</x:Int32> <!-- includes Margin, Padding, Shadow -->

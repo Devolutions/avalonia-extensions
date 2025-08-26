@@ -2,52 +2,80 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:sampleApp="clr-namespace:SampleApp"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.ListBoxDemo">
 
-  <StackPanel Margin="20" Spacing="20" VerticalAlignment="Stretch">
-
-    <!-- Top row of simple ListBoxes -->
-    <StackPanel Orientation="Horizontal" Spacing="20" Height="140">
-      <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:</TextBlock>
-    <ListBox x:Name="animals1" />
   
-    <TextBlock VerticalAlignment="Top" Margin="0 5">Multiple selection:</TextBlock>
+  <StackPanel Margin="20" Spacing="20" VerticalAlignment="Stretch">
+    <ListBox>
+      <ListBoxItem>No</ListBoxItem>
+      <ListBoxItem IsSelected="True">Yes</ListBoxItem>
+      <ListBoxItem IsEnabled="False">Disabled</ListBoxItem>
+    </ListBox>
+    <!-- Top row of simple ListBoxes -->
+    <StackPanel Orientation="Horizontal" Spacing="20" Height="120">
+      <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:<LineBreak />(custom width)</TextBlock>
+      <ListBox x:Name="animals1" Width="110" />
+      <TextBlock VerticalAlignment="Top" Margin="0 5">Multiple selection:<LineBreak />(automatic width)</TextBlock>
     <ListBox x:Name="animals2" SelectionMode="Multiple" />
 
-    <TextBlock VerticalAlignment="Top" Margin="0 5">Fewer entries:</TextBlock>
-    <ListBox x:Name="animals3" />
-
-    <TextBlock VerticalAlignment="Top" Margin="0 5" TextWrapping="Wrap" Width="80">More entries: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
-    <ListBox x:Name="animals6" Width="100" />
+      <TextBlock VerticalAlignment="Top" Margin="15 5 0 5" TextWrapping="Wrap" Width="130">Scrolling: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
+      <ListBox x:Name="animals4" Width="115" />
     </StackPanel>
-
+  
     <!-- Bottom row of multi-column ListBoxes -->
-    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *">
-      <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">Multi-column ListBox (with WrapPanel as ItemsTemplate), multiple selection:</TextBlock>
-      <TextBlock Grid.Row="1" Grid.Column="0" Margin="10 0 0 0" TextWrapping="Wrap">Default (with an arbitrary MinWidth=90 to make it  work out of the box):</TextBlock>
-      <ListBox Grid.Row="2" Grid.Column="0" x:Name="animals4" SelectionMode="Multiple" Margin="10 0 0 0">
+    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 99, Auto, 99" ColumnDefinitions="*, *">
+      <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">
+        <Bold>Multi-column ListBox (with WrapPanel as ItemsTemplate), multiple selection:</Bold>
+      </TextBlock>
+      <TextBlock Grid.Row="1" Grid.Column="0" Margin="10 0 0 0" TextWrapping="Wrap">
+        Default horizontal WrapPanel requires width setting for items to still line up vertically:
+        <TextBlock Classes="code" Text="&lt;WrapPanel ItemWidth=&quot;99&quot; /&gt;" />
+      </TextBlock>
+      <ListBox Grid.Row="2" Grid.Column="0" x:Name="animals5" SelectionMode="Multiple" Margin="10 0 0 0">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" />
+            <WrapPanel ItemWidth="99" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
       </ListBox>
-      <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap">To override default MinWidth, alignment, etc. use a custom ItemTemplate:</TextBlock>
-      <ListBox Grid.Row="2" Grid.Column="1" x:Name="animals5" SelectionMode="Multiple" VerticalAlignment="Stretch">
+      <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap">
+        Vertical WrapPanel:
+        <TextBlock Classes="code" Text="&lt;WrapPanel Orientation=&quot;Vertical&quot; /&gt;" />
+      </TextBlock>
+      <ListBox Grid.Row="2" Grid.Column="1" x:Name="animals6" SelectionMode="Multiple">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+              <WrapPanel Orientation="Vertical" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding }"
-                         MinWidth="110"
-                         TextAlignment="Center" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ListBox>
+      </ListBox>
+      <TextBlock Grid.Row="3" Grid.Column="0" TextWrapping="Wrap">
+        To override default styles, etc. use a custom ItemTemplate:
+        <TextBlock
+          TextWrapping="Wrap"
+          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=MacOS}">
+          (Center-aligned text not recommended, unless length variation is minimal)
+        </TextBlock>
+      </TextBlock>
+      <ListBox Grid.Row="4" Grid.Column="0" x:Name="animals7" SelectionMode="Multiple">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Vertical" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding }"
+                       MinWidth="99"
+                       TextAlignment="Center" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ListBox>
     </Grid>
   </StackPanel>
 

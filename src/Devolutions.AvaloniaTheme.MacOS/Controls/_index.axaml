@@ -19,6 +19,7 @@
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="GridSplitter.axaml" />
+    <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="Menu.axaml" />
     <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />

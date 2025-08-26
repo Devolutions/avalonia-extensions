@@ -29,11 +29,6 @@
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="MinWidth"
-            Value="{BindingToggler
-                                      {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
-                                      {DynamicResource MultiColumnListItemDefaultWidth},
-                                      {DynamicResource ComboBoxItemMinWidth}}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel

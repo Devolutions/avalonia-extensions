@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Converters">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -13,14 +14,36 @@
   
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="10">
-    <Border Padding="20">
-      <ListBox SelectionMode="Multiple">
-        <ListBoxItem>Test</ListBoxItem>
-        <ListBoxItem>Test</ListBoxItem>
-        <ListBoxItem>Test</ListBoxItem>
-        <ListBoxItem>Test</ListBoxItem>
-      </ListBox>
-    </Border>
+      <StackPanel Margin="20" Spacing="10">
+        <ListBox Width="80" HorizontalAlignment="Left">
+          <ListBoxItem>Test</ListBoxItem>
+          <ListBoxItem>Test</ListBoxItem>
+          <ListBoxItem>Test</ListBoxItem>
+          <ListBoxItem>Test</ListBoxItem>
+        </ListBox>
+        <ListBox Width="240" Height="150">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ListBoxItem>Monkey</ListBoxItem>
+          <ListBoxItem>Whale</ListBoxItem>
+          <ListBoxItem>Cat</ListBoxItem>
+          <ListBoxItem>Chameleon</ListBoxItem>
+          <ListBoxItem>Lion</ListBoxItem>
+          <ListBoxItem>Tiger</ListBoxItem>
+          <ListBoxItem>Elephant</ListBoxItem>
+          <ListBoxItem>Test8</ListBoxItem>
+          <ListBoxItem>Test2</ListBoxItem>
+          <ListBoxItem>Test3</ListBoxItem>
+          <ListBoxItem>Test4</ListBoxItem>
+          <ListBoxItem>Test5</ListBoxItem>
+          <ListBoxItem>Test6</ListBoxItem>
+          <ListBoxItem>Test7</ListBoxItem>
+          <ListBoxItem>Test8</ListBoxItem>
+        </ListBox>
+      </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
@@ -29,8 +52,7 @@
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="Padding" Value="{DynamicResource ComboBoxDropDownInnerPadding}" />
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
     <Setter Property="Template">
@@ -44,16 +66,22 @@
           <ScrollViewer Name="PART_ScrollViewer"
                         VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
                         HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
-                        HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
-                        VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                         IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                         IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
                         IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
-                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
+                        HorizontalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityAuto},
+                              {DynamicResource ScrollBarVisibilityDisabled}}"
+                        VerticalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityDisabled},
+                              {DynamicResource ScrollBarVisibilityAuto}}">
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="{StaticResource ComboBoxDropDownInnerPadding}" />
+                            Margin="{TemplateBinding Padding}" />
           </ScrollViewer>
         </Border>
       </ControlTemplate>

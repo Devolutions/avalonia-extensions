@@ -29,12 +29,8 @@
   <!-- KEPT FOR DESIGNER! -->
   <!-- This also dictates which theme is initially loaded -->
   <Application.Styles>
-    <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
-
     <!-- <DevolutionsMacOsTheme /> -->
-    <!-- <DevolutionsDevExpressTheme /> -->
-    <DevolutionsLinuxYaruTheme />
-
-    <StyleInclude Source="/Styles.axaml" />
+    <DevolutionsDevExpressTheme />
+    <!-- <DevolutionsLinuxYaruTheme /> -->
   </Application.Styles>
 </Application>

@@ -14,7 +14,7 @@
       <ListBoxItem IsEnabled="False">Disabled</ListBoxItem>
     </ListBox>
     <!-- Top row of simple ListBoxes -->
-    <StackPanel Orientation="Horizontal" Spacing="20" Height="120">
+    <StackPanel Orientation="Horizontal" Spacing="20" Height="122">
       <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:<LineBreak />(custom width)</TextBlock>
       <ListBox x:Name="animals1" Width="110" />
       <TextBlock VerticalAlignment="Top" Margin="0 5">Multiple selection:<LineBreak />(automatic width)</TextBlock>
@@ -25,7 +25,7 @@
     </StackPanel>
   
     <!-- Bottom row of multi-column ListBoxes -->
-    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 99, Auto, 99" ColumnDefinitions="*, *">
+    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 100, Auto, 99" ColumnDefinitions="*, *">
       <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">
         <Bold>Multi-column ListBox (with WrapPanel as ItemsTemplate), multiple selection:</Bold>
       </TextBlock>
@@ -71,7 +71,7 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <TextBlock Text="{Binding }"
-                       MinWidth="99"
+                       MinWidth="69"
                        TextAlignment="Center" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>

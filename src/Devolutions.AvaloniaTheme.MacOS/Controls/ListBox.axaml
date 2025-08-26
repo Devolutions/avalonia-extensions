@@ -47,7 +47,6 @@
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Padding" Value="{DynamicResource PopupPadding}" />
-
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
     <Setter Property="Template">

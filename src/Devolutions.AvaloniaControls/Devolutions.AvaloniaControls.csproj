@@ -31,6 +31,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />
 
-    <PackageReference Include="Irihi.Ursa" Version="1.12.0" />
+    <PackageReference Include="Irihi.Ursa" Version="[1.12.0,)" />
   </ItemGroup>
 </Project>

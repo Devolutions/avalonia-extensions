@@ -58,10 +58,4 @@
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="DemoPages\CheckBoxListBoxDemo.axaml.cs">
-      <DependentUpon>CheckBoxListBoxDemo.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
 </Project>

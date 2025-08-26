@@ -39,10 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Irihi.Ursa" Version="1.12.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Design\ThemePreviewer.axaml.cs">
       <DependentUpon>ThemePreviewer.axaml</DependentUpon>
       <SubType>Code</SubType>

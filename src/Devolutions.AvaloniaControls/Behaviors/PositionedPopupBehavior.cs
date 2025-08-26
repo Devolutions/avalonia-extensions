@@ -66,6 +66,12 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
     {
         base.OnDetaching();
 
+        if (this.AssociatedObject is not null)
+        {
+            this.AssociatedObject.Opened -= this.OnOpened;
+            this.AssociatedObject.Closed -= this.OnClosed;
+        }
+
         if (this.AssociatedObject is not null && this.fusionMaskPanel is not null)
         {
             this.fusionMaskPanel.Children.Clear();

@@ -34,7 +34,7 @@
           CornerRadius="{TemplateBinding CornerRadius}">
           <Border.Transitions>
             <Transitions>
-              <BrushTransition Property="Background" Duration="0:0:0.03" />
+              <BrushTransition Property="Background" Duration="0:0:0.05" />
             </Transitions>
           </Border.Transitions>
           <CheckBox
@@ -92,7 +92,7 @@
           CornerRadius="{TemplateBinding CornerRadius}">
           <Border.Transitions>
             <Transitions>
-              <BrushTransition Property="Background" Duration="0:0:0.03" />
+              <BrushTransition Property="Background" Duration="0:0:0.05" />
             </Transitions>
           </Border.Transitions>
           <CheckBox

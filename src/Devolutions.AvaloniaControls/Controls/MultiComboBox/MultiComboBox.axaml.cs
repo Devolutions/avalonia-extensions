@@ -15,6 +15,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Irihi.Avalonia.Shared.Helpers;
+using static Extensions.AvaloniaExtensions;
 
 public enum MultiComboBoxOverflowMode
 {
@@ -60,7 +61,6 @@ public class MultiComboBox : SelectingItemsControl
     public static readonly StyledProperty<object?> InnerRightContentProperty =
         AvaloniaProperty.Register<MultiComboBox, object?>(
             nameof(InnerRightContent));
-
 
     public static readonly StyledProperty<IDataTemplate?> SelectedItemTemplateProperty =
         AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(
@@ -121,22 +121,21 @@ public class MultiComboBox : SelectingItemsControl
     {
         this.SelectedItems = new AvaloniaList<object>();
 
-        ObservableExtensions.Subscribe(this.GetObservable(OverflowModeProperty),
-            visibility =>
+        this.GetObservable(OverflowModeProperty).Subscribe(visibility =>
+        {
+            this.ScrollbarVisibility = visibility switch
             {
-                this.ScrollbarVisibility = visibility switch
-                {
-                    MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
-                    MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
-                    _ => ScrollBarVisibility.Auto,
-                };
-                this.EffectiveSelectedItemsPanel = this.SelectedItemsPanel ?? visibility switch
-                {
-                    MultiComboBoxOverflowMode.Scroll => DefaultSelectedItemsPanel,
-                    MultiComboBoxOverflowMode.Wrap => DefaultSelectedItemsWrapPanel,
-                    _ => DefaultSelectedItemsPanel,
-                };
-            });
+                MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
+                MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
+                _ => ScrollBarVisibility.Auto,
+            };
+            this.EffectiveSelectedItemsPanel = this.SelectedItemsPanel ?? visibility switch
+            {
+                MultiComboBoxOverflowMode.Scroll => DefaultSelectedItemsPanel,
+                MultiComboBoxOverflowMode.Wrap => DefaultSelectedItemsWrapPanel,
+                _ => DefaultSelectedItemsPanel,
+            };
+        });
     }
 
     public ITemplate<Panel>? SelectedItemsPanel
@@ -222,6 +221,12 @@ public class MultiComboBox : SelectingItemsControl
 
     public ITemplate<Panel> EffectiveSelectedItemsPanel { get; private set; } = DefaultSelectedItemsPanel;
 
+    private MultiComboBoxItem? GetMultiComboBoxItemContainer(object? item)
+    {
+        if (item is null) return null;
+        return item as MultiComboBoxItem ?? this.ContainerFromItem(item) as MultiComboBoxItem;
+    }
+
     public void Remove(object? o)
     {
         if (o is StyledElement s)
@@ -232,7 +237,10 @@ public class MultiComboBox : SelectingItemsControl
             if (item is not null)
             {
                 var container = this.ContainerFromItem(item);
-                if (container is MultiComboBoxItem t) t.IsSelected = false;
+                if (container is MultiComboBoxItem t)
+                {
+                    t.IsSelected = false;
+                }
             }
         }
     }
@@ -248,27 +256,15 @@ public class MultiComboBox : SelectingItemsControl
 
         foreach (var item in this.Items)
         {
-            if (item is MultiComboBoxItem multiComboBoxItem)
-            {
-                multiComboBoxItem.BeginUpdate();
-            }
-            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
-            {
-                multiComboBoxItem2.BeginUpdate();
-            }
+            this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
         }
 
         foreach (var item in this.Items)
         {
-            if (item is MultiComboBoxItem multiComboBoxItem)
+            if (this.GetMultiComboBoxItemContainer(item) is MultiComboBoxItem multiComboBoxItem)
             {
                 this.SelectedItems.Add(multiComboBoxItem.DataContext);
                 multiComboBoxItem.Select();
-            }
-            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
-            {
-                this.SelectedItems.Add(multiComboBoxItem2.DataContext);
-                multiComboBoxItem2.Select();
             }
             else
             {
@@ -278,14 +274,7 @@ public class MultiComboBox : SelectingItemsControl
 
         foreach (var item in this.Items)
         {
-            if (item is MultiComboBoxItem multiComboBoxItem)
-            {
-                multiComboBoxItem.EndUpdate();
-            }
-            else if (item is not null && this.ContainerFromItem(item) is MultiComboBoxItem multiComboBoxItem2)
-            {
-                multiComboBoxItem2.EndUpdate();
-            }
+            this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
         }
 
         this.selectAllItem?.EndUpdate();
@@ -337,20 +326,19 @@ public class MultiComboBox : SelectingItemsControl
 
         if (this.selectAllItem is { } sai)
         {
-            ObservableExtensions.Subscribe(sai.GetObservable(IsSelectedProperty),
-                isSelected =>
-                {
-                    if (this.updateInternal) return;
+            sai.GetObservable(IsSelectedProperty).Subscribe(isSelected =>
+            {
+                if (this.updateInternal) return;
 
-                    if (isSelected)
-                    {
-                        this.Selection.SelectAll();
-                    }
-                    else
-                    {
-                        this.Selection.Clear();
-                    }
-                });
+                if (isSelected)
+                {
+                    this.Selection.SelectAll();
+                }
+                else
+                {
+                    this.Selection.Clear();
+                }
+            });
         }
     }
 
@@ -447,7 +435,6 @@ public class MultiComboBox : SelectingItemsControl
         this.HookCloseAction(e);
         this.HookSelectAllNavigation(e);
         this.HookItemSelection(e);
-        this.HookTabItemSelection(e);
         this.HookItemsNavigation(e);
 
         base.OnKeyDown(e);
@@ -458,12 +445,7 @@ public class MultiComboBox : SelectingItemsControl
         if (e.Handled) return;
         if (this.OverflowMode == MultiComboBoxOverflowMode.Scroll && e.Key is Key.Left or Key.Right && this.selectionScrollViewer is ScrollViewer sv)
         {
-            var dir = e.Key == Key.Left ? -1 : 1;
-            var step = 48 * dir;
-            var maxX = Math.Max(0, sv.Extent.Width - sv.Viewport.Width);
-            var newX = Math.Clamp(sv.Offset.X + step, 0, maxX);
-            sv.Offset = new Vector(newX, sv.Offset.Y);
-
+            sv.ScrollHorizontally(e.Key == Key.Left ? HorizontalScrollDirection.Left : HorizontalScrollDirection.Right);
             e.Handled = true;
         }
     }
@@ -502,7 +484,7 @@ public class MultiComboBox : SelectingItemsControl
 
         if (e.Key == Key.Up)
         {
-            var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(this.CanFocus);
+            var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
             if (firstChild?.IsFocused == true)
             {
                 this.FocusSelectAll();
@@ -516,18 +498,7 @@ public class MultiComboBox : SelectingItemsControl
         if (e.Handled) return;
         if (this.IsDropDownOpen && e.Key is Key.Enter or Key.Space)
         {
-            this.SelectFocusedItem();
-            e.Handled = true;
-        }
-    }
-
-    private void HookTabItemSelection(KeyEventArgs e)
-    {
-        if (e.Handled) return;
-        if (this.IsDropDownOpen && e.Key == Key.Tab)
-        {
-            this.SelectFocusedItem();
-            this.IsDropDownOpen = false;
+            this.ToggleFocusedItem();
             e.Handled = true;
         }
     }
@@ -549,7 +520,7 @@ public class MultiComboBox : SelectingItemsControl
 
     private bool FocusSelectAll()
     {
-        if (this.selectAllItem is not null && this.CanFocus(this.selectAllItem))
+        if (this.selectAllItem is not null && CanFocus(this.selectAllItem))
         {
             return this.selectAllItem.Focus();
         }
@@ -559,7 +530,7 @@ public class MultiComboBox : SelectingItemsControl
 
     private bool FocusFirstItem()
     {
-        var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(this.CanFocus);
+        var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
         if (firstChild != null)
         {
             return firstChild.Focus(NavigationMethod.Directional);
@@ -568,7 +539,7 @@ public class MultiComboBox : SelectingItemsControl
         return false;
     }
 
-    private void SelectFocusedItem()
+    private void ToggleFocusedItem()
     {
         if (this.selectAllItem?.IsFocused == true)
         {
@@ -586,5 +557,5 @@ public class MultiComboBox : SelectingItemsControl
         }
     }
 
-    private bool CanFocus(Control control) => control is { Focusable: true, IsEffectivelyEnabled: true, IsVisible: true };
+    private static bool CanFocus(Control control) => control is { Focusable: true, IsEffectivelyEnabled: true, IsVisible: true };
 }

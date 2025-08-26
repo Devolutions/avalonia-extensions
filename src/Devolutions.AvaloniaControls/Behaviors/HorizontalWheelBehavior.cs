@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Extensions;
 
 public static class HorizontalWheelBehavior
 {
@@ -49,12 +50,8 @@ public static class HorizontalWheelBehavior
         var raw = Math.Abs(e.Delta.Y) >= Math.Abs(e.Delta.X) ? e.Delta.Y : e.Delta.X;
         if (raw == 0) return;
 
-        var pixels = raw * 48;
+        sv.ScrollHorizontally(step: raw * -48);
 
-        var maxX = Math.Max(0, sv.Extent.Width - sv.Viewport.Width);
-        var newX = Math.Clamp(sv.Offset.X - pixels, 0, maxX);
-
-        sv.Offset = new Vector(newX, sv.Offset.Y);
         e.Handled = true;
     }
 }

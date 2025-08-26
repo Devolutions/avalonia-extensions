@@ -1,6 +1,54 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    x:ClassModifier="internal">
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+  x:ClassModifier="internal">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Orientation="Horizontal">
+        <StackPanel Width="150">
+          <ListBox SelectionMode="Single">
+            <ListBoxItem>single 1</ListBoxItem>
+            <ListBoxItem>single 2</ListBoxItem>
+            <ListBoxItem>single 3</ListBoxItem>
+          </ListBox>
+
+          <Separator Margin="0 5" />
+
+          <ListBox SelectionMode="Toggle">
+            <ListBoxItem>togglable 1</ListBoxItem>
+            <ListBoxItem>togglable 2</ListBoxItem>
+            <ListBoxItem>togglable 3</ListBoxItem>
+          </ListBox>
+
+          <Separator Margin="0 5" />
+
+          <ListBox SelectionMode="AlwaysSelected">
+            <ListBoxItem>AlwaysSelected 1</ListBoxItem>
+            <ListBoxItem>AlwaysSelected 2</ListBoxItem>
+            <ListBoxItem>AlwaysSelected 3</ListBoxItem>
+          </ListBox>
+        </StackPanel>
+
+        <StackPanel Width="150">
+          <ListBox SelectionMode="Multiple">
+            <ListBoxItem>multi 1</ListBoxItem>
+            <ListBoxItem>multi 2</ListBoxItem>
+            <ListBoxItem>multi 3</ListBoxItem>
+          </ListBox>
+
+          <Separator Margin="0 5" />
+
+          <ListBox SelectionMode="11">
+            <ListBoxItem>multi togglable 1</ListBoxItem>
+            <ListBoxItem>multi togglable 2</ListBoxItem>
+            <ListBoxItem>multi togglable 3</ListBoxItem>
+          </ListBox>
+        </StackPanel>
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
     <Setter Property="Background" Value="{DynamicResource InputBackground}" />

@@ -1,0 +1,143 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="20">
+      <StackPanel>
+        <MultiComboBoxItem Content="Option 1" />
+        <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
+        <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type MultiComboBoxItem}" TargetType="MultiComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="RootPanel"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          Padding="{TemplateBinding Padding}"
+          Background="Transparent">
+
+          <CheckBox
+            Content="{TemplateBinding Content}"
+            IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+            Margin="4 0 6 0"
+            IsTabStop="False"
+            Focusable="False"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:selected /template/ Path#CheckMark">
+      <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
+    </Style>
+
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^:selected /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^:selected /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type MultiComboBoxSelectAllItem}" TargetType="MultiComboBoxSelectAllItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="RootPanel"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          Padding="{TemplateBinding Padding}"
+          Background="Transparent">
+
+          <CheckBox
+            Content="{TemplateBinding Content}"
+            IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+            Margin="4 0 6 0"
+            Padding="0"
+            IsThreeState="True"
+            IsTabStop="False"
+            Focusable="False"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:selected /template/ Path#CheckMark">
+      <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
+    </Style>
+
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^:selected /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^:selected /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.CheckBoxListBoxDemo"
+             x:DataType="vm:CheckBoxListBoxViewModel">
+
+  <Design.DataContext>
+    <vm:CheckBoxListBoxViewModel />
+  </Design.DataContext>
+
+  <Border Margin="20" Padding="20" HorizontalAlignment="Stretch">
+    <StackPanel Orientation="Vertical">
+      <CheckBoxListBox HorizontalAlignment="Left">
+        <CheckBoxListBoxItem>Item 1</CheckBoxListBoxItem>
+        <CheckBoxListBoxItem>Item 2</CheckBoxListBoxItem>
+        <CheckBoxListBoxItem>Item 3</CheckBoxListBoxItem>
+      </CheckBoxListBox>
+
+      <Separator Margin="0 10" />
+
+      <CheckBoxListBox HorizontalAlignment="Left"
+                       ItemsSource="{Binding Items}"
+                       SelectedItems="{Binding SelectedItems}" />
+
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Selected: " />
+        <TextBlock Text="{Binding SelectedText}" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

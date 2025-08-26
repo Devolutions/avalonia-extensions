@@ -1,6 +1,7 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors"
   x:ClassModifier="internal">
   <Design.PreviewWith>
     <Panel Width="400" Height="400">
@@ -8,7 +9,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Watermark="test">
-        <EditableComboBoxItem Value="tesfsdfast df asdf asdf as fd" />
+        <EditableComboBoxItem Value="test" />
         <EditableComboBoxItem Value="search highlight" Classes="search-highlight" />
         <EditableComboBoxItem Value="secondary search highlight" Classes="secondary-search-highlight" />
       </EditableComboBox>
@@ -130,8 +131,7 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type EditableComboBox+InnerTextBox}"
-                TargetType="EditableComboBox+InnerTextBox">
+  <ControlTheme x:Key="{x:Type EditableComboBox+InnerTextBox}" TargetType="EditableComboBox+InnerTextBox">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
@@ -212,24 +212,15 @@
   <ControlTheme x:Key="{x:Type EditableComboBox+InnerComboBox}" TargetType="EditableComboBox+InnerComboBox">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
-    <Setter Property="Foreground"
-            Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="Background"
-            Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderBrush"
-            Value="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderThickness"
-            Value="{Binding BorderThickness, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="CornerRadius"
-            Value="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="Padding"
-            Value="{Binding Padding, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="MinHeight"
-            Value="{Binding MinHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="InnerLeftContent"
-            Value="{Binding InnerLeftContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="InnerRightContent"
-            Value="{Binding InnerRightContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="Padding" Value="{Binding Padding, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="MinHeight" Value="{Binding MinHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="InnerLeftContent" Value="{Binding InnerLeftContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="InnerRightContent" Value="{Binding InnerRightContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
@@ -270,28 +261,29 @@
               </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <ContentPresenter x:Name="PART_TextBoxPresenter"
-                              Grid.Column="1" />
+            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
 
-            <Border x:Name="DropDownOverlay"
-                    Grid.Column="2"
-                    Background="Transparent"
-                    Margin="0,1,1,1"
-                    Width="30"
-                    IsVisible="False"
-                    HorizontalAlignment="Right" />
+            <Border
+              x:Name="DropDownOverlay"
+              Grid.Column="2"
+              Background="Transparent"
+              Margin="0,1,1,1"
+              Width="30"
+              IsVisible="False"
+              HorizontalAlignment="Right" />
 
-            <PathIcon x:Name="DropDownGlyph"
-                      Grid.Column="2"
-                      UseLayoutRounding="False"
-                      IsHitTestVisible="False"
-                      Height="12"
-                      Width="12"
-                      Margin="0,0,10,0"
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Center"
-                      Foreground="{TemplateBinding Foreground}"
-                      Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+            <PathIcon
+              x:Name="DropDownGlyph"
+              Grid.Column="2"
+              UseLayoutRounding="False"
+              IsHitTestVisible="False"
+              Height="12"
+              Width="12"
+              Margin="0,0,10,0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Foreground="{TemplateBinding Foreground}"
+              Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
 
             <ItemsControl
               Grid.Column="3"
@@ -322,41 +314,34 @@
               IsLightDismissEnabled="True"
               OverlayDismissEventPassThrough="True"
               InheritsTransform="True">
-              <Panel>
-                <Border
-                  x:Name="PopupBorder"
-                  Background="{DynamicResource ComboBoxDropDownBackground}"
-                  BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                  BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-                  Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
-                  HorizontalAlignment="Stretch"
-                  CornerRadius="{DynamicResource OverlayCornerRadius}">
-                  <ScrollViewer
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                    IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                      ItemsPanel="{TemplateBinding ItemsPanel}" />
-                  </ScrollViewer>
-                </Border>
-                <Border
-                  x:Name="PopupTabMask"
-                  Background="{x:Null}"
-                  BorderBrush="{DynamicResource ComboBoxDropDownBackground}"
-                  Margin="{
-                              Binding PopupBorderMaskMargin,
-                              RelativeSource={RelativeSource TemplatedParent}
-                           }"
-                  Width="{
-                              Binding PopupBorderMaskWidth,
-                              RelativeSource={RelativeSource TemplatedParent}
-                           }"
-                  Padding="0"
-                  HorizontalAlignment="Left"
-                  CornerRadius="0" />
-              </Panel>
+              <Interaction.Behaviors>
+                <behaviors:PositionedPopupBehavior
+                  PositionToTemplatedParent="True"
+                  InjectFusionMask="True"
+                  PopupBorderThickness="{
+                    Binding FocusedBorderThickness, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+                  }" />
+              </Interaction.Behaviors>
+
+              <Border
+                x:Name="PopupBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                HorizontalAlignment="Stretch"
+                CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                  IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
+                  <ItemsPresenter
+                    Name="PART_ItemsPresenter"
+                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+              </Border>
             </Popup>
           </Grid>
         </DataValidationErrors>
@@ -364,75 +349,83 @@
     </Setter>
 
     <Style Selector="^ /template/ Border#HighlightBackground">
-      <Setter Property="BorderThickness"
-              Value="{
-                Binding FocusedBorderThickness, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-            }" />
+      <Setter
+        Property="BorderThickness"
+        Value="{
+          Binding FocusedBorderThickness, 
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+        }" />
     </Style>
     <Style Selector="^:dropdownopen /template/ Border#HighlightBackground">
-      <Setter Property="BorderThickness"
-              Value="{
-                Binding FocusedBorderThickness, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
-                Converter={x:Static DevoConverters.ThicknessExtractor}, 
-                ConverterParameter={x:Static ThicknessSubset.AllButBottom}
-            }" />
+      <Setter
+        Property="BorderThickness"
+        Value="{
+          Binding FocusedBorderThickness, 
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
+          Converter={x:Static DevoConverters.ThicknessExtractor}, 
+          ConverterParameter={x:Static ThicknessSubset.AllButBottom}
+        }" />
     </Style>
     <Style Selector="^:dropdownopen:dropdown-open-from-top /template/ Border#HighlightBackground">
-      <Setter Property="BorderThickness"
-              Value="{
-                Binding FocusedBorderThickness, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
-                Converter={x:Static DevoConverters.ThicknessExtractor}, 
-                ConverterParameter={x:Static ThicknessSubset.AllButTop}
-            }" />
+      <Setter
+        Property="BorderThickness"
+        Value="{
+          Binding FocusedBorderThickness, 
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
+          Converter={x:Static DevoConverters.ThicknessExtractor}, 
+          ConverterParameter={x:Static ThicknessSubset.AllButTop}
+        }" />
     </Style>
 
-    <Style Selector="^:is-split-between-screens /template/ Border#HighlightBackground">
-      <Setter Property="BorderThickness"
-              Value="{
-                Binding FocusedBorderThickness, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-            }" />
+    <Style Selector="^:is-cut-by-screen-edge /template/ Border#HighlightBackground">
+      <Setter
+        Property="BorderThickness"
+        Value="{
+          Binding FocusedBorderThickness, 
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+        }" />
     </Style>
 
     <Style Selector="^">
-      <Setter Property="CornerRadius"
-              Value="{
-                Binding CornerRadius, 
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-            }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+        }" />
     </Style>
 
     <Style
       Selector="^:dropdownopen /template/ Border#Background, ^:dropdownopen /template/ Border#HighlightBackground">
-      <Setter Property="CornerRadius"
-              Value="{
-                Binding CornerRadius,
-                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
-                Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                ConverterParameter={x:Static CornerRadiusSubset.Top}
-            }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius,
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.Top}
+        }" />
     </Style>
     <Style
       Selector="^:dropdownopen:dropdown-open-from-top /template/ Border#Background, ^:dropdownopen:dropdown-open-from-top /template/ Border#HighlightBackground">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius,
-                        RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.Bottom}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius,
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.Bottom}
+        }" />
     </Style>
 
     <Style
-      Selector="^:is-split-between-screens /template/ Border#Background, ^:is-split-between-screens /template/ Border#HighlightBackground">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius,
-                        RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-                    }" />
+      Selector="^:is-cut-by-screen-edge /template/ Border#Background, ^:is-cut-by-screen-edge /template/ Border#HighlightBackground">
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius,
+          RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+        }" />
     </Style>
 
     <!-- Error State -->
@@ -475,106 +468,95 @@
     </Style>
 
     <Style Selector="^:not(:dropdown-open-from-top):not(:dropdown-overflow-left):not(:dropdown-overflow-right) /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius,
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.Bottom}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius,
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.Bottom}
+        }" />
     </Style>
     <Style Selector="^:not(:dropdown-open-from-top):not(:dropdown-overflow-left):dropdown-overflow-right /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.AllButTopLeft}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.AllButTopLeft}
+        }" />
     </Style>
     <Style Selector="^:not(:dropdown-open-from-top):dropdown-overflow-left:not(:dropdown-overflow-right) /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.AllButTopRight}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.AllButTopRight}
+        }" />
     </Style>
 
     <Style Selector="^:dropdown-open-from-top:not(:dropdown-overflow-left):not(:dropdown-overflow-right) /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius,
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.Top}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius,
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.Top}
+        }" />
     </Style>
     <Style Selector="^:dropdown-open-from-top:not(:dropdown-overflow-left):dropdown-overflow-right /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.AllButBottomLeft}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.AllButBottomLeft}
+        }" />
     </Style>
     <Style Selector="^:dropdown-open-from-top:dropdown-overflow-left:not(:dropdown-overflow-right) /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent},
-                        Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
-                        ConverterParameter={x:Static CornerRadiusSubset.AllButBottomRight}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent},
+          Converter={x:Static DevoConverters.CornerRadiusExtractor}, 
+          ConverterParameter={x:Static CornerRadiusSubset.AllButBottomRight}
+        }" />
     </Style>
 
     <Style Selector="^:dropdown-overflow-left:dropdown-overflow-right /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent}
-                    }" />
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent}
+        }" />
     </Style>
 
-    <Style Selector="^:is-split-between-screens /template/ Border#PopupBorder">
-      <Setter Property="CornerRadius"
-              Value="{
-                        Binding CornerRadius, 
-                        RelativeSource={RelativeSource TemplatedParent}
-                    }" />
+    <Style Selector="^:is-cut-by-screen-edge /template/ Border#PopupBorder">
+      <Setter
+        Property="CornerRadius"
+        Value="{
+          Binding CornerRadius, 
+          RelativeSource={RelativeSource TemplatedParent}
+        }" />
     </Style>
 
-    <Style Selector="^:dropdownopen:not(:dropdown-open-from-top) /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent},
-               Converter={x:Static DevoConverters.ThicknessExtractor}, 
-               ConverterParameter={x:Static ThicknessSubset.Top}
-            }" />
-    </Style>
-    <Style Selector="^:dropdownopen:dropdown-open-from-top /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent},
-               Converter={x:Static DevoConverters.ThicknessExtractor}, 
-               ConverterParameter={x:Static ThicknessSubset.Bottom}
-            }" />
+    <Style Selector="^:pointerover:not(:dropdownopen)">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}" />
     </Style>
 
-    <Style Selector="^:is-split-between-screens /template/ Border#PopupTabMask">
-      <Setter
-        Property="BorderThickness"
-        Value="{
-               Binding FocusedBorderThickness, 
-               RelativeSource={RelativeSource TemplatedParent}
-            }" />
-    </Style>
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.049" />
+      </Transitions>
+    </Setter>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type EditableComboBox}" TargetType="EditableComboBox">

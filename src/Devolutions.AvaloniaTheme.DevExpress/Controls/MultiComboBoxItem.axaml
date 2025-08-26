@@ -1,0 +1,188 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="20" Height="300">
+      <StackPanel>
+        <MultiComboBoxItem Content="Option 1" />
+        <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
+        <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type MultiComboBoxItem}" TargetType="MultiComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="LayoutRoot"
+          Background="Transparent"
+          MinHeight="{DynamicResource ComboBoxItemMinHeight}"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          Padding="0">
+          <StackPanel
+            Orientation="Horizontal" Margin="{TemplateBinding Padding}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Border
+              Name="SelectionHighlight"
+              Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+              Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
+              VerticalAlignment="Stretch"
+              Background="Transparent"
+              Padding="0"
+              CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
+
+            <CheckBox
+              Content="{TemplateBinding Content}"
+              IsTabStop="False"
+              Focusable="False"
+              Margin="0"
+              Padding="6 0 8 0"
+              Background="Transparent"
+              IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <!--  Selected state  -->
+    <Style Selector="^:selected">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!--  PointerOver state  -->
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+      <Style Selector="^ /template/ Border#SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+      <Style Selector="^ /template/ Border#SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
+
+    <!--  Disabled state  -->
+    <Style Selector="^:disabled /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundDisabled}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushDisabled}" />
+      <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type MultiComboBoxSelectAllItem}" TargetType="MultiComboBoxSelectAllItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="LayoutRoot"
+          Background="Transparent"
+          MinHeight="{DynamicResource ComboBoxItemMinHeight}"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          Padding="0 0 8 0">
+          <StackPanel Orientation="Horizontal">
+            <Border
+              Name="SelectionHighlight"
+              Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+              Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
+              VerticalAlignment="Stretch"
+              Background="Transparent"
+              Padding="{TemplateBinding Padding}"
+              CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
+
+            <CheckBox
+              Content="{TemplateBinding Content}"
+              IsThreeState="True"
+              IsTabStop="False"
+              Focusable="False"
+              IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <!--  Selected state  -->
+    <Style Selector="^:selected">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!--  PointerOver state  -->
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+      <Style Selector="^ /template/ Border#SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus, ^[IsFocused=True]">
+      <Style Selector="^ /template/ Border#LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+      </Style>
+      <Style Selector="^ /template/ Border#SelectionHighlight">
+        <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+      </Style>
+    </Style>
+
+    <!--  Disabled state  -->
+    <Style Selector="^:disabled /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundDisabled}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushDisabled}" />
+      <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

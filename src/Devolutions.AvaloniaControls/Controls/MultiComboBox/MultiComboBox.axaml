@@ -213,26 +213,29 @@
                 CornerRadius="{DynamicResource OverlayCornerRadius}">
                 <DockPanel LastChildFill="True">
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
+
+                  <MultiComboBoxSelectAllItem
+                    Name="PART_SelectAllItem"
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Focusable="True"
+                    IsTabStop="False"
+                    Content="{TemplateBinding SelectAllText}" />
+                  <Separator
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
                   <ScrollViewer
                     Grid.IsSharedSizeScope="True"
                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <StackPanel Orientation="Vertical">
-                      <MultiComboBoxSelectAllItem
-                        Name="PART_SelectAllItem"
-                        IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                        Focusable="True"
-                        IsTabStop="False"
-                        Content="{TemplateBinding SelectAllText}" />
-                      <Separator IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-                      <ItemsPresenter
-                        Name="PART_ItemsPresenter"
-                        Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                        HorizontalAlignment="Stretch"
-                        KeyboardNavigation.TabNavigation="None"
-                        ItemsPanel="{TemplateBinding ItemsPanel}" />
-                    </StackPanel>
+                    <ItemsPresenter
+                      Name="PART_ItemsPresenter"
+                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      HorizontalAlignment="Stretch"
+                      KeyboardNavigation.TabNavigation="None"
+                      ItemsPanel="{TemplateBinding ItemsPanel}" />
                   </ScrollViewer>
                 </DockPanel>
               </Border>

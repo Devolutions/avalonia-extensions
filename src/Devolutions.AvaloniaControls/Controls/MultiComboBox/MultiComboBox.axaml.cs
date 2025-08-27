@@ -575,6 +575,7 @@ public class MultiComboBox : SelectingItemsControl
         var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
         if (firstChild != null)
         {
+            this.ScrollIntoView(firstChild.DataContext ?? firstChild);
             return firstChild.Focus(NavigationMethod.Directional);
         }
 
@@ -599,5 +600,5 @@ public class MultiComboBox : SelectingItemsControl
         }
     }
 
-    private static bool CanFocus(Control control) => control is { Focusable: true, IsEffectivelyEnabled: true, IsVisible: true };
+    private static bool CanFocus(Control control) => control is { Focusable: true, IsEffectivelyEnabled: true };
 }

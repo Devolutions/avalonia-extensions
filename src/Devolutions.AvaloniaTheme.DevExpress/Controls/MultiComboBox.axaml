@@ -188,33 +188,35 @@
                 Margin="6">
                 <DockPanel LastChildFill="True">
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
+
+                  <MultiComboBoxSelectAllItem
+                    Name="PART_SelectAllItem"
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Focusable="True"
+                    IsTabStop="False"
+                    Margin="4"
+                    Content="{TemplateBinding SelectAllText}" />
+
+                  <Border
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    BorderThickness="0 0 0 1"
+                    Margin="0"
+                    BorderBrush="{DynamicResource BorderBrush}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
                   <ScrollViewer
                     Grid.IsSharedSizeScope="True"
                     Margin="4 0"
                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <StackPanel Orientation="Vertical" Margin="{DynamicResource ComboBoxDropdownContentMargin}">
-                      <MultiComboBoxSelectAllItem
-                        Name="PART_SelectAllItem"
-                        IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                        Focusable="True"
-                        IsTabStop="False"
-                        Content="{TemplateBinding SelectAllText}" />
-
-                      <Border
-                        IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                        BorderThickness="0 0 0 1"
-                        Margin="0 4"
-                        BorderBrush="{DynamicResource BorderBrush}" />
-
-                      <ItemsPresenter
-                        Name="PART_ItemsPresenter"
-                        KeyboardNavigation.TabNavigation="None"
-                        Margin="0"
-                        HorizontalAlignment="Stretch"
-                        ItemsPanel="{TemplateBinding ItemsPanel}" />
-                    </StackPanel>
+                    <ItemsPresenter
+                      Name="PART_ItemsPresenter"
+                      KeyboardNavigation.TabNavigation="None"
+                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      HorizontalAlignment="Stretch"
+                      ItemsPanel="{TemplateBinding ItemsPanel}" />
                   </ScrollViewer>
                 </DockPanel>
               </Border>

@@ -4,79 +4,82 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ControlAlignment">
-  
-  
-  <StackPanel Margin="10">
-    <TextBlock Classes="h1" Text="Grids" />
-    <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
-          ColumnSpacing="10"
-          Margin="10 0">
-      <TextBlock Grid.Column="0">TextBlock</TextBlock>
-      <TextBox Grid.Column="1" Watermark="TextBox" />
-      <TextBox Grid.Column="2" Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
-      <ComboBox Grid.Column="3" SelectedIndex="2">
+
+  <ScrollViewer>
+    <StackPanel Margin="10">
+      <TextBlock Classes="h1" Text="Grids" />
+      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+            ColumnSpacing="10"
+            Margin="10 0">
+        <TextBlock Grid.Column="0">TextBlock</TextBlock>
+        <TextBox Grid.Column="1" Watermark="TextBox" />
+        <TextBox Grid.Column="2" Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+        <ComboBox Grid.Column="3" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
           <ComboBoxItem>Option 3</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
-      <AutoCompleteBox Grid.Column="4" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
-      <NumericUpDown Grid.Column="5" Value="0"
-                     Increment="1"
-                     Watermark="mm" />
-      <CalendarDatePicker Grid.Column="6" />
-      <Button Grid.Column="7" Content="Button" />
-      <CheckBox Grid.Column="8" Content="Checkbox" IsChecked="True" />
-      <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-      <TextBlock Grid.Column="9" Text="🙂" FontSize="45" />
-    </Grid>
+        <AutoCompleteBox Grid.Column="4" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Column="5" Value="0"
+                       Increment="1"
+                       Watermark="mm" />
+        <CalendarDatePicker Grid.Column="6" />
+        <Button Grid.Column="7" Content="Button" />
+        <CheckBox Grid.Column="8" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Column="9" Content="RadioButton" IsChecked="True" />
+        <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
+        <TextBlock Grid.Column="10" Text="🙂" FontSize="45" />
+      </Grid>
 
-    <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *"
-          RowSpacing="5"
-          Width="150"
-          HorizontalAlignment="Left"
-          Margin="10 5">
-      <TextBlock Grid.Row="2">TextBlock</TextBlock>
-      <TextBox Grid.Row="3" Watermark="TextBox" />
-      <ComboBox Grid.Row="4" SelectedIndex="2">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-        <ComboBoxItem>Option 4</ComboBoxItem>
-      </ComboBox>
-      <AutoCompleteBox Grid.Row="5" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
-      <NumericUpDown Grid.Row="6" Value="0"
-                     Increment="1"
-                     Watermark="mm" />
-      <CalendarDatePicker Grid.Row="7" />
-      <Button Grid.Row="8" Content="Button" />
-      <CheckBox Grid.Row="9" Content="Checkbox" IsChecked="True" />
-    </Grid>
-
-    <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
-    <StackPanel Orientation="Vertical" Spacing="20" VerticalAlignment="Top">
-      <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
-        <TextBlock>TextBlock</TextBlock>
-        <TextBox Watermark="TextBox" />
-        <TextBox Grid.Column="2" Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
-        <ComboBox SelectedIndex="2">
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *"
+            RowSpacing="5"
+            Width="150"
+            HorizontalAlignment="Left"
+            Margin="10 5">
+        <TextBlock Grid.Row="2">TextBlock</TextBlock>
+        <TextBox Grid.Row="3" Watermark="TextBox" />
+        <ComboBox Grid.Row="4" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
           <ComboBoxItem>Option 3</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
-        <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Value="0"
+        <AutoCompleteBox Grid.Row="5" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Row="6" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker />
-        <Button Content="Button" />
-        <CheckBox Content="Checkbox" IsChecked="True" />
-        <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-        <TextBlock Text="🙂" FontSize="45" />
-      </StackPanel>
-      <StackPanel Orientation="Vertical" Width="150" Margin="10 5" Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <TextBlock>TextBlock</TextBlock>
+        <CalendarDatePicker Grid.Row="7" />
+        <Button Grid.Row="8" Content="Button" />
+        <CheckBox Grid.Row="9" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Row="10" Content="RadioButton" IsChecked="True" />
+      </Grid>
+
+      <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
+      <StackPanel Orientation="Vertical" Spacing="20" VerticalAlignment="Top">
+        <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
+          <TextBlock>TextBlock</TextBlock>
+          <TextBox Watermark="TextBox" />
+          <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+          <ComboBox SelectedIndex="2">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Option 4</ComboBoxItem>
+          </ComboBox>
+          <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
+          <NumericUpDown Value="0"
+                         Increment="1"
+                         Watermark="mm" />
+          <CalendarDatePicker />
+          <Button Content="Button" />
+          <CheckBox Content="Checkbox" IsChecked="True" />
+          <RadioButton Content="RadioButton" IsChecked="True" />
+          <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
+          <TextBlock Text="🙂" FontSize="45" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Width="150" Margin="10 5" Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Left">
+          <TextBlock>TextBlock</TextBlock>
           <TextBox Watermark="TextBox" />
           <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
@@ -92,7 +95,9 @@
           <TextBox Classes="revealPasswordButton" />
           <Button Content="Button" />
           <CheckBox Content="Checkbox" IsChecked="True" />
+          <RadioButton Content="RadioButton" IsChecked="True" />
+        </StackPanel>
       </StackPanel>
     </StackPanel>
-  </StackPanel>
+  </ScrollViewer>
 </UserControl>

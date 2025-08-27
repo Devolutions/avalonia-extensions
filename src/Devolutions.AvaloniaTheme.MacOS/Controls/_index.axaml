@@ -27,6 +27,7 @@
     <MergeResourceInclude Source="MultiComboBox.axaml" />
     <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
+    <MergeResourceInclude Source="RadioButton.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />
     <MergeResourceInclude Source="Separator.axaml" />

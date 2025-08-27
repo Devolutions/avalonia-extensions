@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.RadioButtonDemo">
+
+  <StackPanel Orientation="Horizontal" Margin="20" Spacing="10" Height="200" VerticalAlignment="Top">
+    <Border Padding="10">
+      <StackPanel>
+        <TextBlock Margin="0 0 0 5">First Group</TextBlock>
+        <RadioButton GroupName="First Group"
+                     Content="First Option" />
+        <RadioButton GroupName="First Group"
+                     Content="Second Option" IsChecked="True" />
+        <RadioButton GroupName="First Group"
+                     Content="Third Option" IsEnabled="False" />
+
+        <TextBlock Margin="0 10 0 5">Second Group</TextBlock>
+        <RadioButton GroupName="Second Group"
+                     Content="First Option" IsChecked="True" IsEnabled="False" />
+        <RadioButton GroupName="Second Group"
+                     Content="Second Option" IsEnabled="False" />
+      </StackPanel>
+    </Border>
+
+    <Border Background="{DynamicResource AlternativeBackgroundBrush}" Padding="10">
+      <StackPanel>
+        <TextBlock Margin="0 0 0 5">Third Group</TextBlock>
+        <RadioButton GroupName="Third Group"
+                     Content="First Option" />
+        <RadioButton GroupName="Third Group"
+                     Content="Second Option" IsChecked="True" />
+        <RadioButton IsEnabled="False"
+                     GroupName="Third Group"
+                     Content="Third Option" />
+
+        <TextBlock Margin="0 10 0 5">Fourth Group</TextBlock>
+        <RadioButton GroupName="Fourth Group"
+                     Content="First Option" IsChecked="True" IsEnabled="False" />
+        <RadioButton GroupName="Fourth Group"
+                     Content="Second Option" IsEnabled="False" />
+
+      </StackPanel>
+    </Border>
+  </StackPanel>
+
+
+</UserControl>

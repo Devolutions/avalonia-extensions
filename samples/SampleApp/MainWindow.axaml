@@ -112,7 +112,7 @@
         </TabItem.Header>
         <demoPages:GridSplitterDemo />
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacOS, Windows - DevExpress" />
         </TabItem.Header>
@@ -135,6 +135,12 @@
           <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:NumericUpDownDemo />
+      </TabItem>
+      <TabItem IsSelected="True">
+        <TabItem.Header>
+          <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacOS" />
+        </TabItem.Header>
+        <demoPages:RadioButtonDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>

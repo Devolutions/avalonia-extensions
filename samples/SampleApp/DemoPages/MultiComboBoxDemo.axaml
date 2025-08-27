@@ -4,7 +4,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:vm="clr-namespace:SampleApp.ViewModels"
-  mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="700"
+  mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="800"
   x:Class="SampleApp.DemoPages.MultiComboBoxDemo"
   x:DataType="vm:MultiComboBoxViewModel">
 
@@ -12,7 +12,7 @@
     <vm:MultiComboBoxViewModel />
   </Design.DataContext>
 
-  <Border Margin="20" Padding="20" HorizontalAlignment="Stretch">
+  <Border Margin="10" Padding="10" HorizontalAlignment="Stretch">
     <StackPanel Orientation="Vertical">
       <MultiComboBox Width="200" Watermark="select...">
         <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
@@ -22,7 +22,7 @@
         <MultiComboBoxItem>Item 5</MultiComboBoxItem>
       </MultiComboBox>
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>OverflowMode = Scroll (Default)</TextBlock>
       <TextBlock Margin="10 0 0 0">
@@ -39,7 +39,7 @@
         <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
       </MultiComboBox>
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>OverflowMode = Wrap</TextBlock>
       <MultiComboBox Width="200" Watermark="select..." OverflowMode="Wrap" SelectAllLabel="Select All">
@@ -50,7 +50,7 @@
         <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
       </MultiComboBox>
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <MultiComboBox
         HorizontalAlignment="Left"
@@ -62,7 +62,7 @@
         <TextBlock Text="{Binding SelectedText}" />
       </StackPanel>
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>"Select All" feature</TextBlock>
       <MultiComboBox
@@ -72,7 +72,7 @@
         ItemsSource="{Binding Items}"
         SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>LOT of values</TextBlock>
       <MultiComboBox
@@ -81,7 +81,7 @@
         SelectAllLabel="Select All"
         ItemsSource="{Binding LotOfItems}" />
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>Disabled</TextBlock>
       <MultiComboBox
@@ -91,7 +91,7 @@
         ItemsSource="{Binding Items}"
         SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
 
-      <Separator Margin="0 10" />
+      <Separator Margin="0 5" />
 
       <TextBlock>Custom Item Template</TextBlock>
       <MultiComboBox
@@ -108,6 +108,19 @@
           </DataTemplate>
         </MultiComboBox.ItemTemplate>
       </MultiComboBox>
+
+      <Separator Margin="0 5" />
+
+      <TextBlock>Enum Values</TextBlock>
+      <MultiComboBox
+        HorizontalAlignment="Left"
+        Watermark="Enum Values"
+        ItemsSource="{Binding EnumValues}"
+        SelectedItems="{Binding SelectedEnumValues, Mode=TwoWay}" />
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Selected: " />
+        <TextBlock Text="{Binding SelectedEnumValuesText}" />
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

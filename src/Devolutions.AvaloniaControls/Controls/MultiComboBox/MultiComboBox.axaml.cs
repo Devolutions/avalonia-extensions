@@ -125,13 +125,11 @@ public class MultiComboBox : SelectingItemsControl
 
         this.GetObservable(OverflowModeProperty).Subscribe(_ =>
         {
-            this.RaisePropertyChanged(ScrollbarVisibilityProperty, default, this.ScrollbarVisibility);
-            this.RaisePropertyChanged(EffectiveSelectedItemsPanelProperty, null!, this.EffectiveSelectedItemsPanel);
+            this.RaiseDirectPropertyChanged(ScrollbarVisibilityProperty);
+            this.RaiseDirectPropertyChanged(EffectiveSelectedItemsPanelProperty);
         });
-        this.GetObservable(SelectedItemTemplateProperty)
-            .Subscribe(_ => this.RaisePropertyChanged(EffectiveSelectedItemTemplateProperty, null!, this.EffectiveSelectedItemTemplate));
-        this.GetObservable(ItemTemplateProperty)
-            .Subscribe(_ => this.RaisePropertyChanged(EffectiveSelectedItemTemplateProperty, null!, this.EffectiveSelectedItemTemplate));
+        this.GetObservable(SelectedItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
     }
 
     public ITemplate<Panel>? SelectedItemsPanel
@@ -228,6 +226,12 @@ public class MultiComboBox : SelectingItemsControl
     };
 
     public IDataTemplate? EffectiveSelectedItemTemplate => this.SelectedItemTemplate ?? this.ItemTemplate;
+
+    private void RaiseDirectPropertyChanged<T>(DirectPropertyBase<T> property)
+    {
+        T val = this.GetValue(property);
+        this.RaisePropertyChanged(property, default!, val);
+    }
 
     private MultiComboBoxItem? GetMultiComboBoxItemContainer(object? item)
     {

@@ -14,10 +14,8 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
+using Irihi.Avalonia.Shared.Helpers;
 using static Extensions.AvaloniaExtensions;
-using AvaloniaPropertyExtension = Irihi.Avalonia.Shared.Helpers.AvaloniaPropertyExtension;
-using ObservableExtension = Irihi.Avalonia.Shared.Helpers.ObservableExtension;
-using RoutedEventExtension = Irihi.Avalonia.Shared.Helpers.RoutedEventExtension;
 
 public enum MultiComboBoxOverflowMode
 {
@@ -117,7 +115,7 @@ public class MultiComboBox : SelectingItemsControl
     {
         FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
-        AvaloniaPropertyExtension.AffectsPseudoClass<MultiComboBox>(IsDropDownOpenProperty, PC_DropDownOpen);
+        IsDropDownOpenProperty.AffectsPseudoClass<MultiComboBox>(PC_DropDownOpen);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>((box, args) => box.OnSelectedItemsChanged(args));
     }
 
@@ -325,27 +323,26 @@ public class MultiComboBox : SelectingItemsControl
 
         this.selectAllItem?.UpdateSelection();
 
-        RoutedEventExtension.RemoveHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
+        PointerPressedEvent.RemoveHandler(this.OnBackgroundPointerPressed, this.rootBorder);
         this.rootBorder = e.NameScope.Find<Border>(PART_BackgroundBorder);
-        RoutedEventExtension.AddHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
+        PointerPressedEvent.AddHandler(this.OnBackgroundPointerPressed, this.rootBorder);
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count == 0);
 
         if (this.selectAllItem is { } sai)
         {
-            ObservableExtension.Subscribe(sai.GetObservable(IsSelectedProperty),
-                isSelected =>
-                {
-                    if (this.updateInternal) return;
+            sai.GetObservable(IsSelectedProperty).Subscribe(isSelected =>
+            {
+                if (this.updateInternal) return;
 
-                    if (isSelected)
-                    {
-                        this.Selection.SelectAll();
-                    }
-                    else
-                    {
-                        this.Selection.Clear();
-                    }
-                });
+                if (isSelected)
+                {
+                    this.Selection.SelectAll();
+                }
+                else
+                {
+                    this.Selection.Clear();
+                }
+            });
         }
     }
 

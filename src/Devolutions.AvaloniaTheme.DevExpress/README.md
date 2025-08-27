@@ -82,6 +82,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 ## Styled Controls
 
+Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.
+
 |||
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 |||
@@ -134,7 +136,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 || <h3>Label</h3> |
 |||
 |✅ | <h3>ListBox</h3> <h4>ListBoxItem</h4>|
-|| <img src="https://github.com/user-attachments/assets/2571edc4-4893-4a0d-b31e-b229d866a824" alt="ListBox demo" style="width: 464px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/56cce1f9-6c52-4c6a-bdc1-e77e2ba23d2a" alt="ListBox demo (darkmode)" style="width: 464px; max-width: 100%;" /> |
+|| <img alt="ListBox demos" src="https://github.com/user-attachments/assets/ef36c281-71fd-4fc6-911f-55490de05d32" style="width: 927px; max-width: 100%;" /> <br /><img alt="ListBox demos - darkmode" src="https://github.com/user-attachments/assets/19d4d810-588f-42d6-9750-fb21329034b3" style="width: 927px; max-width: 100%;" /> |
 || <h3>ManagedFileChooser</h3> |
 |||
 || <h3>Menu</h3> |

@@ -121,7 +121,7 @@
                 Margin="1">
                 <u:MultiComboBoxSelectedItemList
                   VerticalAlignment="Center"
-                  ItemTemplate="{TemplateBinding SelectedItemTemplate}"
+                  ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
                   ItemsSource="{TemplateBinding SelectedItems}"
                   RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                   ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />

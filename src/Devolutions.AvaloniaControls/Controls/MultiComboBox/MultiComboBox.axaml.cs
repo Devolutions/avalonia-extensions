@@ -82,13 +82,15 @@ public class MultiComboBox : SelectingItemsControl
 
     public static readonly DirectProperty<MultiComboBox, ScrollBarVisibility> ScrollbarVisibilityProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, ScrollBarVisibility>(nameof(ScrollbarVisibility),
-            o => o.ScrollbarVisibility,
-            (o, v) => o.ScrollbarVisibility = v);
+            o => o.ScrollbarVisibility);
 
     public static readonly DirectProperty<MultiComboBox, ITemplate<Panel>> EffectiveSelectedItemsPanelProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, ITemplate<Panel>>(nameof(EffectiveSelectedItemsPanel),
-            o => o.EffectiveSelectedItemsPanel,
-            (o, v) => o.EffectiveSelectedItemsPanel = v);
+            o => o.EffectiveSelectedItemsPanel);
+
+    public static readonly DirectProperty<MultiComboBox, IDataTemplate?> EffectiveSelectedItemTemplateProperty =
+        AvaloniaProperty.RegisterDirect<MultiComboBox, IDataTemplate?>(nameof(EffectiveSelectedItemTemplate),
+            o => o.EffectiveSelectedItemTemplate);
 
     private static readonly ITemplate<Panel> DefaultSelectedItemsPanel =
         new FuncTemplate<Panel>(() => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
@@ -121,21 +123,13 @@ public class MultiComboBox : SelectingItemsControl
     {
         this.SelectedItems = new AvaloniaList<object>();
 
-        this.GetObservable(OverflowModeProperty).Subscribe(visibility =>
+        this.GetObservable(OverflowModeProperty).Subscribe(_ =>
         {
-            this.ScrollbarVisibility = visibility switch
-            {
-                MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
-                MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
-                _ => ScrollBarVisibility.Auto,
-            };
-            this.EffectiveSelectedItemsPanel = this.SelectedItemsPanel ?? visibility switch
-            {
-                MultiComboBoxOverflowMode.Scroll => DefaultSelectedItemsPanel,
-                MultiComboBoxOverflowMode.Wrap => DefaultSelectedItemsWrapPanel,
-                _ => DefaultSelectedItemsPanel,
-            };
+            this.RaiseDirectPropertyChanged(ScrollbarVisibilityProperty);
+            this.RaiseDirectPropertyChanged(EffectiveSelectedItemsPanelProperty);
         });
+        this.GetObservable(SelectedItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
     }
 
     public ITemplate<Panel>? SelectedItemsPanel
@@ -217,9 +211,27 @@ public class MultiComboBox : SelectingItemsControl
         set => this.SetValue(PopupInnerBottomContentProperty, value);
     }
 
-    public ScrollBarVisibility ScrollbarVisibility { get; private set; } = ScrollBarVisibility.Auto;
+    public ScrollBarVisibility ScrollbarVisibility => this.OverflowMode switch
+    {
+        MultiComboBoxOverflowMode.Scroll => ScrollBarVisibility.Auto,
+        MultiComboBoxOverflowMode.Wrap => ScrollBarVisibility.Disabled,
+        _ => ScrollBarVisibility.Auto,
+    };
 
-    public ITemplate<Panel> EffectiveSelectedItemsPanel { get; private set; } = DefaultSelectedItemsPanel;
+    public ITemplate<Panel> EffectiveSelectedItemsPanel => this.SelectedItemsPanel ?? this.OverflowMode switch
+    {
+        MultiComboBoxOverflowMode.Scroll => DefaultSelectedItemsPanel,
+        MultiComboBoxOverflowMode.Wrap => DefaultSelectedItemsWrapPanel,
+        _ => DefaultSelectedItemsPanel,
+    };
+
+    public IDataTemplate? EffectiveSelectedItemTemplate => this.SelectedItemTemplate ?? this.ItemTemplate;
+
+    private void RaiseDirectPropertyChanged<T>(DirectPropertyBase<T> property)
+    {
+        T val = this.GetValue(property);
+        this.RaisePropertyChanged(property, default!, val);
+    }
 
     private MultiComboBoxItem? GetMultiComboBoxItemContainer(object? item)
     {
@@ -421,7 +433,6 @@ public class MultiComboBox : SelectingItemsControl
         if (item is MultiComboBoxItem containerItem)
         {
             container.DataContext = containerItem.Content;
-            return;
         }
 
         base.PrepareContainerForItemOverride(container, item, index);

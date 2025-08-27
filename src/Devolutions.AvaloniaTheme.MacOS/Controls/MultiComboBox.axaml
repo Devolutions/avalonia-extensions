@@ -42,7 +42,7 @@
           <MultiComboBoxItem Content="Option 1" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="With Select All" Margin="10" SelectAllLabel="Select All">
+        <MultiComboBox Watermark="With Select All" Margin="10" SelectAllText="Select All">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
           <MultiComboBoxItem Content="Option 3" />
@@ -126,9 +126,26 @@
                 Foreground="{DynamicResource TextBoxInnerForeground}"
                 IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
+              <TextBlock
+                Grid.Column="1"
+                Margin="{TemplateBinding Padding}"
+                Text="{TemplateBinding AllSelectedText}"
+                Foreground="{TemplateBinding Foreground}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                IsHitTestVisible="False"
+                TextTrimming="CharacterEllipsis"
+                IsVisible="{AndBinding
+                  {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNotNullOrEmpty}},
+                  {TemplateBinding IsAllSelected}
+                }" />
               <SmallScrollViewer
                 Name="PART_SelectionScrollViewer"
                 Grid.Column="1"
+                IsVisible="{OrBinding
+                  {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNullOrEmpty}},
+                  {TemplateBinding IsAllSelected, Converter={x:Static BoolConverters.Not}}
+                }"
                 Background="{x:Null}"
                 Margin="1 0"
                 MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
@@ -206,12 +223,12 @@
                   <StackPanel Orientation="Vertical" Margin="0">
                     <MultiComboBoxSelectAllItem
                       Name="PART_SelectAllItem"
-                      IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                       Focusable="True"
                       IsTabStop="False"
-                      Content="{TemplateBinding SelectAllLabel}" />
+                      Content="{TemplateBinding SelectAllText}" />
 
-                    <Separator IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    <Separator IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
                     <ItemsPresenter
                       Name="PART_ItemsPresenter"

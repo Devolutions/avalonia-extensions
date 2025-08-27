@@ -30,7 +30,7 @@
   <!-- This also dictates which theme is initially loaded -->
   <Application.Styles>
     <!-- <DevolutionsMacOsTheme /> -->
-    <!-- <DevolutionsDevExpressTheme /> -->
-    <DevolutionsLinuxYaruTheme />
+    <DevolutionsDevExpressTheme />
+    <!-- <DevolutionsLinuxYaruTheme /> -->
   </Application.Styles>
 </Application>

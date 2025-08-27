@@ -36,8 +36,11 @@ public class MultiComboBox : SelectingItemsControl
     public static readonly StyledProperty<MultiComboBoxOverflowMode> OverflowModeProperty =
         AvaloniaProperty.Register<MultiComboBox, MultiComboBoxOverflowMode>(nameof(OverflowMode));
 
-    public static readonly StyledProperty<string?> SelectAllLabelProperty =
-        AvaloniaProperty.Register<MultiComboBox, string?>(nameof(SelectAllLabel));
+    public static readonly StyledProperty<string?> SelectAllTextProperty =
+        AvaloniaProperty.Register<MultiComboBox, string?>(nameof(SelectAllText));
+
+    public static readonly StyledProperty<string?> AllSelectedTextProperty =
+        AvaloniaProperty.Register<MultiComboBox, string?>(nameof(AllSelectedText));
 
     public static readonly StyledProperty<bool> IsDropDownOpenProperty =
         ComboBox.IsDropDownOpenProperty.AddOwner<MultiComboBox>();
@@ -92,6 +95,10 @@ public class MultiComboBox : SelectingItemsControl
         AvaloniaProperty.RegisterDirect<MultiComboBox, IDataTemplate?>(nameof(EffectiveSelectedItemTemplate),
             o => o.EffectiveSelectedItemTemplate);
 
+    public static readonly DirectProperty<MultiComboBox, bool?> IsAllSelectedProperty =
+        AvaloniaProperty.RegisterDirect<MultiComboBox, bool?>(nameof(IsAllSelected),
+            o => o.IsAllSelected);
+
     private static readonly ITemplate<Panel> DefaultSelectedItemsPanel =
         new FuncTemplate<Panel>(() => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
 
@@ -144,10 +151,16 @@ public class MultiComboBox : SelectingItemsControl
         set => this.SetValue(OverflowModeProperty, value);
     }
 
-    public string? SelectAllLabel
+    public string? SelectAllText
     {
-        get => this.GetValue(SelectAllLabelProperty);
-        set => this.SetValue(SelectAllLabelProperty, value);
+        get => this.GetValue(SelectAllTextProperty);
+        set => this.SetValue(SelectAllTextProperty, value);
+    }
+
+    public string? AllSelectedText
+    {
+        get => this.GetValue(AllSelectedTextProperty);
+        set => this.SetValue(AllSelectedTextProperty, value);
     }
 
     public bool IsDropDownOpen
@@ -227,6 +240,21 @@ public class MultiComboBox : SelectingItemsControl
 
     public IDataTemplate? EffectiveSelectedItemTemplate => this.SelectedItemTemplate ?? this.ItemTemplate;
 
+    public bool? IsAllSelected
+    {
+        get
+        {
+            if (this.SelectedItems is null) return false;
+
+            return this.SelectedItems.Count switch
+            {
+                0 => false,
+                var i when i == this.Items.Count => true,
+                _ => null,
+            };
+        }
+    }
+
     private void RaiseDirectPropertyChanged<T>(DirectPropertyBase<T> property)
     {
         T val = this.GetValue(property);
@@ -305,6 +333,8 @@ public class MultiComboBox : SelectingItemsControl
                 }
             }
         }
+
+        this.RaiseDirectPropertyChanged(IsAllSelectedProperty);
 
         this.updateInternal = false;
     }
@@ -418,6 +448,7 @@ public class MultiComboBox : SelectingItemsControl
         }
 
         this.selectAllItem?.UpdateSelection();
+        this.RaiseDirectPropertyChanged(IsAllSelectedProperty);
     }
 
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)

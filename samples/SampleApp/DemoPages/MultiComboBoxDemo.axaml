@@ -42,7 +42,7 @@
       <Separator Margin="0 5" />
 
       <TextBlock>OverflowMode = Wrap</TextBlock>
-      <MultiComboBox Width="200" Watermark="select..." OverflowMode="Wrap" SelectAllLabel="Select All">
+      <MultiComboBox Width="200" Watermark="select..." OverflowMode="Wrap" SelectAllText="Select All">
         <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
         <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
         <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
@@ -68,7 +68,7 @@
       <MultiComboBox
         HorizontalAlignment="Left"
         Watermark="With select all"
-        SelectAllLabel="Select All"
+        SelectAllText="Select All"
         ItemsSource="{Binding Items}"
         SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
 
@@ -78,7 +78,8 @@
       <MultiComboBox
         HorizontalAlignment="Left"
         Watermark="LOT of values"
-        SelectAllLabel="Select All"
+        SelectAllText="Select All"
+        AllSelectedText="All"
         ItemsSource="{Binding LotOfItems}" />
 
       <Separator Margin="0 5" />

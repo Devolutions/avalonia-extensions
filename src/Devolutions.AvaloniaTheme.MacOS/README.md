@@ -40,6 +40,8 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
     - [ContextMenu](#contextmenu)
     - [DataGrid](#datagrid)
     - [GridSplitter](#gridsplitter)
+    - [ListBox](#listbox)
+      - [ListBoxItem](#listboxitem)
     - [Menu](#menu)
     - [MenuFlyoutPresenter](#menuflyoutpresenter)
     - [MenuItem](#menuitem)
@@ -60,7 +62,9 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
   - 🚧 In progress ...
     - small improvements & fixes, some code cleanup
     - SplitButton
+    - CheckBoxListBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
     - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
+    - MultiComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
     - RadioButton
     - DropDownButton
@@ -91,6 +95,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 ```
 
 ## Styled Controls
+
+Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.
 
 ||| 
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
@@ -143,10 +149,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 |||
 || <h3>Label</h3> |
 |||
-|| <h3>ListBox</h3> |
-|||
-|| <h3>ListBoxItem</h3> |
-|||
+|✅ | <h3>ListBox</h3> <h4>ListBoxItem</h4> |
+|| <img alt="Basic ListBox" src="https://github.com/user-attachments/assets/3d759f36-7f42-4866-9d48-aded0ee38a0e" style="width: 901px; max-width: 100%;" /><br /><img alt="ListBox demos" src="https://github.com/user-attachments/assets/af7c355b-5cd9-4ab3-9377-12123e687d0c" style="width: 817px; max-width: 100%;" /><br /><img alt="Multi-column ListBox demos" src="https://github.com/user-attachments/assets/54eb0b14-a7be-43cf-a938-babc7259c687" style="width: 972px; max-width: 100%;" /><br /><img alt="Multi-column ListBoxes with scrollbars" src="https://github.com/user-attachments/assets/f190dec6-6aa9-467d-a2e5-358c8f363a47" style="width: 551px; max-width: 100%;" /><br /><img alt="ListBox demos - darkmode" src="https://github.com/user-attachments/assets/697e2b93-f49e-4aa0-8fbe-eb8428e88195" style="width: 973px; max-width: 100%;" /> |
 || <h3>ManagedFileChooser</h3> |
 |||
 |✅ | <h3>Menu</h3> |

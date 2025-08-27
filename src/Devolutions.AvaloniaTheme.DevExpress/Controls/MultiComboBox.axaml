@@ -38,7 +38,7 @@
           <MultiComboBoxItem Content="Option 4" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="Select All" Margin="10" SelectAllLabel="Select All">
+        <MultiComboBox Watermark="Select All" Margin="10" SelectAllText="Select All" AllSelectedText="All">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
           <MultiComboBoxItem Content="Option 3" />
@@ -120,8 +120,24 @@
                   Text="{TemplateBinding Watermark}"
                   IsVisible="False" />
 
+                <TextBlock
+                  Name="AllSelectedTextBlock"
+                  Text="{TemplateBinding AllSelectedText}"
+                  Foreground="{TemplateBinding Foreground}"
+                  FontSize="{TemplateBinding FontSize}"
+                  Margin="{TemplateBinding Padding}"
+                  TextTrimming="CharacterEllipsis"
+                  IsVisible="{AndBinding
+                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNotNullOrEmpty}},
+                    {Binding !!IsAllSelected, RelativeSource={RelativeSource TemplatedParent}}
+                  }" />
+
                 <SmallScrollViewer
                   Name="PART_SelectionScrollViewer"
+                  IsVisible="{OrBinding
+                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNullOrEmpty}},
+                    {TemplateBinding IsAllSelected, Converter={x:Static BoolConverters.Not}}
+                  }"
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="{x:Null}"
                   Margin="1"
@@ -172,33 +188,35 @@
                 Margin="6">
                 <DockPanel LastChildFill="True">
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
+
+                  <MultiComboBoxSelectAllItem
+                    Name="PART_SelectAllItem"
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Focusable="True"
+                    IsTabStop="False"
+                    Margin="4"
+                    Content="{TemplateBinding SelectAllText}" />
+
+                  <Border
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    BorderThickness="0 0 0 1"
+                    Margin="0"
+                    BorderBrush="{DynamicResource BorderBrush}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
                   <ScrollViewer
                     Grid.IsSharedSizeScope="True"
                     Margin="4 0"
                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <StackPanel Orientation="Vertical" Margin="{DynamicResource ComboBoxDropdownContentMargin}">
-                      <MultiComboBoxSelectAllItem
-                        Name="PART_SelectAllItem"
-                        IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                        Focusable="True"
-                        IsTabStop="False"
-                        Content="{TemplateBinding SelectAllLabel}" />
-
-                      <Border
-                        IsVisible="{TemplateBinding SelectAllLabel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                        BorderThickness="0 0 0 1"
-                        Margin="0 4"
-                        BorderBrush="{DynamicResource BorderBrush}" />
-
-                      <ItemsPresenter
-                        Name="PART_ItemsPresenter"
-                        KeyboardNavigation.TabNavigation="None"
-                        Margin="0"
-                        HorizontalAlignment="Stretch"
-                        ItemsPanel="{TemplateBinding ItemsPanel}" />
-                    </StackPanel>
+                    <ItemsPresenter
+                      Name="PART_ItemsPresenter"
+                      KeyboardNavigation.TabNavigation="None"
+                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      HorizontalAlignment="Stretch"
+                      ItemsPanel="{TemplateBinding ItemsPanel}" />
                   </ScrollViewer>
                 </DockPanel>
               </Border>

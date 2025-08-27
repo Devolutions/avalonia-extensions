@@ -34,7 +34,7 @@
 
   <ControlTheme x:Key="TabPane_TabItem" TargetType="TabItem">
     <Setter Property="FontSize" Value="{DynamicResource TabItemHeaderFontSize}" />
-    <Setter Property="FontWeight" Value="{DynamicResource TabItemHeaderThemeFontWeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DefaultFontWeight}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
     <Setter Property="Padding" Value="{DynamicResource TabItemHeaderMargin}" />
@@ -157,7 +157,7 @@
     </Style>
 
     <Style Selector="^:selected">
-      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontWeight" Value="{DynamicResource DemiBoldWeight}" />
     </Style>
   </ControlTheme>
 

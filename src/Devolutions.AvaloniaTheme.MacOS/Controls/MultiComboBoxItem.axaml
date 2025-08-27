@@ -32,6 +32,7 @@
 
           <CheckBox
             Content="{TemplateBinding Content}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
             Margin="4 0 6 0"
             IsTabStop="False"
@@ -95,6 +96,7 @@
 
           <CheckBox
             Content="{TemplateBinding Content}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
             Margin="4 0 6 0"
             Padding="0"

@@ -45,6 +45,7 @@
 
             <CheckBox
               Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
               IsTabStop="False"
               Focusable="False"
               Margin="0"
@@ -131,6 +132,7 @@
 
             <CheckBox
               Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
               IsThreeState="True"
               IsTabStop="False"
               Focusable="False"

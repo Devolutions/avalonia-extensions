@@ -128,6 +128,10 @@ public class MultiComboBox : SelectingItemsControl
             this.RaisePropertyChanged(ScrollbarVisibilityProperty, default, this.ScrollbarVisibility);
             this.RaisePropertyChanged(EffectiveSelectedItemsPanelProperty, null!, this.EffectiveSelectedItemsPanel);
         });
+        this.GetObservable(SelectedItemTemplateProperty)
+            .Subscribe(_ => this.RaisePropertyChanged(EffectiveSelectedItemTemplateProperty, null!, this.EffectiveSelectedItemTemplate));
+        this.GetObservable(ItemTemplateProperty)
+            .Subscribe(_ => this.RaisePropertyChanged(EffectiveSelectedItemTemplateProperty, null!, this.EffectiveSelectedItemTemplate));
     }
 
     public ITemplate<Panel>? SelectedItemsPanel

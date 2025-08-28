@@ -57,7 +57,7 @@
       </ControlTemplate>
     </Setter>
 
-    <!--Unchecked PointerOver State -->
+    <!-- Unchecked PointerOver State -->
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#CheckBox">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundMidBrush}" />
@@ -65,7 +65,7 @@
     </Style>
 
     <Style Selector="^:focus">
-      <!--Unchecked focussed State -->
+      <!-- Unchecked focussed State -->
       <Style Selector="^ /template/ Border#CheckBox">
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
@@ -73,7 +73,7 @@
       </Style>
     </Style>
 
-    <!-- ✅Unchecked Disabled state -->
+    <!-- Unchecked Disabled state -->
     <Style Selector="^:disabled">
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundDisabledBrush}" />
@@ -85,7 +85,7 @@
     </Style>
 
     <Style Selector="^:checked">
-      <!--Checked Normal State -->
+      <!-- Checked Normal State -->
       <Style Selector="^:not(:focus)">
         <Style Selector="^ /template/ Border#CheckBox">
           <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentBrush}" />
@@ -113,7 +113,7 @@
         </Style>
       </Style>
 
-      <!--Checked PointerOver State -->
+      <!-- Checked PointerOver State -->
       <Style Selector="^:pointerover">
         <Style Selector="^ /template/ Border#CheckBox">
           <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentBrush}" />
@@ -127,7 +127,7 @@
         </Style>
       </Style>
 
-      <!--Checked Pressed State -->
+      <!-- Checked Pressed State -->
       <Style Selector="^:pressed">
         <Style Selector="^ /template/ Border#CheckBox">
           <Setter Property="BorderBrush" Value="{DynamicResource ControlBackgroundAccentBrush}" />

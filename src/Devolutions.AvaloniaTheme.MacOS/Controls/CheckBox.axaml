@@ -124,6 +124,16 @@
       </Style>
     </Style>
 
+    <!--  Pressed State  -->
+    <Style Selector="^:pressed">
+      <Style Selector="^ /template/ Border#ControlBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}" />
+      </Style>
+      <Style Selector="^:checked /template/ Border#ControlBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedCheckedBackgroundBrush}" />
+      </Style>
+    </Style>
+
     <!--  Disabled State  -->
     <Style Selector="^:disabled">
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />

@@ -24,6 +24,7 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="MinHeight" Value="24" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Grid x:Name="RootGrid" ColumnDefinitions="16,*">
@@ -64,7 +65,7 @@
       </Style>
     </Style>
 
-    <Style Selector="^:focus">
+    <Style Selector="^:focus, ^:focus-visible">
       <!-- Unchecked focussed State -->
       <Style Selector="^ /template/ Border#CheckBox">
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
@@ -175,6 +176,21 @@
         <Setter Property="Width" Value="7" />
       </Style>
 
+      <!-- Indeterminate focussed State -->
+      <Style Selector="^:focus:not(:pointerover)">
+        <Style Selector="^ /template/ Border#CheckBox">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
+          <Setter Property="BorderThickness" Value="1.6" />
+        </Style>
+
+        <Style Selector="^ /template/ PathIcon#CheckGlyph">
+          <Setter Property="Foreground" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+          <Setter Property="Data" Value="{StaticResource CheckMarkIndeterminatePath}" />
+          <Setter Property="Width" Value="5" />
+        </Style>
+      </Style>
+        
       <!-- Indeterminate PointerOver State -->
       <Style Selector="^:pointerover">
         <Style Selector="^ /template/ PathIcon#CheckGlyph">

@@ -61,7 +61,7 @@
     <!-- Unchecked PointerOver State -->
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#CheckBox">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxEmptyPointeroverBrush}" />
       </Style>
     </Style>
 
@@ -73,7 +73,7 @@
         <Setter Property="BorderThickness" Value="1.6" />
       </Style>
       <Style Selector="^:pointerover /template/ Border#CheckBox">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxEmptyPointeroverBrush}" />
       </Style>
 
     </Style>

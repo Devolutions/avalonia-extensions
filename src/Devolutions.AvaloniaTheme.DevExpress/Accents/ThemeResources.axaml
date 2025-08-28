@@ -12,7 +12,6 @@
       <Color x:Key="ErrorTextColor">#C50500</Color>
 
       <Color x:Key="ControlBackgroundHighColor">#ffffff</Color>
-      <Color x:Key="ControlBackgroundMidColor">#eaeaea</Color>
 
       <Color x:Key="ControlBorderLowColorSolid">#e7e7e7</Color>
       <Color x:Key="ControlBorderMidColorSolid">#dbdbdb</Color>
@@ -30,6 +29,8 @@
       <Color x:Key='ScrollBarThumbColor'>#9f9f9f</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#dddddd</SolidColorBrush>
 
+      <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
+      
       <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.07" />
       <SolidColorBrush x:Key="ControlBackgroundPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
@@ -85,6 +86,8 @@
       <Color x:Key='ScrollBarThumbColor'>#808080</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>
 
+      <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="Transparent" />
+      
       <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.11" />
       <SolidColorBrush x:Key="ControlBackgroundPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
       <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
@@ -142,7 +145,6 @@
 
   <SolidColorBrush x:Key="ControlForegroundAccentHighBrush" Color="{DynamicResource AccentForegroundColor}" />
   <SolidColorBrush x:Key="ControlBackgroundHighBrush" Color="{DynamicResource ControlBackgroundHighColor}" />
-  <SolidColorBrush x:Key="ControlBackgroundMidBrush" Color="{DynamicResource ControlBackgroundMidColor}" />
   <SolidColorBrush x:Key="ControlBackgroundAccentBrush" Color="{DynamicResource SystemAccentColor}" />
 
   <SolidColorBrush x:Key="ControlBorderMidBrush" Color="{DynamicResource ControlBorderMidColorSolid}" />
@@ -201,11 +203,11 @@
   <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
   <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
 
-  <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="CheckBoxForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.56" />
   <SolidColorBrush x:Key="CheckBoxCheckedBackgroundDisabledBrush" Color="{DynamicResource ForegroundColor}"
                    Opacity="0.2" />
   <SolidColorBrush x:Key="CheckBoxCheckMarkDisabledBrush" Color="{DynamicResource AccentForegroundColor}" Opacity="0.8" />
+  <SolidColorBrush x:Key="CheckBoxEmptyPointeroverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
 
   <Thickness x:Key="TabItemHeaderPadding">4 0</Thickness>
   <Thickness x:Key="FirstTabItemHeaderPadding">6 0 4 0</Thickness>

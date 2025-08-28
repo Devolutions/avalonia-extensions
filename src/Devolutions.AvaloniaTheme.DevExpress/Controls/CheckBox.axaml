@@ -71,6 +71,10 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="1.6" />
       </Style>
+      <Style Selector="^:pointerover /template/ Border#CheckBox">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundMidBrush}" />
+      </Style>
+
     </Style>
 
     <!-- Unchecked Disabled state -->

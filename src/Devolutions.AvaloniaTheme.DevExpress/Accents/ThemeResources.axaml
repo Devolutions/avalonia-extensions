@@ -205,6 +205,7 @@
   <SolidColorBrush x:Key="CheckBoxForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.56" />
   <SolidColorBrush x:Key="CheckBoxCheckedBackgroundDisabledBrush" Color="{DynamicResource ForegroundColor}"
                    Opacity="0.2" />
+  <SolidColorBrush x:Key="CheckBoxCheckMarkDisabledBrush" Color="{DynamicResource AccentForegroundColor}" Opacity="0.8" />
 
   <Thickness x:Key="TabItemHeaderPadding">4 0</Thickness>
   <Thickness x:Key="FirstTabItemHeaderPadding">6 0 4 0</Thickness>

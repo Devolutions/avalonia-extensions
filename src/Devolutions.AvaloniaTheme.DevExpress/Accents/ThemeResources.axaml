@@ -53,14 +53,8 @@
       <Color x:Key='SecondarySearchHighlightBackground'>#77fad000</Color>
       <Color x:Key='SecondarySearchHighlightForeground'>#ee000000</Color>
 
-      <!-- 
-        Temporary work-around; currently, black text in light theme looks blurry / grey-ish instead of
-        black and crisp.
-        This seems to be due to poor hinting for the Segoe UI font when rendered with Skia.
-        For now, demi-bold is the compromise we were the least dissatisfied with.
-      -->
-      <FontWeight x:Key="DefaultFontWeight">DemiBold</FontWeight>
-      <FontWeight x:Key="DemiBoldWeight">Bold</FontWeight>
+      <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
+      <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
     </ResourceDictionary>
 
     <!-- TODO: Darkmode colours just roughly -->
@@ -138,7 +132,7 @@
 
   <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
 
-  <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.90" />
+  <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="1" />
   <SolidColorBrush x:Key="ForegroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
   <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.55" />
 
@@ -206,7 +200,7 @@
 
   <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
   <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
-  
+
   <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="CheckBoxForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.56" />
   <SolidColorBrush x:Key="CheckBoxCheckedBackgroundDisabledBrush" Color="{DynamicResource ForegroundColor}"

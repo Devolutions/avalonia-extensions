@@ -100,7 +100,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 || <h3>Carousel</h3> |
 |||
 |✅ | <h3>CheckBox</h3> |
-|| <img src="https://github.com/user-attachments/assets/5faea9f6-3cf9-433f-86f5-fd8f75ad05f6" alt="CheckBox demo" style="width: 810px; max-width: 100%;" /> |
+|| <img alt="CheckBox demos" src="https://github.com/user-attachments/assets/784deb51-1566-4c5b-abf1-be7e995ecacf" style="width: 659px; max-width: 100%;" /> <br /><img alt="CheckBox demos - dark mode" src="https://github.com/user-attachments/assets/9bbe6be9-7174-48c0-a83b-b94bbdfaee8b" style="width: 659px; max-width: 100%;" /> <br /><img alt="CheckBox interactivity" src="https://github.com/user-attachments/assets/476336ef-4ca8-4ed1-ba82-a5bd5e127375" style="width: 300px; max-width: 100%;" /> <img alt="CheckBox interactivity" src="https://github.com/user-attachments/assets/70fed8bd-62c0-4df2-88d7-55dd62f29539" style="width: 300px; max-width: 100%;" />
+ |
 |✅ | <h3>ComboBox</h3> <h4>ComboBoxItem</h4> |
 || <img src="https://github.com/user-attachments/assets/f0e107c0-a4b2-4eec-bc0b-789e0f90cad6" alt="ComboBox demo" style="width: 232px; max-width: 100%;" /> |
 |🚧 | <h3>ContextMenu</h3> |

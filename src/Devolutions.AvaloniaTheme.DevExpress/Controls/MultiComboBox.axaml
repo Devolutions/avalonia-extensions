@@ -177,16 +177,21 @@
               Margin="50"
               InheritsTransform="True">
 
-              <Border
-                x:Name="PopupBorder"
+              <Panel
                 Background="{TemplateBinding Background}"
-                BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                 HorizontalAlignment="Stretch"
-                BoxShadow="{DynamicResource ComboBoxBoxShadow}"
                 Margin="6">
-                <DockPanel LastChildFill="True">
+                <Border
+                  x:Name="PopupBorder"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                  BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                  Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                  HorizontalAlignment="Stretch"
+                  BoxShadow="{DynamicResource ComboBoxBoxShadow}"
+                  Margin="0" />
+
+                <DockPanel LastChildFill="True" Margin="{DynamicResource ComboBoxDropdownBorderPadding}">
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
 
                   <MultiComboBoxSelectAllItem
@@ -219,7 +224,7 @@
                       ItemsPanel="{TemplateBinding ItemsPanel}" />
                   </ScrollViewer>
                 </DockPanel>
-              </Border>
+              </Panel>
             </Popup>
           </Panel>
         </DataValidationErrors>

@@ -147,7 +147,7 @@
                   VerticalScrollBarVisibility="Disabled">
                   <u:MultiComboBoxSelectedItemList
                     VerticalAlignment="Center"
-                    ItemTemplate="{TemplateBinding SelectedItemTemplate}"
+                    ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
                     ItemsSource="{TemplateBinding SelectedItems}"
                     RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                     ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
@@ -157,26 +157,29 @@
 
             <Popup
               Name="PART_Popup"
-              WindowManagerAddShadowHint="True"
+              WindowManagerAddShadowHint="False"
               IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-              MinWidth="{AddBinding 
-                {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
-                12
-              }"
+              MinWidth="{AddBinding
+                        {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
+                        12
+                     }"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
-              PlacementTarget="PART_Root"
-              OverlayInputPassThroughElement="{Binding #PART_Root}"
               Placement="AnchorAndGravity"
               PlacementAnchor="BottomLeft"
               PlacementGravity="BottomRight"
-              HorizontalAlignment="Left"
+              HorizontalAlignment="Stretch"
               HorizontalOffset="-6"
-              VerticalOffset="-6"
+              VerticalOffset="0"
               IsLightDismissEnabled="True"
-              OverlayDismissEventPassThrough="False"
-              Margin="50"
+              OverlayDismissEventPassThrough="True"
               InheritsTransform="True">
-
+              <Interaction.Behaviors>
+                <PositionedPopupBehavior
+                  PositionToTemplatedParent="True"
+                  InjectFusionMask="False"
+                  PopupBorderThickness="1" />
+              </Interaction.Behaviors>
+              
               <Border
                 x:Name="PopupBorder"
                 Background="{TemplateBinding Background}"
@@ -185,8 +188,9 @@
                 Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                 HorizontalAlignment="Stretch"
                 BoxShadow="{DynamicResource ComboBoxBoxShadow}"
-                Margin="6">
-                <DockPanel LastChildFill="True">
+                Margin="6 0 6 6"
+                CornerRadius="0">
+                <DockPanel LastChildFill="True" Margin="{DynamicResource ComboBoxDropdownBorderPadding}">
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
 
                   <MultiComboBoxSelectAllItem
@@ -259,6 +263,10 @@
       </Style>
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="#939393" />
+      </Style>
+      
+      <Style Selector="^:dropdown-open-from-top /template/ Popup#PART_Popup">
+        <Setter Property="VerticalOffset" Value="6" />
       </Style>
     </Style>
 

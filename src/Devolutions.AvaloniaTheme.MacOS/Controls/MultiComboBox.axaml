@@ -154,7 +154,7 @@
                 VerticalScrollBarVisibility="Disabled">
                 <u:MultiComboBoxSelectedItemList
                   VerticalAlignment="Center"
-                  ItemTemplate="{TemplateBinding SelectedItemTemplate}"
+                  ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
                   ItemsSource="{TemplateBinding SelectedItems}"
                   RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                   ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />

@@ -52,7 +52,7 @@
   <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
     <Setter Property="Focusable" Value="True" />
     <Setter Property="VerticalAlignment" Value="Top" />
-    <Setter Property="Background" Value="{DynamicResource InputBackground}" />
+    <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="MaxDropDownHeight" Value="300" />
@@ -286,6 +286,10 @@
 
     <Style Selector="^:is-cut-by-screen-edge /template/ Border#HighlightBackground">
       <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <Style Selector="^:dropdownopen">
+      <Setter Property="Background" Value="{DynamicResource InputBackground}" />
     </Style>
 
     <Style

@@ -1,25 +1,29 @@
-<ResourceDictionary
-  xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+<!-- Based off https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/RadioButton.xaml -->
+
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:ClassModifier="internal">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
 
   <Design.PreviewWith>
-    <design:ThemePreviewer>
-      <StackPanel Margin="10">
-        <CheckBox IsChecked="True">Emulate 3 buttons</CheckBox>
-        <CheckBox IsChecked="False">Swap mouse bu</CheckBox>
-        <CheckBox IsChecked="True" IsEnabled="False">Auto scale with</CheckBox>
-        <CheckBox IsEnabled="False">Unchecked disabled </CheckBox>
-        <CheckBox IsThreeState="True" IsChecked="{x:Null}">Unknown by default</CheckBox>
-        <CheckBox IsThreeState="True" IsChecked="{x:Null}" IsEnabled="False">
-          Indeterminate
-        </CheckBox>
-        <CheckBox Width="120">Checkbox should wrap its text</CheckBox>
+    <Border Padding="20" Background="Silver">
+      <StackPanel>
+        <RadioButton GroupName="1" Content="When" />
+        <RadioButton GroupName="1" Content="Always" IsChecked="True" />
+        <RadioButton GroupName="2" IsEnabled="False" Content="Option 1" Margin="0 10 0 0" />
+        <RadioButton GroupName="2" Content="Option 2" IsChecked="True" IsEnabled="False" />
       </StackPanel>
-    </design:ThemePreviewer>
+    </Border>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
+
+  <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
@@ -28,21 +32,20 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
-    <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
-      <ControlTemplate>
+      <ControlTemplate TargetType="RadioButton">
         <Panel Name="ReservedSpaceForFocus"
                Margin="{StaticResource InputControlsSpaceForFocusBorder}">
-          <Grid ColumnDefinitions="Auto,5,*" MinHeight="20" ClipToBounds="False">
+          <Grid ColumnDefinitions="Auto,5,*">
             <Border
               Name="FocusBorderElement"
               VerticalAlignment="Center"
               Margin="{StaticResource FocusBorderMargin}"
               BorderThickness="{StaticResource FocusBorderThickness}"
-              CornerRadius="5">
+              CornerRadius="10">
               <Border
                 Name="ControlBorder"
                 Width="14"
@@ -51,33 +54,20 @@
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="{TemplateBinding CornerRadius}"
+                CornerRadius="7"
                 BoxShadow="{DynamicResource ControlBackgroundRecessedShadow}">
-                <Panel>
-                  <Path
-                    Name="CheckMark"
-                    IsVisible="False"
-                    Width="9"
-                    Height="9"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Data="{DynamicResource CheckMarkPath}"
-                    FlowDirection="LeftToRight"
-                    Stretch="Fill"
-                    Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
-
-                  <Rectangle
-                    Name="IndeterminateMark"
-                    IsVisible="False"
-                    Width="8"
-                    Height="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Stretch="Uniform"
-                    Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
-                </Panel>
+                <Ellipse
+                  Name="CheckGlyph"
+                  IsVisible="False"
+                  Width="6"
+                  Height="6"
+                  Fill="{WindowActiveBindingToggler 
+                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
+                  UseLayoutRounding="False" />
               </Border>
             </Border>
+
             <ContentPresenter
               Name="PART_ContentPresenter"
               Grid.Column="2"
@@ -87,6 +77,7 @@
               Content="{TemplateBinding Content}"
               ContentTemplate="{TemplateBinding ContentTemplate}"
               IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+              Foreground="{TemplateBinding Foreground}"
               RecognizesAccessKey="True"
               TextWrapping="Wrap"
               TextElement.Foreground="{TemplateBinding Foreground}" />
@@ -109,18 +100,18 @@
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
         <Setter Property="BoxShadow" Value="0 0 Transparent" /> <!-- TODO: How do you set it to None? -->
       </Style>
-      <Style Selector="^/template/ Path#CheckMark">
+      <Style Selector="^/template/ Ellipse#CheckGlyph">
         <Setter Property="IsVisible" Value="True" />
       </Style>
     </Style>
-    <Style Selector="^:indeterminate">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
-      <Style Selector="^/template/ Border#ControlBorder">
-        <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
-        <Setter Property="BoxShadow" Value="0 0 Transparent" /> <!-- TODO: How do you set it to None? -->
+
+    <!--  Pressed State  -->
+    <Style Selector="^:pressed">
+      <Style Selector="^ /template/ Border#ControlBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}" />
       </Style>
-      <Style Selector="^/template/ Rectangle#IndeterminateMark">
-        <Setter Property="IsVisible" Value="True" />
+      <Style Selector="^:checked /template/ Border#ControlBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedCheckedBackgroundBrush}" />
       </Style>
     </Style>
 
@@ -138,18 +129,9 @@
           <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
           <Setter Property="BoxShadow" Value="{DynamicResource ControlBackgroundRecessedShadow}" />
         </Style>
-        <Style Selector="^/template/ Path#CheckMark">
+        <Style Selector="^/template/ Ellipse#CheckGlyph">
           <Setter Property="IsVisible" Value="True" />
-          <Setter Property="Fill" Value="{DynamicResource ForegroundLowBrush}" />
-        </Style>
-      </Style>
-      <Style Selector="^:indeterminate">
-        <Style Selector="^/template/ Border#ControlBorder">
-          <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-        </Style>
-        <Style Selector="^/template/ Rectangle#IndeterminateMark">
-          <Setter Property="IsVisible" Value="True" />
-          <Setter Property="Fill" Value="{DynamicResource ForegroundLowBrush}" />
+          <!-- Fill is handled within the template since the WindowActive toggler will always override styles -->
         </Style>
       </Style>
     </Style>

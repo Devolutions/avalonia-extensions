@@ -379,7 +379,7 @@
                   <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                 ConverterParameter="MacOS_NonDistributed_Columns">
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=DataGrid}" Path="Classes" />
-                  <Binding Source="{StaticResource DataGridRowMargin}" />
+                    <Binding Source="{StaticResource DataGridRowMargin}" />
                     <Binding Source="{StaticResource DataGridDistributedColumnsRowMargin}" />
                   </MultiBinding>
                   <Binding Source="{StaticResource DataGridGroupHeaderMarginGridLinesVisible}" />
@@ -613,7 +613,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,*,Auto,Auto"
+                RowDefinitions="Auto,*,Auto"
                 ClipToBounds="True">
             <DataGridColumnHeader Name="PART_TopLeftCornerHeader"
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
@@ -677,7 +677,7 @@
             </Grid>
             <Border Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"
-                    Grid.Row="0" Grid.RowSpan="4"
+                    Grid.Row="0" Grid.RowSpan="3"
                     IsHitTestVisible="False"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

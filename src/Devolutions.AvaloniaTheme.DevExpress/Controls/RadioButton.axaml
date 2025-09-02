@@ -1,0 +1,194 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    x:ClassModifier="internal">
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="20">
+      <StackPanel Margin="20" Spacing="10" Height="460" VerticalAlignment="Top">
+        <Border Padding="10">
+          <StackPanel>
+            <TextBlock Margin="0 0 0 5">First Group</TextBlock>
+            <RadioButton GroupName="First Group"
+                         Content="First Option" />
+            <RadioButton GroupName="First Group"
+                         Content="Second Option" IsChecked="True" />
+            <RadioButton GroupName="First Group"
+                         Content="Third Option" IsEnabled="False" />
+
+            <TextBlock Margin="0 10 0 5">Second Group</TextBlock>
+            <RadioButton GroupName="Second Group"
+                         Content="First Option" IsChecked="True" IsEnabled="False" />
+            <RadioButton GroupName="Second Group"
+                         Content="Second Option" IsEnabled="False" />
+          </StackPanel>
+        </Border>
+
+        <Border Background="Silver" Padding="10">
+          <StackPanel>
+            <TextBlock Margin="0 0 0 5">Third Group</TextBlock>
+            <RadioButton GroupName="Third Group"
+                         Content="First Option" />
+            <RadioButton GroupName="Third Group"
+                         Content="Second Option" IsChecked="True" />
+            <RadioButton IsEnabled="False"
+                         GroupName="Third Group"
+                         Content="Third Option" />
+
+            <TextBlock Margin="0 10 0 5">Fourth Group</TextBlock>
+            <RadioButton GroupName="Fourth Group"
+                         Content="First Option" IsChecked="True" IsEnabled="False" />
+            <RadioButton GroupName="Fourth Group"
+                         Content="Second Option" IsEnabled="False" />
+
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton">
+    <Setter Property="Padding" Value="5,0,0,0" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="RadioButton">
+
+        <Grid x:Name="RootGrid" ColumnDefinitions="16,*">
+          <Panel Grid.Column="0" VerticalAlignment="Center" UseLayoutRounding="False">
+            <Border x:Name="RadioButton"
+                    BorderBrush="{DynamicResource ControlBorderBrushTransparent}"
+                    Background="{DynamicResource CheckBoxBackgroundBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    UseLayoutRounding="False"
+                    Height="16"
+                    Width="16">
+
+              <Ellipse
+                Name="CheckGlyph"
+                Width="8"
+                Height="8"
+                Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                VerticalAlignment="Center"
+                UseLayoutRounding="False" />
+            </Border>
+          </Panel>
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Grid.Column="1"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Content="{TemplateBinding Content}"
+                            Margin="{TemplateBinding Padding}"
+                            RecognizesAccessKey="True"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            TextWrapping="Wrap" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Unchecked PointerOver State -->
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#RadioButton">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxEmptyPointeroverBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:focus, ^:focus-visible">
+      <!-- Unchecked focussed State -->
+      <Style Selector="^ /template/ Border#RadioButton">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
+        <Setter Property="BorderThickness" Value="1.6" />
+      </Style>
+      <Style Selector="^:pointerover /template/ Border#RadioButton">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxEmptyPointeroverBrush}" />
+      </Style>
+
+    </Style>
+
+    <!-- Unchecked Disabled state -->
+    <Style Selector="^:disabled">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundDisabledBrush}" />
+      </Style>
+
+      <Style Selector="^ /template/ Border#RadioButton">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:checked">
+      <!-- Checked Normal State -->
+      <Style Selector="^:not(:focus)">
+        <Style Selector="^ /template/ Border#RadioButton">
+          <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+        </Style>
+      </Style>
+
+      <Style Selector="^ /template/ Ellipse#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+
+      <!-- Checked focussed State -->
+      <Style Selector="^:focus:not(:pointerover)">
+        <Style Selector="^ /template/ Border#RadioButton">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
+          <Setter Property="BorderThickness" Value="1.6" />
+        </Style>
+
+        <Style Selector="^ /template/ Ellipse#CheckGlyph">
+          <Setter Property="Fill" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+        </Style>
+      </Style>
+
+      <!-- Checked PointerOver State -->
+      <Style Selector="^:pointerover">
+        <Style Selector="^ /template/ Border#RadioButton">
+          <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+        </Style>
+
+        <Style Selector="^ /template/ Ellipse#CheckGlyph">
+          <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+          <Setter Property="Width" Value="9" />
+        </Style>
+      </Style>
+
+      <!-- Checked Pressed State -->
+      <Style Selector="^:pressed">
+        <Style Selector="^ /template/ Border#RadioButton">
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+          <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentBrush}" />
+        </Style>
+
+        <Style Selector="^ /template/ Ellipse#CheckGlyph">
+          <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+          <Setter Property="Width" Value="8" />
+        </Style>
+      </Style>
+      
+      <!-- Checked Disabled State -->
+      <Style Selector="^:disabled">
+        <Style Selector="^ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundDisabledBrush}" />
+        </Style>
+
+        <Style Selector="^ /template/ Border#RadioButton">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedBackgroundDisabledBrush}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+        </Style>
+
+        <Style Selector="^ /template/ Ellipse#CheckGlyph">
+          <Setter Property="Fill" Value="{DynamicResource CheckBoxCheckMarkDisabledBrush}" />
+        </Style>
+      </Style>
+    </Style>
+    
+  </ControlTheme>
+</ResourceDictionary>

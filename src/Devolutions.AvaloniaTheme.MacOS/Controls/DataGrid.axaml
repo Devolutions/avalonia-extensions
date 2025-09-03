@@ -619,7 +619,7 @@
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
             <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
                                             Grid.Column="1"
-                                            Grid.Row="0" Grid.ColumnSpan="2" />
+                                            Grid.Row="0" />
             <Rectangle Name="PART_ColumnHeadersAndRowsSeparator"
                        Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0"
                        VerticalAlignment="Bottom"

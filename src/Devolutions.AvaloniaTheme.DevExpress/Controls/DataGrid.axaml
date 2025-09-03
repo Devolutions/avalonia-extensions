@@ -519,6 +519,7 @@
             <DataGridRowsPresenter Name="PART_RowsPresenter"
                                    Grid.Row="1"
                                    Grid.Column="0"
+                                   Grid.ColumnSpan="3"
                                    ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
               <DataGridRowsPresenter.GestureRecognizers>
                 <ScrollGestureRecognizer CanHorizontallyScroll="True"
@@ -570,10 +571,6 @@
       <Style Selector="^ /template/ Rectangle#PART_ColumnHeadersAndRowsSeparator">
         <Setter Property="IsVisible" Value="False" />
       </Style>
-    </Style>
-    <Style Selector="^ /template/ DataGridRowsPresenter#PART_RowsPresenter">
-      <Setter Property="Grid.RowSpan" Value="2" />
-      <Setter Property="Grid.ColumnSpan" Value="3" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

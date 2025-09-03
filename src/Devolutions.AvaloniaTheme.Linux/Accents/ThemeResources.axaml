@@ -32,6 +32,8 @@
       <Color x:Key='CalendarNavButtonColor'>#b0b0b0</Color>
       <Color x:Key='CalendarPopupBorderColor'>#d1d1d1</Color>
 
+      <Color x:Key='ScrollBarsSeparatorBackgroundColor'>#e6e6e6</Color>
+
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#fafafa" />
 
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
@@ -75,6 +77,8 @@
 
       <Color x:Key='CalendarNavButtonColor'>#7c7c7c</Color>
       <Color x:Key='CalendarPopupBorderColor'>#454545</Color>
+
+      <Color x:Key='ScrollBarsSeparatorBackgroundColor'>#1f1f1f</Color>
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#1d1d1d" />
 

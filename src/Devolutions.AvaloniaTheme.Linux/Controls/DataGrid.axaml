@@ -553,10 +553,14 @@
                                          IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}" />
               </DataGridRowsPresenter.GestureRecognizers>
             </DataGridRowsPresenter>
-            <Rectangle Name="PART_BottomRightCorner"
-                       Fill="{DynamicResource DataGridScrollBarsSeparatorBackground}"
+            <!-- Do not use name 'PART_BottomRightCorner' it's visibility gets set to true somewhere in the cs code! -->
+            <Rectangle Name="CustomBottomRightCorner"
+                       Fill="{DynamicResource ScrollBarsSeparatorBackgroundColor}"
                        Grid.Column="2"
-                       Grid.Row="2" />
+                       Grid.Row="2"
+                       IsVisible="{OrBinding  
+              {Binding #PART_VerticalScrollbar.IsExpanded},
+               {Binding #PART_HorizontalScrollbar.IsExpanded}}" />
             <ScrollBar Name="PART_VerticalScrollbar"
                        Orientation="Vertical"
                        Grid.Column="2"

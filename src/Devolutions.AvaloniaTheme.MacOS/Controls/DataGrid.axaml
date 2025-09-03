@@ -3,6 +3,14 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="{DynamicResource SystemBaseMediumColor}" />
@@ -379,10 +387,10 @@
                   <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                 ConverterParameter="MacOS_NonDistributed_Columns">
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=DataGrid}" Path="Classes" />
-                  <Binding Source="{StaticResource DataGridRowMargin}" />
+                    <Binding Source="{StaticResource DataGridRowMargin}" />
                     <Binding Source="{StaticResource DataGridDistributedColumnsRowMargin}" />
                   </MultiBinding>
-                  <Binding Source="{StaticResource DataGridGroupHeaderMarginGridLinesVisible}" />
+                  <Binding Source="{StaticResource DataGridRowGridLinesVisibleMargin}" />
                 </MultiBinding>
               </Border.Margin>
               <Border.CornerRadius>
@@ -485,7 +493,7 @@
                           ConverterParameter="None,All,Horizontal,Vertical">
               <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=DataGrid}" Path="GridLinesVisibility" />
               <Binding Source="{StaticResource DataGridGroupHeaderMargin}" />
-              <Binding Source="{StaticResource DataGridGroupHeaderMarginGridLinesVisible}" />
+              <Binding Source="{StaticResource DataGridRowGridLinesVisibleMargin}" />
             </MultiBinding>
           </Border.Margin>
           <Border.CornerRadius>
@@ -613,14 +621,13 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,*,Auto,Auto"
+                RowDefinitions="Auto,*,Auto"
                 ClipToBounds="True">
             <DataGridColumnHeader Name="PART_TopLeftCornerHeader"
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
             <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
                                             Grid.Column="1"
-                                            Grid.Row="0" Grid.ColumnSpan="2"
-                                            Margin="{DynamicResource DataGridRowPadding}" />
+                                            Grid.Row="0" />
             <Rectangle Name="PART_ColumnHeadersAndRowsSeparator"
                        Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0"
                        VerticalAlignment="Bottom"
@@ -631,7 +638,6 @@
                                    Grid.Row="1"
                                    Grid.Column="0"
                                    Grid.ColumnSpan="2"
-                                   Grid.RowSpan="2"
                                    ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
               <DataGridRowsPresenter.GestureRecognizers>
                 <ScrollGestureRecognizer CanHorizontallyScroll="True"
@@ -677,7 +683,7 @@
             </Grid>
             <Border Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"
-                    Grid.Row="0" Grid.RowSpan="4"
+                    Grid.Row="0" Grid.RowSpan="3"
                     IsHitTestVisible="False"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

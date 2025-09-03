@@ -468,15 +468,13 @@
     </Setter>
   </ControlTheme>
 
+
   <!-- DataGrid -->
   <ControlTheme x:Key="{x:Type DataGrid}" TargetType="DataGrid">
     <Setter Property="IsReadOnly" Value="True" />
     <Setter Property="CanUserReorderColumns" Value="True" />
     <Setter Property="CanUserResizeColumns" Value="True" />
     <Setter Property="CanUserSortColumns" Value="True" />
-    <Setter Property="GridLinesVisibility" Value="All" />
-    <Setter Property="RowHeight" Value="{DynamicResource DataGridRowHeight}" />
-    <Setter Property="ColumnHeaderHeight" Value="26" />
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
     <Setter Property="RowBackground" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
@@ -486,9 +484,12 @@
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="SelectionMode" Value="Extended" />
+    <Setter Property="GridLinesVisibility" Value="All" />
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="RowHeight" Value="{DynamicResource DataGridRowHeight}" />
+    <Setter Property="ColumnHeaderHeight" Value="26" />
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
         <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}"
@@ -503,7 +504,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,*,Auto,Auto"
+                RowDefinitions="Auto,*,Auto"
                 ClipToBounds="True">
             <DataGridColumnHeader Name="PART_TopLeftCornerHeader"
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
@@ -519,6 +520,7 @@
             <DataGridRowsPresenter Name="PART_RowsPresenter"
                                    Grid.Row="1"
                                    Grid.Column="0"
+                                   Grid.ColumnSpan="3"
                                    ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
               <DataGridRowsPresenter.GestureRecognizers>
                 <ScrollGestureRecognizer CanHorizontallyScroll="True"
@@ -548,7 +550,7 @@
             </Grid>
             <Border Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"
-                    Grid.Row="0" Grid.RowSpan="4"
+                    Grid.Row="0" Grid.RowSpan="3"
                     IsHitTestVisible="False"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
@@ -570,10 +572,6 @@
       <Style Selector="^ /template/ Rectangle#PART_ColumnHeadersAndRowsSeparator">
         <Setter Property="IsVisible" Value="False" />
       </Style>
-    </Style>
-    <Style Selector="^ /template/ DataGridRowsPresenter#PART_RowsPresenter">
-      <Setter Property="Grid.RowSpan" Value="2" />
-      <Setter Property="Grid.ColumnSpan" Value="3" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

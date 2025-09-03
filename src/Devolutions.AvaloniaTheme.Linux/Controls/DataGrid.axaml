@@ -9,21 +9,21 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-    <DataGrid
-      Width="200"
-      Height="200">
-      <DataGrid.ItemsSource>
-        <Color>Red</Color>
-        <Color>Turquoise</Color>
-      </DataGrid.ItemsSource>
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="A" x:DataType="Color" Binding="{Binding A}" />
-        <DataGridTextColumn Header="R" x:DataType="Color" Binding="{Binding R}" />
-        <DataGridTextColumn Header="G" x:DataType="Color" Binding="{Binding G}" />
-        <DataGridTextColumn Header="B" x:DataType="Color" Binding="{Binding B}" />
-      </DataGrid.Columns>
-    </DataGrid>
-  </design:ThemePreviewer>
+      <DataGrid
+        Width="200"
+        Height="200">
+        <DataGrid.ItemsSource>
+          <Color>Red</Color>
+          <Color>Turquoise</Color>
+        </DataGrid.ItemsSource>
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="A" x:DataType="Color" Binding="{Binding A}" />
+          <DataGridTextColumn Header="R" x:DataType="Color" Binding="{Binding R}" />
+          <DataGridTextColumn Header="G" x:DataType="Color" Binding="{Binding G}" />
+          <DataGridTextColumn Header="B" x:DataType="Color" Binding="{Binding B}" />
+        </DataGrid.Columns>
+      </DataGrid>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="{DynamicResource DataGridColumnHeaderForegroundColor}" />
@@ -529,7 +529,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,*,Auto,Auto"
+                RowDefinitions="Auto,*,Auto"
                 ClipToBounds="True">
             <DataGridColumnHeader Name="PART_TopLeftCornerHeader"
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
@@ -553,10 +553,14 @@
                                          IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}" />
               </DataGridRowsPresenter.GestureRecognizers>
             </DataGridRowsPresenter>
-            <Rectangle Name="PART_BottomRightCorner"
-                       Fill="{DynamicResource DataGridScrollBarsSeparatorBackground}"
+            <!-- Do not use name 'PART_BottomRightCorner' it's visibility gets set to true somewhere in the cs code! -->
+            <Rectangle Name="CustomBottomRightCorner"
+                       Fill="{DynamicResource ScrollBarsSeparatorBackgroundColor}"
                        Grid.Column="2"
-                       Grid.Row="2" />
+                       Grid.Row="2"
+                       IsVisible="{OrBinding  
+              {Binding #PART_VerticalScrollbar.IsExpanded},
+               {Binding #PART_HorizontalScrollbar.IsExpanded}}" />
             <ScrollBar Name="PART_VerticalScrollbar"
                        Orientation="Vertical"
                        Grid.Column="2"
@@ -574,7 +578,7 @@
             </Grid>
             <Border x:Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"
-                    Grid.Row="0" Grid.RowSpan="4"
+                    Grid.Row="0" Grid.RowSpan="3"
                     IsHitTestVisible="False"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

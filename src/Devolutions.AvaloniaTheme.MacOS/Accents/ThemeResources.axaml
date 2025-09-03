@@ -417,7 +417,7 @@
   <Thickness x:Key="DataGridGroupHeaderBorderThickness">1</Thickness>
   <Thickness x:Key="DataGridGroupHeaderBorderThicknessGridLinesVisible">0 1</Thickness>
   <Thickness x:Key="DataGridGroupHeaderMargin">8 2</Thickness>
-  <Thickness x:Key="DataGridGroupHeaderMarginGridLinesVisible">0 1</Thickness>
+  <Thickness x:Key="DataGridRowGridLinesVisibleMargin">0 1</Thickness>
 
   <!-- Menu & MenuItem Resources -->
   <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="{DynamicResource PopupBackgroundColor}" />

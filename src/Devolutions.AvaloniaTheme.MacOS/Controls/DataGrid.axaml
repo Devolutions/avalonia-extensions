@@ -3,6 +3,14 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="{DynamicResource SystemBaseMediumColor}" />
@@ -382,7 +390,7 @@
                     <Binding Source="{StaticResource DataGridRowMargin}" />
                     <Binding Source="{StaticResource DataGridDistributedColumnsRowMargin}" />
                   </MultiBinding>
-                  <Binding Source="{StaticResource DataGridGroupHeaderMarginGridLinesVisible}" />
+                  <Binding Source="{StaticResource DataGridRowGridLinesVisibleMargin}" />
                 </MultiBinding>
               </Border.Margin>
               <Border.CornerRadius>
@@ -485,7 +493,7 @@
                           ConverterParameter="None,All,Horizontal,Vertical">
               <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=DataGrid}" Path="GridLinesVisibility" />
               <Binding Source="{StaticResource DataGridGroupHeaderMargin}" />
-              <Binding Source="{StaticResource DataGridGroupHeaderMarginGridLinesVisible}" />
+              <Binding Source="{StaticResource DataGridRowGridLinesVisibleMargin}" />
             </MultiBinding>
           </Border.Margin>
           <Border.CornerRadius>

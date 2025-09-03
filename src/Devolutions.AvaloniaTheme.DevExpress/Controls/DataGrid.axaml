@@ -468,15 +468,13 @@
     </Setter>
   </ControlTheme>
 
+
   <!-- DataGrid -->
   <ControlTheme x:Key="{x:Type DataGrid}" TargetType="DataGrid">
     <Setter Property="IsReadOnly" Value="True" />
     <Setter Property="CanUserReorderColumns" Value="True" />
     <Setter Property="CanUserResizeColumns" Value="True" />
     <Setter Property="CanUserSortColumns" Value="True" />
-    <Setter Property="GridLinesVisibility" Value="All" />
-    <Setter Property="RowHeight" Value="{DynamicResource DataGridRowHeight}" />
-    <Setter Property="ColumnHeaderHeight" Value="26" />
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
     <Setter Property="RowBackground" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
@@ -486,9 +484,12 @@
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="SelectionMode" Value="Extended" />
+    <Setter Property="GridLinesVisibility" Value="All" />
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="RowHeight" Value="{DynamicResource DataGridRowHeight}" />
+    <Setter Property="ColumnHeaderHeight" Value="26" />
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
         <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}"

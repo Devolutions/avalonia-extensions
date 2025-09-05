@@ -2,6 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
       <StackPanel>
@@ -75,7 +83,6 @@
       <Style Selector="^:pointerover /template/ Border#CheckBox">
         <Setter Property="Background" Value="{DynamicResource CheckBoxEmptyPointeroverBrush}" />
       </Style>
-
     </Style>
 
     <!-- Unchecked Disabled state -->
@@ -190,7 +197,7 @@
           <Setter Property="Width" Value="5" />
         </Style>
       </Style>
-        
+
       <!-- Indeterminate PointerOver State -->
       <Style Selector="^:pointerover">
         <Style Selector="^ /template/ PathIcon#CheckGlyph">

@@ -2,69 +2,121 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.ExpanderDemo">
 
   <UserControl.Resources>
     <StreamGeometry x:Key="ComputerPath">M23 2H1C0.448 2 0 2.448 0 3V17C0 17.552 0.448 18 1 18H8.5C8.5 18 8.393 21 7 21V22H17V21C15.607 21 15.5 18 15.5 18H23C23.552 18 24 17.552 24 17V3C24 2.448 23.552 2 23 2ZM12 17C11.724 17 11.5 16.776 11.5 16.5C11.5 16.224 11.724 16 12 16C12.276 16 12.5 16.224 12.5 16.5C12.5 16.776 12.276 17 12 17ZM22 15H2V4H22V15Z</StreamGeometry>
   </UserControl.Resources>
 
-  <StackPanel Spacing="4" Margin="20">
-    <TextBlock Classes="section-title">Accordion-type Expanders</TextBlock>
-    <TextBlock Margin="0 0 0 10">Default height is fairly tight for use in a dense Stack of Expanders.</TextBlock>
-    <Expander>
-      <Expander.Header>
-        <Grid ColumnDefinitions="20, *, 50">
-          <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
-          <!-- Issue: If you use <SVG> it doesn't honour the parent's opacity -->
-          <PathIcon Width="16"
-                    Margin="  0 0 7 0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource SystemAccentColorDark1}"
-                    Data="{StaticResource ComputerPath}" />
-          <TextBlock Grid.Column="1" Text="IT-help-a23432" />
-          <TextBlock Grid.Column="2" Text="✅" HorizontalAlignment="Right" />
-        </Grid>
-      </Expander.Header>
-      <TextBlock>Passed all tests</TextBlock>
-    </Expander>
-    <Expander>
-      <Expander.Header>
-        <Grid ColumnDefinitions="20, *, 50">
-          <PathIcon Width="16"
-                    Margin="  0 0 7 0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource SystemAccentColorDark1}"
-                    Data="{StaticResource ComputerPath}" />
-          <TextBlock Grid.Column="1" Text="Mac-Devo-90878" />
-          <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
-        </Grid>
-      </Expander.Header>
-      <TextBlock>Error<LineBreak />Access denied</TextBlock>
-    </Expander>
-    <Expander VerticalAlignment="Top" IsEnabled="False">
-      <Expander.Header>
-        <Grid ColumnDefinitions="20, *, 50">
-          <PathIcon Width="16"
-                    Margin="  0 0 7 0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource SystemAccentColorDark1}"
-                    Data="{StaticResource ComputerPath}" />
-          <TextBlock Grid.Column="1" Text="Disabled Expander" />
-          <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
-        </Grid>
-      </Expander.Header>
-    </Expander>
+  <StackPanel>
+    <StackPanel Spacing="4" Margin="20">
+      <TextBlock Classes="section-title">Accordion-type Expanders</TextBlock>
+      <TextBlock Margin="0 0 0 10">Default height is fairly tight for use in a dense Stack of Expanders.</TextBlock>
+      <Expander>
+        <Expander.Header>
+          <Grid ColumnDefinitions="20, *, 50">
+            <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
+            <!-- Issue: If you use <SVG> it doesn't honour the parent's opacity -->
+            <PathIcon Width="16"
+                      Margin="  0 0 7 0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Foreground="{DynamicResource SystemAccentColorDark1}"
+                      Data="{StaticResource ComputerPath}" />
+            <TextBlock Grid.Column="1" Text="IT-help-a23432" />
+            <TextBlock Grid.Column="2" Text="✅" HorizontalAlignment="Right" />
+          </Grid>
+        </Expander.Header>
+        <TextBlock>Passed all tests</TextBlock>
+      </Expander>
+      <Expander>
+        <Expander.Header>
+          <Grid ColumnDefinitions="20, *, 50">
+            <PathIcon Width="16"
+                      Margin="  0 0 7 0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Foreground="{DynamicResource SystemAccentColorDark1}"
+                      Data="{StaticResource ComputerPath}" />
+            <TextBlock Grid.Column="1" Text="Mac-Devo-90878" />
+            <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
+          </Grid>
+        </Expander.Header>
+        <TextBlock>Error<LineBreak />Access denied</TextBlock>
+      </Expander>
+      <Expander VerticalAlignment="Top" IsEnabled="False">
+        <Expander.Header>
+          <Grid ColumnDefinitions="20, *, 50">
+            <PathIcon Width="16"
+                      Margin="  0 0 7 0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Foreground="{DynamicResource SystemAccentColorDark1}"
+                      Data="{StaticResource ComputerPath}" />
+            <TextBlock Grid.Column="1" Text="Disabled Expander" />
+            <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
+          </Grid>
+        </Expander.Header>
+      </Expander>
 
+      <TextBlock Classes="section-title" Margin="0 40 0 0">Stand-alone Expanders</TextBlock>
+      <TextBlock Margin="0 0 0 10">
+        For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">Height</TextBlock> or
+        <TextBlock Classes="code">MinHeight</TextBlock>.
+      </TextBlock>
+      <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48" />
 
-    <TextBlock Classes="section-title" Margin="0 40 0 0">Stand-alone Expanders</TextBlock>
-    <TextBlock Margin="0 0 0 10">
-      For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">Height</TextBlock> or
-      <TextBlock Classes="code">MinHeight</TextBlock>.
-    </TextBlock>
-    <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48" />
+    </StackPanel>
+    <Border Padding="20" Margin="0 20 0 0 " Classes="alternativeBackground">
+      <StackPanel Spacing="4" Margin="20">
+        <Expander>
+          <Expander.Header>
+            <Grid ColumnDefinitions="20, *, 50">
+              <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
+              <!-- Issue: If you use <SVG> it doesn't honour the parent's opacity -->
+              <PathIcon Width="16"
+                        Margin="  0 0 7 0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource SystemAccentColorDark1}"
+                        Data="{StaticResource ComputerPath}" />
+              <TextBlock Grid.Column="1" Text="IT-help-a23432" />
+              <TextBlock Grid.Column="2" Text="✅" HorizontalAlignment="Right" />
+            </Grid>
+          </Expander.Header>
+          <TextBlock>Passed all tests</TextBlock>
+        </Expander>
+        <Expander>
+          <Expander.Header>
+            <Grid ColumnDefinitions="20, *, 50">
+              <PathIcon Width="16"
+                        Margin="  0 0 7 0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource SystemAccentColorDark1}"
+                        Data="{StaticResource ComputerPath}" />
+              <TextBlock Grid.Column="1" Text="Mac-Devo-90878" />
+              <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
+            </Grid>
+          </Expander.Header>
+          <TextBlock>Error<LineBreak />Access denied</TextBlock>
+        </Expander>
+        <Expander VerticalAlignment="Top" IsEnabled="False">
+          <Expander.Header>
+            <Grid ColumnDefinitions="20, *, 50">
+              <PathIcon Width="16"
+                        Margin="  0 0 7 0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource SystemAccentColorDark1}"
+                        Data="{StaticResource ComputerPath}" />
+              <TextBlock Grid.Column="1" Text="Disabled Expander" />
+              <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
+            </Grid>
+          </Expander.Header>
+        </Expander>
+      </StackPanel>
+    </Border>
   </StackPanel>
 </UserControl>

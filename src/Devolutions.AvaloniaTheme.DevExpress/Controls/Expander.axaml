@@ -91,37 +91,43 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border x:Name="ToggleButtonBackground"
-                CornerRadius="{TemplateBinding CornerRadius}"
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}">
-          <Grid x:Name="ToggleButtonGrid"
-                ColumnDefinitions="*,Auto">
-            <ContentPresenter x:Name="PART_ContentPresenter"
-                              Content="{TemplateBinding Content}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              Foreground="{TemplateBinding Foreground}"
-                              Margin="{TemplateBinding Padding}" />
-            <Border Grid.Column="1"
-                    Width="{DynamicResource ExpanderChevronWidth}"
-                    Margin="{DynamicResource ExpanderChevronMargin}">
-              <Path x:Name="ExpandCollapseChevron"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Stretch="Uniform"
-                    RenderTransformOrigin="50%,50%"
-                    Stroke="{DynamicResource ForegroundHighBrush}"
-                    StrokeThickness="0.7">
-                <Path.RenderTransform>
-                  <RotateTransform />
-                </Path.RenderTransform>
-              </Path>
-            </Border>
-          </Grid>
-        </Border>
+        <Panel>
+          <Border x:Name="ToggleButtonBackground"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid x:Name="ToggleButtonGrid"
+                  ColumnDefinitions="*,Auto">
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Foreground="{TemplateBinding Foreground}"
+                                Margin="{TemplateBinding Padding}" />
+              <Border Grid.Column="1"
+                      Width="{DynamicResource ExpanderChevronWidth}"
+                      Margin="{DynamicResource ExpanderChevronMargin}">
+                <Path x:Name="ExpandCollapseChevron"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Stretch="Uniform"
+                      RenderTransformOrigin="50%,50%"
+                      Stroke="{DynamicResource ForegroundHighBrush}"
+                      StrokeThickness="0.7">
+                  <Path.RenderTransform>
+                    <RotateTransform />
+                  </Path.RenderTransform>
+                </Path>
+              </Border>
+            </Grid>
+          </Border>
+          <Border Name="BottomBorder"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  BorderThickness="0 0 0 1"
+                  BorderBrush="{TemplateBinding BorderBrush}" />
+        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -159,8 +165,13 @@
     </Style>
 
     <!-- PointerOver -->
-    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground">
-      <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPointerOverBrush}" />
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#ToggleButtonBackground">
+        <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPointerOverBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#BottomBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderPointerOverBrush}" />
+      </Style>
     </Style>
 
     <!-- Pressed -->

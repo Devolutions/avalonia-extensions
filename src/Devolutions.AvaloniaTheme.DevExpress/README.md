@@ -33,6 +33,7 @@ the Avalonia community to add more DevExpress-style controls.
     - [ComboBox](#combobox)
       - [ComboBoxItem](#comboboxitem)
     - [DataGrid](#datagrid)
+    - [Expander](#expander)
     - [ListBox](#listbox)
       - [ListBoxItem](#listboxitem)
     - [NumericUpDown](#numericupdown)
@@ -120,8 +121,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>EmbeddableControlRoot</h3> |
 |||
-|| <h3>Expander</h3> |
-|||
+|✅ | <h3>Expander</h3> |
+|| <img alt="Expanders" src="https://github.com/user-attachments/assets/d4564040-e2bb-4a98-865a-a54e424c4f3e" style="width: 932px; max-width: 100%;"/><br /><br /><img alt="Expanders - dark mode" src="https://github.com/user-attachments/assets/940a1718-85d5-49bc-9d61-66d2947436e8" style="width: 932px; max-width: 100%;"/> |
 || <h3>FluentControls</h3> |
 |||
 || <h3>FlyoutPresenter</h3> |

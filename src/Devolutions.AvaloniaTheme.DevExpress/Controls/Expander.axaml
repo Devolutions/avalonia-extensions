@@ -208,7 +208,7 @@
   <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander">
     <Setter Property="MinWidth" Value="{DynamicResource FlyoutThemeMinWidth}" />
     <Setter Property="MinHeight" Value="{DynamicResource ExpanderMinHeight}" />
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ExpanderBodyBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderContentPadding}" />

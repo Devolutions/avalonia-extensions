@@ -3,6 +3,14 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Margin="20" Height="400" Width="180" Spacing="5">

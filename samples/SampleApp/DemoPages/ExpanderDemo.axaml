@@ -10,14 +10,14 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <StackPanel Spacing="4" Margin="20">
+    <StackPanel Margin="20">
       <TextBlock Classes="section-title">Accordion-type Expanders</TextBlock>
       <TextBlock Margin="0 0 0 10">Default height is fairly tight for use in a dense Stack of Expanders.</TextBlock>
       <Expander>
         <Expander.Header>
           <Grid ColumnDefinitions="20, *, 50">
             <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
-            <!-- Issue: If you use <SVG> it doesn't honour the parent's opacity -->
+            <!-- ^ Issue: If you use <Svg> it doesn't honour the parent's opacity -->
             <PathIcon Width="16"
                       Margin="  0 0 7 0"
                       HorizontalAlignment="Center"
@@ -43,7 +43,21 @@
             <TextBlock Grid.Column="2" Text="❌" HorizontalAlignment="Right" />
           </Grid>
         </Expander.Header>
-        <TextBlock>Error<LineBreak />Access denied</TextBlock>
+        <TextBlock FontFamily="Courier New, Courier, monospace">
+          Error at line:1 char:1<LineBreak />
+          Get-WmiObject : The RPC server is unavailable. (Exception from HRESULT: 0x800706BA)<LineBreak />
+          + Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3} | S ...<LineBreak />
+          + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<LineBreak />
+          + CategoryInfo          : InvalidOperation: (:) [Get-WmiObject], COMException<LineBreak />
+          + FullyQualifiedErrorId : GetWMICOMException,Microsoft.PowerShell.Commands.GetWmiObjectCommand<LineBreak />
+          <LineBreak />
+          Get-WmiObject : Access is denied. (Exception from HRESULT: 0x80070005)<LineBreak />
+          At line:1 char:1<LineBreak />
+          + Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3} | S ...<LineBreak />
+          + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<LineBreak />
+          + CategoryInfo          : InvalidOperation: (:) [Get-WmiObject], UnauthorizedAccessException<LineBreak />
+          + FullyQualifiedErrorId : GetWMICOMException,Microsoft.PowerShell.Commands.GetWmiObjectCommand<LineBreak />
+        </TextBlock>
       </Expander>
       <Expander VerticalAlignment="Top" IsEnabled="False">
         <Expander.Header>
@@ -62,19 +76,34 @@
 
       <TextBlock Classes="section-title" Margin="0 40 0 0">Stand-alone Expanders</TextBlock>
       <TextBlock Margin="0 0 0 10">
-        For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">Height</TextBlock> or
-        <TextBlock Classes="code">MinHeight</TextBlock>.
+        For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">MinHeight</TextBlock>.
       </TextBlock>
-      <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48" />
+      <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48">
+        <StackPanel>
+          <CheckBox IsChecked="False">Unchecked</CheckBox>
+          <CheckBox IsChecked="True">Checked</CheckBox>
+          <CheckBox IsThreeState="True" IsChecked="{x:Null}">Partially checked</CheckBox>
+        </StackPanel>
+      </Expander>
+
+      <Expander Header="Rounded" CornerRadius="19" Margin="0 10 0 0 ">
+        <StackPanel>
+          <TextBlock>Expanded content</TextBlock>
+        </StackPanel>
+      </Expander>
+
+      <Expander ExpandDirection="Up" Header="Expand Up" Margin="0 10 0 0 ">
+        <StackPanel>
+          <TextBlock>Expanded content</TextBlock>
+        </StackPanel>
+      </Expander>
 
     </StackPanel>
     <Border Padding="20" Margin="0 20 0 0 " Classes="alternativeBackground">
-      <StackPanel Spacing="4" Margin="20">
+      <StackPanel Margin="20">
         <Expander>
           <Expander.Header>
             <Grid ColumnDefinitions="20, *, 50">
-              <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
-              <!-- Issue: If you use <SVG> it doesn't honour the parent's opacity -->
               <PathIcon Width="16"
                         Margin="  0 0 7 0"
                         HorizontalAlignment="Center"

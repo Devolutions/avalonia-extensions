@@ -39,6 +39,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
       - [ComboBoxItem](#comboboxitem)
     - [ContextMenu](#contextmenu)
     - [DataGrid](#datagrid)
+    - [Expander](#expander)
     - [GridSplitter](#gridsplitter)
     - [ListBox](#listbox)
       - [ListBoxItem](#listboxitem)
@@ -133,8 +134,9 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 || [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md) |
 || <h3>EmbeddableControlRoot</h3> |
 |||
-|| <h3>Expander</h3> |
-|||
+|✅ | <h3>Expander</h3> |
+|| <img alt="Expanders" src="https://github.com/user-attachments/assets/106e240f-a2e2-4a7b-a782-f0b159ebef42" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expanders - dark mode" src="https://github.com/user-attachments/assets/866e6cec-3490-4a72-bf56-4d30a4129788" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded" src="https://github.com/user-attachments/assets/19992249-9896-43d2-9e52-5caf2562db22" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded - dark mode" src="https://github.com/user-attachments/assets/da545402-f8c9-4b34-bf60-1b4047c9b02f" style="width: 880px; max-width: 100%;" />
+ |
 || <h3>FluentControls</h3> |
 |||
 || <h3>FlyoutPresenter</h3> |

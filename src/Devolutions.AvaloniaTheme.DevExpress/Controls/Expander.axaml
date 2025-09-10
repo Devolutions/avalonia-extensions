@@ -33,7 +33,7 @@
           <TextBlock>Expanded content</TextBlock>
         </Expander>
 
-        <Expander Header="Custom height" Height="48" Margin="0 40 0 0 ">
+        <Expander Header="Custom height" MinHeight="48" Margin="0 40 0 0 ">
           <TextBlock>Expanded content</TextBlock>
         </Expander>
 
@@ -221,7 +221,7 @@
     <Setter Property="MinHeight" Value="{DynamicResource ExpanderMinHeight}" />
     <Setter Property="Background" Value="{DynamicResource ExpanderBodyBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
+    <Setter Property="Margin" Value="0 0 0 2" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderContentPadding}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />

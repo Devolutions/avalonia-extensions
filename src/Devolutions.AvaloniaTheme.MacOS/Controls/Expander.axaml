@@ -102,9 +102,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
-
                Margin="1.5">
-
           <Border x:Name="ToggleButtonBackground"
                   CornerRadius="{TemplateBinding CornerRadius}"
                   Background="{TemplateBinding Background}"
@@ -170,9 +168,6 @@
           </Animation>
         </Style.Animations>
       </Style>
-      <Style Selector="^ /template/ Border#BottomBorder">
-        <Setter Property="BorderBrush" Value="Transparent" />
-      </Style>
     </Style>
 
     <Style Selector="^[Tag=collapsed] /template/ Path#ExpandCollapseChevron">
@@ -212,6 +207,9 @@
     <Style Selector="^ /template/ Path#ExpandCollapseChevron">
       <Setter Property="Data" Value="M 0 0 L 7 7 L 14 0" />
       <Setter Property="Width" Value="{DynamicResource ExpanderChevronWidth}" />
+    </Style>
+    <Style Selector="^[Tag=expanded] /template/ Border#BottomBorder">
+      <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
   </ControlTheme>
 

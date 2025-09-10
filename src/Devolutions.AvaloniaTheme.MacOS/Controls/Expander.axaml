@@ -157,17 +157,6 @@
       </Style>
     </Style>
 
-    <Style Selector="^:focus-visible">
-      <Style Selector="^">
-        <Setter Property="Tag" Value="True" />
-      </Style>
-    </Style>
-    <Style Selector="^:not(:focus-visible)">
-      <Style Selector="^">
-        <Setter Property="Tag" Value="False" />
-      </Style>
-    </Style>
-
     <Style Selector="^[Tag=expanded]">
       <Style Selector="^ /template/ Path#ExpandCollapseChevron">
         <Style.Animations>

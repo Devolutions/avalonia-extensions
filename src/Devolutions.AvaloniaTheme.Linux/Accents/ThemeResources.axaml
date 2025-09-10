@@ -3,7 +3,7 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key='Light'>
-      <Color x:Key='ForegroundHighColor'>#050505</Color>
+      <Color x:Key='ForegroundColor'>#050505</Color>
       <Color x:Key='BackgroundColor'>#ffffff</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#fcfcfc</Color>
       <Color x:Key='BorderColor'>#d1d1d1</Color>
@@ -43,13 +43,20 @@
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#cbcbcb" />
 
+      <Color x:Key='ExpanderHeaderBackgroundColor'>#ffffff</Color>
+      <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#f9f9f9</Color>
+      <Color x:Key='ExpanderHeaderBackgroundPressedColor'>#f0f0f0</Color>
+      <Color x:Key='ExpanderBodyBackgroundColor'>#ffffff</Color>
+      <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key='Dark'>
       <Color x:Key='SystemAltHighColor'>#1f1f1f</Color>
       <Color x:Key='SystemBaseMediumColor'>#f5f5f5</Color>
 
-      <Color x:Key='ForegroundHighColor'>#fcfcfc</Color>
+      <Color x:Key='ForegroundColor'>#fcfcfc</Color>
       <Color x:Key='BackgroundColor'>#2c2c2c</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#272727</Color>
       <Color x:Key='BorderColor'>#181818</Color>
@@ -89,6 +96,13 @@
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#202020" />
 
+      <Color x:Key='ExpanderHeaderBackgroundColor'>#3d3d3d</Color>
+      <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#424242</Color>
+      <Color x:Key='ExpanderHeaderBackgroundPressedColor'>#4c4c4c</Color>
+      <Color x:Key='ExpanderBodyBackgroundColor'>#3d3d3d</Color>
+      <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource BackgroundColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="Transparent" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -103,9 +117,9 @@
   <SolidColorBrush x:Key='ScrollControlBackground' Color="{DynamicResource ScrollControlBackgroundColor}" />
   <SolidColorBrush x:Key='ScrollControlBorder' Color="{DynamicResource BorderColor}" />
 
-  <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundHighColor}" />
-  <SolidColorBrush x:Key='ForegroundLowBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
-  <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundHighColor}" Opacity="0.6" />
+  <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundColor}" />
+  <SolidColorBrush x:Key='ForegroundLowBrush' Color="{DynamicResource ForegroundColor}" Opacity="0.6" />
+  <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundColor}" Opacity="0.6" />
   <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
   <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.6" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
@@ -154,6 +168,11 @@
   <SolidColorBrush x:Key='RepeatButtonForegroundDisabled' Color="{DynamicResource InputDisabledForegroundColor}" />
 
   <SolidColorBrush x:Key='TableBorder' Color="{DynamicResource InputBorderColor}" />
+
+  <SolidColorBrush x:Key="ExpanderHeaderBackgroundBrush" Color="{DynamicResource ExpanderHeaderBackgroundColor}" />
+  <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOverBrush" Color="{DynamicResource ExpanderHeaderBackgroundPointerOverColor}" />
+  <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressedBrush" Color="{DynamicResource ExpanderHeaderBackgroundPressedColor}" />
+  <SolidColorBrush x:Key="ExpanderBodyBackgroundBrush" Color="{DynamicResource ExpanderBodyBackgroundColor}" />
 
   <BoxShadows x:Key="PopupShadow">0 0 1 0 #66000000</BoxShadows>
 

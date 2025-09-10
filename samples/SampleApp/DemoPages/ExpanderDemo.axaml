@@ -74,8 +74,7 @@
         </Expander.Header>
       </Expander>
 
-      <TextBlock Classes="section-title" Margin="0 40 0 0">Stand-alone Expanders</TextBlock>
-      <TextBlock Margin="0 0 0 10">
+      <TextBlock Margin="0 20 0 10">
         For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">MinHeight</TextBlock>.
       </TextBlock>
       <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48">
@@ -86,7 +85,7 @@
         </StackPanel>
       </Expander>
 
-      <Expander Header="Rounded" CornerRadius="19" Margin="0 10 0 0 ">
+      <Expander Header="Rounded" CornerRadius="19" Margin="0 40 0 0 ">
         <StackPanel>
           <TextBlock>Expanded content</TextBlock>
         </StackPanel>

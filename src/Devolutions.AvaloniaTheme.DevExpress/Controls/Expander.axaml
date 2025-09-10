@@ -33,7 +33,7 @@
           <TextBlock>Expanded content</TextBlock>
         </Expander>
 
-        <Expander Header="Custom height" Height="48" Margin="0 40 0 0 ">
+        <Expander Header="Custom height" MinHeight="48" Margin="0 40 0 0 ">
           <TextBlock>Expanded content</TextBlock>
         </Expander>
 

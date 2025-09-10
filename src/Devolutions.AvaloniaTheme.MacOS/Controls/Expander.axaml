@@ -92,7 +92,6 @@
     <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="FontWeight" Value="DemiBold" />
-    <Setter Property="Margin" Value="0 2 0 0" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderHeaderPadding}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -233,6 +232,7 @@
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
+    <Setter Property="Margin" Value="0 0 0 2" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderContentPadding}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />

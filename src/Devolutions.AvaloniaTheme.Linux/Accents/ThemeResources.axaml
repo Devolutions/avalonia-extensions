@@ -125,6 +125,7 @@
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
 
   <SolidColorBrush x:Key='BackgroundBrush' Color="{DynamicResource BackgroundColor}" />
+  <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.06" />
 
   <SolidColorBrush x:Key='InputBackground' Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key='InputBorder' Color="{DynamicResource InputBorderColor}" />

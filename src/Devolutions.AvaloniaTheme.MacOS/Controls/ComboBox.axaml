@@ -13,32 +13,60 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-      <StackPanel Margin="20" Height="400" Width="180" Spacing="5">
-        <ComboBox SelectedIndex="2" MaxDropDownHeight="100">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
-        </ComboBox>
-        <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEnabled="False">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
-        </ComboBox>
-        <ComboBox MaxDropDownHeight="100" PlaceholderText="Choose one">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
-          <ComboBoxItem>Option 4</ComboBoxItem>
-          <ComboBoxItem>Option 5</ComboBoxItem>
-          <ComboBoxItem>Option 6</ComboBoxItem>
-          <ComboBoxItem>Option 7</ComboBoxItem>
-          <ComboBoxItem>Option 8</ComboBoxItem>
-          <ComboBoxItem>Option 9</ComboBoxItem>
-        </ComboBox>
+      <StackPanel>
+        <StackPanel Margin="20" Height="200" Width="180" Spacing="5">
+          <ComboBox SelectedIndex="2" MaxDropDownHeight="100">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+          </ComboBox>
+          <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEnabled="False">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+          </ComboBox>
+          <ComboBox MaxDropDownHeight="100" PlaceholderText="Choose one">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Option 4</ComboBoxItem>
+            <ComboBoxItem>Option 5</ComboBoxItem>
+            <ComboBoxItem>Option 6</ComboBoxItem>
+            <ComboBoxItem>Option 7</ComboBoxItem>
+            <ComboBoxItem>Option 8</ComboBoxItem>
+            <ComboBoxItem>Option 9</ComboBoxItem>
+          </ComboBox>
+        </StackPanel>
+
+        <Border Background="{DynamicResource LayoutBackgroundLowBrush}">
+          <StackPanel Margin="20" Height="200" Width="180" Spacing="5">
+            <ComboBox SelectedIndex="2" MaxDropDownHeight="100">
+              <ComboBoxItem>Option 1</ComboBoxItem>
+              <ComboBoxItem>Option 2</ComboBoxItem>
+              <ComboBoxItem>Option 3</ComboBoxItem>
+            </ComboBox>
+            <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEnabled="False">
+              <ComboBoxItem>Option 1</ComboBoxItem>
+              <ComboBoxItem>Option 2</ComboBoxItem>
+              <ComboBoxItem>Option 3</ComboBoxItem>
+            </ComboBox>
+            <ComboBox MaxDropDownHeight="100" PlaceholderText="Choose one">
+              <ComboBoxItem>Option 1</ComboBoxItem>
+              <ComboBoxItem>Option 2</ComboBoxItem>
+              <ComboBoxItem>Option 3</ComboBoxItem>
+              <ComboBoxItem>Option 4</ComboBoxItem>
+              <ComboBoxItem>Option 5</ComboBoxItem>
+              <ComboBoxItem>Option 6</ComboBoxItem>
+              <ComboBoxItem>Option 7</ComboBoxItem>
+              <ComboBoxItem>Option 8</ComboBoxItem>
+              <ComboBoxItem>Option 9</ComboBoxItem>
+            </ComboBox>
+          </StackPanel>
+        </Border>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-  
+
 
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
     <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
@@ -63,13 +91,17 @@
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
+                  Fill="{WindowActiveBindingToggler 
+                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
             <Path Height="4.4"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}">
+                  Fill="{WindowActiveBindingToggler 
+                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}">
               <Path.RenderTransform>
                 <ScaleTransform ScaleY="-1" />
               </Path.RenderTransform>
@@ -80,10 +112,9 @@
     </Setter>
 
     <Style Selector="^:disabled">
-      <Setter Property="BorderThickness" Value="0" />
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Style Selector="^ /template/ Border#PART_Border">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
       </Style>
     </Style>
   </ControlTheme>
@@ -208,9 +239,6 @@
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
       <Style Selector="^ /template/ Border#border">
         <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDisabledBoxShadow}" />
-      </Style>
-      <Style Selector="^ /template/ Path">
-        <Setter Property="Fill" Value="{DynamicResource ForegroundLowBrush}" />
       </Style>
     </Style>
   </ControlTheme>

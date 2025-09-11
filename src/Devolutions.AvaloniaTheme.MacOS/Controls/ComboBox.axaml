@@ -19,7 +19,7 @@
           <ComboBoxItem>Option 2</ComboBoxItem>
           <ComboBoxItem>Option 3</ComboBoxItem>
         </ComboBox>
-        <ComboBox SelectedIndex="3" MaxDropDownHeight="100" IsEnabled="False">
+        <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEnabled="False">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
           <ComboBoxItem>Option 3</ComboBoxItem>
@@ -38,16 +38,7 @@
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-
-  <ResourceDictionary.ThemeDictionaries>
-    <ResourceDictionary x:Key="Default">
-      <Thickness x:Key="PopUpToggleButtonPadding">0.6 0.6 0 0</Thickness>
-    </ResourceDictionary>
-
-    <ResourceDictionary x:Key="Dark">
-      <Thickness x:Key="PopUpToggleButtonPadding">0.6 0 0 0</Thickness>
-    </ResourceDictionary>
-  </ResourceDictionary.ThemeDictionaries>
+  
 
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
     <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
@@ -65,22 +56,19 @@
           <StackPanel
             Name="PART_StackPanel"
             VerticalAlignment="Center"
-            Spacing="2"
-            Margin="{DynamicResource PopUpToggleButtonPadding}">
-            <Path Width="9"
-                  Height="4.4"
+            HorizontalAlignment="Center"
+            Spacing="2">
+            <Path Height="4.4"
+                  Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Stretch="Uniform"
                   Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}" />
-
-            <Path Width="9"
-                  Height="4.4"
+            <Path Height="4.4"
+                  Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Stretch="Uniform"
                   Fill="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ControlForegroundAccentInactiveHighBrush}">
               <Path.RenderTransform>
                 <ScaleTransform ScaleY="-1" />

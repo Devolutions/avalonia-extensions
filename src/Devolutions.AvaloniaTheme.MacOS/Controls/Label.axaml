@@ -20,7 +20,7 @@
                             RecognizesAccessKey="True"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
-          <!-- TextBlock#Colon is used in GlobalStyles to display colon in forms -->
+          <!-- TextBlock#Colon can be used in styles to automatically display colon after each label (cp. SampleApp/styles.axaml) -->
           <TextBlock
             Name="Colon"
             Text=":"

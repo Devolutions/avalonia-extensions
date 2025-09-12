@@ -23,8 +23,8 @@
 
   <Style Selector="Border.alternativeBackground">
     <Setter Property="Background" Value="{DynamicResource AlternativeBackgroundBrush}" />
-  </Style>  
-  
+  </Style>
+
   <Style Selector="Panel.mainControl">
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
   </Style>
@@ -42,5 +42,13 @@
     <Setter Property="Background" Value="{DynamicResource LayoutBackgroundLowBrush}" />
     <Setter Property="Padding" Value="4,0,4,0" />
     <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- This rule is also used in RDM Styles.MacOS-->
+  <Style
+    Selector="Grid.form > Label /template/ TextBlock#Colon,
+                 Label.form /template/ TextBlock#Colon,
+                 .compact-form > Label /template/ TextBlock#Colon">
+    <Setter Property="IsVisible" Value="True" />
   </Style>
 </Styles>

@@ -86,7 +86,7 @@
         </TabItem.Header>
         <demoPages:EditableComboBoxDemo />
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="Expander" ApplicableTo="MacOS, Windows - DevExpress" />
         </TabItem.Header>
@@ -117,6 +117,12 @@
           <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacOS" />
         </TabItem.Header>
         <demoPages:GridSplitterDemo />
+      </TabItem>
+      <TabItem IsSelected="True">
+        <TabItem.Header>
+          <controls:SampleItemHeader Title="Label" ApplicableTo="MacOS" />
+        </TabItem.Header>
+        <demoPages:LabelDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>

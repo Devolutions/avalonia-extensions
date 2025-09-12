@@ -47,6 +47,14 @@
     </Setter>
   </Style>
 
+  <Style
+    Selector="Grid.form > Label /template/ TextBlock#Colon,
+                 Label.form /template/ TextBlock#Colon,
+                 .compact-form > Label /template/ TextBlock#Colon">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+
+
   <!-- Custom Classes used as ConverterParameters in Template styles - declared here to make them available to the IDE's parser to avoid false error highlighting -->
   <Style Selector=".MacOS_Theme_MenuLabelBelowIcon" />
   <Style Selector=".MacOS_Theme_MenuItemIconOnly" />

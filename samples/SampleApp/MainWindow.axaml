@@ -120,7 +120,7 @@
       </TabItem>
       <TabItem IsSelected="True">
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Label" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="Label" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:LabelDemo />
       </TabItem>

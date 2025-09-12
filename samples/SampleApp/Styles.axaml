@@ -44,7 +44,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
-  <!-- This rule is also used in RDM Styles.MacOS-->
+  <!-- Example for consumer's styles accessing the colon (this rule is also used in RDM Styles.MacOS) -->
   <Style
     Selector="Grid.form > Label /template/ TextBlock#Colon,
                  Label.form /template/ TextBlock#Colon,

@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             x:Class="SampleApp.DemoPages.LabelDemo">
+
+  <StackPanel Margin="10" Width="400" Spacing="15" HorizontalAlignment="Left">
+    <StackPanel>
+      <Label Content="Label" Target="{Binding #Input1}" />
+      <TextBox Name="Input1" Text="Input" />
+    </StackPanel>
+
+    <StackPanel>
+      <Label Content="Label explicitly disabled" IsEnabled="False" Target="{Binding #Input2}" />
+      <TextBox Name="Input2" Text="Linked input control not affected" />
+    </StackPanel>
+
+    <StackPanel IsEnabled="False">
+      <Label Content="Container disabled" Target="{Binding #Input3}" />
+      <TextBox Name="Input3" Text="Input" />
+    </StackPanel>
+
+    <StackPanel>
+      <Label Content="Linked control disabled" Target="{Binding #Input4}" />
+      <TextBox Name="Input4" Text="Input" IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel>
+      <Label Content="_Label not linked to Target" />
+      <TextBox Name="Input5" Text="No mnemonics, no accesibility, no label-click-to-focus" />
+    </StackPanel>
+
+
+    <TextBlock Margin="0 20 0 0">
+      To automatically show a colon after labels add a style:<LineBreak />
+      <TextBlock Classes="code" Text="&lt;Style Selector=&quot;Label /template/ TextBlock#Colon&quot;&gt;" /><LineBreak />
+      <TextBlock Classes="code" Text="&lt;Setter Property=&quot;IsVisible&quot; Value=&quot;True&quot; /&gt;" />
+    </TextBlock>
+
+    <StackPanel>
+      <Label Content="Label" Classes="form" Target="{Binding #Input6}" />
+      <TextBox Name="Input6" Text="Colon automatically added" />
+    </StackPanel>
+
+
+    <Grid Classes="form" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto" Margin="10 0" ColumnSpacing="4" RowSpacing="4">
+      <Label Content="_First" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Target="{Binding #FirstNameBox}" />
+      <TextBox Name="FirstNameBox" Grid.Row="0" Grid.Column="1" Text="Otto" />
+
+      <Label Content="Last Name" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Target="{Binding #LastNameBox}" />
+      <TextBox Name="LastNameBox" Grid.Row="1" Grid.Column="1" IsEnabled="False" Text="Smith" />
+    </Grid>
+
+
+  </StackPanel>
+
+
+</UserControl>

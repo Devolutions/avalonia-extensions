@@ -170,7 +170,6 @@
                 Width="16"
                 Height="16"
                 Margin="2"
-                Padding="3"
                 ClickMode="Press"
                 Focusable="False"
                 IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />

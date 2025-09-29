@@ -2,6 +2,15 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Width="200" Height="400" Spacing="20" Margin="20">
@@ -19,12 +28,13 @@
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
           Watermark="test">
-          <EditableComboBox.InnerLeftContent>
-            <Svg Path="M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z" />
-          </EditableComboBox.InnerLeftContent>
-          <EditableComboBox.InnerRightContent>
-            <Svg Path="M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z" />
-          </EditableComboBox.InnerRightContent>
+          <EditableComboBoxItem Value="test1" />
+          <EditableComboBoxItem Value="test2" />
+          <EditableComboBoxItem Value="test3" />
+        </EditableComboBox>
+
+        <EditableComboBox
+          Width="200">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -45,11 +55,8 @@
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
   <Thickness x:Key="EditableComboBoxItemPadding">10,3</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
-  <!--
-        Note: On the actual current MacOs Theme, the height is 20 and dropdown items have a height of 18. 
-        22/20 is here to match the rest of the styles we have in our MacOs theme instead.
-        - sbergerondrouin 2025-04-24
-    -->
+
+  <!-- Need to override default height in EditableComboBox control -->
   <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">20</x:Double>
 
@@ -112,7 +119,7 @@
               Name="BorderElement"
               Background="{TemplateBinding Background}"
               BorderBrush="{DynamicResource TextBoxBorderBrush}"
-              BorderThickness="1 1 1 0"
+              BorderThickness="1 1 1 1"
               CornerRadius="{TemplateBinding CornerRadius}"
               MinWidth="{TemplateBinding MinWidth}"
               MinHeight="{TemplateBinding MinHeight}" />
@@ -131,10 +138,12 @@
 
               <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
 
+              <!-- Background="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}"  -->
+
               <Border
                 Name="DropDownGlyphBackground"
                 Grid.Column="2"
-                Width="17"
+                Width="16"
                 Height="16"
                 CornerRadius="{DynamicResource ControlCornerRadius}"
                 HorizontalAlignment="Right"
@@ -148,7 +157,9 @@
                   Width="9"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
-                  Foreground="#FFF"
+                  Foreground="{WindowActiveBindingToggler 
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
                   Data="{StaticResource ChevronPath}">
                   <PathIcon.RenderTransform>
                     <ScaleTransform ScaleY="-1" />
@@ -166,7 +177,6 @@
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
               </ItemsControl>
-
               <Popup
                 Name="PART_Popup"
                 WindowManagerAddShadowHint="False"
@@ -242,7 +252,9 @@
     </Setter>
 
     <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
+      <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
     </Style>
 
     <!-- Error State -->
@@ -280,7 +292,8 @@
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundRecessedBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
       </Style>
     </Style>
   </ControlTheme>
@@ -288,12 +301,14 @@
   <ControlTheme x:Key="{x:Type EditableComboBox}" TargetType="EditableComboBox" BasedOn="{StaticResource {x:Type EditableComboBox}}">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="CaretBrush" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
 
     <Setter Property="ClipToBounds" Value="False" />
   </ControlTheme>

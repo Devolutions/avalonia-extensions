@@ -8,7 +8,7 @@
   <ScrollViewer>
     <StackPanel Margin="10">
       <TextBlock Classes="h1" Text="Grids" />
-      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
             ColumnSpacing="10"
             Margin="10 0">
         <TextBlock Grid.Column="0">TextBlock</TextBlock>
@@ -20,19 +20,24 @@
           <ComboBoxItem>Option 3</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
-        <AutoCompleteBox Grid.Column="4" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Column="5" Value="0"
+        <EditableComboBox Grid.Column="4">
+          <EditableComboBoxItem Value="test1" />
+          <EditableComboBoxItem Value="test2" />
+          <EditableComboBoxItem Value="test3" />
+        </EditableComboBox>
+        <AutoCompleteBox Grid.Column="5" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Column="6" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Column="6" />
-        <Button Grid.Column="7" Content="Button" />
-        <CheckBox Grid.Column="8" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Column="9" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Column="7" />
+        <Button Grid.Column="8" Content="Button" />
+        <CheckBox Grid.Column="9" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Column="10" Content="RadioButton" IsChecked="True" />
         <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-        <TextBlock Grid.Column="10" Text="🙂" FontSize="45" />
+        <TextBlock Grid.Column="11" Text="🙂" FontSize="45" />
       </Grid>
 
-      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *"
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *"
             RowSpacing="5"
             Width="150"
             HorizontalAlignment="Left"
@@ -45,14 +50,19 @@
           <ComboBoxItem>Option 3</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
-        <AutoCompleteBox Grid.Row="5" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Row="6" Value="0"
+        <EditableComboBox Grid.Row="5">
+          <EditableComboBoxItem Value="test1" />
+          <EditableComboBoxItem Value="test2" />
+          <EditableComboBoxItem Value="test3" />
+        </EditableComboBox>
+        <AutoCompleteBox Grid.Row="6" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Row="7" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Row="7" />
-        <Button Grid.Row="8" Content="Button" />
-        <CheckBox Grid.Row="9" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Row="10" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Row="8" />
+        <Button Grid.Row="9" Content="Button" />
+        <CheckBox Grid.Row="10" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Row="11" Content="RadioButton" IsChecked="True" />
       </Grid>
 
       <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
@@ -61,12 +71,17 @@
           <TextBlock>TextBlock</TextBlock>
           <TextBox Watermark="TextBox" />
           <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
-          <ComboBox SelectedIndex="2">
+          <ComboBox SelectedIndex="2" IsEnabled="False">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
             <ComboBoxItem>Option 3</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
+          <EditableComboBox IsEnabled="False">
+            <EditableComboBoxItem Value="test1" />
+            <EditableComboBoxItem Value="test2" />
+            <EditableComboBoxItem Value="test3" />
+          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
@@ -87,6 +102,11 @@
             <ComboBoxItem>Option 3</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
+          <EditableComboBox>
+            <EditableComboBoxItem Value="test1" />
+            <EditableComboBoxItem Value="test2" />
+            <EditableComboBoxItem Value="test3" />
+          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"

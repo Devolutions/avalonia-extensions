@@ -21,9 +21,9 @@
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
         <EditableComboBox Grid.Column="4">
-          <EditableComboBoxItem Value="test1" />
-          <EditableComboBoxItem Value="test2" />
-          <EditableComboBoxItem Value="test3" />
+          <EditableComboBoxItem Value="Option 1" />
+          <EditableComboBoxItem Value="Option 2" />
+          <EditableComboBoxItem Value="Option 3" />
         </EditableComboBox>
         <AutoCompleteBox Grid.Column="5" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
         <NumericUpDown Grid.Column="6" Value="0"

@@ -287,7 +287,8 @@
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="CaretBrush" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />

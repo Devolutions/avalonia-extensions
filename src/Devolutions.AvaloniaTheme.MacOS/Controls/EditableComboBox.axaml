@@ -51,13 +51,12 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <Thickness x:Key="EditableComboBoxBorderThickness">1</Thickness>
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
   <Thickness x:Key="EditableComboBoxItemPadding">10,3</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
 
   <!-- Need to override default height in EditableComboBox control -->
-  <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
+  <x:Double x:Key="EditableComboBoxHeight">21</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">20</x:Double>
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">
@@ -88,11 +87,7 @@
             Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Background"
             Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderBrush"
-            Value="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderThickness"
-            Value="{Binding BorderThickness, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="CornerRadius"
+     <Setter Property="CornerRadius"
             Value="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Padding"
             Value="{Binding Padding, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
@@ -118,8 +113,9 @@
             <Border
               Name="BorderElement"
               Background="{TemplateBinding Background}"
-              BorderBrush="{DynamicResource TextBoxBorderBrush}"
-              BorderThickness="1 1 1 1"
+              BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
+              BorderThickness="{DynamicResource ControlBorderThickness}"
+              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
               CornerRadius="{TemplateBinding CornerRadius}"
               MinWidth="{TemplateBinding MinWidth}"
               MinHeight="{TemplateBinding MinHeight}" />
@@ -229,19 +225,7 @@
                 </Border>
               </Popup>
             </Grid>
-
-            <Border Name="BottomBorder"
-                    BorderThickness="0 0 0 0.6"
-                    BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Margin="0.6 0  " />
-            <Border Name="BottomBorderShadow"
-                    BorderThickness="0 0 0 0.6"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                    Margin="0.6 0 0.6 -0.6 " />
+            
             <Border Name="FocusBorderElement"
                     Margin="-3"
                     BorderThickness="4"
@@ -307,9 +291,6 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
-
     <Setter Property="ClipToBounds" Value="False" />
   </ControlTheme>
 </ResourceDictionary>

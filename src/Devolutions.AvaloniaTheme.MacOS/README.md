@@ -39,6 +39,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
       - [ComboBoxItem](#comboboxitem)
     - [ContextMenu](#contextmenu)
     - [DataGrid](#datagrid)
+    - [EditableComboBox](#editablecombobox) ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))
     - [Expander](#expander)
     - [GridSplitter](#gridsplitter)
     - [ListBox](#listbox)
@@ -64,7 +65,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
     - small improvements & fixes, some code cleanup
     - SplitButton
     - CheckBoxListBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
-    - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
+  
     - MultiComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
     - RadioButton
@@ -130,8 +131,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>DropDownButton</h3> |
 |||
-|🚧 | <h3>EditableComboBox</h3> |
-|| [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md) |
+|✅ | <h3>EditableComboBox</h3> |
+|| [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)<br /><br /><img alt="EditableComboBox" src="https://github.com/user-attachments/assets/0aa4e16a-461b-4ffd-9420-b180d0c7bb9a" style="width: 431px; max-width: 100%;"/><br /><br /><img alt="EditableComboBox - dark mode" src="https://github.com/user-attachments/assets/eef1d34d-ce7e-4386-bc30-2ad165151f7b" style="width: 431px; max-width: 100%;" /> |
 || <h3>EmbeddableControlRoot</h3> |
 |||
 |✅ | <h3>Expander</h3> |

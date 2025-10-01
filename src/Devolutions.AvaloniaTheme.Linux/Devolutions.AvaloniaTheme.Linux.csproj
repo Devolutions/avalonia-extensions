@@ -5,9 +5,8 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Devolutions.AvaloniaTheme.Linux</RootNamespace>
   </PropertyGroup>
-
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>1.0.0-dev2</Version>
     <Company>Devolutions</Company>
     <Description>Devolutions Avalonia Linux Theme (Yaru)</Description>
     <PackageId>Devolutions.AvaloniaTheme.Linux</PackageId>
@@ -18,26 +17,23 @@
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
-
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.2.1,)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.2.1,)" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.2.1,)" />
-    <PackageReference Include="Avalonia.Svg.Skia" Version="[11.2.0,)" />
+    <PackageReference Include="Avalonia" Version="[11.3.6,)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.6,)" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.6,)" />
+    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="[11.3.6.2,)" />
   </ItemGroup>
-
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.8.27,)" />
+    <!--    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.8.27,)" />-->
+    <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Design\ThemePreviewer.axaml.cs">
       <DependentUpon>ThemePreviewer.axaml</DependentUpon>
@@ -55,7 +51,6 @@
   <ItemGroup>
     <AdditionalFiles Include="Design\ThemePreviewer.axaml" />
   </ItemGroup>
-
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <Compile Remove="Design\ThemePreviewer.axaml.cs" />
     <None Include="Design\ThemePreviewer.axaml.cs" />

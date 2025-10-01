@@ -17,6 +17,9 @@
         <MergeResourceInclude Source="Controls/ClosableTag.axaml" />
         <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBox.axaml" />
         <MergeResourceInclude Source="Controls/MultiComboBox/MultiComboBoxItem.axaml" />
+
+        <MergeResourceInclude Source="Controls/ToggleButtonGroup.axaml" />
+        <MergeResourceInclude Source="Controls/ToggleButtonGroupItem.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 

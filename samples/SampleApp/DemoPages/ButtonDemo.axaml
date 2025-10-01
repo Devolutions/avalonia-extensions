@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
              x:Class="SampleApp.DemoPages.ButtonDemo">
 
   <StackPanel>
@@ -37,6 +37,28 @@
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
         <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
       </Grid>
+    </Border>
+
+    <Border Background="{DynamicResource LayoutBackgroundLowBrush}" Margin="20 0">
+      <ToggleButtonGroup ItemsMinWidth="94">
+        <ToggleButtonGroupItem Content="System">
+          <ToggleButtonGroupItem.InnerLeftContent>
+            <Svg Path="/Assets/ThemeDefault.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+          </ToggleButtonGroupItem.InnerLeftContent>
+        </ToggleButtonGroupItem>
+
+        <ToggleButtonGroupItem Content="Light">
+          <ToggleButtonGroupItem.InnerLeftContent>
+            <Svg Path="/Assets/ThemeLight.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+          </ToggleButtonGroupItem.InnerLeftContent>
+        </ToggleButtonGroupItem>
+
+        <ToggleButtonGroupItem Content="Dark">
+          <ToggleButtonGroupItem.InnerLeftContent>
+            <Svg Path="/Assets/ThemeDark.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+          </ToggleButtonGroupItem.InnerLeftContent>
+        </ToggleButtonGroupItem>
+      </ToggleButtonGroup>
     </Border>
   </StackPanel>
 </UserControl>

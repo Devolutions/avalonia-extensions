@@ -1,0 +1,97 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  x:ClassModifier="internal">
+  <Design.PreviewWith>
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+      <Border Background="Black">
+        <ToggleButtonGroup ItemsMinWidth="94">
+          <ToggleButtonGroupItem Content="System" />
+          <ToggleButtonGroupItem Content="Light" />
+          <ToggleButtonGroupItem Content="Dark" />
+        </ToggleButtonGroup>
+      </Border>
+    </ThemeVariantScope>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type ToggleButtonGroupItem}" TargetType="ToggleButtonGroupItem">
+    <Setter Property="Background" Value="{DynamicResource ControlBackgroundColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonGroupBorderColor}" />
+    <Setter Property="BorderThickness" Value="1 1 0 1" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="MinWidth" Value="{Binding $parent[ToggleButtonGroup].ItemsMinWidth}" />
+
+    <Style Selector="^:nth-child(1)">
+      <Setter Property="CornerRadius" Value="5 0 0 5" />
+    </Style>
+    <Style Selector="^:nth-last-child(1)">
+      <Setter Property="CornerRadius" Value="0 5 5 0" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource ToggleButtonGroupSelectedBackgroundColor}" />
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="Background" Value="{DynamicResource ToggleButtonGroupSelectedBackgroundColor}" />
+      <Setter Property="Foreground" Value="{DynamicResource ToggleButtonGroupSelectedForegroundColor}" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <Grid ColumnDefinitions="Auto, *, Auto">
+            <ItemsControl
+              Name="PART_InnerLeftContent"
+              Grid.Column="0"
+              ItemsSource="{TemplateBinding InnerLeftContent}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerLeftContentPanel" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <ContentPresenter Grid.Column="1"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              CornerRadius="{TemplateBinding CornerRadius}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              Opacity="0"
+                              FontWeight="Bold" />
+            <ContentPresenter Grid.Column="1"
+                              Name="PART_ContentPresenter"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              CornerRadius="{TemplateBinding CornerRadius}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+
+            <ItemsControl
+              Name="PART_InnerRightContent"
+              Grid.Column="2"
+              ItemsSource="{TemplateBinding InnerRightContent}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

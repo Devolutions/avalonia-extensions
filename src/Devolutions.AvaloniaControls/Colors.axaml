@@ -10,7 +10,15 @@
       <Color x:Key="DefaultInnerIconForegroundColor">#aaa</Color>
       <Color x:Key="DefaultInnerIconPointerOverForegroundColor">#595959</Color>
       <Color x:Key="DefaultInnerIconPressedForegroundColor">#000</Color>
+
+      <Color x:Key="ControlBackgroundColor">#fff</Color>
+
+      <Color x:Key="ToggleButtonGroupBorderColor">#cde2f5</Color>
+      <Color x:Key="ToggleButtonGroupHoverBackgroundColor">#f1f8fe</Color>
+      <Color x:Key="ToggleButtonGroupSelectedBackgroundColor">#f1f8fe</Color>
+      <Color x:Key="ToggleButtonGroupSelectedForegroundColor">#0068c3</Color>
     </ResourceDictionary>
+
     <ResourceDictionary x:Key='Dark'>
       <Color x:Key="TextForegroundColor">#FFF</Color>
 
@@ -19,6 +27,13 @@
       <Color x:Key="DefaultInnerIconForegroundColor">#d0d0d0</Color>
       <Color x:Key="DefaultInnerIconPointerOverForegroundColor">#fff</Color>
       <Color x:Key="DefaultInnerIconPressedForegroundColor">#999</Color>
+
+      <Color x:Key="ControlBackgroundColor">#202020</Color>
+
+      <Color x:Key="ToggleButtonGroupBorderColor">#1a3348</Color>
+      <Color x:Key="ToggleButtonGroupHoverBackgroundColor">#1d2a35</Color>
+      <Color x:Key="ToggleButtonGroupSelectedBackgroundColor">#1d2a35</Color>
+      <Color x:Key="ToggleButtonGroupSelectedForegroundColor">#0088f2</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

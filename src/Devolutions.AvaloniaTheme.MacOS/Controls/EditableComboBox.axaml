@@ -83,25 +83,13 @@
                 Content="{TemplateBinding Value}"
                 Search="{TemplateBinding FilterHighlightText}"
                 VerticalAlignment="Center" />
-              <TextBlock
-                Name="PART_SearchHighlightText"
-                Text="{TemplateBinding Value}"
-                Foreground="{DynamicResource SearchHighlightForeground}"
-                Background="{DynamicResource SearchHighlightBackground}"
-                VerticalAlignment="Center" />
-              <TextBlock
-                Name="PART_SecondarySearchHighlightText"
-                Text="{TemplateBinding Value}"
-                Foreground="{DynamicResource SecondarySearchHighlightForeground}"
-                Background="{DynamicResource SecondarySearchHighlightBackground}"
-                VerticalAlignment="Center" />
             </StackPanel>
           </StackPanel>
         </Border>
       </ControlTemplate>
     </Setter>
     <Style Selector="^ /template/ Border#PART_Background">
-      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     </Style>
 
     <Style Selector="^[IsSelected=True]">
@@ -122,6 +110,7 @@
       </Style>
       <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+        <Setter Property="HighlightForeground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>
   </ControlTheme>
@@ -226,11 +215,7 @@
                 IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
                 MinWidth="{AddBinding
                                     {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
-                                    12
-                                }"
-                MaxWidth="{MultiplyBinding
-                                    {AddBinding {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}, 12},
-                                    2
+                                    24
                                 }"
                 MaxHeight="{TemplateBinding MaxDropDownHeight}"
                 VerticalOffset="2"

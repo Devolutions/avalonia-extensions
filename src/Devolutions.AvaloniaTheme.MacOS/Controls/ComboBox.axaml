@@ -137,11 +137,12 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
+               ClipToBounds="False"
                Margin="{StaticResource InputControlsSpaceForFocusBorder}">
           <Border
-            Name="border"
+            Name="BorderElement"
             Background="{TemplateBinding Background}"
-            BorderThickness="{DynamicResource ButtonBorderThickness}"
+            BorderThickness="{DynamicResource ControlBorderThickness}"
             BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
             BoxShadow="{DynamicResource ControlBorderBoxShadow}"
             CornerRadius="{TemplateBinding CornerRadius}">
@@ -170,7 +171,6 @@
                 Width="16"
                 Height="16"
                 Margin="2"
-                Padding="3"
                 ClickMode="Press"
                 Focusable="False"
                 IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
@@ -237,7 +237,7 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
-      <Style Selector="^ /template/ Border#border">
+      <Style Selector="^ /template/ Border#BorderElement">
         <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDisabledBoxShadow}" />
       </Style>
     </Style>

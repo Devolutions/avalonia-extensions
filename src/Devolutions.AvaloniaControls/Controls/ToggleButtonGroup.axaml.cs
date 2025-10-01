@@ -18,4 +18,10 @@ public class ToggleButtonGroup : ListBox
         get => this.GetValue(ItemsMinWidthProperty);
         set => this.SetValue(ItemsMinWidthProperty, value);
     }
+
+    protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
+        new ToggleButtonGroupItem();
+
+    protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
+        this.NeedsContainer<ToggleButtonGroupItem>(item, out recycleKey);
 }

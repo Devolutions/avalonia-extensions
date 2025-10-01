@@ -6,75 +6,18 @@
     <ThemeVariantScope RequestedThemeVariant="Dark">
       <Border Background="Black">
         <ToggleButtonGroup ItemsMinWidth="94">
-          <ListBoxItem Content="System" />
-          <ListBoxItem Content="Light" />
-          <ListBoxItem Content="Dark" />
+          <ToggleButtonGroupItem Content="System" />
+          <ToggleButtonGroupItem Content="Light" />
+          <ToggleButtonGroupItem Content="Dark" />
         </ToggleButtonGroup>
       </Border>
     </ThemeVariantScope>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="ToggleButtonGroup_Item_theme" TargetType="ListBoxItem">
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundColor}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonGroupBorderColor}" />
-    <Setter Property="BorderThickness" Value="1 1 0 1" />
-    <Setter Property="Padding" Value="5" />
-    <Setter Property="HorizontalAlignment" Value="Center" />
-    <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="MinWidth" Value="{Binding $parent[ToggleButtonGroup].ItemsMinWidth}" />
-
-    <Style Selector="^:nth-child(1)">
-      <Setter Property="CornerRadius" Value="5 0 0 5" />
-    </Style>
-    <Style Selector="^:nth-last-child(1)">
-      <Setter Property="CornerRadius" Value="0 5 5 0" />
-      <Setter Property="BorderThickness" Value="1" />
-    </Style>
-
-    <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="{DynamicResource ToggleButtonGroupSelectedBackgroundColor}" />
-    </Style>
-    <Style Selector="^:selected">
-      <Setter Property="Background" Value="{DynamicResource ToggleButtonGroupSelectedBackgroundColor}" />
-      <Setter Property="Foreground" Value="{DynamicResource ToggleButtonGroupSelectedForegroundColor}" />
-      <Setter Property="FontWeight" Value="Bold" />
-    </Style>
-
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="{TemplateBinding CornerRadius}"
-                Padding="{TemplateBinding Padding}">
-          <Panel>
-            <ContentPresenter Background="Transparent"
-                              BorderThickness="0"
-                              CornerRadius="{TemplateBinding CornerRadius}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              Content="{TemplateBinding Content}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              Opacity="0"
-                              FontWeight="Bold" />
-            <ContentPresenter Name="PART_ContentPresenter"
-                              Background="Transparent"
-                              BorderThickness="0"
-                              CornerRadius="{TemplateBinding CornerRadius}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              Content="{TemplateBinding Content}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
-          </Panel>
-        </Border>
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
-
   <ControlTheme x:Key="{x:Type ToggleButtonGroup}" TargetType="ToggleButtonGroup" BasedOn="{StaticResource {x:Type ListBox}}">
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="ItemContainerTheme" Value="{StaticResource ToggleButtonGroup_Item_theme}" />
+    <!-- <Setter Property="ItemContainerTheme" Value="{StaticResource ToggleButtonGroup_Item_theme}" /> -->
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
         <WrapPanel Orientation="Horizontal" />

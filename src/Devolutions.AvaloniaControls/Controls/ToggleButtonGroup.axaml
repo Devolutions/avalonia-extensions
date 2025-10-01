@@ -17,7 +17,6 @@
   <ControlTheme x:Key="{x:Type ToggleButtonGroup}" TargetType="ToggleButtonGroup" BasedOn="{StaticResource {x:Type ListBox}}">
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="Background" Value="Transparent" />
-    <!-- <Setter Property="ItemContainerTheme" Value="{StaticResource ToggleButtonGroup_Item_theme}" /> -->
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
         <WrapPanel Orientation="Horizontal" />

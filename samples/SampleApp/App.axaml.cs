@@ -8,7 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using Avalonia.Svg.Skia;
+using Avalonia.Svg;
 using ViewModels;
 
 public class App : Application

@@ -79,9 +79,10 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         }
     }
 
-    protected override void OnAttachedToVisualTree(CompositeDisposable disposable)
+    protected override IDisposable OnAttachedToVisualTreeOverride()
     {
-        if (this.AssociatedObject is null) return;
+        CompositeDisposable disposable = new();
+        if (this.AssociatedObject is null) return disposable;
 
         if (this.PositionToTemplatedParent)
         {
@@ -90,7 +91,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         this.PositionTo ??= this.AssociatedObject.PlacementTarget;
 
-        if (this.PositionTo is null) return;
+        if (this.PositionTo is null) return disposable;
 
         this.AssociatedObject.Opened += this.OnOpened;
         this.AssociatedObject.Closed += this.OnClosed;
@@ -149,6 +150,8 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             });
 
         disposable.Add(this.popupChildSubscription);
+
+        return disposable;
     }
 
     private void OnOpened(object? sender, EventArgs e)

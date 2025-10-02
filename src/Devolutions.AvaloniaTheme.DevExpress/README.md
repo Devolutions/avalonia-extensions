@@ -54,7 +54,6 @@ the Avalonia community to add more DevExpress-style controls.
      - SplitButton
      - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
-    - RadioButton
     - vertical tabs
 
 ## Installation

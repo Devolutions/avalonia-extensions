@@ -49,6 +49,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
     - [MenuItem](#menuitem)
     - [NumericUpDown](#numericupdown)
       - [ButtonSpinner](#buttonspinner)
+    - [RadioButton](#radiobutton)
     - [ScrollViewer](#scrollviewer)
       - [ScrollBar](#scrollbar)
     - [Separator](#separator)
@@ -68,7 +69,6 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
   
     - MultiComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
-    - RadioButton
     - DropDownButton
 
 ## Installation
@@ -136,8 +136,7 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 || <h3>EmbeddableControlRoot</h3> |
 |||
 |✅ | <h3>Expander</h3> |
-|| <img alt="Expanders" src="https://github.com/user-attachments/assets/106e240f-a2e2-4a7b-a782-f0b159ebef42" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expanders - dark mode" src="https://github.com/user-attachments/assets/866e6cec-3490-4a72-bf56-4d30a4129788" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded" src="https://github.com/user-attachments/assets/19992249-9896-43d2-9e52-5caf2562db22" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded - dark mode" src="https://github.com/user-attachments/assets/da545402-f8c9-4b34-bf60-1b4047c9b02f" style="width: 880px; max-width: 100%;" />
- |
+|| <img alt="Expanders" src="https://github.com/user-attachments/assets/106e240f-a2e2-4a7b-a782-f0b159ebef42" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expanders - dark mode" src="https://github.com/user-attachments/assets/866e6cec-3490-4a72-bf56-4d30a4129788" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded" src="https://github.com/user-attachments/assets/19992249-9896-43d2-9e52-5caf2562db22" style="width: 880px; max-width: 100%;" /> <br /><img alt="Expander expanded - dark mode" src="https://github.com/user-attachments/assets/da545402-f8c9-4b34-bf60-1b4047c9b02f" style="width: 880px; max-width: 100%;" /> |
 || <h3>FluentControls</h3> |
 |||
 || <h3>FlyoutPresenter</h3> |
@@ -176,8 +175,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>ProgressBar</h3> |
 |||
-|| <h3>RadioButton</h3> |
-|||
+|✅ | <h3>RadioButton</h3> |
+|| <img alt="RadioButton demos" src="https://github.com/user-attachments/assets/b0097ffc-47ef-4553-bda0-2764f4254d8c" style="width: 313px; max-width: 100%;" /><img alt="RadioButton demos - dark mode" src="https://github.com/user-attachments/assets/4705b961-6c14-4882-aeed-fd9b2fd2a6ce" style="width: 313px; max-width: 100%;" /> |
 || <h3>RefreshContainer</h3> |
 |||
 || <h3>RefreshVisualizer</h3> |

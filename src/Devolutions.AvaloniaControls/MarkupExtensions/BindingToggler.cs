@@ -1,70 +1,67 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
-using Avalonia;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Converters;
 using Helpers;
-using Microsoft.Extensions.DependencyInjection;
 
-public class BindingTogglerExtension : MarkupExtension, IDisposable
+public class BindingTogglerExtension : MarkupExtension
 {
-    private IBinding? resolvedWhenFalseBinding;
-    private IBinding? resolvedWhenTrueBinding;
+    private readonly WeakReference<IBinding?> resolvedWhenFalseBinding = new(null);
+    private readonly WeakReference<IBinding?> resolvedWhenTrueBinding = new(null);
 
-    public BindingTogglerExtension(IBinding conditionBinding, object whenTrueBinding, object whenFalseBinding)
+    public BindingTogglerExtension(IBinding conditionBinding, object? whenTrueBinding, object? whenFalseBinding)
     {
-        this.ConditionBinding = conditionBinding;
+        this.ConditionBinding = new WeakReference<IBinding>(conditionBinding);
         this.WhenTrueBinding = whenTrueBinding;
         this.WhenFalseBinding = whenFalseBinding;
     }
 
     [ConstructorArgument("conditionBinding")]
-    public IBinding ConditionBinding { get; init; }
+    public WeakReference<IBinding> ConditionBinding { get; init; }
 
     [ConstructorArgument("whenTrueBinding")]
-    public object WhenTrueBinding { get; init; }
+    public object? WhenTrueBinding { get; private set; }
 
     [ConstructorArgument("whenFalseBinding")]
-    public object WhenFalseBinding { get; init; }
+    public object? WhenFalseBinding { get; private set; }
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        var provideTarget = serviceProvider.GetService<IProvideValueTarget>();
-        var setter = provideTarget?.TargetObject as Setter;
-        var targetType = setter?.Property?.PropertyType;
+        IProvideValueTarget? provideTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
+        Setter? setter = provideTarget?.TargetObject as Setter;
+        Type? targetType = setter?.Property?.PropertyType;
 
-        if (targetType is not null)
+        this.resolvedWhenTrueBinding.TryGetTarget(out IBinding? resolvedTrueBinding);
+        if (resolvedTrueBinding is null && this.WhenTrueBinding is not null)
         {
-            this.resolvedWhenTrueBinding ??=
-                MarkupExtensionHelpers.GetBinding(this.WhenTrueBinding, targetType) ?? ObservableHelpers.Empty.ToBinding();
-            this.resolvedWhenFalseBinding ??=
-                MarkupExtensionHelpers.GetBinding(this.WhenFalseBinding, targetType) ?? ObservableHelpers.Empty.ToBinding();
+            resolvedTrueBinding = targetType is not null
+                ? MarkupExtensionHelpers.GetBinding(this.WhenTrueBinding, targetType)
+                : MarkupExtensionHelpers.GetBinding<object?>(this.WhenTrueBinding);
+            this.resolvedWhenTrueBinding.SetTarget(resolvedTrueBinding);
+            this.WhenTrueBinding = null;
         }
-        else
+
+        this.resolvedWhenFalseBinding.TryGetTarget(out IBinding? resolvedFalseBinding);
+        if (resolvedFalseBinding is null && this.WhenFalseBinding is not null)
         {
-            this.resolvedWhenTrueBinding ??=
-                MarkupExtensionHelpers.GetBinding<object?>(this.WhenTrueBinding) ?? ObservableHelpers.Empty.ToBinding();
-            this.resolvedWhenFalseBinding ??=
-                MarkupExtensionHelpers.GetBinding<object?>(this.WhenFalseBinding) ?? ObservableHelpers.Empty.ToBinding();
+            resolvedFalseBinding = targetType is not null
+                ? MarkupExtensionHelpers.GetBinding(this.WhenFalseBinding, targetType)
+                : MarkupExtensionHelpers.GetBinding<object?>(this.WhenFalseBinding);
+            this.resolvedWhenFalseBinding.SetTarget(resolvedFalseBinding);
+            this.WhenFalseBinding = null;
         }
+
+        if (!this.ConditionBinding.TryGetTarget(out IBinding? condition)) return null!;
 
         return new MultiBinding
         {
             Converter = DevoMultiConverters.BooleanToChoiceConverter,
             Bindings =
             [
-                this.ConditionBinding, this.resolvedWhenTrueBinding, this.resolvedWhenFalseBinding,
+                condition, resolvedTrueBinding!, resolvedFalseBinding!,
             ],
         };
-    }
-
-    public void Dispose()
-    {
-        (this.resolvedWhenFalseBinding as IDisposable)?.Dispose();
-        this.resolvedWhenFalseBinding = null;
-        (this.resolvedWhenTrueBinding as IDisposable)?.Dispose();
-        this.resolvedWhenTrueBinding = null;
     }
 }

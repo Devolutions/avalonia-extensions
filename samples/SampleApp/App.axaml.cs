@@ -8,16 +8,16 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using Avalonia.Svg.Skia;
+using Avalonia.Svg;
 using ViewModels;
 
 public class App : Application
 {
     private readonly Styles themeStylesContainer = new();
     private Styles? devExpressStyles;
+    private bool devToolsAttached;
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
-    private bool devToolsAttached;
     public static Theme? CurrentTheme { get; set; }
 
     public override void Initialize()
@@ -26,8 +26,8 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            this.Styles.Clear();
-            this.Styles.Add(this.themeStylesContainer);
+            // this.Styles.Clear();
+            // this.Styles.Add(this.themeStylesContainer);
         }
 
         this.linuxYaruStyles = this.Resources["LinuxYaruStyles"] as Styles;
@@ -41,24 +41,30 @@ public class App : Application
         {
             Theme? theme = this.DetectDesignTheme();
 
-            if (OperatingSystem.IsWindows())
+            if (theme is not null)
             {
-                theme ??= new DevExpressTheme();
-            }
-            else if (OperatingSystem.IsMacOS())
-            {
-                theme ??= new MacOsTheme();
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                theme ??= new LinuxYaruTheme();
-            }
-            else
-            {
-                theme ??= new MacOsTheme();
-            }
+                this.Styles.Clear();
+                this.Styles.Add(this.themeStylesContainer);
 
-            SetTheme(theme);
+                if (OperatingSystem.IsWindows())
+                {
+                    theme ??= new DevExpressTheme();
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    theme ??= new MacOsTheme();
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    theme ??= new LinuxYaruTheme();
+                }
+                else
+                {
+                    theme ??= new MacOsTheme();
+                }
+
+                SetTheme(theme);
+            }
         }
     }
 

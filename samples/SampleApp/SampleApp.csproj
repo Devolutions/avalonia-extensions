@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.6.2" />
+    <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.6.2" />
+    <!--    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.6.2" />-->
+    <!--        <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />-->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.0" />
   </ItemGroup>
@@ -41,7 +43,8 @@
         See: https://github.com/mono/SkiaSharp/issues/3117#issuecomment-2896259517
         - sbergerondrouin 2025-06-18
     -->
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
   </ItemGroup>
 
   <ItemGroup>

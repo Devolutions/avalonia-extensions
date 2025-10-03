@@ -28,7 +28,8 @@
     <PackageReference Include="Avalonia" Version="[11.3.6,)" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.6,)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.6,)" />
-    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="[11.3.6,)" />
+    <!--        <PackageReference Include="Avalonia.Svg.Skia" Version="[11.3.0,)" />-->
+    <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">

@@ -6,7 +6,7 @@
     <RootNamespace>Devolutions.AvaloniaTheme.Linux</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>1.0.0-dev2</Version>
+    <Version>1.0.0-dev8</Version>
     <Company>Devolutions</Company>
     <Description>Devolutions Avalonia Linux Theme (Yaru)</Description>
     <PackageId>Devolutions.AvaloniaTheme.Linux</PackageId>
@@ -24,7 +24,6 @@
     <PackageReference Include="Avalonia" Version="[11.3.6,)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.6,)" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.6,)" />
-    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="[11.3.6.2,)" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->

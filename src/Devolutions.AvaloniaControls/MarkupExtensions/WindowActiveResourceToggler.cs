@@ -1,9 +1,8 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Helpers;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 
 public class WindowActiveResourceTogglerExtension : MarkupExtension
 {
@@ -25,12 +24,12 @@ public class WindowActiveResourceTogglerExtension : MarkupExtension
     {
         if (Design.IsDesignMode)
         {
-            return Application.Current?.GetResourceObservable(this.ActiveResourceKey).ToBinding() ?? ObservableHelpers.Empty.ToBinding();
+            return new DynamicResourceExtension(this.ActiveResourceKey).ProvideValue(serviceProvider);
         }
 
         this.toggler ??= new WindowActiveBindingTogglerExtension(
-            Application.Current?.GetResourceObservable(this.ActiveResourceKey).ToBinding() ?? ObservableHelpers.Empty.ToBinding(),
-            Application.Current?.GetResourceObservable(this.InactiveResourceKey).ToBinding() ?? ObservableHelpers.Empty.ToBinding()
+            new DynamicResourceExtension(this.ActiveResourceKey).ProvideValue(serviceProvider),
+            new DynamicResourceExtension(this.InactiveResourceKey).ProvideValue(serviceProvider)
         );
 
         return this.toggler.ProvideValue(serviceProvider);

@@ -2,7 +2,6 @@ namespace Devolutions.AvaloniaControls.Helpers;
 
 using System.ComponentModel;
 using System.Globalization;
-using Avalonia;
 using Avalonia.Data;
 
 public static class MarkupExtensionHelpers
@@ -23,17 +22,17 @@ public static class MarkupExtensionHelpers
                 if (isParsable)
                 {
                     TIn value = Parse(str, (dynamic)default(TIn)!);
-                    return SingleValueObservable(value).ToBinding();
+                    return ObservableHelpers.ValueBinding(value);
                 }
 
                 break;
             }
         }
-
-        if (v is TIn t) return SingleValueObservable(t).ToBinding();
+        
+        if (v is TIn t) return ObservableHelpers.ValueBinding(t);
 
         return TypeDescriptor.GetConverter(v.GetType()).ConvertTo(v, typeof(TIn)) is TIn t2
-            ? SingleValueObservable(t2).ToBinding()
+            ? ObservableHelpers.ValueBinding(t2)
             : null;
     }
 
@@ -51,7 +50,7 @@ public static class MarkupExtensionHelpers
                 if (isParsable)
                 {
                     var parseMethod = type.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)]);
-                    return SingleValueObservable(parseMethod?.Invoke(type, [str, CultureInfo.InvariantCulture])).ToBinding();
+                    return ObservableHelpers.ValueBinding(parseMethod?.Invoke(type, [str, CultureInfo.InvariantCulture]));
                 }
 
                 break;
@@ -60,12 +59,10 @@ public static class MarkupExtensionHelpers
 
         var t = TypeDescriptor.GetConverter(v.GetType()).ConvertTo(v, type);
         return t is not null
-            ? SingleValueObservable(t).ToBinding()
+            ? ObservableHelpers.ValueBinding(t)
             : null;
     }
 
     private static T Parse<T>(string stringValue, T _) where T : IParsable<T> =>
         T.Parse(stringValue, CultureInfo.InvariantCulture);
-
-    private static SingleValueObservable<T> SingleValueObservable<T>(T v) => new(v);
 }

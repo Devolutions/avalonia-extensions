@@ -6,18 +6,18 @@
 
   <Application.Resources>
     <Styles x:Key="LinuxYaruStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsLinuxYaruTheme />
       <StyleInclude Source="/Styles.axaml" />
     </Styles>
     <Styles x:Key="DevExpressStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsDevExpressTheme GlobalStyles="False" />
       <DevolutionsDevExpressThemeGlobalStyles />
       <StyleInclude Source="/Styles.axaml" />
     </Styles>
     <Styles x:Key="MacOsStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsMacOsTheme GlobalStyles="False" />
       <DevolutionsMacOsThemeGlobalStyles />
       <StyleInclude Source="/Styles.axaml" />
@@ -32,5 +32,6 @@
     <DevolutionsMacOsTheme />
     <!-- <DevolutionsDevExpressTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
+    <FluentTheme />
   </Application.Styles>
 </Application>

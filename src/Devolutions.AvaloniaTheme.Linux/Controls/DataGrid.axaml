@@ -26,6 +26,24 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key='Light'>
+      <Color x:Key='DataGridColumnHeaderBackgroundColor'>#d1d1d1</Color>
+      <Color x:Key='DataGridColumnHeaderForegroundColor'>#101010</Color>
+
+      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#fafafa" />
+      <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#f2f6fb" />
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key='Dark'>
+      <Color x:Key='DataGridColumnHeaderBackgroundColor'>#1f1f1f</Color>
+      <Color x:Key='DataGridColumnHeaderForegroundColor'>#f5f5f5</Color>
+
+      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#252525" />
+      <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#2c2c2c" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
   <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="{DynamicResource DataGridColumnHeaderForegroundColor}" />
   <SolidColorBrush x:Key="DataGridColumnHeaderBackground" Color="{DynamicResource DataGridColumnHeaderBackgroundColor}" />
   <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackground" Color="{DynamicResource SystemListLowColor}" />
@@ -46,7 +64,7 @@
   <SolidColorBrush x:Key="DataGridCellInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
   <SolidColorBrush x:Key="DataGridDetailsPresenterBackground" Color="{DynamicResource SystemChromeMediumLowColor}" />
   <SolidColorBrush x:Key="DataGridDropLocationIndicatorBackground" Color="{DynamicResource SystemAccentColor}" />
-  <StaticResource x:Key='DataGridGridLinesBrush' ResourceKey='TableBorder' />
+  <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="{DynamicResource InputBorderColor}" />
 
   <x:Double x:Key="ListAccentLowOpacity">0.6</x:Double>
   <x:Double x:Key="ListAccentMediumOpacity">0.8</x:Double>
@@ -60,8 +78,7 @@
   <StaticResource x:Key="DataGridRowSelectedBackgroundOpacity" ResourceKey="ListAccentLowOpacity" />
   <StaticResource x:Key="DataGridRowSelectedHoveredBackgroundOpacity" ResourceKey="ListAccentMediumOpacity" />
   <StaticResource x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity" ResourceKey="ListAccentLowOpacity" />
-  <StaticResource x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity"
-                  ResourceKey="ListAccentMediumOpacity" />
+  <StaticResource x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity" ResourceKey="ListAccentMediumOpacity" />
   <StaticResource x:Key="DataGridCellBackground" ResourceKey="SystemControlTransparentBrush" />
   <StaticResource x:Key="DataGridCurrencyVisualPrimaryBrush" ResourceKey="SystemControlTransparentBrush" />
 
@@ -73,7 +90,7 @@
     <Setter Property="VerticalAlignment" Value="Stretch" />
     <Setter Property="Background" Value="Transparent" />
     <Style Selector="^ /template/ DataValidationErrors">
-      <Setter Property="Theme" Value="{DynamicResource TooltipDataValidationErrors}" />
+      <Setter Property="Theme" Value="{StaticResource TooltipDataValidationErrors}" />
     </Style>
   </ControlTheme>
 
@@ -250,8 +267,16 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="DataGridTopLeftColumnHeader" TargetType="DataGridColumnHeader"
-                BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+  <ControlTheme x:Key="DataGridTopLeftColumnHeader" TargetType="DataGridColumnHeader">
+    <Setter Property="Foreground" Value="{DynamicResource DataGridColumnHeaderForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderBackgroundBrush}" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
+    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="MinHeight" Value="32" />
+
     <Setter Property="Template">
       <ControlTemplate>
         <Grid x:Name="TopLeftHeaderRoot"
@@ -267,6 +292,32 @@
         </Grid>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:focus-visible /template/ Grid#FocusVisual">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="^:pointerover /template/ Grid#PART_ColumnHeaderRoot">
+      <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderHoveredBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="^:pressed /template/ Grid#PART_ColumnHeaderRoot">
+      <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderPressedBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="^:dragIndicator">
+      <Setter Property="Opacity" Value="0.5" />
+    </Style>
+
+    <Style Selector="^:sortascending /template/ Path#SortIcon">
+      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Data" Value="{StaticResource DataGridSortIconAscendingPath}" />
+    </Style>
+
+    <Style Selector="^:sortdescending /template/ Path#SortIcon">
+      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Data" Value="{StaticResource DataGridSortIconDescendingPath}" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type DataGridRowHeader}" TargetType="DataGridRowHeader">
@@ -311,7 +362,11 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
-    <Setter Property="Background" Value="{Binding $parent[DataGrid].RowBackground}" />
+    <Setter Property="Background"
+            Value="{DynamicResourceToggler 
+              {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+              DataGridRowBackgroundBrush, DataGridAlternatingRowBackgroundBrush
+            }" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="RowBorder"
@@ -324,9 +379,9 @@
                               RowDefinitions="*,Auto,Auto">
 
             <Rectangle Name="BackgroundRectangle"
-                       Fill="{DynamicResource DataGridRowBackground}"
                        Grid.RowSpan="2"
-                       Grid.ColumnSpan="2" />
+                       Grid.ColumnSpan="2"
+                       Fill="{TemplateBinding Background}" />
             <Rectangle x:Name="InvalidVisualElement"
                        Opacity="0"
                        Grid.ColumnSpan="2"
@@ -353,13 +408,6 @@
         </Border>
       </ControlTemplate>
     </Setter>
-
-    <ControlTheme.Children>
-      <Style Selector="^:nth-child(2n)">
-        <Setter Property="Background"
-                Value="{DynamicResource DataGridAlternatingRowBackgroundBrush}" />
-      </Style>
-    </ControlTheme.Children>
 
     <Style Selector="^:invalid">
       <Style Selector="^ /template/ Rectangle#InvalidVisualElement">
@@ -394,7 +442,7 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="FluentDataGridRowGroupExpanderButtonTheme" TargetType="ToggleButton">
+  <ControlTheme x:Key="DevoYaruDataGridRowGroupExpanderButtonTheme" TargetType="ToggleButton">
     <Setter Property="Template">
       <ControlTemplate>
         <Border Width="12"
@@ -435,7 +483,7 @@
                         Width="12"
                         Height="12"
                         Margin="12,0,0,0"
-                        Theme="{StaticResource FluentDataGridRowGroupExpanderButtonTheme}"
+                        Theme="{StaticResource DevoYaruDataGridRowGroupExpanderButtonTheme}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Background="{TemplateBinding Background}"
@@ -517,8 +565,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
-        <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}"
-                   Width="2" />
+        <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}" Width="2" />
       </Template>
     </Setter>
     <Setter Property="Template">
@@ -529,7 +576,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid ColumnDefinitions="Auto,*,Auto"
-                RowDefinitions="Auto,*,Auto"
+                RowDefinitions="Auto,*,Auto, Auto"
                 ClipToBounds="True">
             <DataGridColumnHeader Name="PART_TopLeftCornerHeader"
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
@@ -553,14 +600,11 @@
                                          IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}" />
               </DataGridRowsPresenter.GestureRecognizers>
             </DataGridRowsPresenter>
-            <!-- Do not use name 'PART_BottomRightCorner' it's visibility gets set to true somewhere in the cs code! -->
-            <Rectangle Name="CustomBottomRightCorner"
-                       Fill="{DynamicResource ScrollBarsSeparatorBackgroundColor}"
+
+            <Rectangle Name="PART_BottomRightCorner"
+                       Fill="{DynamicResource DataGridScrollBarsSeparatorBackground}"
                        Grid.Column="2"
-                       Grid.Row="2"
-                       IsVisible="{OrBinding  
-              {Binding #PART_VerticalScrollbar.IsExpanded},
-               {Binding #PART_HorizontalScrollbar.IsExpanded}}" />
+                       Grid.Row="2" />
             <ScrollBar Name="PART_VerticalScrollbar"
                        Orientation="Vertical"
                        Grid.Column="2"
@@ -578,7 +622,7 @@
             </Grid>
             <Border x:Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"
-                    Grid.Row="0" Grid.RowSpan="3"
+                    Grid.Row="0" Grid.RowSpan="4"
                     IsHitTestVisible="False"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

@@ -8,7 +8,7 @@
     <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>1.0.0-dev2</Version>
+    <Version>1.0.0-dev8</Version>
     <Company>Devolutions</Company>
     <Description>Devolutions Avalonia Controls Library</Description>
     <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions/tree/master/src/Devolutions.AvaloniaControls</PackageProjectUrl>
@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.3.6,)" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.6,)" />
     <PackageReference Include="Xaml.Behaviors" Version="[11.3.6,)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />

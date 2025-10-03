@@ -1,29 +1,28 @@
 namespace Devolutions.AvaloniaControls.Helpers;
 
+using Avalonia.Data;
+
 public static class ObservableHelpers
 {
-  public static SingleValueObservable<T> SingleValue<T>(T v) => new(v);
-
-  public static SingleValueObservable<T?> EmptyTyped<T>() where T : class? => new(null);
-
-  public static readonly SingleValueObservable<object?> Empty = new(null);
+    public static IBinding EmptyBinding() => new Binding { Source = null };
+    public static IBinding ValueBinding(object? value) => new Binding { Source = value };
 }
 
 public class SingleValueObservable<T>(T value) : IObservable<T>
 {
-  public IDisposable Subscribe(IObserver<T> observer)
-  {
-    observer.OnNext(value);
-    observer.OnCompleted();
-    return EmptyDisposable.Instance;
-  }
+    public IDisposable Subscribe(IObserver<T> observer)
+    {
+        observer.OnNext(value);
+        observer.OnCompleted();
+        return EmptyDisposable.Instance;
+    }
 
-  private sealed class EmptyDisposable : IDisposable
-  {
-    public static readonly EmptyDisposable Instance = new();
+    private sealed class EmptyDisposable : IDisposable
+    {
+        public static readonly EmptyDisposable Instance = new();
 
-    private EmptyDisposable() { }
+        private EmptyDisposable() { }
 
-    public void Dispose() { }
-  }
+        public void Dispose() { }
+    }
 }

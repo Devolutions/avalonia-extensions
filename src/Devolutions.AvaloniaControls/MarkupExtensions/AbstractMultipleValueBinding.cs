@@ -9,11 +9,9 @@ public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
 {
     private readonly WeakReference<IBinding>[]? bindings;
 
-    private MultiBinding? multiBindingInstance;
-
-    protected AbstractMultipleValueBinding(object a, object b)
+    protected AbstractMultipleValueBinding(object b1, object b2)
     {
-        if (GetBinding(a) is IBinding bA && GetBinding(b) is IBinding bB)
+        if (GetBinding(b1) is IBinding bA && GetBinding(b2) is IBinding bB)
         {
             this.bindings =
             [
@@ -23,9 +21,9 @@ public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
         }
     }
 
-    protected AbstractMultipleValueBinding(object a, object b, params object[] bindings) : this(a, b)
+    protected AbstractMultipleValueBinding(object b1, object b2, params object[] bindings)
     {
-        if (GetBinding(a) is IBinding bA && GetBinding(b) is IBinding bB)
+        if (GetBinding(b1) is IBinding bA && GetBinding(b2) is IBinding bB)
         {
             this.bindings =
             [
@@ -42,13 +40,11 @@ public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
     {
         if (this.bindings is null) return null!;
 
-        this.multiBindingInstance ??= new MultiBinding
+        return new MultiBinding
         {
             Bindings = this.bindings.Select(b => b.TryGetTarget(out IBinding? t) ? t : null).SkipNulls().ToArray(),
             Converter = this.MultiValueConverter,
         };
-
-        return this.multiBindingInstance;
     }
 
     private static IBinding? GetBinding(object? v) => MarkupExtensionHelpers.GetBinding<TIn>(v);

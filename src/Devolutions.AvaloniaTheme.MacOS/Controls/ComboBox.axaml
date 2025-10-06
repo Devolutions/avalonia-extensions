@@ -70,6 +70,10 @@
 
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
     <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+    <Setter Property="Foreground"
+            Value="{WindowActiveBindingToggler 
+      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
     <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
     <Setter Property="CornerRadius" Value="{StaticResource SelectionCornerRadius}" />
@@ -91,17 +95,13 @@
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
+                  Fill="{TemplateBinding Foreground}" />
             <Path Height="4.4"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
-                  Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}">
+                  Fill="{TemplateBinding Foreground}">
               <Path.RenderTransform>
                 <ScaleTransform ScaleY="-1" />
               </Path.RenderTransform>

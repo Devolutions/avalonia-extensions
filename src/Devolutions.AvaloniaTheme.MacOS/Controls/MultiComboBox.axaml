@@ -101,7 +101,10 @@
                 Margin="2"
                 Padding="3"
                 IsHitTestVisible="False"
-                Focusable="False" />
+                Focusable="False"
+                Foreground="{WindowActiveBindingToggler 
+      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
 
               <Border
                 Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sampleApp="clr-namespace:SampleApp"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ControlAlignment">
 
@@ -13,7 +14,14 @@
             Margin="10 0">
         <TextBlock Grid.Column="0">TextBlock</TextBlock>
         <TextBox Grid.Column="1" Watermark="TextBox" />
-        <TextBox Grid.Column="2" Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+        <TextBox Grid.Column="2"
+                 Height="22" MinHeight="22" MaxHeight="22"
+                 IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=Windows - DevExpress}">
+          thin
+        </TextBox>
         <ComboBox Grid.Column="3" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
@@ -44,7 +52,7 @@
         <TextBlock Grid.Column="12" Text="🙂" FontSize="45" />
       </Grid>
 
-      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *"
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *"
             RowSpacing="5"
             Width="150"
             HorizontalAlignment="Left"
@@ -84,7 +92,13 @@
         <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
           <TextBlock>TextBlock</TextBlock>
           <TextBox Watermark="TextBox" />
-          <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+          <TextBox Height="22" MinHeight="22" MaxHeight="22"
+                   IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=Windows - DevExpress}">
+            thin
+          </TextBox>
           <ComboBox SelectedIndex="2" IsEnabled="False">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>

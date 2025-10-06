@@ -64,11 +64,12 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
+  <!-- Override default height in EditableComboBox control -->
   <Thickness x:Key="EditableComboBoxBorderThickness">1</Thickness>
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
   <Thickness x:Key="EditableComboBoxItemPadding">10,3</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
-  <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
+  <x:Double x:Key="EditableComboBoxHeight">23</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">28</x:Double>
   <SolidColorBrush x:Key="ComboBoxBackgroundBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
 
@@ -379,9 +380,10 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
-
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Mode" Value="Immediate" />
 
     <!-- Search highlight -->

@@ -153,7 +153,6 @@
                 Margin="{TemplateBinding Padding}"
                 Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-
                 IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}"
                 Text="{TemplateBinding PlaceholderText}" />
               <ContentControl
@@ -174,7 +173,6 @@
                 ClickMode="Press"
                 Focusable="False"
                 IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
-
             </Grid>
           </Border>
           <Border Name="FocusBorderElement"

@@ -4,6 +4,15 @@
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
   x:ClassModifier="internal">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
       <StackPanel Width="200" Height="200" Spacing="20">

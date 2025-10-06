@@ -31,8 +31,6 @@
 
   <ItemGroup>
     <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.6.2" />
-    <!--    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.6.2" />-->
-    <!--        <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />-->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.0" />
   </ItemGroup>

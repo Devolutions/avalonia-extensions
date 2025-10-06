@@ -2,6 +2,15 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Width="200" Height="400" Spacing="20" Margin="20">
@@ -19,12 +28,13 @@
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
           Watermark="test">
-          <EditableComboBox.InnerLeftContent>
-            <Svg Path="M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z" />
-          </EditableComboBox.InnerLeftContent>
-          <EditableComboBox.InnerRightContent>
-            <Svg Path="M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z" />
-          </EditableComboBox.InnerRightContent>
+          <EditableComboBoxItem Value="test1" />
+          <EditableComboBoxItem Value="test2" />
+          <EditableComboBoxItem Value="test3" />
+        </EditableComboBox>
+
+        <EditableComboBox
+          Width="200">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -41,35 +51,67 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <Thickness x:Key="EditableComboBoxBorderThickness">1</Thickness>
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
   <Thickness x:Key="EditableComboBoxItemPadding">10,3</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
-  <!--
-        Note: On the actual current MacOs Theme, the height is 20 and dropdown items have a height of 18. 
-        22/20 is here to match the rest of the styles we have in our MacOs theme instead.
-        - sbergerondrouin 2025-04-24
-    -->
-  <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
-  <x:Double x:Key="EditableComboBoxItemsHeight">20</x:Double>
+
+  <!-- Need to override default height in EditableComboBox control -->
+  <x:Double x:Key="EditableComboBoxHeight">21</x:Double>
+  <x:Double x:Key="EditableComboBoxItemsHeight">22</x:Double>
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">
     <Setter Property="IsHitTestVisible" Value="True" />
     <Setter Property="Margin" Value="4 0" />
-    <Setter Property="CornerRadius" Value="4" />
-    <Setter Property="Padding" Value="10 0 10 2" />
-
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="Padding" Value="10 0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <Path Name="CheckMark"
+                  Width="10"
+                  Height="10"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="{DynamicResource CheckMarkPath}"
+                  Fill="Transparent"
+                  FlowDirection="LeftToRight"
+                  Stretch="Fill" />
+            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Stretch">
+              <SearchHighlightTextBlock
+                Name="PART_Text"
+                Content="{TemplateBinding Value}"
+                Search="{TemplateBinding FilterHighlightText}"
+                VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
     <Style Selector="^ /template/ Border#PART_Background">
-      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     </Style>
 
-    <Style
-      Selector="^:pointerover /template/ Border#PART_Background, ^[IsSelected=True] /template/ Border#PART_Background">
-      <Setter Property="Background" Value="{DynamicResource EditableComboBoxItemHoverBackground}" />
+    <Style Selector="^[IsSelected=True]">
+      <Style Selector="^ /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="Transparent" />
+      </Style>
     </Style>
-    <Style
-      Selector="^:pointerover /template/ TextBlock#PART_Text, ^[IsSelected=True] /template/ TextBlock#PART_Text">
-      <Setter Property="Foreground" Value="#FFF" />
+
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+      </Style>
+      <Style Selector="^[IsSelected=True] /template/ Path#CheckMark">
+        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
+      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
+        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+        <Setter Property="HighlightForeground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      </Style>
     </Style>
   </ControlTheme>
 
@@ -81,10 +123,6 @@
             Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Background"
             Value="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderBrush"
-            Value="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="BorderThickness"
-            Value="{Binding BorderThickness, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="CornerRadius"
             Value="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Padding"
@@ -111,8 +149,9 @@
             <Border
               Name="BorderElement"
               Background="{TemplateBinding Background}"
-              BorderBrush="{DynamicResource TextBoxBorderBrush}"
-              BorderThickness="1 1 1 0"
+              BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
+              BorderThickness="{DynamicResource ControlBorderThickness}"
+              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
               CornerRadius="{TemplateBinding CornerRadius}"
               MinWidth="{TemplateBinding MinWidth}"
               MinHeight="{TemplateBinding MinHeight}" />
@@ -131,10 +170,12 @@
 
               <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
 
+              <!-- Background="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}"  -->
+
               <Border
                 Name="DropDownGlyphBackground"
                 Grid.Column="2"
-                Width="17"
+                Width="16"
                 Height="16"
                 CornerRadius="{DynamicResource ControlCornerRadius}"
                 HorizontalAlignment="Right"
@@ -148,7 +189,9 @@
                   Width="9"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
-                  Foreground="#FFF"
+                  Foreground="{WindowActiveBindingToggler 
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
                   Data="{StaticResource ChevronPath}">
                   <PathIcon.RenderTransform>
                     <ScaleTransform ScaleY="-1" />
@@ -166,48 +209,39 @@
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
               </ItemsControl>
-
               <Popup
                 Name="PART_Popup"
                 WindowManagerAddShadowHint="False"
                 IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
                 MinWidth="{AddBinding
                                     {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
-                                    12
-                                }"
-                MaxWidth="{MultiplyBinding
-                                    {AddBinding {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}, 12},
-                                    2
+                                    24
                                 }"
                 MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                Placement="AnchorAndGravity"
-                PlacementAnchor="BottomLeft"
-                PlacementGravity="BottomRight"
+                VerticalOffset="2"
                 HorizontalAlignment="Stretch"
-                HorizontalOffset="-6"
-                VerticalOffset="0"
                 IsLightDismissEnabled="True"
                 OverlayDismissEventPassThrough="True"
                 InheritsTransform="True"
                 ClipToBounds="False">
                 <Border
                   x:Name="PopupBorder"
-                  Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
-                  BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                  BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-                  Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                  Background="{DynamicResource PopupBackgroundBrush}"
+                  BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                  BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
+                  Padding="{DynamicResource PopupPadding}"
                   HorizontalAlignment="Stretch"
-                  BoxShadow="{DynamicResource ComboBoxBoxShadow}"
-                  Margin="1 0 1 1"
-                  CornerRadius="10">
+                  BoxShadow="{DynamicResource PopupShadow}"
+                  Margin="{DynamicResource PopupMargin}"
+                  CornerRadius="{DynamicResource LayoutCornerRadius}">
                   <ScrollViewer
-                    CornerRadius="10"
+                    CornerRadius="{DynamicResource LayoutCornerRadius}"
                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                     IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                     <ItemsPresenter
                       Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      Margin="{DynamicResource AutoCompleteListPadding}"
                       ItemsPanel="{TemplateBinding ItemsPanel}">
                       <ItemsPresenter.Styles>
                         <Style Selector="StackPanel">
@@ -220,18 +254,6 @@
               </Popup>
             </Grid>
 
-            <Border Name="BottomBorder"
-                    BorderThickness="0 0 0 0.6"
-                    BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Margin="0.6 0  " />
-            <Border Name="BottomBorderShadow"
-                    BorderThickness="0 0 0 0.6"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                    Margin="0.6 0 0.6 -0.6 " />
             <Border Name="FocusBorderElement"
                     Margin="-3"
                     BorderThickness="4"
@@ -242,7 +264,9 @@
     </Setter>
 
     <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
+      <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
     </Style>
 
     <!-- Error State -->
@@ -253,10 +277,17 @@
     <!--  Focused State  -->
     <Style Selector="^:focus-within">
       <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderFocusBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{StaticResource FocusBorderThickness}" />
+        <Setter Property="CornerRadius" Value="7" />
       </Style>
-      <Style Selector="^ /template/ Border#BottomBorder">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderFocusBrush}" />
+    </Style>
+
+    <Style Selector="^:focus-visible">
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{StaticResource FocusBorderThickness}" />
+        <Setter Property="CornerRadius" Value="7" />
       </Style>
     </Style>
 
@@ -280,7 +311,8 @@
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundRecessedBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
       </Style>
     </Style>
   </ControlTheme>
@@ -288,13 +320,13 @@
   <ControlTheme x:Key="{x:Type EditableComboBox}" TargetType="EditableComboBox" BasedOn="{StaticResource {x:Type EditableComboBox}}">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
-    <Setter Property="CaretBrush" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
-
     <Setter Property="ClipToBounds" Value="False" />
   </ControlTheme>
 </ResourceDictionary>

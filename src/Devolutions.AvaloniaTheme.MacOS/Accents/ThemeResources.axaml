@@ -71,6 +71,7 @@
 
       <BoxShadows x:Key="TextBoxBorderShadows">0 0.5 2.5 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
       <BoxShadows x:Key="ControlBorderBoxShadow">0 1 1.5 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
+      <BoxShadows x:Key="ButtonBorderBoxShadow">0 0.5 1 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
       <BoxShadows x:Key="ComboBoxDisabledBoxShadow">0 1 1.5 0 #26000000, 0 0 0 0.5 #08000000</BoxShadows>
       <BoxShadows x:Key="ToolTipBorderShadow">0 0 1 0 #66000000, 0 7 17 0 #30000000</BoxShadows>
       <Thickness x:Key="ButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
@@ -315,7 +316,7 @@
   <SolidColorBrush x:Key="DefaultIconFillBrush" Color="{DynamicResource DefaultIconColor}" />
 
   <!-- Button Resources (& button-like parts of other controls) -->
-  <Thickness x:Key="ButtonPadding">10 1.4 10 2.6</Thickness>
+  <Thickness x:Key="ButtonPadding">10 0</Thickness>
   <FontWeight x:Key="ButtonFontWeight">400</FontWeight>
   <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource ControlBorderAccentColor}" />
 

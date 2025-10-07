@@ -15,7 +15,7 @@
       </TextBlock>
       <ComboBox Grid.Column="1" Grid.Row="1" SelectedIndex="2" VerticalAlignment="Top" Margin="10 0 20 0">
         <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
+        <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
         <ComboBoxItem>Option 3 (Default)</ComboBoxItem>
         <ComboBoxItem>Option 4</ComboBoxItem>
       </ComboBox>

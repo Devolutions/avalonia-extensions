@@ -322,17 +322,10 @@
               Name="PART_Popup"
               WindowManagerAddShadowHint="False"
               IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-              MinWidth="{AddBinding
-                        {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
-                        12
-                     }"
+              MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
-              Placement="AnchorAndGravity"
-              PlacementAnchor="BottomLeft"
-              PlacementGravity="BottomRight"
-              HorizontalAlignment="Stretch"
-              HorizontalOffset="-6"
-              VerticalOffset="0"
+              PlacementTarget="BorderElement"
+              Placement="BottomEdgeAlignedLeft"
               IsLightDismissEnabled="True"
               OverlayDismissEventPassThrough="True"
               InheritsTransform="True">
@@ -344,16 +337,15 @@
                   BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                   Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                   HorizontalAlignment="Stretch"
-                  BoxShadow="{DynamicResource ComboBoxBoxShadow}"
-                  Margin="6 0 6 6"
-                  CornerRadius="0">
+                  BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
+                  Margin="{DynamicResource ComboBoxPopupBorderMargin}">
                   <ScrollViewer
                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                     IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                     <ItemsPresenter
                       Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      Margin="{DynamicResource ComboBoxDropDownInnerPadding}"
                       ItemsPanel="{TemplateBinding ItemsPanel}" />
                   </ScrollViewer>
                 </Border>
@@ -378,7 +370,7 @@
     </Style>
 
     <Style Selector="^ /template/ Border#DropDownGlyphBackground:pointerover">
-      <Setter Property="Background" Value="{DynamicResource EditableComboBoxGlyphHoverBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ControlBackgroundPointerOverBrush}" />
     </Style>
 
     <Style Selector="^:dropdownopen">
@@ -400,9 +392,16 @@
 
     <!--  Disabled State  -->
     <Style Selector="^:disabled">
-      <Style Selector="^ /template/ Border#Background">
-        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundDisabled}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushDisabled}" />
+      <Style Selector="^ /template/ Border#BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxDisabledBorderSelectedBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+      </Style>
+      <Style Selector="^ /template/ Border#BottomBorderElement">
+        <Setter Property="IsVisible" Value="False" />
+      </Style>
+      <Style Selector="^ /template/ ContentControl#TextBoxPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}" />
@@ -415,7 +414,7 @@
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="CaretBrush" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="SelectionBrush" Value="{DynamicResource TextSelectionBrush}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextSelectionColorSolid}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="4 3 2 3" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />

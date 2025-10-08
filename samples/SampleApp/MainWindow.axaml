@@ -50,7 +50,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:ComboBoxDemo />
       </TabItem>

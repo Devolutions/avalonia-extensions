@@ -10,6 +10,7 @@
     <MergeResourceInclude Source="CalendarDayButton.axaml" />
     <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
+    <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />

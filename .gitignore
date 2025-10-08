@@ -17,3 +17,6 @@ global.json
 
 # macOS
 .DS_Store
+
+# AI assistant files
+CLAUDE.md

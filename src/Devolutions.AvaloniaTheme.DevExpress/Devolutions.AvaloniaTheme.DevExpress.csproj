@@ -26,9 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.3.0,)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.0,)" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.0,)" />
+    <PackageReference Include="Avalonia" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.7" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">

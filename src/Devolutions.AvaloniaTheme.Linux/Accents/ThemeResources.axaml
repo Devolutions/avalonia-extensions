@@ -51,8 +51,8 @@
       <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
 
-      <BoxShadows x:Key="ControlBorderBoxShadow">0 1 1.5 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
-      <BoxShadows x:Key="ComboBoxDisabledBoxShadow">0 1 1.5 0 #26000000, 0 0 0 0.5 #08000000</BoxShadows>
+      <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="PopupBorderBrush" Color="#adadad" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key='Dark'>
@@ -107,8 +107,8 @@
       <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource BackgroundColor}" Opacity="0.6" />
       <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="Transparent" />
 
-      <BoxShadows x:Key="ControlBorderBoxShadow">0 0 Transparent</BoxShadows>
-      <BoxShadows x:Key="ComboBoxDisabledBoxShadow">0 0.5 2.5 0 #26ffffff, 0 0 0 0.5 #08ffffff</BoxShadows>
+      <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
+      <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -196,40 +196,14 @@
   <x:Double x:Key="NumericUpDownMinWidth">96</x:Double>
   <x:Double x:Key="TextControlMinHeight">34</x:Double>
 
-  <CornerRadius x:Key="LayoutCornerRadius">5</CornerRadius>
-  <CornerRadius x:Key="SelectionCornerRadius">4</CornerRadius>
-
-  <Thickness x:Key="InputControlsSpaceForFocusBorder">1.5</Thickness>
-  <Thickness x:Key="FocusBorderThickness">3.5</Thickness>
-  <Thickness x:Key="FocusBorderMargin">-3</Thickness>
-
-  <SolidColorBrush x:Key="FocusBorderBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.5" />
-
-  <SolidColorBrush x:Key="ControlForegroundAccentHighBrush" Color="#ffffff" />
-  <SolidColorBrush x:Key="ControlForegroundAccentInactiveHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
-
-  <SolidColorBrush x:Key="ControlBackgroundHighBrush" Color="#ffffff" />
-
-  <LinearGradientBrush x:Key="ControlBackgroundAccentRaisedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-    <GradientStop Offset="0" Color="{StaticResource SystemAccentColorLight1}" />
-    <GradientStop Offset="1" Color="{StaticResource SystemAccentColor}" />
-  </LinearGradientBrush>
-
-  <SolidColorBrush x:Key="ControlBorderAccentBrush" Color="{StaticResource SystemAccentColor}" />
-
-  <SolidColorBrush x:Key="ControlBorderRaisedBrush" Color="#d1d1d1" />
+  <Thickness x:Key="FocusBorderThickness">2</Thickness>
 
   <!-- ComboBox & ComboBoxItem Resources -->
-  <x:Int32 x:Key="ComboBoxItemHeight">22</x:Int32>
-  
-  <!-- TODO: Use Bindings to named item properties & AddBinding to encode these dependencies more securely -->
-  <!-- InitialFirstItemDistance must match ComboBoxShadowMargin.bottom + PopupPadding.top -->
-  <x:Int32 x:Key="InitialFirstItemDistance">9</x:Int32>
-  <x:Int32 x:Key="PopupTrimHeight">30</x:Int32>
-  <x:Int32 x:Key="PopupSideMarginWidth">12</x:Int32>
-  <Thickness x:Key="PopupMargin">12 1 12 29</Thickness>
-  <Thickness x:Key="PopupPadding">3 5</Thickness>
-  <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
+  <x:Int32 x:Key="ComboBoxItemHeight">30</x:Int32>
+  <x:Int32 x:Key="InitialFirstItemDistance">3</x:Int32>
+  <x:Int32 x:Key="PopupTrimHeight">2</x:Int32>
+  <x:Int32 x:Key="PopupSideMarginWidth">2</x:Int32>
+  <Thickness x:Key="PopupMargin">1</Thickness>
 
   <!-- DEVELOPMENT ONLY -->
   <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->

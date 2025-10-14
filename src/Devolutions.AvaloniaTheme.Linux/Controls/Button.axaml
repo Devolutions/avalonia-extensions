@@ -24,7 +24,7 @@
 
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
-    <Setter Property="MinHeight" Value="{DynamicResource TextControlMinHeight}" />
+    <Setter Property="MinHeight" Value="{DynamicResource InputDefaultHeight}" />
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
     <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
@@ -55,7 +55,7 @@
           <Border Name="FocusBorderElement"
                   IsVisible="False"
                   BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
-                  BorderThickness="2"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
                   CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>
       </ControlTemplate>

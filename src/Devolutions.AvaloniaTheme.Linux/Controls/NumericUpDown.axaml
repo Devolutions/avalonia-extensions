@@ -5,61 +5,61 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
   xmlns:sys="clr-namespace:System;assembly=System.Runtime"
   x:ClassModifier="internal">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-    <Border Padding="20">
-      <StackPanel Spacing="20">
-        <NumericUpDown
-          Minimum="0"
-          Maximum="10"
-          Increment="0.5"
-          Watermark="Enter text" />
-        <NumericUpDown
-          Minimum="0"
-          Maximum="10"
-          Increment="0.5"
-          VerticalContentAlignment="Center"
-          HorizontalContentAlignment="Center"
-          ButtonSpinnerLocation="Left"
-          Watermark="Enter text" />
-        <NumericUpDown ButtonSpinnerLocation="Left">
-          <NumericUpDown.InnerLeftContent>
-            <TextBlock
-              Text="m"
-              TextAlignment="Center"
-              VerticalAlignment="Center" />
-          </NumericUpDown.InnerLeftContent>
-          <NumericUpDown.InnerRightContent>
-            <Button Content="X" />
-          </NumericUpDown.InnerRightContent>
-        </NumericUpDown>
-        <NumericUpDown ButtonSpinnerLocation="Right">
-          <NumericUpDown.InnerLeftContent>
-            <Button Content="X" />
-          </NumericUpDown.InnerLeftContent>
-          <NumericUpDown.InnerRightContent>
-            <TextBlock
-              Text="m"
-              TextAlignment="Center"
-              VerticalAlignment="Center" />
-          </NumericUpDown.InnerRightContent>
-        </NumericUpDown>
-        <NumericUpDown>
-          <DataValidationErrors.Error>
-            <sys:Exception>
-              <x:Arguments>
-                <x:String>Error</x:String>
-              </x:Arguments>
-            </sys:Exception>
-          </DataValidationErrors.Error>
-        </NumericUpDown>
-      </StackPanel>
-    </Border>
-  </design:ThemePreviewer>
+      <Border Padding="20">
+        <StackPanel Spacing="20">
+          <NumericUpDown
+            Minimum="0"
+            Maximum="10"
+            Increment="0.5"
+            Watermark="Enter text" />
+          <NumericUpDown
+            Minimum="0"
+            Maximum="10"
+            Increment="0.5"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            ButtonSpinnerLocation="Left"
+            Watermark="Enter text" />
+          <NumericUpDown ButtonSpinnerLocation="Left">
+            <NumericUpDown.InnerLeftContent>
+              <TextBlock
+                Text="m"
+                TextAlignment="Center"
+                VerticalAlignment="Center" />
+            </NumericUpDown.InnerLeftContent>
+            <NumericUpDown.InnerRightContent>
+              <Button Content="X" />
+            </NumericUpDown.InnerRightContent>
+          </NumericUpDown>
+          <NumericUpDown ButtonSpinnerLocation="Right">
+            <NumericUpDown.InnerLeftContent>
+              <Button Content="X" />
+            </NumericUpDown.InnerLeftContent>
+            <NumericUpDown.InnerRightContent>
+              <TextBlock
+                Text="m"
+                TextAlignment="Center"
+                VerticalAlignment="Center" />
+            </NumericUpDown.InnerRightContent>
+          </NumericUpDown>
+          <NumericUpDown>
+            <DataValidationErrors.Error>
+              <sys:Exception>
+                <x:Arguments>
+                  <x:String>Error</x:String>
+                </x:Arguments>
+              </sys:Exception>
+            </DataValidationErrors.Error>
+          </NumericUpDown>
+        </StackPanel>
+      </Border>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type NumericUpDown}" TargetType="NumericUpDown">
@@ -115,8 +115,11 @@
             </ButtonSpinner>
             <Border
               Name="PART_FocusBorder"
+              IsVisible="False"
               Margin="0"
               Background="Transparent"
+              BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
+              BorderThickness="{StaticResource FocusBorderThickness}"
               IsHitTestVisible="False"
               CornerRadius="{DynamicResource ControlCornerRadius}" />
           </Panel>
@@ -125,8 +128,7 @@
     </Setter>
     <!-- Focused State -->
     <Style Selector="^:focus-within /template/ Border#PART_FocusBorder">
-      <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
-      <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Left] /template/ TextBox">

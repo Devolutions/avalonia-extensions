@@ -75,7 +75,7 @@
           <Border
             Name="border"
             Background="{TemplateBinding Background}"
-            BorderThickness="{DynamicResource ButtonBorderThickness}"
+            BorderThickness="{DynamicResource ControlBorderThickness}"
             BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
             BoxShadow="{DynamicResource ControlBorderBoxShadow}"
             MinHeight="{TemplateBinding MinHeight}"

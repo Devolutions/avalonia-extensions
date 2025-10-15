@@ -52,7 +52,6 @@
   </Design.PreviewWith>
 
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
-  <Thickness x:Key="EditableComboBoxItemPadding">10,3</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
 
   <!-- Need to override default height in EditableComboBox control -->
@@ -61,13 +60,13 @@
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">
     <Setter Property="IsHitTestVisible" Value="True" />
-    <Setter Property="Margin" Value="4 0" />
+    <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="Padding" Value="10 0" />
+    <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
-          <StackPanel Orientation="Horizontal" Spacing="5">
+          <StackPanel Orientation="Horizontal" Spacing="4">
             <Path Name="CheckMark"
                   Width="10"
                   Height="10"
@@ -77,13 +76,11 @@
                   Fill="Transparent"
                   FlowDirection="LeftToRight"
                   Stretch="Fill" />
-            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Stretch">
-              <SearchHighlightTextBlock
-                Name="PART_Text"
-                Content="{TemplateBinding Value}"
-                Search="{TemplateBinding FilterHighlightText}"
-                VerticalAlignment="Center" />
-            </StackPanel>
+            <SearchHighlightTextBlock
+              Name="PART_Text"
+              Content="{TemplateBinding Value}"
+              Search="{TemplateBinding FilterHighlightText}"
+              VerticalAlignment="Center" />
           </StackPanel>
         </Border>
       </ControlTemplate>

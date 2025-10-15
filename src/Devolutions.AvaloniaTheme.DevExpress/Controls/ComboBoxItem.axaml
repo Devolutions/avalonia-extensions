@@ -3,6 +3,15 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries> -->
+  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
+  <!-- </ResourceDictionary.MergedDictionaries> -->
+
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="300">
       <StackPanel Spacing="0" Width="200">

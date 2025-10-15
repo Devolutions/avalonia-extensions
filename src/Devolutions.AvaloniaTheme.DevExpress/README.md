@@ -33,6 +33,7 @@ the Avalonia community to add more DevExpress-style controls.
     - [ComboBox](#combobox)
       - [ComboBoxItem](#comboboxitem)
     - [DataGrid](#datagrid)
+    - [EditableComboBox](#editablecombobox) ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))
     - [Expander](#expander)
     - [ListBox](#listbox)
       - [ListBoxItem](#listboxitem)
@@ -52,7 +53,6 @@ the Avalonia community to add more DevExpress-style controls.
      - small improvements & fixes, some code cleanup
      - ContextMenu
      - SplitButton
-     - EditableComboBox [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)
   - 🔮 Next on the road map ...
     - vertical tabs
 
@@ -116,8 +116,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>DropDownButton</h3> |
 |||
-|🚧 | <h3>EditableComboBox</h3> ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))|
-|||
+|✅ | <h3>EditableComboBox</h3> ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))|
+|| <img width="392" alt="EditableComboBox" src="https://github.com/user-attachments/assets/4762e4ce-07a1-420e-899a-2a355fc920e1" style="width: 392px; max-width: 100%;" /> <br /><img width="403" alt="EditableComboBox - dark mode" src="https://github.com/user-attachments/assets/716a10e2-8dfd-49f4-a767-5feb26c434e3" style="width: 403px; max-width: 100%;" /> |
 || <h3>EmbeddableControlRoot</h3> |
 |||
 |✅ | <h3>Expander</h3> |

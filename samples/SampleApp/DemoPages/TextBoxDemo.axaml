@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             xmlns:sampleApp="clr-namespace:SampleApp"
              x:DataType="vm:TextBoxViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
@@ -42,7 +43,13 @@
           <Label>Error Indicator:</Label>
           <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
 
-          <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+          <TextBox Height="22" MinHeight="22" MaxHeight="22"
+                   IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=Windows - DevExpress}">
+            thin
+          </TextBox>
         </StackPanel>
       </StackPanel>
     </Border>

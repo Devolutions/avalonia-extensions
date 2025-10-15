@@ -15,9 +15,9 @@ public class App : Application
 {
     private readonly Styles themeStylesContainer = new();
     private Styles? devExpressStyles;
-    private bool devToolsAttached;
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
+    private bool devToolsAttached;
     public static Theme? CurrentTheme { get; set; }
 
     public override void Initialize()
@@ -26,8 +26,8 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            // this.Styles.Clear();
-            // this.Styles.Add(this.themeStylesContainer);
+            this.Styles.Clear();
+            this.Styles.Add(this.themeStylesContainer);
         }
 
         this.linuxYaruStyles = this.Resources["LinuxYaruStyles"] as Styles;
@@ -41,30 +41,24 @@ public class App : Application
         {
             Theme? theme = this.DetectDesignTheme();
 
-            if (theme is not null)
+            if (OperatingSystem.IsWindows())
             {
-                this.Styles.Clear();
-                this.Styles.Add(this.themeStylesContainer);
-
-                if (OperatingSystem.IsWindows())
-                {
-                    theme ??= new DevExpressTheme();
-                }
-                else if (OperatingSystem.IsMacOS())
-                {
-                    theme ??= new MacOsTheme();
-                }
-                else if (OperatingSystem.IsLinux())
-                {
-                    theme ??= new LinuxYaruTheme();
-                }
-                else
-                {
-                    theme ??= new MacOsTheme();
-                }
-
-                SetTheme(theme);
+                theme ??= new DevExpressTheme();
             }
+            else if (OperatingSystem.IsMacOS())
+            {
+                theme ??= new MacOsTheme();
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                theme ??= new LinuxYaruTheme();
+            }
+            else
+            {
+                theme ??= new MacOsTheme();
+            }
+
+            SetTheme(theme);
         }
     }
 

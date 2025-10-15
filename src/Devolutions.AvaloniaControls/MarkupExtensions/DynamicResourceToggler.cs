@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
+using Avalonia;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.MarkupExtensions;
@@ -25,7 +26,7 @@ public class DynamicResourceTogglerExtension : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        if (!this.ConditionBinding.TryGetTarget(out IBinding? conditionBinding)) return null!;
+        if (!this.ConditionBinding.TryGetTarget(out IBinding? conditionBinding)) return AvaloniaProperty.UnsetValue;
 
         return new BindingTogglerExtension(
             conditionBinding,

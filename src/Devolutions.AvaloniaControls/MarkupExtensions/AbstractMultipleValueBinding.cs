@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
+using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
@@ -38,7 +39,7 @@ public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        if (this.bindings is null) return null!;
+        if (this.bindings is null) return AvaloniaProperty.UnsetValue;
 
         return new MultiBinding
         {

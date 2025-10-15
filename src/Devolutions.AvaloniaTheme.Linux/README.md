@@ -21,6 +21,8 @@ the Avalonia community to add more controls.
 - [Installation](#installation)
 - [Styled Controls](#styled-controls)
   - Available in the current build
+    - [ComboBox](#combobox)
+      - [ComboBoxItem](#comboboxitem)
   - 🚧 In progress ...
     - Dark mode support
   - 🔮 Next on the road map ...
@@ -52,139 +54,139 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 ## Styled Controls
 
-||                                                                                                 | Notes |
-|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|-------|
-||||
-|| <h3>AdornerLayer</h3> ||
-||||
-|| <h3>AutoCompleteBox</h3> ||
-||||
-|| <h3>Button</h3> ||
-||||
-|| <h3>ButtonSpinner</h3> ||
-||||
-|| <h3>Calendar</h3> ||
-||||
-|| <h3>CalendarButton</h3> ||
-||||
-|| <h3>CalendarDatePicker</h3> ||
-||||
-|| <h3>CalendarDayButton</h3> ||
-||||
-|| <h3>CalendarItem</h3> ||
-||||
-|| <h3>CaptionButtons</h3> ||
-||||
-|| <h3>Carousel</h3> ||
-||||
-|| <h3>CheckBox</h3> ||
-||||
-|| <h3>ComboBox</h3> <h4>ComboBoxItem</h4> ||
-||||
-|| <h3>ContextMenu</h3> ||
-||||
-|| <h3>DataGrid</h3> ||
-||||
-|| <h3>DataValidationErrors</h3> ||
-||||
-|| <h3>DatePicker</h3> ||
-||||
-|| <h3>DateTimePickerShared</h3> ||
-||||
-|| <h3>DropDownButton</h3> ||
-||||
-|| <h3>EmbeddableControlRoot</h3> ||
-||||
-|| <h3>Expander</h3> ||
-||||
-|| <h3>FluentControls</h3> ||
-||||
-|| <h3>FlyoutPresenter</h3> ||
-||||
-|| <h3>GridSplitter</h3> ||
-||||
-|| <h3>HeaderedContentControl</h3> ||
-||||
-|| <h3>HyperlinkButton</h3> ||
-||||
-|| <h3>ItemsControl</h3> ||
-||||
-|| <h3>Label</h3> ||
-||||
-|| <h3>ListBox</h3> ||
-||||
-|| <h3>ListBoxItem</h3> ||
-||||
-|| <h3>ManagedFileChooser</h3> ||
-||||
-|| <h3>Menu</h3> ||
-||||
-|| <h3>MenuFlyoutPresenter</h3> ||
-||||
-|| <h3>MenuItem</h3> ||
-||||
-|| <h3>MenuScrollViewer</h3> ||
-||||
-|| <h3>NotificationCard</h3> ||
-||||
-|| <h3>NumericUpDown</h3> ||
-||||
-|| <h3>OverlayPopupHost</h3> ||
-||||
-|| <h3>PathIcon</h3> ||
-||||
-|| <h3>PopupRoot</h3> ||
-||||
-|| <h3>ProgressBar</h3> ||
-||||
-|| <h3>RadioButton</h3> ||
-||||
-|| <h3>RefreshContainer</h3> ||
-||||
-|| <h3>RefreshVisualizer</h3> ||
-||||
-|| <h3>RepeatButton</h3> ||
-||||
-|| <h3>ScrollViewer</h3> <h4>ScrollBar</h4> ||
-||||
-|| <h3>SelectableTextBlock</h3> ||
-||||
-|| <h3>Separator</h3> ||
-||||
-|| <h3>Slider</h3> ||
-||||
-|| <h3>SplitButton</h3> ||
-||||
-|| <h3>SplitView</h3> ||
-||||
-|| <h3>TabControl</h3> <h4>TabItem<h4> ||
-||||
-|| <h3>TabStrip</h3> ||
-||||
-|| <h3>TabStripItem</h3> ||
-||||
-|| <h3>TextBox</h3> ||
-||||
-|| <h3>TextSelectionHandle</h3> ||
-||||
-|| <h3>ThemeVariantScope</h3> ||
-||||
-|| <h3>TimePicker</h3> ||
-||||
-|| <h3>TitleBar</h3> ||
-||||
-|| <h3>ToggleButton</h3> ||
-||||
-|| <h3>ToggleSwitch</h3> ||
-||||
-|| <h3>ToolTip</h3> ||
-||||
-|| <h3>TransitioningContentControl</h3> ||
-||||
-|| <h3>TreeView</h3> <h4>TreeViewItem<h4> ||
-||||
-|| <h3>Window</h3> ||
-||||
-|| <h3>WindowNotificationManager</h3> ||
-||||
+||                                                                                                 |
+|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+|||
+|| <h3>AdornerLayer</h3> |
+|||
+|| <h3>AutoCompleteBox</h3> |
+|||
+|| <h3>Button</h3> |
+|||
+|| <h3>ButtonSpinner</h3> |
+|||
+|| <h3>Calendar</h3> |
+|||
+|| <h3>CalendarButton</h3> |
+|||
+|| <h3>CalendarDatePicker</h3> |
+|||
+|| <h3>CalendarDayButton</h3> |
+|||
+|| <h3>CalendarItem</h3> |
+|||
+|| <h3>CaptionButtons</h3> |
+|||
+|| <h3>Carousel</h3> |
+|||
+|| <h3>CheckBox</h3> |
+|||
+|✅ | <h3>ComboBox</h3> <h4>ComboBoxItem</h4> |
+|| <img alt="ComboBox" src="https://github.com/user-attachments/assets/dffff816-a0d8-4dc1-8906-ae5b4946690c" style="width: 360px; max-width: 100%;" /> <img alt="ComboBox - dark mode" src="https://github.com/user-attachments/assets/3010743c-f9dd-4446-9a31-cc717504cfc6" style="width: 360px; max-width: 100%;" /> |
+|| <h3>ContextMenu</h3> |
+|||
+|| <h3>DataGrid</h3> |
+|||
+|| <h3>DataValidationErrors</h3> |
+|||
+|| <h3>DatePicker</h3> |
+|||
+|| <h3>DateTimePickerShared</h3> |
+|||
+|| <h3>DropDownButton</h3> |
+|||
+|| <h3>EmbeddableControlRoot</h3> |
+|||
+|| <h3>Expander</h3> |
+|||
+|| <h3>FluentControls</h3> |
+|||
+|| <h3>FlyoutPresenter</h3> |
+|||
+|| <h3>GridSplitter</h3> |
+|||
+|| <h3>HeaderedContentControl</h3> |
+|||
+|| <h3>HyperlinkButton</h3> |
+|||
+|| <h3>ItemsControl</h3> |
+|||
+|| <h3>Label</h3> |
+|||
+|| <h3>ListBox</h3> |
+|||
+|| <h3>ListBoxItem</h3> |
+|||
+|| <h3>ManagedFileChooser</h3> |
+|||
+|| <h3>Menu</h3> |
+|||
+|| <h3>MenuFlyoutPresenter</h3> |
+|||
+|| <h3>MenuItem</h3> |
+|||
+|| <h3>MenuScrollViewer</h3> |
+|||
+|| <h3>NotificationCard</h3> |
+|||
+|| <h3>NumericUpDown</h3> |
+|||
+|| <h3>OverlayPopupHost</h3> |
+|||
+|| <h3>PathIcon</h3> |
+|||
+|| <h3>PopupRoot</h3> |
+|||
+|| <h3>ProgressBar</h3> |
+|||
+|| <h3>RadioButton</h3> |
+|||
+|| <h3>RefreshContainer</h3> |
+|||
+|| <h3>RefreshVisualizer</h3> |
+|||
+|| <h3>RepeatButton</h3> |
+|||
+|| <h3>ScrollViewer</h3> <h4>ScrollBar</h4> |
+|||
+|| <h3>SelectableTextBlock</h3> |
+|||
+|| <h3>Separator</h3> |
+|||
+|| <h3>Slider</h3> |
+|||
+|| <h3>SplitButton</h3> |
+|||
+|| <h3>SplitView</h3> |
+|||
+|| <h3>TabControl</h3> <h4>TabItem<h4> |
+|||
+|| <h3>TabStrip</h3> |
+|||
+|| <h3>TabStripItem</h3> |
+|||
+|| <h3>TextBox</h3> |
+|||
+|| <h3>TextSelectionHandle</h3> |
+|||
+|| <h3>ThemeVariantScope</h3> |
+|||
+|| <h3>TimePicker</h3> |
+|||
+|| <h3>TitleBar</h3> |
+|||
+|| <h3>ToggleButton</h3> |
+|||
+|| <h3>ToggleSwitch</h3> |
+|||
+|| <h3>ToolTip</h3> |
+|||
+|| <h3>TransitioningContentControl</h3> |
+|||
+|| <h3>TreeView</h3> <h4>TreeViewItem<h4> |
+|||
+|| <h3>Window</h3> |
+|||
+|| <h3>WindowNotificationManager</h3> |
+|||
 

@@ -32,6 +32,5 @@
     <!-- <DevolutionsMacOsTheme /> -->
     <DevolutionsDevExpressTheme />
     <!-- <DevolutionsLinuxYaruTheme /> -->
-    <FluentTheme />
   </Application.Styles>
 </Application>

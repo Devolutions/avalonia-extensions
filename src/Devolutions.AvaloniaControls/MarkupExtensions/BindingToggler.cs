@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
+using Avalonia;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
@@ -53,7 +54,7 @@ public class BindingTogglerExtension : MarkupExtension
             this.WhenFalseBinding = null;
         }
 
-        if (!this.ConditionBinding.TryGetTarget(out IBinding? condition)) return null!;
+        if (!this.ConditionBinding.TryGetTarget(out IBinding? condition)) return AvaloniaProperty.UnsetValue;
 
         return new MultiBinding
         {

@@ -50,6 +50,9 @@
       <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
+
+      <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="PopupBorderBrush" Color="#adadad" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key='Dark'>
@@ -103,6 +106,9 @@
       <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="Transparent" />
       <SolidColorBrush x:Key="ExpanderHeaderBottomBorderBrush" Color="{DynamicResource BackgroundColor}" Opacity="0.6" />
       <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="Transparent" />
+
+      <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
+      <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -189,6 +195,15 @@
 
   <x:Double x:Key="NumericUpDownMinWidth">96</x:Double>
   <x:Double x:Key="TextControlMinHeight">34</x:Double>
+
+  <Thickness x:Key="FocusBorderThickness">2</Thickness>
+
+  <!-- ComboBox & ComboBoxItem Resources -->
+  <x:Int32 x:Key="ComboBoxItemHeight">30</x:Int32>
+  <x:Int32 x:Key="InitialFirstItemDistance">3</x:Int32>
+  <x:Int32 x:Key="PopupTrimHeight">2</x:Int32>
+  <x:Int32 x:Key="PopupSideMarginWidth">2</x:Int32>
+  <Thickness x:Key="PopupMargin">1</Thickness>
 
   <!-- DEVELOPMENT ONLY -->
   <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->

@@ -1,6 +1,5 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
-using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
@@ -30,7 +29,7 @@ public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
             [
                 new WeakReference<IBinding>(bA),
                 new WeakReference<IBinding>(bB),
-                ..bindings.Select(GetBinding).SkipNulls().Select(static b => new WeakReference<IBinding>(b)).ToArray(),
+                ..bindings.Select(GetBinding).SkipNulls().Select(static b => new WeakReference<IBinding>(b)),
             ];
         }
     }

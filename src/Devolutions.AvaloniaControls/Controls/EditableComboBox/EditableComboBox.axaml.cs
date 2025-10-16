@@ -3,6 +3,8 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
+using System.Collections.Specialized;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -16,7 +18,7 @@ using Avalonia.VisualTree;
 [TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
 [PseudoClasses(PC_DropdownOpen, PC_Pressed)]
-public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
+public partial class EditableComboBox : ItemsControl, IInputElement
 {
     public const string PC_DropdownOpen = ":dropdownopen";
 
@@ -89,7 +91,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
     public static readonly StyledProperty<EditableComboBoxMode> ModeProperty =
         AvaloniaProperty.Register<EditableComboBox, EditableComboBoxMode>(nameof(Mode));
 
-    private readonly IDisposable? dropdownChangedSubscription;
+    private readonly CompositeDisposable compositeDisposable = new();
 
     private readonly AvaloniaList<object?> filteredItems = new();
 
@@ -154,7 +156,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
 
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
-        this.dropdownChangedSubscription = this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);
+        // this.dropdownChangedSubscription = this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);
 
         this.Template = new FuncControlTemplate((_, namescope) =>
         {
@@ -167,9 +169,9 @@ public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
             };
         });
 
-        this.Items.CollectionChanged += (_, _) => this.FillItems();
-        this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems());
-        this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems());
+        // this.Items.CollectionChanged += (_, _) => this.FillItems();
+        // this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
+        // this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
     }
 
     public TimeSpan CaretBlinkInterval
@@ -289,6 +291,29 @@ public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
     {
         get => this.GetValue(WatermarkProperty);
         set => this.SetValue(WatermarkProperty, value);
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        this.Items.CollectionChanged += this.Items_CollectionChanged;
+        this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
+        this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
+        this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
+    }
+
+    private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+    {
+        this.FillItems();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        // This currently won't properly support runtime-change of the Template, but we accept this for now
+        this.compositeDisposable.Dispose();
+        this.Items.CollectionChanged -= this.Items_CollectionChanged;
     }
 
     public new bool Focus(NavigationMethod method = NavigationMethod.Unspecified, KeyModifiers keyModifiers = KeyModifiers.None) =>
@@ -619,10 +644,5 @@ public partial class EditableComboBox : ItemsControl, IInputElement, IDisposable
 
         this.innerComboBox.SelectedIndex = -1;
         this.innerTextBox.Watermark = this.Watermark;
-    }
-
-    public void Dispose()
-    {
-        this.dropdownChangedSubscription?.Dispose();
     }
 }

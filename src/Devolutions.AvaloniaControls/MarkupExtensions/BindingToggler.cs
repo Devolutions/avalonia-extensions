@@ -12,15 +12,18 @@ public class BindingTogglerExtension : MarkupExtension
     private readonly WeakReference<IBinding?> resolvedWhenFalseBinding = new(null);
     private readonly WeakReference<IBinding?> resolvedWhenTrueBinding = new(null);
 
+    private readonly WeakReference<IBinding> weakConditionBinding;
+
     public BindingTogglerExtension(IBinding conditionBinding, object? whenTrueBinding, object? whenFalseBinding)
     {
-        this.ConditionBinding = new WeakReference<IBinding>(conditionBinding);
+        this.ConditionBinding = conditionBinding;
+        this.weakConditionBinding = new WeakReference<IBinding>(conditionBinding);
         this.WhenTrueBinding = whenTrueBinding;
         this.WhenFalseBinding = whenFalseBinding;
     }
 
     [ConstructorArgument("conditionBinding")]
-    public WeakReference<IBinding> ConditionBinding { get; init; }
+    public IBinding? ConditionBinding { get; private set; }
 
     [ConstructorArgument("whenTrueBinding")]
     public object? WhenTrueBinding { get; private set; }
@@ -41,7 +44,6 @@ public class BindingTogglerExtension : MarkupExtension
                 ? MarkupExtensionHelpers.GetBinding(this.WhenTrueBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenTrueBinding);
             this.resolvedWhenTrueBinding.SetTarget(resolvedTrueBinding);
-            this.WhenTrueBinding = null;
         }
 
         this.resolvedWhenFalseBinding.TryGetTarget(out IBinding? resolvedFalseBinding);
@@ -51,12 +53,11 @@ public class BindingTogglerExtension : MarkupExtension
                 ? MarkupExtensionHelpers.GetBinding(this.WhenFalseBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenFalseBinding);
             this.resolvedWhenFalseBinding.SetTarget(resolvedFalseBinding);
-            this.WhenFalseBinding = null;
         }
 
-        if (!this.ConditionBinding.TryGetTarget(out IBinding? condition)) return AvaloniaProperty.UnsetValue;
+        if (!this.weakConditionBinding.TryGetTarget(out IBinding? condition)) return AvaloniaProperty.UnsetValue;
 
-        return new MultiBinding
+        var multiBinding = new MultiBinding
         {
             Converter = DevoMultiConverters.BooleanToChoiceConverter,
             Bindings =
@@ -64,5 +65,11 @@ public class BindingTogglerExtension : MarkupExtension
                 condition, resolvedTrueBinding!, resolvedFalseBinding!,
             ],
         };
+
+        this.WhenTrueBinding = null;
+        this.WhenFalseBinding = null;
+        this.ConditionBinding = null;
+
+        return multiBinding;
     }
 }

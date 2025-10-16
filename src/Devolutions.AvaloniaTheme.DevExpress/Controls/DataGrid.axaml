@@ -298,7 +298,6 @@
                               ColumnDefinitions="Auto,*"
                               RowDefinitions="*,Auto,Auto">
 
-            <!-- Isn't this pointless considering RowBorder have a background? -->
             <Rectangle Name="BackgroundRectangle"
                        Fill="{DynamicResource DataGridRowBackgroundBrush}"
                        Grid.RowSpan="2"

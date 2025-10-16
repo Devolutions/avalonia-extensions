@@ -8,15 +8,18 @@ using Helpers;
 
 public class DynamicResourceTogglerExtension : MarkupExtension
 {
+    private readonly WeakReference<IBinding?> weakConditionBinding;
+
     public DynamicResourceTogglerExtension(object conditionBinding, object whenTrueResourceKey, object whenFalseResourceKey)
     {
-        this.ConditionBinding = new WeakReference<IBinding>(conditionBinding as IBinding ?? MarkupExtensionHelpers.GetBinding<bool>(conditionBinding)!);
+        this.ConditionBinding = MarkupExtensionHelpers.GetBinding<bool>(conditionBinding);
+        this.weakConditionBinding = new WeakReference<IBinding?>(this.ConditionBinding);
         this.WhenTrueResourceKey = whenTrueResourceKey;
         this.WhenFalseResourceKey = whenFalseResourceKey;
     }
 
     [ConstructorArgument("conditionBinding")]
-    public WeakReference<IBinding> ConditionBinding { get; init; }
+    public IBinding? ConditionBinding { get; private set; }
 
     [ConstructorArgument("whenTrueResourceKey")]
     public object WhenTrueResourceKey { get; init; }
@@ -26,12 +29,16 @@ public class DynamicResourceTogglerExtension : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        if (!this.ConditionBinding.TryGetTarget(out IBinding? conditionBinding)) return AvaloniaProperty.UnsetValue;
+        if (!this.weakConditionBinding.TryGetTarget(out IBinding? conditionBinding)) return AvaloniaProperty.UnsetValue;
 
-        return new BindingTogglerExtension(
+        var ret = new BindingTogglerExtension(
             conditionBinding,
             new DynamicResourceExtension(this.WhenTrueResourceKey).ProvideValue(serviceProvider),
             new DynamicResourceExtension(this.WhenFalseResourceKey).ProvideValue(serviceProvider)
         ).ProvideValue(serviceProvider);
+
+        this.ConditionBinding = null;
+
+        return ret;
     }
 }

@@ -6,8 +6,6 @@ using Avalonia.Markup.Xaml.MarkupExtensions;
 
 public class WindowActiveResourceTogglerExtension : MarkupExtension
 {
-    private WindowActiveBindingTogglerExtension? toggler;
-
     public WindowActiveResourceTogglerExtension(object activeResourceKey, object inactiveResourceKey)
     {
         this.ActiveResourceKey = activeResourceKey;
@@ -27,11 +25,9 @@ public class WindowActiveResourceTogglerExtension : MarkupExtension
             return new DynamicResourceExtension(this.ActiveResourceKey).ProvideValue(serviceProvider);
         }
 
-        this.toggler ??= new WindowActiveBindingTogglerExtension(
+        return new WindowActiveBindingTogglerExtension(
             new DynamicResourceExtension(this.ActiveResourceKey).ProvideValue(serviceProvider),
             new DynamicResourceExtension(this.InactiveResourceKey).ProvideValue(serviceProvider)
-        );
-
-        return this.toggler.ProvideValue(serviceProvider);
+        ).ProvideValue(serviceProvider);
     }
 }

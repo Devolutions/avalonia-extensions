@@ -123,18 +123,10 @@ Each theme's README.md maintains a checklist of styled controls with status indi
 Refer to individual theme README files for complete lists and visual examples.
 
 
+
 # Development Rules
-- Never automatically run `npm run dev` as I will be running the server in a separate terminal. If you want to restart the application, ask and I will do it for you. Never try to run any server yourself.
-- Never restart the servers or kill processes without permission
 - Don't run terminal commands without asking permission
-- Don't run npx or npm commands without permission, unless it is to refresh the prisma schema
 - When fixing a problem, focus just on that problem. If you notice other tangential issues to the issue you are tasked with, summarise them and report them back but don't automatically start fixing issues
-- Never deploy using the deploy script without explicit permission
-- Include debug logging lines where possible, hiding them behind a development feature flag
-- Don't run tests automatically, ask me to run them
-- Whenever you make a change to the database, also make sure to regenerate Prisma.
-- Never make changes to the database that could result in losing data. If you're worried about this, then please ask for help or guidance.
-- Never log using console.log, use the built in logging tooling in each project.
 
 # File Modification Rules
 - Make minimal, focused changes only
@@ -144,16 +136,57 @@ Refer to individual theme README files for complete lists and visual examples.
 - if you find yourself rewriting things that haven't been asked for stop, flag the error and unwind it
 
 Always go through the following process:
-1.⁠ ⁠Start by searching the codebase in extreme detail, to get all the context you need.
-2.⁠ ⁠Create a detailed plan before doing anything.
-3.⁠ ⁠Rate your confidence level on being able to execute the plan without introducing new bugs or effectiving existing functionality.
-4.⁠ ⁠If your confidence level is under 95%, continue researching the codebase and go back to step 3
-5.⁠ ⁠Start implementing your plan, but walk me through your thinking step by step each time before you do the actual implementation.
+1. Start by searching the codebase in extreme detail, to get all the context you need.
+2. Create a detailed plan before doing anything.
+3. Rate your confidence level on being able to execute the plan without introducing new bugs or affecting existing
+   functionality.
+4. If your confidence level is under 95%, continue researching the codebase and go back to step 3
+5. Start implementing your plan, but walk me through your thinking step by step each time before you do the actual implementation.
 
-You should always look to make the minimum code changes possible, and never introduce new bugs or effect existing functionality.
+You should always look to make the minimum code changes possible, and never introduce new bugs or affect existing
+functionality.
 
 # Version Control Rules
 - Never push to git without explicit permission
 - Never stage to git without explicit permission
 
-When you're done with a task, run this command: osascript -e 'display notification "Agent is Done ✅" with title "Cursor"'
+# User Notifications via Dialog
+**CRITICAL**: The user may be working on other things and not watching this conversation. You MUST use dialog notifications for important events.
+
+## When to Show Dialogs
+Always show a dialog for:
+1. **Task completion** - When you finish any task
+2. **Permission requests** - When you need permission for operations (database changes, npm commands, git operations, etc.)
+3. **Important errors** - When something fails that requires user attention
+4. **Configuration changes** - When you modify ports, environment variables, or other config
+
+## Dialog Command Format
+**IMPORTANT**: Use **double quotes** for the outer `-e` parameter to avoid escaping issues with colons and special characters:
+
+```bash
+osascript -e "display dialog \"Message here\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+```
+
+### Task Completion Examples:
+```bash
+osascript -e "display dialog \"Task Complete ✅\n\nAdded priority dropdown menu\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e "display dialog \"Task Complete ✅\n\nConnected New Task button to backend\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+```
+
+### Permission Request Examples:
+```bash
+osascript -e "display dialog \"Permission Needed ⚠️\n\nNeed to run database migration\n\nMay I proceed?\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e "display dialog \"Ready to Commit ✅\n\nStaging changes for commit\n\nMay I proceed?\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+```
+
+### Multi-line Messages:
+Use `\n` for line breaks. Keep messages concise but informative:
+```bash
+osascript -e "display dialog \"Commits Created ✅\n\n1. feat - Added description field\n2. chore - Updated ports\n\nAll changes committed!\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+```
+
+## Common Mistakes to Avoid:
+❌ DON'T use single quotes for outer command: `osascript -e 'display dialog "Text: value"'` (fails with colons)
+✅ DO use double quotes for outer command: `osascript -e "display dialog \"Text - value\""`
+❌ DON'T forget to escape inner quotes when using double quotes
+✅ DO escape all inner quotes with backslash: `\"`

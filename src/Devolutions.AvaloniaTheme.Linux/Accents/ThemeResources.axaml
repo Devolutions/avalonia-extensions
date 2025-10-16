@@ -112,7 +112,7 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <FontFamily x:Key="DefaultFontFamily">Open Sans, sanserif</FontFamily>
+  <FontFamily x:Key="DefaultFontFamily">Open Sans, sans-serif</FontFamily>
   <x:Double x:Key="DefaultFontSize">14</x:Double>
 
   <Thickness x:Key="TextControlThemePadding">8,6,6,5</Thickness>

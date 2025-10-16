@@ -83,21 +83,20 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Data="{DynamicResource ChevronPathThin}"
-                Fill="{DynamicResource ForegroundColor}" />
+                Fill="{DynamicResource ForegroundHighBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
 
     <Style Selector="^:disabled">
-      <Style Selector="^ /template/ Border#PART_Border">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="Transparent" />
+      <Style Selector="^ /template/ Path">
+        <Setter Property="Fill" Value="{DynamicResource ButtonForegroundDisabled}" />
       </Style>
     </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
-    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundColor}" />
+    <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
     <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -105,7 +104,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Padding" Value="10 0 0 0" />
     <Setter Property="MinHeight" Value="{DynamicResource InputDefaultHeight}" />
-    <Setter Property="PlaceholderForeground" Value="{DynamicResource ThemeForegroundBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource ForegroundLowBrush}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -126,7 +125,7 @@
                 Name="PlaceholderTextBlock"
                 Grid.Column="0"
                 Margin="{TemplateBinding Padding}"
-                Foreground="{TemplateBinding Foreground}"
+                Foreground="{TemplateBinding PlaceholderForeground}"
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                 IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}"
@@ -161,7 +160,6 @@
             MaxHeight="{TemplateBinding MaxDropDownHeight}"
             IsLightDismissEnabled="True"
             IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-            PlacementTarget="{TemplateBinding}"
             InheritsTransform="True"
             Placement="AnchorAndGravity"
             PlacementAnchor="BottomLeft"
@@ -189,9 +187,8 @@
                     Margin="{DynamicResource PopupMargin}"
                     BoxShadow="{DynamicResource PopupShadow}">
               <ScrollViewer
-                Classes="MacOS_TransparentTrack"
-                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                 IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                 <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
               </ScrollViewer>
@@ -209,12 +206,11 @@
     </Style>
 
     <Style Selector="^:disabled">
-      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
     </Style>
 
     <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHoverColor}" />
+      <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

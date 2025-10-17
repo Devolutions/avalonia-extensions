@@ -281,7 +281,12 @@
 
   <!-- Row -->
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
-    <Setter Property="Background" Value="{Binding $parent[DataGrid].RowBackground}" />
+    <Setter Property="Background"
+            Value="{BindingToggler 
+              {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+              {Binding $parent[DataGrid].RowBackground},
+              {WindowActiveResourceToggler DataGridItemBackgroundAlternating, DataGridItemBackgroundAlternatingInInactiveWindow}
+            }" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="RowBorder"
@@ -322,9 +327,6 @@
       </ControlTemplate>
     </Setter>
 
-    <Style Selector="^:nth-child(even) /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Fill" Value="{WindowActiveResourceToggler DataGridItemBackgroundAlternating, DataGridItemBackgroundAlternatingInInactiveWindow}" />
-    </Style>
     <Style Selector="^:invalid">
       <Style Selector="^ /template/ Rectangle#InvalidVisualElement">
         <Setter Property="Opacity" Value="0.4" />

@@ -21,9 +21,6 @@
       <Color x:Key='ButtonBackgroundHoverColor'>#f5f5f5</Color>
       <Color x:Key='ButtonBackgroundActiveColor'>#d6d6d6</Color>
 
-      <Color x:Key='DataGridColumnHeaderBackgroundColor'>#d1d1d1</Color>
-      <Color x:Key='DataGridColumnHeaderForegroundColor'>#101010</Color>
-
       <Color x:Key='RepeatButtonIconShadowColor'>#fefefe</Color>
       <Color x:Key='RepeatButtonBackgroundHoverColor'>#f5f5f5</Color>
       <Color x:Key='RepeatButtonBackgroundPressedColor'>#e6e6e6</Color>
@@ -37,9 +34,6 @@
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#fafafa" />
 
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
-
-      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#fafafa" />
-      <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#f2f6fb" />
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#cbcbcb" />
 
@@ -82,9 +76,6 @@
       <Color x:Key='RepeatButtonBackgroundPressedColor'>#232323</Color>
       <Color x:Key='RepeatButtonBackgroundDisabledColor'>#00000000</Color>
 
-      <Color x:Key='DataGridColumnHeaderBackgroundColor'>#1f1f1f</Color>
-      <Color x:Key='DataGridColumnHeaderForegroundColor'>#f5f5f5</Color>
-
       <Color x:Key='CalendarNavButtonColor'>#7c7c7c</Color>
       <Color x:Key='CalendarPopupBorderColor'>#454545</Color>
 
@@ -93,9 +84,6 @@
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#1d1d1d" />
 
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorDark1}" />
-
-      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#252525" />
-      <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#2c2c2c" />
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#202020" />
 

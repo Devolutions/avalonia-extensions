@@ -3,6 +3,8 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
+using System.Collections.Specialized;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -89,6 +91,8 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     public static readonly StyledProperty<EditableComboBoxMode> ModeProperty =
         AvaloniaProperty.Register<EditableComboBox, EditableComboBoxMode>(nameof(Mode));
 
+    private readonly CompositeDisposable compositeDisposable = new();
+
     private readonly AvaloniaList<object?> filteredItems = new();
 
     private readonly InnerComboBox innerComboBox;
@@ -111,15 +115,16 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         {
             Name = "PART_InnerTextBox",
             Focusable = true,
+
+            [!!TextBox.TextProperty] = this[!!ValueProperty],
+            [!!TextBox.CaretIndexProperty] = this[!!CaretIndexProperty],
+            [!!TextBox.SelectionStartProperty] = this[!!SelectionStartProperty],
+            [!!TextBox.SelectionEndProperty] = this[!!SelectionEndProperty],
+            [!TextBox.CaretBlinkIntervalProperty] = this[!CaretBlinkIntervalProperty],
+            [!TextBox.SelectionBrushProperty] = this[!SelectionBrushProperty],
+            [!TextBox.SelectionForegroundBrushProperty] = this[!SelectionForegroundBrushProperty],
+            [!TextBox.CaretBrushProperty] = this[!CaretBrushProperty],
         };
-        this.BindProperty(this.innerTextBox, TextBox.TextProperty, "Value", true);
-        this.BindProperty(this.innerTextBox, TextBox.CaretIndexProperty, twoWay: true);
-        this.BindProperty(this.innerTextBox, TextBox.SelectionStartProperty, twoWay: true);
-        this.BindProperty(this.innerTextBox, TextBox.SelectionEndProperty, twoWay: true);
-        this.BindProperty(this.innerTextBox, TextBox.CaretBlinkIntervalProperty);
-        this.BindProperty(this.innerTextBox, TextBox.SelectionBrushProperty);
-        this.BindProperty(this.innerTextBox, TextBox.SelectionForegroundBrushProperty);
-        this.BindProperty(this.innerTextBox, TextBox.CaretBrushProperty);
 
         this.innerTextBox.TextChanged += this.OnTextChanged;
         this.GetObservable(WatermarkProperty).Subscribe(watermark => this.innerTextBox.Watermark = watermark);
@@ -132,15 +137,26 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             AutoScrollToSelectedItem = true,
 
             ItemsSource = this.filteredItems,
+
+            [!ForegroundProperty] = this[!ForegroundProperty],
+            [!BackgroundProperty] = this[!BackgroundProperty],
+            [!BorderBrushProperty] = this[!BorderBrushProperty],
+            [!BorderThicknessProperty] = this[!BorderThicknessProperty],
+            [!CornerRadiusProperty] = this[!CornerRadiusProperty],
+            [!PaddingProperty] = this[!PaddingProperty],
+            [!MinHeightProperty] = this[!MinHeightProperty],
+            [!InnerComboBox.InnerLeftContentProperty] = this[!InnerLeftContentProperty],
+            [!InnerComboBox.InnerRightContentProperty] = this[!InnerRightContentProperty],
+
+            [!!ComboBox.IsDropDownOpenProperty] = this[!!IsDropDownOpenProperty],
+            [!InnerComboBox.FocusedBorderThicknessProperty] = this[!FocusedBorderThicknessProperty],
+            [!InnerComboBox.MaxDropDownWidthProperty] = this[!MaxDropDownWidthProperty],
+            // [!InnerComboBox.MaxDropDownHeightProperty] = this[!MaxDropDownHeightProperty],
         };
 
-        this.BindProperty(this.innerComboBox, ComboBox.IsDropDownOpenProperty, twoWay: true);
-        this.BindProperty(this.innerComboBox, InnerComboBox.FocusedBorderThicknessProperty);
-        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownWidthProperty);
-        this.BindProperty(this.innerComboBox, InnerComboBox.MaxDropDownHeightProperty);
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
-        this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);
+        // this.dropdownChangedSubscription = this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);
 
         this.Template = new FuncControlTemplate((_, namescope) =>
         {
@@ -153,9 +169,9 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             };
         });
 
-        this.Items.CollectionChanged += (_, _) => this.FillItems();
-        this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems());
-        this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems());
+        // this.Items.CollectionChanged += (_, _) => this.FillItems();
+        // this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
+        // this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
     }
 
     public TimeSpan CaretBlinkInterval
@@ -277,6 +293,29 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         set => this.SetValue(WatermarkProperty, value);
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        this.Items.CollectionChanged += this.Items_CollectionChanged;
+        this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
+        this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
+        this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
+    }
+
+    private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+    {
+        this.FillItems();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        // This currently won't properly support runtime-change of the Template, but we accept this for now
+        this.compositeDisposable.Dispose();
+        this.Items.CollectionChanged -= this.Items_CollectionChanged;
+    }
+
     public new bool Focus(NavigationMethod method = NavigationMethod.Unspecified, KeyModifiers keyModifiers = KeyModifiers.None) =>
         this.innerTextBox.Focus(method, keyModifiers);
 
@@ -307,6 +346,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     protected override void OnInitialized()
     {
         this.innerTextBox.Watermark = this.Watermark;
+
         this.FillItems();
     }
 
@@ -448,19 +488,6 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     private static string? CoerceText(AvaloniaObject sender, string? value) =>
         ((EditableComboBox)sender).CoerceText(value);
 
-    private void BindProperty(AvaloniaObject target, AvaloniaProperty property, string? path = null, bool twoWay = false)
-    {
-        target[!property] = this.CreateRelativeBinding(path ?? property.Name, twoWay);
-    }
-
-    private Binding CreateRelativeBinding(string path, bool twoWay = false) =>
-        new(path, twoWay ? BindingMode.TwoWay : BindingMode.OneWay)
-        {
-            RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
-            {
-                AncestorType = typeof(EditableComboBox),
-            },
-        };
 
     private void FillItems()
     {
@@ -515,7 +542,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         {
             // NOTE: Setting SelectedIndex to an out-of-bound value will actually result in Avalonia setting the SelectedIndex
             //       to -1, which would break this logic (we would always be < Count -1).
-            if (isFirst == false && this.innerComboBox.SelectedIndex < 0) return;
+            if (!isFirst && this.innerComboBox.SelectedIndex < 0) return;
 
             isFirst = false;
 

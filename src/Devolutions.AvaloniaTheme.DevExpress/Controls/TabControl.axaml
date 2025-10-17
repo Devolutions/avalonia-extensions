@@ -79,7 +79,7 @@
 
     <Style Selector="^:selected /template/ Border#SelectionHighlight">
       <Setter Property="IsVisible" Value="True" />
-      </Style>
+    </Style>
 
     <!--  PointerOver state  -->
     <Style Selector="^:pointerover /template/ Border#SelectionHighlight">
@@ -105,7 +105,7 @@
     </Style>
   </ControlTheme>
 
-  
+
   <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Margin" Value="0" />
@@ -113,10 +113,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />
-    <Setter Property="ItemContainerTheme"
-            Value="{BindingToggler {Binding $self.Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=NavBar},
-                                 {DynamicResource Devo_NavBar_TabItem},
-                                 {DynamicResource Default_TabItem}}" />
+    <Setter Property="ItemContainerTheme" Value="{DynamicResource Default_TabItem}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="RootBorder"
@@ -130,9 +127,7 @@
                   ColumnDefinitions="Auto, *"
                   ZIndex="2">
               <ItemsPresenter Name="PART_ItemsPresenter"
-                              Margin="{DynamicResourceToggler {Binding $parent[TabControl].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=NavBar}, 
-                                NavBarTabsContainerMargin, 
-                                TabsContainerMargin}"
+                              Margin="{DynamicResource TabsContainerMargin}"
                               Grid.Column="0"
                               VerticalAlignment="Top"
                               ItemsPanel="{TemplateBinding ItemsPanel}"
@@ -174,6 +169,12 @@
       </Style>
 
       <Style Selector="^.NavBar">
+        <Setter Property="ItemContainerTheme" Value="{DynamicResource Devo_NavBar_TabItem}" />
+
+        <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter">
+          <Setter Property="Margin" Value="{DynamicResource NavBarTabsContainerMargin}" />
+        </Style>
+
         <Style Selector="^ /template/ Border#RootBorder">
           <Setter Property="BorderThickness" Value="1" />
           <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />

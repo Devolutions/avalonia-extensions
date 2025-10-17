@@ -79,81 +79,6 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         }
     }
 
-    protected override IDisposable OnAttachedToVisualTreeOverride()
-    {
-        CompositeDisposable disposable = new();
-        if (this.AssociatedObject is null) return disposable;
-
-        if (this.PositionToTemplatedParent)
-        {
-            this.PositionTo = this.AssociatedObject.TemplatedParent as Control;
-        }
-
-        this.PositionTo ??= this.AssociatedObject.PlacementTarget;
-
-        if (this.PositionTo is null) return disposable;
-
-        this.AssociatedObject.Opened += this.OnOpened;
-        this.AssociatedObject.Closed += this.OnClosed;
-
-        disposable.Add(this.PositionTo.GetObservable(Visual.BoundsProperty).Subscribe(b =>
-        {
-            this.UpdateDropdownOverflowPseudoClass(b, null);
-            this.CalculatePopupBorderMask(null, b);
-        }));
-
-        if (this.InjectFusionMask && this.PositionTo is TemplatedControl { Background: var background })
-        {
-            this.fusionMask ??= new Border
-            {
-                Name = "PopupPositionClassesBehavior_FusionBorder",
-                BorderBrush = background,
-                Padding = new Thickness(0),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                CornerRadius = new CornerRadius(0),
-            };
-
-            this.originalPopupContent = this.AssociatedObject.Child!;
-            this.AssociatedObject.Child = null;
-            this.fusionMaskPanel = new Panel
-            {
-                Name = "PopupPositionClassesBehavior_Panel",
-                Children =
-                {
-                    this.originalPopupContent,
-                    this.fusionMask,
-                },
-            };
-            this.AssociatedObject.Child = this.fusionMaskPanel;
-
-            disposable.Add(this.PositionTo.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
-            {
-                this.fusionMask.BorderBrush = newBg;
-            }));
-        }
-
-        this.popupChildSubscription = this.AssociatedObject.GetObservable(Popup.ChildProperty)
-            .Subscribe(child =>
-            {
-                if (this.popupChildBoundSubscription != null)
-                {
-                    disposable.Remove(this.popupChildBoundSubscription);
-                    this.popupChildBoundSubscription.Dispose();
-                    this.popupChildBoundSubscription = null;
-                }
-
-                this.popupChildBoundSubscription = child?.GetObservable(Visual.BoundsProperty).Subscribe(b => this.UpdateDropdownOverflowPseudoClass(null, b));
-                if (this.popupChildBoundSubscription is not null)
-                {
-                    disposable.Add(this.popupChildBoundSubscription);
-                }
-            });
-
-        disposable.Add(this.popupChildSubscription);
-
-        return disposable;
-    }
-
     private void OnOpened(object? sender, EventArgs e)
     {
         if (this.AssociatedObject?.Child == null) return;
@@ -294,5 +219,81 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         Screen? screen2 = topLevel.Screens.ScreenFromPoint(bottomRightPoint);
         bool isOutsideScreensBoundaries = screen1 is null || screen2 is null;
         return (isOutsideScreensBoundaries, !isOutsideScreensBoundaries && screen1 != screen2);
+    }
+
+    protected override IDisposable OnAttachedToVisualTreeOverride()
+    {
+        var disposable = new CompositeDisposable();
+
+        if (this.AssociatedObject is null) return disposable;
+
+        if (this.PositionToTemplatedParent)
+        {
+            this.PositionTo = this.AssociatedObject.TemplatedParent as Control;
+        }
+
+        this.PositionTo ??= this.AssociatedObject.PlacementTarget;
+
+        if (this.PositionTo is null) return disposable;
+
+        this.AssociatedObject.Opened += this.OnOpened;
+        this.AssociatedObject.Closed += this.OnClosed;
+
+        disposable.Add(this.PositionTo.GetObservable(Visual.BoundsProperty).Subscribe(b =>
+        {
+            this.UpdateDropdownOverflowPseudoClass(b, null);
+            this.CalculatePopupBorderMask(null, b);
+        }));
+
+        if (this.InjectFusionMask && this.PositionTo is TemplatedControl { Background: var background })
+        {
+            this.fusionMask ??= new Border
+            {
+                Name = "PopupPositionClassesBehavior_FusionBorder",
+                BorderBrush = background,
+                Padding = new Thickness(0),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                CornerRadius = new CornerRadius(0),
+            };
+
+            this.originalPopupContent = this.AssociatedObject.Child!;
+            this.AssociatedObject.Child = null;
+            this.fusionMaskPanel = new Panel
+            {
+                Name = "PopupPositionClassesBehavior_Panel",
+                Children =
+                {
+                    this.originalPopupContent,
+                    this.fusionMask,
+                },
+            };
+            this.AssociatedObject.Child = this.fusionMaskPanel;
+
+            disposable.Add(this.PositionTo.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
+            {
+                this.fusionMask.BorderBrush = newBg;
+            }));
+        }
+
+        this.popupChildSubscription = this.AssociatedObject.GetObservable(Popup.ChildProperty)
+            .Subscribe(child =>
+            {
+                if (this.popupChildBoundSubscription != null)
+                {
+                    disposable.Remove(this.popupChildBoundSubscription);
+                    this.popupChildBoundSubscription.Dispose();
+                    this.popupChildBoundSubscription = null;
+                }
+
+                this.popupChildBoundSubscription = child?.GetObservable(Visual.BoundsProperty).Subscribe(b => this.UpdateDropdownOverflowPseudoClass(null, b));
+                if (this.popupChildBoundSubscription is not null)
+                {
+                    disposable.Add(this.popupChildBoundSubscription);
+                }
+            });
+
+        disposable.Add(this.popupChildSubscription);
+
+        return disposable;
     }
 }

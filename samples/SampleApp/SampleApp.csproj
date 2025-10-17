@@ -33,7 +33,6 @@
     <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.6.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.0" />
-    <!-- <PackageReference Include="Devolutions.AvaloniaTheme.MacOS" Version="2024.12.4" /> -->
   </ItemGroup>
 
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
@@ -42,8 +41,8 @@
         See: https://github.com/mono/SkiaSharp/issues/3117#issuecomment-2896259517
         - sbergerondrouin 2025-06-18
     -->
-      <PackageReference Include="SkiaSharp" Version="3.116.1" />
-      <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
   </ItemGroup>
 
   <ItemGroup>

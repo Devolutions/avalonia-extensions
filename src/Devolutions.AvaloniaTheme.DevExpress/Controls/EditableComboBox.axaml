@@ -153,11 +153,11 @@
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="Margin"
             Value="{Binding 
-            Padding, 
-            RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
-            Converter={x:Static DevoConverters.ThicknessExtractor}, 
-            ConverterParameter={x:Static ThicknessSubset.AllButRight}
-        }" />
+                Padding, 
+                RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox},
+                Converter={x:Static DevoConverters.ThicknessExtractor}, 
+                ConverterParameter={x:Static ThicknessSubset.AllButRight}
+            }" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />

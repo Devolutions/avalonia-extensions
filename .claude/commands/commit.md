@@ -17,6 +17,38 @@ Follow the Git commit guidelines documented in `documentation/processes/GIT_COMM
 IMPORTANT: Read and follow `docs/processes/git_commit.md` for detailed guidelines.
 </instructions>
 
+<workon_exclusion>
+**CRITICAL: Never commit /workon development changes**
+
+The `/workon` command modifies these files for local development only:
+- `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
+- `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
+
+**Master branch defaults** (never change these):
+- Theme: `<DevolutionsMacOsTheme />` (uncommented, others commented)
+- Tab: `IsSelected="True"` on Overview tab only
+
+**Pre-commit workflow**:
+1. Check if App.axaml or MainWindow.axaml have changes
+2. If they do, verify they match the master defaults above
+3. If they DON'T match defaults:
+   - First, run `/workon MacOS Overview` to restore defaults
+   - Create a commit with those restorations if needed: `chore: restore default theme and tab`
+   - Then reapply user's development settings (but don't commit them)
+4. Exclude these files from commits unless:
+   - User explicitly requests committing them
+   - Changes are structural (not just theme/tab selection)
+   - Changes involve new code/features in these files
+
+**Detection**: When running `git status`, if you see:
+```
+M samples/SampleApp/App.axaml
+M samples/SampleApp/MainWindow.axaml
+```
+
+Check the actual diff. If changes are only theme toggles or IsSelected attributes, SKIP these files from the commit.
+</workon_exclusion>
+
 <input_processing>
 Optional arguments:
 - No args: Analyze all changes and create commits

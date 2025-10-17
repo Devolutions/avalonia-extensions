@@ -18,6 +18,5 @@ global.json
 # macOS
 .DS_Store
 
-# AI assistant files
-CLAUDE.md
+# AI assistant files (experimental or for personal preference - others are shared) 
 AGENTS.md

@@ -80,7 +80,7 @@
           </demoPages:DataGridGroupedDemo.DataContext>
         </demoPages:DataGridGroupedDemo>
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
@@ -185,7 +185,7 @@
         <demoPages:TreeViewDemo />
       </TabItem>
 
-      <TabItem Header="✜ Control Alignment" IsSelected="True">
+      <TabItem Header="✜ Control Alignment">
         <demoPages:ControlAlignment />
       </TabItem>
 

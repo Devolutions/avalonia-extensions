@@ -11,7 +11,7 @@ Follow the Git commit guidelines documented in `documentation/processes/GIT_COMM
 1. **Check current branch**: Run `git branch --show-current` FIRST - verify you're not on master/main (ask user if you are) and that branch name aligns with the changes
 2. **Review changes**: Run `git status` and `git diff --stat` to understand what changed
 3. **Batch intelligently**: Group related changes into logical, atomic commits
-4. **Follow the format**: Use the standard commit message format (type: subject)
+4. **Follow the format**: Use the project-based commit message format: `[Project] Action description`
 5. **Ensure safety**: Never do anything destructive without explicit permission
 6. **Use subagent if complex**: For multiple commits or complex changes, use a subagent
 
@@ -34,7 +34,7 @@ The `/workon` command modifies these files for local development only:
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
    - First, run `/workon MacOS Overview` to restore defaults
-   - Create a commit with those restorations if needed: `chore: restore default theme and tab`
+   - Create a commit with those restorations if needed: `[Claude] Restore default theme and tab`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them
@@ -60,14 +60,27 @@ First action: Always run `git status && git diff --stat`
 </input_processing>
 
 <quick_reference>
-**Commit Types**: feat, fix, docs, style, refactor, test, chore
+**Project Prefixes**: MacOS, DevExpress, Linux, Controls, Claude
 
 **Message Format**:
 ```
-<type>: <subject> (50 chars max)
+[Project] Action description (50 chars max)
 
 <body> (optional, wrap at 72 chars)
 ```
+
+**Actions**: Add, Update, Fix
+
+**Examples**:
+- `[MacOS] Add ComboBox styling`
+- `[DevExpress] Fix Button focus outline`
+- `[Controls] Add XYZ converter`
+- `[Claude] Update commit guidelines`
+
+**Branch Naming**: `{Project}/{action}-{feature}`
+- `MacOS/add-combobox`
+- `Controls/add-xyz-converter`
+- `Claude/update-commit-guidelines`
 
 **Safety Rules**:
 - Each commit should leave the codebase in a working state

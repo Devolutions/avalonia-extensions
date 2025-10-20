@@ -34,7 +34,7 @@ The `/workon` command modifies these files for local development only:
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
    - First, run `/workon MacOS Overview` to restore defaults
-   - Create a commit with those restorations if needed: `[Claude] Restore default theme and tab`
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme and tab`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them
@@ -60,7 +60,7 @@ First action: Always run `git status && git diff --stat`
 </input_processing>
 
 <quick_reference>
-**Project Prefixes**: MacOS, DevExpress, Linux, Controls, Claude
+**Project Prefixes**: MacOS, DevExpress, Linux, Controls, SampleApp, Claude
 
 **Message Format**:
 ```
@@ -75,6 +75,7 @@ First action: Always run `git status && git diff --stat`
 - `[MacOS] Add ComboBox styling`
 - `[DevExpress] Fix Button focus outline`
 - `[Controls] Add XYZ converter`
+- `[SampleApp] Add new demo page`
 - `[Claude] Update commit guidelines`
 
 **Branch Naming**: `{Project}/{action}-{feature}`

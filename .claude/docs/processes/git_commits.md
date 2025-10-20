@@ -50,6 +50,7 @@ ABOVE ALL, don't do anything that could result in lost work or mess up yet-to-be
 - `DevExpress` - Changes to Devolutions.AvaloniaTheme.DevExpress
 - `Linux` - Changes to Devolutions.AvaloniaTheme.Linux
 - `Controls` - Changes to Devolutions.AvaloniaControls
+- `SampleApp` - Changes specific to the SampleApp demo application
 - `Claude` - Changes to .claude/ configuration and documentation
 
 **Actions**: Add, Update, Fix
@@ -59,6 +60,7 @@ ABOVE ALL, don't do anything that could result in lost work or mess up yet-to-be
 - `[DevExpress] Fix Button focus outline`
 - `[Controls] Add XYZ converter`
 - `[Linux] Update ScrollBar styling`
+- `[SampleApp] Add new demo page`
 - `[Claude] Update commit guidelines`
 
 ### Handling Concurrent Changes

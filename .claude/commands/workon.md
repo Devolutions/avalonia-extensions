@@ -4,9 +4,10 @@ description: Switch theme and navigate to a specific tab in the SampleApp
 
 You are being asked to switch the active theme and navigate to a specific tab in the SampleApp.
 
-The user will provide two arguments:
+The user will provide one or two arguments:
 1. **theme**: One of 'MacOS', 'DevExpress', or 'Linux'
-2. **tabTitle**: The title of a TabItem (e.g., 'Button', 'TextBox', 'DataGrid', 'Control Alignment')
+2. **tabTitle**: (optional) The title of a TabItem (e.g., 'Button', 'TextBox', 'DataGrid', 'Control Alignment'), 
+   Default: 'Overview'
 
 ## Execution Instructions:
 

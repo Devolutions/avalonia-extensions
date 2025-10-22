@@ -1,0 +1,73 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:u="https://irihi.tech/ursa">
+
+  <Design.PreviewWith>
+    <StackPanel Height="300" Width="400" Margin="20">
+      <u:TagInput Watermark="Enter tags..." />
+      <TagInput Watermark="Wrapper test..." />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <!-- Default theme for Ursa TagInput control -->
+  <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="8,4" />
+    <Setter Property="ItemTemplate">
+      <DataTemplate>
+        <u:ClosableTag
+          Content="{Binding}"
+          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
+      </DataTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="u:TagInput">
+        <Border
+          Name="PART_BackgroundBorder"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="3"
+          MinHeight="{TemplateBinding MinHeight}"
+          Padding="{TemplateBinding Padding}">
+          <Grid>
+            <TextBlock
+              Name="PART_Watermark"
+              Text="{TemplateBinding Watermark}"
+              Foreground="{TemplateBinding Foreground}"
+              Opacity="0.5"
+              IsVisible="True"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Left" />
+            <ItemsControl
+              Name="PART_ItemsControl"
+              ItemsSource="{TemplateBinding Items}"
+              ItemTemplate="{TemplateBinding ItemTemplate}"
+              Background="Transparent">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <u:TagInputPanel />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Pseudo-class: hide watermark when not empty -->
+    <Style Selector="^:not(:empty) /template/ TextBlock#PART_Watermark">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Alias for wrapper type -->
+  <StaticResource x:Key="{x:Type TagInput}" ResourceKey="{x:Type u:TagInput}" />
+</ResourceDictionary>

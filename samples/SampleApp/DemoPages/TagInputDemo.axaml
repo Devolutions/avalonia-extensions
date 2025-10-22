@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:u="https://irihi.tech/ursa"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SampleApp.DemoPages.TagInputDemo">
+
+  <ScrollViewer>
+    <Border Margin="20"
+            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+            BorderThickness="{DynamicResource BorderThickness}"
+            CornerRadius="{DynamicResource LayoutCornerRadius}"
+            Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <StackPanel Margin="20" Spacing="20" HorizontalAlignment="Left" Width="500">
+
+        <!-- Email Recipients Example (Primary Use Case) -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Email Recipients</TextBlock>
+          <TextBlock FontSize="12" Opacity="0.7">
+            Type email addresses and press Enter or Comma to add
+          </TextBlock>
+          <u:TagInput Watermark="Enter email addresses..."
+                      Separator="," />
+        </StackPanel>
+
+        <!-- Pre-populated Tags -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Pre-populated Tags</TextBlock>
+          <u:TagInput x:Name="PrePopulatedTagInput" />
+        </StackPanel>
+
+        <!-- With Max Count -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Limited to 3 Tags</TextBlock>
+          <u:TagInput Watermark="Maximum 3 tags..."
+                      MaxCount="3" />
+        </StackPanel>
+
+        <!-- No Duplicates -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">No Duplicate Tags</TextBlock>
+          <u:TagInput Watermark="Duplicates not allowed..."
+                      AllowDuplicates="False" />
+        </StackPanel>
+
+        <!-- Disabled State -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Disabled State</TextBlock>
+          <u:TagInput IsEnabled="False" x:Name="DisabledTagInput" />
+        </StackPanel>
+
+        <!-- Empty Disabled State -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Disabled Empty</TextBlock>
+          <u:TagInput IsEnabled="False" Watermark="Disabled..." />
+        </StackPanel>
+
+        <!-- Space Separator -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Space as Separator</TextBlock>
+          <u:TagInput Watermark="Type words separated by spaces..."
+                      Separator=" " />
+        </StackPanel>
+
+        <!-- Custom Separator -->
+        <StackPanel Spacing="8">
+          <TextBlock FontWeight="Bold">Custom Separator (Semicolon)</TextBlock>
+          <u:TagInput Watermark="Use semicolon (;) to separate..."
+                      Separator=";" />
+        </StackPanel>
+
+      </StackPanel>
+    </Border>
+  </ScrollViewer>
+
+</UserControl>

@@ -27,7 +27,7 @@
         <!-- Pre-populated Tags -->
         <StackPanel Spacing="8">
           <TextBlock FontWeight="Bold">Pre-populated Tags</TextBlock>
-          <u:TagInput x:Name="PrePopulatedTagInput" />
+          <u:TagInput x:Name="PrePopulatedTagInput" Watermark="Should not show up initially..." />
         </StackPanel>
 
         <!-- With Max Count -->

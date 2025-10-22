@@ -124,55 +124,69 @@ public class TagInput : Ursa.Controls.TagInput { }
 - Watermark visibility controlled by `:not(:empty)` pseudo-class selector
 - Demo page uses `<u:TagInput>` directly (wrapper type available via StaticResource alias)
 
-### Phase 4: Design DevExpress Theme Styling
-- [ ] Analyze DevExpress design patterns in existing controls
-  - [ ] Review TextBox styling for input field consistency:113-221
-  - [ ] Review ComboBox for dropdown-style controls
-  - [ ] Review existing ClosableTag for tag appearance:1-63
-  - [ ] Extract common dimensions: heights, paddings, border thickness
-  - [ ] Extract common colors: borders, backgrounds, accents
-- [ ] Define TagInput theme resources
-  - [ ] Add color resources to `Accents/ThemeResources.axaml`
-    - TagInputBackground, TagInputBorder, TagInputForeground
-    - TagInputFocusBorder, TagInputDisabledBackground, etc.
-  - [ ] Define dimension resources: MinHeight, Padding, TagSpacing
-  - [ ] Consider light/dark theme variants
-- [ ] Create complete visual design specification
-  - [ ] Document all control states with expected appearance
-  - [ ] Sketch or describe tag layout and spacing
-  - [ ] Define focus indicator behavior
-  - [ ] Plan animations/transitions if any
-  - [ ] **Solve watermark visibility** - watermark currently hidden behind input panel, needs proper z-order/layout solution
-- [ ] Stop and review design with user before implementation
+### Phase 4: Design & Implement DevExpress Theme Styling ✅ COMPLETED
+- [x] Analyze DevExpress design patterns in existing controls
+  - [x] Review TextBox styling for two-layer border pattern (BorderThickness="1 1 1 0" + separate bottom border)
+  - [x] Review ClosableTag for tag appearance and styling
+  - [x] Extract common dimensions from ThemeResources (TextBasedInputMinHeight, Padding, CornerRadius)
+  - [x] Extract common colors (TextBoxBackgroundBrush, borders, focus accents)
+- [x] Implement DevExpress TagInput theme
+  - [x] Created `Controls/TagInput.axaml` in DevExpress theme
+  - [x] Implemented two-layer border system matching TextBox pattern
+  - [x] Added DataValidationErrors wrapper for form integration
+  - [x] Created TagInputTextBoxTheme for embedded input styling
+  - [x] Implemented visual states: empty, focus-within, disabled, error
+  - [x] Added to `Controls/_index.axaml` for theme inclusion
+- [x] Test basic functionality in ControlAlignment page
+  - [x] Added TagInput to all four layout blocks (2 Grids, 2 StackPanels)
+  - [x] Verified control works in horizontal and vertical layouts
+  - [x] Confirmed no measurement crashes with current implementation
+- [x] Commit working theme implementation
 
-### Phase 5: Implement DevExpress Theme
-- [ ] Implement base ControlTheme
-  - [ ] Set up Template with all PART_ elements from Ursa control
-  - [ ] Apply basic setters: Background, Foreground, BorderBrush, Padding
-  - [ ] Structure internal layout: input field, tags container, decorations
-- [ ] Style tag items within TagInput
-  - [ ] Reuse/reference ClosableTag styling where appropriate
-  - [ ] Ensure tag appearance matches standalone ClosableTag
-  - [ ] Style tag close buttons consistently
-- [ ] Implement visual states
-  - [ ] Normal state baseline
-  - [ ] :focus-within selector for focus state
-  - [ ] :disabled selector with appropriate visual feedback
-  - [ ] :pointerover states for interactive elements
-  - [ ] :error state if TagInput supports validation
-- [ ] Test in SampleApp
-  - [ ] Run SampleApp with DevExpress theme
-  - [ ] Verify all states render correctly
-  - [ ] Test keyboard navigation and focus indicators
-  - [ ] Test adding/removing tags interactively
-  - [ ] Check both light and dark theme variants
-  - [ ] Take screenshots for documentation
-- [ ] Refine based on testing
-  - [ ] Adjust spacing, sizing, colors as needed
-  - [ ] Fix any visual glitches or alignment issues
-  - [ ] Ensure accessibility (contrast ratios, focus visibility)
-- [ ] Update planning doc with implementation notes and commit theme changes
-  - Commit message: "Add DevExpress theme styling for TagInput control"
+**Phase 4 Notes:**
+- DevExpress theme successfully implemented with two-layer border system
+- Control renders correctly and functions properly in all layout scenarios tested
+- Focus state uses bottom border thickness change (1.6px) and accent color
+- Disabled state shows transparent background with proper foreground dimming
+- SmallScrollViewer removed due to "Invalid size returned for Measure" crashes in horizontal layouts
+- Tags currently wrap instead of scrolling horizontally (to be addressed in Phase 5)
+
+### Phase 5: Implement Horizontal Scrolling (TODO - Next Session)
+- [ ] Investigate scrolling approaches
+  - [ ] Research why SmallScrollViewer breaks measurement in horizontal layouts
+    - Current symptom: "Invalid size returned for Measure" exception on app startup
+    - Occurs specifically when TagInput is in horizontal StackPanel or Grid with Auto columns
+    - Removing SmallScrollViewer resolves the crash (tags wrap instead)
+  - [ ] Compare MultiComboBox SmallScrollViewer implementation
+    - MultiComboBox successfully uses SmallScrollViewer for horizontal tag scrolling
+    - Review property differences: MinHeight, MaxHeight, ScrollbarVisibility settings
+    - Check if there are additional constraints or bindings needed
+  - [ ] Analyze TagInputPanel measure/arrange behavior
+    - Understand how TagInputPanel calculates desired size
+    - Determine if panel needs size constraints when wrapped in ScrollViewer
+  - [ ] Test different ScrollViewer configurations
+    - Try standard ScrollViewer vs SmallScrollViewer
+    - Experiment with explicit width/height constraints
+    - Test MaxWidth binding to parent or container
+    - Try ClipToBounds and other layout-affecting properties
+  - [ ] Consider conditional scrolling based on layout context
+    - Detect if control is in horizontal vs vertical container
+    - Apply ScrollViewer only when width is constrained
+    - Use attached properties or template selectors if needed
+- [ ] Implement chosen solution
+  - [ ] Apply changes to DevExpress TagInput.axaml
+  - [ ] Test in all ControlAlignment scenarios (horizontal/vertical grids and stackpanels)
+  - [ ] Verify no crashes and proper scrolling behavior
+  - [ ] Test with many tags to confirm scroll functionality
+- [ ] Commit scrolling implementation
+  - Commit message: "Add horizontal scrolling support to TagInput"
+
+**Investigation Context:**
+- Current implementation: ItemsControl directly in Panel (no ScrollViewer)
+- Works: No crashes, proper layout, tags wrap to multiple lines
+- Doesn't work: Adding SmallScrollViewer causes immediate crash in horizontal layouts
+- Reference: MultiComboBox has working SmallScrollViewer with HorizontalScrollBarVisibility
+- Goal: Enable horizontal scrolling without breaking measurement system
 
 ### Phase 6: Documentation & Polish
 - [ ] Update DevExpress theme README

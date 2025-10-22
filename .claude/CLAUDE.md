@@ -184,6 +184,18 @@ functionality.
 - Never push to git without explicit permission
 - Never stage to git without explicit permission
 
+## Commit Message Guidelines
+- When asked to make temporary commits, clearly label them as such in the commit message
+- Use `[temp]` prefix for temporary commits that represent work-in-progress
+- Examples:
+  - `[temp] most styling working - but scrolling not working`
+  - `[temp] added basic theme structure - needs polish`
+  - `[temp] horizontal layout working - vertical needs fixes`
+- Regular (non-temporary) commits should follow standard patterns:
+  - `[ComponentName] Description of changes`
+  - Include details in commit body about what was done and why
+  - Always include Claude Code attribution footer
+
 # User Notifications via Dialog
 **CRITICAL**: The user may be working on other things and not watching this conversation. You MUST use dialog notifications for important events.
 

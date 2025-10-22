@@ -62,55 +62,67 @@ public class TagInput : Ursa.Controls.TagInput { }
 
 ## Actions
 
-### Phase 1: Research & Understanding
-- [ ] Research Ursa TagInput control
-  - [ ] Review Ursa documentation for TagInput features and API
-  - [ ] Examine Ursa source code to understand control structure and template parts
-  - [ ] Identify all styleable properties, template parts, and visual states
-  - [ ] Document key properties: Items, WaterMark, Delimiter, validation, etc.
-  - [ ] Take screenshots of default Ursa TagInput appearance for comparison
-- [ ] Analyze existing ClosableTag implementation
-  - [ ] Review wrapper class pattern in AvaloniaControls
-  - [ ] Study theme resource organization in DevExpress
-  - [ ] Understand ControlTheme structure and pseudo-class selectors
-  - [ ] Document the StaticResource aliasing technique
-- [ ] Check MultiComboBox for tag-related patterns
-  - [ ] Review how MultiComboBox uses tags internally
-  - [ ] Identify reusable patterns or considerations
+### Phase 1: Research & Understanding ✅ COMPLETED
+- [x] Research Ursa TagInput control
+  - [x] Review Ursa documentation for TagInput features and API
+  - [x] Examine Ursa source code to understand control structure and template parts
+  - [x] Identify all styleable properties, template parts, and visual states
+  - [x] Document key properties: Items, WaterMark, Delimiter, validation, etc.
+  - [ ] Take screenshots of default Ursa TagInput appearance for comparison (will do in Phase 2)
+- [x] Analyze existing ClosableTag implementation
+  - [x] Review wrapper class pattern in AvaloniaControls
+  - [x] Study theme resource organization in DevExpress
+  - [x] Understand ControlTheme structure and pseudo-class selectors
+  - [x] Document the StaticResource aliasing technique
+- [x] Check MultiComboBox for tag-related patterns
+  - [x] Review how MultiComboBox uses tags internally
+  - [x] Identify reusable patterns or considerations
 
-### Phase 2: Create SampleApp Demo Page
-- [ ] Research existing SampleApp structure
-  - [ ] Review existing demo pages in `samples/SampleApp/DemoPages/`
-  - [ ] Understand navigation and page organization
-- [ ] Create TagInputDemoPage with basic examples
-  - [ ] Add new demo page AXAML and code-behind
-  - [ ] Include in SampleApp navigation/menu system
-  - [ ] Add email recipients example (primary use case)
-  - [ ] Add basic examples: empty state, pre-populated tags, watermark text
-  - [ ] Add state examples: disabled, error states
-  - [ ] Keep examples simple and focused on common usage
-  - [ ] Use `<u:TagInput>` directly (wrapper doesn't exist yet)
-- [ ] Run SampleApp and verify TagInput displays with default Ursa styling
-- [ ] Test basic functionality: adding tags, removing tags, input
-- [ ] Stop and show user the control with default styling
-- [ ] Update planning doc with progress and commit SampleApp changes
+### Phase 2: Create SampleApp Demo Page ✅ COMPLETED
+- [x] Research existing SampleApp structure
+  - [x] Review existing demo pages in `samples/SampleApp/DemoPages/`
+  - [x] Understand navigation and page organization
+- [x] Create TagInputDemoPage with basic examples
+  - [x] Add new demo page AXAML and code-behind
+  - [x] Include in SampleApp navigation/menu system
+  - [x] Add email recipients example (primary use case)
+  - [x] Add basic examples: empty state, pre-populated tags, watermark text
+  - [x] Add state examples: disabled, error states
+  - [x] Keep examples simple and focused on common usage
+  - [x] Use `<u:TagInput>` directly (wrapper doesn't exist yet)
+- [x] Run SampleApp and verify TagInput displays with default Ursa styling
+- [x] Test basic functionality: adding tags, removing tags, input
+- [x] Stop and show user the control with default styling
+- [x] Update planning doc with progress and commit SampleApp changes
   - Follow `.claude/docs/processes/git_commits.md` guidelines
   - Commit message: "Add TagInput demo page to SampleApp"
 
-### Phase 3: Set Up Basic Infrastructure
-- [ ] Create TagInput wrapper class
-  - [ ] Add `Controls/TagInput.axaml.cs` in AvaloniaControls
-  - [ ] Inherit from `Ursa.Controls.TagInput`
-  - [ ] Keep empty like ClosableTag wrapper (no custom logic needed)
-- [ ] Create basic theme files
-  - [ ] Add `Controls/TagInput.axaml` in DevExpress theme
-  - [ ] Set up XML namespaces and Design.PreviewWith section
-  - [ ] Create initial ControlTheme structure for `u:TagInput`
-  - [ ] Add StaticResource alias for wrapper type
-  - [ ] Include TagInput.axaml in `Controls/_index.axaml`
-- [ ] Update demo page to use both `<u:TagInput>` and `<TagInput>` wrapper
-- [ ] Build and verify no compilation errors
-- [ ] Update planning doc with progress
+**Phase 2 Notes:**
+- Created TagInputDemo.axaml with 8 different examples
+- Demonstrated: email recipients, pre-populated tags, MaxCount, no duplicates, disabled states, separators
+- Control works functionally: tags can be added (Enter + separator), removed (X button), MaxCount enforced, duplicates blocked
+- **Known Issue**: Watermark exists but is hidden behind input panel - will be addressed in Phase 4 with proper theme layout
+
+### Phase 3: Set Up Basic Infrastructure ✅ COMPLETED
+- [x] Create TagInput wrapper class
+  - [x] Add `Controls/TagInput.axaml.cs` in AvaloniaControls
+  - [x] Inherit from `Ursa.Controls.TagInput`
+  - [x] Keep empty like ClosableTag wrapper (no custom logic needed)
+- [x] Create basic theme files
+  - [x] Add `Controls/TagInput.axaml` in AvaloniaControls (default theme)
+  - [x] Set up XML namespaces and Design.PreviewWith section
+  - [x] Create initial ControlTheme structure for `u:TagInput`
+  - [x] Add StaticResource alias for wrapper type
+  - [x] Include TagInput.axaml in `DefaultControlTemplates.axaml`
+- [x] Build and verify no compilation errors
+- [x] Update planning doc with progress
+
+**Phase 3 Notes:**
+- Created wrapper class at `src/Devolutions.AvaloniaControls/Controls/TagInput.axaml.cs`
+- Created default theme at `src/Devolutions.AvaloniaControls/Controls/TagInput.axaml`
+- ItemTemplate properly wired with ClosableTag Command binding to TagInput.Close method
+- Watermark visibility controlled by `:not(:empty)` pseudo-class selector
+- Demo page uses `<u:TagInput>` directly (wrapper type available via StaticResource alias)
 
 ### Phase 4: Design DevExpress Theme Styling
 - [ ] Analyze DevExpress design patterns in existing controls
@@ -130,6 +142,7 @@ public class TagInput : Ursa.Controls.TagInput { }
   - [ ] Sketch or describe tag layout and spacing
   - [ ] Define focus indicator behavior
   - [ ] Plan animations/transitions if any
+  - [ ] **Solve watermark visibility** - watermark currently hidden behind input panel, needs proper z-order/layout solution
 - [ ] Stop and review design with user before implementation
 
 ### Phase 5: Implement DevExpress Theme
@@ -199,14 +212,19 @@ public class TagInput : Ursa.Controls.TagInput { }
 
 ## Appendix
 
-### Key Ursa TagInput Properties (to be filled during research)
-- Items collection
-- Delimiter character(s)
-- WaterMark/placeholder text
-- Max items limit
-- Validation support
-- Custom tag templates
-- (Add more during Phase 1 research)
+### Key Ursa TagInput Properties (filled from Phase 1 research)
+- **Tags** (IList<string>) - Collection of current tag values (bindable)
+- **Watermark** (string?) - Placeholder text displayed when empty
+- **Separator** (string) - Character(s) that delimiter multiple tag input (e.g., ",", ";", " ")
+- **MaxCount** (int) - Maximum number of tags allowed (default: int.MaxValue)
+- **AllowDuplicates** (bool) - Whether repeated tag values are permitted (default: true)
+- **LostFocusBehavior** (enum) - Action when focus is lost: Add current input as tag, or Clear input
+- **AcceptsReturn** (bool) - Enables multi-line tag input via line breaks
+- **ItemTemplate** (IDataTemplate?) - Custom rendering template for individual tags
+- **InputTheme** (ControlTheme) - Styling applied to the embedded TextBox
+- **InnerLeftContent** (object?) - Content positioned to the left of the input field
+- **InnerRightContent** (object?) - Content positioned to the right of the input field
+- **Items** (IList) - Internal collection that includes both tags and the TextBox control
 
 ### DevExpress Theme Color Keys (to be defined)
 - (Will be populated during Phase 4)
@@ -223,4 +241,143 @@ public class TagInput : Ursa.Controls.TagInput { }
 - ✅ MultiComboBox: Review for tag-related patterns and considerations
 
 ### Research Notes
-(Space for notes from Phase 1 research, web searches, discoveries)
+
+#### Ursa TagInput Control API (Completed)
+
+**Source Files Identified:**
+- `src/Ursa/Controls/TagInput/TagInput.cs` - Main control implementation
+- `src/Ursa/Controls/TagInput/TagInputPanel.cs` - Layout panel for tags
+- `src/Ursa/Controls/TagInput/ClosableTag.cs` - Individual tag component
+- `src/Ursa/Controls/TagInput/LostFocusBehavior.cs` - Focus handling
+- `src/Ursa.Themes.Semi/Controls/TagInput.axaml` - Default Semi theme styling
+
+**Template Parts:**
+- `PART_ItemsControl` - ItemsControl that houses the tag display
+- `PART_Watermark` - TextBlock for placeholder text when empty
+
+**Pseudo-Classes:**
+- `:empty` - Applied when no tags exist and input is empty
+- `:pointerover` - Hover state
+- `:focus-within` - Keyboard focus state
+
+**Key Public Properties:**
+- `Tags` (IList<string>) - Collection of current tag values
+- `Watermark` (string?) - Placeholder text
+- `AcceptsReturn` (bool) - Enables multi-line tag input via line breaks
+- `MaxCount` (int) - Maximum permissible tags (default: int.MaxValue)
+- `Items` (IList) - Internal collection including TextBox control
+- `InputTheme` (ControlTheme) - Styling for embedded TextBox
+- `ItemTemplate` (IDataTemplate?) - Custom rendering template for tags
+- `Separator` (string) - Character(s) delimiting multiple tag input
+- `LostFocusBehavior` (LostFocusBehavior enum) - Action on focus loss: Add or Clear
+- `AllowDuplicates` (bool) - Permits repeated tag values (default: true)
+- `InnerLeftContent` (object?) - Content positioned left of input field
+- `InnerRightContent` (object?) - Content positioned right of input field
+
+**Default Theme Structure (Semi theme):**
+- Root: Border with MinHeight 30px, Padding 8,4
+- Layout: Panel containing TextBlock (watermark) + ItemsControl with TagInputPanel
+- Uses custom `TagInputPanel` for horizontal tag layout
+- ClosableTag is used as the ItemTemplate with 12x12 close button
+- Resource references: TextBoxDefaultBackground, TextBoxDefaultBorderBrush, ClosableTag* colors
+
+#### ClosableTag Wrapper Pattern Analysis (Completed)
+
+**Wrapper Class Pattern:**
+```csharp
+// File: src/Devolutions.AvaloniaControls/Controls/ClosableTag.axaml.cs
+public class ClosableTag : Ursa.Controls.ClosableTag { }
+```
+- Empty class that simply inherits from Ursa control
+- No custom logic needed - wrapper just provides namespace for theme targeting
+
+**Theme File Structure:**
+```xml
+<!-- File: src/Devolutions.AvaloniaTheme.DevExpress/Controls/ClosableTag.axaml -->
+<ResourceDictionary xmlns:u="https://irihi.tech/ursa">
+  <Design.PreviewWith>...</Design.PreviewWith>
+
+  <!-- Theme-specific resources -->
+  <SolidColorBrush x:Key="ClosableTagBorder" Color="{DynamicResource InputBorderColor}" />
+
+  <!-- ControlTheme targeting Ursa type -->
+  <ControlTheme x:Key="{x:Type u:ClosableTag}" TargetType="u:ClosableTag">
+    <!-- Setters and Template -->
+  </ControlTheme>
+
+  <!-- StaticResource alias for wrapper type -->
+  <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
+</ResourceDictionary>
+```
+
+**Key Pattern Elements:**
+1. Use `xmlns:u="https://irihi.tech/ursa"` for Ursa namespace
+2. Create ControlTheme with `TargetType="u:ClosableTag"` (Ursa type)
+3. Add StaticResource alias at the end to map wrapper type to Ursa theme
+4. Include Design.PreviewWith for IDE designer support
+
+**ClosableTag Styling Details:**
+- MinHeight: 21px
+- BorderThickness: 1
+- CornerRadius: 3
+- Padding: 8,0,4,0
+- Margin: 1
+- Layout: Border > DockPanel with close button (right) + ContentPresenter
+- Close button: Theme="{DynamicResource InnerIconButton}", Margin="4,0,0,0"
+- FontSize: 12 for content
+- Colors reference: InputBorderColor, ClosableTagBackgroundColor, TextForegroundColor
+
+#### DevExpress Theme Resource Organization (Completed)
+
+**Color Resources Structure:**
+- Location: `src/Devolutions.AvaloniaTheme.DevExpress/Accents/ThemeResources.axaml`
+- Uses ThemeDictionaries with "Light" and "Dark" keys for theme variants
+- Colors are defined as Color resources (not brushes) in ThemeResources
+- Controls create SolidColorBrush resources locally referencing these colors via DynamicResource
+
+**Relevant Colors for TagInput:**
+- `BackgroundColor` - #ffffff (light) / #202020 (dark)
+- `BorderColor` - #dadada (light) / #404040 (dark)
+- `ForegroundColor` - #000000 (light) / #f5f5f5 (dark)
+- `TextBoxBackgroundColor` - #fff (light) / #202020 (dark)
+- `TextBoxBorderBottomColor` - #9f9f9f (light) / #666666 (dark)
+- `SystemAccentColor` - Used for focus states (via ControlBackgroundPointerOverBrush with opacity)
+
+**Dimension Resources (from TextBox):**
+- `TextBasedInputMinHeight` - Standard height for input controls
+- `TextBoxPadding` - Standard padding for input fields
+- `ControlCornerRadius` - Standard corner radius
+- `ControlFontSize` - Standard font size
+
+**TextBox Styling Patterns:**
+- BorderThickness: "1 1 1 0" (no bottom border in main border)
+- Separate BottomBorderElement with BorderThickness="0 0 0 1"
+- Uses DataValidationErrors wrapper for validation support
+- InnerLeftContent and InnerRightContent support for icons/decorations
+- Focus indicated by changing BottomBorderElement brush
+
+**Note on ClosableTag Colors:**
+- ClosableTag.axaml references InputBorderColor, ClosableTagBackgroundColor, and TextForegroundColor
+- These are NOT defined in ThemeResources.axaml
+- They come from Ursa's default theme (via Fluent fallback)
+- This is acceptable - means ClosableTag uses framework defaults
+
+#### MultiComboBox Analysis (Completed)
+
+**Finding:** MultiComboBox does NOT use ClosableTag or TagInput
+- Uses its own `MultiComboBoxItem` for displaying selected items
+- No special interaction patterns to consider
+- TagInput will be independent - no conflicts or shared patterns
+
+#### Phase 1 Summary
+
+✅ **Research Complete** - All key information gathered:
+1. TagInput has 12 public properties for customization
+2. Control uses 2 template parts (PART_ItemsControl, PART_Watermark)
+3. 3 main pseudo-classes for visual states (:empty, :pointerover, :focus-within)
+4. Wrapper pattern is simple: empty class + theme file with StaticResource alias
+5. DevExpress theme uses structured color system with Light/Dark variants
+6. TextBox provides standard dimensions and styling patterns to follow
+7. No conflicts with MultiComboBox - independent implementation
+
+**Next Steps:** Proceed to Phase 2 - Create SampleApp demo page to see default Ursa styling

@@ -75,9 +75,8 @@
               IsVisible="False" />
 
             <!-- Content area -->
-            <Border Margin="{TemplateBinding BorderThickness}">
-              <Grid Margin="{TemplateBinding Padding}">
-                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+              <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                 <!-- Watermark -->
                 <TextBlock
@@ -103,8 +102,7 @@
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                </Panel>
-              </Grid>
+              </Panel>
             </Border>
           </Panel>
         </DataValidationErrors>
@@ -165,7 +163,6 @@
       <ControlTemplate TargetType="TextBox">
         <Border Padding="0,4">
           <ScrollViewer
-            Width="{Binding $parent[TextBox].Bounds.Width}"
             AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
             HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
             IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"

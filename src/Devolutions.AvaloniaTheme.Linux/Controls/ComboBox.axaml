@@ -128,8 +128,15 @@
                 Foreground="{TemplateBinding PlaceholderForeground}"
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}"
-                Text="{TemplateBinding PlaceholderText}" />
+                Text="{TemplateBinding PlaceholderText}">
+                <TextBlock.IsVisible>
+                  <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}"
+                             Converter="{x:Static ObjectConverters.IsNull}" />
+                    <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                  </MultiBinding>
+                </TextBlock.IsVisible>
+              </TextBlock>
               <ContentControl
                 Grid.Column="0"
                 Margin="{TemplateBinding Padding}"
@@ -137,7 +144,25 @@
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                 Content="{TemplateBinding SelectionBoxItem}"
-                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" />
+                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+              <TextBox
+                Name="PART_EditableTextBox"
+                Grid.Column="0"
+                Classes="no-focus-border"
+                Padding="{TemplateBinding Padding}"
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                Foreground="{TemplateBinding Foreground}"
+                Background="Transparent"
+                Text="{TemplateBinding Text, Mode=TwoWay}"
+                Watermark="{TemplateBinding PlaceholderText}"
+                BorderThickness="0"
+                MinHeight="0"
+                FocusAdorner="{x:Null}"
+                IsVisible="{TemplateBinding IsEditable}">
+              </TextBox>
               <ToggleButton
                 Name="Toggle"
                 Grid.Column="1"
@@ -199,7 +224,7 @@
     </Setter>
 
     <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible">
+    <Style Selector="^:focus-visible, ^:focus-within">
       <Style Selector="^ /template/ Border#FocusBorderElement">
         <Setter Property="IsVisible" Value="True" />
       </Style>
@@ -211,6 +236,11 @@
 
     <Style Selector="^:pointerover">
       <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
+    </Style>
+
+    <Style Selector="^[IsEditable=true]">
+      <Setter Property="IsTabStop" Value="False" />
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

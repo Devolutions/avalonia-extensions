@@ -59,7 +59,7 @@
           <ComboBox.SelectionBoxItemTemplate>
             <DataTemplate>
               <Border Padding="20" BorderBrush="Red" BorderThickness="1">
-                <TextBlock Text="{ReflectionBinding}"/>
+                <TextBlock Text="{ReflectionBinding}" />
               </Border>
             </DataTemplate>
           </ComboBox.SelectionBoxItemTemplate>
@@ -149,10 +149,9 @@
                                 Margin="{TemplateBinding Padding}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" 
-                                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}"/>
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
               <TextBox Name="PART_EditableTextBox"
-                       Grid.Column="0"
                        Padding="{TemplateBinding Padding}"
                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -161,18 +160,12 @@
                        Text="{TemplateBinding Text, Mode=TwoWay}"
                        Watermark="{TemplateBinding PlaceholderText}"
                        BorderThickness="0"
-                       FocusAdorner="{x:Null}"
                        IsVisible="{TemplateBinding IsEditable}">
                 <TextBox.Styles>
                   <Style Selector="TextBox /template/ Border#BottomBorderElement">
                     <Setter Property="IsVisible" Value="False" />
                   </Style>
                 </TextBox.Styles>
-                <TextBox.Resources>
-                  <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
-                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
-                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
-                </TextBox.Resources>
               </TextBox>
               <Popup Name="PART_Popup"
                      WindowManagerAddShadowHint="False"
@@ -278,7 +271,7 @@
       <Setter Property="PlaceholderForeground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
       <Setter Property="FontWeight" Value="Bold" />
     </Style>
-    
+
     <Style Selector="^[IsEditable=true]">
       <Setter Property="IsTabStop" Value="False" />
       <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />

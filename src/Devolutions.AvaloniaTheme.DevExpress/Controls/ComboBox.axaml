@@ -49,6 +49,24 @@
           <ComboBoxItem>Embedded (tabbed)</ComboBoxItem>
           <ComboBoxItem>Undocked</ComboBoxItem>
         </ComboBox>
+        <ComboBox SelectedIndex="1" IsEditable="True">
+          <ComboBoxItem>Item A</ComboBoxItem>
+          <ComboBoxItem>Item b</ComboBoxItem>
+          <ComboBoxItem>Item c</ComboBoxItem>
+        </ComboBox>
+
+        <ComboBox SelectedIndex="0">
+          <ComboBox.SelectionBoxItemTemplate>
+            <DataTemplate>
+              <Border Padding="20" BorderBrush="Red" BorderThickness="1">
+                <TextBlock Text="{ReflectionBinding}"/>
+              </Border>
+            </DataTemplate>
+          </ComboBox.SelectionBoxItemTemplate>
+          <ComboBoxItem>Item A</ComboBoxItem>
+          <ComboBoxItem>Item b</ComboBoxItem>
+          <ComboBoxItem>Item c</ComboBoxItem>
+        </ComboBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -115,8 +133,14 @@
                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                          Margin="{TemplateBinding Padding}"
                          Text="{TemplateBinding PlaceholderText}"
-                         Foreground="{TemplateBinding PlaceholderForeground}"
-                         IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}" />
+                         Foreground="{TemplateBinding PlaceholderForeground}">
+                <TextBlock.IsVisible>
+                  <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static ObjectConverters.IsNull}" />
+                    <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                  </MultiBinding>
+                </TextBlock.IsVisible>
+              </TextBlock>
               <ContentPresenter Name="ContentPresenter"
                                 Content="{TemplateBinding SelectionBoxItem}"
                                 FontSize="{TemplateBinding FontSize}"
@@ -125,8 +149,31 @@
                                 Margin="{TemplateBinding Padding}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}"/>
+              <TextBox Name="PART_EditableTextBox"
+                       Grid.Column="0"
+                       Padding="{TemplateBinding Padding}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                       Foreground="{TemplateBinding Foreground}"
+                       Background="Transparent"
+                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                       Watermark="{TemplateBinding PlaceholderText}"
+                       BorderThickness="0"
+                       FocusAdorner="{x:Null}"
+                       IsVisible="{TemplateBinding IsEditable}">
+                <TextBox.Styles>
+                  <Style Selector="TextBox /template/ Border#BottomBorderElement">
+                    <Setter Property="IsVisible" Value="False" />
+                  </Style>
+                </TextBox.Styles>
+                <TextBox.Resources>
+                  <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
+                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
+                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                </TextBox.Resources>
+              </TextBox>
               <Popup Name="PART_Popup"
                      WindowManagerAddShadowHint="False"
                      IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
@@ -173,7 +220,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus">
+    <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
@@ -230,6 +277,11 @@
       <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
       <Setter Property="PlaceholderForeground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
       <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    
+    <Style Selector="^[IsEditable=true]">
+      <Setter Property="IsTabStop" Value="False" />
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

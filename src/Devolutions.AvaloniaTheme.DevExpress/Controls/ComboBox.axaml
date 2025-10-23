@@ -161,7 +161,13 @@
                        Text="{TemplateBinding Text, Mode=TwoWay}"
                        Watermark="{TemplateBinding PlaceholderText}"
                        BorderThickness="0"
+                       FocusAdorner="{x:Null}"
                        IsVisible="{TemplateBinding IsEditable}">
+                <TextBox.Styles>
+                  <Style Selector="TextBox /template/ Border#BottomBorderElement">
+                    <Setter Property="IsVisible" Value="False" />
+                  </Style>
+                </TextBox.Styles>
                 <TextBox.Resources>
                   <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
                   <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
@@ -214,7 +220,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus">
+    <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />

@@ -37,6 +37,31 @@ samples/
     └── Experiments/                          # Experimental features
 ```
 
+## Claude Code Organization
+
+**IMPORTANT**: All files intended for Claude Code's information, documentation, or processes MUST be stored within the `.claude/` directory structure.
+
+```
+.claude/
+├── CLAUDE.md                                 # This file - main project instructions
+├── commands/                                 # Custom slash commands
+│   ├── explain.md                            # /explain command
+│   ├── simplify.md                           # /simplify command
+│   └── workon.md                             # /workon command
+└── docs/                                     # Claude-specific documentation
+    └── processes/                            # Process documentation
+        └── ide_connection.md                 # IDE integration guide
+```
+
+### File Placement Rules
+When creating or organizing files for Claude Code:
+- **Documentation**: `.claude/docs/` (e.g., planning docs, architecture notes, process guides)
+- **Processes**: `.claude/docs/processes/` (e.g., workflow guides, troubleshooting)
+- **Planning**: `.claude/docs/planning/` (e.g., feature planning, design decisions)
+- **Commands**: `.claude/commands/` (slash commands only)
+
+**Never** create Claude-related files in the root-level `docs/` or other project directories - they belong exclusively in `.claude/`.
+
 ## Development Commands
 
 ### Building

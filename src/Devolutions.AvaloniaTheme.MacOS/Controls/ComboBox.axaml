@@ -203,12 +203,7 @@
                        BorderThickness="0"
                        MinHeight="0"
                        FocusAdorner="{x:Null}"
-                       IsVisible="{TemplateBinding IsEditable}">
-                <TextBox.Resources>
-                  <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
-                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
-                </TextBox.Resources>
-              </TextBox>
+                       IsVisible="{TemplateBinding IsEditable}" />
               <ToggleButton
                 Name="Toggle"
                 Grid.Column="1"

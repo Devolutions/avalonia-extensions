@@ -18,7 +18,7 @@
   <!-- TODO: move the margins into the theme ?? -->
   <Panel Classes="mainControl">
     <TabControl TabStripPlacement="Left" VerticalAlignment="Stretch">
-      <TabItem>
+      <TabItem IsSelected="True">
         <TabItem.Header>
           <TextBlock FontWeight="600">Overview</TextBlock>
         </TabItem.Header>
@@ -48,7 +48,7 @@
         </TabItem.Header>
         <demoPages:CheckBoxDemo />
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>

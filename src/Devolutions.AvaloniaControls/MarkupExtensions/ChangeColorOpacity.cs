@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
+using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
@@ -8,12 +9,21 @@ using Helpers;
 
 public class ChangeColorOpacity(object color, object opacity) : MarkupExtension
 {
-  private static readonly FuncMultiValueConverter<object, Color> Converter = new(static e =>
+  private static readonly FuncMultiValueConverter<object, object> Converter = new(static e =>
   {
     using var enumerator = e.GetEnumerator();
     enumerator.MoveNext();
+
+    // Handle unset values gracefully (e.g., during theme switching)
+    if (enumerator.Current == AvaloniaProperty.UnsetValue)
+      return AvaloniaProperty.UnsetValue;
+
     var color = (Color)enumerator.Current!;
     enumerator.MoveNext();
+
+    if (enumerator.Current == AvaloniaProperty.UnsetValue)
+      return AvaloniaProperty.UnsetValue;
+
     var opacity = (double)enumerator.Current;
 
     return DoChangeColorOpacity(color, opacity);

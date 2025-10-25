@@ -15,12 +15,14 @@ using ViewModels;
 
 public class App : Application
 {
+    private static bool isSettingTheme;
+
     private readonly Styles themeStylesContainer = new();
     private Styles? devExpressStyles;
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
     private bool devToolsAttached;
-    private static bool isSettingTheme;
+
     public static Theme? CurrentTheme { get; set; }
 
     public override void Initialize()
@@ -101,80 +103,57 @@ public class App : Application
     public static void SetTheme(Theme theme)
     {
         // Prevent recursive calls during window initialization
-        if (isSettingTheme)
-        {
-            Console.WriteLine($"[Theme Switch] BLOCKED recursive call to {theme.Name}");
-            return;
-        }
+        if (isSettingTheme) return;
 
         // Early exit if we're already on this theme (prevents unnecessary style churn)
-        if (CurrentTheme?.Name == theme.Name)
-        {
-            Console.WriteLine($"[Theme Switch] Already on {theme.Name}, skipping");
-            return;
-        }
+        if (CurrentTheme?.Name == theme.Name) return;
 
         isSettingTheme = true;
         try
         {
-            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-
             App app = (App)Current!;
             Theme? previousTheme = CurrentTheme;
             CurrentTheme = theme;
 
             bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
 
-            Console.WriteLine($"[Theme Switch] Starting switch to {theme.Name}");
-
-        Styles? styles = theme switch
-        {
-            LinuxYaruTheme => app.linuxYaruStyles,
-            DevExpressTheme => app.devExpressStyles,
-            MacOsTheme => app.macOsStyles,
-            _ => null,
-        };
-
-        if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
-        {
-            // IMPORTANT: Capture state and hide old window BEFORE changing styles
-            // to prevent expensive re-rendering of a window we're about to discard
-            Window? oldWindow = desktopLifetime.MainWindow;
-            int selectedTabIndex = oldWindow is MainWindow oldMainWindow
-                ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
-                : 0;
-
-            // Suppress theme changes on old window to prevent its ComboBox binding from
-            // triggering SetTheme when we update CurrentTheme
-            if (oldWindow is MainWindow oldMain)
+            Styles? styles = theme switch
             {
-                oldMain.SuppressThemeChangeEvents(true);
+                LinuxYaruTheme => app.linuxYaruStyles,
+                DevExpressTheme => app.devExpressStyles,
+                MacOsTheme => app.macOsStyles,
+                _ => null,
+            };
+
+            if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                // IMPORTANT: Capture state and hide old window BEFORE changing styles
+                // to prevent expensive re-rendering of a window we're about to discard
+                Window? oldWindow = desktopLifetime.MainWindow;
+                int selectedTabIndex = oldWindow is MainWindow oldMainWindow
+                    ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
+                    : 0;
+
+                // Suppress theme changes on old window to prevent its ComboBox binding from
+                // triggering SetTheme when we update CurrentTheme
+                if (oldWindow is MainWindow oldMain)
+                {
+                    oldMain.SuppressThemeChangeEvents(true);
+                }
+
+                oldWindow?.Hide();
+
+                app.themeStylesContainer.Clear();
+                app.themeStylesContainer.AddRange(styles!);
+
+                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
             }
-
-            // Diagnostic: Check for resource/handler accumulation
-            Console.WriteLine($"[Theme Switch] App.Styles.Count: {app.Styles.Count}");
-            Console.WriteLine($"[Theme Switch] themeStylesContainer.Count: {app.themeStylesContainer.Count}");
-
-            oldWindow?.Hide();  // Hide immediately to prevent re-rendering during style change
-
-            // Now change the styles (old window won't waste time re-rendering)
-            app.themeStylesContainer.Clear();
-            app.themeStylesContainer.AddRange(styles!);
-
-            Console.WriteLine($"[Theme Switch] After clear/add - themeStylesContainer.Count: {app.themeStylesContainer.Count}");
-            Console.WriteLine($"[Theme Switch] Time before RecreateMainWindow: {sw.ElapsedMilliseconds}ms");
-
-            RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
-
-            Console.WriteLine($"[Theme Switch] TOTAL TIME: {sw.ElapsedMilliseconds}ms");
-        }
-        else
-        {
-            // Just change styles without window recreation
-            app.themeStylesContainer.Clear();
-            app.themeStylesContainer.AddRange(styles!);
-            Console.WriteLine($"[Theme Switch] TOTAL TIME (no reopen): {sw.ElapsedMilliseconds}ms");
-        }
+            else
+            {
+                // Just change styles without window recreation
+                app.themeStylesContainer.Clear();
+                app.themeStylesContainer.AddRange(styles!);
+            }
         }
         finally
         {
@@ -184,40 +163,23 @@ public class App : Application
 
     private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, Window? oldWindow, int selectedTabIndex)
     {
-        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-
         object? dataContext = oldWindow?.DataContext;
 
-        Console.WriteLine($"[RecreateWindow] Creating new MainWindow... ({sw.ElapsedMilliseconds}ms)");
         MainWindow newWindow = new() { DataContext = dataContext };
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize
         newWindow.SuppressThemeChangeEvents(true);
-        Console.WriteLine($"[RecreateWindow] MainWindow created ({sw.ElapsedMilliseconds}ms)");
 
         lifetime.MainWindow = newWindow;
-
-        Console.WriteLine($"[RecreateWindow] Showing new window... ({sw.ElapsedMilliseconds}ms)");
         newWindow.Show();
-        Console.WriteLine($"[RecreateWindow] New window shown ({sw.ElapsedMilliseconds}ms)");
 
         RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
 
         // Re-enable theme changes after window is fully initialized
         EnableThemeChangesWhenReady(newWindow);
 
-        Console.WriteLine($"[RecreateWindow] Closing old window... ({sw.ElapsedMilliseconds}ms)");
         oldWindow?.Close();
-        Console.WriteLine($"[RecreateWindow] Old window closed ({sw.ElapsedMilliseconds}ms)");
-
-        // Diagnostic: Force garbage collection and report memory
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        Console.WriteLine($"[Theme Switch] GC after close - Gen0: {GC.CollectionCount(0)}, Gen1: {GC.CollectionCount(1)}, Gen2: {GC.CollectionCount(2)}");
-        Console.WriteLine($"[Theme Switch] Total memory: {GC.GetTotalMemory(false) / 1024 / 1024} MB");
-        Console.WriteLine($"[RecreateWindow] TOTAL: {sw.ElapsedMilliseconds}ms");
     }
 
     private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
@@ -249,11 +211,9 @@ public class App : Application
         // Use Dispatcher to re-enable theme changes after the window initialization completes
         // This happens quickly enough to not block user clicks, but late enough that
         // binding-triggered SelectionChanged events during construction are suppressed
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-        {
-            window.SuppressThemeChangeEvents(false);
-            Console.WriteLine($"[RecreateWindow] Theme changes re-enabled");
-        }, Avalonia.Threading.DispatcherPriority.Background);
+        Avalonia.Threading.Dispatcher.UIThread.Post(
+            () => window.SuppressThemeChangeEvents(false),
+            Avalonia.Threading.DispatcherPriority.Background);
     }
 
     public override void OnFrameworkInitializationCompleted()

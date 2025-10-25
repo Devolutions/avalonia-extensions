@@ -129,21 +129,15 @@ public class App : Application
 
         // IMPORTANT: Capture the selected tab index BEFORE changing styles!
         // Changing styles can reset the TabControl's SelectedIndex in the old window
-        int selectedTabIndex = 0; // Default to first tab
+        int selectedTabIndex = 0;
         if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
         {
-            Window? oldWindow = lifetime.MainWindow;
-            if (oldWindow is MainWindow oldMainWindow)
+            if (lifetime.MainWindow is MainWindow oldMainWindow)
             {
                 TabControl? oldTabControl = oldMainWindow.FindControl<TabControl>("MainTabControl");
                 if (oldTabControl != null)
                 {
                     selectedTabIndex = oldTabControl.SelectedIndex;
-                    Console.WriteLine($"[Theme Switch] Captured tab index: {selectedTabIndex} from old window (BEFORE style change)");
-                }
-                else
-                {
-                    Console.WriteLine($"[Theme Switch] WARNING: Could not find MainTabControl in old window");
                 }
             }
         }
@@ -164,42 +158,34 @@ public class App : Application
 
                 newWindow.Show();
 
-                // Wait for the window to fully load and containers to be created
-                // Using LayoutUpdated to ensure the visual tree is ready
+                // Restore tab selection after layout completes and TabItem containers are created
                 EventHandler? layoutHandler = null;
                 layoutHandler = (sender, e) =>
                 {
                     TabControl? tabControl = newWindow.FindControl<TabControl>("MainTabControl");
-                    if (tabControl != null)
+                    if (tabControl?.ContainerFromIndex(0) != null)
                     {
-                        // Check if containers are ready
-                        if (tabControl.ContainerFromIndex(0) != null)
+                        // Unsubscribe to prevent repeated execution
+                        newWindow.LayoutUpdated -= layoutHandler;
+
+                        // Clear all IsSelected properties from TabItems
+                        for (int i = 0; i < tabControl.Items.Count; i++)
                         {
-                            Console.WriteLine($"[Theme Switch] LayoutUpdated: Containers are ready! Current SelectedIndex={tabControl.SelectedIndex}, target={selectedTabIndex}");
-
-                            // Unsubscribe from the event to prevent repeated execution
-                            newWindow.LayoutUpdated -= layoutHandler;
-
-                            // Clear all IsSelected
-                            for (int i = 0; i < tabControl.Items.Count; i++)
+                            if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
                             {
-                                if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
-                                {
-                                    tabItem.IsSelected = false;
-                                }
+                                tabItem.IsSelected = false;
                             }
+                        }
 
-                            // Set the correct one
-                            if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
-                            {
-                                targetTabItem.IsSelected = true;
-                                Console.WriteLine($"[Theme Switch] Successfully set IsSelected=true on TabItem {selectedTabIndex}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"[Theme Switch] WARNING: Still couldn't get container {selectedTabIndex}, using SelectedIndex");
-                                tabControl.SelectedIndex = selectedTabIndex;
-                            }
+                        // Set IsSelected on the target TabItem
+                        if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
+                        {
+                            targetTabItem.IsSelected = true;
+                        }
+                        else
+                        {
+                            // Fallback if container not found
+                            tabControl.SelectedIndex = selectedTabIndex;
                         }
                     }
                 };

@@ -153,24 +153,14 @@ public class App : Application
 
             window.LayoutUpdated -= layoutHandler;
 
-            // Clear all IsSelected properties from TabItems
-            for (int i = 0; i < tabControl.Items.Count; i++)
+            // Clear all IsSelected properties from TabItems to remove XAML hardcoded values
+            foreach (TabItem tabItem in tabControl.Items.OfType<TabItem>())
             {
-                if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
-                {
-                    tabItem.IsSelected = false;
-                }
+                tabItem.IsSelected = false;
             }
 
-            // Set IsSelected on the target TabItem
-            if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
-            {
-                targetTabItem.IsSelected = true;
-            }
-            else
-            {
-                tabControl.SelectedIndex = selectedTabIndex;
-            }
+            // Now SelectedIndex works correctly without XAML interference
+            tabControl.SelectedIndex = selectedTabIndex;
         };
 
         window.LayoutUpdated += layoutHandler;

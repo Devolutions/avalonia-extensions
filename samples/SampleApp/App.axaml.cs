@@ -41,28 +41,15 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            Theme? theme = this.DetectDesignTheme();
-
-            if (OperatingSystem.IsWindows())
-            {
-                theme ??= new DevExpressTheme();
-            }
-            else if (OperatingSystem.IsMacOS())
-            {
-                theme ??= new MacOsTheme();
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                theme ??= new LinuxYaruTheme();
-            }
-            else
-            {
-                theme ??= new MacOsTheme();
-            }
-
+            Theme? theme = this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
         }
     }
+
+    private static Theme GetDefaultThemeForPlatform() => OperatingSystem.IsWindows() ? new DevExpressTheme()
+        : OperatingSystem.IsMacOS() ? new MacOsTheme()
+        : OperatingSystem.IsLinux() ? new LinuxYaruTheme()
+        : new MacOsTheme();
 
     private Theme? DetectDesignTheme()
     {
@@ -77,11 +64,10 @@ public class App : Application
                 DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
                 doc.Load(Path.Join(projDir!.FullName, "App.axaml"));
                 XmlElement? styles = doc["Application"]!["Application.Styles"];
-                foreach (object? obj in styles!)
-                {
-                    Theme? theme = this.ThemeFromXmlElement(obj as XmlElement);
-                    if (theme is not null) return theme;
-                }
+
+                return styles?.OfType<XmlElement>()
+                    .Select(this.ThemeFromXmlElement)
+                    .FirstOrDefault(theme => theme is not null);
             }
         }
         catch (Exception)
@@ -129,72 +115,65 @@ public class App : Application
 
         // IMPORTANT: Capture the selected tab index BEFORE changing styles!
         // Changing styles can reset the TabControl's SelectedIndex in the old window
-        int selectedTabIndex = 0;
-        if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
-        {
-            if (lifetime.MainWindow is MainWindow oldMainWindow)
-            {
-                TabControl? oldTabControl = oldMainWindow.FindControl<TabControl>("MainTabControl");
-                if (oldTabControl != null)
-                {
-                    selectedTabIndex = oldTabControl.SelectedIndex;
-                }
-            }
-        }
+        int selectedTabIndex = reopenWindow
+            && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow oldMainWindow }
+            ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
+            : 0;
 
         // Now change the styles
         app.themeStylesContainer.Clear();
         app.themeStylesContainer.AddRange(styles!);
 
-        if (reopenWindow)
+        if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
         {
-            if (app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
-            {
-                Window? oldWindow = desktopLifetime.MainWindow;
-                object? dataContext = oldWindow?.DataContext;
-
-                MainWindow newWindow = new() { DataContext = dataContext };
-                desktopLifetime.MainWindow = newWindow;
-
-                newWindow.Show();
-
-                // Restore tab selection after layout completes and TabItem containers are created
-                EventHandler? layoutHandler = null;
-                layoutHandler = (sender, e) =>
-                {
-                    TabControl? tabControl = newWindow.FindControl<TabControl>("MainTabControl");
-                    if (tabControl?.ContainerFromIndex(0) != null)
-                    {
-                        // Unsubscribe to prevent repeated execution
-                        newWindow.LayoutUpdated -= layoutHandler;
-
-                        // Clear all IsSelected properties from TabItems
-                        for (int i = 0; i < tabControl.Items.Count; i++)
-                        {
-                            if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
-                            {
-                                tabItem.IsSelected = false;
-                            }
-                        }
-
-                        // Set IsSelected on the target TabItem
-                        if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
-                        {
-                            targetTabItem.IsSelected = true;
-                        }
-                        else
-                        {
-                            // Fallback if container not found
-                            tabControl.SelectedIndex = selectedTabIndex;
-                        }
-                    }
-                };
-
-                newWindow.LayoutUpdated += layoutHandler;
-
-                oldWindow?.Close();
-            }
+            RecreateMainWindow(desktopLifetime, selectedTabIndex);
         }
+    }
+
+    private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, int selectedTabIndex)
+    {
+        object? dataContext = lifetime.MainWindow?.DataContext;
+        Window? oldWindow = lifetime.MainWindow;
+
+        MainWindow newWindow = new() { DataContext = dataContext };
+        lifetime.MainWindow = newWindow;
+        newWindow.Show();
+
+        RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
+        oldWindow?.Close();
+    }
+
+    private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
+    {
+        EventHandler? layoutHandler = null;
+        layoutHandler = (sender, e) =>
+        {
+            TabControl? tabControl = window.FindControl<TabControl>("MainTabControl");
+            if (tabControl?.ContainerFromIndex(0) is null) return;
+
+            window.LayoutUpdated -= layoutHandler;
+
+            // Clear all IsSelected properties from TabItems
+            for (int i = 0; i < tabControl.Items.Count; i++)
+            {
+                if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
+                {
+                    tabItem.IsSelected = false;
+                }
+            }
+
+            // Set IsSelected on the target TabItem
+            if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
+            {
+                targetTabItem.IsSelected = true;
+            }
+            else
+            {
+                tabControl.SelectedIndex = selectedTabIndex;
+            }
+        };
+
+        window.LayoutUpdated += layoutHandler;
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -225,13 +204,8 @@ public abstract class Theme
 {
     public abstract string Name { get; }
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return this.Equals((Theme)obj);
-    }
+    public override bool Equals(object? obj) =>
+        ReferenceEquals(this, obj) || (obj is Theme other && this.Equals(other));
 
     protected bool Equals(Theme other) =>
         this.Name == other.Name;

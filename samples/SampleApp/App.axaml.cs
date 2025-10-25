@@ -20,6 +20,7 @@ public class App : Application
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
     private bool devToolsAttached;
+    private static bool isSettingTheme;
     public static Theme? CurrentTheme { get; set; }
 
     public override void Initialize()
@@ -99,11 +100,25 @@ public class App : Application
 
     public static void SetTheme(Theme theme)
     {
-        App app = (App)Current!;
-        Theme? previousTheme = CurrentTheme;
-        CurrentTheme = theme;
+        // Prevent recursive calls during window initialization
+        if (isSettingTheme)
+        {
+            Console.WriteLine($"[Theme Switch] BLOCKED recursive call to {theme.Name}");
+            return;
+        }
 
-        bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
+        isSettingTheme = true;
+        try
+        {
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
+            App app = (App)Current!;
+            Theme? previousTheme = CurrentTheme;
+            CurrentTheme = theme;
+
+            bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
+
+            Console.WriteLine($"[Theme Switch] Starting switch to {theme.Name}");
 
         Styles? styles = theme switch
         {
@@ -113,34 +128,75 @@ public class App : Application
             _ => null,
         };
 
-        // IMPORTANT: Capture the selected tab index BEFORE changing styles!
-        // Changing styles can reset the TabControl's SelectedIndex in the old window
-        int selectedTabIndex = reopenWindow
-            && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow oldMainWindow }
-            ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
-            : 0;
-
-        // Now change the styles
-        app.themeStylesContainer.Clear();
-        app.themeStylesContainer.AddRange(styles!);
-
         if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
         {
-            RecreateMainWindow(desktopLifetime, selectedTabIndex);
+            // IMPORTANT: Capture state and hide old window BEFORE changing styles
+            // to prevent expensive re-rendering of a window we're about to discard
+            Window? oldWindow = desktopLifetime.MainWindow;
+            int selectedTabIndex = oldWindow is MainWindow oldMainWindow
+                ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
+                : 0;
+
+            // Diagnostic: Check for resource/handler accumulation
+            Console.WriteLine($"[Theme Switch] App.Styles.Count: {app.Styles.Count}");
+            Console.WriteLine($"[Theme Switch] themeStylesContainer.Count: {app.themeStylesContainer.Count}");
+
+            oldWindow?.Hide();  // Hide immediately to prevent re-rendering during style change
+
+            // Now change the styles (old window won't waste time re-rendering)
+            app.themeStylesContainer.Clear();
+            app.themeStylesContainer.AddRange(styles!);
+
+            Console.WriteLine($"[Theme Switch] After clear/add - themeStylesContainer.Count: {app.themeStylesContainer.Count}");
+            Console.WriteLine($"[Theme Switch] Time before RecreateMainWindow: {sw.ElapsedMilliseconds}ms");
+
+            RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
+
+            Console.WriteLine($"[Theme Switch] TOTAL TIME: {sw.ElapsedMilliseconds}ms");
+        }
+        else
+        {
+            // Just change styles without window recreation
+            app.themeStylesContainer.Clear();
+            app.themeStylesContainer.AddRange(styles!);
+            Console.WriteLine($"[Theme Switch] TOTAL TIME (no reopen): {sw.ElapsedMilliseconds}ms");
+        }
+        }
+        finally
+        {
+            isSettingTheme = false;
         }
     }
 
-    private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, int selectedTabIndex)
+    private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, Window? oldWindow, int selectedTabIndex)
     {
-        object? dataContext = lifetime.MainWindow?.DataContext;
-        Window? oldWindow = lifetime.MainWindow;
+        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
+        object? dataContext = oldWindow?.DataContext;
+
+        Console.WriteLine($"[RecreateWindow] Creating new MainWindow... ({sw.ElapsedMilliseconds}ms)");
         MainWindow newWindow = new() { DataContext = dataContext };
+        Console.WriteLine($"[RecreateWindow] MainWindow created ({sw.ElapsedMilliseconds}ms)");
+
         lifetime.MainWindow = newWindow;
+
+        Console.WriteLine($"[RecreateWindow] Showing new window... ({sw.ElapsedMilliseconds}ms)");
         newWindow.Show();
+        Console.WriteLine($"[RecreateWindow] New window shown ({sw.ElapsedMilliseconds}ms)");
 
         RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
+
+        Console.WriteLine($"[RecreateWindow] Closing old window... ({sw.ElapsedMilliseconds}ms)");
         oldWindow?.Close();
+        Console.WriteLine($"[RecreateWindow] Old window closed ({sw.ElapsedMilliseconds}ms)");
+
+        // Diagnostic: Force garbage collection and report memory
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        Console.WriteLine($"[Theme Switch] GC after close - Gen0: {GC.CollectionCount(0)}, Gen1: {GC.CollectionCount(1)}, Gen2: {GC.CollectionCount(2)}");
+        Console.WriteLine($"[Theme Switch] Total memory: {GC.GetTotalMemory(false) / 1024 / 1024} MB");
+        Console.WriteLine($"[RecreateWindow] TOTAL: {sw.ElapsedMilliseconds}ms");
     }
 
     private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
@@ -148,10 +204,11 @@ public class App : Application
         EventHandler? layoutHandler = null;
         layoutHandler = (sender, e) =>
         {
+            // CRITICAL: Unsubscribe immediately to prevent handler accumulation
+            window.LayoutUpdated -= layoutHandler;
+
             TabControl? tabControl = window.FindControl<TabControl>("MainTabControl");
             if (tabControl?.ContainerFromIndex(0) is null) return;
-
-            window.LayoutUpdated -= layoutHandler;
 
             // Clear all IsSelected properties from TabItems to remove XAML hardcoded values
             foreach (TabItem tabItem in tabControl.Items.OfType<TabItem>())

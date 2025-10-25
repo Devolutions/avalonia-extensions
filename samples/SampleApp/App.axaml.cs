@@ -107,6 +107,13 @@ public class App : Application
             return;
         }
 
+        // Early exit if we're already on this theme (prevents unnecessary style churn)
+        if (CurrentTheme?.Name == theme.Name)
+        {
+            Console.WriteLine($"[Theme Switch] Already on {theme.Name}, skipping");
+            return;
+        }
+
         isSettingTheme = true;
         try
         {
@@ -136,6 +143,13 @@ public class App : Application
             int selectedTabIndex = oldWindow is MainWindow oldMainWindow
                 ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
                 : 0;
+
+            // Suppress theme changes on old window to prevent its ComboBox binding from
+            // triggering SetTheme when we update CurrentTheme
+            if (oldWindow is MainWindow oldMain)
+            {
+                oldMain.SuppressThemeChangeEvents(true);
+            }
 
             // Diagnostic: Check for resource/handler accumulation
             Console.WriteLine($"[Theme Switch] App.Styles.Count: {app.Styles.Count}");
@@ -176,6 +190,10 @@ public class App : Application
 
         Console.WriteLine($"[RecreateWindow] Creating new MainWindow... ({sw.ElapsedMilliseconds}ms)");
         MainWindow newWindow = new() { DataContext = dataContext };
+
+        // Suppress theme change events during window initialization to prevent
+        // SelectionChanged from firing multiple times as bindings initialize
+        newWindow.SuppressThemeChangeEvents(true);
         Console.WriteLine($"[RecreateWindow] MainWindow created ({sw.ElapsedMilliseconds}ms)");
 
         lifetime.MainWindow = newWindow;
@@ -185,6 +203,9 @@ public class App : Application
         Console.WriteLine($"[RecreateWindow] New window shown ({sw.ElapsedMilliseconds}ms)");
 
         RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
+
+        // Re-enable theme changes after window is fully initialized
+        EnableThemeChangesWhenReady(newWindow);
 
         Console.WriteLine($"[RecreateWindow] Closing old window... ({sw.ElapsedMilliseconds}ms)");
         oldWindow?.Close();
@@ -223,11 +244,30 @@ public class App : Application
         window.LayoutUpdated += layoutHandler;
     }
 
+    private static void EnableThemeChangesWhenReady(MainWindow window)
+    {
+        // Use Dispatcher to re-enable theme changes after the window initialization completes
+        // This happens quickly enough to not block user clicks, but late enough that
+        // binding-triggered SelectionChanged events during construction are suppressed
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            window.SuppressThemeChangeEvents(false);
+            Console.WriteLine($"[RecreateWindow] Theme changes re-enabled");
+        }, Avalonia.Threading.DispatcherPriority.Background);
+    }
+
     public override void OnFrameworkInitializationCompleted()
     {
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
+            MainWindow mainWindow = new() { DataContext = new MainWindowViewModel() };
+
+            // Suppress theme changes during initial window setup
+            mainWindow.SuppressThemeChangeEvents(true);
+            desktop.MainWindow = mainWindow;
+
+            // Re-enable after initialization completes
+            EnableThemeChangesWhenReady(mainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();

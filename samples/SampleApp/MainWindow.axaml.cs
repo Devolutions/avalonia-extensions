@@ -8,6 +8,8 @@ using Avalonia.Input;
 
 public partial class MainWindow : Window
 {
+  private bool suppressThemeChangeEvents;
+
   public MainWindow()
   {
     this.InitializeComponent();
@@ -29,8 +31,15 @@ public partial class MainWindow : Window
 #endif
   }
 
+  public void SuppressThemeChangeEvents(bool suppress)
+  {
+    this.suppressThemeChangeEvents = suppress;
+  }
+
   private void Themes_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
   {
+    if (this.suppressThemeChangeEvents) return;
+
     SelectingItemsControl? cb = sender as SelectingItemsControl;
     if (cb?.SelectedItem is Theme newTheme) App.SetTheme(newTheme);
   }

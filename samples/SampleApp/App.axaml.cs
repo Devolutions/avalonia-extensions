@@ -2,6 +2,7 @@ namespace SampleApp;
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
@@ -9,6 +10,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
+using Avalonia.VisualTree;
 using ViewModels;
 
 public class App : Application
@@ -125,6 +127,28 @@ public class App : Application
             _ => null,
         };
 
+        // IMPORTANT: Capture the selected tab index BEFORE changing styles!
+        // Changing styles can reset the TabControl's SelectedIndex in the old window
+        int selectedTabIndex = 0; // Default to first tab
+        if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+        {
+            Window? oldWindow = lifetime.MainWindow;
+            if (oldWindow is MainWindow oldMainWindow)
+            {
+                TabControl? oldTabControl = oldMainWindow.FindControl<TabControl>("MainTabControl");
+                if (oldTabControl != null)
+                {
+                    selectedTabIndex = oldTabControl.SelectedIndex;
+                    Console.WriteLine($"[Theme Switch] Captured tab index: {selectedTabIndex} from old window (BEFORE style change)");
+                }
+                else
+                {
+                    Console.WriteLine($"[Theme Switch] WARNING: Could not find MainTabControl in old window");
+                }
+            }
+        }
+
+        // Now change the styles
         app.themeStylesContainer.Clear();
         app.themeStylesContainer.AddRange(styles!);
 
@@ -134,9 +158,54 @@ public class App : Application
             {
                 Window? oldWindow = desktopLifetime.MainWindow;
                 object? dataContext = oldWindow?.DataContext;
+
                 MainWindow newWindow = new() { DataContext = dataContext };
                 desktopLifetime.MainWindow = newWindow;
+
                 newWindow.Show();
+
+                // Wait for the window to fully load and containers to be created
+                // Using LayoutUpdated to ensure the visual tree is ready
+                EventHandler? layoutHandler = null;
+                layoutHandler = (sender, e) =>
+                {
+                    TabControl? tabControl = newWindow.FindControl<TabControl>("MainTabControl");
+                    if (tabControl != null)
+                    {
+                        // Check if containers are ready
+                        if (tabControl.ContainerFromIndex(0) != null)
+                        {
+                            Console.WriteLine($"[Theme Switch] LayoutUpdated: Containers are ready! Current SelectedIndex={tabControl.SelectedIndex}, target={selectedTabIndex}");
+
+                            // Unsubscribe from the event to prevent repeated execution
+                            newWindow.LayoutUpdated -= layoutHandler;
+
+                            // Clear all IsSelected
+                            for (int i = 0; i < tabControl.Items.Count; i++)
+                            {
+                                if (tabControl.ContainerFromIndex(i) is TabItem tabItem)
+                                {
+                                    tabItem.IsSelected = false;
+                                }
+                            }
+
+                            // Set the correct one
+                            if (tabControl.ContainerFromIndex(selectedTabIndex) is TabItem targetTabItem)
+                            {
+                                targetTabItem.IsSelected = true;
+                                Console.WriteLine($"[Theme Switch] Successfully set IsSelected=true on TabItem {selectedTabIndex}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[Theme Switch] WARNING: Still couldn't get container {selectedTabIndex}, using SelectedIndex");
+                                tabControl.SelectedIndex = selectedTabIndex;
+                            }
+                        }
+                    }
+                };
+
+                newWindow.LayoutUpdated += layoutHandler;
+
                 oldWindow?.Close();
             }
         }

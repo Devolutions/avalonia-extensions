@@ -148,45 +148,39 @@ public class TagInput : Ursa.Controls.TagInput { }
 - Control renders correctly and functions properly in all layout scenarios tested
 - Focus state uses bottom border thickness change (1.6px) and accent color
 - Disabled state shows transparent background with proper foreground dimming
-- SmallScrollViewer removed due to "Invalid size returned for Measure" crashes in horizontal layouts
 - Tags currently wrap instead of scrolling horizontally (to be addressed in Phase 5)
 
-### Phase 5: Implement Horizontal Scrolling (TODO - Next Session)
-- [ ] Investigate scrolling approaches
-  - [ ] Research why SmallScrollViewer breaks measurement in horizontal layouts
-    - Current symptom: "Invalid size returned for Measure" exception on app startup
+### Phase 5: Fix Focus Highlight & Investigate Measurement Error (IN PROGRESS)
+- [x] Fix embedded TextBox focus highlight
+  - Added `FocusAdorner="{x:Null}"` to TagInputTextBoxTheme
+  - Removes default blue focus ring around embedded TextBox
+  - Now only bottom border changes on focus (consistent with DevExpress pattern)
+- [ ] Investigate measurement error root cause
+  - [ ] Understand why "Invalid size returned for Measure" occurs in horizontal layouts
+    - **Current Status**: Error occurs when switching to ControlAlignment tab with horizontal layouts
     - Occurs specifically when TagInput is in horizontal StackPanel or Grid with Auto columns
-    - Removing SmallScrollViewer resolves the crash (tags wrap instead)
-  - [ ] Compare MultiComboBox SmallScrollViewer implementation
-    - MultiComboBox successfully uses SmallScrollViewer for horizontal tag scrolling
-    - Review property differences: MinHeight, MaxHeight, ScrollbarVisibility settings
-    - Check if there are additional constraints or bindings needed
-  - [ ] Analyze TagInputPanel measure/arrange behavior
-    - Understand how TagInputPanel calculates desired size
-    - Determine if panel needs size constraints when wrapped in ScrollViewer
-  - [ ] Test different ScrollViewer configurations
-    - Try standard ScrollViewer vs SmallScrollViewer
-    - Experiment with explicit width/height constraints
-    - Test MaxWidth binding to parent or container
-    - Try ClipToBounds and other layout-affecting properties
-  - [ ] Consider conditional scrolling based on layout context
-    - Detect if control is in horizontal vs vertical container
-    - Apply ScrollViewer only when width is constrained
-    - Use attached properties or template selectors if needed
-- [ ] Implement chosen solution
-  - [ ] Apply changes to DevExpress TagInput.axaml
+    - **Critical finding**: Error persists even without any ScrollViewer - not ScrollViewer-specific
+    - Vertical layouts work fine - issue is specific to horizontal layout context
+    - **Attempted fix**: Changing HorizontalAlignment from "Stretch" to "Left" (like MultiComboBox) - did NOT resolve the issue
+    - Need deeper investigation into TagInputPanel measure/arrange behavior
+  - [ ] Further investigation needed:
+    - Examine TagInputPanel source code for measurement logic
+    - Compare with other panel types used in similar scenarios
+    - Check if issue is in Ursa's TagInputPanel implementation
+    - Consider whether we need to override or constrain panel behavior
+    - Test with explicit Width constraints to see if that prevents the error
+- [ ] Once measurement error is fixed, implement horizontal scrolling
+  - [ ] Add SmallScrollViewer around ItemsControl (similar to MultiComboBox pattern)
+  - [ ] Configure scrolling properties (HorizontalScrollBarVisibility, MaxHeight, etc.)
   - [ ] Test in all ControlAlignment scenarios (horizontal/vertical grids and stackpanels)
   - [ ] Verify no crashes and proper scrolling behavior
-  - [ ] Test with many tags to confirm scroll functionality
-- [ ] Commit scrolling implementation
-  - Commit message: "Add horizontal scrolling support to TagInput"
 
-**Investigation Context:**
-- Current implementation: ItemsControl directly in Panel (no ScrollViewer)
-- Works: No crashes, proper layout, tags wrap to multiple lines
-- Doesn't work: Adding SmallScrollViewer causes immediate crash in horizontal layouts
-- Reference: MultiComboBox has working SmallScrollViewer with HorizontalScrollBarVisibility
-- Goal: Enable horizontal scrolling without breaking measurement system
+**Phase 5 Summary:**
+- ✅ FocusAdorner fix successful - committed separately
+- ❌ HorizontalAlignment change did NOT fix measurement error - reverted
+- 🔍 Measurement error investigation continues - likely needs deeper look at TagInputPanel behavior
+- Planning document updated with findings - committed separately
+- Next session: Continue troubleshooting measurement error in horizontal layouts
 
 ### Phase 6: Documentation & Polish
 - [ ] Update DevExpress theme README

@@ -233,7 +233,7 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    public void AttacheDevToolsOnce()
+    public void AttachDevToolsOnce()
     {
         if (this.devToolsAttached)
         {

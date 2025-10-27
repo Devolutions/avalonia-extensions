@@ -9,8 +9,8 @@
         xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
         xmlns:controls="clr-namespace:SampleApp.Controls"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
-        Width="1250"
-        Height="800"
+        Width="1720"
+        Height="1050"
         x:Class="SampleApp.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Devolutions Theme Sampler">

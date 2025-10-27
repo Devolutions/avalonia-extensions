@@ -275,6 +275,7 @@
   <Thickness x:Key="BorderThickness">1</Thickness>
 
   <Thickness x:Key="InputControlsSpaceForFocusBorder">1.5</Thickness>
+  <Thickness x:Key="EmbeddedTextBoxSpaceForFocusFactors">1 -1</Thickness>
   <Thickness x:Key="TabControlSpaceForFocusFactors">1 1 1 -1.5</Thickness>
 
   <x:Double x:Key="DefaultLineHeight">16</x:Double>

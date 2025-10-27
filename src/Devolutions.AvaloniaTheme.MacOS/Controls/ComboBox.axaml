@@ -20,6 +20,12 @@
             <ComboBoxItem>Option 2</ComboBoxItem>
             <ComboBoxItem>Option 3</ComboBoxItem>
           </ComboBox>
+          <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEditable="True">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+          </ComboBox>
+
           <ComboBox SelectedIndex="2" MaxDropDownHeight="100" IsEnabled="False">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
@@ -120,13 +126,11 @@
   </ControlTheme>
 
   <ControlTheme x:Key="ComboBoxEditableTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-    <Style Selector="^ /template/ Panel#ReservedSpaceForFocus">
-      <Setter Property="Margin" Value="0" />
-    </Style>
-    <Style Selector="^ /template/ Border#PART_BorderElement">
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Padding" Value="0" />
-    </Style>
+    <Setter Property="Margin">
+      <Binding Source="{StaticResource InputControlsSpaceForFocusBorder}"
+               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
+               ConverterParameter="{StaticResource EmbeddedTextBoxSpaceForFocusFactors}" />
+    </Setter>
     <Style Selector="^ /template/ Border#BottomBorder">
       <Setter Property="IsVisible" Value="False" />
     </Style>
@@ -146,7 +150,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Padding" Value="8 1 6 2" />
+    <Setter Property="Padding" Value="8 0 6 0" />
     <Setter Property="MinHeight" Value="20" />
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ThemeForegroundBrush}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
@@ -193,7 +197,6 @@
               <TextBox Name="PART_EditableTextBox"
                        Grid.Column="0"
                        Theme="{StaticResource ComboBoxEditableTextBox}"
-                       Padding="{TemplateBinding Padding}"
                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                        Foreground="{TemplateBinding Foreground}"

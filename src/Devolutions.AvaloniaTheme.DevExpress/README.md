@@ -189,8 +189,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>TabStripItem</h3> |
 |||
-|✅ | <h3>TagInput</h3> ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)) |
-|| Input control for managing tags (keywords, labels, recipients). Supports adding/removing tags, separators, max count, duplicate prevention. |
+|✅ | <h3>TagInput</h3> ([Custom control (Ursa)](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)) |
+|| Input control for managing tags (keywords, labels, recipients). Supports adding/removing tags, separators, max count, duplicate prevention. <br /><img src="https://github.com/user-attachments/assets/9e0c1c74-b1db-4d8b-bb03-3a3786e5a187" alt="TagInput" style="width: 528px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/b9146e0b-e096-4187-a676-dbc1003a575b" alt="TagInput dark" style="width: 528px; max-width: 100%;" /> |
 |✅ | <h3>TextBox</h3> |
 || <img src="https://github.com/user-attachments/assets/9eab4003-be77-488e-9a58-f3ad38e3fe39"  alt="TextBox demo" style="width: 322px; max-width: 100%;" /> |
 || <h3>TextSelectionHandle</h3> |

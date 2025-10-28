@@ -103,6 +103,12 @@
                       <u:TagInputPanel VerticalAlignment="Center" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
+                  <ItemsControl.Styles>
+                    <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
+                    <Style Selector="ContentPresenter:nth-last-child(2)">
+                      <Setter Property="Margin" Value="0,0,6,0" />
+                    </Style>
+                  </ItemsControl.Styles>
                 </ItemsControl>
               </Panel>
             </Border>

@@ -28,7 +28,7 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
-    <Setter Property="MaxWidth" Value="600" />
+    <Setter Property="MaxWidth" Value="800" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="1 1 1 0" />
@@ -136,7 +136,7 @@
         <Setter Property="IsVisible" Value="False" />
       </Style>
 
-      <Style Selector="^ /template/ TextBlock#PanelART_Watermark">
+      <Style Selector="^ /template/ TextBlock#PART_Watermark">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
       </Style>
     </Style>

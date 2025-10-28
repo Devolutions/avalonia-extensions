@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
-             xmlns:u="https://irihi.tech/ursa"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ControlAlignment">
 
@@ -42,7 +41,7 @@
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <u:TagInput Grid.Column="6" Watermark="TagInput" />
+        <TagInput Grid.Column="6" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
         <EditableComboBox Grid.Column="7">
           <EditableComboBoxItem Value="Option 1" />
           <EditableComboBoxItem Value="Option 2" />
@@ -86,7 +85,7 @@
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <u:TagInput Grid.Row="7" Watermark="TagInput" />
+        <TagInput Grid.Row="7" Watermark="TagInput" />
         <EditableComboBox Grid.Row="8">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
@@ -133,7 +132,7 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <u:TagInput Watermark="TagInput" />
+          <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
           <EditableComboBox IsEnabled="False">
             <EditableComboBoxItem Value="test1" />
             <EditableComboBoxItem Value="test2" />
@@ -172,7 +171,7 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <u:TagInput Watermark="TagInput" />
+          <TagInput Watermark="TagInput" />
           <EditableComboBox>
             <EditableComboBoxItem Value="test1" />
             <EditableComboBoxItem Value="test2" />

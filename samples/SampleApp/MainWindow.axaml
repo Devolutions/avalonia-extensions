@@ -86,7 +86,7 @@
         </TabItem.Header>
         <demoPages:EditableComboBoxDemo />
       </TabItem>
-      <TabItem IsSelected="True">
+      <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="TagInput" ApplicableTo="Windows - DevExpress" />
         </TabItem.Header>
@@ -191,7 +191,7 @@
         <demoPages:TreeViewDemo />
       </TabItem>
 
-      <TabItem Header="✜ Control Alignment">
+      <TabItem Header="✜ Control Alignment" IsSelected="True">
         <demoPages:ControlAlignment />
       </TabItem>
 

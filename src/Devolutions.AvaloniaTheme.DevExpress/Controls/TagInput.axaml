@@ -28,11 +28,12 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
+    <Setter Property="MaxWidth" Value="600" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="1 1 1 0" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="Padding" Value="8,4" />
+    <Setter Property="Padding" Value="8,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ItemTemplate">
@@ -46,14 +47,13 @@
       <ControlTemplate TargetType="u:TagInput">
         <DataValidationErrors>
           <Panel>
-            <!-- Main border (top, left, right) -->
+            <!-- Main border (top, left, right - no bottom) -->
             <Border
               Name="PART_BorderElement"
               Background="{TemplateBinding Background}"
               BorderBrush="{TemplateBinding BorderBrush}"
               BorderThickness="{TemplateBinding BorderThickness}"
               CornerRadius="{TemplateBinding CornerRadius}"
-              MinWidth="{TemplateBinding MinWidth}"
               MinHeight="{TemplateBinding MinHeight}" />
 
             <!-- Bottom border (separate for focus effect) -->
@@ -63,21 +63,21 @@
               BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
               BorderThickness="0 0 0 1"
               CornerRadius="{TemplateBinding CornerRadius}"
-              MinWidth="{TemplateBinding MinWidth}"
-              MinHeight="{TemplateBinding MinHeight}" />
+              MinHeight="{TemplateBinding MinHeight}"
+              IsHitTestVisible="False" />
 
             <!-- Error border for validation -->
             <Border
               Name="ErrorBorder"
               BorderBrush="{StaticResource SystemControlErrorTextForegroundBrush}"
               BorderThickness="1"
-              CornerRadius="{DynamicResource ControlCornerRadius}"
-              IsVisible="False" />
+              CornerRadius="{TemplateBinding CornerRadius}"
+              IsVisible="False"
+              IsHitTestVisible="False" />
 
-            <!-- Content area -->
+            <!-- Content area with proper margin for borders -->
             <Border Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
-              <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-
+              <Panel>
                 <!-- Watermark -->
                 <TextBlock
                   Name="{x:Static u:TagInput.PART_Watermark}"
@@ -90,15 +90,17 @@
                   HorizontalAlignment="Left" />
 
                 <!-- Tags and input -->
+                <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
                 <ItemsControl
                   Name="PART_ItemsControl"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Top"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  MaxWidth="{TemplateBinding MaxWidth}"
                   ItemTemplate="{TemplateBinding ItemTemplate}"
                   ItemsSource="{TemplateBinding Items}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:TagInputPanel VerticalAlignment="Top" />
+                      <u:TagInputPanel VerticalAlignment="Center" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                 </ItemsControl>
@@ -114,7 +116,7 @@
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
-    <!-- Focus state: change bottom border -->
+    <!-- Focus state: change bottom border (thicker and accent color) -->
     <Style Selector="^:focus-within /template/ Border#BottomBorderElement">
       <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
       <Setter Property="BorderThickness" Value="0 0 0 1.6" />
@@ -134,7 +136,7 @@
         <Setter Property="IsVisible" Value="False" />
       </Style>
 
-      <Style Selector="^ /template/ TextBlock#PART_Watermark">
+      <Style Selector="^ /template/ TextBlock#PanelART_Watermark">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
       </Style>
     </Style>

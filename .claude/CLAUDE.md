@@ -181,8 +181,11 @@ You should always look to make the minimum code changes possible, and never intr
 functionality.
 
 # Version Control Rules
-- Never push to git without explicit permission
-- Never stage to git without explicit permission
+- Never push to git without explicit permission - except when ask to prepare a PR
+- Never stage to git without explicit permission - except when ask to prepare a PR
+- **NEVER EVER force-push without explicit permission** - If rebase goes wrong, we lose the working version!
+- After completing a rebase, ALWAYS ask the user to test before pushing
+- If force-push is needed, explain why and wait for explicit approval
 
 ## Commit Message Guidelines
 - When asked to make temporary commits, clearly label them as such in the commit message

@@ -40,8 +40,11 @@ dotnet add package Devolutions.AvaloniaControls
 - `SearchHighlightTextBlock`
 - `TabPane`
   (Extends `TabControl` for different styling only)
+- `TagInput`
+  (Wrapper for [Ursa](https://github.com/irihitech/Ursa.Avalonia)'s TagInput control - manages tags/keywords/labels with add/remove functionality)
 
 ### Converters
+
 Usage: `Converter={x:Static DevoConverters.<ConverterName>}`
 
 - `ColorToCssFillConverter` <br />ConverterParameter: class(es) of the path(s) to apply colour to <br />
@@ -54,6 +57,7 @@ Usage: `Converter={x:Static DevoConverters.<ConverterName>}`
   Returns a new Thickness, to selectively apply a given Thickness to a subset of the four sides (0 to the others)
 
 ### MultiConverters
+
 Usage: `<MultiBinding Converter="{x:Static DevoMultiConverters.<ConverterName>}">`
 
 - `BooleanToChoiceConverter` <br />

@@ -88,6 +88,12 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
+          <controls:SampleItemHeader Title="TagInput" ApplicableTo="Windows - DevExpress" />
+        </TabItem.Header>
+        <demoPages:TagInputDemo />
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
           <controls:SampleItemHeader Title="Expander" ApplicableTo="MacOS, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:ExpanderDemo />

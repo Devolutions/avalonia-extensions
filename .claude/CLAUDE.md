@@ -76,17 +76,26 @@ dotnet build src/Devolutions.AvaloniaControls
 
 ### Running the Sample App
 ```bash
-# Run the sample application (for testing themes/controls)
-dotnet run --project samples/SampleApp/SampleApp.csproj
+# IMPORTANT: For proper theme detection, build first then run from bin directory
+# This ensures the app can detect the configured theme from App.axaml
+dotnet build samples/SampleApp/SampleApp.csproj && cd samples/SampleApp/bin/Debug/net9.0 && dotnet SampleApp.dll
+
+# Alternative: Use dotnet run (faster, but theme detection won't work)
+# This runs from repo root, causing app to fall back to OS-default theme
+# dotnet run --project samples/SampleApp/SampleApp.csproj
 ```
 
 The SampleApp provides:
 - Visual demos of all styled controls
+- Theme switching via /workon command (see .claude/commands/workon.md)
 - Inspection:
   - if `USE_AVALONIA_ACCELERATE_TOOLS=true` env var is set:
     - F12 opens Avalonia Accelerate Dev Tools
     - F10 opens classic Avalonia Dev Tools
   - otherwise F12 opens classic Avalonia Dev Tools
+
+**Note on Theme Detection:**
+The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/workon` command.
 
 ### Testing
 There are no automated tests in this repository. Testing is done manually via the SampleApp.
@@ -172,8 +181,23 @@ You should always look to make the minimum code changes possible, and never intr
 functionality.
 
 # Version Control Rules
-- Never push to git without explicit permission
-- Never stage to git without explicit permission
+- Never push to git without explicit permission - except when ask to prepare a PR
+- Never stage to git without explicit permission - except when ask to prepare a PR
+- **NEVER EVER force-push without explicit permission** - If rebase goes wrong, we lose the working version!
+- After completing a rebase, ALWAYS ask the user to test before pushing
+- If force-push is needed, explain why and wait for explicit approval
+
+## Commit Message Guidelines
+- When asked to make temporary commits, clearly label them as such in the commit message
+- Use `[temp]` prefix for temporary commits that represent work-in-progress
+- Examples:
+  - `[temp] most styling working - but scrolling not working`
+  - `[temp] added basic theme structure - needs polish`
+  - `[temp] horizontal layout working - vertical needs fixes`
+- Regular (non-temporary) commits should follow standard patterns:
+  - `[ComponentName] Description of changes`
+  - Include details in commit body about what was done and why
+  - Always include Claude Code attribution footer
 
 # User Notifications via Dialog
 **CRITICAL**: The user may be working on other things and not watching this conversation. You MUST use dialog notifications for important events.

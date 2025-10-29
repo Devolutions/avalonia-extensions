@@ -9,14 +9,14 @@
   <ScrollViewer>
     <StackPanel Margin="10">
       <TextBlock Classes="h1" Text="Grids" />
-      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
             ColumnSpacing="10"
             Margin="10 0">
         <TextBlock Grid.Column="0">TextBlock</TextBlock>
         <TextBox Grid.Column="1" Watermark="TextBox" />
         <TextBox Grid.Column="2"
                  Height="22" MinHeight="22" MaxHeight="22"
-                 IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
+                 IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
                        Path=Name,
                        Converter={StaticResource EqualToComparisonConverter},
                        ConverterParameter=Windows - DevExpress}">
@@ -41,24 +41,25 @@
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <EditableComboBox Grid.Column="6">
+        <TagInput Grid.Column="6" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+        <EditableComboBox Grid.Column="7">
           <EditableComboBoxItem Value="Option 1" />
           <EditableComboBoxItem Value="Option 2" />
           <EditableComboBoxItem Value="Option 3" />
         </EditableComboBox>
-        <AutoCompleteBox Grid.Column="7" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Column="8" Value="0"
+        <AutoCompleteBox Grid.Column="8" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Column="9" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Column="9" />
-        <Button Grid.Column="10" Content="Button" />
-        <CheckBox Grid.Column="11" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Column="12" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Column="10" />
+        <Button Grid.Column="11" Content="Button" />
+        <CheckBox Grid.Column="12" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Column="13" Content="RadioButton" IsChecked="True" />
         <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-        <TextBlock Grid.Column="13" Text="🙂" FontSize="45" />
+        <TextBlock Grid.Column="14" Text="🙂" FontSize="45" />
       </Grid>
 
-      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *"
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *, *"
             RowSpacing="5"
             Width="150"
             HorizontalAlignment="Left"
@@ -84,19 +85,20 @@
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <EditableComboBox Grid.Row="7">
+        <TagInput Grid.Row="7" Watermark="TagInput" />
+        <EditableComboBox Grid.Row="8">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
         </EditableComboBox>
-        <AutoCompleteBox Grid.Row="8" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Row="9" Value="0"
+        <AutoCompleteBox Grid.Row="9" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Row="10" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Row="10" />
-        <Button Grid.Row="11" Content="Button" />
-        <CheckBox Grid.Row="12" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Row="13" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Row="11" />
+        <Button Grid.Row="12" Content="Button" />
+        <CheckBox Grid.Row="13" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Row="14" Content="RadioButton" IsChecked="True" />
       </Grid>
 
       <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
@@ -130,6 +132,7 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
+          <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
           <EditableComboBox IsEnabled="False">
             <EditableComboBoxItem Value="test1" />
             <EditableComboBoxItem Value="test2" />
@@ -168,6 +171,7 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
+          <TagInput Watermark="TagInput" />
           <EditableComboBox>
             <EditableComboBoxItem Value="test1" />
             <EditableComboBoxItem Value="test2" />

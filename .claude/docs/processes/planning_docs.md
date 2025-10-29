@@ -1,10 +1,10 @@
 # Project Management Practices
 
-This is a guide for writing plans or project management `.md` files, e.g. `docs/planning/yyyy_MM_dd_a_complex_project.md`. These are for thinking through & documenting decisions, breaking down complex projects into multiple stages, and tracking progress.
+This is a guide for writing plans or project management `.md` files, e.g. `.claude/docs/planning/upcoming/2025_10_21__Complex_Project.md`. These are for thinking through & documenting decisions, breaking down complex projects into multiple stages, and tracking progress.
 
 Aim to keep these concise, but emphasise & clearly capture all the decisions, responses, and requirements from the user.
 
-If you're starting the doc from scratch, store it in `docs/planning/upcoming/`, and first ask the user questions about their project requirements to clarify key decisions. (Use MCP or run `date +"%y%m%d"` command first to get the current date for naming the file)
+If you're starting the doc from scratch, store it in `.claude/docs/planning/upcoming/`, and first ask the user questions about their project requirements to clarify key decisions. (Use MCP or run `date +"%Y_%m_%d"` command first to get the current date for naming the file)
 
 **Planning Document Lifecycle:**
 - **New docs start in `/upcoming/`** - for initial planning and requirements gathering
@@ -12,24 +12,24 @@ If you're starting the doc from scratch, store it in `docs/planning/upcoming/`, 
 - **Move to `/completed/`** when implementation is finished and delivered
 
 see also:
-- `docs/processes/evergreen_docs.md` for instructions on writing evergreen docs
-- `docs/processes/planning_theme_controls.md` for specialized guidance on creating/styling control themes
-- `docs/processes/planning_custom_controls.md` for specialized guidance on creating custom controls in AvaloniaControls
+- `.claude/docs/processes/evergreen_docs.md` for instructions on writing evergreen docs
+- `.claude/docs/processes/planning_theme_controls.md` for specialized guidance on creating/styling control themes
+- `.claude/docs/processes/planning_custom_controls.md` for specialized guidance on creating custom controls in AvaloniaControls
 
 
 ## File naming conventions
 
-Planning docs should follow this naming format: `yyyy_MM_dd_[letter]_description_in_normal_case.md`
+Planning docs should follow this naming format: `yyyy_MM_dd__Description_With_Proper_Capitalization.md`
 
-- Date prefix: `yyyy_MM_dd` format (e.g., `2025_05_26` for 26 May 2025)
-- Auto-incrementing letter: append a letter (a, b, c...) based on creation order within the same day
-  - First doc created on a given day gets `a`
-  - Second doc gets `b`, and so on
-  - This ensures files sort alphanumerically by creation date
-  - Sometimes we might end up with multiple docs with the same day and letter (e.g. `250526a`, e.g if multiple agents were working simultaneously in separate Git worktrees) - don't worry if this happens
-- Description: Use lowercase words separated by underscores
-  - Exception: Keep proper capitalisation for acronyms like `ToC` (Table of Contents)
-  - Example: `2025_05_26_a_ToC_hierarchical_summary_tooltips.md`
+- Date prefix: `yyyy_MM_dd` format (e.g., `2025_10_21` for 21 October 2025)
+- Separator: Two underscores `__` between date and description
+- Description: Use proper capitalization with underscores separating words
+  - Capitalize proper nouns (e.g., Ursa, TagInput, DevExpress)
+  - Capitalize first letter of each significant word
+  - Examples:
+    - `2025_10_21__Ursa_TagInput_theming.md`
+    - `2025_05_26__ToC_Hierarchical_Summary_Tooltips.md`
+    - `2025_08_15__Custom_Control_Development.md`
 
 Update this doc regularly to keep the actions up-to-date. When you change it, make minimal, focused changes, based on new user input.
 
@@ -53,7 +53,7 @@ Don't include a `Date` section at the top since it's implicit from the filename.
 
 ### References
 
-- Mention relevant evergreen docs (in `docs/reference/`), other planning docs (in `docs/planning/current/`, `/upcoming/`, or `/completed/`), code files/functions, links, or anything else that could provide context, with a 1-sentence summary for each of what it's about/why it's relevant
+- Mention relevant evergreen docs (in `.claude/docs/reference/`), other planning docs (in `.claude/docs/planning/current/`, `/upcoming/`, or `/completed/`), code files/functions, links, or anything else that could provide context, with a 1-sentence summary for each of what it's about/why it's relevant
 
 
 ### Principles, key decisions
@@ -127,15 +127,15 @@ For control styling and theming work:
 - Include subtasks with clear acceptance criteria
 - Refer to specific docs, files/functions, examples, links, etc, so it's clear exactly what needs to be done
 - If there are actions that the user needs to do, add those in too, so we can track progress and remind the user.
-- Ask the user whether we should have an early action to create a `yyyy_MM_dd_[letter]_complex_project` Git branch (and move over any changes). If so, then add a final action to merge that back into `main`.
+- Ask the user whether we should have an early action to create a `yyyy_MM_dd__Complex_Project` Git branch (and move over any changes). If so, then add a final action to merge that back into `main`.
 - Add actions to update the planning doc with progress so far at the end of every phase
-- Add actions to Git commit (perhaps at the end of every phase, perhaps use a subagent) - follow instructions in `docs/processes/git_commits.md`
+- Add actions to Git commit (perhaps at the end of every phase, perhaps use a subagent) - follow instructions in `.claude/docs/processes/git_commits.md`
 - Add actions to stop & review with user where appropriate, e.g. when we get to a good stopping point, to manually check changes to the user interface, etc
 - Add actions to search the web where appropriate, e.g. when debugging, determining best practices, making use of 3rd-party libraries, etc
-- Add actions to update relevant `docs/reference/*.md` evergreen docs (see `docs/processes/evergreen_docs.md`).
+- Add actions to update relevant `.claude/docs/reference/*.md` evergreen docs (see `.claude/docs/processes/evergreen_docs.md`).
 - If you think we need a new evergreen-doc, ask the user
 - Explicitly say to use subagents for encapsulated tasks or where the task will create a lot of verbose content, e.g. checking for errors or browser console output with Playwright MCP, doing research
-- Add a final action to move the doc to `docs/planning/completed/` and commit.
+- Add a final action to move the doc to `.claude/docs/planning/completed/` and commit.
 - Ask me three clarifying questions that are not mentally taxing to help you understand the assumptions and my thinking.
 
 Example action (no need to include the words `TODO` or `DONE` explicitly, since the `[ ]` todo-checkboxes capture that):

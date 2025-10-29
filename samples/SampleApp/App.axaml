@@ -27,6 +27,11 @@
       <FluentTheme />
       <StyleInclude Source="/Styles.axaml" />
     </Styles>
+    <Styles x:Key="SimpleStyles">
+      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <SimpleTheme />
+      <StyleInclude Source="/Styles.axaml" />
+    </Styles>
     <actipro:ComparisonConverter x:Key="EqualToComparisonConverter" Operator="EqualTo" />
     <actipro:ComparisonConverter x:Key="NotEqualToComparisonConverter" Operator="NotEqualTo" />
   </Application.Resources>

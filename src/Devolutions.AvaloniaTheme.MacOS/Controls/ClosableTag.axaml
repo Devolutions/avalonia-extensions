@@ -58,6 +58,13 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+      <Style Selector="^ /template/ Button">
+        <Setter Property="Opacity" Value="0.5"></Setter>
+      </Style>
+    </Style>
   </ControlTheme>
   <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
 </ResourceDictionary>

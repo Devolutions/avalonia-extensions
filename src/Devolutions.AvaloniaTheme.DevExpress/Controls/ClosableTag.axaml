@@ -58,6 +58,11 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:disabled">
+      <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabledBrush}" />
+    </Style>
   </ControlTheme>
   <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
 </ResourceDictionary>

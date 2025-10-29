@@ -8,13 +8,13 @@
     <design:ThemePreviewer>
       <StackPanel Height="400" Width="400" Margin="20" Spacing="15">
         <TextBlock>Basic TagInput:</TextBlock>
-        <u:TagInput Watermark="Enter tags..." />
+        <TagInput Watermark="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <u:TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
 
         <TextBlock>Disabled:</TextBlock>
-        <u:TagInput IsEnabled="False" Watermark="Disabled..." />
+        <TagInput IsEnabled="False" Watermark="Disabled..." />
 
         <TextBlock>Wrapper type:</TextBlock>
         <TagInput Watermark="Using wrapper..." />
@@ -38,7 +38,7 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <u:ClosableTag
+        <ClosableTag
           Content="{Binding}"
           Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
       </DataTemplate>

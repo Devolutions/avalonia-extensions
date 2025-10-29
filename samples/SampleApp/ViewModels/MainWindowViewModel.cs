@@ -9,7 +9,8 @@ public partial class MainWindowViewModel : ObservableObject
   [
     new LinuxYaruTheme(),
     new DevExpressTheme(),
-    new MacOsTheme()
+    new MacOsTheme(),
+    new FluentTheme()
   ];
 
   [ObservableProperty] private Theme currentTheme;

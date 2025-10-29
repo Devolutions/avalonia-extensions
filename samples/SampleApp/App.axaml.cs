@@ -21,6 +21,7 @@ public class App : Application
     private Styles? devExpressStyles;
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
+    private Styles? fluentStyles;
     private bool devToolsAttached;
 
     public static Theme? CurrentTheme { get; set; }
@@ -38,6 +39,7 @@ public class App : Application
         this.linuxYaruStyles = this.Resources["LinuxYaruStyles"] as Styles;
         this.devExpressStyles = this.Resources["DevExpressStyles"] as Styles;
         this.macOsStyles = this.Resources["MacOsStyles"] as Styles;
+        this.fluentStyles = this.Resources["FluentStyles"] as Styles;
 
         GC.KeepAlive(typeof(Svg).Assembly);
         GC.KeepAlive(typeof(SvgImageExtension).Assembly);
@@ -122,6 +124,7 @@ public class App : Application
                 LinuxYaruTheme => app.linuxYaruStyles,
                 DevExpressTheme => app.devExpressStyles,
                 MacOsTheme => app.macOsStyles,
+                FluentTheme => app.fluentStyles,
                 _ => null,
             };
 
@@ -274,4 +277,9 @@ public class DevExpressTheme : Theme
 public class MacOsTheme : Theme
 {
     public override string Name => "MacOS";
+}
+
+public class FluentTheme : Theme
+{
+    public override string Name => "Fluent";
 }

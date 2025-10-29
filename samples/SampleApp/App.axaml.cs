@@ -2,6 +2,7 @@ namespace SampleApp;
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
@@ -9,15 +10,19 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
+using Avalonia.VisualTree;
 using ViewModels;
 
 public class App : Application
 {
+    private static bool isSettingTheme;
+
     private readonly Styles themeStylesContainer = new();
     private Styles? devExpressStyles;
     private Styles? linuxYaruStyles;
     private Styles? macOsStyles;
     private bool devToolsAttached;
+
     public static Theme? CurrentTheme { get; set; }
 
     public override void Initialize()
@@ -39,28 +44,15 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            Theme? theme = this.DetectDesignTheme();
-
-            if (OperatingSystem.IsWindows())
-            {
-                theme ??= new DevExpressTheme();
-            }
-            else if (OperatingSystem.IsMacOS())
-            {
-                theme ??= new MacOsTheme();
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                theme ??= new LinuxYaruTheme();
-            }
-            else
-            {
-                theme ??= new MacOsTheme();
-            }
-
+            Theme? theme = this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
         }
     }
+
+    private static Theme GetDefaultThemeForPlatform() => OperatingSystem.IsWindows() ? new DevExpressTheme()
+        : OperatingSystem.IsMacOS() ? new MacOsTheme()
+        : OperatingSystem.IsLinux() ? new LinuxYaruTheme()
+        : new MacOsTheme();
 
     private Theme? DetectDesignTheme()
     {
@@ -75,11 +67,10 @@ public class App : Application
                 DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
                 doc.Load(Path.Join(projDir!.FullName, "App.axaml"));
                 XmlElement? styles = doc["Application"]!["Application.Styles"];
-                foreach (object? obj in styles!)
-                {
-                    Theme? theme = this.ThemeFromXmlElement(obj as XmlElement);
-                    if (theme is not null) return theme;
-                }
+
+                return styles?.OfType<XmlElement>()
+                    .Select(this.ThemeFromXmlElement)
+                    .FirstOrDefault(theme => theme is not null);
             }
         }
         catch (Exception)
@@ -111,48 +102,138 @@ public class App : Application
 
     public static void SetTheme(Theme theme)
     {
-        App app = (App)Current!;
-        Theme? previousTheme = CurrentTheme;
-        CurrentTheme = theme;
+        // Prevent recursive calls during window initialization
+        if (isSettingTheme) return;
 
-        bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
+        // Early exit if we're already on this theme (prevents unnecessary style churn)
+        if (CurrentTheme?.Name == theme.Name) return;
 
-        Styles? styles = theme switch
+        isSettingTheme = true;
+        try
         {
-            LinuxYaruTheme => app.linuxYaruStyles,
-            DevExpressTheme => app.devExpressStyles,
-            MacOsTheme => app.macOsStyles,
-            _ => null,
-        };
+            App app = (App)Current!;
+            Theme? previousTheme = CurrentTheme;
+            CurrentTheme = theme;
 
-        app.themeStylesContainer.Clear();
-        app.themeStylesContainer.AddRange(styles!);
+            bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
 
-        if (reopenWindow)
-        {
-            if (app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            Styles? styles = theme switch
             {
+                LinuxYaruTheme => app.linuxYaruStyles,
+                DevExpressTheme => app.devExpressStyles,
+                MacOsTheme => app.macOsStyles,
+                _ => null,
+            };
+
+            if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+            {
+                // IMPORTANT: Capture state and hide old window BEFORE changing styles
+                // to prevent expensive re-rendering of a window we're about to discard
                 Window? oldWindow = desktopLifetime.MainWindow;
-                object? dataContext = oldWindow?.DataContext;
-                MainWindow newWindow = new() { DataContext = dataContext };
-                desktopLifetime.MainWindow = newWindow;
-                newWindow.Show();
-                oldWindow?.Close();
+                int selectedTabIndex = oldWindow is MainWindow oldMainWindow
+                    ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
+                    : 0;
+
+                // Suppress theme changes on old window to prevent its ComboBox binding from
+                // triggering SetTheme when we update CurrentTheme
+                if (oldWindow is MainWindow oldMain)
+                {
+                    oldMain.SuppressThemeChangeEvents(true);
+                }
+
+                oldWindow?.Hide();
+
+                app.themeStylesContainer.Clear();
+                app.themeStylesContainer.AddRange(styles!);
+
+                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
+            }
+            else
+            {
+                // Just change styles without window recreation
+                app.themeStylesContainer.Clear();
+                app.themeStylesContainer.AddRange(styles!);
             }
         }
+        finally
+        {
+            isSettingTheme = false;
+        }
+    }
+
+    private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, Window? oldWindow, int selectedTabIndex)
+    {
+        object? dataContext = oldWindow?.DataContext;
+
+        MainWindow newWindow = new() { DataContext = dataContext };
+
+        // Suppress theme change events during window initialization to prevent
+        // SelectionChanged from firing multiple times as bindings initialize
+        newWindow.SuppressThemeChangeEvents(true);
+
+        lifetime.MainWindow = newWindow;
+        newWindow.Show();
+
+        RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
+
+        // Re-enable theme changes after window is fully initialized
+        EnableThemeChangesWhenReady(newWindow);
+
+        oldWindow?.Close();
+    }
+
+    private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
+    {
+        EventHandler? layoutHandler = null;
+        layoutHandler = (sender, e) =>
+        {
+            // CRITICAL: Unsubscribe immediately to prevent handler accumulation
+            window.LayoutUpdated -= layoutHandler;
+
+            TabControl? tabControl = window.FindControl<TabControl>("MainTabControl");
+            if (tabControl?.ContainerFromIndex(0) is null) return;
+
+            // Clear all IsSelected properties from TabItems to remove XAML hardcoded values
+            foreach (TabItem tabItem in tabControl.Items.OfType<TabItem>())
+            {
+                tabItem.IsSelected = false;
+            }
+
+            // Now SelectedIndex works correctly without XAML interference
+            tabControl.SelectedIndex = selectedTabIndex;
+        };
+
+        window.LayoutUpdated += layoutHandler;
+    }
+
+    private static void EnableThemeChangesWhenReady(MainWindow window)
+    {
+        // Use Dispatcher to re-enable theme changes after the window initialization completes
+        // This happens quickly enough to not block user clicks, but late enough that
+        // binding-triggered SelectionChanged events during construction are suppressed
+        Avalonia.Threading.Dispatcher.UIThread.Post(
+            () => window.SuppressThemeChangeEvents(false),
+            Avalonia.Threading.DispatcherPriority.Background);
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
+            MainWindow mainWindow = new() { DataContext = new MainWindowViewModel() };
+
+            // Suppress theme changes during initial window setup
+            mainWindow.SuppressThemeChangeEvents(true);
+            desktop.MainWindow = mainWindow;
+
+            // Re-enable after initialization completes
+            EnableThemeChangesWhenReady(mainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    public void AttacheDevToolsOnce()
+    public void AttachDevToolsOnce()
     {
         if (this.devToolsAttached)
         {
@@ -170,13 +251,8 @@ public abstract class Theme
 {
     public abstract string Name { get; }
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return this.Equals((Theme)obj);
-    }
+    public override bool Equals(object? obj) =>
+        ReferenceEquals(this, obj) || (obj is Theme other && this.Equals(other));
 
     protected bool Equals(Theme other) =>
         this.Name == other.Name;

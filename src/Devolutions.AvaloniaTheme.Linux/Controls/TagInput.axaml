@@ -1,0 +1,177 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:u="https://irihi.tech/ursa"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Height="400" Width="400" Margin="20" Spacing="15">
+        <TextBlock>Basic TagInput:</TextBlock>
+        <TagInput Watermark="Enter tags..." />
+
+        <TextBlock>With Tags:</TextBlock>
+        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+
+        <TextBlock>Disabled:</TextBlock>
+        <TagInput IsEnabled="False" Watermark="Disabled..." />
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <!-- Linux theme for Ursa TagInput control -->
+  <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
+    <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin">
+      <Binding Source="{StaticResource FocusBorderThickness}"
+               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
+               ConverterParameter="{StaticResource NegativeThicknessFactors}" />
+    </Setter>
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="MaxWidth" Value="800" />
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorder}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource InputBorderThickness}" />
+    <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="ItemTemplate">
+      <DataTemplate>
+        <ClosableTag
+          Padding="2,4,4,4"
+          Content="{Binding}"
+          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
+      </DataTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="u:TagInput">
+        <DataValidationErrors>
+          <Panel Name="ReservedSpaceForFocus"
+                 ClipToBounds="False"
+                 Margin="{DynamicResource FocusBorderThickness}">
+            <Border
+              Name="PART_BorderElement"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              MinHeight="{TemplateBinding MinHeight}">
+              <Panel>
+                <!-- Watermark -->
+                <TextBlock
+                  Name="{x:Static u:TagInput.PART_Watermark}"
+                  Text="{TemplateBinding Watermark}"
+                  Margin="{DynamicResource TextInputTextPadding}"
+                  Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                  Opacity="0.5"
+                  IsVisible="False"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left" />
+
+                <!-- Tags and input -->
+                <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
+                <ItemsControl
+                  Name="PART_ItemsControl"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  MaxWidth="{TemplateBinding MaxWidth}"
+                  ItemTemplate="{TemplateBinding ItemTemplate}"
+                  ItemsSource="{TemplateBinding Items}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <u:TagInputPanel VerticalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.Styles>
+                    <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
+                    <Style Selector="ContentPresenter:nth-last-child(2)">
+                      <Setter Property="Margin" Value="0,0,4,0" />
+                    </Style>
+                  </ItemsControl.Styles>
+                </ItemsControl>
+              </Panel>
+            </Border>
+            <Border Name="FocusBorderElement"
+                    IsVisible="False"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
+                    CornerRadius="{TemplateBinding CornerRadius}" />
+          </Panel>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Empty state: show watermark -->
+    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <!-- Focus state -->
+    <Style Selector="^:focus-within /template/ Border#FocusBorderElement">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <!-- Disabled state -->
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
+    </Style>
+    <Style Selector="^:disabled /template/ TextBlock#PART_Watermark">
+      <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundDisabled}" />
+    </Style>
+
+    <!-- Error/validation state -->
+    <Style Selector="^:error /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Theme for embedded TextBox within TagInput -->
+  <ControlTheme x:Key="TagInputTextBoxTheme" TargetType="TextBox">
+    <Setter Property="Margin" Value="{DynamicResource TextInputTextPadding}" />
+    <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CaretBrush" Value="{WindowActiveResourceToggler TextControlForeground, TransparentBrush}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+    <Setter Property="Cursor" Value="IBeam" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="MinWidth" Value="50" />
+    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="TextBox">
+        <ScrollViewer
+          AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+          HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+          IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+          VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+          <TextPresenter
+            Name="PART_TextPresenter"
+            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+            CaretBrush="{TemplateBinding CaretBrush}"
+            CaretIndex="{TemplateBinding CaretIndex}"
+            LineHeight="{TemplateBinding LineHeight}"
+            PasswordChar="{TemplateBinding PasswordChar}"
+            RevealPassword="{TemplateBinding RevealPassword}"
+            SelectionBrush="{TemplateBinding SelectionBrush}"
+            SelectionEnd="{TemplateBinding SelectionEnd}"
+            SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+            SelectionStart="{TemplateBinding SelectionStart}"
+            Text="{TemplateBinding Text, Mode=TwoWay}"
+            TextAlignment="{TemplateBinding TextAlignment}"
+            TextWrapping="{TemplateBinding TextWrapping}" />
+        </ScrollViewer>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- Alias for wrapper type -->
+  <StaticResource x:Key="{x:Type TagInput}" ResourceKey="{x:Type u:TagInput}" />
+</ResourceDictionary>

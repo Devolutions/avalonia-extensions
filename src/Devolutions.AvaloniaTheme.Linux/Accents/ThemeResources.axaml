@@ -104,6 +104,7 @@
   <x:Double x:Key="DefaultFontSize">14</x:Double>
 
   <Thickness x:Key="TextControlThemePadding">8,6,6,5</Thickness>
+  <Thickness x:Key="TextInputTextPadding">8,0,4,0</Thickness>
   <x:Double x:Key="TextControlThemeMinHeight">34</x:Double>
 
   <SolidColorBrush x:Key='TransparentBrush' Color="Transparent" />
@@ -185,6 +186,7 @@
   <x:Double x:Key="TextControlMinHeight">34</x:Double>
 
   <Thickness x:Key="FocusBorderThickness">2</Thickness>
+  <Thickness x:Key="NegativeThicknessFactors">-1</Thickness>
 
   <!-- ComboBox & ComboBoxItem Resources -->
   <x:Int32 x:Key="ComboBoxItemHeight">30</x:Int32>

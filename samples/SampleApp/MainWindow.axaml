@@ -88,7 +88,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TagInput" ApplicableTo="Windows - DevExpress" />
+          <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacOS, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:TagInputDemo />
       </TabItem>

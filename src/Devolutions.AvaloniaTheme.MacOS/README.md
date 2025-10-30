@@ -55,6 +55,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
     - [Separator](#separator)
     - [TabControl](#tabcontrol)
       - [TabItem](#tabitem)
+    - [TagInput](#taginput) ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))
     - [TextBox](#textbox)
     - [ToolTip](#tooltip)
     - [TreeView](#treeview)
@@ -201,6 +202,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>TabStripItem</h3> |
 |||
+|✅ | <h3>TagInput</h3> |
+|| [Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md)<br /><br /><img alt="TagInput" src="https://github.com/user-attachments/assets/89e264d1-fa20-4273-bb75-eb8e8a6806fc" style="width: 522px; max-width: 100%;"/><br /><br /><img alt="TagInput - dark mode" src="https://github.com/user-attachments/assets/febebb74-0b6e-4cd6-beaf-0d5b887e0939" style="width: 522px; max-width: 100%;" /> |
 |✅ | <h3>TextBox</h3> |
 || <img src="https://github.com/user-attachments/assets/47930d85-ec80-44b4-802d-6fe72d81bee4" alt="TextBoxdemo" style="width: 343px; max-width: 100%;" /> <br />There appears to be no easy way for styling the caret thickness and margin |
 || <h3>TextSelectionHandle</h3> |

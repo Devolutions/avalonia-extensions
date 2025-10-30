@@ -242,10 +242,6 @@
     <!-- Disabled State -->
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
-
-      <Style Selector="^ /template/ Border#InnerBorderElement">
-        <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundDisabledHighBrush}" />
-      </Style>
     </Style>
 
     <!-- Focused State -->

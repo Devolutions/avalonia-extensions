@@ -25,6 +25,7 @@
       <Color x:Key="TextBoxBackgroundColor">#ffffff</Color>
       <Color x:Key="TextBoxClearButtonBackgroundColor">#808080</Color>
       <Color x:Key="ButtonSpinnerButtonPressedColor">#e9e9e9</Color>
+      <Color x:Key="TagInputTagBackgroundColor">#f0f0f0</Color>
 
       <Color x:Key="ScrollBarTrackColor">#fbfbfb</Color>
       <Color x:Key="ScrollBarTrackBorderColor">#d6d6d6</Color>
@@ -144,6 +145,7 @@
       <Color x:Key="TextBoxBackgroundColor">#2c2c2c</Color>
       <Color x:Key="TextBoxClearButtonBackgroundColor">#7F7F7F</Color>
       <Color x:Key="ButtonSpinnerButtonPressedColor">#808080</Color>
+      <Color x:Key="TagInputTagBackgroundColor">#4c4c4c</Color>
 
       <Color x:Key="ScrollBarTrackColor">#2c2c2c</Color>
       <Color x:Key="ScrollBarTrackBorderColor">#3f3f3f</Color>
@@ -396,6 +398,7 @@
   <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxBackgroundDisabledHighBrush"
                    Color="{DynamicResource BackgroundColor}" Opacity="0.5" />
+  <SolidColorBrush x:Key="TagInputTagBackgroundBrush" Color="{DynamicResource TagInputTagBackgroundColor}" />
   <Thickness x:Key="TextBoxBorderThickness">0.6</Thickness>
   <CornerRadius x:Key="TextBoxCornerRadius">0</CornerRadius>
   <x:Double x:Key="TextBoxMinDimensions">19</x:Double>

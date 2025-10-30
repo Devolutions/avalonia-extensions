@@ -181,10 +181,15 @@ You should always look to make the minimum code changes possible, and never intr
 functionality.
 
 # Version Control Rules
-<<<<<<< HEAD
-- Never push to git without explicit permission - except when ask to prepare a PR
-- Never stage to git without explicit permission - except when ask to prepare a PR
-- **NEVER EVER force-push without explicit permission** - If rebase goes wrong, we lose the working version!
+- **ALWAYS consult `.claude/commands/commit.md` before creating ANY commit** (not just when user types `/commit`)
+  - Check master branch defaults for SampleApp files (theme and tab selection)
+  - Follow commit message format guidelines
+  - Apply workon exclusion rules
+- Never push to git without explicit permission (when you're asked to create a PR you may push (but if a force-push 
+  is required, ask first))
+- Never stage to git without explicit permission
+- **NEVER EVER force-push without explicit permission, EVEN when asked to create a PR** - If something went wrong, we 
+  lose the last working version on the remote!
 - After completing a rebase, ALWAYS ask the user to test before pushing
 - If force-push is needed, explain why and wait for explicit approval
 
@@ -199,14 +204,6 @@ functionality.
   - `[ComponentName] Description of changes`
   - Include details in commit body about what was done and why
   - Always include Claude Code attribution footer
-=======
-- **ALWAYS consult `.claude/commands/commit.md` before creating ANY commit** (not just when user types `/commit`)
-  - Check master branch defaults for SampleApp files (theme and tab selection)
-  - Follow commit message format guidelines
-  - Apply workon exclusion rules
-- Never push to git without explicit permission
-- Never stage to git without explicit permission
->>>>>>> 654c7fb ([Claude] Add reminder to always check commit guidelines)
 
 # User Notifications via Dialog
 **CRITICAL**: The user may be working on other things and not watching this conversation. You MUST use dialog notifications for important events.

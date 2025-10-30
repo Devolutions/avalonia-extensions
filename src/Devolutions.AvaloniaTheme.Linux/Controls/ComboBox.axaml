@@ -96,6 +96,11 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
+    <Setter Property="Margin">
+      <Binding Source="{StaticResource FocusBorderThickness}"
+               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
+               ConverterParameter="{StaticResource NegativeThicknessFactors}" />
+    </Setter>
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
     <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />

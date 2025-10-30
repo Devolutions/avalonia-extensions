@@ -20,6 +20,7 @@
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
+    <MergeResourceInclude Source="TagInput.axaml" />
     <MergeResourceInclude Source="TextBox.axaml" />
     <MergeResourceInclude Source="Window.axaml" />
   </ResourceDictionary.MergedDictionaries>

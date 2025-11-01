@@ -124,6 +124,12 @@
         </TabItem.Header>
         <demoPages:GridSplitterDemo />
       </TabItem>
+      <TabItem IsSelected="True">
+        <TabItem.Header>
+          <controls:SampleItemHeader Title="Label" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+        </TabItem.Header>
+        <demoPages:LabelDemo />
+      </TabItem>
       <TabItem>
         <TabItem.Header>
           <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacOS, Windows - DevExpress" />

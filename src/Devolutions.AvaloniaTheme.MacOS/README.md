@@ -57,6 +57,7 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
       - [TabItem](#tabitem)
     - [TagInput](#taginput) ([Custom control](https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/README.md))
     - [TextBox](#textbox)
+    - [ToggleSwitch](#toggleswitch) (basic switch only)
     - [ToolTip](#tooltip)
     - [TreeView](#treeview)
       - [TreeViewItem](#treeviewitem)
@@ -216,8 +217,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 || <h3>ToggleButton</h3> |
 |||
-|| <h3>ToggleSwitch</h3> |
-|||
+|(✅) | <h3>ToggleSwitch</h3> |
+|| <img src="https://github.com/user-attachments/assets/3fb54744-283e-4848-9da8-b6f4bd9923c1" alt="ToggleSwitch" style="width: 382px; max-width: 100%;" /><img src="https://github.com/user-attachments/assets/e9428a6d-ac3d-4e60-a770-e1365cbdb3d3" alt="ToggleSwitch dark mode" style="width: 382px; max-width: 100%;" /> |
 |✅ | <h3>ToolTip</h3> |
 || <img src="https://github.com/user-attachments/assets/92d9e28e-c955-4643-9d50-ee785f19bbb9" alt="ToolTipdemo - light" style="width: 300px; max-width: 100%;" /><br /><img src="https://github.com/user-attachments/assets/1de29b7a-25e8-4f41-985d-fb2e4f687c1b" alt="ToolTip demo - dark" style="width: 300px; max-width: 100%;" /> |
 || <h3>TransitioningContentControl</h3> |

@@ -14,9 +14,6 @@
         <MergeResourceInclude Source="/Accents/Icons.axaml" />
         <MergeResourceInclude Source="/Accents/ThemeResources.axaml" />
         <MergeResourceInclude Source="/Controls/_index.axaml" />
-        <!-- TODO: Theme variants not handled consistently yet - use Shared / Light / Dark for everything (cp. Semi.Avalonia for good example) -->
-        <MergeResourceInclude Source="/Accents/Shared/ToggleSwitch.axaml" />
-        <MergeResourceInclude Source="/Accents/Light/ToggleSwitch.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Styles.Resources>

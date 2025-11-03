@@ -5,9 +5,18 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ToggleSwitchDemo">
 
-  <StackPanel>
-    <ToggleSwitch>Toggle with Title</ToggleSwitch>
-    <ToggleSwitch Theme="{DynamicResource ButtonToggleSwitch}">Toggle</ToggleSwitch>
-    <ToggleSwitch Theme="{DynamicResource SimpleToggleSwitch}">Toggle</ToggleSwitch>
+  <StackPanel HorizontalAlignment="Left" Spacing="20">
+    <TextBlock TextWrapping="Wrap"><Bold>Note:</Bold> ToggleSwitch is only minimally styled to be usable - see the ThemeControl for various options not supported yet</TextBlock>
+    <StackPanel Width="300" HorizontalAlignment="Left" Spacing="10">
+      <ToggleSwitch>Toggle with Title</ToggleSwitch>
+      <ToggleSwitch>Toggle 2</ToggleSwitch>
+
+
+      <Separator Margin="0 20" />
+
+      <TextBlock Text="Disabled States" FontWeight="Bold" Margin="0 0 0 10" />
+      <ToggleSwitch IsEnabled="False">Off</ToggleSwitch>
+      <ToggleSwitch IsEnabled="False" IsChecked="True">On</ToggleSwitch>
+    </StackPanel>
   </StackPanel>
 </UserControl>

@@ -6,7 +6,7 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-      <StackPanel Margin="20">
+      <StackPanel Margin="20" Width="250">
         <ToggleSwitch
           Content="Content"
           OffContent="OffContent"
@@ -16,10 +16,11 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ToggleSwitch}" TargetType="ToggleSwitch">
-    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+
     <Setter Property="FocusAdorner">
       <FocusAdornerTemplate>
         <Border Theme="{DynamicResource AdornerLayerBorder}"
@@ -36,25 +37,11 @@
     </Setter>
     <Setter Property="Template">
       <ControlTemplate TargetType="ToggleSwitch">
-        <Grid
-          Background="{TemplateBinding Background}"
-          Cursor="Hand"
-          RowDefinitions="Auto,*"
-          ColumnDefinitions="Auto, *">
-          <ContentPresenter
-            Name="PART_ContentPresenter"
-            Grid.Row="0" Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="{DynamicResource ToggleSwitchHeaderMargin}"
-            VerticalAlignment="Top"
-            Content="{TemplateBinding Content}"
-            ContentTemplate="{TemplateBinding ContentTemplate}"
-            IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-            RecognizesAccessKey="True" />
-
+        <DockPanel HorizontalAlignment="Stretch">
+          <!-- Dock switch on right first -->
           <Border
             Name="SwitchBackgroundBorder"
-            Grid.Row="1" Grid.Column="0"
+            DockPanel.Dock="Right"
             TemplatedControl.IsTemplateFocusTarget="True"
             Width="{DynamicResource ToggleSwitchDefaultWidth}"
             Height="{DynamicResource ToggleSwitchDefaultHeight}"
@@ -78,7 +65,7 @@
                 Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
                 <Border
                   Name="SwitchKnobIndicator"
-                  Background="White"
+                  Background="{DynamicResource ToggleSwitchKnobBackground}"
                   BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
                   CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
                 <Arc
@@ -116,39 +103,44 @@
             </Canvas>
           </Border>
 
+          <!-- Content fills remaining space on left -->
+          <ContentPresenter
+            Name="PART_ContentPresenter"
+            Margin="{DynamicResource ToggleSwitchHeaderMargin}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Content="{TemplateBinding Content}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
+            IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+            RecognizesAccessKey="True" />
+
+          <!-- Hidden OnContent/OffContent presenters (kept for compatibility) -->
           <ContentPresenter
             Name="PART_OnContentPresenter"
-            Grid.Row="1" Grid.Column="1"
-            Margin="{DynamicResource ToggleSwitchOnContentMargin}"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
+            Margin="0"
             Content="{TemplateBinding OnContent}"
             ContentTemplate="{TemplateBinding OnContentTemplate}" />
           <ContentPresenter
             Name="PART_OffContentPresenter"
-            Grid.Row="1" Grid.Column="1"
-            Margin="{DynamicResource ToggleSwitchOnContentMargin}"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
+            Margin="0"
             Content="{TemplateBinding OffContent}"
             ContentTemplate="{TemplateBinding OffContentTemplate}" />
-        </Grid>
+        </DockPanel>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^ /template/ ContentPresenter#PART_OnContentPresenter">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#PART_OffContentPresenter">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
 
     <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
       <Setter Property="Margin" Value="0" />
     </Style>
 
     <Style Selector="^:unchecked">
-      <Style Selector="^ /template/ ContentPresenter#PART_OnContentPresenter">
-        <Setter Property="IsVisible" Value="False" />
-      </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_OffContentPresenter">
-        <Setter Property="IsVisible" Value="True" />
-      </Style>
       <Style Selector="^ /template/ Border#SwitchBackgroundBorder">
         <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerUnCheckedDefaultBackground}" />
       </Style>
@@ -166,12 +158,6 @@
     </Style>
 
     <Style Selector="^:checked">
-      <Style Selector="^ /template/ ContentPresenter#PART_OnContentPresenter">
-        <Setter Property="IsVisible" Value="True" />
-      </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_OffContentPresenter">
-        <Setter Property="IsVisible" Value="False" />
-      </Style>
       <Style Selector="^ /template/ Border#SwitchBackgroundBorder">
         <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerCheckedDefaultBackground}" />
       </Style>
@@ -325,7 +311,7 @@
                 Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
                 <Border
                   Name="SwitchKnobIndicator"
-                  Background="White"
+                  Background="{DynamicResource ToggleSwitchKnobBackground}"
                   BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
                   CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
                 <Arc

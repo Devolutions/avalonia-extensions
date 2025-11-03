@@ -174,7 +174,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="" />
+          <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacOS" />
         </TabItem.Header>
         <demoPages:ToggleSwitchDemo />
       </TabItem>

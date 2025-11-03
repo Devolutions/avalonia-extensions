@@ -9,5 +9,11 @@
     <ToggleSwitch>Toggle with Title</ToggleSwitch>
     <ToggleSwitch Theme="{DynamicResource ButtonToggleSwitch}">Toggle</ToggleSwitch>
     <ToggleSwitch Theme="{DynamicResource SimpleToggleSwitch}">Toggle</ToggleSwitch>
+
+    <Separator Margin="0 20" />
+
+    <TextBlock Text="Disabled States" FontWeight="Bold" Margin="0 0 0 10" />
+    <ToggleSwitch IsEnabled="False">Disabled Off</ToggleSwitch>
+    <ToggleSwitch IsEnabled="False" IsChecked="True">Disabled On</ToggleSwitch>
   </StackPanel>
 </UserControl>

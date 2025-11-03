@@ -78,7 +78,7 @@
                 Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
                 <Border
                   Name="SwitchKnobIndicator"
-                  Background="White"
+                  Background="{DynamicResource ToggleSwitchKnobBackground}"
                   BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
                   CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
                 <Arc
@@ -325,7 +325,7 @@
                 Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
                 <Border
                   Name="SwitchKnobIndicator"
-                  Background="White"
+                  Background="{DynamicResource ToggleSwitchKnobBackground}"
                   BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
                   CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
                 <Arc

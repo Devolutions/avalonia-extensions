@@ -9,9 +9,9 @@
   <StackPanel Margin="10">
     <TextBlock Classes="h1" Text="{Binding $parent[Window].Title}" />
     <TextBlock FontSize="15" LineSpacing="2" TextWrapping="Wrap">
-      Elements in this sampler are styled with partial themes (<TextBlock Classes="code" FontSize="16" Text="Avalonia.MacOS" />,
-      <TextBlock Classes="code" FontSize="16" Text="Avalonia.DevExpress" /> and <TextBlock Classes="code" FontSize="16" Text="Avalonia.Linux" />),
-      all built upon <TextBlock Classes="code" FontSize="16" Text="Avalonia.Fluent" />. <LineBreak />
+      Elements in this sampler are styled with partial themes (<TextBlock Classes="code" Text="Avalonia.MacOS" />,
+      <TextBlock Classes="code" Text="Avalonia.DevExpress" /> and <TextBlock Classes="code" Text="Avalonia.Linux" />),
+      all built upon <TextBlock Classes="code" Text="Avalonia.Fluent" />. <LineBreak />
       <LineBreak />
       <Bold>Note:</Bold> at the moment the base theme is not just a
       fallback for everything not implemented yet in the themes, but may in some instances provide

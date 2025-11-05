@@ -34,6 +34,10 @@
                   Margin="5 0 0 0 " />
         </Grid>
         <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
+        <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
+        <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
+        <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+        <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -251,12 +255,22 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^.borderless">
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="^.borderless /template/ Border#BottomBorderElement">
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
     <!-- Disabled State -->
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
 
       <Style Selector="^ /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="Transparent" />
+      </Style>
+      <Style Selector="^:not(.borderless) /template/ Border#PART_BorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxDisabledBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="1" />
       </Style>
@@ -271,7 +285,7 @@
 
 
     <!-- Focused State -->
-    <Style Selector="^:focus">
+    <Style Selector="^:focus:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />

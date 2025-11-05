@@ -27,6 +27,11 @@
           <TextBox Watermark="Watermark" />
           <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True" />
           <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>
+          <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
+          <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
+          <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+          <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
+
         </StackPanel>
       </Border>
     </design:ThemePreviewer>
@@ -200,6 +205,10 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^.borderless">
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
 
     <!-- Disabled State -->
     <Style Selector="^:disabled">

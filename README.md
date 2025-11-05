@@ -35,4 +35,15 @@ dotnet tool install --global AvaloniaUI.DeveloperTools.<your_OS>
 ```
 (replace `<your_OS>` with `Windows`, `macOS` or `Linux`)
 
-The F12 key then opens the new Dev Tools, and F10 opens the old version 
+The F12 key then opens the new Dev Tools, and F10 opens the old version
+
+## AI Assistant Instructions
+
+If you're an AI assistant (like GitHub Copilot or Claude Code) working on this repository, comprehensive guidelines are available in **[`.claude/CLAUDE.md`](.claude/CLAUDE.md)**.
+
+This includes:
+- Repository structure and architecture
+- Development workflows and commands  
+- Coding standards and best practices
+- Version control rules and commit guidelines
+- Custom commands for theme switching and development 

@@ -216,32 +216,44 @@ Always show a dialog for:
 4. **Configuration changes** - When you modify ports, environment variables, or other config
 
 ## Dialog Command Format
-**IMPORTANT**: Use **double quotes** for the outer `-e` parameter to avoid escaping issues with colons and special characters:
+
+### Non-Blocking Dialogs (RECOMMENDED)
+**IMPORTANT**: Always run dialogs in the background with `&` so they don't block execution:
 
 ```bash
-osascript -e "display dialog \"Message here\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e $'display dialog "Message here" buttons {"OK"} default button "OK" with title "GitHub Copilot"' &
 ```
+
+**Key syntax rules for zsh:**
+- Use `$'...'` (ANSI-C quoting) to properly interpret `\n` escape sequences
+- Use single quotes inside for strings (no escaping needed)
+- Escape single quotes with `\'` when needed inside strings
+- Add `&` at the end to run in background (non-blocking)
 
 ### Task Completion Examples:
 ```bash
-osascript -e "display dialog \"Task Complete ✅\n\nAdded priority dropdown menu\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
-osascript -e "display dialog \"Task Complete ✅\n\nConnected New Task button to backend\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e $'display dialog "Task Complete ✅\n\nAdded priority dropdown menu" buttons {"OK"} default button "OK" with title "GitHub Copilot"' &
+
+osascript -e $'display dialog "Task Complete ✅\n\nBranch: feature-name\n\nFiles changed:\n  • file1.cs\n  • file2.axaml\n\nReady to push!" buttons {"OK"} default button "OK" with title "GitHub Copilot"' &
 ```
 
 ### Permission Request Examples:
 ```bash
-osascript -e "display dialog \"Permission Needed ⚠️\n\nNeed to run database migration\n\nMay I proceed?\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
-osascript -e "display dialog \"Ready to Commit ✅\n\nStaging changes for commit\n\nMay I proceed?\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e $'display dialog "Permission Needed ⚠️\n\nNeed to run database migration\n\nMay I proceed?" buttons {"OK"} default button "OK" with title "GitHub Copilot"' &
+
+osascript -e $'display dialog "Ready to Commit ✅\n\nStaging changes for commit\n\nMay I proceed?" buttons {"OK"} default button "OK" with title "GitHub Copilot"' &
 ```
 
-### Multi-line Messages:
-Use `\n` for line breaks. Keep messages concise but informative:
+### Alternative: Display Notifications
+For less critical updates, you can use macOS notifications (also non-blocking):
 ```bash
-osascript -e "display dialog \"Commits Created ✅\n\n1. feat - Added description field\n2. chore - Updated ports\n\nAll changes committed!\" buttons {\"OK\"} default button \"OK\" with title \"Claude Code\""
+osascript -e $'display notification "Message body" with title "Title" subtitle "Subtitle" sound name "Glass"'
 ```
 
 ## Common Mistakes to Avoid:
-❌ DON'T use single quotes for outer command: `osascript -e 'display dialog "Text: value"'` (fails with colons)
-✅ DO use double quotes for outer command: `osascript -e "display dialog \"Text - value\""`
-❌ DON'T forget to escape inner quotes when using double quotes
-✅ DO escape all inner quotes with backslash: `\"`
+❌ DON'T use double quotes with escaped `\"`: `osascript -e "display dialog \"Text\"..."` (fails in zsh with `\n`)
+✅ DO use `$'...'` syntax: `osascript -e $'display dialog "Text"...'`
+❌ DON'T forget the `&` at the end: Dialog will block execution
+✅ DO add `&` for non-blocking: `osascript ... ' &`
+❌ DON'T use plain single quotes: `osascript -e 'display dialog "Text\n"'` (doesn't interpret `\n`)
+✅ DO use ANSI-C quoting: `osascript -e $'display dialog "Text\n"'`

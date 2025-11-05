@@ -12,7 +12,7 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Accents/Icons.axaml" />
-        <MergeResourceInclude Source="/Accents/ThemeResources.axaml" />
+        <!-- Theme-variant (Classic OR LiquidGlass) loaded conditionally in MacOsTheme.axaml.cs -->
         <MergeResourceInclude Source="/Controls/_index.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>

@@ -216,6 +216,9 @@
           <TabItem Header="Search Highlights">
             <experiments:SearchHighlights />
           </TabItem>
+          <TabItem Header="Animated Icon">
+            <experiments:AnimatedIcon />
+          </TabItem>
         </TabControl>
       </TabItem>
     </TabControl>

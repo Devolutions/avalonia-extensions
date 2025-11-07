@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.Experiments.AnimatedIcon">
+
+  <!-- Animated Stars Icon -->
+  <Border Width="32" Height="32" Margin="20,0,0,0">
+    <Viewbox Width="32" Height="32">
+      <Canvas Width="32" Height="32">
+        <!-- Large Star (bottom-left) -->
+        <Path Fill="#0068c3"
+              Data="M11.7099 8.25C10.6099 14.37 6.36993 18.61 0.239932 19.72C-0.0900684 19.78 -0.0900684 20.23 0.239932 20.29C6.35993 21.39 10.5999 25.63 11.7099 31.76C11.7699 32.09 12.2199 32.09 12.2799 31.76C13.3799 25.64 17.6199 21.4 23.7499 20.29C24.0799 20.23 24.0799 19.78 23.7499 19.72C17.6299 18.62 13.3899 14.38 12.2799 8.25C12.2199 7.92 11.7699 7.92 11.7099 8.25Z"
+              RenderTransformOrigin="12,20"
+              Opacity="1">
+          <Path.Styles>
+            <Style Selector="Path">
+              <Style.Animations>
+                <Animation Duration="0:0:1.5" IterationCount="Infinite" Easing="SineEaseInOut">
+                  <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="1.0" />
+                  </KeyFrame>
+                  <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.4" />
+                  </KeyFrame>
+                  <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="1.0" />
+                  </KeyFrame>
+                </Animation>
+              </Style.Animations>
+            </Style>
+          </Path.Styles>
+        </Path>
+
+        <!-- Small Star (top-right) -->
+        <Path Fill="#0068c3"
+              Data="M23.8099 0.170005C23.0699 4.25 20.2499 7.08 16.1699 7.81C15.9499 7.85 15.9499 8.15 16.1699 8.19C20.2499 8.93 23.0799 11.75 23.8099 15.83C23.8499 16.05 24.1499 16.05 24.1899 15.83C24.9299 11.75 27.7499 8.92 31.8299 8.19C32.0499 8.15 32.0499 7.85 31.8299 7.81C27.7499 7.07 24.9199 4.25 24.1899 0.170005C24.1499 -0.0499951 23.8499 -0.0499951 23.8099 0.170005Z"
+              RenderTransformOrigin="24,8"
+              Opacity="1">
+          <Path.Styles>
+            <Style Selector="Path">
+              <Style.Animations>
+                <Animation Duration="0:0:1.5" IterationCount="Infinite" Delay="0:0:0.75" Easing="SineEaseInOut">
+                  <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="1.0" />
+                  </KeyFrame>
+                  <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.4" />
+                  </KeyFrame>
+                  <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="1.0" />
+                  </KeyFrame>
+                </Animation>
+              </Style.Animations>
+            </Style>
+          </Path.Styles>
+        </Path>
+      </Canvas>
+    </Viewbox>
+  </Border>
+
+</UserControl>

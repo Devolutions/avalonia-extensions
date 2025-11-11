@@ -76,10 +76,10 @@
   <x:Double x:Key="ExpanderChevronWidth">10</x:Double>
 
   <!-- Content -->
-  <Thickness x:Key="ExpanderContentDownMarginFactors">1 -4 1 1</Thickness>
-  <Thickness x:Key="ExpanderContentUpMarginFactors">1 1 1 -4</Thickness>
-  <Thickness x:Key="ExpanderContentLeftMarginFactors">-4 1 1 1</Thickness>
-  <Thickness x:Key="ExpanderContentRightMarginFactors">1 1 -4 1</Thickness>
+  <Thickness x:Key="ExpanderContentDownMarginFactors">1 -2 1 1</Thickness>
+  <Thickness x:Key="ExpanderContentUpMarginFactors">1 1 1 -2</Thickness>
+  <Thickness x:Key="ExpanderContentLeftMarginFactors">-2 1 1 1</Thickness>
+  <Thickness x:Key="ExpanderContentRightMarginFactors">1 1 -2 1</Thickness>
   <Thickness x:Key="ExpanderContentPadding">16</Thickness>
   <Thickness x:Key="ExpanderContentDownBorderThickness">0.6,0,0.6,0.6</Thickness>
   <Thickness x:Key="ExpanderContentUpBorderThickness">0.6,0.6,0.6,0</Thickness>
@@ -87,9 +87,9 @@
   <Thickness x:Key="ExpanderContentRightBorderThickness">0,0.6,0.6,0.6</Thickness>
 
   <ControlTheme x:Key="ExpanderToggleButtonTheme" TargetType="ToggleButton">
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ExpanderBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ExpanderButtonBorderThickness}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="FontWeight" Value="DemiBold" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderHeaderPadding}" />
@@ -184,7 +184,7 @@
 
     <!-- Disabled -->
     <Style Selector="^:disabled /template/ Border#ToggleButtonBackground">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ExpanderBackgroundDisabledBrush}" />
     </Style>
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Opacity" Value="0.3" />
@@ -207,8 +207,13 @@
       <Setter Property="Data" Value="M 0 0 L 7 7 L 14 0" />
       <Setter Property="Width" Value="{DynamicResource ExpanderChevronWidth}" />
     </Style>
-    <Style Selector="^[Tag=expanded] /template/ Border#BottomBorder">
-      <Setter Property="BorderBrush" Value="Transparent" />
+    <Style Selector="^[Tag=expanded]">
+      <Style Selector="^ /template/ Border#BottomBorder">
+        <Setter Property="BorderBrush" Value="Transparent" />
+      </Style>
+      <Style Selector="^ /template/ Border#ToggleButtonBackground">
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedTopColor}" />
+      </Style>
     </Style>
   </ControlTheme>
 
@@ -229,7 +234,7 @@
   <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander">
     <Setter Property="MinWidth" Value="{DynamicResource FlyoutThemeMinWidth}" />
     <Setter Property="MinHeight" Value="{DynamicResource ExpanderMinHeight}" />
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ExpanderBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
     <Setter Property="Margin" Value="0 0 0 2" />
@@ -269,7 +274,7 @@
             <Border Name="BottomBorder"
                     Opacity="0"
                     CornerRadius="{TemplateBinding CornerRadius}"
-                    BorderThickness="0 0 0 1"
+                    BorderThickness="{DynamicResource ExpanderContentTrayBottomBorder}"
                     BorderBrush="{TemplateBinding BorderBrush}" />
           </Panel>
         </DockPanel>

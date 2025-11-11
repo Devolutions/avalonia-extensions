@@ -136,6 +136,12 @@
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerUnCheckedForeground" Opacity="0.62" Color="#1C1F23" />
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{StaticResource SystemAccentColor}" />
       <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 4 6 0 #1A000000, 0 0 1 0 #4D000000</BoxShadows>
+
+      <SolidColorBrush x:Key="ExpanderBackgroundBrush" Color="#ffffff" />
+      <StaticResource x:Key="ExpanderBackgroundDisabledBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
+      <Thickness x:Key="ExpanderButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
+      <Thickness x:Key="ExpanderContentTrayBottomBorder">0 0 0 1</Thickness>
+      
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -269,6 +275,12 @@
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerUnCheckedForeground" Opacity="0.55" Color="#f5f5f5" />
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{StaticResource SystemAccentColorDark1}" />
       <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 2 4 0 #40000000</BoxShadows>
+
+      <SolidColorBrush x:Key="ExpanderBackgroundBrush" Color="#2b2b2b" />
+      <SolidColorBrush x:Key="DarkExpanderBackgroundDisabledBrush" Color="#252525" />
+      <StaticResource x:Key="ExpanderBackgroundDisabledBrush" ResourceKey="DarkExpanderBackgroundDisabledBrush" />
+      <Thickness x:Key="ExpanderButtonBorderThickness">0.6 1 0.6 0</Thickness>
+      <Thickness x:Key="ExpanderContentTrayBottomBorder">0</Thickness>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

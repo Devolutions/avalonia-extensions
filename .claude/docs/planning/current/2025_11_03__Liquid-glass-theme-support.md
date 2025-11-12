@@ -27,12 +27,13 @@ macOS 26 (Tahoe), released September 2025, introduced "Liquid Glass" - a new des
 
 ## Current Status Summary
 
-### ✅ Completed (Phase 1)
+### ✅ Phase 1 Complete - Infrastructure
 1. **`MacOSVersionDetector.cs`** - Fully implemented with:
    - OS version detection using `OperatingSystem.IsMacOSVersionAtLeast(26)`
    - Caching for performance
    - `SetTestOverride(bool?)` method for development/testing
    - `ResetCache()` method for test isolation
+   - Moved to `Internal/` namespace (better organization)
 
 2. **`ThemeResources_LiquidGlass.axaml`** - Stub created with:
    - Green text colors to visually confirm when LiquidGlass is active
@@ -43,14 +44,28 @@ macOS 26 (Tahoe), released September 2025, introduced "Liquid Glass" - a new des
    - `MacOsTheme.axaml.cs` - Loads LiquidGlass resources when OS ≥ 26
    - `MacOsThemeWithGlobalStyles.axaml.cs` - Same conditional loading
 
-4. **Visual Confirmation** - Currently shows green text when OS version > 26, confirming the detection and resource loading works correctly.
+### ✅ Phase 2 Complete - Manual Sub-Theme Switching
+1. **Three MacOS Theme Variants** - Created in SampleApp:
+   - `MacOsTheme` - "MacOS - default theme" (auto-detects)
+   - `MacOsClassicTheme` - "MacOS - classic" (forces classic)
+   - `MacOsLiquidGlassTheme` - "MacOS - LiquidGlass" (forces LiquidGlass)
 
-### 🔄 Next Steps (Phase 2)
-- Add manual sub-theme switching to SampleApp
-- Create three MacOS theme variants in the theme picker:
-  - "MacOS - default theme" (auto-detects based on OS)
-  - "MacOS - classic" (forces classic, OS version override to 25)
-  - "MacOS - LiquidGlass" (forces LiquidGlass, OS version override to 26)
+2. **Override Mechanism** - Fully functional:
+   - `SetTheme()` calls `MacOSVersionDetector.SetTestOverride()` before loading styles
+   - `CreateMacOsStyles()` generates fresh theme instances with current override
+   - Manual switching successfully controls resource loading
+
+3. **Testing Confirmed**:
+   - Theme switcher shows all three MacOS variants
+   - Switching works without errors
+   - Green stub appears for LiquidGlass, normal colors for Classic
+   - Auto-detection works for default theme
+
+### 🔄 Next Steps (Phase 3)
+- Replace green color stub with real LiquidGlass styling
+- Define enhanced shadows, translucency, and vibrancy effects
+- Test in both Light and Dark modes
+- Compare side-by-side with Classic theme
 
 ## Technical Architecture
 
@@ -183,49 +198,42 @@ Add three MacOS theme variants:
 
 **Duration:** Completed
 
-### Phase 2: SampleApp Manual Sub-Theme Switching 🔄 CURRENT
+### Phase 2: SampleApp Manual Sub-Theme Switching ✅ COMPLETE
 
 **Goal:** Add manual theme variant selection in SampleApp for development and testing.
 
-**Current Situation:**
-- SampleApp has theme switcher with 5 options including "MacOS"
-- "MacOS" option currently auto-detects OS version
-- Need to add manual override options alongside the auto-detect option
+**What Was Implemented:**
 
-**Requirements:**
+1. **Created Three MacOS Theme Classes:**
+   - `MacOsTheme` - "MacOS - default theme" (OsVersionOverride = null)
+   - `MacOsClassicTheme` - "MacOS - classic" (OsVersionOverride = false)
+   - `MacOsLiquidGlassTheme` - "MacOS - LiquidGlass" (OsVersionOverride = true)
 
-1. **Rename existing MacOS theme option** to "MacOS - default theme"
-   - Keeps current behavior (auto-detects based on OS)
-   - Calls `SetTestOverride(null)` to use actual OS detection
+2. **Updated SetTheme() Method:**
+   - Detects MacOS theme variants via `theme is MacOsTheme` check
+   - Calls `MacOSVersionDetector.SetTestOverride()` with appropriate value before loading styles
+   - Creates fresh theme instances via `CreateMacOsStyles()` to ensure new resources are loaded
 
-2. **Add "MacOS - classic" option**
-   - Forces classic theme regardless of actual OS version
-   - Calls `SetTestOverride(false)` to simulate OS < 26
+3. **Created CreateMacOsStyles() Method:**
+   - Generates fresh `DevolutionsMacOsTheme` instances
+   - Manually calls `BeginInit()` and `EndInit()` for proper initialization
+   - Necessary because theme resource loading happens at initialization time
+   - Reuses cached styles for non-MacOS themes
 
-3. **Add "MacOS - LiquidGlass" option**
-   - Forces LiquidGlass theme regardless of actual OS version
-   - Calls `SetTestOverride(true)` to simulate OS ≥ 26
+4. **Updated MainWindowViewModel:**
+   - Added all three MacOS variants to available themes list
+   - Theme switcher now shows 7 options total (was 5)
 
-**Implementation Tasks:**
-- [ ] Create new Theme classes in `App.axaml.cs`:
-  - `MacOsTheme` → rename to "MacOS - default theme"
-  - `MacOsClassicTheme` → new class, sets override to false
-  - `MacOsLiquidGlassTheme` → new class, sets override to true
-- [ ] Update `SetTheme()` method to handle override before loading styles
-- [ ] Update `MainWindowViewModel.cs` to include all three MacOS variants
-- [ ] Test switching between all three MacOS sub-themes
-- [ ] Verify green text appears only for LiquidGlass option
-- [ ] Verify normal text appears for classic option
-- [ ] Verify auto-detection works for default option
+**Testing Results:**
+- ✅ All three MacOS options appear in theme switcher
+- ✅ Switching between variants works without errors
+- ✅ "MacOS - LiquidGlass" shows green stub colors
+- ✅ "MacOS - classic" shows normal colors
+- ✅ "MacOS - default theme" uses actual OS version detection
+- ✅ Window recreation works properly when switching themes
+- ✅ Override mechanism successfully controls resource loading
 
-**Testing Strategy:**
-- Switch to "MacOS - classic" → should show normal colors
-- Switch to "MacOS - LiquidGlass" → should show green text (stub confirmation)
-- Switch to "MacOS - default theme" → should use actual OS version detection
-- Verify theme switching works without errors
-- Confirm override persists correctly across theme changes
-
-**Duration:** 0.5-1 day
+**Duration:** Completed
 
 ### Phase 3: Liquid Glass Visual Effects Definition ⏸️ PENDING
 
@@ -324,15 +332,15 @@ Add three MacOS theme variants:
 
 **Duration:** 1 day
 
-## Revised Timeline
+## Timeline
 
-**Phase 1 (Foundation):** ✅ Complete
-**Phase 2 (SampleApp Switching):** 🔄 Current - 0.5-1 day
+**Phase 1 (Foundation):** ✅ Complete (Nov 12)
+**Phase 2 (SampleApp Switching):** ✅ Complete (Nov 12)
 **Phase 3 (Visual Styling):** ⏸️ Pending - 2-3 days
 **Phase 4 (Control Templates):** ⏸️ Pending - 2-4 days (if needed)
 **Phase 5 (Documentation):** ⏸️ Pending - 1 day
 
-**Total Remaining:** 5.5-9 days
+**Total Remaining:** 5-8 days
 
 ## Decisions Made
 
@@ -397,11 +405,11 @@ Add three MacOS theme variants:
 - [x] Visual confirmation (stub) shows theme switching works
 - [x] No breaking changes to existing code
 
-### Phase 2 (Current) 🔄
-- [ ] Three MacOS theme variants available in SampleApp
-- [ ] Manual switching between classic/default/LiquidGlass works
-- [ ] Override correctly affects theme resource loading
-- [ ] Green stub colors confirm LiquidGlass mode active
+### Phase 2 (Complete) ✅
+- [x] Three MacOS theme variants available in SampleApp
+- [x] Manual switching between classic/default/LiquidGlass works
+- [x] Override correctly affects theme resource loading
+- [x] Green stub colors confirm LiquidGlass mode active
 
 ### Phase 3 (Pending) ⏸️
 - [ ] Real Liquid Glass styling replaces green stub
@@ -463,12 +471,20 @@ Add three MacOS theme variants:
 
 ## Change Log
 
-- **2025-11-12:** Project plan rewritten to reflect completed Phase 1 and clarify Phase 2 requirements
+- **2025-11-12 (afternoon):** Phase 2 completed - Manual sub-theme switching working
+  - Implemented three MacOS theme variant classes with OsVersionOverride property
+  - Updated SetTheme() to call MacOSVersionDetector.SetTestOverride() before loading styles
+  - Created CreateMacOsStyles() method to generate fresh theme instances
+  - Updated MainWindowViewModel to show all three MacOS variants
+  - Testing confirmed: switching works, green stub appears for LiquidGlass, normal colors for Classic
+  - Ready to proceed to Phase 3 (actual visual styling)
+- **2025-11-12 (morning):** Project plan rewritten to reflect completed Phase 1 and clarify Phase 2 requirements
   - Removed incorrect checkboxes from previous agent's confused state
   - Added clear current status summary
   - Reorganized phases to match actual progress
   - Added manual sub-theme switching as explicit Phase 2 goal
   - Deferred visual styling work to Phase 3 (after switching works)
+  - Moved MacOSVersionDetector from Converters/ to Internal/ namespace
 - **2025-11-03:** Initial project plan created
 
 ## Notes

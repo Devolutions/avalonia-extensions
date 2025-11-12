@@ -16,14 +16,18 @@ Currently, when we need to show content for multiple (but not all) themes, we ha
 2. **Use NotEqualTo with single exclusion** - Implicit logic that breaks when adding new themes
 3. **Multiple separate conditional TextBlocks** - Duplicates content
 
+**Note:** This problem has become more acute with the introduction of MacOS sub-themes ("MacOS (automatic)", "MacOS - classic", "MacOS - LiquidGlass"). Content that should appear for "any MacOS variant" now requires listing all three explicitly.
+
 Example of the current verbose approach:
 ```xml
 <TextBlock.IsVisible>
   <MultiBinding Converter="{x:Static BoolConverters.Or}">
     <Binding Source={x:Static sampleApp:App.CurrentTheme} Path=Name
-             Converter={StaticResource EqualToComparisonConverter} ConverterParameter=MacOS />
+             Converter={StaticResource EqualToComparisonConverter} ConverterParameter="MacOS (automatic)" />
     <Binding Source={x:Static sampleApp:App.CurrentTheme} Path=Name
-             Converter={StaticResource EqualToComparisonConverter} ConverterParameter=Linux />
+             Converter={StaticResource EqualToComparisonConverter} ConverterParameter="MacOS - classic" />
+    <Binding Source={x:Static sampleApp:App.CurrentTheme} Path=Name
+             Converter={StaticResource EqualToComparisonConverter} ConverterParameter="MacOS - LiquidGlass" />
   </MultiBinding>
 </TextBlock.IsVisible>
 ```
@@ -33,10 +37,19 @@ Example of the current verbose approach:
 Create a new `IsOneOfConverter` that accepts comma-separated values:
 
 ```xml
+<!-- Show for any MacOS variant -->
 <TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
                        Path=Name,
                        Converter={StaticResource IsOneOfConverter},
-                       ConverterParameter='MacOS,Linux'}">
+                       ConverterParameter='MacOS (automatic),MacOS - classic,MacOS - LiquidGlass'}">
+  MacOS-specific note
+</TextBlock>
+
+<!-- Or show for multiple different themes -->
+<TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
+                       Path=Name,
+                       Converter={StaticResource IsOneOfConverter},
+                       ConverterParameter='MacOS - classic,Linux - Yaru'}">
   (results in minor positioning bug)
 </TextBlock>
 ```
@@ -109,26 +122,39 @@ Make sure namespace is declared:
 xmlns:converters="clr-namespace:SampleApp.Converters"
 ```
 
-### Step 3: Update ComboBoxDemo.axaml
-Replace the current conditional visibility:
+### Step 3: Update Demo Pages
+Replace verbose conditional visibility patterns with the new converter.
+
+**Example - Showing for specific theme variant:**
 
 **Before:**
 ```xml
 <TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
                        Path=Name,
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=MacOS}">
+                       ConverterParameter=MacOS - classic}">
   (results in minor positioning bug)
 </TextBlock>
 ```
 
-**After:**
+**After (if should show for all MacOS variants):**
 ```xml
 <TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
                        Path=Name,
                        Converter={StaticResource IsOneOfConverter},
-                       ConverterParameter='MacOS,Linux'}">
+                       ConverterParameter='MacOS (automatic),MacOS - classic,MacOS - LiquidGlass'}">
   (results in minor positioning bug)
+</TextBlock>
+```
+
+**After (if should show only for classic):**
+```xml
+<!-- Keep as-is - EqualToComparisonConverter is fine for single values -->
+<TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
+                       Path=Name,
+                       Converter={StaticResource EqualToComparisonConverter},
+                       ConverterParameter=MacOS - classic}">
+  (results in minor positioning bug - classic theme only)
 </TextBlock>
 ```
 
@@ -143,12 +169,20 @@ Replace the current conditional visibility:
   - Mixed case theme names
 
 ### Step 5: Document Usage
-Add a comment in `ComboBoxDemo.axaml` explaining the pattern for future reference:
+Add comments explaining the pattern for future reference:
 
 ```xml
 <!-- Use IsOneOfConverter to show content for multiple themes -->
-<!-- ConverterParameter accepts comma-separated theme names: 'MacOS,Linux' -->
+<!-- ConverterParameter accepts comma-separated theme names -->
+<!-- Examples: -->
+<!--   'MacOS (automatic),MacOS - classic,MacOS - LiquidGlass' (any MacOS variant) -->
+<!--   'MacOS - classic,Linux - Yaru' (specific themes) -->
 ```
+
+**Decision Guidelines:**
+- Use `EqualToComparisonConverter` for **single theme** checks
+- Use `IsOneOfConverter` for **multiple themes** (2+)
+- Most MacOS-specific notes should probably show for **all MacOS variants** unless they're truly classic-only bugs
 
 ## Alternative Approaches Considered
 
@@ -209,4 +243,6 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ## Notes
 
-This is a general-purpose converter that could be used anywhere in the SampleApp (or moved to a shared library) for theme-specific or any multi-option conditional visibility logic.
+- This is a general-purpose converter that could be used anywhere in the SampleApp (or moved to a shared library) for theme-specific or any multi-option conditional visibility logic.
+- **Update (2025-11-12):** With the addition of MacOS sub-themes ("MacOS (automatic)", "MacOS - classic", "MacOS - LiquidGlass"), this converter becomes even more valuable for showing content across all MacOS variants without verbose MultiBinding patterns.
+- Many existing `ConverterParameter=MacOS` instances were updated to `ConverterParameter=MacOS - classic` to be explicit about showing only for the classic variant. When implementing IsOneOfConverter, review each case to determine if it should show for all MacOS variants or just classic.

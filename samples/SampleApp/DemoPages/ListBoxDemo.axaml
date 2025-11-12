@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.ListBoxDemo">
 
-  
+
   <StackPanel Margin="20" Spacing="20" VerticalAlignment="Stretch">
     <ListBox>
       <ListBoxItem>No</ListBoxItem>
@@ -18,12 +18,12 @@
       <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:<LineBreak />(custom width)</TextBlock>
       <ListBox x:Name="animals1" Width="110" />
       <TextBlock VerticalAlignment="Top" Margin="0 5">Multiple selection:<LineBreak />(automatic width)</TextBlock>
-    <ListBox x:Name="animals2" SelectionMode="Multiple" />
+      <ListBox x:Name="animals2" SelectionMode="Multiple" />
 
       <TextBlock VerticalAlignment="Top" Margin="15 5 0 5" TextWrapping="Wrap" Width="130">Scrolling: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
       <ListBox x:Name="animals4" Width="115" />
     </StackPanel>
-  
+
     <!-- Bottom row of multi-column ListBoxes -->
     <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 100, Auto, 99" ColumnDefinitions="*, *">
       <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">
@@ -45,11 +45,11 @@
         <TextBlock Classes="code" Text="&lt;WrapPanel Orientation=&quot;Vertical&quot; /&gt;" />
       </TextBlock>
       <ListBox Grid.Row="2" Grid.Column="1" x:Name="animals6" SelectionMode="Multiple">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Vertical" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Vertical" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
       </ListBox>
       <TextBlock Grid.Row="3" Grid.Column="0" TextWrapping="Wrap">
         To override default styles, etc. use a custom ItemTemplate:
@@ -58,7 +58,7 @@
           IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
                        Path=Name,
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=MacOS}">
+                       ConverterParameter=MacOS - classic}">
           (Center-aligned text not recommended, unless length variation is minimal)
         </TextBlock>
       </TextBlock>

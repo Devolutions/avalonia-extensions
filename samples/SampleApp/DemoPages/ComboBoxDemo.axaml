@@ -41,10 +41,13 @@
       <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
         - Scrolling options list:
         <LineBreak />
-        <TextBlock IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
+        <TextBlock
+          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
                                Path=Name,
                                Converter={StaticResource EqualToComparisonConverter},
-                               ConverterParameter=MacOS}">(results in minor positioning bug)</TextBlock>
+                               ConverterParameter=MacOS - classic}">
+          (results in minor positioning bug)
+        </TextBlock>
       </TextBlock>
       <ComboBox Grid.Column="1" Grid.Row="5" MaxDropDownHeight="100" SelectedIndex="4" VerticalAlignment="Top"
                 Margin="10 0 20 20">

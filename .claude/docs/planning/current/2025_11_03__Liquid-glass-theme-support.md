@@ -471,6 +471,14 @@ Add three MacOS theme variants:
 
 ## Change Log
 
+- **2025-11-12 (late afternoon):** SampleApp theme name updates for clarity
+  - Renamed "MacOS - default theme" to "MacOS (automatic)" for better UX
+  - Updated all `ConverterParameter=MacOS` to `ConverterParameter=MacOS - classic` throughout demo pages
+  - Updated `ApplicableTo="MacOS"` to `ApplicableTo="MacOS - classic"` in MainWindow.axaml control headers
+  - Modified SampleItemHeader to hide status indicator (🟢/🔴) when theme is "MacOS (automatic)"
+  - Changed default ApplicableTo from "MacOS" to "" (empty) in SampleItemHeader (unrelated! should have been "" all 
+    along)
+  - Identified need for IsOneOfConverter (see upcoming project plan) to simplify multi-variant visibility
 - **2025-11-12 (afternoon):** Phase 2 completed - Manual sub-theme switching working
   - Implemented three MacOS theme variant classes with OsVersionOverride property
   - Updated SetTheme() to call MacOSVersionDetector.SetTestOverride() before loading styles

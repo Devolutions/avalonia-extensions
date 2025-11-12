@@ -26,43 +26,43 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:AutoCompleteBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Button" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="Button" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:ButtonDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:CalendarDatePickerDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:CheckBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:ComboBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:ContextMenuDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:DataGridDemo>
           <demoPages:DataGridDemo.DataContext>
@@ -72,7 +72,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:DataGridGroupedDemo>
           <demoPages:DataGridGroupedDemo.DataContext>
@@ -82,25 +82,25 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:EditableComboBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:TagInputDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Expander" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="Expander" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:ExpanderDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:CheckBoxListBoxDemo>
           <demoPages:CheckBoxListBoxDemo.DataContext>
@@ -110,7 +110,7 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:MultiComboBoxDemo>
           <demoPages:MultiComboBoxDemo.DataContext>
@@ -120,73 +120,73 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacOS - classic" />
         </TabItem.Header>
         <demoPages:GridSplitterDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:ListBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Menu" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="Menu" ApplicableTo="MacOS - classic" />
         </TabItem.Header>
         <demoPages:MenuDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacOS - classic" />
         </TabItem.Header>
         <demoPages:MenuFlyoutDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:NumericUpDownDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:RadioButtonDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:ScrollViewerDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:TabControlDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacOS, Windows - DevExpress, Linux - Yaru" />
+          <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacOS - classic, Windows - DevExpress, Linux - Yaru" />
         </TabItem.Header>
         <demoPages:TextBoxDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacOS - classic" />
         </TabItem.Header>
         <demoPages:ToggleSwitchDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacOS" />
+          <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacOS - classic" />
         </TabItem.Header>
         <demoPages:ToolTipDemo />
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacOS, Windows - DevExpress" />
+          <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacOS - classic, Windows - DevExpress" />
         </TabItem.Header>
         <demoPages:TreeViewDemo />
       </TabItem>

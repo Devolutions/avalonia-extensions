@@ -3,7 +3,6 @@ namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
-using Converters;
 
 internal class MacOsTheme : Styles
 {

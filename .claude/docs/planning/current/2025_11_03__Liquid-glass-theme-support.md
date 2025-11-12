@@ -1,8 +1,8 @@
 # macOS Liquid Glass Theme Support - Implementation Plan
 
-**Status:** Planning / In Progress
+**Status:** In Progress - Infrastructure Complete
 **Created:** 2025-11-03
-**Last Updated:** 2025-11-03
+**Last Updated:** 2025-11-12
 
 ## Overview
 
@@ -20,118 +20,131 @@ macOS 26 (Tahoe), released September 2025, introduced "Liquid Glass" - a new des
 
 **Design Goals:**
 1. Users on macOS <26 see the current classic theme (unchanged)
-2. Users on macOS ≥26 see enhanced Liquid Glass-inspired styling
+2. Users on macOS ≥26 see enhanced Liquid Glass-inspired styling automatically
 3. Zero breaking changes to existing API
 4. Conservative approach prioritizing readability over visual gimmicks
+5. SampleApp allows manual sub-theme selection for testing/development
+
+## Current Status Summary
+
+### ✅ Completed (Phase 1)
+1. **`MacOSVersionDetector.cs`** - Fully implemented with:
+   - OS version detection using `OperatingSystem.IsMacOSVersionAtLeast(26)`
+   - Caching for performance
+   - `SetTestOverride(bool?)` method for development/testing
+   - `ResetCache()` method for test isolation
+
+2. **`ThemeResources_LiquidGlass.axaml`** - Stub created with:
+   - Green text colors to visually confirm when LiquidGlass is active
+   - Proper ThemeDictionaries structure (Light/Dark modes)
+   - Ready to be replaced with real styling
+
+3. **Conditional Resource Loading** - Implemented in:
+   - `MacOsTheme.axaml.cs` - Loads LiquidGlass resources when OS ≥ 26
+   - `MacOsThemeWithGlobalStyles.axaml.cs` - Same conditional loading
+
+4. **Visual Confirmation** - Currently shows green text when OS version > 26, confirming the detection and resource loading works correctly.
+
+### 🔄 Next Steps (Phase 2)
+- Add manual sub-theme switching to SampleApp
+- Create three MacOS theme variants in the theme picker:
+  - "MacOS - default theme" (auto-detects based on OS)
+  - "MacOS - classic" (forces classic, OS version override to 25)
+  - "MacOS - LiquidGlass" (forces LiquidGlass, OS version override to 26)
 
 ## Technical Architecture
 
-### 1. OS Version Detection
+### 1. OS Version Detection ✅ COMPLETE
 
-**Implementation:** Use built-in .NET API for version detection
+**Location:** `src/Devolutions.AvaloniaTheme.MacOS/Converters/MacOSVersionDetector.cs`
 
-```csharp
-// Converters/MacOSVersionDetector.cs
-public static class MacOSVersionDetector
-{
-    private static bool? _isLiquidGlassSupported;
-
-    public static bool IsLiquidGlassSupported()
-    {
-        if (_isLiquidGlassSupported.HasValue)
-            return _isLiquidGlassSupported.Value;
-
-        // Check if running on macOS AND version 26+
-        _isLiquidGlassSupported = OperatingSystem.IsMacOS()
-            && OperatingSystem.IsMacOSVersionAtLeast(26);
-
-        return _isLiquidGlassSupported.Value;
-    }
-
-    // For testing purposes
-    internal static bool? _testOverride;
-    public static void SetTestOverride(bool? value) => _testOverride = value;
-}
-```
-
-**Why this approach:**
-- Uses native `libobjc.get_operatingSystemVersion` API
-- No external process spawning (unlike sysctl approach)
-- Official .NET API (available since .NET 5)
-- Platform analyzer support
-- Cached for performance (version won't change during process lifetime)
+**Implementation Details:**
+- Uses `OperatingSystem.IsMacOSVersionAtLeast(26)` API
+- Result is cached for performance (OS version cannot change during runtime)
+- `SetTestOverride(bool?)` allows manual override for testing
+- `ResetCache()` clears both cached value and test override
 
 **Version Mapping Reference:**
 - macOS 26.x (Tahoe) = Darwin 25.x = Liquid Glass
 - macOS 15.x (Sequoia) = Darwin 24.x = Classic
 - macOS 14.x (Sonoma) = Darwin 23.x = Classic
 
-### 2. Resource Organization Pattern
+### 2. Resource Organization Pattern ✅ COMPLETE
 
-**Strategy:** Conditional resource loading with override files
+**Location:** `src/Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml`
 
-The theme currently uses a single `ThemeResources.axaml` file with `ThemeDictionaries` for Light/Dark modes. We'll extend this pattern with conditional loading for OS-specific enhancements.
-
-**Structure:**
+**Current Structure:**
 ```
 Accents/
-├── ThemeResources.axaml           # Base resources (all OS versions, all themes)
-├── LiquidGlassEffects.axaml      # macOS 26+ specific enhancements (NEW)
-└── Icons.axaml                    # Icons
+├── ThemeResources.axaml              # Base resources (all OS versions)
+├── ThemeResources_LiquidGlass.axaml  # macOS 26+ overrides (STUB - green colors)
+└── Icons.axaml                       # Icons
 ```
 
-**LiquidGlassEffects.axaml pattern:**
-```xml
-<ResourceDictionary>
-  <ResourceDictionary.ThemeDictionaries>
-    <ResourceDictionary x:Key="Default"> <!-- Light + Liquid Glass -->
-      <!-- Override specific resources for Liquid Glass look -->
-      <BoxShadows x:Key="PopupShadow">
-        0 0 2 0 #80000000,
-        0 2 8 0 #60000000,
-        0 12 32 0 #50000000
-      </BoxShadows>
-      <x:Double x:Key="MenuBackgroundOpacity">0.7</x:Double>
-    </ResourceDictionary>
-
-    <ResourceDictionary x:Key="Dark"> <!-- Dark + Liquid Glass -->
-      <!-- Same keys with dark-mode appropriate values -->
-    </ResourceDictionary>
-  </ResourceDictionary.ThemeDictionaries>
-</ResourceDictionary>
-```
+**Current Implementation (Stub):**
+- Contains green colors to visually confirm LiquidGlass mode is active
+- Has proper ThemeDictionaries structure for Light/Dark modes
+- Will be replaced with real Liquid Glass styling in Phase 3
 
 **Benefits:**
 - Only overrides what's different (minimal duplication)
 - Follows existing ThemeDictionaries pattern
 - Clear separation of base vs. enhanced resources
 - Easy to see what's Liquid Glass-specific
-- Both Light AND Dark modes enhanced
+- Both Light AND Dark modes can be enhanced
 
-### 3. Theme Initialization Changes
+### 3. Theme Initialization ✅ COMPLETE
 
-**Modify theme loading to conditionally merge Liquid Glass resources:**
+**Locations:** 
+- `src/Devolutions.AvaloniaTheme.MacOS/Internal/MacOsTheme.axaml.cs`
+- `src/Devolutions.AvaloniaTheme.MacOS/Internal/MacOsThemeWithGlobalStyles.axaml.cs`
 
+**Implementation:**
+Both files now:
+1. Load base theme resources first (`ThemeResources.axaml`)
+2. Conditionally load LiquidGlass overrides if `MacOSVersionDetector.IsLiquidGlassSupported()` returns true
+3. Load debug theme previewer in DEBUG builds
+
+**Code Pattern:**
 ```csharp
-// Internal/MacOsTheme.axaml.cs
-public MacOsTheme(IServiceProvider sp)
-{
-    AvaloniaXamlLoader.Load(sp, this);
+// 1) Always load the base theme
+Uri baseUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources.axaml");
+ResourceInclude baseInclude = new(baseUri) { Source = baseUri };
+this.Resources.MergedDictionaries.Add(baseInclude);
 
-    // Conditionally load Liquid Glass enhancements
-    if (MacOSVersionDetector.IsLiquidGlassSupported())
-    {
-        this.Resources.MergedDictionaries.Add(new ResourceInclude
-        {
-            Source = new Uri("avares://Devolutions.AvaloniaTheme.MacOS/Accents/LiquidGlassEffects.axaml")
-        });
-    }
+// 2) Conditionally load LiquidGlass overrides
+if (MacOSVersionDetector.IsLiquidGlassSupported())
+{
+    Uri liquidGlassUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml");
+    ResourceInclude liquidGlassInclude = new(liquidGlassUri) { Source = liquidGlassUri };
+    this.Resources.MergedDictionaries.Add(liquidGlassInclude);
 }
 ```
 
-**Similarly for MacOsThemeWithGlobalStyles.axaml.cs**
+### 4. SampleApp Theme Switching Architecture
 
-### 4. Avalonia Capabilities vs. Liquid Glass Features
+**Current State:**
+- Theme switcher ComboBox in MainWindow shows 5 themes
+- Current MacOS theme option auto-detects OS version
+- Switching themes recreates the main window to apply new styles
+
+**Planned Enhancement (Phase 2):**
+
+Add three MacOS theme variants:
+1. **"MacOS - default theme"** - Auto-detects based on OS version (current behavior)
+2. **"MacOS - classic"** - Forces classic theme (override OS version to 25)
+3. **"MacOS - LiquidGlass"** - Forces LiquidGlass theme (override OS version to 26)
+
+**Implementation Approach:**
+- Create new Theme classes: `MacOsClassicTheme`, `MacOsLiquidGlassTheme`
+- Each variant calls `MacOSVersionDetector.SetTestOverride()` before loading theme
+- `MacOsTheme` (default) uses actual OS detection (override = null)
+
+**Files to Modify:**
+- `samples/SampleApp/App.axaml.cs` - Add new theme classes and switching logic
+- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` - Add new themes to available list
+
+### 5. Avalonia Capabilities vs. Liquid Glass Features
 
 **What Avalonia Can Achieve:**
 - ✅ Enhanced translucency via opacity values
@@ -151,55 +164,85 @@ public MacOsTheme(IServiceProvider sp)
 
 ## Implementation Phases
 
-### Phase 1: Foundation & Infrastructure ✅ IN PROGRESS
+### Phase 1: Foundation & Infrastructure ✅ COMPLETE
 
 **Deliverables:**
 - [x] Research and architecture design
-- [ ] Create `MacOSVersionDetector` class
-- [ ] Set up conditional resource loading in theme initialization
-- [ ] Create empty `LiquidGlassEffects.axaml` with ThemeDictionaries structure
-- [ ] Add test override mechanism for development
-- [ ] Verify version detection works correctly on various macOS versions
+- [x] Create `MacOSVersionDetector` class with test override support
+- [x] Set up conditional resource loading in theme initialization
+- [x] Create `ThemeResources_LiquidGlass.axaml` stub with ThemeDictionaries structure
+- [x] Add test override mechanism for development (`SetTestOverride()`)
+- [x] Verify version detection works correctly (green text visual confirmation)
 
-**Testing:**
-- Create simple test override (e.g., set foreground to green) to verify switching works
-- Test on macOS 26+ (Liquid Glass should apply)
-- Test on macOS <26 (Classic theme should apply)
+**What Was Completed:**
+- `MacOSVersionDetector.cs` - Full implementation with caching and override support
+- `ThemeResources_LiquidGlass.axaml` - Stub with green colors for visual confirmation
+- `MacOsTheme.axaml.cs` - Conditional loading of LiquidGlass resources
+- `MacOsThemeWithGlobalStyles.axaml.cs` - Same conditional loading
+- Visual confirmation: Green text appears when OS version > 26
 
-**Duration:** 1-2 days
+**Duration:** Completed
 
-### Phase 2: SampleApp Integration & Testing 🔄 NEXT
+### Phase 2: SampleApp Manual Sub-Theme Switching 🔄 CURRENT
 
-**Goal:** Verify theme switching infrastructure works before implementing visual effects.
+**Goal:** Add manual theme variant selection in SampleApp for development and testing.
 
-**Deliverables:**
-- [ ] Add version override mechanism to SampleApp (hardcode OS version 26 vs 27)
-- [ ] Add simple visual differentiator to `LiquidGlassEffects.axaml` (e.g., green foreground color)
-- [ ] Test automatic OS version detection:
-  - Set override to 26 → should show Liquid Glass indicator
-  - Set override to 25 → should show Classic (no indicator)
-- [ ] Test manual theme switching in SampleApp
-- [ ] Verify conditional resource loading works correctly
-- [ ] Document testing approach for future development
+**Current Situation:**
+- SampleApp has theme switcher with 5 options including "MacOS"
+- "MacOS" option currently auto-detects OS version
+- Need to add manual override options alongside the auto-detect option
+
+**Requirements:**
+
+1. **Rename existing MacOS theme option** to "MacOS - default theme"
+   - Keeps current behavior (auto-detects based on OS)
+   - Calls `SetTestOverride(null)` to use actual OS detection
+
+2. **Add "MacOS - classic" option**
+   - Forces classic theme regardless of actual OS version
+   - Calls `SetTestOverride(false)` to simulate OS < 26
+
+3. **Add "MacOS - LiquidGlass" option**
+   - Forces LiquidGlass theme regardless of actual OS version
+   - Calls `SetTestOverride(true)` to simulate OS ≥ 26
+
+**Implementation Tasks:**
+- [ ] Create new Theme classes in `App.axaml.cs`:
+  - `MacOsTheme` → rename to "MacOS - default theme"
+  - `MacOsClassicTheme` → new class, sets override to false
+  - `MacOsLiquidGlassTheme` → new class, sets override to true
+- [ ] Update `SetTheme()` method to handle override before loading styles
+- [ ] Update `MainWindowViewModel.cs` to include all three MacOS variants
+- [ ] Test switching between all three MacOS sub-themes
+- [ ] Verify green text appears only for LiquidGlass option
+- [ ] Verify normal text appears for classic option
+- [ ] Verify auto-detection works for default option
 
 **Testing Strategy:**
-- Use obvious visual marker (green text or similar) to confirm Liquid Glass mode
-- Toggle between OS version 26 and 27 using hardcoded override
-- Verify fallback to classic theme when version < 26
-- No actual visual effects needed yet - just infrastructure validation
+- Switch to "MacOS - classic" → should show normal colors
+- Switch to "MacOS - LiquidGlass" → should show green text (stub confirmation)
+- Switch to "MacOS - default theme" → should use actual OS version detection
+- Verify theme switching works without errors
+- Confirm override persists correctly across theme changes
 
-**Duration:** 1 day
+**Duration:** 0.5-1 day
 
-### Phase 3: Liquid Glass Visual Effects Definition
+### Phase 3: Liquid Glass Visual Effects Definition ⏸️ PENDING
+
+**Prerequisites:** Phase 2 must be complete (manual sub-theme switching working)
+
+**Goal:** Replace the green color stub with actual Liquid Glass-inspired styling.
 
 **Deliverables:**
+- [ ] Research and identify key resources from `ThemeResources.axaml` to override
 - [ ] Define enhanced shadow resources (PopupShadow, ToolTipBorderShadow, etc.)
 - [ ] Define translucency levels (conservative approach)
 - [ ] Define blur radii (if using acrylic effects)
-- [ ] Create complete `LiquidGlassEffects.axaml` with Light/Dark variants
+- [ ] Replace stub colors in `ThemeResources_LiquidGlass.axaml` with real styling
+- [ ] Test in both Light and Dark modes
 - [ ] Document each override with rationale
 
-**Key Resources to Override:**
+**Key Resources to Consider Overriding:**
 ```xml
 <!-- Shadows - deeper, more defined -->
 <BoxShadows x:Key="PopupShadow">...</BoxShadows>
@@ -221,10 +264,23 @@ public MacOsTheme(IServiceProvider sp)
 - More conservative than Apple's Liquid Glass (prioritize readability)
 - Enhance depth and polish without compromising usability
 - Respect system "Reduce Transparency" setting (future enhancement)
+- Start with subtle enhancements, can always increase later
+
+**Testing Approach:**
+- Use manual sub-theme switching from Phase 2
+- Compare side-by-side: "MacOS - classic" vs "MacOS - LiquidGlass"
+- Verify no degradation in readability
+- Test in both Light and Dark system themes
 
 **Duration:** 2-3 days
 
-### Phase 4: Selective Control Updates
+### Phase 4: Selective Control Template Updates ⏸️ PENDING
+
+**Prerequisites:** Phase 3 must be complete (resource-level styling done)
+
+**Goal:** Enhance specific control templates if resource overrides prove insufficient.
+
+**Note:** This phase may be unnecessary if resource overrides in Phase 3 achieve desired results.
 
 **Priority Controls (High Visual Impact):**
 
@@ -246,107 +302,151 @@ public MacOsTheme(IServiceProvider sp)
 12. Slider/ToggleSwitch - functional, not decorative
 
 **Approach:**
-- Initially, try resource overrides only (no control template changes)
-- If control templates need modification, do so sparingly
+- Start with resource overrides only (Phase 3)
+- Only modify control templates if absolutely necessary
+- Create control-specific AXAML files in `ThemeResources_LiquidGlass.axaml` if needed
 - Test each control in both light and dark modes
-- Compare side-by-side with macOS <26 to ensure classic mode unchanged
+- Compare side-by-side with classic to ensure no regressions
 
-**Duration:** 3-4 days
+**Duration:** 2-4 days (if needed)
 
-### Phase 5: Documentation & Polish
+### Phase 5: Documentation & Polish ⏸️ PENDING
+
+**Prerequisites:** All visual work complete
 
 **Deliverables:**
 - [ ] Update theme README with OS version requirements
-- [ ] Document opt-out mechanisms (if needed)
-- [ ] Create migration guide for users
-- [ ] Add code comments explaining version detection logic
-- [ ] Update control status tracking (README checkboxes)
-- [ ] Create visual examples/screenshots
+- [ ] Document manual sub-theme switching in SampleApp
+- [ ] Update code comments explaining version detection logic
+- [ ] Create visual examples/screenshots (classic vs LiquidGlass)
+- [ ] Document design decisions and rationale
+- [ ] Update CHANGELOG.md
 
 **Duration:** 1 day
 
-## Total Estimated Timeline
+## Revised Timeline
 
-**Note:** ToggleSwitch cleanup (originally planned as prerequisite) was completed separately in PR #XXX.
+**Phase 1 (Foundation):** ✅ Complete
+**Phase 2 (SampleApp Switching):** 🔄 Current - 0.5-1 day
+**Phase 3 (Visual Styling):** ⏸️ Pending - 2-3 days
+**Phase 4 (Control Templates):** ⏸️ Pending - 2-4 days (if needed)
+**Phase 5 (Documentation):** ⏸️ Pending - 1 day
 
-**Conservative estimate:** 8-10 days for complete implementation
-**Aggressive estimate:** 6-8 days if everything goes smoothly
+**Total Remaining:** 5.5-9 days
 
-**Breakdown:**
-- Phase 1 (Foundation): 1-2 days
-- Phase 2 (SampleApp Testing): 1 day
-- Phase 3 (Visual Effects): 2-3 days
-- Phase 4 (Control Updates): 3-4 days
-- Phase 5 (Documentation): 1 day
+## Decisions Made
 
-## Open Questions & Decisions
+### ✅ Resolved Decisions
 
-### Postponed for Later (After Infrastructure in Place)
+1. **OS Version Detection Approach**
+   - **Decision:** Use `OperatingSystem.IsMacOSVersionAtLeast(26)`
+   - **Rationale:** Native .NET API, no external process spawning, cacheable
+   - **Status:** Implemented and working
+
+2. **Resource Organization**
+   - **Decision:** Separate file `ThemeResources_LiquidGlass.axaml` with overrides
+   - **Rationale:** Clear separation, follows ThemeDictionaries pattern, minimal duplication
+   - **Status:** Implemented with stub
+
+3. **Test/Development Override**
+   - **Decision:** `SetTestOverride(bool?)` method in `MacOSVersionDetector`
+   - **Rationale:** Allows testing on any OS version, flexible for development
+   - **Status:** Implemented and ready for SampleApp integration
+
+4. **Manual Sub-Theme Selection**
+   - **Decision:** Add three MacOS variants in SampleApp theme switcher
+   - **Rationale:** Essential for development/testing before OS 26 is widely available
+   - **Status:** Planned for Phase 2 (current focus)
+
+### ⏸️ Deferred for Later Phases
 
 1. **Specific Visual Values**
-   - Q: What exact shadow, opacity, and blur values should we use?
-   - Status: Will determine once switching infrastructure is working
-   - Next: Create test overrides to preview different values
+   - **Status:** Will determine in Phase 3 after manual switching works
+   - **Approach:** Start conservative, iterate based on visual results
 
-2. **Control Scope**
-   - Q: Which controls get Liquid Glass treatment?
-   - Status: Prioritized list created, but final scope TBD based on visual results
-   - Next: Start with top 5 priority controls, expand if successful
+2. **Control Template Modifications**
+   - **Status:** May not be needed if resource overrides sufficient (Phase 3)
+   - **Approach:** Evaluate necessity after resource-level styling complete
 
-3. **Acrylic/Blur-Behind**
-   - Q: Should we enable window-level blur-behind effects?
-   - Status: Deferred - would require app-level configuration
-   - Decision: Start with stylistic translucency only (no true blur-behind)
-   - Rationale: Simpler, no app changes required, better compatibility
+3. **Acrylic/Blur-Behind Effects**
+   - **Status:** Deferred - would require app-level configuration
+   - **Decision:** Start with stylistic translucency only (no true blur-behind)
+   - **Rationale:** Simpler, no app changes required, better compatibility
 
 4. **Performance Thresholds**
-   - Q: What's acceptable GPU usage increase?
-   - Status: Will measure after implementing visual effects
-   - Next: Performance testing in Phase 5
+   - **Status:** Will measure in Phase 4/5 after visual effects implemented
+   - **Approach:** Conservative defaults, measure impact, adjust if needed
 
-### Outstanding Technical Questions
+### 🤔 Outstanding Questions (Low Priority)
 
 1. **Accessibility Integration**
    - Q: Should we respect macOS "Reduce Transparency" system setting?
-   - Priority: Medium (can be added later)
-   - Complexity: Requires system setting monitoring
+   - Priority: Medium (can be added in future enhancement)
+   - Complexity: Requires system setting monitoring API
 
-2. **User Opt-Out Mechanism**
-   - Q: Should apps be able to disable Liquid Glass even on macOS 26+?
-   - Proposed API: `MacOSVersionDetector.DisableLiquidGlass = true;`
-   - Priority: Low (nice-to-have)
-
-3. **Testing on Pre-Release macOS**
-   - Q: Do we have access to macOS 26 machines for testing?
-   - Workaround: Use version override flag for development
-   - Risk: Visual differences may exist between emulated and real Liquid Glass
-
-## Risks & Mitigations
-
-| Risk | Impact | Likelihood | Mitigation |
-|------|--------|------------|------------|
-| Visual inconsistencies between OS versions | Medium | Low | Extensive side-by-side testing |
-| Performance degradation | High | Low | Conservative effect values, performance testing |
-| Breaking changes for existing users | High | Low | Comprehensive testing, version detection fallbacks |
-| Avalonia framework limitations | Medium | Medium | Set realistic expectations, document limitations |
-| macOS API changes in future versions | Low | Medium | Use stable .NET APIs, cache version detection |
+2. **User Opt-Out API**
+   - Q: Should apps have API to disable Liquid Glass on macOS 26+?
+   - Priority: Low (nice-to-have, not in current scope)
+   - Note: `SetTestOverride(false)` already provides programmatic override
 
 ## Success Criteria
 
+### Phase 1 (Complete) ✅
+- [x] OS version detection working correctly
+- [x] Conditional resource loading functional
+- [x] Visual confirmation (stub) shows theme switching works
+- [x] No breaking changes to existing code
+
+### Phase 2 (Current) 🔄
+- [ ] Three MacOS theme variants available in SampleApp
+- [ ] Manual switching between classic/default/LiquidGlass works
+- [ ] Override correctly affects theme resource loading
+- [ ] Green stub colors confirm LiquidGlass mode active
+
+### Phase 3 (Pending) ⏸️
+- [ ] Real Liquid Glass styling replaces green stub
+- [ ] Conservative, readable design (no usability degradation)
+- [ ] Works in both Light and Dark system themes
+- [ ] Side-by-side comparison shows clear visual enhancement
+
+### Phase 4 (Pending) ⏸️
+- [ ] Control templates updated (if needed)
+- [ ] Priority controls enhanced
+- [ ] No regressions in classic theme
+
+### Phase 5 (Pending) ⏸️
+- [ ] Documentation complete
+- [ ] Screenshots/examples provided
+- [ ] CHANGELOG updated
+
+## Overall Project Success Metrics
+
 1. ✅ Zero breaking changes for existing users
-2. ✅ macOS <26 users see identical theme as before
-3. ✅ macOS ≥26 users see polished, modern Liquid Glass-inspired look
-4. ✅ Readability maintained (no degradation)
-5. ✅ Performance impact negligible (<5% render time increase)
-6. ✅ All priority controls enhanced
-7. ✅ Documentation complete
-8. ✅ Sample app demonstrates both variants
+2. ✅ macOS <26 users see identical classic theme
+3. ⏸️ macOS ≥26 users see polished, modern Liquid Glass-inspired look
+4. ⏸️ Readability maintained (no degradation)
+5. ⏸️ Performance impact negligible (<5% render time increase)
+6. 🔄 SampleApp demonstrates manual theme variant switching
+7. ⏸️ Documentation complete
 
 ## Dependencies
 
 - .NET 9.0 (already in use)
 - Avalonia 11.3.x (already in use)
 - macOS 13+ for acrylic support (already required)
+
+## Key Files
+
+### Implementation Files
+- `src/Devolutions.AvaloniaTheme.MacOS/Internal/MacOSVersionDetector.cs` - OS detection ✅
+- `src/Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml` - LiquidGlass overrides (stub) ✅
+- `src/Devolutions.AvaloniaTheme.MacOS/Internal/MacOsTheme.axaml.cs` - Theme loading ✅
+- `src/Devolutions.AvaloniaTheme.MacOS/Internal/MacOsThemeWithGlobalStyles.axaml.cs` - Theme loading with globals ✅
+
+### SampleApp Files (Phase 2 - Current Focus)
+- `samples/SampleApp/App.axaml.cs` - Theme switching logic, needs new theme classes
+- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` - Available themes list, needs updates
+- `samples/SampleApp/MainWindow.axaml.cs` - Theme selection event handling
 
 ## References
 
@@ -359,11 +459,21 @@ public MacOsTheme(IServiceProvider sp)
 **Internal:**
 - Research findings in conversation history (2025-11-03)
 - Current theme README: `src/Devolutions.AvaloniaTheme.MacOS/README.md`
-- CLAUDE.md project instructions
+- Project instructions: `.claude/CLAUDE.md`
+
+## Change Log
+
+- **2025-11-12:** Project plan rewritten to reflect completed Phase 1 and clarify Phase 2 requirements
+  - Removed incorrect checkboxes from previous agent's confused state
+  - Added clear current status summary
+  - Reorganized phases to match actual progress
+  - Added manual sub-theme switching as explicit Phase 2 goal
+  - Deferred visual styling work to Phase 3 (after switching works)
+- **2025-11-03:** Initial project plan created
 
 ## Notes
 
-- This plan will be updated as implementation progresses
-- Visual design decisions will evolve based on testing and feedback
-- Conservative approach prioritizes stability and readability over visual flair
-- Implementation can be done incrementally (each phase is independently valuable)
+- **Current Focus:** Phase 2 - Manual sub-theme switching in SampleApp
+- **Blocking:** Cannot proceed to visual styling (Phase 3) until manual switching works
+- **Approach:** Incremental, testable phases with clear dependencies
+- **Philosophy:** Conservative styling prioritizing readability over visual complexity

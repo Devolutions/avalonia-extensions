@@ -10,6 +10,8 @@ public partial class MainWindowViewModel : ObservableObject
     new LinuxYaruTheme(),
     new DevExpressTheme(),
     new MacOsTheme(),
+    new MacOsClassicTheme(),
+    new MacOsLiquidGlassTheme(),
     new FluentTheme(),
     new SimpleTheme()
   ];

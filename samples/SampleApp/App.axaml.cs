@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.VisualTree;
@@ -104,6 +105,39 @@ public class App : Application
         };
     }
 
+    /// <summary>
+    /// Creates fresh MacOS theme styles with current override settings.
+    /// This is necessary because theme resources are loaded at initialization time,
+    /// so we need new instances when switching between MacOS sub-themes.
+    /// </summary>
+    private Styles CreateMacOsStyles()
+    {
+        Styles styles = new();
+        
+        // Recreate the same structure as in App.axaml's MacOsStyles resource
+        // Order is important: base theme must be added before global styles
+        styles.Add(new ActiproSoftware.UI.Avalonia.Themes.ModernTheme
+        {
+            AreNativeControlThemesEnabled = false
+        });
+        
+        // Create and manually initialize the theme
+        // ISupportInitialize requires calling BeginInit() and EndInit()
+        Devolutions.AvaloniaTheme.MacOS.DevolutionsMacOsTheme macOsTheme = new();
+        macOsTheme.BeginInit();
+        // GlobalStyles defaults to true, so it will load global styles
+        macOsTheme.EndInit();
+        styles.Add(macOsTheme);
+        
+        // Add app-specific styles
+        styles.Add(new StyleInclude(new Uri("avares://SampleApp/Styles.axaml"))
+        {
+            Source = new Uri("avares://SampleApp/Styles.axaml")
+        });
+        
+        return styles;
+    }
+
     public static void SetTheme(Theme theme)
     {
         // Prevent recursive calls during window initialization
@@ -121,15 +155,30 @@ public class App : Application
 
             bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
 
-            Styles? styles = theme switch
+            Styles? styles;
+            
+            // MacOS themes require special handling to support sub-theme switching
+            if (theme is MacOsTheme macOsTheme)
             {
-                LinuxYaruTheme => app.linuxYaruStyles,
-                DevExpressTheme => app.devExpressStyles,
-                MacOsTheme => app.macOsStyles,
-                FluentTheme => app.fluentStyles,
-                SimpleTheme => app.simpleStyles,
-                _ => null,
-            };
+                // Set override BEFORE creating new theme instance
+                Devolutions.AvaloniaTheme.MacOS.Internal.MacOSVersionDetector.SetTestOverride(macOsTheme.OsVersionOverride);
+                
+                // Create fresh styles with the new override active
+                // This is necessary because theme resources are loaded at initialization time
+                styles = app.CreateMacOsStyles();
+            }
+            else
+            {
+                // Non-MacOS themes use cached styles
+                styles = theme switch
+                {
+                    LinuxYaruTheme => app.linuxYaruStyles,
+                    DevExpressTheme => app.devExpressStyles,
+                    FluentTheme => app.fluentStyles,
+                    SimpleTheme => app.simpleStyles,
+                    _ => null,
+                };
+            }
 
             if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
             {
@@ -279,7 +328,33 @@ public class DevExpressTheme : Theme
 
 public class MacOsTheme : Theme
 {
-    public override string Name => "MacOS";
+    public override string Name => "MacOS - default theme";
+    
+    /// <summary>
+    /// OS version override to apply before loading theme resources.
+    /// null = use actual OS detection (default behavior)
+    /// </summary>
+    public virtual bool? OsVersionOverride => null;
+}
+
+public class MacOsClassicTheme : MacOsTheme
+{
+    public override string Name => "MacOS - classic";
+    
+    /// <summary>
+    /// Force classic theme by simulating OS version &lt; 26
+    /// </summary>
+    public override bool? OsVersionOverride => false;
+}
+
+public class MacOsLiquidGlassTheme : MacOsTheme
+{
+    public override string Name => "MacOS - LiquidGlass";
+    
+    /// <summary>
+    /// Force LiquidGlass theme by simulating OS version &gt;= 26
+    /// </summary>
+    public override bool? OsVersionOverride => true;
 }
 
 public class FluentTheme : Theme

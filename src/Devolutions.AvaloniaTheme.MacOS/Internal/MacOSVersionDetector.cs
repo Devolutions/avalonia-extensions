@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaTheme.MacOS.Converters;
+namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 
 /// <summary>
 ///   Detects macOS version to determine if Liquid Glass visual effects should be enabled.
@@ -54,7 +54,7 @@ public static class MacOSVersionDetector
   /// <summary>
   ///   Sets a test override to force enable/disable Liquid Glass support.
   /// </summary>
-  /// <param name="value">
+  /// <param name="useLiquidGlass">
   ///   <c>true</c> to force enable Liquid Glass;
   ///   <c>false</c> to force disable;
   ///   <c>null</c> to clear override and use actual OS version detection.
@@ -62,9 +62,9 @@ public static class MacOSVersionDetector
   /// <remarks>
   ///   Intended for testing and development purposes only.
   /// </remarks>
-  public static void SetTestOverride(bool? value)
+  public static void SetTestOverride(bool? useLiquidGlass)
   {
-    _testOverride = value;
+    _testOverride = useLiquidGlass;
     // Clear cached value when override changes
     _isLiquidGlassSupported = null;
   }

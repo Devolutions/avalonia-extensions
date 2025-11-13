@@ -44,4 +44,12 @@
     <Setter Property="Padding" Value="4 2 4 1" />
     <Setter Property="Margin" Value="0 0 0 -4" />
   </Style>
+
+  <!-- Example for consumer's styles accessing the colon (this rule is also used in RDM Styles.MacOS) -->
+  <Style
+    Selector="Grid.form > Label /template/ TextBlock#Colon,
+                 Label.form /template/ TextBlock#Colon,
+                 .compact-form > Label /template/ TextBlock#Colon">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
 </Styles>

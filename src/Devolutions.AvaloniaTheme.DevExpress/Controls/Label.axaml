@@ -19,21 +19,32 @@
 
   <ControlTheme x:Key="{x:Type Label}" TargetType="Label">
     <Setter Property="Padding" Value="3" />
+    <Setter Property="IsEnabled" Value="{Binding $self.Target.IsEnabled, FallbackValue=True}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <ContentPresenter
-          Name="PART_ContentPresenter"
-          Background="{TemplateBinding Background}"
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="{TemplateBinding BorderThickness}"
-          CornerRadius="{TemplateBinding CornerRadius}"
-          ContentTemplate="{TemplateBinding ContentTemplate}"
-          Content="{TemplateBinding Content}"
-          Padding="{TemplateBinding Padding}"
-          RecognizesAccessKey="True"
-          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+        <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Padding}">
+          <ContentPresenter
+            Name="PART_ContentPresenter"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="{TemplateBinding CornerRadius}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
+            Content="{TemplateBinding Content}"
+            RecognizesAccessKey="True"
+            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+          <!-- TextBlock#Colon can be used in styles to automatically display colon after each label (cp. SampleApp/styles.axaml) -->
+          <TextBlock
+            Name="Colon"
+            Text=":"
+            IsVisible="False" />
+        </StackPanel>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
+    </Style>
   </ControlTheme>
 </ResourceDictionary>

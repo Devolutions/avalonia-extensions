@@ -5,7 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public partial class MainWindowViewModel : ObservableObject
 {
-  [ObservableProperty] private Theme[] availableThemes =
+  [ObservableProperty]
+  private Theme[] availableThemes =
   [
     new LinuxYaruTheme(),
     new DevExpressTheme(),
@@ -16,10 +17,18 @@ public partial class MainWindowViewModel : ObservableObject
     new SimpleTheme()
   ];
 
-  [ObservableProperty] private Theme currentTheme;
+  [ObservableProperty]
+  private Theme currentTheme;
+
+  [ObservableProperty]
+  private bool showWallpaper = true;
 
   public MainWindowViewModel()
   {
     this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
   }
+
+  public bool IsLiquidGlassTheme =>
+    this.CurrentTheme is MacOsLiquidGlassTheme
+    || (this.CurrentTheme is MacOsTheme && Devolutions.AvaloniaTheme.MacOS.Internal.MacOSVersionDetector.IsLiquidGlassSupported());
 }

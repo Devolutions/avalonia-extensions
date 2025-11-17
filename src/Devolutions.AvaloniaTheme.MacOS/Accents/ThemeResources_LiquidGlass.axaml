@@ -4,20 +4,15 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <Color x:Key="BackgroundColor">#eeffee</Color>
-      <Color x:Key="ForegroundColor">#008800</Color>
-      <Color x:Key="AccentForegroundColor">#ffff00</Color>
+      <Color x:Key="BackgroundColor">#ffffff</Color>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="BackgroundColor">#004400</Color>
-      <Color x:Key="ForegroundColor">#00ff00</Color>
-      <Color x:Key="AccentForegroundColor">#ff00ff</Color>
+      <Color x:Key="BackgroundColor">#21222f</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
 
-  <FontFamily x:Key="MacOsThemeFontFamily">Segoe UI, sans-serif</FontFamily>
-
+  <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource BackgroundColor}" Opacity="0.8" />
 
 </ResourceDictionary>

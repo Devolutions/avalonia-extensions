@@ -131,13 +131,11 @@ public class MultiComboBoxItem : ContentControl
     {
         if (this.updateInternal) return;
         this.updateInternal = true;
-        if (this.parent?.ItemsPanelRoot is VirtualizingPanel)
+
+        var newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
+        if (newIsSelected != this.IsSelected)
         {
-            var newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
-            if (newIsSelected != this.IsSelected)
-            {
-                this.IsSelected = newIsSelected;
-            }
+            this.IsSelected = newIsSelected;
         }
 
         this.updateInternal = false;

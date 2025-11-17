@@ -236,17 +236,13 @@
                     IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
-                  <ScrollViewer
+                  <!--  Inner control for displaying filtered items (has its own ScrollViewer)  -->
+                  <ContentPresenter
+                    Name="PART_ItemsList"
                     Grid.IsSharedSizeScope="True"
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                      HorizontalAlignment="Stretch"
-                      KeyboardNavigation.TabNavigation="None"
-                      ItemsPanel="{TemplateBinding ItemsPanel}" />
-                  </ScrollViewer>
+                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                    HorizontalAlignment="Stretch"
+                    KeyboardNavigation.TabNavigation="None" />
                 </DockPanel>
               </Border>
             </Popup>

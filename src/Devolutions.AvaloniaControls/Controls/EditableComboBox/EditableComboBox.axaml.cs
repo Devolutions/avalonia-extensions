@@ -151,12 +151,10 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             [!!ComboBox.IsDropDownOpenProperty] = this[!!IsDropDownOpenProperty],
             [!InnerComboBox.FocusedBorderThicknessProperty] = this[!FocusedBorderThicknessProperty],
             [!InnerComboBox.MaxDropDownWidthProperty] = this[!MaxDropDownWidthProperty],
-            // [!InnerComboBox.MaxDropDownHeightProperty] = this[!MaxDropDownHeightProperty],
         };
 
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
-        // this.dropdownChangedSubscription = this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged);
 
         this.Template = new FuncControlTemplate((_, namescope) =>
         {
@@ -168,10 +166,6 @@ public partial class EditableComboBox : ItemsControl, IInputElement
                 ClipToBounds = false,
             };
         });
-
-        // this.Items.CollectionChanged += (_, _) => this.FillItems();
-        // this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
-        // this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
     }
 
     public TimeSpan CaretBlinkInterval

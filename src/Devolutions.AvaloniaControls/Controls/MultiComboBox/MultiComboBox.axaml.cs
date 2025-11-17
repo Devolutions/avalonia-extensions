@@ -8,14 +8,17 @@ using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
-using Irihi.Avalonia.Shared.Helpers;
 using static Extensions.AvaloniaExtensions;
+using AvaloniaPropertyExtension = Irihi.Avalonia.Shared.Helpers.AvaloniaPropertyExtension;
+using ObservableExtension = Irihi.Avalonia.Shared.Helpers.ObservableExtension;
+using RoutedEventExtension = Irihi.Avalonia.Shared.Helpers.RoutedEventExtension;
 
 public enum MultiComboBoxOverflowMode
 {
@@ -28,7 +31,7 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_FilterTextBox", typeof(TextBox), IsRequired = false)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
-public class MultiComboBox : SelectingItemsControl
+public partial class MultiComboBox : SelectingItemsControl
 {
     public const string PART_BackgroundBorder = "PART_BackgroundBorder";
     public const string PC_DropDownOpen = ":dropdownopen";
@@ -47,7 +50,7 @@ public class MultiComboBox : SelectingItemsControl
         ComboBox.IsDropDownOpenProperty.AddOwner<MultiComboBox>();
 
     public static readonly StyledProperty<bool?> HasFilterProperty =
-        AvaloniaProperty.Register<MultiComboBox, bool?>(nameof(HasFilter));
+        AvaloniaProperty.Register<MultiComboBox, bool?>(nameof(Filter));
 
     public static readonly DirectProperty<MultiComboBox, bool> IsFilterEnabledProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(IsFilterEnabled), static c => c.IsFilterEnabled);
@@ -114,10 +117,17 @@ public class MultiComboBox : SelectingItemsControl
         new FuncTemplate<Panel>(() => new WrapPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
 
 
+    // Default panel for the inner control (forwarded via property binding)
     private static readonly ITemplate<Panel?> DefaultPanel =
         new FuncTemplate<Panel?>(() => new VirtualizingStackPanel());
 
+    private readonly AvaloniaList<object?> filteredItems = [];
+
+    private readonly MultiComboBoxItemsList innerItemsList;
+
     private TextBox? filterTextbox;
+
+    private ContentPresenter? itemsListPresenter;
 
     private Border? rootBorder;
 
@@ -131,7 +141,7 @@ public class MultiComboBox : SelectingItemsControl
     {
         FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
-        IsDropDownOpenProperty.AffectsPseudoClass<MultiComboBox>(PC_DropDownOpen);
+        AvaloniaPropertyExtension.AffectsPseudoClass<MultiComboBox>(IsDropDownOpenProperty, PC_DropDownOpen);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>((box, args) => box.OnSelectedItemsChanged(args));
     }
 
@@ -139,15 +149,34 @@ public class MultiComboBox : SelectingItemsControl
     {
         this.SelectedItems = new AvaloniaList<object>();
 
-        this.GetObservable(OverflowModeProperty).Subscribe(_ =>
+        // Create inner control for filtered display
+        // Forward parent's ItemsPanel property to inner control - parent never uses it directly
+        this.innerItemsList = new MultiComboBoxItemsList(this)
         {
-            this.RaiseDirectPropertyChanged(ScrollbarVisibilityProperty);
-            this.RaiseDirectPropertyChanged(EffectiveSelectedItemsPanelProperty);
+            Name = "PART_ItemsList",
+            ItemsSource = this.filteredItems,
+            [!ItemsPanelProperty] = this[!ItemsPanelProperty], // Forward to inner control
+            [!ItemTemplateProperty] = this[!ItemTemplateProperty],
+            [!ScrollViewer.HorizontalScrollBarVisibilityProperty] = this[!ScrollViewer.HorizontalScrollBarVisibilityProperty],
+            [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],
+        };
+
+        ObservableExtension.Subscribe(this.GetObservable(OverflowModeProperty),
+            _ =>
+            {
+                this.RaiseDirectPropertyChanged(ScrollbarVisibilityProperty);
+                this.RaiseDirectPropertyChanged(EffectiveSelectedItemsPanelProperty);
+            });
+        ObservableExtension.Subscribe(this.GetObservable(SelectedItemTemplateProperty), _ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        ObservableExtension.Subscribe(this.GetObservable(ItemTemplateProperty), _ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        this.GetObservable(ItemCountProperty).Subscribe(_ =>
+        {
+            this.RaiseDirectPropertyChanged(IsFilterEnabledProperty);
         });
-        this.GetObservable(SelectedItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
-        this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
-        this.GetObservable(ItemCountProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(IsFilterEnabledProperty));
-        IsDropDownOpenProperty.Changed.Subscribe(args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
+
+        this.ItemsView.CollectionChanged += (_, _) => this.ApplyFilter(null);
+
+        ObservableExtension.Subscribe(IsDropDownOpenProperty.Changed, args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
     }
 
     public ITemplate<Panel>? SelectedItemsPanel
@@ -174,7 +203,7 @@ public class MultiComboBox : SelectingItemsControl
         set => this.SetValue(AllSelectedTextProperty, value);
     }
 
-    public bool? HasFilter
+    public bool? Filter
     {
         get => this.GetValue(HasFilterProperty);
         set
@@ -185,7 +214,7 @@ public class MultiComboBox : SelectingItemsControl
         }
     }
 
-    public bool IsFilterEnabled => this.HasFilter ?? this.ItemCount > 20;
+    public bool IsFilterEnabled => this.Filter ?? this.ItemCount > 20;
 
     private bool IsFilterFocused => this.filterTextbox?.IsFocused == true;
 
@@ -289,14 +318,33 @@ public class MultiComboBox : SelectingItemsControl
         {
             this.OnDropDownOpened();
         }
+        else
+        {
+            this.OnDropDownClosed();
+        }
     }
 
     private void OnDropDownOpened()
     {
         if (this.filterTextbox is { } filter)
         {
+            // Clear filter text (this will trigger ApplyFilter which restores original items)
             filter.Text = null;
         }
+
+        this.ApplyFilter(null);
+    }
+
+    private void OnDropDownClosed()
+    {
+        // // Detach and discard the inner control
+        // if (this.itemsListPresenter is not null)
+        // {
+        //     this.itemsListPresenter.Content = null;
+        // }
+
+        // Clear filtered items
+        this.filteredItems.Clear();
     }
 
     private void RaiseDirectPropertyChanged<T>(DirectPropertyBase<T> property)
@@ -308,7 +356,8 @@ public class MultiComboBox : SelectingItemsControl
     private MultiComboBoxItem? GetMultiComboBoxItemContainer(object? item)
     {
         if (item is null) return null;
-        return item as MultiComboBoxItem ?? this.ContainerFromItem(item) as MultiComboBoxItem;
+        // Containers are now managed by innerItemsList, not the parent
+        return item as MultiComboBoxItem ?? this.innerItemsList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
     public void Remove(object? o)
@@ -366,7 +415,8 @@ public class MultiComboBox : SelectingItemsControl
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
         this.selectAllItem?.UpdateSelection();
 
-        var containers = this.Presenter?.Panel?.Children;
+        // Containers are now managed by innerItemsList
+        var containers = this.innerItemsList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
             foreach (var container in containers)
@@ -400,6 +450,14 @@ public class MultiComboBox : SelectingItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+
+        // Store reference to ContentPresenter and set inner control
+        this.itemsListPresenter = e.NameScope.Find<ContentPresenter>("PART_ItemsList");
+        if (this.itemsListPresenter is not null)
+        {
+            this.itemsListPresenter.Content = this.innerItemsList;
+        }
+
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
         this.filterTextbox = e.NameScope.Find<TextBox>("PART_FilterTextBox");
@@ -408,40 +466,52 @@ public class MultiComboBox : SelectingItemsControl
 
         this.selectAllItem?.UpdateSelection();
 
-        PointerPressedEvent.RemoveHandler(this.OnBackgroundPointerPressed, this.rootBorder);
+        RoutedEventExtension.RemoveHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
         this.rootBorder = e.NameScope.Find<Border>(PART_BackgroundBorder);
-        PointerPressedEvent.AddHandler(this.OnBackgroundPointerPressed, this.rootBorder);
+        RoutedEventExtension.AddHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count == 0);
 
         if (this.selectAllItem is { } sai)
         {
-            sai.GetObservable(IsSelectedProperty).Subscribe(isSelected =>
-            {
-                if (this.updateInternal) return;
+            ObservableExtension.Subscribe(sai.GetObservable(IsSelectedProperty),
+                isSelected =>
+                {
+                    if (this.updateInternal) return;
 
-                if (isSelected)
-                {
-                    this.Selection.SelectAll();
-                }
-                else
-                {
-                    this.Selection.Clear();
-                }
-            });
+                    if (isSelected)
+                    {
+                        this.Selection.SelectAll();
+                    }
+                    else
+                    {
+                        this.Selection.Clear();
+                    }
+                });
         }
     }
 
     private void ApplyFilter(string? filterText)
     {
-        // Refresh visibility of all realized containers
-        var containers = this.Presenter?.Panel?.Children;
-        if (containers is not null)
+        filterText ??= this.filterTextbox?.Text;
+        bool hasFilterText = !string.IsNullOrWhiteSpace(filterText);
+
+        // Re-populate filtered items based on current filter
+        this.filteredItems.Clear();
+
+        // IEnumerable source = this.ItemsSource ?? this.Items;
+        foreach (object? item in this.ItemsView)
         {
-            foreach (Control? container in containers)
+            if (!hasFilterText || this.ItemMatchesFilter(item, filterText))
             {
-                if (container is MultiComboBoxItem item)
+                // CRITICAL: If item is a MultiComboBoxItem container (from inline XAML),
+                // extract its content/data rather than using the container itself
+                if (item is MultiComboBoxItem containerItem)
                 {
-                    item.IsVisible = this.ItemMatchesFilter(item.DataContext ?? item, filterText);
+                    this.filteredItems.Add(containerItem.Content ?? containerItem);
+                }
+                else
+                {
+                    this.filteredItems.Add(item);
                 }
             }
         }
@@ -454,8 +524,8 @@ public class MultiComboBox : SelectingItemsControl
             return true;
         }
 
-        var content = item?.ToString() ?? string.Empty;
-        return content.Contains(filterText, StringComparison.OrdinalIgnoreCase);
+        object? content = (item as MultiComboBoxItem)?.Content ?? item;
+        return content?.ToString()?.Contains(filterText, StringComparison.OrdinalIgnoreCase) == true;
     }
 
     private void FixInitializationFromAxamlItems()
@@ -509,7 +579,8 @@ public class MultiComboBox : SelectingItemsControl
         if (this.updateInternal) return;
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
 
-        var containers = this.Presenter?.Panel?.Children;
+        // Containers are now managed by innerItemsList
+        var containers = this.innerItemsList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
             foreach (var container in containers)
@@ -521,34 +592,16 @@ public class MultiComboBox : SelectingItemsControl
             }
         }
 
+        foreach (var item in this.ItemsView)
+        {
+            if (item is MultiComboBoxItem i)
+            {
+                i.UpdateSelection();
+            }
+        }
+
         this.selectAllItem?.UpdateSelection();
         this.RaiseDirectPropertyChanged(IsAllSelectedProperty);
-    }
-
-    protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
-    {
-        recycleKey = item;
-        return item is not MultiComboBoxItem;
-    }
-
-    protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) => new MultiComboBoxItem();
-
-    protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
-    {
-        if (item is MultiComboBoxItem containerItem)
-        {
-            container.DataContext = containerItem.Content;
-        }
-
-        base.PrepareContainerForItemOverride(container, item, index);
-
-        // Apply filter to newly realized containers
-        if (container is MultiComboBoxItem multiComboBoxItem)
-        {
-            multiComboBoxItem.IsVisible = this.ItemMatchesFilter(item, this.filterTextbox?.Text);
-        }
-
-        this.selectAllItem?.UpdateSelection();
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -562,14 +615,10 @@ public class MultiComboBox : SelectingItemsControl
 
         base.OnKeyDown(e);
 
-        // Forward all other keypresses to the textbox and focus it
-        if (!e.Handled && this.filterTextbox is { IsFocused: false } filter && e.KeySymbol is not null)
+        // Forward all other keypresses to the textbox and focus it (except Tab for normal navigation)
+        if (!e.Handled && this.filterTextbox is { IsFocused: false } filter && e.KeySymbol is not null && e.Key != Key.Tab)
         {
             filter.Focus();
-            // if (e.KeySymbol is { } symbol)
-            // {
-            //     filter.Text += symbol;
-            // }
         }
     }
 
@@ -617,7 +666,8 @@ public class MultiComboBox : SelectingItemsControl
 
         if (e.Key == Key.Up)
         {
-            var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
+            // Containers are now managed by innerItemsList
+            var firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
             if (firstChild?.IsFocused == true)
             {
                 this.FocusSelectAll();
@@ -663,10 +713,11 @@ public class MultiComboBox : SelectingItemsControl
 
     private bool FocusFirstItem()
     {
-        var firstChild = this.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
+        // Containers are now managed by innerItemsList
+        var firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
         if (firstChild != null)
         {
-            this.ScrollIntoView(firstChild.DataContext ?? firstChild);
+            this.innerItemsList.ScrollIntoView(firstChild.DataContext ?? firstChild);
             return firstChild.Focus(NavigationMethod.Directional);
         }
 
@@ -681,7 +732,8 @@ public class MultiComboBox : SelectingItemsControl
             return;
         }
 
-        foreach (var dropdownItem in this.GetRealizedContainers())
+        // Containers are now managed by innerItemsList
+        foreach (var dropdownItem in this.innerItemsList.GetRealizedContainers())
         {
             if (dropdownItem is MultiComboBoxItem { IsFocused: true } multiComboBoxItem)
             {

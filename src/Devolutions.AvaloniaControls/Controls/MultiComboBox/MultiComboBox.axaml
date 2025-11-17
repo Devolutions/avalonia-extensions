@@ -212,6 +212,16 @@
                 HorizontalAlignment="Stretch"
                 CornerRadius="{DynamicResource OverlayCornerRadius}">
                 <DockPanel LastChildFill="True">
+                  <TextBox
+                    Name="PART_FilterTextBox"
+                    DockPanel.Dock="Top"
+                    Classes="no-focus-border"
+                    Watermark="Find items"
+                    IsVisible="{TemplateBinding IsFilterEnabled}" />
+                  <Separator
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding IsFilterEnabled}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
 
                   <MultiComboBoxSelectAllItem
@@ -244,6 +254,17 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^ /template/ TextBox#PART_FilterTextBox">
+      <Setter Property="BorderThickness" Value="0" />
+      <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
+        <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="^ /template/ Border#PART_BorderElement">
+          <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+        <!-- <Setter Property="BorderBrush" Value="0" /> -->
+      </Style>
+    </Style>
 
     <Style Selector="^.clearButton, ^.ClearButton">
       <Style Selector="^:pointerover:not(:selection-empty) /template/ Button#ClearButton">

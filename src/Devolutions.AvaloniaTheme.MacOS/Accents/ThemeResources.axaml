@@ -141,7 +141,7 @@
       <StaticResource x:Key="ExpanderBackgroundDisabledBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <Thickness x:Key="ExpanderButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0 0 0 1</Thickness>
-      
+
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">

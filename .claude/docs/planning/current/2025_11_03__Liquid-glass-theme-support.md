@@ -235,52 +235,50 @@ Add three MacOS theme variants:
 
 **Duration:** Completed
 
-### Phase 3: Liquid Glass Visual Effects Definition ⏸️ PENDING
+### Phase 3: Liquid Glass Visual Effects Definition 🔄 IN PROGRESS
 
-**Prerequisites:** Phase 2 must be complete (manual sub-theme switching working)
+**Prerequisites:** Phase 2 must be complete (manual sub-theme switching working) ✅
 
 **Goal:** Replace the green color stub with actual Liquid Glass-inspired styling.
 
+**Status:** Initial implementation complete, awaiting user testing after reboot.
+
 **Deliverables:**
-- [ ] Research and identify key resources from `ThemeResources.axaml` to override
-- [ ] Define enhanced shadow resources (PopupShadow, ToolTipBorderShadow, etc.)
-- [ ] Define translucency levels (conservative approach)
-- [ ] Define blur radii (if using acrylic effects)
-- [ ] Replace stub colors in `ThemeResources_LiquidGlass.axaml` with real styling
-- [ ] Test in both Light and Dark modes
-- [ ] Document each override with rationale
+- [x] Research and identify key resources from `ThemeResources.axaml` to override
+- [x] Define enhanced shadow resources (PopupShadow, ToolTipBorderShadow, etc.)
+- [x] Define translucency levels (conservative approach)
+- [x] Replace stub colors in `ThemeResources_LiquidGlass.axaml` with real styling
+- [ ] Test in both Light and Dark modes (user testing pending)
+- [ ] Iterate based on visual feedback
+- [ ] Document final values with rationale
 
-**Key Resources to Consider Overriding:**
-```xml
-<!-- Shadows - deeper, more defined -->
-<BoxShadows x:Key="PopupShadow">...</BoxShadows>
-<BoxShadows x:Key="ToolTipBorderShadow">...</BoxShadows>
-<BoxShadows x:Key="ControlShadow">...</BoxShadows>
+**Implementation Summary:**
+Replaced green color stub with conservative shadow and opacity enhancements. See `.claude/temp/liquidglass-phase3-notes.md` for detailed implementation notes including:
+- All shadow value changes (before/after comparison)
+- Design rationale and philosophy
+- Testing strategy
+- Potential adjustment approaches
 
-<!-- Translucency - conservative values -->
-<x:Double x:Key="WindowBackgroundOpacity">0.90</x:Double>
-<x:Double x:Key="MenuBackgroundOpacity">0.80</x:Double>
-<x:Double x:Key="TooltipBackgroundOpacity">0.85</x:Double>
+**Current Approach:**
+- Enhanced shadows with 5-20% deeper/stronger values
+- Subtle scrollbar visibility improvements
+- Slightly more pronounced material layering
+- Stronger effects in dark mode for better depth perception
+- No color changes, no template modifications (yet)
 
-<!-- Vibrancy-inspired brushes -->
-<SolidColorBrush x:Key="VibrancyBackgroundBrush"
-                 Color="{DynamicResource BackgroundColor}"
-                 Opacity="0.75" />
-```
-
-**Design Principles:**
-- More conservative than Apple's Liquid Glass (prioritize readability)
-- Enhance depth and polish without compromising usability
-- Respect system "Reduce Transparency" setting (future enhancement)
-- Start with subtle enhancements, can always increase later
+**User Feedback Status:**
+- Initial impression: Effects may be too subtle
+- Needs side-by-side comparison after reboot
+- May need adjustment based on real-world testing
+- SampleApp demos may not showcase differences well
 
 **Testing Approach:**
 - Use manual sub-theme switching from Phase 2
 - Compare side-by-side: "MacOS - classic" vs "MacOS - LiquidGlass"
-- Verify no degradation in readability
 - Test in both Light and Dark system themes
+- Focus on: buttons, text boxes, popups, tooltips, scrollbars
 
-**Duration:** 2-3 days
+**Duration:** 2-3 days (in progress)
 
 ### Phase 4: Selective Control Template Updates ⏸️ PENDING
 
@@ -471,6 +469,15 @@ Add three MacOS theme variants:
 
 ## Change Log
 
+- **2025-11-12 (evening):** Phase 3 initial implementation - Liquid Glass styling
+  - Replaced green color stub with actual shadow and opacity enhancements
+  - Enhanced PopupShadow, ToolTipBorderShadow, control borders, text boxes, toggle switches
+  - Increased scrollbar visibility (opacity +7-11%)
+  - More pronounced layout backgrounds (opacity +3-6%)
+  - Stronger effects in dark mode for better depth
+  - Detailed implementation notes in `.claude/temp/liquidglass-phase3-notes.md`
+  - **Status:** Awaiting user testing after reboot
+  - **Feedback:** Effects may be too subtle, need side-by-side comparison
 - **2025-11-12 (late afternoon):** SampleApp theme name updates for clarity
   - Renamed "MacOS - default theme" to "MacOS (automatic)" for better UX
   - Updated all `ConverterParameter=MacOS` to `ConverterParameter=MacOS - classic` throughout demo pages

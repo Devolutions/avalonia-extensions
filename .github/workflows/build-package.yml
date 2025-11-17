@@ -61,7 +61,7 @@ jobs:
           } else {
             "publish-test"
           }
-          
+
           if ((-Not $IsMasterBranch) -or $IsScheduledJob) {
             $DryRun = $true # force dry run
           }
@@ -74,7 +74,7 @@ jobs:
           if ($PackageVersion -NotMatch '^\d+\.\d+\.\d+\.\d+$') {
             throw "invalid version format: $PackageVersion, expected: 1.2.3.4"
           }
-                    
+
           $Packages = @()
           if ('${{ inputs.build-mac }}' -eq 'true') {
               $Packages += "AvaloniaTheme.MacOS"
@@ -179,7 +179,7 @@ jobs:
             Remove-Item $PackedFile -ErrorAction SilentlyContinue | Out-Null
             Compress-Archive -Path "$UnpackedDir\*" -Destination $PackedFile -CompressionLevel Optimal
           }
-  
+
       - name: Upload nuget packages
         uses: actions/upload-artifact@v4.3.6
         with:
@@ -192,6 +192,8 @@ jobs:
     needs: [preflight, build-nuget]
     environment: ${{ needs.preflight.outputs.package-env }}
     if: ${{ fromJSON(needs.preflight.outputs.skip-publish) == false }}
+    permissions:
+      id-token: write
 
     steps:
       - name: Download nuget package
@@ -199,6 +201,12 @@ jobs:
         with:
           name: package-nupkg
           path: package
+
+      - name: NuGet login (OIDC)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_BOT_USERNAME }}
 
       - name: Publish to nuget.org
         shell: pwsh
@@ -209,7 +217,7 @@ jobs:
           foreach ($NugetPackage in $NugetPackages) {
             $PushArgs = @(
               'nuget', 'push', "$NugetPackage",
-              '--api-key', '${{ secrets.NUGET_API_KEY }}',
+              '--api-key', '${{ steps.nuget-login.outputs.NUGET_API_KEY }}',
               '--source', 'https://api.nuget.org/v3/index.json',
               '--skip-duplicate', '--no-symbols'
             )

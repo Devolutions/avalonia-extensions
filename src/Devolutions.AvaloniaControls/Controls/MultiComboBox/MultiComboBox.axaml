@@ -217,6 +217,7 @@
                     DockPanel.Dock="Top"
                     Classes="no-focus-border"
                     Watermark="Find items"
+                    KeyboardNavigation.IsTabStop="False"
                     IsVisible="{TemplateBinding IsFilterEnabled}" />
                   <Separator
                     DockPanel.Dock="Top"

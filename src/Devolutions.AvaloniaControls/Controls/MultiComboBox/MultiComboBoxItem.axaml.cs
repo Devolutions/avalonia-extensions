@@ -89,7 +89,7 @@ public class MultiComboBoxItem : ContentControl
 
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            var p = e.GetCurrentPoint(this);
+            PointerPoint p = e.GetCurrentPoint(this);
             if (p.Properties.PointerUpdateKind is PointerUpdateKind.LeftButtonPressed
                 or PointerUpdateKind.RightButtonPressed)
             {
@@ -112,7 +112,7 @@ public class MultiComboBoxItem : ContentControl
         if (!e.Handled && !double.IsNaN(this.pointerDownPoint.X) &&
             e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
         {
-            var point = e.GetCurrentPoint(this);
+            PointerPoint point = e.GetCurrentPoint(this);
             if (new Rect(this.Bounds.Size).ContainsExclusive(point.Position) && e.Pointer.Type == PointerType.Touch)
             {
                 this.IsSelected = !this.IsSelected;
@@ -132,7 +132,7 @@ public class MultiComboBoxItem : ContentControl
         if (this.updateInternal) return;
         this.updateInternal = true;
 
-        var newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
+        bool newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
         if (newIsSelected != this.IsSelected)
         {
             this.IsSelected = newIsSelected;
@@ -218,8 +218,8 @@ public class MultiComboBoxSelectAllItem : ContentControl
     {
         this.updateInternal = true;
 
-        var selectCount = this.parent?.SelectedItems?.Count;
-        var itemsCount = this.parent?.Items.Count;
+        int? selectCount = this.parent?.SelectedItems?.Count;
+        int? itemsCount = this.parent?.Items.Count;
 
         if (selectCount is null || itemsCount is null || itemsCount == 0 || selectCount == 0)
         {

@@ -364,12 +364,12 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (o is StyledElement s)
         {
-            var data = s.DataContext;
+            object? data = s.DataContext;
             this.SelectedItems?.Remove(data);
-            var item = this.Items.FirstOrDefault(a => ReferenceEquals(a, data));
+            object? item = this.Items.FirstOrDefault(a => ReferenceEquals(a, data));
             if (item is not null)
             {
-                var container = this.ContainerFromItem(item);
+                Control? container = this.ContainerFromItem(item);
                 if (container is MultiComboBoxItem t)
                 {
                     t.IsSelected = false;
@@ -387,12 +387,12 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.SelectedItems.Clear();
 
-        foreach (var item in this.Items)
+        foreach (object? item in this.Items)
         {
             this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
         }
 
-        foreach (var item in this.Items)
+        foreach (object? item in this.Items)
         {
             if (this.GetMultiComboBoxItemContainer(item) is MultiComboBoxItem multiComboBoxItem)
             {
@@ -405,7 +405,7 @@ public partial class MultiComboBox : SelectingItemsControl
             }
         }
 
-        foreach (var item in this.Items)
+        foreach (object? item in this.Items)
         {
             this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
         }
@@ -416,10 +416,10 @@ public partial class MultiComboBox : SelectingItemsControl
         this.selectAllItem?.UpdateSelection();
 
         // Containers are now managed by innerItemsList
-        var containers = this.innerItemsList.Presenter?.Panel?.Children;
+        Controls? containers = this.innerItemsList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
-            foreach (var container in containers)
+            foreach (Control? container in containers)
             {
                 if (container is MultiComboBoxItem i)
                 {
@@ -530,9 +530,9 @@ public partial class MultiComboBox : SelectingItemsControl
 
     private void FixInitializationFromAxamlItems()
     {
-        var isCleared = false;
+        bool isCleared = false;
 
-        foreach (var item in this.Items)
+        foreach (object? item in this.Items)
         {
             if (item is MultiComboBoxItem multiComboBoxItem)
             {
@@ -580,10 +580,10 @@ public partial class MultiComboBox : SelectingItemsControl
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
 
         // Containers are now managed by innerItemsList
-        var containers = this.innerItemsList.Presenter?.Panel?.Children;
+        Controls? containers = this.innerItemsList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
-            foreach (var container in containers)
+            foreach (Control? container in containers)
             {
                 if (container is MultiComboBoxItem i)
                 {
@@ -592,7 +592,7 @@ public partial class MultiComboBox : SelectingItemsControl
             }
         }
 
-        foreach (var item in this.ItemsView)
+        foreach (object? item in this.ItemsView)
         {
             if (item is MultiComboBoxItem i)
             {
@@ -667,7 +667,7 @@ public partial class MultiComboBox : SelectingItemsControl
         if (e.Key == Key.Up)
         {
             // Containers are now managed by innerItemsList
-            var firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
+            Control? firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
             if (firstChild?.IsFocused == true)
             {
                 this.FocusSelectAll();
@@ -714,7 +714,7 @@ public partial class MultiComboBox : SelectingItemsControl
     private bool FocusFirstItem()
     {
         // Containers are now managed by innerItemsList
-        var firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
+        Control? firstChild = this.innerItemsList.Presenter?.Panel?.Children.FirstOrDefault(CanFocus);
         if (firstChild != null)
         {
             this.innerItemsList.ScrollIntoView(firstChild.DataContext ?? firstChild);
@@ -733,7 +733,7 @@ public partial class MultiComboBox : SelectingItemsControl
         }
 
         // Containers are now managed by innerItemsList
-        foreach (var dropdownItem in this.innerItemsList.GetRealizedContainers())
+        foreach (Control dropdownItem in this.innerItemsList.GetRealizedContainers())
         {
             if (dropdownItem is MultiComboBoxItem { IsFocused: true } multiComboBoxItem)
             {

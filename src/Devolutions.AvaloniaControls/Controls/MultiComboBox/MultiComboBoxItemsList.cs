@@ -1,10 +1,7 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
-using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Utils;
 
 public partial class MultiComboBox
 {
@@ -19,31 +16,6 @@ public partial class MultiComboBox
         public MultiComboBoxItemsList(MultiComboBox parent)
         {
             this.parent = parent;
-        }
-
-        /// <summary>
-        /// Resets the scroll state to clear any stale VirtualizingStackPanel anchor references.
-        /// Called when the dropdown reopens to prevent anchor registration errors.
-        /// </summary>
-        public void ResetScrollState()
-        {
-            // Ensure template is applied
-            this.ApplyTemplate();
-
-            // Get ScrollViewer from template by name
-            var scrollViewer = this.FindNameScope()?.Find<ScrollViewer>("PART_ScrollViewer");
-            if (scrollViewer is not null)
-            {
-                // Reset scroll position
-                scrollViewer.Offset = new Vector(0, 0);
-            }
-
-            // Force layout invalidation on the panel to clear stale state
-            if (this.Presenter?.Panel is Panel panel)
-            {
-                panel.InvalidateMeasure();
-                panel.InvalidateArrange();
-            }
         }
 
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>

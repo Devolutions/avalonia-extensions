@@ -1,63 +1,23 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+
   <ResourceDictionary.ThemeDictionaries>
-    <!-- Light Mode Liquid Glass Overrides -->
     <ResourceDictionary x:Key="Default">
-      <!-- Enhanced PopupShadow: deeper, more pronounced layers for Liquid Glass depth -->
-      <BoxShadows x:Key="PopupShadow">0 0 1.5 0 #80000000, 0 0 2 0 #66000000, 0 10 30 0 #55000000</BoxShadows>
-
-      <!-- Enhanced ToolTipBorderShadow: stronger definition -->
-      <BoxShadows x:Key="ToolTipBorderShadow">0 0 1.5 0 #80000000, 0 8 20 0 #45000000</BoxShadows>
-
-      <!-- Enhanced control shadows: more depth for interactive elements -->
-      <BoxShadows x:Key="ControlBorderBoxShadow">0 1 2 0 #66000000, 0 0 0 0.5 #0D000000</BoxShadows>
-      <BoxShadows x:Key="ButtonBorderBoxShadow">0 0.5 1.5 0 #66000000, 0 0 0 0.5 #0D000000</BoxShadows>
-      <BoxShadows x:Key="TextBoxBorderShadows">0 0.5 3 0 #66000000, 0 0 0 0.5 #0D000000</BoxShadows>
-
-      <!-- Enhanced recessed shadow for depth perception -->
-      <BoxShadows x:Key="ControlBackgroundRecessedShadow">inset 0 5 4 -2 #d0d0d0</BoxShadows>
-
-      <!-- Enhanced toggle switch shadow for material feel -->
-      <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 4 8 0 #26000000, 0 0 1.5 0 #66000000</BoxShadows>
-
-      <!-- Subtle increase in scrollbar thumb opacity for better visibility -->
-      <x:Double x:Key="ScrollBarThumbOpacity">0.40</x:Double>
-      <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.50" />
-
-      <!-- Slightly more pronounced layout backgrounds for subtle material layering -->
-      <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.15" />
-      <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.09" />
+      <Color x:Key="BackgroundColor">#eeffee</Color>
+      <Color x:Key="ForegroundColor">#008800</Color>
+      <Color x:Key="AccentForegroundColor">#ffff00</Color>
     </ResourceDictionary>
 
-    <!-- Dark Mode Liquid Glass Overrides -->
     <ResourceDictionary x:Key="Dark">
-      <!-- Enhanced PopupShadow: even more pronounced in dark mode -->
-      <BoxShadows x:Key="PopupShadow">0 0 2 0 #99000000, 0 0 3 0 #80000000, 0 12 35 0 #66000000</BoxShadows>
-
-      <!-- Enhanced ToolTipBorderShadow -->
-      <BoxShadows x:Key="ToolTipBorderShadow">0 0 2 0 #99000000, 0 10 24 0 #55000000</BoxShadows>
-
-      <!-- Enhanced control shadows: stronger in dark mode for depth -->
-      <BoxShadows x:Key="ControlBorderBoxShadow">0 1 2.5 0 #80000000, 0 0 0 0.5 #1A000000</BoxShadows>
-      <BoxShadows x:Key="ButtonBorderBoxShadow">0 0.5 2 0 #80000000, 0 0 0 0.5 #1A000000</BoxShadows>
-      <BoxShadows x:Key="TextBoxBorderShadows">0 0.5 3.5 0 #80000000, 0 0 0 0.5 #1A000000</BoxShadows>
-
-      <!-- Enhanced recessed shadow (darker in dark mode) -->
-      <BoxShadows x:Key="ControlBackgroundRecessedShadow">inset 0 5 4 -2 #1a1a1a</BoxShadows>
-
-      <!-- Enhanced toggle switch shadow -->
-      <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 5 10 0 #33000000, 0 0 2 0 #80000000</BoxShadows>
-
-      <!-- Enhanced scrollbar visibility in dark mode -->
-      <x:Double x:Key="ScrollBarThumbOpacity">0.45</x:Double>
-      <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.55" />
-
-      <!-- More pronounced layering in dark mode -->
-      <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.18" />
-      <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.11" />
+      <Color x:Key="BackgroundColor">#004400</Color>
+      <Color x:Key="ForegroundColor">#00ff00</Color>
+      <Color x:Key="AccentForegroundColor">#ff00ff</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+
+  <FontFamily x:Key="MacOsThemeFontFamily">Segoe UI, sans-serif</FontFamily>
 
 
 </ResourceDictionary>

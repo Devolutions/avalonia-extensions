@@ -38,13 +38,14 @@
             </Transitions>
           </Border.Transitions>
           <CheckBox
-            Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             IsTabStop="False"
-            Focusable="False" />
+            Focusable="False">
+            <SearchHighlightTextBlock Content="{TemplateBinding Content}" Search="{TemplateBinding FilterValue}" />
+          </CheckBox>
         </Border>
       </ControlTemplate>
     </Setter>

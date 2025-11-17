@@ -15,6 +15,9 @@ public class MultiComboBoxItem : ContentControl
     public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<MultiComboBoxItem, bool>(
         nameof(IsSelected));
 
+    public static readonly StyledProperty<string?> FilterValueProperty =
+        MultiComboBox.FilterValueProperty.AddOwner<MultiComboBoxItem>();
+
     private static readonly Point SInvalidPoint = new(double.NaN, double.NaN);
     private MultiComboBox? parent;
     private Point pointerDownPoint = SInvalidPoint;
@@ -32,6 +35,12 @@ public class MultiComboBoxItem : ContentControl
     {
         get => this.GetValue(IsSelectedProperty);
         set => this.SetValueIfChanged(IsSelectedProperty, value);
+    }
+
+    public string? FilterValue
+    {
+        get => this.GetValue(FilterValueProperty);
+        set => this.SetValue(FilterValueProperty, value);
     }
 
     internal void Select()

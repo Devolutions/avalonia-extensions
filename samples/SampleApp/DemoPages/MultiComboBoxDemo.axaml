@@ -14,7 +14,7 @@
 
   <Border Margin="10" Padding="10" HorizontalAlignment="Stretch">
     <StackPanel Orientation="Vertical">
-      <MultiComboBox Width="200" Watermark="select..." Filter="True">
+      <MultiComboBox Width="200" Watermark="select..." ShowFilter="True">
         <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
         <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
         <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
@@ -80,6 +80,7 @@
         Watermark="LOT of values"
         SelectAllText="Select All"
         AllSelectedText="All"
+        FilterText="Find an option..."
         ItemsSource="{Binding LotOfItems}" />
 
       <Separator Margin="0 5" />

@@ -216,7 +216,7 @@
                     Name="PART_FilterTextBox"
                     DockPanel.Dock="Top"
                     Classes="no-focus-border"
-                    Watermark="Find items"
+                    Watermark="{TemplateBinding FilterText}"
                     KeyboardNavigation.IsTabStop="False"
                     IsVisible="{TemplateBinding IsFilterEnabled}" />
                   <Separator

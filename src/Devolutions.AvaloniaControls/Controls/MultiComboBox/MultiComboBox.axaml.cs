@@ -11,6 +11,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -46,11 +47,17 @@ public partial class MultiComboBox : SelectingItemsControl
     public static readonly StyledProperty<string?> AllSelectedTextProperty =
         AvaloniaProperty.Register<MultiComboBox, string?>(nameof(AllSelectedText));
 
+    public static readonly StyledProperty<string> FilterTextProperty =
+        AvaloniaProperty.Register<MultiComboBox, string>(nameof(FilterText), "Find items");
+
+    public static readonly StyledProperty<string?> FilterValueProperty =
+        AvaloniaProperty.Register<MultiComboBox, string?>(nameof(FilterValue), defaultBindingMode: BindingMode.TwoWay, inherits: true);
+
     public static readonly StyledProperty<bool> IsDropDownOpenProperty =
         ComboBox.IsDropDownOpenProperty.AddOwner<MultiComboBox>();
 
-    public static readonly StyledProperty<bool?> HasFilterProperty =
-        AvaloniaProperty.Register<MultiComboBox, bool?>(nameof(Filter));
+    public static readonly StyledProperty<bool?> ShowFilterProperty =
+        AvaloniaProperty.Register<MultiComboBox, bool?>(nameof(ShowFilter));
 
     public static readonly DirectProperty<MultiComboBox, bool> IsFilterEnabledProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(IsFilterEnabled), static c => c.IsFilterEnabled);
@@ -203,18 +210,30 @@ public partial class MultiComboBox : SelectingItemsControl
         set => this.SetValue(AllSelectedTextProperty, value);
     }
 
-    public bool? Filter
+    public string FilterText
     {
-        get => this.GetValue(HasFilterProperty);
+        get => this.GetValue(FilterTextProperty);
+        set => this.SetValue(FilterTextProperty, value);
+    }
+
+    public string? FilterValue
+    {
+        get => this.GetValue(FilterValueProperty);
+        set => this.SetValue(FilterValueProperty, value);
+    }
+
+    public bool? ShowFilter
+    {
+        get => this.GetValue(ShowFilterProperty);
         set
         {
             bool oldIsFilterEnabled = this.IsFilterEnabled;
-            this.SetValue(HasFilterProperty, value);
+            this.SetValue(ShowFilterProperty, value);
             this.RaisePropertyChanged(IsFilterEnabledProperty, oldIsFilterEnabled, this.IsFilterEnabled);
         }
     }
 
-    public bool IsFilterEnabled => this.Filter ?? this.ItemCount > 20;
+    public bool IsFilterEnabled => this.ShowFilter ?? this.ItemCount > 20;
 
     private bool IsFilterFocused => this.filterTextbox?.IsFocused == true;
 
@@ -462,7 +481,11 @@ public partial class MultiComboBox : SelectingItemsControl
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
         this.filterTextbox = e.NameScope.Find<TextBox>("PART_FilterTextBox");
 
-        this.filterTextbox?.GetObservable(TextBox.TextProperty).Subscribe(this.ApplyFilter);
+        if (this.filterTextbox is { } partFilterTextBox)
+        {
+            partFilterTextBox[!!TextBox.TextProperty] = this[!!FilterValueProperty];
+            partFilterTextBox.GetObservable(TextBox.TextProperty).Subscribe(this.ApplyFilter);
+        }
 
         this.selectAllItem?.UpdateSelection();
 

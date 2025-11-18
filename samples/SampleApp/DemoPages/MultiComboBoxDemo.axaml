@@ -109,6 +109,14 @@
             </StackPanel>
           </DataTemplate>
         </MultiComboBox.ItemTemplate>
+        <MultiComboBox.SelectedItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal">
+              <Border Width="12" Height="12" Background="Blue" Margin="0 0 5 0" />
+              <TextBlock Text="{Binding}" />
+            </StackPanel>
+          </DataTemplate>
+        </MultiComboBox.SelectedItemTemplate>
       </MultiComboBox>
 
       <Separator Margin="0 5" />

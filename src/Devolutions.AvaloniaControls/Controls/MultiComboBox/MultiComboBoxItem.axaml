@@ -23,6 +23,7 @@
     <Setter Property="MinHeight" Value="32" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border
@@ -38,14 +39,14 @@
             </Transitions>
           </Border.Transitions>
           <CheckBox
+            Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+            IsEnabled="{TemplateBinding IsEnabled}"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             IsTabStop="False"
-            Focusable="False">
-            <SearchHighlightTextBlock Content="{TemplateBinding Content}" Search="{TemplateBinding FilterValue}" />
-          </CheckBox>
+            Focusable="False" />
         </Border>
       </ControlTemplate>
     </Setter>

@@ -7,7 +7,7 @@
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="400" Width="400">
       <StackPanel>
-        <MultiComboBox Watermark="fill" Margin="10">
+        <MultiComboBox Watermark="fill" Margin="10" ShowFilter="True">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
           <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
           <MultiComboBoxItem Content="Option 3" IsEnabled="False" IsSelected="True" />
@@ -68,6 +68,12 @@
     <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="ItemTemplate">
+      <DataTemplate>
+        <SearchHighlightTextBlock Content="{Binding}" Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+      </DataTemplate>
+    </Setter>
+
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -179,7 +185,7 @@
                   InjectFusionMask="False"
                   PopupBorderThickness="1" />
               </Interaction.Behaviors>
-              
+
               <Border
                 x:Name="PopupBorder"
                 Background="{TemplateBinding Background}"
@@ -191,6 +197,22 @@
                 Margin="6 0 6 6"
                 CornerRadius="0">
                 <DockPanel LastChildFill="True" Margin="{DynamicResource ComboBoxDropdownBorderPadding}">
+                  <TextBox
+                    Name="PART_FilterTextBox"
+                    DockPanel.Dock="Top"
+                    Classes="no-focus-border borderless"
+                    Watermark="{TemplateBinding FilterText}"
+                    KeyboardNavigation.IsTabStop="False"
+                    Padding="4 0"
+                    IsVisible="{TemplateBinding IsFilterEnabled}" />
+
+                  <Border
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding IsFilterEnabled}"
+                    BorderThickness="0 0 0 1"
+                    Margin="0"
+                    BorderBrush="{DynamicResource BorderBrush}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
 
                   <MultiComboBoxSelectAllItem
@@ -210,18 +232,13 @@
                     BorderBrush="{DynamicResource BorderBrush}" />
 
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
-                  <ScrollViewer
+                  <!--  Inner control for displaying filtered items (has its own ScrollViewer)  -->
+                  <ContentPresenter
+                    Name="PART_ItemsListPresenter"
                     Grid.IsSharedSizeScope="True"
-                    Margin="4 0"
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
-                      KeyboardNavigation.TabNavigation="None"
-                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                      HorizontalAlignment="Stretch"
-                      ItemsPanel="{TemplateBinding ItemsPanel}" />
-                  </ScrollViewer>
+                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                    HorizontalAlignment="Stretch"
+                    KeyboardNavigation.TabNavigation="None" />
                 </DockPanel>
               </Border>
             </Popup>
@@ -229,6 +246,16 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^ /template/ TextBox#PART_FilterTextBox">
+      <Setter Property="BorderThickness" Value="0" />
+      <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
+        <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="^ /template/ Border#PART_BorderElement">
+          <Setter Property="BorderThickness" Value="0" />
+        </Style>
+      </Style>
+    </Style>
 
     <Style Selector="^:selection-empty /template/ TextBlock#PlaceholderTextBlock">
       <Setter Property="IsVisible" Value="True" />
@@ -264,7 +291,7 @@
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="#939393" />
       </Style>
-      
+
       <Style Selector="^:dropdown-open-from-top /template/ Popup#PART_Popup">
         <Setter Property="VerticalOffset" Value="6" />
       </Style>

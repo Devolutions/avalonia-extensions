@@ -9,11 +9,11 @@ public partial class MultiComboBox
     /// Internal ItemsControl used to display filtered items in the dropdown.
     /// This allows filtering without affecting the parent MultiComboBox's Items/ItemsSource.
     /// </summary>
-    internal class MultiComboBoxItemsList : SelectingItemsControl
+    internal class InnerMultiComboBoxList : SelectingItemsControl
     {
         private readonly MultiComboBox parent;
 
-        public MultiComboBoxItemsList(MultiComboBox parent)
+        public InnerMultiComboBoxList(MultiComboBox parent)
         {
             this.parent = parent;
         }

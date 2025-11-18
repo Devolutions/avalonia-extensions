@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\MultiComboBox\MultiComboBoxItemsList.cs">
-      <DependentUpon>MultiComboBoxItemsList.axaml</DependentUpon>
+    <Compile Update="Controls\MultiComboBox\InnerMultiComboBoxList.cs">
+      <DependentUpon>InnerMultiComboBoxList.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

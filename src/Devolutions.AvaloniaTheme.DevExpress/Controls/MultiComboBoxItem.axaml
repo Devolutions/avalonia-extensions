@@ -52,6 +52,7 @@
               Padding="6 0 8 0"
               Background="Transparent"
               IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+              IsEnabled="{TemplateBinding IsEnabled}"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Stretch" />
           </StackPanel>

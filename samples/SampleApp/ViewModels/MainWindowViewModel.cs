@@ -27,8 +27,4 @@ public partial class MainWindowViewModel : ObservableObject
   {
     this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
   }
-
-  public bool IsLiquidGlassTheme =>
-    this.CurrentTheme is MacOsLiquidGlassTheme
-    || (this.CurrentTheme is MacOsTheme && Devolutions.AvaloniaTheme.MacOS.Internal.MacOSVersionDetector.IsLiquidGlassSupported());
 }

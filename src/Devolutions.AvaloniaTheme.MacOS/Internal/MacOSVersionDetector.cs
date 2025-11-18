@@ -21,9 +21,9 @@ public static class MacOSVersionDetector
   /// <remarks>
   ///   <para>
   ///     Version mapping:
-  ///     - macOS 26.x (Tahoe) = Darwin 25.x = Liquid Glass supported
-  ///     - macOS 15.x (Sequoia) = Darwin 24.x = Classic theme only
-  ///     - macOS 14.x (Sonoma) = Darwin 23.x = Classic theme only
+  ///     - macOS 26.x (Tahoe) = Liquid Glass supported
+  ///     - macOS 15.x (Sequoia) = Classic theme only
+  ///     - macOS 14.x (Sonoma) = Classic theme only
   ///   </para>
   ///   <para>
   ///     The result is cached for performance since OS version cannot change during process lifetime.

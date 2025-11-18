@@ -21,7 +21,7 @@
     </TextBlock>
     <StackPanel Orientation="Horizontal" Margin="0 30 0 0">
       <TextBlock Classes="h1" Text="Quick view of current theme: " />
-      <TextBlock Classes="h1" Foreground="{DynamicResource AccentButtonBackground}" Text="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName}}" />
+      <TextBlock Classes="h1" Foreground="{DynamicResource AccentButtonBackground}" Text="{Binding Source={x:Static sampleApp:App.CurrentTheme}, Path=DisplayName}" />
     </StackPanel>
     <TabControl TabStripPlacement="Top" Margin="0 15 0 0">
       <TabItem Header="Tab 1">

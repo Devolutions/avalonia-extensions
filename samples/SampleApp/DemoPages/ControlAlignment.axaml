@@ -18,7 +18,7 @@
                  Height="22" MinHeight="22" MaxHeight="22"
                  IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Windows - DevExpress}">
+                       ConverterParameter=DevExpress}">
           thin
         </TextBox>
         <ComboBox Grid.Column="3" SelectedIndex="2">
@@ -108,7 +108,7 @@
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
                    IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Windows - DevExpress}">
+                       ConverterParameter=DevExpress}">
             thin
           </TextBox>
           <ComboBox SelectedIndex="2" IsEnabled="False">

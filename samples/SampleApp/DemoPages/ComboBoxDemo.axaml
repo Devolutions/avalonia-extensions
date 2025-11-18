@@ -44,7 +44,7 @@
         <TextBlock
           IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                                Converter={StaticResource EqualToComparisonConverter},
-                               ConverterParameter=MacOS - classic}">
+                               ConverterParameter=MacClassic}">
           (results in minor positioning bug)
         </TextBlock>
       </TextBlock>

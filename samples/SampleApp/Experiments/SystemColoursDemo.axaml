@@ -12,7 +12,7 @@
                TextWrapping="Wrap"
                IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Linux - Yaru}">
+                       ConverterParameter=Yaru}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
       </TextBlock>
     <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">

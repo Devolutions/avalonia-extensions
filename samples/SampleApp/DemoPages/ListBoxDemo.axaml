@@ -57,7 +57,7 @@
           TextWrapping="Wrap"
           IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=MacOS - classic}">
+                       ConverterParameter=MacClassic}">
           (Center-aligned text not recommended, unless length variation is minimal)
         </TextBlock>
       </TextBlock>

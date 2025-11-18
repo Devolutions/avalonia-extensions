@@ -38,7 +38,8 @@ public class App : Application
   public static Theme? CurrentTheme { get; set; }
 
   /// <summary>
-  ///   Returns the effective theme name, resolving MacOS Automatic to Classic or LiquidGlass as appropriate.
+  ///   Returns the effective theme name (short), resolving MacOS Automatic to Classic or LiquidGlass as appropriate.
+  ///   Use this for code/logic comparisons.
   /// </summary>
   public static string EffectiveCurrentThemeName
   {
@@ -330,7 +331,15 @@ public class App : Application
 
 public abstract class Theme
 {
+  /// <summary>
+  ///   Short name for use in code/logic (e.g., "MacOS", "LiquidGlass")
+  /// </summary>
   public abstract string Name { get; }
+
+  /// <summary>
+  ///   Display name for UI presentation (e.g., "MacOS (automatic)", "MacOS - LiquidGlass")
+  /// </summary>
+  public abstract string DisplayName { get; }
 
   public override bool Equals(object? obj) =>
     ReferenceEquals(this, obj) || (obj is Theme other && this.Equals(other));
@@ -344,18 +353,26 @@ public abstract class Theme
 
 public class LinuxYaruTheme : Theme
 {
-  public override string Name => "Linux - Yaru";
+  public const string ThemeName = "Yaru";
+  public const string ThemeDisplayName = "Linux - Yaru";
+  public override string Name => ThemeName;
+  public override string DisplayName => ThemeDisplayName;
 }
 
 public class DevExpressTheme : Theme
 {
-  public override string Name => "Windows - DevExpress";
+  public const string ThemeName = "DevExpress";
+  public const string ThemeDisplayName = "Windows - DevExpress";
+  public override string Name => ThemeName;
+  public override string DisplayName => ThemeDisplayName;
 }
 
 public class MacOsTheme : Theme
 {
-  public const string ThemeName = "MacOS (automatic)";
+  public const string ThemeName = "MacOS";
+  public const string ThemeDisplayName = "MacOS (automatic)";
   public override string Name => ThemeName;
+  public override string DisplayName => ThemeDisplayName;
 
   /// <summary>
   ///   OS version override to apply before loading theme resources.
@@ -366,8 +383,10 @@ public class MacOsTheme : Theme
 
 public class MacOsClassicTheme : MacOsTheme
 {
-  public new const string ThemeName = "MacOS - classic";
+  public new const string ThemeName = "MacClassic";
+  public new const string ThemeDisplayName = "MacOS - classic";
   public override string Name => ThemeName;
+  public override string DisplayName => ThemeDisplayName;
 
   /// <summary>
   ///   Force classic theme by simulating OS version &lt; 26
@@ -377,8 +396,10 @@ public class MacOsClassicTheme : MacOsTheme
 
 public class MacOsLiquidGlassTheme : MacOsTheme
 {
-  public new const string ThemeName = "MacOS - LiquidGlass";
+  public new const string ThemeName = "LiquidGlass";
+  public new const string ThemeDisplayName = "MacOS - LiquidGlass";
   public override string Name => ThemeName;
+  public override string DisplayName => ThemeDisplayName;
 
   /// <summary>
   ///   Force LiquidGlass theme by simulating OS version &gt;= 26
@@ -388,10 +409,14 @@ public class MacOsLiquidGlassTheme : MacOsTheme
 
 public class FluentTheme : Theme
 {
-  public override string Name => "Fluent";
+  public const string ThemeName = "Fluent";
+  public override string Name => ThemeName;
+  public override string DisplayName => ThemeName;
 }
 
 public class SimpleTheme : Theme
 {
-  public override string Name => "Simple";
+  public const string ThemeName = "Simple";
+  public override string Name => ThemeName;
+  public override string DisplayName => ThemeName;
 }

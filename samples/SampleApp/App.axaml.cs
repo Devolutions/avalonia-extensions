@@ -19,6 +19,12 @@ using ViewModels;
 
 public class App : Application
 {
+  /// <summary>
+  ///   Returns true if the currently applied theme is LiquidGlass (either explicitly or via auto-detection).
+  /// </summary>
+  public static bool IsLiquidGlassTheme =>
+    CurrentTheme is MacOsLiquidGlassTheme
+    || (CurrentTheme is MacOsTheme && Devolutions.AvaloniaTheme.MacOS.Internal.MacOSVersionDetector.IsLiquidGlassSupported());
   private static bool isSettingTheme;
 
   private readonly Styles themeStylesContainer = new();

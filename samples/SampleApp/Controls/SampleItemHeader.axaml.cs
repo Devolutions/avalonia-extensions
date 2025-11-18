@@ -32,18 +32,27 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     set => this.SetValue(ApplicableToProperty, value);
   }
 
-  private bool IsApplicable =>
-    this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Any(theme =>
-      string.Equals(theme, App.CurrentTheme?.Name, StringComparison.OrdinalIgnoreCase));
 
-  public string? Status
+  private bool IsApplicable
   {
     get
     {
-      if (App.CurrentTheme?.Name == "MacOS (automatic)") return "";
-      return this.IsApplicable ? "🟢" : "🔴";
+      string[] themes = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+      // If MacOS Automatic, use App.IsLiquidGlassTheme to resolve to classic or LiquidGlass
+      if (App.CurrentTheme?.Name != "MacOS (automatic)")
+      {
+        return themes.Any(theme => string.Equals(theme, App.CurrentTheme?.Name, StringComparison.OrdinalIgnoreCase));
+      }
+
+      return App.IsLiquidGlassTheme
+        ? themes.Any(theme => string.Equals(theme, "MacOS - LiquidGlass", StringComparison.OrdinalIgnoreCase))
+        : themes.Any(theme => string.Equals(theme, "MacOS - classic", StringComparison.OrdinalIgnoreCase));
     }
   }
+  
+  public string? Status =>
+    // Always show green/red icon, even for MacOS Automatic, using resolved theme
+    this.IsApplicable ? "🟢" : "🔴";
 
   public new event PropertyChangedEventHandler? PropertyChanged;
 

@@ -33,10 +33,26 @@ public class App : Application
   ///   Returns true if the currently applied theme is LiquidGlass (either explicitly or via auto-detection).
   /// </summary>
   public static bool IsLiquidGlassTheme =>
-    CurrentTheme is MacOsLiquidGlassTheme
-    || (CurrentTheme is MacOsTheme && MacOSVersionDetector.IsLiquidGlassSupported());
+    EffectiveCurrentThemeName == MacOsLiquidGlassTheme.ThemeName;
 
   public static Theme? CurrentTheme { get; set; }
+
+  /// <summary>
+  ///   Returns the effective theme name, resolving MacOS Automatic to Classic or LiquidGlass as appropriate.
+  /// </summary>
+  public static string EffectiveCurrentThemeName
+  {
+    get
+    {
+      if (CurrentTheme is MacOsTheme)
+      {
+        return MacOSVersionDetector.IsLiquidGlassSupported()
+          ? MacOsLiquidGlassTheme.ThemeName
+          : MacOsClassicTheme.ThemeName;
+      }
+      return CurrentTheme?.Name ?? "";
+    }
+  }
 
   public override void Initialize()
   {
@@ -338,7 +354,8 @@ public class DevExpressTheme : Theme
 
 public class MacOsTheme : Theme
 {
-  public override string Name => "MacOS (automatic)";
+  public const string ThemeName = "MacOS (automatic)";
+  public override string Name => ThemeName;
 
   /// <summary>
   ///   OS version override to apply before loading theme resources.
@@ -349,7 +366,8 @@ public class MacOsTheme : Theme
 
 public class MacOsClassicTheme : MacOsTheme
 {
-  public override string Name => "MacOS - classic";
+  public new const string ThemeName = "MacOS - classic";
+  public override string Name => ThemeName;
 
   /// <summary>
   ///   Force classic theme by simulating OS version &lt; 26
@@ -359,7 +377,8 @@ public class MacOsClassicTheme : MacOsTheme
 
 public class MacOsLiquidGlassTheme : MacOsTheme
 {
-  public override string Name => "MacOS - LiquidGlass";
+  public new const string ThemeName = "MacOS - LiquidGlass";
+  public override string Name => ThemeName;
 
   /// <summary>
   ///   Force LiquidGlass theme by simulating OS version &gt;= 26

@@ -18,8 +18,7 @@
         <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
         <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
-                    IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+                    IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
                    ConverterParameter=MacOS - classic}">
           <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 0 0">/</TextBlock>

@@ -10,8 +10,7 @@
       where lighter and darker variants are also calculated. </TextBlock>
     <TextBlock Margin="0 0 0 10"
                TextWrapping="Wrap"
-               IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                       Path=Name,
+               IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
                        ConverterParameter=Linux - Yaru}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml

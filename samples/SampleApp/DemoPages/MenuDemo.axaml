@@ -215,8 +215,7 @@
           </Menu>
           <Border Background="{DynamicResource BackgroundBrush}" Padding="15">
             <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap"
-                       IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                       Path=Name,
+                       IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
                        ConverterParameter=MacOS - classic}">
               <Bold>Use the following classes for menu styling:</Bold><LineBreak /><LineBreak />

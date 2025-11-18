@@ -38,15 +38,7 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     get
     {
       string[] themes = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-      // If MacOS Automatic, use App.IsLiquidGlassTheme to resolve to classic or LiquidGlass
-      if (App.CurrentTheme?.Name != "MacOS (automatic)")
-      {
-        return themes.Any(theme => string.Equals(theme, App.CurrentTheme?.Name, StringComparison.OrdinalIgnoreCase));
-      }
-
-      return App.IsLiquidGlassTheme
-        ? themes.Any(theme => string.Equals(theme, "MacOS - LiquidGlass", StringComparison.OrdinalIgnoreCase))
-        : themes.Any(theme => string.Equals(theme, "MacOS - classic", StringComparison.OrdinalIgnoreCase));
+      return themes.Any(theme => string.Equals(theme, App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
     }
   }
   

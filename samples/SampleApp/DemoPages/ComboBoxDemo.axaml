@@ -42,8 +42,7 @@
         - Scrolling options list:
         <LineBreak />
         <TextBlock
-          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme},
-                               Path=Name,
+          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                                Converter={StaticResource EqualToComparisonConverter},
                                ConverterParameter=MacOS - classic}">
           (results in minor positioning bug)

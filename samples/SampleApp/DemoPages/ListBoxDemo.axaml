@@ -55,8 +55,7 @@
         To override default styles, etc. use a custom ItemTemplate:
         <TextBlock
           TextWrapping="Wrap"
-          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                       Path=Name,
+          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
                        ConverterParameter=MacOS - classic}">
           (Center-aligned text not recommended, unless length variation is minimal)

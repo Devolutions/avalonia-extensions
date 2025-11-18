@@ -79,8 +79,7 @@
           </DataGrid.Columns>
         </DataGrid>
         <TextBlock
-          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
                    ConverterParameter=MacOS - classic}">
           This can be fixed by applying
@@ -88,8 +87,7 @@
         </TextBlock>
         <DataGrid ItemsSource="{Binding Items}"
                   Classes="MacOS_NonDistributed_Columns"
-                  IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+                  IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
                    ConverterParameter=MacOS - classic}">
           <DataGrid.Columns>

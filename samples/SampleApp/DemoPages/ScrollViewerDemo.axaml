@@ -100,8 +100,7 @@
       </Grid>
       <TextBlock
         TextWrapping="Wrap"
-        IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+        IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
                    ConverterParameter=MacOS - classic}">
         <Bold>Note:</Bold> MacOS hides scrollbars completely (depending on user settings), but they re-appear on scroll events.

@@ -61,11 +61,11 @@ macOS 26 (Tahoe), released September 2025, introduced "Liquid Glass" - a new des
    - Green stub appears for LiquidGlass, normal colors for Classic
    - Auto-detection works for default theme
 
-### 🔄 Next Steps (Phase 3)
-- Replace green color stub with real LiquidGlass styling
-- Define enhanced shadows, translucency, and vibrancy effects
-- Test in both Light and Dark modes
-- Compare side-by-side with Classic theme
+### 🔄 Next Steps
+- All infrastructure for LiquidGlass theme development is complete and working in SampleApp.
+- Manual theme switching and OS auto-detection are fully implemented.
+- The SampleApp now includes a top-right wallpaper preview control (checkbox) for testing translucency effects.
+- The next step is to work on individual controls, one at a time, to implement LiquidGlass-inspired visual effects.
 
 ## Technical Architecture
 
@@ -235,77 +235,22 @@ Add three MacOS theme variants:
 
 **Duration:** Completed
 
-### Phase 3: Liquid Glass Visual Effects Definition 🔄 IN PROGRESS
+### Phase 3: Per-Control LiquidGlass Visual Effects (Upcoming)
 
-**Prerequisites:** Phase 2 must be complete (manual sub-theme switching working) ✅
+**Goal:** Implement and test LiquidGlass-inspired visual effects for individual controls in SampleApp.
 
-**Goal:** Replace the green color stub with actual Liquid Glass-inspired styling.
+**Status:** Infrastructure and preview tools are complete. Ready to begin per-control visual work.
 
-**Status:** Initial implementation complete, awaiting user testing after reboot.
-
-**Deliverables:**
-- [x] Research and identify key resources from `ThemeResources.axaml` to override
-- [x] Define enhanced shadow resources (PopupShadow, ToolTipBorderShadow, etc.)
-- [x] Define translucency levels (conservative approach)
-- [x] Replace stub colors in `ThemeResources_LiquidGlass.axaml` with real styling
-- [ ] Test in both Light and Dark modes (user testing pending)
-- [ ] Iterate based on visual feedback
-- [ ] Document final values with rationale
-
-**Implementation Summary:**
-Replaced green color stub with conservative shadow and opacity enhancements. See `.claude/temp/liquidglass-phase3-notes.md` for detailed implementation notes including:
-- All shadow value changes (before/after comparison)
-- Design rationale and philosophy
-- Testing strategy
-- Potential adjustment approaches
-
-**Current Approach:**
-- Enhanced shadows with 5-20% deeper/stronger values
-- Subtle scrollbar visibility improvements
-- Slightly more pronounced material layering
-- Stronger effects in dark mode for better depth perception
-- No color changes, no template modifications (yet)
-
-**User Feedback Status:**
-- Initial impression: Effects may be too subtle
-- Needs side-by-side comparison after reboot
-- May need adjustment based on real-world testing
-- SampleApp demos may not showcase differences well
-
-**Testing Approach:**
-- Use manual sub-theme switching from Phase 2
-- Compare side-by-side: "MacOS - classic" vs "MacOS - LiquidGlass"
-- Test in both Light and Dark system themes
-- Focus on: buttons, text boxes, popups, tooltips, scrollbars
-
-**Duration:** 2-3 days (in progress)
+**Approach:**
+- Work on one control at a time (Window, Menu, ToolTip, DataGrid, ScrollViewer, etc.)
+- Use the wallpaper preview control to test translucency and vibrancy effects
+- Document changes and rationale for each control
 
 ### Phase 4: Selective Control Template Updates ⏸️ PENDING
 
 **Prerequisites:** Phase 3 must be complete (resource-level styling done)
 
 **Goal:** Enhance specific control templates if resource overrides prove insufficient.
-
-**Note:** This phase may be unnecessary if resource overrides in Phase 3 achieve desired results.
-
-**Priority Controls (High Visual Impact):**
-
-1. **Window** - Main application chrome
-2. **Menu/ContextMenu** - Prominent glass effect
-3. **ToolTip** - Small but frequent
-4. **DataGrid** - Large surface area
-5. **ScrollViewer** - Translucent scrollbars
-
-**Medium Priority:**
-6. ComboBox/ListBox dropdowns
-7. TabControl backgrounds
-8. Expander panels
-9. TreeView sidebars
-
-**Low Priority (minimal changes):**
-10. Button/CheckBox/RadioButton - too small for complex effects
-11. TextBox - should remain solid for readability
-12. Slider/ToggleSwitch - functional, not decorative
 
 **Approach:**
 - Start with resource overrides only (Phase 3)
@@ -504,7 +449,8 @@ Replaced green color stub with conservative shadow and opacity enhancements. See
 
 ## Notes
 
-- **Current Focus:** Phase 2 - Manual sub-theme switching in SampleApp
-- **Blocking:** Cannot proceed to visual styling (Phase 3) until manual switching works
-- **Approach:** Incremental, testable phases with clear dependencies
-- **Philosophy:** Conservative styling prioritizing readability over visual complexity
+- All infrastructure for LiquidGlass theme development is complete and working in SampleApp.
+- Manual theme switching and OS auto-detection are fully implemented.
+- The SampleApp now includes a top-right wallpaper preview control (checkbox) for testing translucency effects.
+- The next step is to work on individual controls, one at a time, to implement LiquidGlass-inspired visual effects.
+- Documentation and planning will be updated as each control is completed.

@@ -357,12 +357,6 @@ public partial class MultiComboBox : SelectingItemsControl
 
     private void OnDropDownClosed()
     {
-        // // Detach and discard the inner control
-        // if (this.itemsListPresenter is not null)
-        // {
-        //     this.itemsListPresenter.Content = null;
-        // }
-
         // Clear filtered items
         this.filteredItems.Clear();
     }
@@ -527,8 +521,15 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             if (!hasFilterText || this.ItemMatchesFilter(item, filterText))
             {
-                // CRITICAL: If item is a MultiComboBoxItem container (from inline XAML),
-                // extract its content/data rather than using the container itself
+                // If we have concrete `MultiComboBoxItem` instances, they are owned by us 
+                // ("us" being `MultiComboBox` because we are a `ItemsControl`).
+                //
+                // ItemsControl must own their containers.
+                // We don't realize unrealized container, so the inner `InnerMultiComboBoxList` can realize
+                // and own them without problem.
+                //
+                // However, if we own concrete instances, we must send clones to the InnerMultiComboBoxList,
+                // so we clone and bind them.
                 if (item is MultiComboBoxItem containerItem)
                 {
                     this.filteredItems.Add(new MultiComboBoxItem

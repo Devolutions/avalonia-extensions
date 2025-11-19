@@ -33,7 +33,7 @@ public class App : Application
   ///   Returns true if the currently applied theme is LiquidGlass (either explicitly or via auto-detection).
   /// </summary>
   public static bool IsLiquidGlassTheme =>
-    EffectiveCurrentThemeName == MacOsLiquidGlassTheme.ThemeName;
+    EffectiveCurrentThemeName == new MacOsLiquidGlassTheme().Name;
 
   public static Theme? CurrentTheme { get; set; }
 
@@ -48,9 +48,10 @@ public class App : Application
       if (CurrentTheme is MacOsTheme)
       {
         return MacOSVersionDetector.IsLiquidGlassSupported()
-          ? MacOsLiquidGlassTheme.ThemeName
-          : MacOsClassicTheme.ThemeName;
+          ? new MacOsLiquidGlassTheme().Name
+          : new MacOsClassicTheme().Name;
       }
+
       return CurrentTheme?.Name ?? "";
     }
   }
@@ -331,14 +332,7 @@ public class App : Application
 
 public abstract class Theme
 {
-  /// <summary>
-  ///   Short name for use in code/logic (e.g., "MacOS", "LiquidGlass")
-  /// </summary>
   public abstract string Name { get; }
-
-  /// <summary>
-  ///   Display name for UI presentation (e.g., "MacOS (automatic)", "MacOS - LiquidGlass")
-  /// </summary>
   public abstract string DisplayName { get; }
 
   public override bool Equals(object? obj) =>
@@ -353,27 +347,21 @@ public abstract class Theme
 
 public class LinuxYaruTheme : Theme
 {
-  public const string ThemeName = "Yaru";
-  public const string ThemeDisplayName = "Linux - Yaru";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeDisplayName;
+  public override string Name => "Yaru";
+  public override string DisplayName => "Linux - Yaru";
 }
 
 public class DevExpressTheme : Theme
 {
-  public const string ThemeName = "DevExpress";
-  public const string ThemeDisplayName = "Windows - DevExpress";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeDisplayName;
+  public override string Name => "DevExpress";
+  public override string DisplayName => "Windows - DevExpress";
 }
 
 public class MacOsTheme : Theme
 {
-  public const string ThemeName = "MacOS";
-  public const string ThemeDisplayName = "MacOS (automatic)";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeDisplayName;
-
+  public override string Name => "MacOS";
+  public override string DisplayName => "MacOS (automatic)";
+  
   /// <summary>
   ///   OS version override to apply before loading theme resources.
   ///   null = use actual OS detection (default behavior)
@@ -383,24 +371,19 @@ public class MacOsTheme : Theme
 
 public class MacOsClassicTheme : MacOsTheme
 {
-  public new const string ThemeName = "MacClassic";
-  public new const string ThemeDisplayName = "MacOS - classic";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeDisplayName;
-
+  public override string Name => "MacClassic";
+  public override string DisplayName => "MacOS - classic";
+  
   /// <summary>
-  ///   Force classic theme by simulating OS version &lt; 26
+  ///   Force classic theme by simulating OS version &lt;= 26
   /// </summary>
   public override bool? OsVersionOverride => false;
 }
 
 public class MacOsLiquidGlassTheme : MacOsTheme
 {
-  public new const string ThemeName = "LiquidGlass";
-  public new const string ThemeDisplayName = "MacOS - LiquidGlass";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeDisplayName;
-
+  public override string Name => "LiquidGlass";
+  public override string DisplayName => "MacOS - LiquidGlass";
   /// <summary>
   ///   Force LiquidGlass theme by simulating OS version &gt;= 26
   /// </summary>
@@ -409,14 +392,12 @@ public class MacOsLiquidGlassTheme : MacOsTheme
 
 public class FluentTheme : Theme
 {
-  public const string ThemeName = "Fluent";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeName;
+  public override string Name => "Fluent";
+  public override string DisplayName => "Fluent";
 }
 
 public class SimpleTheme : Theme
 {
-  public const string ThemeName = "Simple";
-  public override string Name => ThemeName;
-  public override string DisplayName => ThemeName;
+  public override string Name => "Simple";
+  public override string DisplayName => "Simple";
 }

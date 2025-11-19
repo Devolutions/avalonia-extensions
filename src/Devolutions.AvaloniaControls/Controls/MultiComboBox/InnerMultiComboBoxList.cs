@@ -32,6 +32,7 @@ public partial class MultiComboBox
             if (item is MultiComboBoxItem containerItem)
             {
                 container.DataContext = containerItem.Content;
+                containerItem.ContentTemplate ??= this.ItemTemplate;
             }
 
             base.PrepareContainerForItemOverride(container, item, index);
@@ -46,4 +47,3 @@ public partial class MultiComboBox
         }
     }
 }
-// ReSharper enable MemberHidesStaticFromOuterClass

@@ -163,7 +163,7 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             Name = "PART_ItemsList",
             ItemsSource = this.filteredItems,
-            [!ItemsPanelProperty] = this[!ItemsPanelProperty], // Forward to inner control
+            [!ItemsPanelProperty] = this[!ItemsPanelProperty],
             [!ItemTemplateProperty] = this[!ItemTemplateProperty],
             [!ScrollViewer.HorizontalScrollBarVisibilityProperty] = this[!ScrollViewer.HorizontalScrollBarVisibilityProperty],
             [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],

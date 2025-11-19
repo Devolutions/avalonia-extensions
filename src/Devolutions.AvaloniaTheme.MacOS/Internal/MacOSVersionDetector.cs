@@ -9,7 +9,11 @@ namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 /// </remarks>
 public static class MacOSVersionDetector
 {
-  private static bool? _isLiquidGlassSupported;
+  private static readonly Lazy<bool> _isLiquidGlassSupported = new Lazy<bool>(
+    () => OperatingSystem.IsMacOS() && OperatingSystem.IsMacOSVersionAtLeast(26),
+    System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+
+  private static readonly object _overrideLock = new object();
   internal static bool? _testOverride;
 
   /// <summary>
@@ -32,22 +36,15 @@ public static class MacOSVersionDetector
   public static bool IsLiquidGlassSupported()
   {
     // Test override takes precedence (for development/testing)
-    if (_testOverride.HasValue)
+    lock (_overrideLock)
     {
-      return _testOverride.Value;
+      if (_testOverride.HasValue)
+      {
+        return _testOverride.Value;
+      }
     }
 
-    // Return cached result if available
-    if (_isLiquidGlassSupported.HasValue)
-    {
-      return _isLiquidGlassSupported.Value;
-    }
-
-    // Check if running on macOS AND version 26+
-    // Uses native libobjc.get_operatingSystemVersion API via .NET
-    _isLiquidGlassSupported = OperatingSystem.IsMacOS()
-                              && OperatingSystem.IsMacOSVersionAtLeast(26);
-
+    // Return thread-safe cached result
     return _isLiquidGlassSupported.Value;
   }
 
@@ -64,9 +61,10 @@ public static class MacOSVersionDetector
   /// </remarks>
   public static void SetTestOverride(bool? useLiquidGlass)
   {
-    _testOverride = useLiquidGlass;
-    // Clear cached value when override changes
-    _isLiquidGlassSupported = null;
+    lock (_overrideLock)
+    {
+      _testOverride = useLiquidGlass;
+    }
   }
 
   /// <summary>
@@ -74,7 +72,11 @@ public static class MacOSVersionDetector
   /// </summary>
   internal static void ResetCache()
   {
-    _isLiquidGlassSupported = null;
-    _testOverride = null;
+    lock (_overrideLock)
+    {
+      _testOverride = null;
+    }
+    // Note: Cannot reset Lazy<T> once initialized, but this is acceptable
+    // since OS version cannot change during process lifetime
   }
 }

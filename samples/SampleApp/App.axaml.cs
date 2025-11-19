@@ -19,6 +19,7 @@ using ViewModels;
 
 public class App : Application
 {
+  private static readonly object themeLock = new object();
   private static bool isSettingTheme;
 
   // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
@@ -183,13 +184,17 @@ public class App : Application
 
   public static void SetTheme(Theme theme)
   {
-    // Prevent recursive calls during window initialization
-    if (isSettingTheme) return;
+    lock (themeLock)
+    {
+      // Prevent recursive calls during window initialization
+      if (isSettingTheme) return;
 
-    // Early exit if we're already on this theme (prevents unnecessary style churn)
-    if (CurrentTheme?.Name == theme.Name) return;
+      // Early exit if we're already on this theme (prevents unnecessary style churn)
+      if (CurrentTheme?.Name == theme.Name) return;
 
-    isSettingTheme = true;
+      isSettingTheme = true;
+    }
+
     try
     {
       App app = (App)Current!;
@@ -265,7 +270,10 @@ public class App : Application
     }
     finally
     {
-      isSettingTheme = false;
+      lock (themeLock)
+      {
+        isSettingTheme = false;
+      }
     }
   }
 

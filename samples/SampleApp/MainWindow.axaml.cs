@@ -17,7 +17,10 @@ public partial class MainWindow : Window
   public MainWindow()
   {
     this.InitializeComponent();
-    this.UpdatePreviewBackground();
+    
+    // Update preview background once the window is fully loaded
+    this.Loaded += (s, e) => this.UpdatePreviewBackground();
+    
 #if DEBUG
     bool useAccelerate = Environment.GetEnvironmentVariable("USE_AVALONIA_ACCELERATE_TOOLS")?.ToLowerInvariant() == "true";
 
@@ -51,12 +54,11 @@ public partial class MainWindow : Window
 
   private void UpdatePreviewBackground()
   {
-    MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
-    if (vm == null) return;
+    if (this.currentViewModel == null) return;
     Panel? panel = this.FindControl<Panel>("PreviewWallpaper");
     if (panel == null) return;
 
-    panel.Background = vm.ShowWallpaper ? this.GenerateTieDyeBrush() : Brushes.Transparent;
+    panel.Background = this.currentViewModel.ShowWallpaper ? this.GenerateTieDyeBrush() : Brushes.Transparent;
   }
 
   // When switching Themes, the ViewModel survives across window recreation, but the window itself is brand new.
@@ -66,21 +68,21 @@ public partial class MainWindow : Window
   {
     base.OnDataContextChanged(e);
 
-    // Unsubscribe from old ViewModel
-    if (this.currentViewModel != null)
+    MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
+    
+    // Only unsubscribe if we're switching to a different ViewModel
+    if (this.currentViewModel != null && this.currentViewModel != vm)
     {
       this.currentViewModel.PropertyChanged -= this.OnViewModelPropertyChanged;
     }
 
-    // Subscribe to new ViewModel
-    MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
-    this.currentViewModel = vm;
-
-    if (vm != null)
+    // Only subscribe if this is a new ViewModel
+    if (vm != null && this.currentViewModel != vm)
     {
-      this.UpdatePreviewBackground();
       vm.PropertyChanged += this.OnViewModelPropertyChanged;
     }
+    
+    this.currentViewModel = vm;
   }
 
   private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

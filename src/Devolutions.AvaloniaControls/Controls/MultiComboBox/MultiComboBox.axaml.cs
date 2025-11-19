@@ -67,9 +67,6 @@ public partial class MultiComboBox : SelectingItemsControl
     public static readonly DirectProperty<MultiComboBox, bool> IsFilterEnabledProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(IsFilterEnabled), static c => c.IsFilterEnabled);
 
-    public static readonly DirectProperty<MultiComboBox, bool> HasNoResultsProperty =
-        AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(HasNoResults), static c => c.HasNoResults);
-
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         AvaloniaProperty.Register<MultiComboBox, double>(
             nameof(MaxDropDownHeight));
@@ -248,8 +245,6 @@ public partial class MultiComboBox : SelectingItemsControl
     }
 
     public bool IsFilterEnabled => this.ShowFilter ?? this.ItemCount > 20;
-
-    public bool HasNoResults => this.IsFilterEnabled && !string.IsNullOrWhiteSpace(this.FilterValue) && this.FilteredItems.Count == 0;
 
     private bool IsFilterFocused => this.filterTextbox?.IsFocused == true;
 
@@ -561,9 +556,6 @@ public partial class MultiComboBox : SelectingItemsControl
                 }
             }
         }
-
-        // Notify that HasNoResults may have changed
-        this.RaisePropertyChanged(HasNoResultsProperty, !this.HasNoResults, this.HasNoResults);
     }
 
     private bool ItemMatchesFilter(object? item, string? filterText)

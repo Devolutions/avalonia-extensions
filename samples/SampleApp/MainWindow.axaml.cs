@@ -1,6 +1,7 @@
 namespace SampleApp;
 
 using System;
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -10,6 +11,7 @@ using ViewModels;
 
 public partial class MainWindow : Window
 {
+  private MainWindowViewModel? currentViewModel;
   private bool suppressThemeChangeEvents;
 
   public MainWindow()
@@ -57,20 +59,36 @@ public partial class MainWindow : Window
     panel.Background = vm.ShowWallpaper ? this.GenerateTieDyeBrush() : Brushes.Transparent;
   }
 
+  // When switching Themes, the ViewModel survives across window recreation, but the window itself is brand new.
+  // That's why OnDataContextChanged fires - the new window is receiving the ViewModel for the first time,
+  // even though the ViewModel already existed (and remembers things like wallpaper setting).
   protected override void OnDataContextChanged(EventArgs e)
   {
     base.OnDataContextChanged(e);
-    MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
-    if (vm == null) return;
 
-    this.UpdatePreviewBackground();
-    vm.PropertyChanged += (s, args) =>
+    // Unsubscribe from old ViewModel
+    if (this.currentViewModel != null)
     {
-      if (args.PropertyName == nameof(vm.ShowWallpaper))
-      {
-        this.UpdatePreviewBackground();
-      }
-    };
+      this.currentViewModel.PropertyChanged -= this.OnViewModelPropertyChanged;
+    }
+
+    // Subscribe to new ViewModel
+    MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
+    this.currentViewModel = vm;
+
+    if (vm != null)
+    {
+      this.UpdatePreviewBackground();
+      vm.PropertyChanged += this.OnViewModelPropertyChanged;
+    }
+  }
+
+  private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+  {
+    if (e.PropertyName == nameof(MainWindowViewModel.ShowWallpaper))
+    {
+      this.UpdatePreviewBackground();
+    }
   }
 
   private IBrush GenerateTieDyeBrush() =>

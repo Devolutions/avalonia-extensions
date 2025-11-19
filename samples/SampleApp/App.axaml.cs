@@ -361,7 +361,7 @@ public class MacOsTheme : Theme
 {
   public override string Name => "MacOS";
   public override string DisplayName => "MacOS (automatic)";
-  
+
   /// <summary>
   ///   OS version override to apply before loading theme resources.
   ///   null = use actual OS detection (default behavior)
@@ -373,7 +373,7 @@ public class MacOsClassicTheme : MacOsTheme
 {
   public override string Name => "MacClassic";
   public override string DisplayName => "MacOS - classic";
-  
+
   /// <summary>
   ///   Force classic theme by simulating OS version &lt;= 26
   /// </summary>
@@ -384,6 +384,7 @@ public class MacOsLiquidGlassTheme : MacOsTheme
 {
   public override string Name => "LiquidGlass";
   public override string DisplayName => "MacOS - LiquidGlass";
+
   /// <summary>
   ///   Force LiquidGlass theme by simulating OS version &gt;= 26
   /// </summary>
@@ -393,11 +394,11 @@ public class MacOsLiquidGlassTheme : MacOsTheme
 public class FluentTheme : Theme
 {
   public override string Name => "Fluent";
-  public override string DisplayName => "Fluent";
+  public override string DisplayName => "Avalonia Fluent";
 }
 
 public class SimpleTheme : Theme
 {
   public override string Name => "Simple";
-  public override string DisplayName => "Simple";
+  public override string DisplayName => "Avalonia Simple";
 }

@@ -37,11 +37,11 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
   {
     get
     {
-      string[] themes = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-      return themes.Any(theme => string.Equals(theme, App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
+      string[] themeNames = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+      return themeNames.Any(themeName => string.Equals(themeName, App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
     }
   }
-  
+
   public string? Status =>
     // Always show green/red icon, even for MacOS Automatic, using resolved theme
     this.IsApplicable ? "🟢" : "🔴";

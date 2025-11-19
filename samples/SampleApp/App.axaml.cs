@@ -43,21 +43,10 @@ public class App : Application
   /// <summary>
   ///   Returns the effective theme name (short), resolving MacOS Automatic to Classic or LiquidGlass as appropriate.
   ///   Use this for code/logic comparisons.
+  ///   This is updated whenever the theme changes (in SetTheme()).
   /// </summary>
-  public static string EffectiveCurrentThemeName
-  {
-    get
-    {
-      if (CurrentTheme is MacOsTheme)
-      {
-        return MacOSVersionDetector.IsLiquidGlassSupported()
-          ? LiquidGlassThemeName
-          : MacClassicThemeName;
-      }
+  public static string EffectiveCurrentThemeName { get; private set; } = "";
 
-      return CurrentTheme?.Name ?? "";
-    }
-  }
 
   public override void Initialize()
   {
@@ -217,7 +206,7 @@ public class App : Application
       // MacOS themes require special handling to support sub-theme switching
       if (theme is MacOsTheme macOsTheme)
       {
-        // Set override BEFORE creating new theme instance
+        // Set override FIRST so IsLiquidGlassSupported() returns the correct value
         MacOSVersionDetector.SetTestOverride(macOsTheme.OsVersionOverride);
 
         // Create fresh styles with the new override active
@@ -235,6 +224,19 @@ public class App : Application
           SimpleTheme => app.simpleStyles,
           _ => null
         };
+      }
+
+      // Update cached effective theme name
+      // This avoids repeated OS version checks when XAML bindings access the property
+      if (theme is MacOsTheme)
+      {
+        EffectiveCurrentThemeName = MacOSVersionDetector.IsLiquidGlassSupported()
+          ? LiquidGlassThemeName
+          : MacClassicThemeName;
+      }
+      else
+      {
+        EffectiveCurrentThemeName = theme?.Name ?? "";
       }
 
       if (reopenWindow && app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)

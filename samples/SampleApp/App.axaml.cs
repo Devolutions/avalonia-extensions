@@ -106,8 +106,17 @@ public class App : Application
           .FirstOrDefault(theme => theme is not null);
       }
     }
-    catch (Exception)
-    { /* ignore */
+    catch (DirectoryNotFoundException)
+    { /* ignore: directory structure not as expected */
+    }
+    catch (IOException)
+    { /* ignore: file not found or inaccessible */
+    }
+    catch (XmlException)
+    { /* ignore: invalid XML */
+    }
+    catch (UnauthorizedAccessException)
+    { /* ignore: insufficient permissions */
     }
 
     return null;

@@ -19,19 +19,17 @@ using ViewModels;
 
 public class App : Application
 {
-  private static readonly object themeLock = new object();
-  private static bool isSettingTheme;
-
   // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
   internal const string MacClassicThemeName = "MacClassic";
   internal const string LiquidGlassThemeName = "LiquidGlass";
+  private static readonly object themeLock = new();
+  private static bool isSettingTheme;
 
   private readonly Styles themeStylesContainer = new();
   private Styles? devExpressStyles;
   private bool devToolsAttached;
   private Styles? fluentStyles;
   private Styles? linuxYaruStyles;
-  private Styles? macOsStyles;
   private Styles? simpleStyles;
 
   /// <summary>
@@ -73,7 +71,6 @@ public class App : Application
 
     this.linuxYaruStyles = this.Resources["LinuxYaruStyles"] as Styles;
     this.devExpressStyles = this.Resources["DevExpressStyles"] as Styles;
-    this.macOsStyles = this.Resources["MacOsStyles"] as Styles;
     this.fluentStyles = this.Resources["FluentStyles"] as Styles;
     this.simpleStyles = this.Resources["SimpleStyles"] as Styles;
 
@@ -112,17 +109,29 @@ public class App : Application
           .FirstOrDefault(theme => theme is not null);
       }
     }
-    catch (DirectoryNotFoundException)
-    { /* ignore: directory structure not as expected */
+    catch (DirectoryNotFoundException e)
+    {
+#if DEBUG
+      Console.WriteLine($"[DEBUG] DirectoryNotFoundException in DetectDesignTheme: {e}");
+#endif
     }
-    catch (IOException)
-    { /* ignore: file not found or inaccessible */
+    catch (IOException e)
+    {
+#if DEBUG
+      Console.WriteLine($"[DEBUG] IOException in DetectDesignTheme: {e}");
+#endif
     }
-    catch (XmlException)
-    { /* ignore: invalid XML */
+    catch (XmlException e)
+    {
+#if DEBUG
+      Console.WriteLine($"[DEBUG] XmlException in DetectDesignTheme: {e}");
+#endif
     }
-    catch (UnauthorizedAccessException)
-    { /* ignore: insufficient permissions */
+    catch (UnauthorizedAccessException e)
+    {
+#if DEBUG
+      Console.WriteLine($"[DEBUG] UnauthorizedAccessException in DetectDesignTheme: {e}");
+#endif
     }
 
     return null;

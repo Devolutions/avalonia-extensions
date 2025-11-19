@@ -57,8 +57,7 @@
     <TabItem Header="Non-Distributed Columns">
       <StackPanel Margin="20" Spacing="10">
         <TextBlock
-          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName}, 
                    Converter={StaticResource EqualToComparisonConverter},
                    ConverterParameter=MacClassic}">
           <Bold>NOTE:</Bold> When none of the columns are sized to fill the width of the table (<TextBlock Classes="code" Text="Width='*'" />), the right row margins are too large

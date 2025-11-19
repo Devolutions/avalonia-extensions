@@ -87,6 +87,18 @@ public partial class MainWindow : Window
     this.currentViewModel = vm;
   }
 
+  protected override void OnClosed(EventArgs e)
+  {
+    // Unsubscribe from ViewModel events to prevent memory leaks
+    if (this.currentViewModel != null)
+    {
+      this.currentViewModel.PropertyChanged -= this.OnViewModelPropertyChanged;
+      this.currentViewModel = null;
+    }
+
+    base.OnClosed(e);
+  }
+
   private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
     if (e.PropertyName == nameof(MainWindowViewModel.ShowWallpaper))

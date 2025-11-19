@@ -21,6 +21,10 @@ public class App : Application
 {
   private static bool isSettingTheme;
 
+  // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
+  internal const string MacClassicThemeName = "MacClassic";
+  internal const string LiquidGlassThemeName = "LiquidGlass";
+
   private readonly Styles themeStylesContainer = new();
   private Styles? devExpressStyles;
   private bool devToolsAttached;
@@ -33,7 +37,7 @@ public class App : Application
   ///   Returns true if the currently applied theme is LiquidGlass (either explicitly or via auto-detection).
   /// </summary>
   public static bool IsLiquidGlassTheme =>
-    EffectiveCurrentThemeName == new MacOsLiquidGlassTheme().Name;
+    EffectiveCurrentThemeName == LiquidGlassThemeName;
 
   public static Theme? CurrentTheme { get; set; }
 
@@ -48,8 +52,8 @@ public class App : Application
       if (CurrentTheme is MacOsTheme)
       {
         return MacOSVersionDetector.IsLiquidGlassSupported()
-          ? new MacOsLiquidGlassTheme().Name
-          : new MacOsClassicTheme().Name;
+          ? LiquidGlassThemeName
+          : MacClassicThemeName;
       }
 
       return CurrentTheme?.Name ?? "";
@@ -94,12 +98,13 @@ public class App : Application
       XmlDocument doc = new();
       string dir = Directory.GetCurrentDirectory();
       DirectoryInfo? debug = Directory.GetParent(dir);
-      DirectoryInfo? bin = Directory.GetParent(debug!.FullName);
-      if (debug.Name.Equals("Debug", StringComparison.OrdinalIgnoreCase) && bin!.Name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+      DirectoryInfo? bin = debug != null ? Directory.GetParent(debug.FullName) : null;
+      if (debug?.Name.Equals("Debug", StringComparison.OrdinalIgnoreCase) == true &&
+          bin?.Name.Equals("bin", StringComparison.OrdinalIgnoreCase) == true)
       {
         DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
         doc.Load(Path.Join(projDir!.FullName, "App.axaml"));
-        XmlElement? styles = doc["Application"]!["Application.Styles"];
+        XmlElement? styles = doc["Application"]?["Application.Styles"];
 
         return styles?.OfType<XmlElement>()
           .Select(this.ThemeFromXmlElement)
@@ -167,9 +172,10 @@ public class App : Application
     styles.Add(macOsTheme);
 
     // Add app-specific styles
-    styles.Add(new StyleInclude(new Uri("avares://SampleApp/Styles.axaml"))
+    Uri stylesUri = new("avares://SampleApp/Styles.axaml");
+    styles.Add(new StyleInclude(stylesUri)
     {
-      Source = new Uri("avares://SampleApp/Styles.axaml")
+      Source = stylesUri
     });
 
     return styles;
@@ -235,16 +241,26 @@ public class App : Application
 
         oldWindow?.Hide();
 
+        if (styles == null)
+        {
+          throw new InvalidOperationException($"Unable to load styles for theme: {theme.Name}");
+        }
+
         app.themeStylesContainer.Clear();
-        app.themeStylesContainer.AddRange(styles!);
+        app.themeStylesContainer.AddRange(styles);
 
         RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
       }
       else
       {
         // Just change styles without window recreation
+        if (styles == null)
+        {
+          throw new InvalidOperationException($"Unable to load styles for theme: {theme.Name}");
+        }
+
         app.themeStylesContainer.Clear();
-        app.themeStylesContainer.AddRange(styles!);
+        app.themeStylesContainer.AddRange(styles);
       }
     }
     finally
@@ -380,7 +396,7 @@ public class MacOsTheme : Theme
 
 public class MacOsClassicTheme : MacOsTheme
 {
-  public override string Name => "MacClassic";
+  public override string Name => App.MacClassicThemeName;
   public override string DisplayName => "MacOS - classic";
 
   /// <summary>
@@ -391,7 +407,7 @@ public class MacOsClassicTheme : MacOsTheme
 
 public class MacOsLiquidGlassTheme : MacOsTheme
 {
-  public override string Name => "LiquidGlass";
+  public override string Name => App.LiquidGlassThemeName;
   public override string DisplayName => "MacOS - LiquidGlass";
 
   /// <summary>

@@ -11,12 +11,14 @@ using ViewModels;
 
 public partial class MainWindow : Window
 {
+  private readonly IBrush tieDyeBrush;
   private MainWindowViewModel? currentViewModel;
   private bool suppressThemeChangeEvents;
 
   public MainWindow()
   {
     this.InitializeComponent();
+    this.tieDyeBrush = this.GenerateTieDyeBrush();
     
     // Update preview background once the window is fully loaded
     this.Loaded += (s, e) => this.UpdatePreviewBackground();
@@ -58,7 +60,7 @@ public partial class MainWindow : Window
     Panel? panel = this.FindControl<Panel>("PreviewWallpaper");
     if (panel == null) return;
 
-    panel.Background = this.currentViewModel.ShowWallpaper ? this.GenerateTieDyeBrush() : Brushes.Transparent;
+    panel.Background = this.currentViewModel.ShowWallpaper ? this.tieDyeBrush : Brushes.Transparent;
   }
 
   // When switching Themes, the ViewModel survives across window recreation, but the window itself is brand new.

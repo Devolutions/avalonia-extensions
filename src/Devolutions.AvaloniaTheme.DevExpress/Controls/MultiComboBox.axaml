@@ -232,13 +232,24 @@
                     BorderBrush="{DynamicResource BorderBrush}" />
 
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
-                  <!--  Inner control for displaying filtered items (has its own ScrollViewer)  -->
-                  <ContentPresenter
-                    Name="PART_ItemsListPresenter"
-                    Grid.IsSharedSizeScope="True"
-                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                    HorizontalAlignment="Stretch"
-                    KeyboardNavigation.TabNavigation="None" />
+                  <Panel HorizontalAlignment="Stretch">
+                    <ContentPresenter
+                      Name="PART_ItemsListPresenter"
+                      Grid.IsSharedSizeScope="True"
+                      Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                      HorizontalAlignment="Stretch"
+                      KeyboardNavigation.TabNavigation="None" />
+
+                    <TextBlock
+                      Name="PART_NoResultsText"
+                      Text="{TemplateBinding NoResultsText}"
+                      IsVisible="{Binding !FilteredItems.Count, RelativeSource={RelativeSource TemplatedParent}}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Margin="6"
+                      FontSize="{TemplateBinding FontSize}"
+                      Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                  </Panel>
                 </DockPanel>
               </Border>
             </Popup>

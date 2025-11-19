@@ -30,6 +30,7 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_SelectionScrollViewer", typeof(ScrollViewer), IsRequired = false)]
 [TemplatePart("PART_SelectAllItem", typeof(MultiComboBoxSelectAllItem), IsRequired = false)]
 [TemplatePart("PART_FilterTextBox", typeof(TextBox), IsRequired = false)]
+[TemplatePart("PART_NoResultsText", typeof(TextBlock), IsRequired = false)]
 [TemplatePart("PART_ItemsListPresenter", typeof(ContentPresenter), IsRequired = true)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
@@ -51,6 +52,9 @@ public partial class MultiComboBox : SelectingItemsControl
     public static readonly StyledProperty<string> FilterTextProperty =
         AvaloniaProperty.Register<MultiComboBox, string>(nameof(FilterText), "Find items");
 
+    public static readonly StyledProperty<string> NoResultsTextProperty =
+        AvaloniaProperty.Register<MultiComboBox, string>(nameof(NoResultsText), "No results found");
+
     public static readonly StyledProperty<string?> FilterValueProperty =
         AvaloniaProperty.Register<MultiComboBox, string?>(nameof(FilterValue), defaultBindingMode: BindingMode.TwoWay, inherits: true);
 
@@ -62,6 +66,9 @@ public partial class MultiComboBox : SelectingItemsControl
 
     public static readonly DirectProperty<MultiComboBox, bool> IsFilterEnabledProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(IsFilterEnabled), static c => c.IsFilterEnabled);
+
+    public static readonly DirectProperty<MultiComboBox, bool> HasNoResultsProperty =
+        AvaloniaProperty.RegisterDirect<MultiComboBox, bool>(nameof(HasNoResults), static c => c.HasNoResults);
 
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         AvaloniaProperty.Register<MultiComboBox, double>(
@@ -129,8 +136,6 @@ public partial class MultiComboBox : SelectingItemsControl
     private static readonly ITemplate<Panel?> DefaultPanel =
         new FuncTemplate<Panel?>(() => new VirtualizingStackPanel());
 
-    private readonly AvaloniaList<object?> filteredItems = [];
-
     private readonly InnerMultiComboBoxList innerList;
 
     private TextBox? filterTextbox;
@@ -162,7 +167,7 @@ public partial class MultiComboBox : SelectingItemsControl
         this.innerList = new InnerMultiComboBoxList(this)
         {
             Name = "PART_ItemsList",
-            ItemsSource = this.filteredItems,
+            ItemsSource = this.FilteredItems,
             [!ItemsPanelProperty] = this[!ItemsPanelProperty],
             [!ItemTemplateProperty] = this[!ItemTemplateProperty],
             [!ScrollViewer.HorizontalScrollBarVisibilityProperty] = this[!ScrollViewer.HorizontalScrollBarVisibilityProperty],
@@ -186,6 +191,8 @@ public partial class MultiComboBox : SelectingItemsControl
 
         ObservableExtension.Subscribe(IsDropDownOpenProperty.Changed, args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
     }
+
+    public AvaloniaList<object?> FilteredItems { get; } = [];
 
     public ITemplate<Panel>? SelectedItemsPanel
     {
@@ -217,6 +224,12 @@ public partial class MultiComboBox : SelectingItemsControl
         set => this.SetValue(FilterTextProperty, value);
     }
 
+    public string NoResultsText
+    {
+        get => this.GetValue(NoResultsTextProperty);
+        set => this.SetValue(NoResultsTextProperty, value);
+    }
+
     public string? FilterValue
     {
         get => this.GetValue(FilterValueProperty);
@@ -235,6 +248,8 @@ public partial class MultiComboBox : SelectingItemsControl
     }
 
     public bool IsFilterEnabled => this.ShowFilter ?? this.ItemCount > 20;
+
+    public bool HasNoResults => this.IsFilterEnabled && !string.IsNullOrWhiteSpace(this.FilterValue) && this.FilteredItems.Count == 0;
 
     private bool IsFilterFocused => this.filterTextbox?.IsFocused == true;
 
@@ -358,7 +373,7 @@ public partial class MultiComboBox : SelectingItemsControl
     private void OnDropDownClosed()
     {
         // Clear filtered items
-        this.filteredItems.Clear();
+        this.FilteredItems.Clear();
     }
 
     private void RaiseDirectPropertyChanged<T>(DirectPropertyBase<T> property)
@@ -514,7 +529,7 @@ public partial class MultiComboBox : SelectingItemsControl
         bool hasFilterText = !string.IsNullOrWhiteSpace(filterText);
 
         // Re-populate filtered items based on current filter
-        this.filteredItems.Clear();
+        this.FilteredItems.Clear();
 
         // IEnumerable source = this.ItemsSource ?? this.Items;
         foreach (object? item in this.ItemsView)
@@ -532,7 +547,7 @@ public partial class MultiComboBox : SelectingItemsControl
                 // so we clone and bind them.
                 if (item is MultiComboBoxItem containerItem)
                 {
-                    this.filteredItems.Add(new MultiComboBoxItem
+                    this.FilteredItems.Add(new MultiComboBoxItem
                     {
                         [!ContentControl.ContentProperty] = containerItem[!ContentControl.ContentProperty],
                         [!ContentControl.ContentTemplateProperty] = containerItem[!ContentControl.ContentTemplateProperty],
@@ -542,10 +557,13 @@ public partial class MultiComboBox : SelectingItemsControl
                 }
                 else
                 {
-                    this.filteredItems.Add(item);
+                    this.FilteredItems.Add(item);
                 }
             }
         }
+
+        // Notify that HasNoResults may have changed
+        this.RaisePropertyChanged(HasNoResultsProperty, !this.HasNoResults, this.HasNoResults);
     }
 
     private bool ItemMatchesFilter(object? item, string? filterText)

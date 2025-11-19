@@ -62,6 +62,12 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
+    <Setter Property="ItemTemplate">
+      <DataTemplate>
+        <SearchHighlightTextBlock Content="{Binding}" Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+      </DataTemplate>
+    </Setter>
+
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -212,6 +218,19 @@
                 HorizontalAlignment="Stretch"
                 CornerRadius="{DynamicResource OverlayCornerRadius}">
                 <DockPanel LastChildFill="True">
+                  <TextBox
+                    Name="PART_FilterTextBox"
+                    DockPanel.Dock="Top"
+                    Classes="no-focus-border"
+                    Watermark="{TemplateBinding FilterText}"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    KeyboardNavigation.IsTabStop="False"
+                    IsVisible="{TemplateBinding IsFilterEnabled}" />
+                  <Separator
+                    DockPanel.Dock="Top"
+                    IsVisible="{TemplateBinding IsFilterEnabled}" />
+
                   <ContentPresenter Content="{TemplateBinding PopupInnerTopContent}" DockPanel.Dock="Top" />
 
                   <MultiComboBoxSelectAllItem
@@ -226,17 +245,24 @@
                     IsVisible="{TemplateBinding SelectAllText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
                   <ContentPresenter Content="{TemplateBinding PopupInnerBottomContent}" DockPanel.Dock="Bottom" />
-                  <ScrollViewer
-                    Grid.IsSharedSizeScope="True"
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
+
+                  <Panel HorizontalAlignment="Stretch">
+                    <ContentPresenter
+                      Name="PART_ItemsListPresenter"
+                      Grid.IsSharedSizeScope="True"
                       Margin="{DynamicResource ComboBoxDropdownContentMargin}"
                       HorizontalAlignment="Stretch"
-                      KeyboardNavigation.TabNavigation="None"
-                      ItemsPanel="{TemplateBinding ItemsPanel}" />
-                  </ScrollViewer>
+                      KeyboardNavigation.TabNavigation="None" />
+
+                    <TextBlock
+                      Name="PART_NoResultsText"
+                      Text="{TemplateBinding NoResultsText}"
+                      IsVisible="{Binding !FilteredItems.Count, RelativeSource={RelativeSource TemplatedParent}}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Margin="6"
+                      Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                  </Panel>
                 </DockPanel>
               </Border>
             </Popup>
@@ -244,6 +270,16 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^ /template/ TextBox#PART_FilterTextBox">
+      <Setter Property="BorderThickness" Value="0" />
+      <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
+        <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="^ /template/ Border#PART_BorderElement">
+          <Setter Property="BorderThickness" Value="0" />
+        </Style>
+      </Style>
+    </Style>
 
     <Style Selector="^.clearButton, ^.ClearButton">
       <Style Selector="^:pointerover:not(:selection-empty) /template/ Button#ClearButton">

@@ -39,8 +39,8 @@
   <!-- KEPT FOR DESIGNER! -->
   <!-- This also dictates which theme is initially loaded -->
   <Application.Styles>
-    <DevolutionsMacOsTheme />
+    <!-- <DevolutionsMacOsTheme /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
-    <!-- <DevolutionsLinuxYaruTheme /> -->
+    <DevolutionsLinuxYaruTheme />
   </Application.Styles>
 </Application>

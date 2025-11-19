@@ -1,0 +1,21 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="clr-namespace:Devolutions.AvaloniaControls.Controls">
+
+  <ControlTheme x:Key="{x:Type local:MultiComboBox+InnerMultiComboBoxList}" TargetType="local:MultiComboBox+InnerMultiComboBoxList">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ScrollViewer
+          Name="PART_ScrollViewer"
+          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+          <ItemsPresenter
+            Name="PART_ItemsPresenter"
+            ItemsPanel="{TemplateBinding ItemsPanel}" />
+        </ScrollViewer>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

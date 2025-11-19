@@ -15,6 +15,9 @@ public class MultiComboBoxItem : ContentControl
     public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<MultiComboBoxItem, bool>(
         nameof(IsSelected));
 
+    public static readonly StyledProperty<string?> FilterValueProperty =
+        MultiComboBox.FilterValueProperty.AddOwner<MultiComboBoxItem>();
+
     private static readonly Point SInvalidPoint = new(double.NaN, double.NaN);
     private MultiComboBox? parent;
     private Point pointerDownPoint = SInvalidPoint;
@@ -32,6 +35,12 @@ public class MultiComboBoxItem : ContentControl
     {
         get => this.GetValue(IsSelectedProperty);
         set => this.SetValueIfChanged(IsSelectedProperty, value);
+    }
+
+    public string? FilterValue
+    {
+        get => this.GetValue(FilterValueProperty);
+        set => this.SetValue(FilterValueProperty, value);
     }
 
     internal void Select()
@@ -89,7 +98,7 @@ public class MultiComboBoxItem : ContentControl
 
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            var p = e.GetCurrentPoint(this);
+            PointerPoint p = e.GetCurrentPoint(this);
             if (p.Properties.PointerUpdateKind is PointerUpdateKind.LeftButtonPressed
                 or PointerUpdateKind.RightButtonPressed)
             {
@@ -112,7 +121,7 @@ public class MultiComboBoxItem : ContentControl
         if (!e.Handled && !double.IsNaN(this.pointerDownPoint.X) &&
             e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
         {
-            var point = e.GetCurrentPoint(this);
+            PointerPoint point = e.GetCurrentPoint(this);
             if (new Rect(this.Bounds.Size).ContainsExclusive(point.Position) && e.Pointer.Type == PointerType.Touch)
             {
                 this.IsSelected = !this.IsSelected;
@@ -131,13 +140,11 @@ public class MultiComboBoxItem : ContentControl
     {
         if (this.updateInternal) return;
         this.updateInternal = true;
-        if (this.parent?.ItemsPanelRoot is VirtualizingPanel)
+
+        bool newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
+        if (newIsSelected != this.IsSelected)
         {
-            var newIsSelected = this.parent?.SelectedItems?.Contains(this.DataContext) ?? false;
-            if (newIsSelected != this.IsSelected)
-            {
-                this.IsSelected = newIsSelected;
-            }
+            this.IsSelected = newIsSelected;
         }
 
         this.updateInternal = false;
@@ -220,8 +227,8 @@ public class MultiComboBoxSelectAllItem : ContentControl
     {
         this.updateInternal = true;
 
-        var selectCount = this.parent?.SelectedItems?.Count;
-        var itemsCount = this.parent?.Items.Count;
+        int? selectCount = this.parent?.SelectedItems?.Count;
+        int? itemsCount = this.parent?.Items.Count;
 
         if (selectCount is null || itemsCount is null || itemsCount == 0 || selectCount == 0)
         {

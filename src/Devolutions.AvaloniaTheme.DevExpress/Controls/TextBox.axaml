@@ -285,11 +285,16 @@
 
 
     <!-- Focused State -->
-    <Style Selector="^:focus:not(.no-focus-border)">
+    <Style Selector="^[IsReadOnly=False]:focus:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
       </Style>
+    </Style>
+
+    <!-- Read-only State -->
+    <Style Selector="^[IsReadOnly=True]">
+      <Setter Property="CaretBrush" Value="Transparent" />
     </Style>
 
     <Style Selector="^:error /template/ Border#ErrorBorder">

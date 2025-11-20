@@ -220,7 +220,7 @@
     </Style>
 
     <!-- Focused State -->
-    <Style Selector="^:focus:not(.no-focus-border)">
+    <Style Selector="^[IsReadOnly=False]:focus:not(.no-focus-border)">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundFocused}" />
 
       <Style Selector="^ /template/ TextBlock#PART_Watermark">
@@ -232,6 +232,11 @@
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler InputFocusedBorder, InputBorder}" />
         <Setter Property="BorderThickness" Value="{WindowActiveResourceToggler InputFocusedBorderThickness, InputBorderThickness}" />
       </Style>
+    </Style>
+
+    <!-- Read-only State -->
+    <Style Selector="^[IsReadOnly=True]">
+      <Setter Property="CaretBrush" Value="Transparent" />
     </Style>
 
     <Style Selector="^:error /template/ Border#PART_BorderElement">

@@ -78,6 +78,35 @@ Note: there may be other agents changing the code while you work.
 - When adding files with special characters, quote the path: `git add "path/with special chars/file.txt"`
 - If you are just making commits in the batches that you think are sensible and there are no deletions, then you don't need to ask me for permission to stage the commits each time.
 
+### Workon Development Changes
+
+**CRITICAL: Never commit /workon development changes**
+
+The `/workon` command modifies these files for local development only:
+- `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
+- `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
+
+**Master branch defaults**:
+- Theme: All themes commented out (automatically selects platform-appropriate theme)
+  ```xml
+  <!-- <DevolutionsMacOsTheme /> -->
+  <!-- <DevolutionsDevExpressTheme /> -->
+  <!-- <DevolutionsLinuxYaruTheme /> -->
+  ```
+- Tab: `IsSelected="True"` on Overview tab only
+
+**Pre-commit workflow**:
+1. Check if App.axaml or MainWindow.axaml have changes
+2. If they do, verify they match the master defaults above
+3. If they DON'T match defaults:
+   - First, run `/workon Default Overview` to restore defaults (all themes commented)
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme and tab`
+   - Then reapply user's development settings (but don't commit them)
+4. Exclude these files from commits unless:
+   - User explicitly requests committing them
+   - Changes are structural (not just theme/tab selection)
+   - Changes involve new code/features in these files
+
 ## Subagent
 
 Run this in a subagent unless there is a good reason not to. Provide it with lots of context about what we've been doing that will help it to make good decisions and write a good commit message.

@@ -40,6 +40,9 @@
           </Grid>
         </StackPanel>
         <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
+          <Label>Read Only:</Label>
+          <TextBox IsReadOnly="True" Text="This is read-only text" />
+          
           <Label>Error Indicator:</Label>
           <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
 

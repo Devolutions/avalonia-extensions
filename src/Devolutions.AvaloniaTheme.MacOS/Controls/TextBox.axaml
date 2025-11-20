@@ -265,13 +265,18 @@
     </Style>
 
     <!-- Focused State -->
-    <Style Selector="^:focus:not(.no-focus-border)">
+    <Style Selector="^[IsReadOnly=False]:focus:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#FocusBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
       </Style>
+    </Style>
+
+    <!-- Read-only State -->
+    <Style Selector="^[IsReadOnly=True]">
+      <Setter Property="CaretBrush" Value="Transparent" />
     </Style>
 
     <Style Selector="^:error /template/ Border#PART_BorderElement">

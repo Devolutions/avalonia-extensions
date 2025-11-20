@@ -11,6 +11,7 @@ riderModule.iml
 
 # VS Code
 .vs
+.vscode/
 
 # local
 global.json

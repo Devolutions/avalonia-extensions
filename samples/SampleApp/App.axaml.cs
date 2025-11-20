@@ -461,8 +461,18 @@ public class MacOsClassicThemeStyle : Styles, ISupportInitialize
 
   public void EndInit()
   {
-    // This wrapper doesn't actually load styles - it's just a marker
-    // The actual theme is loaded by App.Initialize() after detecting this element
+    // At runtime, this wrapper doesn't actually load styles - it's just a marker.
+    // The actual theme is loaded by App.Initialize() after detecting this element.
+    // However, in Design Mode (Previewer), we must explicitly load the theme here
+    // because App.Initialize() is not called.
+    if (Design.IsDesignMode)
+    {
+      MacOSVersionDetector.SetTestOverride(false);
+      var theme = new DevolutionsMacOsTheme();
+      theme.BeginInit();
+      theme.EndInit();
+      this.Add(theme);
+    }
   }
 }
 
@@ -476,7 +486,17 @@ public class MacOsLiquidGlassThemeStyle : Styles, ISupportInitialize
 
   public void EndInit()
   {
-    // This wrapper doesn't actually load styles - it's just a marker
-    // The actual theme is loaded by App.Initialize() after detecting this element
+    // At runtime, this wrapper doesn't actually load styles - it's just a marker.
+    // The actual theme is loaded by App.Initialize() after detecting this element.
+    // However, in Design Mode (Previewer), we must explicitly load the theme here
+    // because App.Initialize() is not called.
+    if (Design.IsDesignMode)
+    {
+      MacOSVersionDetector.SetTestOverride(true);
+      var theme = new DevolutionsMacOsTheme();
+      theme.BeginInit();
+      theme.EndInit();
+      this.Add(theme);
+    }
   }
 }

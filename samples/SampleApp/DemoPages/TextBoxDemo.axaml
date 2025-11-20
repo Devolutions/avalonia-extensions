@@ -44,10 +44,9 @@
           <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
 
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
-                   IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                       Path=Name,
+                   IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Windows - DevExpress}">
+                       ConverterParameter=DevExpress}">
             thin
           </TextBox>
 

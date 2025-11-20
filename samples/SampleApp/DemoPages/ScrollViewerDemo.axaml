@@ -100,10 +100,9 @@
       </Grid>
       <TextBlock
         TextWrapping="Wrap"
-        IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+        IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacOS}">
+                   ConverterParameter=MacClassic}">
         <Bold>Note:</Bold> MacOS hides scrollbars completely (depending on user settings), but they re-appear on scroll events.
         Since Avalonia ScrollBars only expand on pointerOver, hiding them completely would be a bit confusing. So the Thumb sliders
         remain visible even when <TextBlock Classes="code" Text="AllowAutoHide=&quot;True&quot;" />.

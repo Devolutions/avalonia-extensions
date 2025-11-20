@@ -23,10 +23,9 @@
           <TabItem Header="Tab 3" IsEnabled="False" />
         </TabControl>
         <StackPanel
-          IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                       Path=Name,
+          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                        Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Windows - DevExpress}">
+                       ConverterParameter=DevExpress}">
           <TextBlock Margin="0 10 0 2">Vertical NavBar (<TextBlock Classes="code">TabControl Classes="NavBar"</TextBlock>)</TextBlock>
           <Border Classes="alternativeBackground" Padding="20">
             <TabControl TabStripPlacement="Left" Classes="NavBar">

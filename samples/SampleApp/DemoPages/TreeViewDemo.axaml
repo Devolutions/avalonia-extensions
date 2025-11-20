@@ -96,11 +96,10 @@
       </TreeView>
 
       <!-- With alternating row colour & scrolling -->
-      <StackPanel Spacing="20" 
-                  IsVisible="{Binding Source={x:Static sampleApp:App.CurrentTheme}, 
-                   Path=Name,
+      <StackPanel Spacing="20"
+                  IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
                    Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacOS}">
+                   ConverterParameter=MacClassic}">
 
         <TreeView Width="150" Height="160" Classes="MacOS_Theme_AlternatingRowColor"
                   Background="{DynamicResource BackgroundBrush}"

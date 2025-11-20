@@ -6,6 +6,8 @@
       <Color x:Key="BackgroundColor">#ffffff</Color>
       <Color x:Key="ForegroundColor">#000000</Color>
 
+      <Color x:Key="SystemRegionColor">#ffffff</Color>
+
       <Color x:Key="AccentForegroundColor">#ffffff</Color>
       <Color x:Key="ErrorTextColor">#C50500</Color>
 
@@ -141,12 +143,14 @@
       <StaticResource x:Key="ExpanderBackgroundDisabledBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <Thickness x:Key="ExpanderButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0 0 0 1</Thickness>
-      
+
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="BackgroundColor">#000000</Color>
       <Color x:Key="ForegroundColor">#ffffff</Color>
+
+      <Color x:Key="SystemRegionColor">#21222F</Color>
 
       <Color x:Key="AccentForegroundColor">#deecf9</Color>
       <Color x:Key="ErrorTextColor">#ed7083</Color>
@@ -178,7 +182,7 @@
       <Color x:Key="CalendarSelectedBackgroundColor">#454545</Color>
 
 
-      <SolidColorBrush x:Key="BackgroundBrush" Color="#212121" />
+      <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource SystemRegionColor}" />
 
       <SolidColorBrush x:Key="ForegroundHighMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.73" />
       <SolidColorBrush x:Key="ForegroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.55" />
@@ -287,6 +291,7 @@
 
   <!-- TODO: Appkit buttons have DD at the bottom, EE at the top & fading -> try sub-pixel rendering (UseLayoutRounding) (s. `default button issues.psd` ... -->
   <FontFamily x:Key="MacOsThemeFontFamily">SF Pro Text, Inter, Helvetica Neue, Segoe UI, sans-serif</FontFamily>
+  <SolidColorBrush x:Key="SystemRegionBrush" Color="{DynamicResource SystemRegionColor}" />
 
   <LinearGradientBrush x:Key="ControlBackgroundRecessedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
     <GradientStop Offset="0" Color="{DynamicResource ControlBorderLowColor}" />

@@ -20,22 +20,27 @@ Theme must be one of:
 - 'MacOS' → Maps to `<DevolutionsMacOsTheme />`
 - 'DevExpress' → Maps to `<DevolutionsDevExpressTheme />`
 - 'Linux' → Maps to `<DevolutionsLinuxYaruTheme />`
+- 'Default' → All themes commented out (platform-appropriate theme auto-selected)
 
 Case-insensitive matching is acceptable.
 
 ### Step 3: Update App.axaml theme
 File: `samples/SampleApp/App.axaml`
 
-In the `<Application.Styles>` block (around lines 31-35):
+In the `<Application.Styles>` block (around lines 41-45):
 - Comment out ALL three theme lines with `<!-- ... -->`
-- Uncomment ONLY the selected theme
+- If theme is 'Default', leave all commented
+- Otherwise, uncomment ONLY the selected theme
 
-Current state example:
+Default state (master branch should always have this):
 ```xml
   <Application.Styles>
     <!-- <DevolutionsMacOsTheme /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
-    <DevolutionsLinuxYaruTheme />
+    <!-- <DevolutionsLinuxYaruTheme /> -->
+
+    <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
+    <Style />
   </Application.Styles>
 ```
 
@@ -45,6 +50,9 @@ Target state for MacOS:
     <DevolutionsMacOsTheme />
     <!-- <DevolutionsDevExpressTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
+
+    <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
+    <Style />
   </Application.Styles>
 ```
 

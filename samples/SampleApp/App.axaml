@@ -41,6 +41,9 @@
   <Application.Styles>
     <!-- <DevolutionsMacOsTheme /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
-    <DevolutionsLinuxYaruTheme />
+    <!-- <DevolutionsLinuxYaruTheme /> -->
+
+    <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
+    <Style />
   </Application.Styles>
 </Application>

@@ -26,14 +26,19 @@ The `/workon` command modifies these files for local development only:
 - `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
 
 **Master branch defaults** (never change these):
-- Theme: `<DevolutionsMacOsTheme />` (uncommented, others commented)
+- Theme: All themes commented out (automatically selects platform-appropriate theme)
+  ```xml
+  <!-- <DevolutionsMacOsTheme /> -->
+  <!-- <DevolutionsDevExpressTheme /> -->
+  <!-- <DevolutionsLinuxYaruTheme /> -->
+  ```
 - Tab: `IsSelected="True"` on Overview tab only
 
 **Pre-commit workflow**:
 1. Check if App.axaml or MainWindow.axaml have changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/workon MacOS Overview` to restore defaults
+   - First, run `/workon Default Overview` to restore defaults (all themes commented)
    - Create a commit with those restorations if needed: `[SampleApp] Restore default theme and tab`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:

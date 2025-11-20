@@ -1,6 +1,7 @@
 namespace SampleApp;
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -130,9 +131,12 @@ public class App : Application
   {
     if (elem is null) return null;
 
-    return elem.Name switch
+    // Use LocalName to ignore namespace prefix (e.g., "local:MacOsClassicThemeStyle" -> "MacOsClassicThemeStyle")
+    return elem.LocalName switch
     {
       "DevolutionsMacOsTheme" => new MacOsTheme(),
+      "MacOsClassicThemeStyle" => new MacOsClassicTheme(),
+      "MacOsLiquidGlassThemeStyle" => new MacOsLiquidGlassTheme(),
       "DevolutionsLinuxYaruTheme" => new LinuxYaruTheme(),
       "DevolutionsDevExpressTheme" => new DevExpressTheme(),
       "StyleInclude" => elem.GetAttribute("Source") switch
@@ -445,4 +449,34 @@ public class SimpleTheme : Theme
 {
   public override string Name => "Simple";
   public override string DisplayName => "Avalonia Simple";
+}
+
+/// <summary>
+/// XAML-compatible wrapper for MacOS Classic theme.
+/// Used in Application.Styles to force Classic theme on startup.
+/// </summary>
+public class MacOsClassicThemeStyle : Styles, ISupportInitialize
+{
+  public void BeginInit() { }
+
+  public void EndInit()
+  {
+    // This wrapper doesn't actually load styles - it's just a marker
+    // The actual theme is loaded by App.Initialize() after detecting this element
+  }
+}
+
+/// <summary>
+/// XAML-compatible wrapper for MacOS LiquidGlass theme.
+/// Used in Application.Styles to force LiquidGlass theme on startup.
+/// </summary>
+public class MacOsLiquidGlassThemeStyle : Styles, ISupportInitialize
+{
+  public void BeginInit() { }
+
+  public void EndInit()
+  {
+    // This wrapper doesn't actually load styles - it's just a marker
+    // The actual theme is loaded by App.Initialize() after detecting this element
+  }
 }

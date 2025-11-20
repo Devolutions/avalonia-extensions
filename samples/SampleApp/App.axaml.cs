@@ -263,7 +263,7 @@ public class App : Application
 
         if (styles == null)
         {
-          throw new InvalidOperationException($"Unable to load styles for theme: {theme.Name}");
+          throw new InvalidOperationException($"Unable to load styles for theme: {theme?.Name ?? "Unknown"}");
         }
 
         app.themeStylesContainer.Clear();
@@ -276,7 +276,7 @@ public class App : Application
         // Just change styles without window recreation
         if (styles == null)
         {
-          throw new InvalidOperationException($"Unable to load styles for theme: {theme.Name}");
+          throw new InvalidOperationException($"Unable to load styles for theme: {theme?.Name ?? "Unknown"}");
         }
 
         app.themeStylesContainer.Clear();

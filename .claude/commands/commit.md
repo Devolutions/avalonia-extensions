@@ -29,6 +29,8 @@ The `/workon` command modifies these files for local development only:
 - Theme: All themes commented out (automatically selects platform-appropriate theme)
   ```xml
   <!-- <DevolutionsMacOsTheme /> -->
+  <!-- <local:MacOsClassicThemeStyle /> -->
+  <!-- <local:MacOsLiquidGlassThemeStyle /> -->
   <!-- <DevolutionsDevExpressTheme /> -->
   <!-- <DevolutionsLinuxYaruTheme /> -->
   ```

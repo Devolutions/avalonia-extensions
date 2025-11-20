@@ -5,7 +5,7 @@ description: "/workon [theme] [tabTitle?] [projectPlan?] - Switch theme, navigat
 You are being asked to switch the active theme and navigate to a specific tab in the SampleApp.
 
 The user will provide one to three arguments:
-1. **theme**: One of 'MacOS', 'DevExpress', or 'Linux'
+1. **theme**: One of 'MacOS', 'MacOSClassic' (or 'Classic'), 'MacOSLiquidGlass' (or 'LiquidGlass'), 'DevExpress', 'Linux', or 'Default'
 2. **tabTitle**: (optional) The title of a TabItem (e.g., 'Button', 'TextBox', 'DataGrid', 'Control Alignment'),
    Default: 'Overview'
 3. **projectPlan**: (optional) Name or partial name of a document in `.claude/docs/planning` to load and work on
@@ -17,25 +17,38 @@ Extract the theme, tabTitle, and projectPlan from the user's command. The format
 
 ### Step 2: Validate theme argument
 Theme must be one of:
-- 'MacOS' → Maps to `<DevolutionsMacOsTheme />`
+- 'MacOS' → Maps to `<DevolutionsMacOsTheme />` (automatic sub-theme selection based on OS version)
+- 'MacOSClassic' (or 'Classic') → Maps to `<local:MacOsClassicThemeStyle />` (force Classic theme)
+- 'MacOSLiquidGlass' (or 'LiquidGlass' or 'Liquid') → Maps to `<local:MacOsLiquidGlassThemeStyle />` (force LiquidGlass theme)
 - 'DevExpress' → Maps to `<DevolutionsDevExpressTheme />`
 - 'Linux' → Maps to `<DevolutionsLinuxYaruTheme />`
 - 'Default' → All themes commented out (platform-appropriate theme auto-selected)
 
-Case-insensitive matching is acceptable.
+Case-insensitive matching is acceptable. Accept variations:
+- 'Classic' or 'MacOSClassic' or 'MacClassic' → MacOSClassic
+- 'LiquidGlass' or 'Liquid' or 'MacOSLiquidGlass' or 'Glass' → MacOSLiquidGlass
 
 ### Step 3: Update App.axaml theme
 File: `samples/SampleApp/App.axaml`
 
-In the `<Application.Styles>` block (around lines 41-45):
-- Comment out ALL three theme lines with `<!-- ... -->`
+In the `<Application.Styles>` block (around lines 41-49):
+- Comment out ALL theme lines with `<!-- ... -->`
 - If theme is 'Default', leave all commented
 - Otherwise, uncomment ONLY the selected theme
+
+**Theme line locations:**
+- Line ~44: `<DevolutionsMacOsTheme />` (MacOS automatic)
+- Line ~45: `<local:MacOsClassicThemeStyle />` (MacOS Classic forced)
+- Line ~46: `<local:MacOsLiquidGlassThemeStyle />` (MacOS LiquidGlass forced)
+- Line ~47: `<DevolutionsDevExpressTheme />` (DevExpress)
+- Line ~48: `<DevolutionsLinuxYaruTheme />` (Linux)
 
 Default state (master branch should always have this):
 ```xml
   <Application.Styles>
     <!-- <DevolutionsMacOsTheme /> -->
+    <!-- <local:MacOsClassicThemeStyle /> -->
+    <!-- <local:MacOsLiquidGlassThemeStyle /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
 
@@ -44,10 +57,26 @@ Default state (master branch should always have this):
   </Application.Styles>
 ```
 
-Target state for MacOS:
+Target state for MacOS (automatic):
 ```xml
   <Application.Styles>
     <DevolutionsMacOsTheme />
+    <!-- <local:MacOsClassicThemeStyle /> -->
+    <!-- <local:MacOsLiquidGlassThemeStyle /> -->
+    <!-- <DevolutionsDevExpressTheme /> -->
+    <!-- <DevolutionsLinuxYaruTheme /> -->
+
+    <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
+    <Style />
+  </Application.Styles>
+```
+
+Target state for MacOS Classic (forced):
+```xml
+  <Application.Styles>
+    <!-- <DevolutionsMacOsTheme /> -->
+    <local:MacOsClassicThemeStyle />
+    <!-- <local:MacOsLiquidGlassThemeStyle /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
 

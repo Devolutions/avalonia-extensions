@@ -1,17 +1,21 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+  <!-- MARK: Light Mode -->
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <Color x:Key="BackgroundColor">#ffffff</Color>
     </ResourceDictionary>
 
+    <!-- MARK: Dark Mode -->
+
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="BackgroundColor">#21222f</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
+  <!-- MARK: Common Resources -->
 
 
   <!-- DEVELOPMENT ONLY -->

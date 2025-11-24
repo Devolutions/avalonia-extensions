@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Experiments.SystemColoursDemo">
   <StackPanel>
@@ -10,9 +11,7 @@
       where lighter and darker variants are also calculated. </TextBlock>
     <TextBlock Margin="0 0 0 10"
                TextWrapping="Wrap"
-               IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                       Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=Yaru}">
+               IsVisible="{ext:ThemeIsOneOf 'Yaru'}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
       </TextBlock>
     <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">

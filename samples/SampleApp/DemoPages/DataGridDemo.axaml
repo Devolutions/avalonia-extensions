@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:SampleApp.ViewModels"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.DataGridDemo"
              x:DataType="vm:DataGridViewModel">
@@ -57,9 +58,7 @@
     <TabItem Header="Non-Distributed Columns">
       <StackPanel Margin="20" Spacing="10">
         <TextBlock
-          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName}, 
-                   Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacClassic}">
+          IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
           <Bold>NOTE:</Bold> When none of the columns are sized to fill the width of the table (<TextBlock Classes="code" Text="Width='*'" />), the right row margins are too large
         </TextBlock>
         <DataGrid ItemsSource="{Binding Items}">
@@ -78,17 +77,13 @@
           </DataGrid.Columns>
         </DataGrid>
         <TextBlock
-          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                   Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacClassic}">
+          IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
           This can be fixed by applying
           <TextBlock Classes="code" Text="Classes='MacOS_NonDistributed_Columns'" />:
         </TextBlock>
         <DataGrid ItemsSource="{Binding Items}"
                   Classes="MacOS_NonDistributed_Columns"
-                  IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                   Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacClassic}">
+                  IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
           <DataGrid.Columns>
             <DataGridTemplateColumn Header="">
               <DataGridTemplateColumn.CellTemplate>

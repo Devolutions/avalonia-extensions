@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.ScrollViewerDemo">
 
@@ -100,9 +101,7 @@
       </Grid>
       <TextBlock
         TextWrapping="Wrap"
-        IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                   Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacClassic}">
+        IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
         <Bold>Note:</Bold> MacOS hides scrollbars completely (depending on user settings), but they re-appear on scroll events.
         Since Avalonia ScrollBars only expand on pointerOver, hiding them completely would be a bit confusing. So the Thumb sliders
         remain visible even when <TextBlock Classes="code" Text="AllowAutoHide=&quot;True&quot;" />.

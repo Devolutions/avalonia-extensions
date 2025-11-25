@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
              x:Class="SampleApp.DemoPages.ButtonDemo">
 
@@ -18,9 +19,7 @@
         <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
         <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
-                    IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                   Converter={StaticResource EqualToComparisonConverter},
-                   ConverterParameter=MacClassic}">
+                    IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
           <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 0 0">/</TextBlock>
           <Button Classes="accentPrecise" VerticalAlignment="Center">Open</Button>
           <TextBlock VerticalAlignment="Center" Margin="5 0 0 0">(<TextBlock Classes="code" Text="Classes=&quot;accentPrecise&quot;" />More precise look, but not responsive to custom accent colour / inactive window)</TextBlock>

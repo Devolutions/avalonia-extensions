@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.MenuDemo">
 
@@ -215,9 +216,7 @@
           </Menu>
           <Border Background="{DynamicResource BackgroundBrush}" Padding="15">
             <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap"
-                       IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                       Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=MacClassic}">
+                       IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
               <Bold>Use the following classes for menu styling:</Bold><LineBreak /><LineBreak />
               • <TextBlock Classes="code" Text="MacOS_Theme_MenuLabelBelowIcon" /> for a toolbar-style menu
               <LineBreak />

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              x:DataType="vm:TextBoxViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
@@ -47,9 +48,7 @@
           <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
 
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
-                   IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                       Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=DevExpress}">
+                   IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
           </TextBox>
 

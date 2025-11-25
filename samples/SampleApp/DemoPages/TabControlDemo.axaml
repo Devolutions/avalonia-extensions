@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TabControlDemo">
 
@@ -23,9 +24,7 @@
           <TabItem Header="Tab 3" IsEnabled="False" />
         </TabControl>
         <StackPanel
-          IsVisible="{Binding Source={x:Static sampleApp:App.EffectiveCurrentThemeName},
-                       Converter={StaticResource EqualToComparisonConverter},
-                       ConverterParameter=DevExpress}">
+          IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
           <TextBlock Margin="0 10 0 2">Vertical NavBar (<TextBlock Classes="code">TabControl Classes="NavBar"</TextBlock>)</TextBlock>
           <Border Classes="alternativeBackground" Padding="20">
             <TabControl TabStripPlacement="Left" Classes="NavBar">

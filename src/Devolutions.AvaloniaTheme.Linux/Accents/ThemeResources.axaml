@@ -33,6 +33,9 @@
 
       <Color x:Key='ScrollBarsSeparatorBackgroundColor'>#e6e6e6</Color>
 
+      <Color x:Key='ListBoxBackgroundColor'>#ffffff</Color>
+      <Color x:Key='ListBoxBorderColor'>#dddddd</Color>
+
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#fafafa" />
 
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
@@ -87,6 +90,8 @@
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#1d1d1d" />
 
+      <Color x:Key='ListBoxBackgroundColor'>#202020</Color>
+      <Color x:Key='ListBoxBorderColor'>#343337</Color>
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorDark1}" />
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#202020" />

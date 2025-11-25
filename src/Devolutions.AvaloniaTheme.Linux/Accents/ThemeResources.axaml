@@ -1,6 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+   <!-- MARK: Light Mode -->
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key='Light'>
       <Color x:Key='ForegroundColor'>#050505</Color>
@@ -48,6 +50,8 @@
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#adadad" />
     </ResourceDictionary>
+
+   <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key='Dark'>
       <Color x:Key='SystemAltHighColor'>#1f1f1f</Color>
@@ -99,6 +103,8 @@
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+     <!-- MARK: Common Resources -->
 
   <FontFamily x:Key="DefaultFontFamily">Open Sans, sans-serif</FontFamily>
   <x:Double x:Key="DefaultFontSize">14</x:Double>

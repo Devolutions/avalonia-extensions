@@ -26,7 +26,7 @@
   </Style>
 
   <Style Selector="Panel.mainControl">
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SampleAppBackground}" />
   </Style>
 
   <Style Selector="TextBlock.h1">

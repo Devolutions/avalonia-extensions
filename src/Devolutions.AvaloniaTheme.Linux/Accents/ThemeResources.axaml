@@ -52,6 +52,9 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#adadad" />
+
+      <Color x:Key="SampleAppBackgroundColor">#ffffff</Color>
+
     </ResourceDictionary>
 
    <!-- MARK: Dark Mode -->
@@ -106,6 +109,8 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
+
+      <Color x:Key="SampleAppBackgroundColor">#202020</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -207,7 +212,7 @@
   <Thickness x:Key="PopupMargin">1</Thickness>
 
   <!-- DEVELOPMENT ONLY -->
-  <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SampleAppBackgroundColor}" />
 
   <SolidColorBrush x:Key="TestGreen" Color="Green" Opacity="0.84" />
   <SolidColorBrush x:Key="TestRed" Color="Red" />

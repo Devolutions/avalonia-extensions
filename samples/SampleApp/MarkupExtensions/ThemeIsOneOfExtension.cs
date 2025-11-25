@@ -6,6 +6,12 @@ using SampleApp;
 
 namespace SampleApp.MarkupExtensions;
 
+/// <summary>
+/// Markup extension that creates a binding to check if the current theme matches any of the specified theme names.
+/// </summary>
+/// <param name="themes">
+/// A comma-separated list of theme names to check against the current theme.
+/// </param>
 public class ThemeIsOneOfExtension : MarkupExtension
 {
     public ThemeIsOneOfExtension(string themes)
@@ -20,7 +26,7 @@ public class ThemeIsOneOfExtension : MarkupExtension
         return new Binding
         {
             Source = App.EffectiveCurrentThemeName,
-            Converter = new IsOneOfConverter(),
+            Converter = DevoConverters.IsOneOfConverter,
             ConverterParameter = Themes
         };
     }

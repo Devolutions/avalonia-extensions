@@ -22,7 +22,7 @@
       <ListBox x:Name="animals2" SelectionMode="Multiple" />
 
       <TextBlock VerticalAlignment="Top" Margin="15 5 0 5" TextWrapping="Wrap" Width="130">Scrolling: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
-      <ListBox x:Name="animals4" Width="115" />
+      <ListBox x:Name="animals4" Width="115" CornerRadius="8" HorizontalAlignment="Left"/>
     </StackPanel>
 
     <!-- Bottom row of multi-column ListBoxes -->

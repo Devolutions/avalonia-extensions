@@ -211,6 +211,9 @@
   <x:Int32 x:Key="PopupSideMarginWidth">2</x:Int32>
   <Thickness x:Key="PopupMargin">1</Thickness>
 
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
+
   <!-- DEVELOPMENT ONLY -->
   <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SampleAppBackgroundColor}" />
 

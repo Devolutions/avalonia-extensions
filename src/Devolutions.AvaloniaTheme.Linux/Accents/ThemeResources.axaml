@@ -1,6 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+   <!-- MARK: Light Mode -->
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key='Light'>
       <Color x:Key='ForegroundColor'>#050505</Color>
@@ -31,6 +33,9 @@
 
       <Color x:Key='ScrollBarsSeparatorBackgroundColor'>#e6e6e6</Color>
 
+      <Color x:Key='ListBoxBackgroundColor'>#ffffff</Color>
+      <Color x:Key='ListBoxBorderColor'>#dddddd</Color>
+
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#fafafa" />
 
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorLight1}" />
@@ -47,7 +52,12 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#adadad" />
+
+      <Color x:Key="SampleAppBackgroundColor">#ffffff</Color>
+
     </ResourceDictionary>
+
+   <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key='Dark'>
       <Color x:Key='SystemAltHighColor'>#1f1f1f</Color>
@@ -83,6 +93,8 @@
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="#1d1d1d" />
 
+      <Color x:Key='ListBoxBackgroundColor'>#202020</Color>
+      <Color x:Key='ListBoxBorderColor'>#343337</Color>
       <SolidColorBrush x:Key='InputFocusedBorder' Color="{DynamicResource SystemAccentColorDark1}" />
 
       <SolidColorBrush x:Key="CalendarButtonOpenBorderBrush" Color="#202020" />
@@ -97,8 +109,12 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
+
+      <Color x:Key="SampleAppBackgroundColor">#202020</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+     <!-- MARK: Common Resources -->
 
   <FontFamily x:Key="DefaultFontFamily">Open Sans, sans-serif</FontFamily>
   <x:Double x:Key="DefaultFontSize">14</x:Double>
@@ -195,8 +211,11 @@
   <x:Int32 x:Key="PopupSideMarginWidth">2</x:Int32>
   <Thickness x:Key="PopupMargin">1</Thickness>
 
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
+  <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
+
   <!-- DEVELOPMENT ONLY -->
-  <!-- <SolidColorBrush x:Key="Background" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SampleAppBackgroundColor}" />
 
   <SolidColorBrush x:Key="TestGreen" Color="Green" Opacity="0.84" />
   <SolidColorBrush x:Key="TestRed" Color="Red" />

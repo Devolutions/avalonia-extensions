@@ -35,7 +35,7 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
         <!-- HCA was changed here to ensure nav arrows display correctly -->

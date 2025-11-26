@@ -4,7 +4,7 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="0">
-      <Border Background="{DynamicResource BackgroundBrush}"
+      <Border Background="{DynamicResource SystemRegionBrush}"
               Margin="0"
               Padding="0"
               Width="400"

@@ -254,7 +254,7 @@
   <x:Double x:Key="CalendarFontSize">11</x:Double>
 
   <!-- DEVELOPMENT ONLY -->
-  <!-- <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.13" /> -->
+  <StaticResource x:Key="SampleAppBackground" ResourceKey="BackgroundBrush" />
 
   <SolidColorBrush x:Key="TestGreen" Color="Green" Opacity="0.84" />
   <SolidColorBrush x:Key="TestRed" Color="Red" />

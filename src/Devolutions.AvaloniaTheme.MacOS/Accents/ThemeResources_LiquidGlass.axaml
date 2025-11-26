@@ -13,6 +13,9 @@
   </ResourceDictionary.ThemeDictionaries>
 
 
-  <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource BackgroundColor}" Opacity="0.8" />
+
+  <!-- DEVELOPMENT ONLY -->
+
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource BackgroundColor}" Opacity="0.8" />
 
 </ResourceDictionary>

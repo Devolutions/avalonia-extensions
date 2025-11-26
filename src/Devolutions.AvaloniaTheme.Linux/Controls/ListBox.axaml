@@ -2,27 +2,35 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+  xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.Linux.Converters"
   x:ClassModifier="internal">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries> -->
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-      <StackPanel Orientation="Horizontal">
-        <StackPanel Width="150">
-          <ListBox SelectionMode="Single">
+      <StackPanel Orientation="Horizontal" Spacing="20" Margin="20">
+        <StackPanel Width="170" Spacing="20">
+          <ListBox SelectionMode="Single" Height="100" CornerRadius="8">
             <ListBoxItem>single 1</ListBoxItem>
             <ListBoxItem>single 2</ListBoxItem>
             <ListBoxItem>single 3</ListBoxItem>
+            <ListBoxItem>single 4</ListBoxItem>
+            <ListBoxItem>single 5</ListBoxItem>
+            <ListBoxItem>single 6</ListBoxItem>
           </ListBox>
-
-          <Separator Margin="0 5" />
 
           <ListBox SelectionMode="Toggle">
             <ListBoxItem>togglable 1</ListBoxItem>
             <ListBoxItem>togglable 2</ListBoxItem>
             <ListBoxItem>togglable 3</ListBoxItem>
           </ListBox>
-
-          <Separator Margin="0 5" />
 
           <ListBox SelectionMode="AlwaysSelected">
             <ListBoxItem>AlwaysSelected 1</ListBoxItem>
@@ -31,14 +39,12 @@
           </ListBox>
         </StackPanel>
 
-        <StackPanel Width="150">
+        <StackPanel Width="170" Spacing="20">
           <ListBox SelectionMode="Multiple">
             <ListBoxItem>multi 1</ListBoxItem>
             <ListBoxItem>multi 2</ListBoxItem>
             <ListBoxItem>multi 3</ListBoxItem>
           </ListBox>
-
-          <Separator Margin="0 5" />
 
           <ListBox SelectionMode="11">
             <ListBoxItem>multi togglable 1</ListBoxItem>
@@ -51,7 +57,43 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-    <Setter Property="Background" Value="{DynamicResource InputBackground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
+    <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundColor}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderColor}" />
+         <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+        <Border Name="border"
+                ClipToBounds="{TemplateBinding ClipToBounds}"
+                Background="{TemplateBinding Background}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer Name="PART_ScrollViewer"
+                        VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
+                        HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
+                        IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                        IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
+                        IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                        AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
+                        HorizontalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:LinuxConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityAuto},
+                              {DynamicResource ScrollBarVisibilityDisabled}}"
+                        VerticalScrollBarVisibility="{BindingToggler
+                              {Binding $parent[ListBox], Converter={x:Static converters:LinuxConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {DynamicResource ScrollBarVisibilityDisabled},
+                              {DynamicResource ScrollBarVisibilityAuto}}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="{TemplateBinding Padding}" />
+          </ScrollViewer>
+        </Border>
+        <Border Name="VisualBorder"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
   </ControlTheme>
 </ResourceDictionary>

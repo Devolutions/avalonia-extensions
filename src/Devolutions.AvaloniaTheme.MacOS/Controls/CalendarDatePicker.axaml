@@ -95,7 +95,7 @@
                      IsLightDismissEnabled="True">
                 <Border BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
                         BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                        Background="{DynamicResource BackgroundBrush}"
+                        Background="{DynamicResource SystemRegionBrush}"
                         CornerRadius="{DynamicResource LayoutCornerRadius}"
                         Margin="{DynamicResource PopupMargin}"
                         Padding="{DynamicResource PopupPadding}"

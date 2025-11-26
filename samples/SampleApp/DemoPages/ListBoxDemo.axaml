@@ -22,11 +22,11 @@
       <ListBox x:Name="animals2" SelectionMode="Multiple" />
 
       <TextBlock VerticalAlignment="Top" Margin="15 5 0 5" TextWrapping="Wrap" Width="130">Scrolling: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
-      <ListBox x:Name="animals4" Width="115" />
+      <ListBox x:Name="animals4" Width="115" CornerRadius="8" HorizontalAlignment="Left"/>
     </StackPanel>
 
     <!-- Bottom row of multi-column ListBoxes -->
-    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 100, Auto, 99" ColumnDefinitions="*, *">
+    <Grid ColumnSpacing="20" RowSpacing="20" RowDefinitions="Auto, Auto, 105, Auto, 105" ColumnDefinitions="*, *">
       <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0  5 0 0">
         <Bold>Multi-column ListBox (with WrapPanel as ItemsTemplate), multiple selection:</Bold>
       </TextBlock>

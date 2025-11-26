@@ -595,7 +595,7 @@
     <Setter Property="CanUserReorderColumns" Value="True" />
     <Setter Property="CanUserResizeColumns" Value="True" />
     <Setter Property="CanUserSortColumns" Value="True" />
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
     <Setter Property="RowBackground" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderThickness" Value="1" />

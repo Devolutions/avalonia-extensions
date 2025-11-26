@@ -51,11 +51,10 @@
     <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
+        <Panel>
         <Border Name="border"
                 ClipToBounds="{TemplateBinding ClipToBounds}"
                 Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <ScrollViewer Name="PART_ScrollViewer"
                         VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
@@ -78,6 +77,11 @@
                             Margin="{TemplateBinding Padding}" />
           </ScrollViewer>
         </Border>
+        <Border Name="VisualBorder"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}" />
+        </Panel>
       </ControlTemplate>
     </Setter>
   </ControlTheme>

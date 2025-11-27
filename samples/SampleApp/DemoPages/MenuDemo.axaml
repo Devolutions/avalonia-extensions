@@ -82,7 +82,7 @@
           </MenuItem>
           <MenuItem Header="Menu Item" />
           <MenuItem Header="Menu Item" />
-          <MenuItem Header="-" />
+          <Separator />
           <MenuItem Header="Menu Item" />
         </MenuItem>
         <MenuItem Header="-" />

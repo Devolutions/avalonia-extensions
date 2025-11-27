@@ -10,24 +10,71 @@
                Text="Right-click me">
       <TextBlock.ContextFlyout>
         <MenuFlyout Placement="RightEdgeAlignedTop">
-          <MenuItem Header="Open session" InputGesture="&#x2318;+O" />
-          <MenuItem Header="Open with parameters">
-            <MenuItem Header="Open (embedded/tabbed)" />
-            <MenuItem Header="Open embedded SFTP connection" />
-            <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
-            <MenuItem Header="-" />
-            <MenuItem Header="Open (select credentials)..." />
+          <MenuItem Header="Open session" InputGesture="&#x2318;+O">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Computer.svg" />
+            </MenuItem.Icon>
           </MenuItem>
-          <MenuItem Header="View password" />
-          <MenuItem Header="Copy name" />
-          <MenuItem Header="Copy password" />
-          <MenuItem Header="-" />
-          <MenuItem Header="Focus session" />
+          <MenuItem Header="Open with parameters">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Folder.svg" />
+            </MenuItem.Icon>
+            <MenuItem Header="Open (embedded/tabbed)">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Computer.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open embedded SFTP connection">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Computer.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Computer.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="-" />
+            <MenuItem Header="Open (select credentials)...">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/User.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </MenuItem>
+          <MenuItem Header="View password">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/PasswordAnalyser.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Copy name">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyName.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Copy password">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyPassword.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator />
+          <MenuItem Header="Focus session">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Details.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
           <MenuItem Header="Edit" IsEnabled="False">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Properties.svg" />
+            </MenuItem.Icon>
             <MenuItem Header="Dummy1" />
             <MenuItem Header="Dummy2" />
           </MenuItem>
+          <MenuItem Header="-" />
+          <MenuItem Header="^ NOT a &lt;Separator&gt;" />
           <MenuItem Header="Toggle Options">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/More.svg" />
+            </MenuItem.Icon>
             <MenuItem Header="Option 1" ToggleType="CheckBox" />
             <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
           </MenuItem>

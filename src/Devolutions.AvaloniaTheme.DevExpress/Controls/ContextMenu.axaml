@@ -39,7 +39,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="Background" Value="{DynamicResource MenuBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxDropDownBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxDropdownBorderPadding}" />

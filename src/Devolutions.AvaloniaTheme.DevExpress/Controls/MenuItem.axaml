@@ -136,7 +136,7 @@
                  VerticalOffset="-7"
                  IsLightDismissEnabled="False"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
-            <Border Background="{DynamicResource MenuFlyoutPresenterBackground}"
+            <Border Background="{DynamicResource MenuBackground}"
                     BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
                     BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
@@ -167,7 +167,7 @@
     </Style>
     <Style Selector="^:selected">
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource MenuItemBackgroundPointerOver}" />
       </Style>
       <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundPointerOver}" />

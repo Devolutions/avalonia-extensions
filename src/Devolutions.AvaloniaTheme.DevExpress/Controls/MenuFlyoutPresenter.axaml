@@ -4,7 +4,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
   <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="Background" Value="{DynamicResource MenuBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxDropDownBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxDropdownBorderPadding}" />

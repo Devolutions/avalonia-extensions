@@ -13,8 +13,6 @@
       <ContextMenu>
         <MenuItem Header="Standard _Menu Item" />
         <MenuItem Header="Disabled" IsEnabled="False" />
-        <MenuItem Header="Copy" />
-        <MenuItem Header="Paste" />
         <Separator />
         <MenuItem Header="Menu with _Submenu">
           <MenuItem Header="Submenu _1" />

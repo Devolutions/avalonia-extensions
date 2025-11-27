@@ -37,11 +37,6 @@
       </Panel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-  
-  <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}">
-    <Setter Property="Margin" Value="40,0,-4,0" />
-    <Setter Property="Background" Value="{DynamicResource Border}" />
-  </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />

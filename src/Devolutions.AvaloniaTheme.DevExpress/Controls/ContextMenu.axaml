@@ -50,6 +50,8 @@
     <Setter Property="Padding" Value="4" />
     <Setter Property="Margin" Value="4" />
     <Setter Property="CornerRadius" Value="4" />
+    <!-- Block inheritance of LineHeight from parent controls -->
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">

@@ -18,6 +18,8 @@
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
+    <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
+    <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="MultiComboBox.axaml" />
     <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
@@ -27,6 +29,7 @@
     <MergeResourceInclude Source="RadioButton.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />
+    <MergeResourceInclude Source="Separator.axaml" />
     <MergeResourceInclude Source="SplitButton.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />

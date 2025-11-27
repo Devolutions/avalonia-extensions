@@ -59,6 +59,8 @@
 
       <Color x:Key='SecondarySearchHighlightBackground'>#77fad000</Color>
       <Color x:Key='SecondarySearchHighlightForeground'>#ee000000</Color>
+      
+      <Color x:Key='MenuItemBackgroundPointerOverColor'>#eaeaea</Color>
 
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
       <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
@@ -124,6 +126,8 @@
       <Color x:Key='SecondarySearchHighlightBackground'>#88e6af56</Color>
       <Color x:Key='SecondarySearchHighlightForeground'>#ee202020</Color>
 
+      <Color x:Key='MenuItemBackgroundPointerOverColor'>#3c3c3c</Color>
+      
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
       <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
     </ResourceDictionary>
@@ -231,6 +235,13 @@
   <Thickness x:Key="NavBarTabsContainerMargin">5 10 10 10</Thickness>
 
   <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
+  <CornerRadius x:Key="ContextMenuCornerRadius">4</CornerRadius>
+  <Thickness x:Key="MenuFlyoutScrollerMargin">0 4</Thickness>
+  
+  <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource SystemRegionColor}" />
+  <SolidColorBrush x:Key="MenuItemBackgroundPointerOver" Color="{DynamicResource MenuItemBackgroundPointerOverColor}" />
+  
+  <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
 
   <x:Double x:Key="OpacityVisible">1</x:Double>
   <x:Double x:Key="OpacityHidden">0</x:Double>
@@ -246,7 +257,7 @@
 
   <x:Double x:Key="TreeViewItemMinHeight">22</x:Double>
   <x:Double x:Key="TreeViewItemExpandCollapseChevronSize">12</x:Double>
-  <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">4 0 4 0</Thickness>
+  <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">4 0</Thickness>
   <Thickness x:Key="TreeViewItemTreeViewItemPaddingn">0 0 5 0</Thickness>
 
   <!-- CalendarDatePicker Resources -->

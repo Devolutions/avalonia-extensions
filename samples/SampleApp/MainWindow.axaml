@@ -140,7 +140,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic" />
+            <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress" />
           </TabItem.Header>
           <demoPages:MenuFlyoutDemo />
         </TabItem>

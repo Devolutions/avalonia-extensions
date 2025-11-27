@@ -231,7 +231,9 @@
   <Thickness x:Key="NavBarTabsContainerMargin">5 10 10 10</Thickness>
 
   <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
-
+  <CornerRadius x:Key="ContextMenuCornerRadius">4</CornerRadius>
+  <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
+ 
   <x:Double x:Key="OpacityVisible">1</x:Double>
   <x:Double x:Key="OpacityHidden">0</x:Double>
 

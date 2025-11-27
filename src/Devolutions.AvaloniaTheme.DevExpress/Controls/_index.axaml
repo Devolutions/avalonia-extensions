@@ -18,6 +18,8 @@
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
+    <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
+    <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="MultiComboBox.axaml" />
     <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />

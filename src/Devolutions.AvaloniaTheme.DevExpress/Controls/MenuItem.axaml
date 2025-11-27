@@ -2,8 +2,8 @@
 
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:conv="using:Avalonia.Controls.Converters"
-                    x:ClassModifier="internal">
+                    xmlns:conv="using:Avalonia.Controls.Converters">
+  
   <Design.PreviewWith>
     <Border Padding="20" Width="320">
       <StackPanel Spacing="20" HorizontalAlignment="Left">
@@ -52,16 +52,20 @@
   </Design.PreviewWith>
 
   <conv:PlatformKeyGestureConverter x:Key="KeyGestureConverter" />
-  <x:Double x:Key="MenuFlyoutSubItemPopupHorizontalOffset">-4</x:Double>
-  <Thickness x:Key="MenuIconPresenterMargin">0,0,12,0</Thickness>
+  <x:Double x:Key="MenuFlyoutSubItemPopupHorizontalOffset">5</x:Double>
+  <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
   <Thickness x:Key="MenuInputGestureTextMargin">24,0,0,0</Thickness>
   <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForeground}" />
-    <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
-    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutItemThemePaddingNarrow}" />
+    <Setter Property="Padding" Value="4 2" />
+    <Setter Property="Margin" Value="4 2" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <!-- Block inheritance of LineHeight from parent controls -->
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
@@ -71,7 +75,7 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
                   CornerRadius="{TemplateBinding CornerRadius}">
-            <Grid>
+            <Grid MinHeight="20">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"
                                   SharedSizeGroup="ToggleIcon" />
@@ -110,31 +114,38 @@
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center"
                          Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
-              <Path Name="PART_ChevronPath"
-                    Stretch="Uniform"
-                    Width="8"
-                    Height="16"
-                    Data="{StaticResource MenuItemChevronPathData}"
-                    Fill="{DynamicResource MenuFlyoutSubItemChevron}"
-                    Margin="{DynamicResource MenuFlyoutItemChevronMargin}"
-                    VerticalAlignment="Center"
-                    Grid.Column="4" />
+              <PathIcon Name="PART_ChevronPath"
+                        Grid.Column="4"
+                        UseLayoutRounding="False"
+                        IsHitTestVisible="False"
+                        Width="9"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource ForegroundHighBrush}"
+                        Data="{StaticResource ChevronPath}">
+                <PathIcon.RenderTransform>
+                  <RotateTransform Angle="-90" />
+                </PathIcon.RenderTransform>
+              </PathIcon>
             </Grid>
           </Border>
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  Placement="RightEdgeAlignedTop"
                  HorizontalOffset="{DynamicResource MenuFlyoutSubItemPopupHorizontalOffset}"
+                 VerticalOffset="-7"
                  IsLightDismissEnabled="False"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
             <Border Background="{DynamicResource MenuFlyoutPresenterBackground}"
-                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                    BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
+                    BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
+                    Margin="{DynamicResource ComboBoxPopupBorderMargin}"
                     Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
                     MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                     MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                     HorizontalAlignment="Stretch"
-                    CornerRadius="{DynamicResource OverlayCornerRadius}">
+                    CornerRadius="{DynamicResource ContextMenuCornerRadius}">
               <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
                 <ItemsPresenter Name="PART_ItemsPresenter"
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
@@ -164,8 +175,8 @@
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver}" />
       </Style>
-      <Style Selector="^ /template/ Path#PART_ChevronPath">
-        <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevronPointerOver}" />
+      <Style Selector="^ /template/ PathIcon#PART_ChevronPath">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutSubItemChevronPointerOver}" />
       </Style>
     </Style>
 
@@ -178,8 +189,8 @@
       <Style Selector="^ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed}" />
       </Style>
-      <Style Selector="^ Path#PART_ChevronPath">
-        <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevronPressed}" />
+      <Style Selector="^ PathIcon#PART_ChevronPath">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutSubItemChevronPressed}" />
       </Style>
     </Style>
 
@@ -193,16 +204,16 @@
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled}" />
       </Style>
-      <Style Selector="^ /template/ Path#PART_ChevronPath">
-        <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevronDisabled}" />
+      <Style Selector="^ /template/ PathIcon#PART_ChevronPath">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutSubItemChevronDisabled}" />
       </Style>
     </Style>
 
-    <Style Selector="^:open /template/ Path#PART_ChevronPath">
-      <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevronSubMenuOpened}" />
+    <Style Selector="^:open /template/ PathIcon#PART_ChevronPath">
+      <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutSubItemChevronSubMenuOpened}" />
     </Style>
 
-    <Style Selector="^:empty /template/ Path#PART_ChevronPath">
+    <Style Selector="^:empty /template/ PathIcon#PART_ChevronPath">
       <Setter Property="IsVisible" Value="False" />
     </Style>
 
@@ -261,3 +272,4 @@
     </Setter>
   </ControlTheme>
 </ResourceDictionary>
+

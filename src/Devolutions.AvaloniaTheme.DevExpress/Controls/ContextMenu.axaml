@@ -37,41 +37,32 @@
       </Panel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-
-  <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
-  <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
-
+  
   <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}">
     <Setter Property="Margin" Value="40,0,-4,0" />
     <Setter Property="Background" Value="{DynamicResource Border}" />
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-    <Setter Property="Padding" Value="4" />
-    <Setter Property="Margin" Value="4" />
-    <Setter Property="CornerRadius" Value="4" />
-    <!-- Block inheritance of LineHeight from parent controls -->
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-  </ControlTheme>
-
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxDropDownBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}" />
-    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Padding" Value="{DynamicResource ComboBoxDropdownBorderPadding}" />
     <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
     <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}" />
+    <Setter Property="Focusable" Value="True" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="WindowManagerAddShadowHint" Value="False" />
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ContextMenuCornerRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
 
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
+                Margin="{DynamicResource ComboBoxPopupBorderMargin}"
+                BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
                 Padding="{TemplateBinding Padding}"
                 MaxWidth="{TemplateBinding MaxWidth}"
                 MinHeight="{TemplateBinding MinHeight}"
@@ -80,7 +71,7 @@
           <ScrollViewer>
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="0"
+                            Margin="{DynamicResource MenuFlyoutScrollerMargin}"
                             KeyboardNavigation.TabNavigation="Continue"
                             Grid.IsSharedSizeScope="True" />
           </ScrollViewer>

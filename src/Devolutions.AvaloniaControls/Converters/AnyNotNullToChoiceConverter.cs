@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
+namespace Devolutions.AvaloniaControls.Converters;
+
 using System.Globalization;
 using Avalonia;
 using Avalonia.Data.Converters;
-
-namespace Devolutions.AvaloniaControls.Converters;
 
 /// <summary>
 ///   Returns a choice based on whether any of the first N-2 values are not null.
@@ -16,6 +14,7 @@ namespace Devolutions.AvaloniaControls.Converters;
 ///   All preceding values are checked - if any are not null and not UnsetValue, the "true" choice is returned.
 /// </remarks>
 public class AnyNotNullToChoiceConverter : IMultiValueConverter
+{
     public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         if (values == null || values.Count < 2)

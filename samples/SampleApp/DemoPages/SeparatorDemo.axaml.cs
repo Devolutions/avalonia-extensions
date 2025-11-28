@@ -1,17 +1,11 @@
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-
 namespace SampleApp.DemoPages;
+
+using Avalonia.Controls;
 
 public partial class SeparatorDemo : UserControl
 {
-    public SeparatorDemo()
-    {
-        InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+  public SeparatorDemo()
+  {
+    InitializeComponent();
+  }
 }

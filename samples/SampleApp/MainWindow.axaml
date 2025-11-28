@@ -164,6 +164,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress" />
+          </TabItem.Header>
+          <demoPages:SeparatorDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Yaru" />
           </TabItem.Header>
           <demoPages:TabControlDemo />

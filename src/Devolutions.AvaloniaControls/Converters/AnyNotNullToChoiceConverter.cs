@@ -29,4 +29,7 @@ public class AnyNotNullToChoiceConverter : IMultiValueConverter
 
         return falseChoice;
     }
+
+    public object ConvertBack(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
 }

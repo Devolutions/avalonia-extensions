@@ -164,6 +164,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress" />
+          </TabItem.Header>
+          <demoPages:SeparatorDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Yaru" />
           </TabItem.Header>
           <demoPages:TabControlDemo />
@@ -230,7 +236,7 @@
               Width="250"
               Padding="0 0 8 8 ">
         <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-          <Border Background="{DynamicResource BackgroundBrush}"
+          <Border Background="{DynamicResource BackgroundColor}"
                   CornerRadius="5"
                   BorderThickness="1"
                   BorderBrush="Gray"
@@ -259,7 +265,7 @@
               Padding="0 8 8 0"
               IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}">
         <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-          <Border Background="{DynamicResource BackgroundBrush}"
+          <Border Background="{DynamicResource BackgroundColor}"
                   CornerRadius="5"
                   BorderThickness="1"
                   BorderBrush="Gray"

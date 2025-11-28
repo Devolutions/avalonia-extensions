@@ -13,4 +13,5 @@ public static class DevoMultiConverters
     public static readonly TabBorderVisibilityConverter TabBorderVisibilityConverter = new();
     public static readonly FirstNonNullValueMultiConverter FirstNonNullValueMultiConverter = new();
     public static readonly FirstNonEmptyStringMultiConverter FirstNonEmptyStringMultiConverter = new();
+    public static readonly AnyNotNullToChoiceConverter AnyNotNullToChoiceConverter = new();
 }

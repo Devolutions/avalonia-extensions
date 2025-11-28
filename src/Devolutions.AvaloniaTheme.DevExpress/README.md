@@ -42,6 +42,7 @@ the Avalonia community to add more DevExpress-style controls.
     - [RadioButton](#radiobutton)
     - [ScrollViewer](#scrollviewer)
       - [ScrollBar](#scrollbar)
+    - [Separator](#separator)
     - [TabControl](#tabcontrol)
       - [TabItem](#tabitem)
     - [TabPane](#tabpane)
@@ -173,8 +174,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 || <img src="https://github.com/user-attachments/assets/9a431dc0-dcd8-4abd-9a80-360578c2d9be" alt="ScrolBar demo" style="width: 288px; max-width: 100%;" /> <br /><img src="https://github.com/user-attachments/assets/145da20e-dc7e-414a-9831-1b1020d1d9f9" alt="ScrollViewer demo" style="width: 419px; max-width: 100%;" /> |
 || <h3>SelectableTextBlock</h3> |
 |||
-|| <h3>Separator</h3> |
-|||
+|✅ | <h3>Separator</h3> |
+|| <img alt="Separator demo" src="https://github.com/user-attachments/assets/4c10e8ab-9d19-4c1e-9891-e61ba8ad3a97" style="width: 758px; max-width: 100%;" /> <br /><img alt="Separator demo - dark mode" src="https://github.com/user-attachments/assets/4cff138b-35c5-4580-9aba-5b4b40c42de6" style="width: 758px; max-width: 100%;" /> |
 || <h3>Slider</h3> |
 |||
 || <h3>SplitButton</h3> |

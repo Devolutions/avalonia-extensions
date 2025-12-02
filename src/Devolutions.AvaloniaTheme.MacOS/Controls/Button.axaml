@@ -7,9 +7,9 @@
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
-  <!-- <ResourceDictionary.MergedDictionaries> -->
-  <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
-  <!-- </ResourceDictionary.MergedDictionaries> -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
@@ -23,11 +23,11 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonCornerRadius}" />
     <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -41,7 +41,7 @@
         <Panel Name="ReservedSpaceForFocus"
                Margin="{StaticResource InputControlsSpaceForFocusBorder}">
           <Border Name="BackgroundElement"
-                  MinHeight="21"
+                  MinHeight="{DynamicResource ButtonMinHeight}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
@@ -52,6 +52,7 @@
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Foreground="{TemplateBinding Foreground}"
                             Padding="{TemplateBinding Padding}"
+                            Margin="{DynamicResource ButtonTextMargin}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             FontSize="{TemplateBinding FontSize}"
@@ -76,7 +77,7 @@
     </Style>
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderDisabledBrush}" />
     </Style>
 
@@ -90,9 +91,9 @@
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource AccentButtonDisabledBorderThickness}" />
       </Style>
     </Style>
 
@@ -105,8 +106,8 @@
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackground}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
       </Style>
     </Style>
   </ControlTheme>

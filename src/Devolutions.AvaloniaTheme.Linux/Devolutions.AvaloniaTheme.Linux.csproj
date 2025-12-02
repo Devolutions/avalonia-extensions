@@ -27,7 +27,7 @@
     <PackageReference Include="Avalonia" Version="[11.3.7,)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.1.1"/>
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" />
     <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
   </ItemGroup>
 

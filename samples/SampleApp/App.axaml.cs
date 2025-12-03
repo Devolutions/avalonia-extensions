@@ -175,11 +175,7 @@ public class App : Application
     styles.Add(macOsTheme);
 
     // Add app-specific styles
-    Uri stylesUri = new("avares://SampleApp/Styles.axaml");
-    styles.Add(new StyleInclude(stylesUri)
-    {
-      Source = stylesUri
-    });
+    styles.Add(new SampleAppStyles());
 
     return styles;
   }

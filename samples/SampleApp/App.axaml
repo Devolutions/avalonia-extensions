@@ -9,29 +9,29 @@
     <Styles x:Key="LinuxYaruStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <DevolutionsLinuxYaruTheme />
-      <StyleInclude Source="/Styles.axaml" />
+      <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="DevExpressStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <DevolutionsDevExpressTheme GlobalStyles="False" />
       <DevolutionsDevExpressThemeGlobalStyles />
-      <StyleInclude Source="/Styles.axaml" />
+      <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="MacOsStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <DevolutionsMacOsTheme GlobalStyles="False" />
       <DevolutionsMacOsThemeGlobalStyles />
-      <StyleInclude Source="/Styles.axaml" />
+      <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="FluentStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <FluentTheme />
-      <StyleInclude Source="/Styles.axaml" />
+      <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <SimpleTheme />
-      <StyleInclude Source="/Styles.axaml" />
+      <local:SampleAppStyles />
     </Styles>
     <actipro:ComparisonConverter x:Key="EqualToComparisonConverter" Operator="EqualTo" />
     <actipro:ComparisonConverter x:Key="NotEqualToComparisonConverter" Operator="NotEqualTo" />

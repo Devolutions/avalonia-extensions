@@ -37,7 +37,7 @@ public static class MarkupExtensionHelpers
                 {
                     // Runtime detection: Use dynamic if available (fast), otherwise use reflection (AoT-compatible)
                     TIn? value = IsDynamicCodeSupported
-                        ? Parse(str, (dynamic)default(TIn)!) // Fast path for non-AoT
+                        ? ParseViaDynamic<TIn>(str)     // Fast path for non-AoT
                         : ParseViaReflection<TIn>(str); // AoT-compatible path
 
                     return ObservableHelpers.ValueBinding(value);
@@ -90,6 +90,14 @@ public static class MarkupExtensionHelpers
 
     private static T Parse<T>(string stringValue, T _) where T : IParsable<T> =>
         T.Parse(stringValue, CultureInfo.InvariantCulture);
+
+    // Dynamic path - isolated in separate method to prevent AoT inlining
+    // This method is only called when RuntimeFeature.IsDynamicCodeSupported is true
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static TIn ParseViaDynamic<TIn>(string stringValue)
+    {
+        return Parse(stringValue, (dynamic)default(TIn)!);
+    }
 
     // AoT-compatible version that uses reflection instead of dynamic
     // This is automatically used when RuntimeFeature.IsDynamicCodeSupported is false (Native AoT)

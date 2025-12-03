@@ -93,6 +93,7 @@ public static class MarkupExtensionHelpers
 
     // Dynamic path - isolated in separate method to prevent AoT inlining
     // This method is only called when RuntimeFeature.IsDynamicCodeSupported is true
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static TIn ParseViaDynamic<TIn>(string stringValue)
     {
         return Parse(stringValue, (dynamic)default(TIn)!);

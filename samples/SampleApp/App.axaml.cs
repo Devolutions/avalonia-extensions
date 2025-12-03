@@ -139,6 +139,7 @@ public class App : Application
       "MacOsLiquidGlassThemeStyle" => new MacOsLiquidGlassTheme(),
       "DevolutionsLinuxYaruTheme" => new LinuxYaruTheme(),
       "DevolutionsDevExpressTheme" => new DevExpressTheme(),
+      "FluentThemePlusAddOns" => new FluentTheme(),
       "StyleInclude" => elem.GetAttribute("Source") switch
       {
         "avares://Devolutions.AvaloniaTheme.MacOS/MacOSTheme.axaml" => new MacOsTheme(),
@@ -495,4 +496,8 @@ public class MacOsLiquidGlassThemeStyle : Styles, ISupportInitialize
       this.Add(theme);
     }
   }
+}
+
+public class FluentThemePlusAddOns : Styles
+{
 }

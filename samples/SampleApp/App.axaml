@@ -45,6 +45,7 @@
     <!-- <local:MacOsLiquidGlassThemeStyle /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
+    <local:FluentThemePlusAddOns />
 
     <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
     <Style />

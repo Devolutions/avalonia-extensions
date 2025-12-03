@@ -6,6 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -18,6 +19,9 @@
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.8" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
+
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,5 +61,24 @@
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
     <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Avalonia core assemblies -->
+    <TrimmerRootAssembly Include="Avalonia.Themes.Simple" />
+    <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmerRootAssembly Include="Avalonia.Controls.DataGrid" />
+
+    <!-- ActiPro assemblies -->
+    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Bars" />-->
+    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Shared" />-->
+    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Core" />-->
+    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />-->
+
+    <!-- Devolutions Avalonia assemblies -->
+    <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />
+    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.DevExpress" />
+    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.Linux" />
+    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.MacOS" />
   </ItemGroup>
 </Project>

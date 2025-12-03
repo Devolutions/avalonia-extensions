@@ -196,7 +196,11 @@
           <TabItem.Header>
             <controls:SampleItemHeader Title="TreeDataGrid  (Accelerate)" ApplicableTo="" />
           </TabItem.Header>
-          <demoPages:TreeDataGridDemo />
+          <demoPages:TreeDataGridDemo>
+            <demoPages:TreeDataGridDemo.DataContext>
+              <vm:TreeDataGridViewModel />
+            </demoPages:TreeDataGridDemo.DataContext>
+          </demoPages:TreeDataGridDemo>
         </TabItem>
         <TabItem>
           <TabItem.Header>

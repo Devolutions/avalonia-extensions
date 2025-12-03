@@ -16,7 +16,7 @@ public class Person
   public ObservableCollection<Person> Children { get; } = new();
 }
 
-public class TreeDataGridViewModel : ObservableObject
+public partial class TreeDataGridViewModel : ObservableObject
 {
 #if ENABLE_TREEDATAGRID
   private readonly ObservableCollection<Person> _people = new()

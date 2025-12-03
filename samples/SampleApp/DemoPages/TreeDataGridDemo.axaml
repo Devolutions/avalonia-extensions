@@ -11,5 +11,5 @@
     <vm:TreeDataGridViewModel />
   </Design.DataContext>
 
-  <TreeDataGrid Source="{Binding Source} " />
+  <TreeDataGrid Source="{Binding Source}" />
 </UserControl>

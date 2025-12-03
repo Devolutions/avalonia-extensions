@@ -14,10 +14,33 @@
     <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Only enable Accelerate if a license key is present in the environment or explicitly enabled -->
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+
+    <!-- Enable TreeDataGrid if explicitly requested -->
+    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == '' and '$(USE_AVALONIA_ACCELERATE_CONTROLS)' == 'true'">true</EnableTreeDataGrid>
+    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == ''">false</EnableTreeDataGrid>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(EnableAccelerate)' == 'true'">
+    <DefineConstants>$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(EnableTreeDataGrid)' == 'true'">
+    <DefineConstants>$(DefineConstants);ENABLE_TREEDATAGRID</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Register the license key for Avalonia Accelerate if present -->
+  <ItemGroup>
+    <AvaloniaUILicenseKey Include="$(AVALONIA_LICENSE_KEY)" Condition="'$(AVALONIA_LICENSE_KEY)' != ''" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.8" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.8" />
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableTreeDataGrid)' == 'true'" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
 
@@ -28,7 +51,7 @@
   <ItemGroup>
     <!--Add both, Classic and Accelerate Dev Tools-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.8" />
-    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.0.4">
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.0.4" Condition="'$(EnableAccelerate)' == 'true'">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>

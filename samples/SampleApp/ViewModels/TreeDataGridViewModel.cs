@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using CommunityToolkit.Mvvm.ComponentModel;
+
+#if ENABLE_TREEDATAGRID
+using Avalonia.Controls.Models.TreeDataGrid;
+#endif
 
 namespace SampleApp.ViewModels;
 
@@ -15,6 +18,7 @@ public class Person
 
 public class TreeDataGridViewModel : ObservableObject
 {
+#if ENABLE_TREEDATAGRID
   private readonly ObservableCollection<Person> _people = new()
   {
     new Person
@@ -65,4 +69,7 @@ public class TreeDataGridViewModel : ObservableObject
   }
 
   public HierarchicalTreeDataGridSource<Person> Source { get; }
+#else
+  public object? Source { get; } = null;
+#endif
 }

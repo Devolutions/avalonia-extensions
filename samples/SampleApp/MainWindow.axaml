@@ -194,7 +194,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TreeDataGrid" ApplicableTo="" />
+            <controls:SampleItemHeader Title="TreeDataGrid  (Accelerate)" ApplicableTo="" />
           </TabItem.Header>
           <demoPages:TreeDataGridDemo />
         </TabItem>

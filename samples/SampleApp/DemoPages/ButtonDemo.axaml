@@ -2,14 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
              x:Class="SampleApp.DemoPages.ButtonDemo">
 
   <StackPanel>
     <Border Margin="20 0">
-      <Grid ColumnDefinitions="130, 85, Auto" RowDefinitions="50, 50, 50, 50, 50, 50" Margin="20">
+      <Grid ColumnDefinitions="130, 72, Auto" RowDefinitions="50, 50, 50, 50, 50, 50" Margin="20">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
         <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Cancel" />
         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
@@ -19,13 +18,15 @@
         <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
         <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
         <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center">With custom ContentTemplate:</TextBlock>
-        <Button Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Content="Computer">
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Computer">
           <Button.ContentTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="4">
-                <Svg Path="/Assets/Computer.svg" Width="16" Height="16"/>
-                <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
-              </StackPanel>
+              <Border Padding="5">
+                <StackPanel Orientation="Vertical" Spacing="2">
+                  <Svg Path="/Assets/Computer.svg" Width="16" Height="16" />
+                  <TextBlock Text="{Binding $parent[Button].Content}" VerticalAlignment="Center" />
+                </StackPanel>
+              </Border>
             </DataTemplate>
           </Button.ContentTemplate>
         </Button>

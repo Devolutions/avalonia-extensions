@@ -46,6 +46,7 @@
                   CornerRadius="{TemplateBinding CornerRadius}" />
           <ContentPresenter Name="PART_ContentPresenter"
                             Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
                             Foreground="{TemplateBinding Foreground}"
                             Padding="{TemplateBinding Padding}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"

@@ -10,12 +10,12 @@
     For example, when a MenuItem.Icon contain a Svg and that menu item is disabled, we want to
     colorize that Svg in grey. 
     
-    These styles are opt-out; consumers can use `<DevolutionsMacOsTheme GlobalStyles="False" />`
+    These styles are opt-out; consumers can use `<DevolutionsDevExpressTheme GlobalStyles="False" />`
     to opt-out of these global styles.
     
     They are also provided as a separate tag to cover scenarios where consumers would like to scope
     them to some control instead of including them globally;
-    They are thus available through the (very verbose) `<DevolutionsMacOsThemeGlobalStyles />` tag.
+    They are thus available through the (very verbose) `<DevolutionsDevExpressThemeGlobalStyles />` tag.
 
     This is to ensure consumers are granted enough control to prevent styles "bleeding-out" in cases
     where that might be undesirable.

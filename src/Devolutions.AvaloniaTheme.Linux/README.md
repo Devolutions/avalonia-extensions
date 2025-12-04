@@ -47,7 +47,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 ``` xaml
 <Application ...>
   <Application.Styles>
-     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/LinuxTheme.axaml" />
+     <DevolutionsLinuxYaruTheme />
   </Application.Styles>
 </Application>
 ```

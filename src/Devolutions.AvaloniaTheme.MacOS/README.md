@@ -98,6 +98,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 </Application>
 ```
 
+**Note:** Some global Styles will also be loaded by default, you can opt out by setting `GlobalStyles` to false (`<DevolutionsMacOsTheme GlobalStyles="False" />`). GlobalStyles are also available as a separate tag `<DevolutionsMacOsThemeGlobalStyles />` to cover scenarios where consumers would like to scope them to some control instead of including them globally. This is may be necessary to prevent styles from "bleeding out" in cases where that might be undesirable.
+
 ## Styled Controls
 
 Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.

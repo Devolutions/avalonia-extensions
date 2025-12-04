@@ -78,10 +78,12 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 ``` xaml
 <Application ...>
   <Application.Styles>
-     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/DevExpressTheme.axaml" />
+     <DevolutionsDevExpressTheme />
   </Application.Styles>
 </Application>
 ```
+
+**Note:** Some global Styles will also be loaded by default, you can opt out by setting `GlobalStyles` to false (`<DevolutionsDevExpressTheme GlobalStyles="False" />`). GlobalStyles are also available as a separate tag `<DevolutionsDevExpressThemeGlobalStyles />` to cover scenarios where consumers would like to scope them to some control instead of including them globally. This is may be necessary to prevent styles from "bleeding out" in cases where that might be undesirable.
 
 ## Styled Controls
 

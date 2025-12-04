@@ -1,5 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="SampleApp.TreeDataGridFluentTheme">
+        x:Class="SampleApp.FluentThemeAddOns.TreeDataGridFluentTheme">
     <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml"/>
 </Styles>

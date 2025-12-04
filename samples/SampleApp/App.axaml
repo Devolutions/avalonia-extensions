@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
   xmlns:local="clr-namespace:SampleApp"
+  xmlns:addons="clr-namespace:SampleApp.FluentThemeAddOns"
   x:Class="SampleApp.App">
 
   <Application.Resources>
@@ -26,7 +27,8 @@
     <Styles x:Key="FluentStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <FluentTheme />
-      <local:TreeDataGridFluentTheme />
+      <addons:DataGridFluentTheme />
+      <addons:TreeDataGridFluentTheme />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">

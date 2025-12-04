@@ -1,4 +1,4 @@
-namespace SampleApp;
+namespace SampleApp.FluentThemeAddOns;
 
 // ReSharper disable once RedundantUsingDirective
 using Avalonia.Markup.Xaml;

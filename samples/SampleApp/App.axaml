@@ -26,7 +26,7 @@
     <Styles x:Key="FluentStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <FluentTheme />
-      <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml"/>
+      <local:TreeDataGridFluentTheme />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">

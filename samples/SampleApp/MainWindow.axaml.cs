@@ -138,7 +138,7 @@ public partial class MainWindow : Window
     var header = new SampleApp.Controls.SampleItemHeader
     {
       Title = "TreeDataGrid (Accelerate)",
-      ApplicableTo = ""
+      ApplicableTo = "Fluent"
     };
     tabItem.Header = header;
 

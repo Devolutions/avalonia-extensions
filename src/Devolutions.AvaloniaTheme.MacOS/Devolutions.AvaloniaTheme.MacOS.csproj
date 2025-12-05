@@ -5,13 +5,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
   <PropertyGroup>
+    <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
     <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
     <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(EnableAccelerate)' == 'true'">
-    <DefineConstants>$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+    <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+    <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,7 +37,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.3.7,)" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
-    <!-- Conditionally include the real TreeDataGrid package -->
+    <!-- Conditionally include the Accelerate licenced TreeDataGrid package -->
     <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
     <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />

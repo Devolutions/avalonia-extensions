@@ -5,6 +5,8 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 
+.env
+
 # Rider
 .idea
 *.sln.DotSettings.user

@@ -28,9 +28,9 @@ public partial class MainWindow : Window
 #endif
     
 #if DEBUG
-    bool useAccelerate = Environment.GetEnvironmentVariable("USE_AVALONIA_ACCELERATE_TOOLS")?.ToLowerInvariant() == "true";
+    bool useAccelerateDevTools = Environment.GetEnvironmentVariable("USE_AVALONIA_ACCELERATE_TOOLS")?.ToLowerInvariant() == "true";
 
-    if (useAccelerate)
+    if (useAccelerateDevTools)
     {
       // Enable Accelerate dev tools (AvaloniaUI.DiagnosticsSupport) - requiring a licence to use
       (Application.Current as App)?.AttachDevToolsOnce();

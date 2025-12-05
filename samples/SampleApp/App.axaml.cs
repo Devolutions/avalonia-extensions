@@ -368,7 +368,11 @@ public class App : Application
     }
 
 #if DEBUG
+#if USE_AVALONIA_ACCELERATE_TOOLS
     this.AttachDeveloperTools();
+#else
+    this.AttachDevTools();
+#endif
 #endif
     this.devToolsAttached = true;
   }

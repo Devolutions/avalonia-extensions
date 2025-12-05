@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == '' and '$(USE_AVALONIA_ACCELERATE_CONTROLS)' == 'true'">true</EnableTreeDataGrid>
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == ''">false</EnableTreeDataGrid>
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(EnableTreeDataGrid)' == 'true'">
-    <DefineConstants>$(DefineConstants);ENABLE_TREEDATAGRID</DefineConstants>
+  <PropertyGroup Condition="'$(EnableAccelerate)' == 'true'">
+    <DefineConstants>$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,7 +37,7 @@
     <PackageReference Include="Avalonia" Version="[11.3.7,)" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
     <!-- Conditionally include the real TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableTreeDataGrid)' == 'true'" />
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
     <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
   </ItemGroup>

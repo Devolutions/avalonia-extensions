@@ -35,5 +35,9 @@ public class DevolutionsDevExpressTheme : Styles, ISupportInitialize
         this.Add(this.GlobalStyles
             ? new DevExpressThemeWithGlobalStyles(this.sp)
             : new DevExpressTheme(this.sp));
+
+#if ENABLE_ACCELERATE
+        this.Add(new Controls.TreeDataGridStyles(this.sp));
+#endif
     }
 }

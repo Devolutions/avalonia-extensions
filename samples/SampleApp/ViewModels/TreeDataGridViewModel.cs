@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-#if ENABLE_TREEDATAGRID
+#if ENABLE_ACCELERATE
 using Avalonia.Controls.Models.TreeDataGrid;
 #endif
 
@@ -18,7 +18,7 @@ public class Person
 
 public partial class TreeDataGridViewModel : ObservableObject
 {
-#if ENABLE_TREEDATAGRID
+#if ENABLE_ACCELERATE
   private readonly ObservableCollection<Person> _people = new()
   {
     new Person

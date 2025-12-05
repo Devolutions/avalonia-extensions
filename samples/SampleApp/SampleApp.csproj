@@ -19,17 +19,18 @@
     <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
     <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
 
-    <!-- Enable TreeDataGrid if explicitly requested -->
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == '' and '$(USE_AVALONIA_ACCELERATE_CONTROLS)' == 'true'">true</EnableTreeDataGrid>
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == ''">false</EnableTreeDataGrid>
+    <!-- Enable Accelerate Dev Tools if explicitly requested via env var -->
+    <UseAvaloniaAccelerateTools Condition="'$(UseAvaloniaAccelerateTools)' == '' and '$(USE_AVALONIA_ACCELERATE_TOOLS)' == 'true'">true</UseAvaloniaAccelerateTools>
+    
+    <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(EnableAccelerate)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(EnableTreeDataGrid)' == 'true'">
-    <DefineConstants>$(DefineConstants);ENABLE_TREEDATAGRID</DefineConstants>
+  <PropertyGroup Condition="'$(UseAvaloniaAccelerateTools)' == 'true'">
+    <DefineConstants>$(DefineConstants);USE_AVALONIA_ACCELERATE_TOOLS</DefineConstants>
   </PropertyGroup>
 
   <!-- Register the license key for Avalonia Accelerate if present -->
@@ -40,7 +41,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.8" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.8" />
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableTreeDataGrid)' == 'true'" />
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
 
@@ -48,10 +49,12 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
   </ItemGroup>
 
+
+
   <ItemGroup>
     <!--Add both, Classic and Accelerate Dev Tools-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.8" />
-    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.0.4" Condition="'$(EnableAccelerate)' == 'true'">
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.0.4" Condition="'$(UseAvaloniaAccelerateTools)' == 'true'">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>

@@ -39,7 +39,6 @@
     <MergeResourceInclude Source="TextBlock.axaml" />
     <MergeResourceInclude Source="TreeView.axaml" />
     <MergeResourceInclude Source="TreeViewItem.axaml" />
-    <MergeResourceInclude Source="TreeDataGrid.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="Window.axaml" />
   </ResourceDictionary.MergedDictionaries>

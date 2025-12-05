@@ -9,15 +9,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == '' and '$(USE_AVALONIA_ACCELERATE_CONTROLS)' == 'true'">true</EnableTreeDataGrid>
-    <EnableTreeDataGrid Condition="'$(EnableTreeDataGrid)' == ''">false</EnableTreeDataGrid>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(EnableTreeDataGrid)' == 'true'">
-    <DefineConstants>$(DefineConstants);ENABLE_TREEDATAGRID</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <Version>1.0.0</Version>
     <Company>Devolutions</Company>
     <Description>Devolutions Avalonia Controls Library</Description>
@@ -41,9 +32,6 @@
     <PackageReference Include="System.Reactive" Version="*" />
 
     <PackageReference Include="Irihi.Ursa" Version="[1.12.0,)" />
-    
-    <!-- Conditionally include the real TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableTreeDataGrid)' == 'true'" />
   </ItemGroup>
 
   <ItemGroup>

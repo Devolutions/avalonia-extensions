@@ -22,6 +22,10 @@ public partial class MainWindow : Window
     
     // Update preview background once the window is fully loaded
     this.Loaded += (s, e) => this.UpdatePreviewBackground();
+
+#if ENABLE_ACCELERATE
+    this.AddTreeDataGridTab();
+#endif
     
 #if DEBUG
     bool useAccelerate = Environment.GetEnvironmentVariable("USE_AVALONIA_ACCELERATE_TOOLS")?.ToLowerInvariant() == "true";
@@ -123,4 +127,44 @@ public partial class MainWindow : Window
         new GradientStop(Color.Parse("#FF0000"), 1)
       }
     };
+
+#if ENABLE_ACCELERATE
+  private void AddTreeDataGridTab()
+  {
+    var tabControl = this.FindControl<TabControl>("MainTabControl");
+    if (tabControl == null) return;
+
+    var tabItem = new TabItem();
+    var header = new SampleApp.Controls.SampleItemHeader
+    {
+      Title = "TreeDataGrid (Accelerate)",
+      ApplicableTo = ""
+    };
+    tabItem.Header = header;
+
+    var demo = new SampleApp.DemoPages.TreeDataGridDemo();
+    demo.DataContext = new TreeDataGridViewModel();
+    tabItem.Content = demo;
+
+    // Insert before "TreeView" to keep alphabetical order
+    int insertIndex = -1;
+    for (int i = 0; i < tabControl.Items.Count; i++)
+    {
+      if (tabControl.Items[i] is TabItem ti && ti.Header is SampleApp.Controls.SampleItemHeader h && h.Title == "TreeView")
+      {
+        insertIndex = i;
+        break;
+      }
+    }
+
+    if (insertIndex != -1)
+    {
+      tabControl.Items.Insert(insertIndex, tabItem);
+    }
+    else
+    {
+      tabControl.Items.Add(tabItem);
+    }
+  }
+#endif
 }

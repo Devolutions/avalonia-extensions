@@ -30,24 +30,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.3.7,)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
-    <!-- Conditionally include the Accelerate licenced TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" />
-    <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
+    <PackageReference Include="Avalonia" Version="[11.3.7,)"/>
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
+    <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'"/>
+    <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.11.28,)" />
+    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2025.11.28,)"/>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
+    <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -65,13 +65,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="Design\ThemePreviewer.axaml" />
+    <AdditionalFiles Include="Design\ThemePreviewer.axaml"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-    <Compile Remove="Design\ThemePreviewer.axaml.cs" />
-    <None Include="Design\ThemePreviewer.axaml.cs" />
-    <AvaloniaXaml Remove="Design\ThemePreviewer.axaml" />
-    <None Include="Design\ThemePreviewer.axaml" />
+    <Compile Remove="Design\ThemePreviewer.axaml.cs"/>
+    <None Include="Design\ThemePreviewer.axaml.cs"/>
+    <AvaloniaXaml Remove="Design\ThemePreviewer.axaml"/>
+    <None Include="Design\ThemePreviewer.axaml"/>
   </ItemGroup>
 </Project>

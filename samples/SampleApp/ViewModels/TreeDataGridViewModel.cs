@@ -1,12 +1,11 @@
-using System.Collections.ObjectModel;
-using Avalonia.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-
 #if ENABLE_ACCELERATE
 using Avalonia.Controls.Models.TreeDataGrid;
 #endif
 
 namespace SampleApp.ViewModels;
+
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 public class Person
 {
@@ -16,7 +15,7 @@ public class Person
   public ObservableCollection<Person> Children { get; } = new();
 }
 
-public partial class TreeDataGridViewModel : ObservableObject
+public class TreeDataGridViewModel : ObservableObject
 {
 #if ENABLE_ACCELERATE
   private readonly ObservableCollection<Person> _people = new()
@@ -45,7 +44,7 @@ public partial class TreeDataGridViewModel : ObservableObject
           Age = 42,
           Children =
           {
-            new Person { FirstName = "Lailah ", LastName = "Velazquez", Age = 16 }
+            new Person { FirstName = "Lailah", LastName = "Velazquez", Age = 16 }
           }
         }
       }

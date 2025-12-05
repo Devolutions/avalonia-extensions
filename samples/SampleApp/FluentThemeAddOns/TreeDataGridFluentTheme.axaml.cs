@@ -10,7 +10,7 @@ public class TreeDataGridFluentTheme : Styles
   public TreeDataGridFluentTheme(IServiceProvider? sp = null)
   {
 #if ENABLE_ACCELERATE
-        AvaloniaXamlLoader.Load(sp, this);
+    AvaloniaXamlLoader.Load(sp, this);
 #endif
   }
 }

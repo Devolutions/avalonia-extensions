@@ -5,7 +5,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="using:Avalonia.Controls.Converters">
 
-        <ResourceDictionary.ThemeDictionaries>
+      <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
           <SolidColorBrush x:Key="TreeDataGridGridLinesBrush" Color="{StaticResource SystemListLowColor}" />
           <SolidColorBrush x:Key="TreeDataGridHeaderBackgroundPointerOverBrush" Color="{StaticResource SystemBaseHighColor}" Opacity="0.1" />
@@ -328,5 +328,3 @@
         </Style>
       </ControlTheme>
     </ResourceDictionary>
-
-<!-- Additional styling in Accents/Styles.axaml -->

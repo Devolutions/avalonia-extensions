@@ -148,6 +148,8 @@ jobs:
 
       - name: Build nuget packages
         shell: pwsh
+        env:
+          AVALONIA_LICENSE_KEY: ${{ secrets.AVALONIA_LICENSE_KEY }}
         run: |
           $PackageList = '${{ needs.preflight.outputs.package-list }}'
           $ProjectDirs = @($PackageList -Split ',' | ForEach-Object { ".\src\Devolutions.$_" })

@@ -159,7 +159,8 @@ Refer to individual theme README files for complete lists and visual examples.
 
 
 # Development Rules
-- Don't run terminal commands without asking permission
+- Don't run terminal commands without asking permission, except cd, mkdir, editing & creating files within the repo, building, running and closing the app. 
+- NEVER ask the user to allow a command without a short explanation of what it is supposed to accomplish.
 - When fixing a problem, focus just on that problem. If you notice other tangential issues to the issue you are tasked with, summarise them and report them back but don't automatically start fixing issues
 
 # File Modification Rules

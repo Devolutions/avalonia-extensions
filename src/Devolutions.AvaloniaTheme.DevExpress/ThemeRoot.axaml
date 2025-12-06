@@ -4,7 +4,7 @@
 
   <!-- Using Fluent Theme as a fallback for anything not defined in DevExpress theme -->
   <FluentTheme />
-
+  
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
 
   <Styles.Resources>

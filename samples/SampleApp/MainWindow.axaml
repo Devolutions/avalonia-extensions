@@ -192,6 +192,7 @@
           </TabItem.Header>
           <demoPages:ToolTipDemo />
         </TabItem>
+        <!-- TabItem "TreeDataGrid" inserted here through code-behind if Accelerate is enabled -->
         <TabItem>
           <TabItem.Header>
             <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress" />

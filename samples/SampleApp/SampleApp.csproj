@@ -14,9 +14,29 @@
     <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
   </PropertyGroup>
 
+  <!-- Only enable Accelerate if a license key is present or explicitly enabled. 
+       (To enable manually, use: `dotnet run /p:EnableAccelerate=true`, will still throw an error though if no valid licence key is found -->
+  <PropertyGroup>
+    <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+    <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+
+    <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+    <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+
+    <!-- If Accelerate is not enabled, exclude files that require it from the build  -->
+    <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <!-- Register the license key for Avalonia Accelerate if present -->
+  <ItemGroup>
+    <AvaloniaUILicenseKey Include="$(AVALONIA_LICENSE_KEY)" Condition="'$(AVALONIA_LICENSE_KEY)' != ''" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.8" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
 

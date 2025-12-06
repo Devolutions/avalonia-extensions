@@ -10,7 +10,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.Threading;
@@ -139,6 +138,7 @@ public class App : Application
       "MacOsLiquidGlassThemeStyle" => new MacOsLiquidGlassTheme(),
       "DevolutionsLinuxYaruTheme" => new LinuxYaruTheme(),
       "DevolutionsDevExpressTheme" => new DevExpressTheme(),
+      "FluentThemePlusAddOns" => new FluentTheme(),
       "StyleInclude" => elem.GetAttribute("Source") switch
       {
         "avares://Devolutions.AvaloniaTheme.MacOS/MacOSTheme.axaml" => new MacOsTheme(),
@@ -495,4 +495,8 @@ public class MacOsLiquidGlassThemeStyle : Styles, ISupportInitialize
       this.Add(theme);
     }
   }
+}
+
+public class FluentThemePlusAddOns : Styles
+{
 }

@@ -40,7 +40,9 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
     <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'"/>
+    <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 
+         Consumers who want to use TreeDataGrid must reference it themselves. -->
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">

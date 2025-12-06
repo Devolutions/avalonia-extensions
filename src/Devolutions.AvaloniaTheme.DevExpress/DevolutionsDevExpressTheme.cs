@@ -37,7 +37,15 @@ public class DevolutionsDevExpressTheme : Styles, ISupportInitialize
             : new DevExpressTheme(this.sp));
 
 #if ENABLE_ACCELERATE
-        this.Add(new Controls.TreeDataGridStyles(this.sp));
+        if (IsTreeDataGridAvailable())
+        {
+            this.Add(new Controls.TreeDataGridStyles(this.sp));
+        }
 #endif
+    }
+
+    private static bool IsTreeDataGridAvailable()
+    {
+        return Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
     }
 }

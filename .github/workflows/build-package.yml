@@ -63,7 +63,7 @@ jobs:
           }
 
           if ((-Not $IsMasterBranch) -or $IsScheduledJob) {
-            $DryRun = $true # force dry run
+            $SkipPublish = $true # force skip publish
           }
 
           $PackageVersion = '${{ inputs.version }}'

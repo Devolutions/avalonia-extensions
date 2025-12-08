@@ -39,7 +39,6 @@ jobs:
     name: Preflight
     runs-on: ubuntu-22.04
     outputs:
-      package-env: ${{ steps.info.outputs.package-env }}
       package-version: ${{ steps.info.outputs.package-version }}
       package-list: ${{ steps.info.outputs.package-list }}
       skip-publish: ${{ steps.info.outputs.skip-publish }}
@@ -56,14 +55,8 @@ jobs:
           try { $SkipPublish = [System.Boolean]::Parse('${{ inputs.skip-publish }}') } catch { $SkipPublish = $false }
           try { $DryRun = [System.Boolean]::Parse('${{ inputs.dry-run }}') } catch { $DryRun = $true }
 
-          $PackageEnv = if ($IsMasterBranch -And -Not $IsScheduledJob) {
-            "publish-prod"
-          } else {
-            "publish-test"
-          }
-
           if ((-Not $IsMasterBranch) -or $IsScheduledJob) {
-            $SkipPublish = $true # force skip publish
+            $DryRun = $true # force dry run
           }
 
           $PackageVersion = '${{ inputs.version }}'
@@ -98,7 +91,6 @@ jobs:
           }
           $PackageList = $Packages -join ","
 
-          echo "package-env=$PackageEnv" >> $Env:GITHUB_OUTPUT
           echo "package-version=$PackageVersion" >> $Env:GITHUB_OUTPUT
           echo "package-list=$PackageList" >> $Env:GITHUB_OUTPUT
           echo "skip-publish=$($SkipPublish.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
@@ -112,7 +104,7 @@ jobs:
     name: Build nuget
     runs-on: windows-2022
     needs: [preflight]
-    environment: ${{ needs.preflight.outputs.package-env }}
+    environment: publish-prod
 
     steps:
       - name: Check out ${{ github.repository }}
@@ -192,7 +184,7 @@ jobs:
     name: Publish packages
     runs-on: ubuntu-22.04
     needs: [preflight, build-nuget]
-    environment: ${{ needs.preflight.outputs.package-env }}
+    environment: publish-prod
     if: ${{ fromJSON(needs.preflight.outputs.skip-publish) == false }}
     permissions:
       id-token: write

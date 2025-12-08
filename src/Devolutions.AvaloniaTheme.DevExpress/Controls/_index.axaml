@@ -38,6 +38,7 @@
     <MergeResourceInclude Source="TextBox.axaml" />
     <MergeResourceInclude Source="TextBlock.axaml" />
     <MergeResourceInclude Source="TreeView.axaml" />
+    <!-- TreeDataGrid.axaml conditionally loaded in DevolutionsDevExpressTheme.cs if licensed Accelerate controls are enabled  -->
     <MergeResourceInclude Source="TreeViewItem.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="Window.axaml" />

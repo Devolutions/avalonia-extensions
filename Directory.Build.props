@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <!-- Attempt to read .env file from the solution root -->
+    <DotEnvFile>$(MSBuildThisFileDirectory).env</DotEnvFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="Exists('$(DotEnvFile)')">
+    <DotEnvContent>$([System.IO.File]::ReadAllText('$(DotEnvFile)'))</DotEnvContent>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DotEnvContent)' != ''">
+    <!-- Regex to find AVALONIA_LICENSE_KEY=value 
+         (?m) enables multiline mode so ^ matches start of line
+         ^\s* matches start of line and optional whitespace
+         \s*=\s* matches equals sign with optional whitespace around it
+         ([^\r\n]+) matches the value until end of line
+    -->
+    <AvaloniaLicenseKeyPattern>(?m)^\s*AVALONIA_LICENSE_KEY\s*=\s*([^\r\n]+)</AvaloniaLicenseKeyPattern>
+    <AVALONIA_LICENSE_KEY Condition="'$(AVALONIA_LICENSE_KEY)' == ''">$([System.Text.RegularExpressions.Regex]::Match($(DotEnvContent), $(AvaloniaLicenseKeyPattern)).Groups[1].Value.Trim())</AVALONIA_LICENSE_KEY>
+  </PropertyGroup>
+</Project>

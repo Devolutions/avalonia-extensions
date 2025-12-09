@@ -23,14 +23,14 @@ on:
         description: 'release version'
         default: "latest"
         required: true
-      skip-publish:
-        description: 'Skip publishing'
-        type: boolean
-        default: false
-      dry-run:
-        description: 'Dry run (simulate)'
-        type: boolean
-        default: true
+      publish-mode:
+        description: 'Publishing Mode'
+        type: choice
+        options:
+          - 'Skip Publishing'
+          - 'Dry Run (Master only)'
+          - 'Publish (Master only)'
+        default: 'Skip Publishing'
   schedule:
     - cron: '32 5 * * 1' # 05:32 AM UTC every Monday
 
@@ -39,6 +39,7 @@ jobs:
     name: Preflight
     runs-on: ubuntu-22.04
     outputs:
+      package-env: ${{ steps.info.outputs.package-env }}
       package-version: ${{ steps.info.outputs.package-version }}
       package-list: ${{ steps.info.outputs.package-list }}
       skip-publish: ${{ steps.info.outputs.skip-publish }}
@@ -52,11 +53,26 @@ jobs:
           $IsMasterBranch = ('${{ github.ref_name }}' -eq 'master')
           $IsScheduledJob = ('${{ github.event_name }}' -eq 'schedule')
 
-          try { $SkipPublish = [System.Boolean]::Parse('${{ inputs.skip-publish }}') } catch { $SkipPublish = $false }
-          try { $DryRun = [System.Boolean]::Parse('${{ inputs.dry-run }}') } catch { $DryRun = $true }
+          $PublishMode = '${{ inputs.publish-mode }}'
+          if ([string]::IsNullOrEmpty($PublishMode)) { $PublishMode = 'Skip Publishing' }
 
-          if ((-Not $IsMasterBranch) -or $IsScheduledJob) {
-            $DryRun = $true # force dry run
+          $SkipPublish = ($PublishMode -eq 'Skip Publishing')
+          $DryRun = ($PublishMode -eq 'Dry Run (Master only)')
+
+          $PackageEnv = if ($IsMasterBranch -And -Not $SkipPublish) {
+            "publish-prod"
+          } else {
+            "publish-test"
+          }
+            
+          if ($IsScheduledJob) {
+            $SkipPublish = $false
+            $DryRun = $true # force dry run of publish step
+          }
+            
+          if ((-Not $IsMasterBranch)) {
+            $SkipPublish = $true # force skipping publish step
+            $DryRun = $false # just to avoid confusing 'Notice' messages
           }
 
           $PackageVersion = '${{ inputs.version }}'
@@ -91,6 +107,7 @@ jobs:
           }
           $PackageList = $Packages -join ","
 
+          echo "package-env=$PackageEnv" >> $Env:GITHUB_OUTPUT
           echo "package-version=$PackageVersion" >> $Env:GITHUB_OUTPUT
           echo "package-list=$PackageList" >> $Env:GITHUB_OUTPUT
           echo "skip-publish=$($SkipPublish.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
@@ -98,13 +115,14 @@ jobs:
 
           echo "::notice::Building Packages: $PackageList"
           echo "::notice::Version: $PackageVersion"
+          echo "::notice::SkipPublish: $SkipPublish"
           echo "::notice::DryRun: $DryRun"
 
   build-nuget:
     name: Build nuget
     runs-on: windows-2022
     needs: [preflight]
-    environment: publish-prod
+    environment: ${{ needs.preflight.outputs.package-env }}
 
     steps:
       - name: Check out ${{ github.repository }}
@@ -184,7 +202,7 @@ jobs:
     name: Publish packages
     runs-on: ubuntu-22.04
     needs: [preflight, build-nuget]
-    environment: publish-prod
+    environment: ${{ needs.preflight.outputs.package-env }}
     if: ${{ fromJSON(needs.preflight.outputs.skip-publish) == false }}
     permissions:
       id-token: write

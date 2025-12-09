@@ -13,6 +13,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.Threading;
+using Devolutions.AvaloniaTheme.DevExpress;
+using Devolutions.AvaloniaTheme.Linux;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
 using ViewModels;
@@ -90,12 +92,16 @@ public class App : Application
           bin?.Name.Equals("bin", StringComparison.OrdinalIgnoreCase) == true)
       {
         DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
-        doc.Load(Path.Join(projDir!.FullName, "App.axaml"));
-        XmlElement? styles = doc["Application"]?["Application.Styles"];
+        string appAxamlPath = Path.Join(projDir!.FullName, "App.axaml");
+        if (File.Exists(appAxamlPath))
+        {
+          doc.Load(appAxamlPath);
+          XmlElement? styles = doc["Application"]?["Application.Styles"];
 
-        return styles?.OfType<XmlElement>()
-          .Select(this.ThemeFromXmlElement)
-          .FirstOrDefault(theme => theme is not null);
+          return styles?.OfType<XmlElement>()
+            .Select(this.ThemeFromXmlElement)
+            .FirstOrDefault(theme => theme is not null);
+        }
       }
     }
     catch (DirectoryNotFoundException e)
@@ -180,6 +186,30 @@ public class App : Application
     return styles;
   }
 
+  private Styles CreateLinuxStyles()
+  {
+    Styles styles = new();
+    styles.Add(new ModernTheme { AreNativeControlThemesEnabled = false });
+    styles.Add(new DevolutionsLinuxYaruTheme());
+    styles.Add(new SampleAppStyles());
+    return styles;
+  }
+
+  private Styles CreateDevExpressStyles()
+  {
+    Styles styles = new();
+    styles.Add(new ModernTheme { AreNativeControlThemesEnabled = false });
+
+    var theme = new DevolutionsDevExpressTheme { GlobalStyles = false };
+    theme.BeginInit();
+    theme.EndInit();
+    styles.Add(theme);
+
+    styles.Add(new DevolutionsDevExpressThemeGlobalStyles());
+    styles.Add(new SampleAppStyles());
+    return styles;
+  }
+
   public static void SetTheme(Theme theme)
   {
     lock (themeLock)
@@ -218,8 +248,8 @@ public class App : Application
         // Non-MacOS themes use cached styles
         styles = theme switch
         {
-          LinuxYaruTheme => app.linuxYaruStyles,
-          DevExpressTheme => app.devExpressStyles,
+          LinuxYaruTheme => app.CreateLinuxStyles(),
+          DevExpressTheme => app.CreateDevExpressStyles(),
           FluentTheme => app.fluentStyles,
           SimpleTheme => app.simpleStyles,
           _ => null

@@ -1,5 +1,6 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "samples\SampleApp\SampleApp.csproj", "{8FB0A38F-D80A-45A1-9796-FD22FDB14064}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.MacOS", "src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj", "{052424E1-48F3-4D8E-A780-DEB4D33B4482}"
@@ -13,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.Linux", "src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj", "{2B21E358-E385-44C8-B346-8654E9D61377}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaControls", "src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj", "{3652052E-B032-409A-AB43-C18CB6A18086}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A091072B-6B14-4D57-B6CE-B7DEEA212054}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaControls.VisualTests", "tests\Devolutions.AvaloniaControls.VisualTests\Devolutions.AvaloniaControls.VisualTests.csproj", "{37A56EB5-31A4-493F-B411-F2D310F7D976}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +45,10 @@ Global
 		{3652052E-B032-409A-AB43-C18CB6A18086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3652052E-B032-409A-AB43-C18CB6A18086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3652052E-B032-409A-AB43-C18CB6A18086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{052424E1-48F3-4D8E-A780-DEB4D33B4482} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
@@ -47,5 +56,6 @@ Global
 		{DDDC64A4-451A-4496-841C-30C3C4BA62AE} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
 		{2B21E358-E385-44C8-B346-8654E9D61377} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
 		{3652052E-B032-409A-AB43-C18CB6A18086} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
+		{37A56EB5-31A4-493F-B411-F2D310F7D976} = {A091072B-6B14-4D57-B6CE-B7DEEA212054}
 	EndGlobalSection
 EndGlobal

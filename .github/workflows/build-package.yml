@@ -59,19 +59,14 @@ jobs:
           $SkipPublish = ($PublishMode -eq 'Skip Publishing')
           $DryRun = ($PublishMode -eq 'Dry Run (Master only)')
 
-          $PackageEnv = if ($IsMasterBranch -And -Not $SkipPublish) {
+          $PackageEnv = if ($IsMasterBranch -And -Not $SkipPublish -And -Not $IsScheduledJob) {
             "publish-prod"
           } else {
             "publish-test"
           }
             
-          if ($IsScheduledJob) {
-            $SkipPublish = $false
-            $DryRun = $true # force dry run of publish step
-          }
-            
-          if ((-Not $IsMasterBranch)) {
-            $SkipPublish = $true # force skipping publish step
+          if ($IsScheduledJob -Or (-Not $IsMasterBranch)) {
+            $SkipPublish = $true # force skipping publish (jobs running in 'publish-test' cannot test the publishing step)
             $DryRun = $false # just to avoid confusing 'Notice' messages
           }
 

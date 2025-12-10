@@ -125,7 +125,7 @@
                   <Thumb Theme="{StaticResource FluentScrollBarThumb}"
                          Width="7"
                          MinHeight="{DynamicResource ScrollBarSize}"
-                         RenderTransform="{DynamicResource VerticalScrollThumbShrinkTransform}"
+                         RenderTransform="{StaticResource VerticalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="50%,100%" />
                 </Track>
 
@@ -202,7 +202,7 @@
                   <Thumb Theme="{StaticResource FluentScrollBarThumb}"
                          Height="7"
                          MinWidth="{DynamicResource ScrollBarSize}"
-                         RenderTransform="{DynamicResource HorizontalScrollThumbShrinkTransform}"
+                         RenderTransform="{StaticResource HorizontalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="100%,50%" />
                 </Track>
 
@@ -302,54 +302,36 @@
       </Style>
     </Style>
 
-    <Style Selector="^ /template/ RepeatButton">
-      <Setter Property="Opacity">
-        <Setter.Value>
-          <MultiBinding Converter="{x:Static DevoMultiConverters.BooleanToChoiceConverter}">
-            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollBar}" Path="AllowAutoHide" />
-            <Binding Source="{StaticResource OpacityHidden}" />
-            <Binding Source="{StaticResource OpacityVisible}" />
-          </MultiBinding>
-        </Setter.Value>
-      </Setter>
+    <Style Selector="^[AllowAutoHide=True] /template/ RepeatButton">
+      <Setter Property="Opacity" Value="{StaticResource OpacityHidden}" />
+    </Style>
+    <Style Selector="^[AllowAutoHide=False] /template/ RepeatButton">
+      <Setter Property="Opacity" Value="{StaticResource OpacityVisible}" />
     </Style>
 
     <!-- Conditional styles depending on `AllowAutoHide` property -->
     <!-- The converter is needed to avoid using <Style Selector="^[IsExpanded=True]">, which would apply also for a ScrollBar
          that was expanded by pointerover. The shrinking back of the ScrollBar would then only happen after the built-in delay,
          rather than immediately when the pointer moves off  -->
-    <Style Selector="^ /template/ Thumb">
-      <Setter Property="CornerRadius">
-        <Setter.Value>
-          <MultiBinding Converter="{x:Static DevoMultiConverters.BooleanToChoiceConverter}">
-            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollBar}" Path="AllowAutoHide" />
-            <Binding Source="{StaticResource ScrollBarThumbCornerRadius}" />
-            <Binding Source="{StaticResource ScrollBarThumbExpandedCornerRadius}" />
-          </MultiBinding>
-        </Setter.Value>
-      </Setter>
+    <Style Selector="^[AllowAutoHide=True] /template/ Thumb">
+      <Setter Property="CornerRadius" Value="{StaticResource ScrollBarThumbCornerRadius}" />
     </Style>
-    <Style Selector="^:vertical /template/ Thumb">
-      <Setter Property="RenderTransform">
-        <Setter.Value>
-          <MultiBinding Converter="{x:Static DevoMultiConverters.BooleanToChoiceConverter}">
-            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollBar}" Path="AllowAutoHide" />
-            <Binding Source="{StaticResource VerticalScrollThumbShrinkTransform}" />
-            <Binding Source="{StaticResource NoTransform}" />
-          </MultiBinding>
-        </Setter.Value>
-      </Setter>
+    <Style Selector="^[AllowAutoHide=False] /template/ Thumb">
+      <Setter Property="CornerRadius" Value="{StaticResource ScrollBarThumbExpandedCornerRadius}" />
     </Style>
-    <Style Selector="^:horizontal /template/ Thumb">
-      <Setter Property="RenderTransform">
-        <Setter.Value>
-          <MultiBinding Converter="{x:Static DevoMultiConverters.BooleanToChoiceConverter}">
-            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollBar}" Path="AllowAutoHide" />
-            <Binding Source="{StaticResource HorizontalScrollThumbShrinkTransform}" />
-            <Binding Source="{StaticResource NoTransform}" />
-          </MultiBinding>
-        </Setter.Value>
-      </Setter>
+
+    <Style Selector="^:vertical[AllowAutoHide=True] /template/ Thumb">
+      <Setter Property="RenderTransform" Value="{StaticResource VerticalScrollThumbShrinkTransform}" />
+    </Style>
+    <Style Selector="^:vertical[AllowAutoHide=False] /template/ Thumb">
+      <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
+    </Style>
+
+    <Style Selector="^:horizontal[AllowAutoHide=True] /template/ Thumb">
+      <Setter Property="RenderTransform" Value="{StaticResource HorizontalScrollThumbShrinkTransform}" />
+    </Style>
+    <Style Selector="^:horizontal[AllowAutoHide=False] /template/ Thumb">
+      <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
     </Style>
 
     <Style Selector="^:pointerover">

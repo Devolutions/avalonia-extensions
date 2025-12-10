@@ -25,7 +25,7 @@
     <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
 
     <!-- If Accelerate is not enabled, exclude files that require it from the build  -->
-    <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs</DefaultItemExcludes>
+    <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs;**\TreeDataGridViewModel.cs</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- Register the license key for Avalonia Accelerate if present -->

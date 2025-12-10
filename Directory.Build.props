@@ -13,9 +13,9 @@
          (?m) enables multiline mode so ^ matches start of line
          ^\s* matches start of line and optional whitespace
          \s*=\s* matches equals sign with optional whitespace around it
-         ([^\r\n]+) matches the value until end of line
+         ([^\s#]+) matches the value until whitespace or comment start
     -->
-    <AvaloniaLicenseKeyPattern>(?m)^\s*AVALONIA_LICENSE_KEY\s*=\s*([^\r\n]+)</AvaloniaLicenseKeyPattern>
+    <AvaloniaLicenseKeyPattern>(?m)^\s*AVALONIA_LICENSE_KEY\s*=\s*([^\s#]+)</AvaloniaLicenseKeyPattern>
     <AVALONIA_LICENSE_KEY Condition="'$(AVALONIA_LICENSE_KEY)' == ''">$([System.Text.RegularExpressions.Regex]::Match($(DotEnvContent), $(AvaloniaLicenseKeyPattern)).Groups[1].Value.Trim())</AVALONIA_LICENSE_KEY>
   </PropertyGroup>
 </Project>

@@ -5,10 +5,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="Exists('$(DotEnvFile)')">
-    <DotEnvContent>$([System.IO.File]::ReadAllText('$(DotEnvFile)'))</DotEnvContent>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(DotEnvContent)' != ''">
+    <!-- Read file into a temporary property -->
+    <_TempDotEnvContent>$([System.IO.File]::ReadAllText('$(DotEnvFile)'))</_TempDotEnvContent>
+    
     <!-- Regex to find AVALONIA_LICENSE_KEY=value 
          (?m) enables multiline mode so ^ matches start of line
          ^\s* matches start of line and optional whitespace
@@ -16,6 +15,11 @@
          ([^\s#]+) matches the value until whitespace or comment start
     -->
     <AvaloniaLicenseKeyPattern>(?m)^\s*AVALONIA_LICENSE_KEY\s*=\s*([^\s#]+)</AvaloniaLicenseKeyPattern>
-    <AVALONIA_LICENSE_KEY Condition="'$(AVALONIA_LICENSE_KEY)' == ''">$([System.Text.RegularExpressions.Regex]::Match($(DotEnvContent), $(AvaloniaLicenseKeyPattern)).Groups[1].Value.Trim())</AVALONIA_LICENSE_KEY>
+    
+    <!-- Extract key -->
+    <AVALONIA_LICENSE_KEY Condition="'$(AVALONIA_LICENSE_KEY)' == ''">$([System.Text.RegularExpressions.Regex]::Match($(_TempDotEnvContent), $(AvaloniaLicenseKeyPattern)).Groups[1].Value)</AVALONIA_LICENSE_KEY>
+    
+    <!-- Clear the temporary property to prevent secrets from leaking into build logs -->
+    <_TempDotEnvContent/>
   </PropertyGroup>
 </Project>

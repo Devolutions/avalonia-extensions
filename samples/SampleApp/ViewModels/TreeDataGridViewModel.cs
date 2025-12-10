@@ -1,4 +1,5 @@
 #if ENABLE_ACCELERATE
+using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 #endif
 

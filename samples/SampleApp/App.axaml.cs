@@ -93,6 +93,7 @@ public class App : Application
       {
         DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
         string appAxamlPath = Path.Join(projDir!.FullName, "App.axaml");
+        // The headless instances during test runs don't have App.axaml, so testing here to suppress warnings 
         if (File.Exists(appAxamlPath))
         {
           doc.Load(appAxamlPath);
@@ -186,30 +187,6 @@ public class App : Application
     return styles;
   }
 
-  private Styles CreateLinuxStyles()
-  {
-    Styles styles = new();
-    styles.Add(new ModernTheme { AreNativeControlThemesEnabled = false });
-    styles.Add(new DevolutionsLinuxYaruTheme());
-    styles.Add(new SampleAppStyles());
-    return styles;
-  }
-
-  private Styles CreateDevExpressStyles()
-  {
-    Styles styles = new();
-    styles.Add(new ModernTheme { AreNativeControlThemesEnabled = false });
-
-    var theme = new DevolutionsDevExpressTheme { GlobalStyles = false };
-    theme.BeginInit();
-    theme.EndInit();
-    styles.Add(theme);
-
-    styles.Add(new DevolutionsDevExpressThemeGlobalStyles());
-    styles.Add(new SampleAppStyles());
-    return styles;
-  }
-
   public static void SetTheme(Theme theme)
   {
     lock (themeLock)
@@ -245,11 +222,11 @@ public class App : Application
       }
       else
       {
-        // Non-MacOS themes use cached styles
+        // Non-MacOS themes use cached styles (from App.axaml Resources)
         styles = theme switch
         {
-          LinuxYaruTheme => app.CreateLinuxStyles(),
-          DevExpressTheme => app.CreateDevExpressStyles(),
+          LinuxYaruTheme => app.linuxYaruStyles,
+          DevExpressTheme => app.devExpressStyles,
           FluentTheme => app.fluentStyles,
           SimpleTheme => app.simpleStyles,
           _ => null

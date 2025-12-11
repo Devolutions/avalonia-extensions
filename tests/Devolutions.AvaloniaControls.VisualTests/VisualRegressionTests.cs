@@ -134,12 +134,12 @@ public class VisualRegressionTests
         // Force theme reload to ensure fresh styles for every test
         App.CurrentTheme = null;
 
-        SampleApp.Theme theme = themeName switch
+        Theme theme = themeName switch
         {
-            "MacClassic" => new SampleApp.MacOsClassicTheme(),
-            "LiquidGlass" => new SampleApp.MacOsLiquidGlassTheme(),
-            "Linux" => new SampleApp.LinuxYaruTheme(),
-            "DevExpress" => new SampleApp.DevExpressTheme(),
+            "MacClassic" => new MacOsClassicTheme(),
+            "LiquidGlass" => new MacOsLiquidGlassTheme(),
+            "Linux" => new LinuxYaruTheme(),
+            "DevExpress" => new DevExpressTheme(),
             _ => throw new ArgumentException($"Unknown theme: {themeName}")
         };
         App.SetTheme(theme);

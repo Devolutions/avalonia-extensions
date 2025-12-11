@@ -40,7 +40,7 @@ public class VisualRegressionTests
 
         if (!File.Exists(mainWindowPath))
         {
-             throw new FileNotFoundException($"Could not find MainWindow.axaml at {mainWindowPath}");
+            throw new FileNotFoundException($"Could not find MainWindow.axaml at {mainWindowPath}");
         }
 
         var content = File.ReadAllText(mainWindowPath);
@@ -60,11 +60,11 @@ public class VisualRegressionTests
                 
                 var themes = applicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                          .Select(t => t.Trim())
-                                         .Where(t => !string.Equals(t, "Fluent", StringComparison.OrdinalIgnoreCase) && 
-                                                     !string.Equals(t, "Simple", StringComparison.OrdinalIgnoreCase))
                                          .ToList();
-                
-                _pageThemes[pageName] = themes;
+
+                // Only run tests for themes we care about and support in the test runner (TestPage() - e.g. not Fluent)
+                var supportedThemes = new List<string> { "MacClassic", "LiquidGlass", "Linux", "DevExpress" };
+                _pageThemes[pageName] = [.. themes.Intersect(supportedThemes)];
 
                 // Check for ViewModel
                 var viewModelMatch = Regex.Match(item, @"<vm:(\w+)");
@@ -109,11 +109,7 @@ public class VisualRegressionTests
 
             foreach (var applicableTheme in applicableThemes)
             {
-                // Only run tests for themes we explicitly support in the test runner
-                if (applicableTheme is "MacClassic" or "LiquidGlass" or "Linux" or "DevExpress")
-                {
-                    result.Add(new object?[] { page, applicableTheme, viewModelType });
-                }
+                result.Add([page, applicableTheme, viewModelType]);
             }
         }
             

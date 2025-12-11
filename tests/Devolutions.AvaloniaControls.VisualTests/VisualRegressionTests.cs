@@ -25,6 +25,7 @@ public class VisualRegressionTests
     private static Dictionary<string, List<string>>? _pageThemes;
     private static Dictionary<string, string>? _pageViewModels;
 
+    // Finds applicable themes and ViewModel for each control by parsing MainWindow.axaml
     private static void EnsureMetadataLoaded()
     {
         if (_pageThemes != null && _pageViewModels != null) return;
@@ -39,7 +40,6 @@ public class VisualRegressionTests
 
         if (!File.Exists(mainWindowPath))
         {
-            // Fallback or throw? Let's try to find it if the relative path is wrong
              throw new FileNotFoundException($"Could not find MainWindow.axaml at {mainWindowPath}");
         }
 
@@ -90,20 +90,11 @@ public class VisualRegressionTests
         EnsureMetadataLoaded();
         var result = new List<object?[]>();
 
-        // Define priority for themes to detect leaking (DevExpress/Linux first)
-        var themePriority = new Dictionary<string, int>
-        {
-            { "DevExpress", 0 },
-            { "Yaru", 1 },
-            { "MacClassic", 2 },
-            { "LiquidGlass", 3 }
-        };
-
         foreach (var page in pages)
         {
             if (!_pageThemes!.ContainsKey(page.Name))
             {
-                // If not in our map, skip it (as per user instruction to only test what's in SampleItemHeader)
+                // If a theme is not among the applicable themes for this control (as per SampleItemHeader in MainWindow.axaml), skip it
                 continue;
             }
 
@@ -115,14 +106,6 @@ public class VisualRegressionTests
             {
                 viewModelType = assembly.GetTypes().FirstOrDefault(t => t.Name == viewModelName);
             }
-
-            // Sort themes by priority
-            applicableThemes.Sort((a, b) => 
-            {
-                int pA = themePriority.ContainsKey(a) ? themePriority[a] : 99;
-                int pB = themePriority.ContainsKey(b) ? themePriority[b] : 99;
-                return pA.CompareTo(pB);
-            });
 
             foreach (var applicableTheme in applicableThemes)
             {
@@ -138,7 +121,7 @@ public class VisualRegressionTests
 
                 if (themeName != null)
                 {
-                    result.Add(new object?[] { page.Name, page, themeName, viewModelType });
+                    result.Add(new object?[] { page, themeName, viewModelType });
                 }
             }
         }
@@ -146,10 +129,13 @@ public class VisualRegressionTests
         return result;
     }
 
+    // TestPage() is called automatically by the xUnit Test Runner for each entry 
+    //   returned by GetDemoPages() when you run the tests.
     [AvaloniaTheory]
     [MemberData(nameof(GetDemoPages))]
-    public void TestPage(string pageName, Type pageType, string themeName, Type? viewModelType)
+    public void TestPage(Type pageType, string themeName, Type? viewModelType)
     {
+        var pageName = pageType.Name;
         // Ensure directories exist
         Directory.CreateDirectory(TestResultsDirectory);
 

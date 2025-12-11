@@ -126,9 +126,11 @@
                       RenderTransformOrigin="50%,50%"
                       Stroke="{DynamicResource ControlBorderAccentColor}"
                       StrokeThickness="2">
-                  <Path.RenderTransform>
-                    <RotateTransform />
-                  </Path.RenderTransform>
+                  <Path.Transitions>
+                    <Transitions>
+                      <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+                    </Transitions>
+                  </Path.Transitions>
                 </Path>
               </Border>
             </Grid>
@@ -156,30 +158,12 @@
 
     <Style Selector="^[Tag=expanded]">
       <Style Selector="^ /template/ Path#ExpandCollapseChevron">
-        <Style.Animations>
-          <Animation FillMode="Both" Duration="0:0:0.0625">
-            <KeyFrame Cue="0%">
-              <Setter Property="RotateTransform.Angle" Value="0" />
-            </KeyFrame>
-            <KeyFrame Cue="100%">
-              <Setter Property="RotateTransform.Angle" Value="180" />
-            </KeyFrame>
-          </Animation>
-        </Style.Animations>
+        <Setter Property="RenderTransform" Value="rotate(180deg)" />
       </Style>
     </Style>
 
     <Style Selector="^[Tag=collapsed] /template/ Path#ExpandCollapseChevron">
-      <Style.Animations>
-        <Animation FillMode="Both" Duration="0:0:0.0625">
-          <KeyFrame Cue="0%">
-            <Setter Property="RotateTransform.Angle" Value="180" />
-          </KeyFrame>
-          <KeyFrame Cue="100%">
-            <Setter Property="RotateTransform.Angle" Value="0" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
+      <Setter Property="RenderTransform" Value="rotate(0deg)" />
     </Style>
 
     <!-- Disabled -->

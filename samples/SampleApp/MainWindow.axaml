@@ -34,37 +34,37 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:ButtonDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:CalendarDatePickerDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:CheckBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:ContextMenuDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:DataGridDemo>
             <demoPages:DataGridDemo.DataContext>
@@ -74,7 +74,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:DataGridGroupedDemo>
             <demoPages:DataGridGroupedDemo.DataContext>
@@ -84,7 +84,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:EditableComboBoxDemo />
         </TabItem>
@@ -102,7 +102,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:CheckBoxListBoxDemo>
             <demoPages:CheckBoxListBoxDemo.DataContext>
@@ -112,7 +112,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:MultiComboBoxDemo>
             <demoPages:MultiComboBoxDemo.DataContext>
@@ -146,7 +146,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:NumericUpDownDemo />
         </TabItem>
@@ -170,13 +170,13 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:TabControlDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, DevExpress, Yaru" />
+            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:TextBoxDemo />
         </TabItem>

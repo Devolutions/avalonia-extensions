@@ -13,6 +13,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.Threading;
+using Devolutions.AvaloniaTheme.DevExpress;
+using Devolutions.AvaloniaTheme.Linux;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
 using ViewModels;
@@ -90,12 +92,17 @@ public class App : Application
           bin?.Name.Equals("bin", StringComparison.OrdinalIgnoreCase) == true)
       {
         DirectoryInfo? projDir = Directory.GetParent(bin.FullName);
-        doc.Load(Path.Join(projDir!.FullName, "App.axaml"));
-        XmlElement? styles = doc["Application"]?["Application.Styles"];
+        string appAxamlPath = Path.Join(projDir!.FullName, "App.axaml");
+        // The headless instances during test runs don't have App.axaml, so testing here to suppress warnings 
+        if (File.Exists(appAxamlPath))
+        {
+          doc.Load(appAxamlPath);
+          XmlElement? styles = doc["Application"]?["Application.Styles"];
 
-        return styles?.OfType<XmlElement>()
-          .Select(this.ThemeFromXmlElement)
-          .FirstOrDefault(theme => theme is not null);
+          return styles?.OfType<XmlElement>()
+            .Select(this.ThemeFromXmlElement)
+            .FirstOrDefault(theme => theme is not null);
+        }
       }
     }
     catch (DirectoryNotFoundException e)
@@ -215,7 +222,7 @@ public class App : Application
       }
       else
       {
-        // Non-MacOS themes use cached styles
+        // Non-MacOS themes use cached styles (from App.axaml Resources)
         styles = theme switch
         {
           LinuxYaruTheme => app.linuxYaruStyles,
@@ -391,7 +398,7 @@ public abstract class Theme
 
 public class LinuxYaruTheme : Theme
 {
-  public override string Name => "Yaru";
+  public override string Name => "Linux";
   public override string DisplayName => "Linux - Yaru";
 }
 

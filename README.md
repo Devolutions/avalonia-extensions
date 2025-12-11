@@ -37,6 +37,23 @@ dotnet tool install --global AvaloniaUI.DeveloperTools.<your_OS>
 
 The F12 key then opens the new Dev Tools, and F10 opens the old version
 
+## Testing
+
+There is limited visual regression testing available. DemoPagea are compared against baseline screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline`. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`. 
+
+### Limitations
+- Interactive behaviours (e.g. pointerOver, popUpOpen, focus, etc.) are not tested
+- Accelerate controls that depend on a licence (e.g. TreeDataGrid) are not tested
+
+### Usage
+- `dotnet test --filter "DisplayName~VisualRegressionTests”` - runs all tests
+- `dotnet test` - runs all tests, plus some little unit tests (worth it for the time saved typing!)
+- `dotnet test --filter "DisplayName~DevExpress”` - runs tests for all controls implemented in DevExpress
+- `dotnet test --filter "DisplayName~Button”` - runs tests for Button under each of the themes it's implemented in
+- `dotnet test --list-tests` - lists all test cases
+  
+🤍🖤 All tests are run for light & dark mode
+
 ## AI Assistant Instructions
 
 If you're an AI assistant (like GitHub Copilot or Claude Code) working on this repository, comprehensive guidelines are available in **[`.claude/CLAUDE.md`](.claude/CLAUDE.md)**.

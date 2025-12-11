@@ -28,43 +28,43 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:AutoCompleteBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ButtonDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:CalendarDatePickerDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:CheckBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ContextMenuDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
           </TabItem.Header>
           <demoPages:DataGridDemo>
             <demoPages:DataGridDemo.DataContext>
@@ -74,7 +74,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
           </TabItem.Header>
           <demoPages:DataGridGroupedDemo>
             <demoPages:DataGridGroupedDemo.DataContext>
@@ -96,7 +96,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ExpanderDemo />
         </TabItem>
@@ -122,80 +122,80 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic" />
+            <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:GridSplitterDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ListBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic" />
+            <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:MenuDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:MenuFlyoutDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:NumericUpDownDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:RadioButtonDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ScrollViewerDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:SeparatorDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:TabControlDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:TextBoxDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacClassic" />
+            <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacClassic, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ToggleSwitchDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacClassic" />
+            <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacClassic, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ToolTipDemo />
         </TabItem>
         <!-- TabItem "TreeDataGrid" inserted here through code-behind if Accelerate is enabled -->
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress" />
+            <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:TreeViewDemo />
         </TabItem>

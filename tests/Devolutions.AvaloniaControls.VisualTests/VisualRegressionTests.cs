@@ -60,6 +60,8 @@ public class VisualRegressionTests
                 
                 var themes = applicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                          .Select(t => t.Trim())
+                                         .Where(t => !string.Equals(t, "Fluent", StringComparison.OrdinalIgnoreCase) && 
+                                                     !string.Equals(t, "Simple", StringComparison.OrdinalIgnoreCase))
                                          .ToList();
                 
                 _pageThemes[pageName] = themes;

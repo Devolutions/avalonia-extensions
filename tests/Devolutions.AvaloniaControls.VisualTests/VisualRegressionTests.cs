@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
 using Xunit;
@@ -182,36 +183,53 @@ public class VisualRegressionTests
         };
 
         window.Show();
+
+        // 4. Test Light Mode
+        CaptureAndCompare("", ThemeVariant.Light);
+
+        // 5. Test Dark Mode
+        CaptureAndCompare("_dark", ThemeVariant.Dark);
         
-        // 4. Wait for layout
-        Dispatcher.UIThread.RunJobs();
-        
-        // 5. Capture
-        var frame = window.CaptureRenderedFrame();
-        if (frame == null) throw new Exception("Failed to capture frame");
-        using var bitmap = frame;
-        
-        // 6. Save and Compare
-        var baselinePath = Path.Combine(BaselinesDirectory, themeName, $"{pageName}.png");
-        var actualPath = Path.Combine(TestResultsDirectory, themeName, $"{pageName}.png");
-        var diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}_diff.png");
-        
-        // Ensure subdirectories exist
-        Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
-        Directory.CreateDirectory(Path.GetDirectoryName(actualPath)!);
-        Directory.CreateDirectory(Path.GetDirectoryName(diffPath)!);
-        
-        bitmap.Save(actualPath);
-        
-        if (File.Exists(baselinePath))
+
+        void CaptureAndCompare(string suffix, ThemeVariant variant)
         {
-            bool result = ImageComparer.CompareImages(baselinePath, actualPath, diffPath);
-            Assert.True(result, $"\u001b[1mVisual regression detected for {pageName} ({themeName})\u001b[0m. Diff saved to {diffPath}");
+            if (Application.Current != null)
+            {
+                Application.Current.RequestedThemeVariant = variant;
+            }
+            
+            // Wait for layout and theme application
+            Dispatcher.UIThread.RunJobs();
+            
+            // Capture
+            var frame = window.CaptureRenderedFrame();
+            if (frame == null) throw new Exception($"Failed to capture frame for {variant}");
+            using var bitmap = frame;
+            
+            // Save and Compare
+            var fileName = $"{pageName}{suffix}.png";
+            var baselinePath = Path.Combine(BaselinesDirectory, themeName, fileName);
+            var testPath = Path.Combine(TestResultsDirectory, themeName, fileName);
+            var diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
+            
+            // Ensure subdirectories exist
+            Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(diffPath)!);
+            
+            bitmap.Save(testPath);
+            
+            if (File.Exists(baselinePath))
+            {
+                bool result = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
+                Assert.True(result, $"\u001b[1mVisual regression detected for {pageName} ({themeName}) [{variant}]\u001b[0m. Diff saved to {diffPath}");
+            }
+            else
+            {
+                Assert.Fail($"\u001b[1mNo baseline found for {pageName} ({themeName}) [{variant}]\u001b[0m. Saved screenshot to {testPath}");
+            }
         }
-        else
-        {
-            Assert.Fail($"\u001b[1mNo baseline found for {pageName} ({themeName})\u001b[0m. Saved actual to {actualPath}");
-        }
+
         
         window.Close();
     }

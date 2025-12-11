@@ -6,24 +6,24 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 
 public static class ImageComparer
 {
-    public static bool CompareImages(string baselinePath, string actualPath, string diffPath)
+    public static bool CompareImages(string baselinePath, string testPath, string diffPath)
     {
         if (!File.Exists(baselinePath))
         {
             throw new FileNotFoundException("Baseline image not found", baselinePath);
         }
 
-        if (!File.Exists(actualPath))
+        if (!File.Exists(testPath))
         {
-            throw new FileNotFoundException("Actual image not found", actualPath);
+            throw new FileNotFoundException("Test screenshot not found", testPath);
         }
 
         using var baseline = SKBitmap.Decode(baselinePath);
-        using var actual = SKBitmap.Decode(actualPath);
+        using var screenshot = SKBitmap.Decode(testPath);
 
-        if (baseline.Width != actual.Width || baseline.Height != actual.Height)
+        if (baseline.Width != screenshot.Width || baseline.Height != screenshot.Height)
         {
-            Console.WriteLine($"Dimension mismatch: Baseline {baseline.Width}x{baseline.Height} vs Actual {actual.Width}x{actual.Height}");
+            Console.WriteLine($"Dimension mismatch: Baseline {baseline.Width}x{baseline.Height} vs Screenshot {screenshot.Width}x{screenshot.Height}");
             return false;
         }
 
@@ -36,7 +36,7 @@ public static class ImageComparer
             for (int x = 0; x < baseline.Width; x++)
             {
                 var p1 = baseline.GetPixel(x, y);
-                var p2 = actual.GetPixel(x, y);
+                var p2 = screenshot.GetPixel(x, y);
 
                 if (p1 != p2)
                 {

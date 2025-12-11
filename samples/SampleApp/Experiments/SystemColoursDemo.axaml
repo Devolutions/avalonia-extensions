@@ -11,7 +11,7 @@
       where lighter and darker variants are also calculated. </TextBlock>
     <TextBlock Margin="0 0 0 10"
                TextWrapping="Wrap"
-               IsVisible="{ext:ThemeIsOneOf 'Yaru'}">
+               IsVisible="{ext:ThemeIsOneOf 'Linux'}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
       </TextBlock>
     <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">

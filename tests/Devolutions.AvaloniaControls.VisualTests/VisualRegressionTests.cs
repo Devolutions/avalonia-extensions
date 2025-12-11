@@ -109,19 +109,10 @@ public class VisualRegressionTests
 
             foreach (var applicableTheme in applicableThemes)
             {
-                // Map ApplicableTo names to our Test Theme names
-                string? themeName = applicableTheme switch
+                // Only run tests for themes we explicitly support in the test runner
+                if (applicableTheme is "MacClassic" or "LiquidGlass" or "Linux" or "DevExpress")
                 {
-                    "MacClassic" => "MacClassic",
-                    "LiquidGlass" => "LiquidGlass",
-                    "Yaru" => "Linux",
-                    "DevExpress" => "DevExpress",
-                    _ => null
-                };
-
-                if (themeName != null)
-                {
-                    result.Add(new object?[] { page, themeName, viewModelType });
+                    result.Add(new object?[] { page, applicableTheme, viewModelType });
                 }
             }
         }

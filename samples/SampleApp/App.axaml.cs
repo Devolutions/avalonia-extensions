@@ -421,7 +421,7 @@ public abstract class Theme
 
 public class LinuxYaruTheme : Theme
 {
-  public override string Name => "Yaru";
+  public override string Name => "Linux";
   public override string DisplayName => "Linux - Yaru";
 }
 

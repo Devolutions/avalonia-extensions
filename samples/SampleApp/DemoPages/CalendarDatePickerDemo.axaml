@@ -11,7 +11,7 @@
         Margin="20"
         ColumnSpacing="30"
         RowSpacing="30">
-    <StackPanel Grid.Column="0" Grid.Row="0" Spacing="20" Width="220">
+    <StackPanel Grid.Column="0" Grid.Row="0" Spacing="20" Width="250">
       <CalendarDatePicker HorizontalAlignment="Left" />
       <CalendarDatePicker Name="DatePicker" HorizontalAlignment="Left" />
       <CalendarDatePicker Name="DatePicker2" HorizontalAlignment="Left" IsEnabled="False" />

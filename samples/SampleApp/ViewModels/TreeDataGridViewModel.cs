@@ -1,6 +1,11 @@
 #if ENABLE_ACCELERATE
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
+using Avalonia.Controls.Selection;
+using Avalonia.Controls.Templates;
+using Avalonia.Layout;
+using Avalonia.Svg;
+using System;
 #endif
 
 namespace SampleApp.ViewModels;
@@ -8,68 +13,102 @@ namespace SampleApp.ViewModels;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Person
+public class NetworkNode
 {
-  public string? FirstName { get; set; }
-  public string? LastName { get; set; }
-  public int Age { get; set; }
-  public ObservableCollection<Person> Children { get; } = new();
+  public string Name { get; set; }
+  public string Type { get; set; } // "Folder", "Computer", "User"
+  public string IPAddress { get; set; }
+  public string Status { get; set; }
+  public string LastSeen { get; set; }
+  public string IconPath => Type switch
+  {
+      "Folder" => "/Assets/Folder.svg",
+      "Computer" => "/Assets/Computer.svg",
+      "User" => "/Assets/User.svg",
+      _ => "/Assets/Help.svg"
+  };
+  public ObservableCollection<NetworkNode> Children { get; } = new();
+
+  public NetworkNode(string name, string type, string ip = "", string status = "", string lastSeen = "")
+  {
+    Name = name;
+    Type = type;
+    IPAddress = ip;
+    Status = status;
+    LastSeen = lastSeen;
+  }
 }
 
 public class TreeDataGridViewModel : ObservableObject
 {
 #if ENABLE_ACCELERATE
-  private readonly ObservableCollection<Person> _people = new()
+  private readonly ObservableCollection<NetworkNode> _nodes = new()
   {
-    new Person
+    new NetworkNode("Data Center", "Folder")
     {
-      FirstName = "Eleanor",
-      LastName = "Pope",
-      Age = 32,
       Children =
       {
-        new Person { FirstName = "Marcel", LastName = "Gutierrez", Age = 4 }
-      }
-    },
-    new Person
-    {
-      FirstName = "Jeremy",
-      LastName = "Navarro",
-      Age = 74,
-      Children =
-      {
-        new Person
+        new NetworkNode("Servers", "Folder")
         {
-          FirstName = "Jane",
-          LastName = "Navarro",
-          Age = 42,
           Children =
           {
-            new Person { FirstName = "Lailah", LastName = "Velazquez", Age = 16 }
+            new NetworkNode("DC01", "Computer", "192.168.1.10", "Online", "Just now"),
+            new NetworkNode("WEB01", "Computer", "192.168.1.20", "Online", "5 mins ago"),
+            new NetworkNode("SQL01", "Computer", "192.168.1.30", "Warning", "1 hour ago")
+          }
+        },
+        new NetworkNode("Workstations", "Folder")
+        {
+          Children =
+          {
+            new NetworkNode("DESKTOP-A", "Computer", "10.0.0.5", "Offline", "2 days ago"),
+            new NetworkNode("DESKTOP-B", "Computer", "10.0.0.6", "Online", "Just now")
           }
         }
       }
     },
-    new Person { FirstName = "Jazmine", LastName = "Schroeder", Age = 52 }
+    new NetworkNode("Users", "Folder")
+    {
+      Children =
+      {
+        new NetworkNode("Admin", "User", "", "Active", "Just now"),
+        new NetworkNode("Guest", "User", "", "Inactive", "Never")
+      }
+    }
   };
 
   public TreeDataGridViewModel()
   {
-    Source = new HierarchicalTreeDataGridSource<Person>(_people)
+    CellSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes)
     {
       Columns =
       {
-        new HierarchicalExpanderColumn<Person>(
-          new TextColumn<Person, string>("First Name", x => x.FirstName),
-          x => x.Children),
-        new TextColumn<Person, string>("Last Name", x => x.LastName),
-        new TextColumn<Person, int>("Age", x => x.Age)
+        // Name column will be added by the View to use XAML DataTemplate
+        new TextColumn<NetworkNode, string>("Type", x => x.Type),
+        new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress),
+        new TextColumn<NetworkNode, string>("Status", x => x.Status),
+        new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen)
+      }
+    };
+    CellSelectionSource.Selection = new TreeDataGridCellSelectionModel<NetworkNode>(CellSelectionSource);
+
+    RowSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes)
+    {
+      Columns =
+      {
+        // Name column will be added by the View to use XAML DataTemplate
+        new TextColumn<NetworkNode, string>("Type", x => x.Type),
+        new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress),
+        new TextColumn<NetworkNode, string>("Status", x => x.Status),
+        new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen)
       }
     };
   }
 
-  public HierarchicalTreeDataGridSource<Person> Source { get; }
+  public HierarchicalTreeDataGridSource<NetworkNode> CellSelectionSource { get; }
+  public HierarchicalTreeDataGridSource<NetworkNode> RowSelectionSource { get; }
 #else
-  public object? Source { get; } = null;
+  public object? CellSelectionSource { get; } = null;
+  public object? RowSelectionSource { get; } = null;
 #endif
 }

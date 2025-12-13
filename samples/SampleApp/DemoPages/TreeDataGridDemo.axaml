@@ -7,9 +7,24 @@
              x:Class="SampleApp.DemoPages.TreeDataGridDemo"
              x:DataType="vm:TreeDataGridViewModel">
 
+  <UserControl.Resources>
+    <DataTemplate x:Key="NameColumnTemplate" DataType="vm:NetworkNode">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Svg Path="{Binding IconPath}" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.Resources>
+
   <Design.DataContext>
     <vm:TreeDataGridViewModel />
   </Design.DataContext>
 
-  <TreeDataGrid Source="{Binding Source}" />
+  <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, *" RowSpacing="20" ColumnSpacing="50" Margin="20">
+    <TextBlock Grid.Column="0" Grid.Row="0" Text="Row Selection" Classes="section-title" Margin="0,0,0,10" />
+    <TreeDataGrid Grid.Column="0" Grid.Row="1" Source="{Binding RowSelectionSource}" />
+
+    <TextBlock Grid.Column="1" Grid.Row="0" Text="Cell Selection" Classes="section-title" Margin="0,0,0,10" />
+    <TreeDataGrid Grid.Column="1" Grid.Row="1" Source="{Binding CellSelectionSource}" />
+  </Grid>
 </UserControl>

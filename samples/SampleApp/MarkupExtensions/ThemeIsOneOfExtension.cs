@@ -1,5 +1,4 @@
 using System;
-using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Devolutions.AvaloniaControls.Converters;
 using SampleApp;
@@ -23,11 +22,10 @@ public class ThemeIsOneOfExtension : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        return new Binding
-        {
-            Source = App.EffectiveCurrentThemeName,
-            Converter = DevoConverters.IsOneOfConverter,
-            ConverterParameter = Themes
-        };
+        return DevoConverters.IsOneOfConverter.Convert(
+            App.EffectiveCurrentThemeName,
+            typeof(bool),
+            Themes,
+            System.Globalization.CultureInfo.CurrentCulture);
     }
 }

@@ -1,6 +1,19 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="Devolutions.AvaloniaTheme.DevExpress.Controls.TreeDataGridStyles">
+  <!-- 
+    NOTE: This file is an exception to our usual "One ControlTheme per file" pattern.
+    
+    Reasons:
+    1. Avalonia's TreeDataGrid architecture: The base `TreeDataGridCell` does not have a ControlTheme. 
+       To style all cells (Text, CheckBox, etc.) consistently, we must use a Style Selector 
+       like `:is(TreeDataGridCell)`.
+    2. ResourceDictionary limitations: Our standard `TreeDataGrid.axaml` is a ResourceDictionary, 
+       which cannot contain top-level Style Selectors.
+    3. Conditional Loading: This class is only loaded if the Accelerate license is present. 
+       It serves as the container for both the standard resources (merged below) and these 
+       global cell styles.
+  -->
   <Styles.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
@@ -8,4 +21,13 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Styles.Resources>
+
+  <Style Selector=":is(TreeDataGridCell)">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="MinHeight" Value="25" />
+  </Style>
+
+  <Style Selector=":is(TreeDataGridCell):selected">
+    <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+  </Style>
 </Styles>

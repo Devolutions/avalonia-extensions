@@ -174,7 +174,7 @@
         </Setter>
 
         <Style Selector="^:selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
-          <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+          <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
         </Style>
 
       </ControlTheme>

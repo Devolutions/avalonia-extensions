@@ -39,10 +39,13 @@
   <Style Selector="TextBlock.code">
     <!-- AMP: <Span> or <Run> don't support padding, so not looking great with coloured background -->
     <Setter Property="FontFamily" Value="{DynamicResource CodeFontFamily}" />
-    <Setter Property="FontSize" Value="{Binding $parent[TextBlock].FontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource CodeFontColor}" />
     <Setter Property="Background" Value="{DynamicResource LayoutBackgroundLowBrush}" />
     <Setter Property="Padding" Value="4 2 4 1" />
     <Setter Property="Margin" Value="0 0 0 -4" />
+  </Style>
+
+  <Style Selector="TextBlock TextBlock.code">
+    <Setter Property="FontSize" Value="{Binding $parent[TextBlock].FontSize}" />
   </Style>
 </Styles>

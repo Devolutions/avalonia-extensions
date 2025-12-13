@@ -24,22 +24,24 @@ public partial class TreeDataGridDemo : UserControl
           // Add to CellSelectionSource
           if (vm.CellSelectionSource != null && vm.CellSelectionSource.Columns.Count > 0 && vm.CellSelectionSource.Columns[0].Header as string != "Name")
           {
-               var col = new HierarchicalExpanderColumn<NetworkNode>(
-                  new TemplateColumn<NetworkNode>("Name", template),
-                  node => node.Children
-              );
+              var col = CreateNameExpanderColumn(template);
               vm.CellSelectionSource.Columns.Insert(0, col);
           }
 
           // Add to RowSelectionSource
           if (vm.RowSelectionSource != null && vm.RowSelectionSource.Columns.Count > 0 && vm.RowSelectionSource.Columns[0].Header as string != "Name")
           {
-               var col = new HierarchicalExpanderColumn<NetworkNode>(
-                  new TemplateColumn<NetworkNode>("Name", template),
-                  node => node.Children
-              );
+              var col = CreateNameExpanderColumn(template);
               vm.RowSelectionSource.Columns.Insert(0, col);
           }
       }
+  }
+
+  private HierarchicalExpanderColumn<NetworkNode> CreateNameExpanderColumn(IDataTemplate template)
+  {
+      return new HierarchicalExpanderColumn<NetworkNode>(
+          new TemplateColumn<NetworkNode>("Name", template),
+          node => node.Children
+      );
   }
 }

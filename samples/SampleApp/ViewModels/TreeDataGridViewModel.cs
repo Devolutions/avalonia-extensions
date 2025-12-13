@@ -15,11 +15,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public class NetworkNode
 {
-  public string Name { get; set; }
-  public string Type { get; set; } // "Folder", "Computer", "User"
-  public string IPAddress { get; set; }
-  public string Status { get; set; }
-  public string LastSeen { get; set; }
+  public string Name { get; set; } = string.Empty;
+  public string Type { get; set; } = string.Empty; // "Folder", "Computer", "User"
+  public string IPAddress { get; set; } = string.Empty;
+  public string Status { get; set; } = string.Empty;
+  public string LastSeen { get; set; } = string.Empty;
   public string IconPath => Type switch
   {
       "Folder" => "/Assets/Folder.svg",
@@ -79,30 +79,22 @@ public class TreeDataGridViewModel : ObservableObject
 
   public TreeDataGridViewModel()
   {
-    CellSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes)
-    {
-      Columns =
-      {
-        // Name column will be added by the View to use XAML DataTemplate
-        new TextColumn<NetworkNode, string>("Type", x => x.Type),
-        new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress),
-        new TextColumn<NetworkNode, string>("Status", x => x.Status),
-        new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen)
-      }
-    };
+    CellSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes);
+    AddSharedColumns(CellSelectionSource);
     CellSelectionSource.Selection = new TreeDataGridCellSelectionModel<NetworkNode>(CellSelectionSource);
 
-    RowSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes)
-    {
-      Columns =
-      {
-        // Name column will be added by the View to use XAML DataTemplate
-        new TextColumn<NetworkNode, string>("Type", x => x.Type),
-        new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress),
-        new TextColumn<NetworkNode, string>("Status", x => x.Status),
-        new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen)
-      }
-    };
+    RowSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(_nodes);
+    AddSharedColumns(RowSelectionSource);
+    RowSelectionSource.Selection = new TreeDataGridRowSelectionModel<NetworkNode>(RowSelectionSource);
+  }
+
+  private static void AddSharedColumns(HierarchicalTreeDataGridSource<NetworkNode> source)
+  {
+    // Name column will be added by the View to use XAML DataTemplate
+    source.Columns.Add(new TextColumn<NetworkNode, string>("Type", x => x.Type));
+    source.Columns.Add(new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress));
+    source.Columns.Add(new TextColumn<NetworkNode, string>("Status", x => x.Status));
+    source.Columns.Add(new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen));
   }
 
   public HierarchicalTreeDataGridSource<NetworkNode> CellSelectionSource { get; }

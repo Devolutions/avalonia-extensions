@@ -31,11 +31,11 @@
               <TabItem Header="Tab 1">
                 <StackPanel>
                   <TextBlock VerticalAlignment="Top" TextWrapping="Wrap">To make the NavBar wider than the longest TabItem Header:</TextBlock>
-                  <TextBlock Classes="code" Text="&lt;TabControl.ItemsPanel&gt;" />
-                  <TextBlock Classes="code" Text="    &lt;ItemsPanelTemplate&gt;" />
-                  <TextBlock Classes="code" Text="        &lt;StackPanel Width=&quot;150&quot; /&gt;" />
-                  <TextBlock Classes="code" Text="    &lt;/ItemsPanelTemplate &gt;" />
-                  <TextBlock Classes="code" Text="&lt;/TabControl.ItemsPanel &gt;" />
+                  <TextBlock Classes="code" Margin="0 1" Text="&lt;TabControl.ItemsPanel&gt;" />
+                  <TextBlock Classes="code" Margin="0 1" Text="    &lt;ItemsPanelTemplate&gt;" />
+                  <TextBlock Classes="code" Margin="0 1" Text="        &lt;StackPanel Width=&quot;150&quot; /&gt;" />
+                  <TextBlock Classes="code" Margin="0 1" Text="    &lt;/ItemsPanelTemplate &gt;" />
+                  <TextBlock Classes="code" Margin="0 1" Text="&lt;/TabControl.ItemsPanel &gt;" />
                 </StackPanel>
               </TabItem>
               <TabItem Header="Tab 2">

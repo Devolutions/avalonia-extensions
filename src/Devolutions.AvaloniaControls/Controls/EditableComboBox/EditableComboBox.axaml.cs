@@ -502,7 +502,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
         this.RefreshContainers();
 
-        if (filter)
+        if (filter && this.Mode == EditableComboBoxMode.Filter)
         {
             this.FilterItems();
         }

@@ -62,6 +62,7 @@ There is limited visual regression testing available. DemoPagea are compared aga
 - `dotnet test` - runs all tests, plus some little unit tests (worth it for the time saved typing!)
 - `dotnet test --filter "DisplayName~DevExpress”` - runs tests for all controls implemented in DevExpress
 - `dotnet test --filter "DisplayName~Button”` - runs tests for Button under each of the themes it's implemented in
+- `UPDATE_BASELINES=true dotnet test [filters]` - updates baseline screenshots when changes are expected
 - `dotnet test --list-tests` - lists all test cases
   
 🤍🖤 All tests are run for light & dark mode

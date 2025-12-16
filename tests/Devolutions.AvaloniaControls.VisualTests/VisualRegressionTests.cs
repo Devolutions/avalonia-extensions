@@ -202,6 +202,11 @@ public class VisualRegressionTests
             
             bitmap.Save(testPath);
             
+            if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
+            {
+                File.Copy(testPath, baselinePath, true);
+            }
+            
             if (File.Exists(baselinePath))
             {
                 bool result = ImageComparer.CompareImages(baselinePath, testPath, diffPath);

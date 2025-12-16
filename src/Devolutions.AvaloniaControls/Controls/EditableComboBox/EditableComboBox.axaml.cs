@@ -550,7 +550,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             isFirst = false;
 
             this.innerComboBox.SelectedIndex += 1;
-            EditableComboBoxItem? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex) as EditableComboBoxItem;
+            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
             if (container?.IsEffectivelyEnabled == true) break;
         }
 
@@ -562,7 +562,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         while (this.innerComboBox.SelectedIndex > 0)
         {
             this.innerComboBox.SelectedIndex -= 1;
-            EditableComboBoxItem? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex) as EditableComboBoxItem;
+            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
             if (container?.IsEffectivelyEnabled == true) break;
         }
 

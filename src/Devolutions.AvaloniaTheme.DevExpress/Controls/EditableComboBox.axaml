@@ -315,6 +315,7 @@
                    Background="Transparent"
                    HorizontalAlignment="Right" VerticalAlignment="Stretch"
                    ZIndex="9999999"
+                   IsHitTestVisible="True"
                    UseLayoutRounding="False">
               <Border
                 Name="DropDownGlyphBackground"

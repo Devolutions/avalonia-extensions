@@ -3,54 +3,60 @@
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="SampleApp.DemoPages.NumericUpDownDemo">
 
-  <Border Padding="20">
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
-          ColumnDefinitions="Auto, 120"
-          HorizontalAlignment="Left">
-      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Watermark:</TextBlock>
-      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">0 - 10 only:</TextBlock>
-      <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled:</TextBlock>
-      <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Read-only:</TextBlock>
-      <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Top">Error:</TextBlock>
-      <NumericUpDown Grid.Row="0" Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Margin="5 5 0 5"
-                     Increment="1"
-                     Watermark="Days" />
-      <NumericUpDown Grid.Row="1" Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Margin="5 5 0 5"
-                     Minimum="0"
-                     Maximum="10"
-                     Increment="0.5"
-                     Value="10" />
-      <NumericUpDown Grid.Row="2" Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Margin="5 5 0 5"
-                     Minimum="0"
-                     Maximum="10"
-                     Value="5"
-                     Increment="0.5"
-                     IsEnabled="False" />
-      <NumericUpDown Grid.Row="3" Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Margin="5 5 0 5"
-                     Minimum="0"
-                     Maximum="10"
-                     Value="5"
-                     Increment="0.5"
-                     IsReadOnly="True" />
-      <NumericUpDown Grid.Row="4" Grid.Column="1"
-                     VerticalAlignment="Center"
-                     Margin="5 5 0 5">
-        <DataValidationErrors.Error>
-          <system:Exception>
-            <x:Arguments>
-              <x:String>Error</x:String>
-            </x:Arguments>
-          </system:Exception>
-        </DataValidationErrors.Error>
-      </NumericUpDown>
-    </Grid>
-  </Border>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <NumericUpDown Increment="1" Watermark="Days" />
+    </StackPanel>
+    <Border Padding="20">
+      <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
+            ColumnDefinitions="Auto, 120"
+            HorizontalAlignment="Left">
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Watermark:</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">0 - 10 only:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled:</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Read-only:</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Top">Error:</TextBlock>
+        <NumericUpDown Grid.Row="0" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="5 5 0 5"
+                       Increment="1"
+                       Watermark="Days" />
+        <NumericUpDown Grid.Row="1" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="5 5 0 5"
+                       Minimum="0"
+                       Maximum="10"
+                       Increment="0.5"
+                       Value="10" />
+        <NumericUpDown Grid.Row="2" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="5 5 0 5"
+                       Minimum="0"
+                       Maximum="10"
+                       Value="5"
+                       Increment="0.5"
+                       IsEnabled="False" />
+        <NumericUpDown Grid.Row="3" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="5 5 0 5"
+                       Minimum="0"
+                       Maximum="10"
+                       Value="5"
+                       Increment="0.5"
+                       IsReadOnly="True" />
+        <NumericUpDown Grid.Row="4" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="5 5 0 5">
+          <DataValidationErrors.Error>
+            <system:Exception>
+              <x:Arguments>
+                <x:String>Error</x:String>
+              </x:Arguments>
+            </system:Exception>
+          </DataValidationErrors.Error>
+        </NumericUpDown>
+      </Grid>
+    </Border>
+  </StackPanel>
 </UserControl>

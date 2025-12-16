@@ -3,68 +3,73 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              x:DataType="vm:TextBoxViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
 
-  <ScrollViewer>
-    <Border Margin="20"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}"
-            Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <StackPanel Margin="20" Spacing="10" HorizontalAlignment="Left" Orientation="Horizontal">
-        <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
-          <Label>_Name:</Label>
-          <TextBox Watermark="Enter your name" />
-          <Label>Password:</Label>
-          <TextBox PasswordChar="*" Watermark="Enter your password" />
-          <Label>Notes:</Label>
-          <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" />
-          <TextBox InnerLeftContent="http://" />
-          <TextBox InnerRightContent=".com" />
-          <TextBox
-            InnerLeftContent="http://"
-            InnerRightContent=".com" />
-          <TextBox Classes="clearButton">With 'Clear' button</TextBox>
-          <TextBox Watermark="Disabled with Watermark" IsEnabled="False" />
-          <TextBox IsEnabled="False">Disabled Filled</TextBox>
-          <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
-          <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
-          <Label>Custom Height:</Label>
-          <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
-            <TextBox Grid.Column="0" Watermark="Type here" Height="35" VerticalContentAlignment="Center" />
-            <Button Grid.Column="1" Content="..." HorizontalContentAlignment="Center" Height="35" Width="35"
-                    Margin="5 0 0 0 " />
-          </Grid>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <TextBox Watermark="Enter your name" Width="200" />
+    </StackPanel>
+    <ScrollViewer>
+      <Border Margin="20"
+              BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+              BorderThickness="{DynamicResource BorderThickness}"
+              CornerRadius="{DynamicResource LayoutCornerRadius}"
+              Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Margin="20" Spacing="10" HorizontalAlignment="Left" Orientation="Horizontal">
+          <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
+            <Label>_Name:</Label>
+            <TextBox Watermark="Enter your name" />
+            <Label>Password:</Label>
+            <TextBox PasswordChar="*" Watermark="Enter your password" />
+            <Label>Notes:</Label>
+            <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox InnerLeftContent="http://" />
+            <TextBox InnerRightContent=".com" />
+            <TextBox
+              InnerLeftContent="http://"
+              InnerRightContent=".com" />
+            <TextBox Classes="clearButton">With 'Clear' button</TextBox>
+            <TextBox Watermark="Disabled with Watermark" IsEnabled="False" />
+            <TextBox IsEnabled="False">Disabled Filled</TextBox>
+            <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
+            <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
+            <Label>Custom Height:</Label>
+            <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
+              <TextBox Grid.Column="0" Watermark="Type here" Height="35" VerticalContentAlignment="Center" />
+              <Button Grid.Column="1" Content="..." HorizontalContentAlignment="Center" Height="35" Width="35"
+                      Margin="5 0 0 0 " />
+            </Grid>
+          </StackPanel>
+          <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
+            <Label>Read Only:</Label>
+            <TextBox IsReadOnly="True" Text="This is read-only text" />
+
+            <Label>Error Indicator:</Label>
+            <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
+
+            <TextBox Height="22" MinHeight="22" MaxHeight="22"
+                     IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
+              thin
+            </TextBox>
+
+            <TextBlock Margin="0 10 0 0">
+              <Bold>For embeded TextBoxes use</Bold><LineBreak />
+              <TextBlock Classes="code">borderless</TextBlock> /
+              <TextBlock Classes="code">no-focus-border</TextBlock>:
+            </TextBlock>
+            <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
+            <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
+            <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+            <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless</TextBox>
+
+          </StackPanel>
         </StackPanel>
-        <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
-          <Label>Read Only:</Label>
-          <TextBox IsReadOnly="True" Text="This is read-only text" />
-          
-          <Label>Error Indicator:</Label>
-          <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
-
-          <TextBox Height="22" MinHeight="22" MaxHeight="22"
-                   IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
-            thin
-          </TextBox>
-
-          <TextBlock Margin="0 10 0 0">
-            <Bold>For embeded TextBoxes use</Bold><LineBreak />
-            <TextBlock Classes="code">borderless</TextBlock> /
-            <TextBlock Classes="code">no-focus-border</TextBlock>:
-          </TextBlock>
-          <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless</TextBox>
-
-        </StackPanel>
-      </StackPanel>
-    </Border>
-  </ScrollViewer>
+      </Border>
+    </ScrollViewer>
+  </StackPanel>
 
 </UserControl>

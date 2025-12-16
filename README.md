@@ -37,6 +37,18 @@ dotnet tool install --global AvaloniaUI.DeveloperTools.<your_OS>
 
 The F12 key then opens the new Dev Tools, and F10 opens the old version
 
+## Avalonia Accelerate Controls
+
+We will soon start to add styles for at least some [Avalonia Accelerate](https://avaloniaui.net/accelerate) controls, starting with `TreeDataGrid` in the DevExpress theme.
+
+To view and test Accelerate-licensed controls in the SampleApp:
+
+1. Create a `.env` file in the repository root.
+2. Add your license key: `AVALONIA_LICENSE_KEY=your_key_here`.
+3. Rebuild the solution.
+
+**Note:** If the controls don't appear or you see build errors, you may need to force a NuGet restore or invalidate your IDE caches (e.g., **File > Invalidate Caches** in Rider) to update the conditional package dependencies.
+
 ## Testing
 
 There is limited visual regression testing available. DemoPagea are compared against baseline screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline`. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`. 

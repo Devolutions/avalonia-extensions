@@ -41,6 +41,14 @@
           <EditableComboBoxItem Value="test3" />
         </EditableComboBox>
 
+        <EditableComboBox Watermark="GPT">
+          <EditableComboBoxItem Value="gpt-5" />
+          <EditableComboBoxItem Value="gpt-5-chat-latest" />
+          <EditableComboBoxItem Value="gpt-5-mini" />
+          <EditableComboBoxItem Value="gpt-4.1" />
+          <EditableComboBoxItem Value="gpt-4.1-mini" />
+        </EditableComboBox>
+
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
@@ -68,7 +76,7 @@
   <Thickness x:Key="EditableComboBoxBorderThickness">1</Thickness>
   <Thickness x:Key="EditableComboBoxPadding">10,5,0,5</Thickness>
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
-  <x:Double x:Key="EditableComboBoxHeight">23</x:Double>
+  <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">24</x:Double>
   <SolidColorBrush x:Key="ComboBoxBackgroundBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
 
@@ -84,6 +92,7 @@
         <Border Name="PART_Background"
                 MinHeight="{DynamicResource ComboBoxItemMinHeight}"
                 CornerRadius="{TemplateBinding CornerRadius}"
+                Margin="0 -2 0 0"
                 Padding="{DynamicResource ComboBoxItemBorderPadding}">
           <StackPanel Orientation="Horizontal">
             <Border
@@ -103,7 +112,7 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    
+
     <!--  Selected state  -->
     <Style Selector="^[IsSelected=True]">
       <Style Selector="^ /template/ Border#PART_Background">
@@ -138,7 +147,7 @@
         <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
       </Style>
     </Style>
-    
+
     <!--  Disabled state  -->
     <Style Selector="^:disabled /template/ SearchHighlightTextBlock#PART_Text">
       <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
@@ -289,12 +298,33 @@
 
             <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
 
-            <Panel Grid.Column="2" Margin="0 0 1 0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                   Width="17" Height="16">
+            <ItemsControl
+              Grid.Column="3"
+              Name="PART_InnerRightContent"
+              ItemsSource="{TemplateBinding InnerRightContent}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <Panel Grid.Column="2"
+                   Margin="-1"
+                   Name="DropDownGlyphContainer"
+                   Background="Transparent"
+                   HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                   ZIndex="9999999"
+                   IsHitTestVisible="True"
+                   UseLayoutRounding="False">
               <Border
                 Name="DropDownGlyphBackground"
                 Background="Transparent"
-                CornerRadius="{DynamicResource ControlCornerRadius}" />
+                IsHitTestVisible="False"
+                Margin="1 1 2 1"
+                CornerRadius="{DynamicResource ControlCornerRadius}"
+                HorizontalAlignment="Right" VerticalAlignment="Center"
+                Width="17" Height="16" />
               <PathIcon
                 Name="DropDownGlyph"
                 UseLayoutRounding="False"
@@ -306,17 +336,6 @@
                 Foreground="{TemplateBinding Foreground}"
                 Data="{StaticResource ChevronPath}" />
             </Panel>
-
-            <ItemsControl
-              Grid.Column="3"
-              Name="PART_InnerRightContent"
-              ItemsSource="{TemplateBinding InnerRightContent}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-            </ItemsControl>
 
             <Popup
               Name="PART_Popup"
@@ -369,7 +388,7 @@
       </Style>
     </Style>
 
-    <Style Selector="^ /template/ Border#DropDownGlyphBackground:pointerover">
+    <Style Selector="^ /template/ Panel#DropDownGlyphContainer:pointerover Border#DropDownGlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundPointerOverBrush}" />
     </Style>
 

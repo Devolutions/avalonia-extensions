@@ -59,7 +59,7 @@
 
       <Color x:Key='SecondarySearchHighlightBackground'>#77fad000</Color>
       <Color x:Key='SecondarySearchHighlightForeground'>#ee000000</Color>
-      
+
       <Color x:Key='MenuItemBackgroundPointerOverColor'>#eaeaea</Color>
 
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
@@ -127,7 +127,7 @@
       <Color x:Key='SecondarySearchHighlightForeground'>#ee202020</Color>
 
       <Color x:Key='MenuItemBackgroundPointerOverColor'>#3c3c3c</Color>
-      
+
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
       <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
     </ResourceDictionary>
@@ -207,7 +207,7 @@
   <Thickness x:Key="ComboBoxPopupBorderMargin">0 0 0 10</Thickness>
   <BoxShadows x:Key="ComboBoxDropDownShadow"> 0 3 7 0 #30000000</BoxShadows>
   <Thickness x:Key="ComboBoxItemPadding">10 3</Thickness>
-  <Thickness x:Key="ComboBoxItemBorderPadding">0 6 6 6</Thickness>
+  <Thickness x:Key="ComboBoxItemBorderPadding">0 0 6 0</Thickness>
   <Thickness x:Key="MultiColumnListBoxBorderPadding">6</Thickness>
   <Thickness x:Key="ComboBoxItemBorderMargin">0</Thickness>
   <Thickness x:Key="MultiColumnListBoxItemBorderMargin">5 1</Thickness>
@@ -237,10 +237,10 @@
   <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
   <CornerRadius x:Key="ContextMenuCornerRadius">4</CornerRadius>
   <Thickness x:Key="MenuFlyoutScrollerMargin">0 4</Thickness>
-  
+
   <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource SystemRegionColor}" />
   <SolidColorBrush x:Key="MenuItemBackgroundPointerOver" Color="{DynamicResource MenuItemBackgroundPointerOverColor}" />
-  
+
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="SeparatorMargin">0</Thickness>
   <Thickness x:Key="SeparatorContextMenuMargin">39,0,0,0</Thickness>

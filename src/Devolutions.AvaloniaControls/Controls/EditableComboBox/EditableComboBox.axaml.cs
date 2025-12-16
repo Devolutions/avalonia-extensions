@@ -298,7 +298,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
     {
-        this.FillItems();
+        this.FillItems(true);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -483,7 +483,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         ((EditableComboBox)sender).CoerceText(value);
 
 
-    private void FillItems()
+    private void FillItems(bool filter = false)
     {
         if (!this.IsInitialized) return;
 
@@ -500,15 +500,24 @@ public partial class EditableComboBox : ItemsControl, IInputElement
                                     };
         }
 
-        this.filteredItems.Clear();
+        this.RefreshContainers();
 
-        // FIXME: Clone is currently required to fix an issue where the InnerComboBox would not re-attach the items
-        //        to it's visual tree when an item that was already added to it is removed and then the same instance is
-        //        re-added (which is what we do when filtering).
-        //
-        //        It would be great if we could find a better way to do this without additional memory allocation.
-        //        - sbergerondrouin 2025-05-09
-        this.filteredItems.AddRange(this.realizedItems.Select(static i => i.Clone()));
+        if (filter && this.Mode == EditableComboBoxMode.Filter)
+        {
+            this.FilterItems();
+        }
+        else
+        {
+            this.filteredItems.Clear();
+
+            // FIXME: Clone is currently required to fix an issue where the InnerComboBox would not re-attach the items
+            //        to it's visual tree when an item that was already added to it is removed and then the same instance is
+            //        re-added (which is what we do when filtering).
+            //
+            //        It would be great if we could find a better way to do this without additional memory allocation.
+            //        - sbergerondrouin 2025-05-09
+            this.filteredItems.AddRange(this.realizedItems.Select(static i => i.Clone()));
+        }
     }
 
     private void FilterItems()
@@ -542,7 +551,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
             this.innerComboBox.SelectedIndex += 1;
             Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEnabled == true && container.IsVisible) break;
+            if (container?.IsEffectivelyEnabled == true) break;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -554,7 +563,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         {
             this.innerComboBox.SelectedIndex -= 1;
             Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEnabled == true && container.IsVisible) break;
+            if (container?.IsEffectivelyEnabled == true) break;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -581,7 +590,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private void OnOpenMenu()
     {
-        this.FilterItems();
+        this.FillItems();
         if (this.ClearOnOpen)
         {
             this.innerComboBox.SelectedIndex = -1;

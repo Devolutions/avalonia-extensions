@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ComboBoxDemo">
@@ -11,84 +10,84 @@
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
       <ComboBox SelectedIndex="2">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3 (Default)</ComboBoxItem>
-          <ComboBoxItem>Option 4</ComboBoxItem>
-      </ComboBox>
-    </StackPanel>
-    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-    <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto">
-      <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
-        <Bold>ComboBox: </Bold>
-      </TextBlock>
-      <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
-        - All options fit,<LineBreak />- sensible default pre-selected)
-      </TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="1" SelectedIndex="2" VerticalAlignment="Top" Margin="10 0 20 0">
         <ComboBoxItem>Option 1</ComboBoxItem>
         <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
         <ComboBoxItem>Option 3 (Default)</ComboBoxItem>
         <ComboBoxItem>Option 4</ComboBoxItem>
       </ComboBox>
-
-      <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">- explicit user choice required: </TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-        <ComboBoxItem>Option 4</ComboBoxItem>
-      </ComboBox>
-      <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 45">
-        - Disabled
-      </TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="3" SelectedIndex="0" IsEnabled="False" VerticalAlignment="Top"
-                Margin="10 0 20 0">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-
-      </ComboBox>
-      <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
-        - Scrolling options list:
-        <LineBreak />
-        <TextBlock
-          IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
-          (results in minor positioning bug)
+    </StackPanel>
+    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+        <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
+          <Bold>ComboBox: </Bold>
         </TextBlock>
-      </TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="5" MaxDropDownHeight="100" SelectedIndex="4" VerticalAlignment="Top"
-                Margin="10 0 20 20">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-        <ComboBoxItem>Option 4</ComboBoxItem>
-        <ComboBoxItem>Option 5</ComboBoxItem>
-        <ComboBoxItem>Option 6</ComboBoxItem>
-        <ComboBoxItem>Option 7</ComboBoxItem>
-        <ComboBoxItem>Option 8</ComboBoxItem>
-        <ComboBoxItem>Option 9</ComboBoxItem>
-      </ComboBox>
-      <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 45 10 15">
-        <Bold>Editable (</Bold><TextBlock Classes="code">IsEditable</TextBlock><Bold>)</Bold>
-      </TextBlock>
-      <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" Margin="0 5 10 15">- with pre-selection:</TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="7" IsEditable="True" SelectedIndex="2" VerticalAlignment="Top"
-                Margin="10 0 20 0">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-        <ComboBoxItem>Option 4</ComboBoxItem>
-      </ComboBox>
-      <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Top" Margin="0 5 10 15">- without selection:</TextBlock>
-      <ComboBox Grid.Column="1" Grid.Row="8" IsEditable="True" PlaceholderText="Pick or type" VerticalAlignment="Top"
-                Margin="10 0 20 0">
-        <ComboBoxItem>Option 1</ComboBoxItem>
-        <ComboBoxItem>Option 2</ComboBoxItem>
-        <ComboBoxItem>Option 3</ComboBoxItem>
-        <ComboBoxItem>Option 4</ComboBoxItem>
-      </ComboBox>
-    </Grid>
-  </Border>
+        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
+          - All options fit,<LineBreak />- sensible default pre-selected)
+        </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="1" SelectedIndex="2" VerticalAlignment="Top" Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3 (Default)</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">- explicit user choice required: </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+        </ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 45">
+          - Disabled
+        </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="3" SelectedIndex="0" IsEnabled="False" VerticalAlignment="Top"
+                  Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+
+        </ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Scrolling options list:
+          <LineBreak />
+          <TextBlock
+            IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
+            (results in minor positioning bug)
+          </TextBlock>
+        </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="5" MaxDropDownHeight="100" SelectedIndex="4" VerticalAlignment="Top"
+                  Margin="10 0 20 20">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+          <ComboBoxItem>Option 5</ComboBoxItem>
+          <ComboBoxItem>Option 6</ComboBoxItem>
+          <ComboBoxItem>Option 7</ComboBoxItem>
+          <ComboBoxItem>Option 8</ComboBoxItem>
+          <ComboBoxItem>Option 9</ComboBoxItem>
+        </ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 45 10 15">
+          <Bold>Editable (</Bold><TextBlock Classes="code">IsEditable</TextBlock><Bold>)</Bold>
+        </TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" Margin="0 5 10 15">- with pre-selection:</TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="7" IsEditable="True" SelectedIndex="2" VerticalAlignment="Top"
+                  Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+        </ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Top" Margin="0 5 10 15">- without selection:</TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="8" IsEditable="True" PlaceholderText="Pick or type" VerticalAlignment="Top"
+                  Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+        </ComboBox>
+      </Grid>
+    </Border>
   </StackPanel>
 </UserControl>

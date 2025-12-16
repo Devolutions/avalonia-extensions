@@ -11,44 +11,44 @@
       <RadioButton GroupName="FocusTestGroup" Content="First Option" />
     </StackPanel>
     <StackPanel Orientation="Horizontal" Margin="20" Spacing="10" Height="200" VerticalAlignment="Top">
-    <Border Padding="10">
-      <StackPanel>
-        <TextBlock Margin="0 0 0 5">Group A</TextBlock>
-        <RadioButton GroupName="Group A"
-                     Content="First Option" />
-        <RadioButton GroupName="Group A"
-                     Content="Second Option" IsChecked="True" />
-        <RadioButton GroupName="Group A"
-                     Content="Third Option" IsEnabled="False" />
+      <Border Padding="10">
+        <StackPanel>
+          <TextBlock Margin="0 0 0 5">Group A</TextBlock>
+          <RadioButton GroupName="Group A"
+                       Content="First Option" />
+          <RadioButton GroupName="Group A"
+                       Content="Second Option" IsChecked="True" />
+          <RadioButton GroupName="Group A"
+                       Content="Third Option" IsEnabled="False" />
 
-        <TextBlock Margin="0 10 0 5">Group C (disabled)</TextBlock>
-        <RadioButton GroupName="Group C (disabled)"
-                     Content="First Option" IsChecked="True" IsEnabled="False" />
-        <RadioButton GroupName="Group C (disabled)"
-                     Content="Second Option" IsEnabled="False" />
-      </StackPanel>
-    </Border>
+          <TextBlock Margin="0 10 0 5">Group C (disabled)</TextBlock>
+          <RadioButton GroupName="Group C (disabled)"
+                       Content="First Option" IsChecked="True" IsEnabled="False" />
+          <RadioButton GroupName="Group C (disabled)"
+                       Content="Second Option" IsEnabled="False" />
+        </StackPanel>
+      </Border>
 
-    <Border Background="{DynamicResource AlternativeBackgroundBrush}" Padding="10">
-      <StackPanel>
-        <TextBlock Margin="0 0 0 5">Group B (disabled)</TextBlock>
-        <RadioButton GroupName="Group B"
-                     Content="First Option" />
-        <RadioButton GroupName="Group B"
-                     Content="Second Option" IsChecked="True" />
-        <RadioButton IsEnabled="False"
-                     GroupName="Group B"
-                     Content="Third Option" />
+      <Border Background="{DynamicResource AlternativeBackgroundBrush}" Padding="10">
+        <StackPanel>
+          <TextBlock Margin="0 0 0 5">Group B (disabled)</TextBlock>
+          <RadioButton GroupName="Group B"
+                       Content="First Option" />
+          <RadioButton GroupName="Group B"
+                       Content="Second Option" IsChecked="True" />
+          <RadioButton IsEnabled="False"
+                       GroupName="Group B"
+                       Content="Third Option" />
 
-        <TextBlock Margin="0 10 0 5">Group D (disabled)</TextBlock>
-        <RadioButton GroupName="Group D"
-                     Content="First Option" IsChecked="True" IsEnabled="False" />
-        <RadioButton GroupName="Group D"
-                     Content="Second Option" IsEnabled="False" />
+          <TextBlock Margin="0 10 0 5">Group D (disabled)</TextBlock>
+          <RadioButton GroupName="Group D"
+                       Content="First Option" IsChecked="True" IsEnabled="False" />
+          <RadioButton GroupName="Group D"
+                       Content="Second Option" IsEnabled="False" />
 
-      </StackPanel>
-    </Border>
-  </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
   </StackPanel>
 
 

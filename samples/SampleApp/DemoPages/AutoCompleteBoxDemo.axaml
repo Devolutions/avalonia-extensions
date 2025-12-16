@@ -6,8 +6,14 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.AutoCompleteBoxDemo">
 
-  <StackPanel Margin="20" Spacing="20"  HorizontalAlignment="Left">
-    <TextBlock Text="Start typing to find your animal:" />
-    <AutoCompleteBox x:Name="Animals" FilterMode="Contains" IsDropDownOpen="True" />
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20" Spacing="10">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <AutoCompleteBox Width="200" />
+    </StackPanel>
+    <StackPanel Margin="20" Spacing="20"  HorizontalAlignment="Left">
+      <TextBlock Text="Start typing to find your animal:" />
+      <AutoCompleteBox x:Name="Animals" FilterMode="Contains" IsDropDownOpen="True" />
+    </StackPanel>
   </StackPanel>
 </UserControl>

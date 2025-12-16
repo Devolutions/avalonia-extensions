@@ -3,7 +3,12 @@
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="SampleApp.DemoPages.NumericUpDownDemo">
 
-  <Border Padding="20">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <NumericUpDown Increment="1" Watermark="Days" />
+    </StackPanel>
+    <Border Padding="20">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
           ColumnDefinitions="Auto, 120"
           HorizontalAlignment="Left">
@@ -53,4 +58,5 @@
       </NumericUpDown>
     </Grid>
   </Border>
+  </StackPanel>
 </UserControl>

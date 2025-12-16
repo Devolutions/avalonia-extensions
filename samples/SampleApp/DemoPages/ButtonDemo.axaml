@@ -7,6 +7,10 @@
              x:Class="SampleApp.DemoPages.ButtonDemo">
 
   <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <Button Content="Cancel" />
+    </StackPanel>
     <Border Margin="20 0">
       <Grid ColumnDefinitions="130, 72, Auto" RowDefinitions="50, 50, 50, 50, 50, 50" Margin="20">
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>

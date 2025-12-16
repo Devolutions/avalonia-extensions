@@ -7,7 +7,17 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ComboBoxDemo">
 
-  <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <ComboBox SelectedIndex="2">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3 (Default)</ComboBoxItem>
+          <ComboBoxItem>Option 4</ComboBoxItem>
+      </ComboBox>
+    </StackPanel>
+    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
     <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto">
       <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
         <Bold>ComboBox: </Bold>
@@ -80,4 +90,5 @@
       </ComboBox>
     </Grid>
   </Border>
+  </StackPanel>
 </UserControl>

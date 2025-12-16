@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
@@ -158,6 +159,13 @@ public class VisualRegressionTests
         };
 
         window.Show();
+        
+        // Wait for window to be ready
+        Dispatcher.UIThread.RunJobs();
+        
+        // Simulate Tab key to focus the first control
+        window.KeyPress(Key.Tab, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
 
         // 4. Test Light Mode
         CaptureAndCompare("", ThemeVariant.Light);
@@ -175,7 +183,7 @@ public class VisualRegressionTests
             
             // Wait for layout and theme application
             Dispatcher.UIThread.RunJobs();
-            
+
             // Capture
             var frame = window.CaptureRenderedFrame();
             if (frame == null) throw new Exception($"Failed to capture frame for {variant}");

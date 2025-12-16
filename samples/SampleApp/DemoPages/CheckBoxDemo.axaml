@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.CheckBoxDemo">
-  <Grid Margin="20" RowDefinitions="20 Auto 20 Auto" ColumnDefinitions="Auto Auto Auto 180">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <CheckBox IsChecked="False">Unchecked</CheckBox>
+    </StackPanel>
+    <Grid Margin="20" RowDefinitions="20 Auto 20 Auto" ColumnDefinitions="Auto Auto Auto 180">
     <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="4"
             BorderBrush="{DynamicResource LayoutBorderMidBrush}" BorderThickness="{DynamicResource BorderThickness}"
             CornerRadius="{DynamicResource LayoutCornerRadius}" />
@@ -77,4 +82,5 @@
       <CheckBox IsChecked="True">(Set bottom margin to 5 to make checkbox spacing larger than the line height) </CheckBox>
     </StackPanel>
   </Grid>
+  </StackPanel>
 </UserControl>

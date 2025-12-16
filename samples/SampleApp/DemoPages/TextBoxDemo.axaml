@@ -9,7 +9,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
 
-  <ScrollViewer>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <TextBox Watermark="Enter your name" Width="200" />
+    </StackPanel>
+    <ScrollViewer>
     <Border Margin="20"
             BorderBrush="{DynamicResource LayoutBorderMidBrush}"
             BorderThickness="{DynamicResource BorderThickness}"
@@ -66,5 +71,6 @@
       </StackPanel>
     </Border>
   </ScrollViewer>
+  </StackPanel>
 
 </UserControl>

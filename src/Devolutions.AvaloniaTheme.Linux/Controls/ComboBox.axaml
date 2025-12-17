@@ -96,11 +96,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
-    <Setter Property="Margin">
-      <Binding Source="{StaticResource FocusBorderThickness}"
-               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
-               ConverterParameter="{StaticResource NegativeThicknessFactors}" />
-    </Setter>
+    <Setter Property="Margin" Value="0" />
     <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
     <Setter Property="Foreground" Value="{WindowActiveResourceToggler ForegroundHighBrush, ForegroundInactiveBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -117,8 +113,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
-               ClipToBounds="False"
-               Margin="{DynamicResource FocusBorderThickness}">
+               ClipToBounds="False">
           <Border
             Name="BorderElement"
             Background="{TemplateBinding Background}"
@@ -166,8 +161,7 @@
                 BorderThickness="0"
                 MinHeight="0"
                 FocusAdorner="{x:Null}"
-                IsVisible="{TemplateBinding IsEditable}">
-              </TextBox>
+                IsVisible="{TemplateBinding IsEditable}" />
               <ToggleButton
                 Name="Toggle"
                 Grid.Column="1"

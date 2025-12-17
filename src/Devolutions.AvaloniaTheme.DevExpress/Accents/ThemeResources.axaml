@@ -197,16 +197,16 @@
   <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOverBrush" Color="{DynamicResource ExpanderHeaderBackgroundPointerOverColor}" />
   <SolidColorBrush x:Key="ExpanderBodyBackgroundBrush" Color="{DynamicResource ExpanderBodyBackgroundColor}" />
 
-  <x:Double x:Key="TextBasedInputMinHeight">23</x:Double>
+  <x:Double x:Key="TextBasedInputMinHeight">22</x:Double>
 
   <SolidColorBrush x:Key="ComboBoxItemBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="ComboBoxDropDownBorderBrushTransparent" Color="{DynamicResource ForegroundColor}"
                    Opacity="0.28" />
-  <Thickness x:Key="ComboBoxPadding">4,0</Thickness>
+  <Thickness x:Key="ComboBoxPadding">5,0</Thickness>
   <Thickness x:Key="ComboBoxDropDownInnerPadding">4</Thickness>
   <Thickness x:Key="ComboBoxPopupBorderMargin">0 0 0 10</Thickness>
   <BoxShadows x:Key="ComboBoxDropDownShadow"> 0 3 7 0 #30000000</BoxShadows>
-  <Thickness x:Key="ComboBoxItemPadding">10 3</Thickness>
+  <Thickness x:Key="ComboBoxItemPadding">10 0</Thickness>
   <Thickness x:Key="ComboBoxItemBorderPadding">0 0 6 0</Thickness>
   <Thickness x:Key="MultiColumnListBoxBorderPadding">6</Thickness>
   <Thickness x:Key="ComboBoxItemBorderMargin">0</Thickness>

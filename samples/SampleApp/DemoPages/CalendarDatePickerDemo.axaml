@@ -9,7 +9,7 @@
   <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <CalendarDatePicker Watermark="   ">
+      <CalendarDatePicker Watermark=" ">
         <CalendarDatePicker.Styles>
           <Style Selector="TextBox">
             <Setter Property="CaretBrush" Value="Transparent" />

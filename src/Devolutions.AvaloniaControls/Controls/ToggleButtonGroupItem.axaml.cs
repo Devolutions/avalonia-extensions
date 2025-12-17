@@ -6,6 +6,7 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
+using Avalonia.Input;
 
 [TemplatePart("PART_InnerLeftContent", typeof(ItemsControl), IsRequired = true)]
 [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
@@ -27,4 +28,19 @@ public class ToggleButtonGroupItem : ListBoxItem
     public IEnumerable InnerLeftContent { get; set; } = new AvaloniaList<Control>();
 
     public IEnumerable InnerRightContent { get; set; } = new AvaloniaList<Control>();
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        if (this.Parent is not ToggleButtonGroup toggleButtonGroup)
+        {
+            return;
+        }
+
+        if (toggleButtonGroup.ItemClickCommand is { } command && command.CanExecute(this))
+        {
+            command.Execute(this);
+        }
+    }
 }

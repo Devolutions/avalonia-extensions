@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -7,6 +8,9 @@ public class ToggleButtonGroup : ListBox
 {
     public static readonly StyledProperty<double?> ItemsMinWidthProperty =
         AvaloniaProperty.Register<ToggleButtonGroup, double?>(nameof(ItemsMinWidth));
+
+    public static readonly StyledProperty<ICommand?> ItemClickCommandProperty =
+        AvaloniaProperty.Register<ToggleButtonGroup, ICommand?>(nameof(ItemClickCommand));
 
     static ToggleButtonGroup()
     {
@@ -17,6 +21,12 @@ public class ToggleButtonGroup : ListBox
     {
         get => this.GetValue(ItemsMinWidthProperty);
         set => this.SetValue(ItemsMinWidthProperty, value);
+    }
+
+    public ICommand? ItemClickCommand
+    {
+        get => this.GetValue(ItemClickCommandProperty);
+        set => this.SetValue(ItemClickCommandProperty, value);
     }
 
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>

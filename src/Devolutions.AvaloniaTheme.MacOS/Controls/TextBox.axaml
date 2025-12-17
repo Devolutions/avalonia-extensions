@@ -129,11 +129,9 @@
     <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
-          <DataValidationErrors ClipToBounds="False">
-            <Panel ClipToBounds="False">
-              <Border Name="PART_BorderElement"
+        <DataValidationErrors ClipToBounds="False">
+          <Panel ClipToBounds="False">
+            <Border Name="PART_BorderElement"
                       Height="{TemplateBinding Height}"
                       BorderThickness="{TemplateBinding BorderThickness}"
                       BorderBrush="{TemplateBinding BorderBrush}"
@@ -240,7 +238,6 @@
             </Panel>
 
           </DataValidationErrors>
-        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -257,6 +254,10 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BoxShadow" Value="0 0 Transparent" />
       </Style>
+    </Style>
+
+    <Style Selector="^.no-focus-border">
+      <Setter Property="FocusAdorner" Value="{x:Null}" />
     </Style>
 
     <!-- Disabled State -->

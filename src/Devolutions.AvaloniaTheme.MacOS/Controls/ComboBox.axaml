@@ -126,11 +126,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="ComboBoxEditableTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-    <Setter Property="Margin">
-      <Binding Source="{StaticResource InputControlsSpaceForFocusBorder}"
-               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
-               ConverterParameter="{StaticResource EmbeddedTextBoxSpaceForFocusFactors}" />
-    </Setter>
+    <Setter Property="Margin" Value="4 0" />
     <Style Selector="^ /template/ Border#BottomBorder">
       <Setter Property="IsVisible" Value="False" />
     </Style>

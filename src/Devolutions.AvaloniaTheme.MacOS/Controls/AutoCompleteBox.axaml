@@ -48,7 +48,8 @@
                  WindowManagerAddShadowHint="False"
                  MaxHeight="{TemplateBinding MaxDropDownHeight}"
                  IsLightDismissEnabled="True"
-                 PlacementTarget="{TemplateBinding}">
+                 PlacementTarget="{TemplateBinding}"
+                 VerticalOffset="2">
             <Popup.MinWidth>
               <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">
                 <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Width" />

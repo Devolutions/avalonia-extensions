@@ -38,7 +38,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
     <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'"/>
+    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
     <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)"/>
   </ItemGroup>
 

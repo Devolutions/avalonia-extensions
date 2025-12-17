@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -12,7 +8,7 @@ using Avalonia.Input;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
-using Xunit;
+using System.Runtime.CompilerServices;
 
 namespace Devolutions.AvaloniaControls.VisualTests;
 
@@ -21,7 +17,7 @@ public class VisualRegressionTests
 {
     private const string BaselinesDirectory = "../../../Screenshots/Baseline";
     private const string TestResultsDirectory = "../../../Screenshots/Test";
-    private const string TestDiffsDirectory = "../../../Screenshots/Test-Diffs";
+    private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
 
     private static Dictionary<string, List<string>>? _pageThemes;
     private static Dictionary<string, string>? _pageViewModels;
@@ -198,7 +194,6 @@ public class VisualRegressionTests
             // Ensure subdirectories exist
             Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
             Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
-            Directory.CreateDirectory(Path.GetDirectoryName(diffPath)!);
             
             bitmap.Save(testPath);
             
@@ -210,15 +205,38 @@ public class VisualRegressionTests
             if (File.Exists(baselinePath))
             {
                 bool result = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
-                Assert.True(result, $"\u001b[1mVisual regression detected for {pageName} ({themeName}) [{variant}]\u001b[0m. Diff saved to {diffPath}");
+                Assert.True(result, $"\n\u001b[1mVisual regression detected\u001b[0m for \u001b[1m[{themeName}] {pageName} - {variant}\u001b[0m. Diff saved to {Path.GetDirectoryName(diffPath)}");
             }
             else
             {
-                Assert.Fail($"\u001b[1mNo baseline found for {pageName} ({themeName}) [{variant}]\u001b[0m. Saved screenshot to {testPath}");
+                Assert.Fail($"\n\u001b[1mNo baseline found\u001b[0m for \u001b[1m[{themeName}] {pageName} - {variant}\u001b[0m. Saved screenshot to {testPath}");
             }
         }
 
         
         window.Close();
+    }
+}
+
+internal static class TestInitializer
+{
+    [ModuleInitializer]
+    internal static void Run()
+    {
+        if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n\n" + new string('!', 80));
+            Console.WriteLine("\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
+            Console.WriteLine("Visual regression baselines will be updated.");
+            Console.WriteLine("If this was not intentional:");
+            Console.WriteLine("");
+            Console.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");
+            Console.WriteLine("");
+            Console.WriteLine("Remove the variable from the current shell with:");
+            Console.WriteLine("`export UPDATE_BASELINES=false`");
+            Console.WriteLine(new string('!', 80) + "\n");
+            Console.ResetColor();
+        }
     }
 }

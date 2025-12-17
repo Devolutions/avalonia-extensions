@@ -9,7 +9,13 @@
   <StackPanel>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20" Spacing="10">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <AutoCompleteBox Width="200" />
+      <AutoCompleteBox Width="200">
+        <AutoCompleteBox.Styles>
+          <Style Selector="TextBox">
+            <Setter Property="CaretBrush" Value="Transparent" />
+          </Style>
+        </AutoCompleteBox.Styles>
+      </AutoCompleteBox>
     </StackPanel>
     <StackPanel Margin="20" Spacing="20"  HorizontalAlignment="Left">
       <TextBlock Text="Start typing to find your animal:" />

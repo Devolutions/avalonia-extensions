@@ -55,6 +55,12 @@ public static class ImageComparer
 
         if (!areEqual)
         {
+            var dir = Path.GetDirectoryName(diffPath);
+            if (!string.IsNullOrEmpty(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
             using var image = SKImage.FromBitmap(diff);
             using var data = image.Encode(SKEncodedImageFormat.Png, 100);
             using var stream = File.OpenWrite(diffPath);

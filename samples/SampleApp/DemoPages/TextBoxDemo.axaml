@@ -11,7 +11,7 @@
   <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <TextBox Watermark="Enter your name" Width="200" />
+      <TextBox Width="200" CaretBrush="Transparent" />
     </StackPanel>
     <ScrollViewer>
       <Border Margin="20"

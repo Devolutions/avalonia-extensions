@@ -160,7 +160,7 @@ public class VisualRegressionTests
         Dispatcher.UIThread.RunJobs();
         
         // Simulate Tab key to focus the first control
-        window.KeyPress(Key.Tab, RawInputModifiers.None);
+        window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
         Dispatcher.UIThread.RunJobs();
 
         // 4. Test Light Mode

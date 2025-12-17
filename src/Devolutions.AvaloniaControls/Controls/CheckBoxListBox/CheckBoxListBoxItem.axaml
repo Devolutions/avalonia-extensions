@@ -11,5 +11,6 @@
 
   <ControlTheme x:Key="{x:Type CheckBoxListBoxItem}" TargetType="CheckBoxListBoxItem" BasedOn="{StaticResource {x:Type CheckBox}}">
     <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="Margin" Value="4 0 0 0  " />
   </ControlTheme>
 </ResourceDictionary>

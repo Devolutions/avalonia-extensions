@@ -5,12 +5,23 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="SampleApp.DemoPages.TagInputDemo">
 
-  <ScrollViewer>
-    <Border Margin="20"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}"
-            Background="{DynamicResource LayoutBackgroundLowBrush}">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <TagInput Width="300">
+        <TagInput.Styles>
+          <Style Selector="TextBox">
+            <Setter Property="CaretBrush" Value="Transparent" />
+          </Style>
+        </TagInput.Styles>
+      </TagInput>
+    </StackPanel>
+    <ScrollViewer>
+      <Border Margin="20"
+              BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+              BorderThickness="{DynamicResource BorderThickness}"
+              CornerRadius="{DynamicResource LayoutCornerRadius}"
+              Background="{DynamicResource LayoutBackgroundLowBrush}">
       <StackPanel Margin="20" Spacing="20" HorizontalAlignment="Left" Width="500">
 
         <!-- Email Recipients Example (Primary Use Case) -->
@@ -72,5 +83,5 @@
       </StackPanel>
     </Border>
   </ScrollViewer>
-
+  </StackPanel>
 </UserControl>

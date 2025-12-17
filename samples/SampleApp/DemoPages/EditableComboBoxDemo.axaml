@@ -5,11 +5,19 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.EditableComboBoxDemo">
 
-  <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-    <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto">
-      <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
-        <Bold>Preferred Usage Pattern: </Bold>
-      </TextBlock>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <EditableComboBox Width="200" CaretBrush="Transparent">
+        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+      </EditableComboBox>
+    </StackPanel>
+    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto">
+        <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
+          <Bold>Preferred Usage Pattern: </Bold>
+        </TextBlock>
       <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
         - Default mode (platform-specific)
       </TextBlock>
@@ -123,4 +131,5 @@
       </EditableComboBox>
     </Grid>
   </Border>
+  </StackPanel>
 </UserControl>

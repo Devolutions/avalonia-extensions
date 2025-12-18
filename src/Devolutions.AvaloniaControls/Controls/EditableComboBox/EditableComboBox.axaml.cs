@@ -145,6 +145,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             [!CornerRadiusProperty] = this[!CornerRadiusProperty],
             [!PaddingProperty] = this[!PaddingProperty],
             [!MinHeightProperty] = this[!MinHeightProperty],
+            [!IsEnabledProperty] = this[!IsEnabledProperty],
             [!InnerComboBox.InnerLeftContentProperty] = this[!InnerLeftContentProperty],
             [!InnerComboBox.InnerRightContentProperty] = this[!InnerRightContentProperty],
 

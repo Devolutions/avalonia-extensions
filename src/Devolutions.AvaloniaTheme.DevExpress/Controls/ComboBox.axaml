@@ -12,7 +12,7 @@
   <!-- </ResourceDictionary.MergedDictionaries> -->
 
   <Design.PreviewWith>
-    <design:ThemePreviewer Padding="20" Height="300">
+    <design:ThemePreviewer Padding="20" Height="400">
       <StackPanel Spacing="10" Width="200">
         <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False">
           <ComboBoxItem>External</ComboBoxItem>
@@ -25,7 +25,7 @@
                   SelectedIndex="1"
                   HorizontalContentAlignment="Center">
           <ComboBoxItem>Item 1</ComboBoxItem>
-          <ComboBoxItem>Item 2</ComboBoxItem>
+          <ComboBoxItem>disabled</ComboBoxItem>
         </ComboBox>
 
         <ComboBox PlaceholderText="Error">
@@ -256,6 +256,8 @@
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}" />
       </Style>
+
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
     </Style>
 
     <!-- Search highlight -->

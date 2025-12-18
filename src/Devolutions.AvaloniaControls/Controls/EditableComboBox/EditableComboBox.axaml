@@ -5,14 +5,26 @@
   x:ClassModifier="internal">
   <Design.PreviewWith>
     <Panel Width="400" Height="400">
-      <EditableComboBox
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Watermark="test">
-        <EditableComboBoxItem Value="test" />
-        <EditableComboBoxItem Value="search highlight" Classes="search-highlight" />
-        <EditableComboBoxItem Value="secondary search highlight" Classes="secondary-search-highlight" />
-      </EditableComboBox>
+      <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
+        <EditableComboBox
+          Watermark="test">
+          <EditableComboBoxItem Value="test" />
+          <EditableComboBoxItem Value="search highlight" Classes="search-highlight" />
+          <EditableComboBoxItem Value="secondary search highlight" Classes="secondary-search-highlight" />
+        </EditableComboBox>
+        <EditableComboBox Value="Test">
+          <EditableComboBoxItem>A</EditableComboBoxItem>
+          <EditableComboBoxItem>B</EditableComboBoxItem>
+          <EditableComboBoxItem>C</EditableComboBoxItem>
+          <EditableComboBoxItem>Test</EditableComboBoxItem>
+        </EditableComboBox>
+        <EditableComboBox Value="Disabled" IsEnabled="False">
+          <EditableComboBoxItem>A</EditableComboBoxItem>
+          <EditableComboBoxItem>B</EditableComboBoxItem>
+          <EditableComboBoxItem>C</EditableComboBoxItem>
+          <EditableComboBoxItem>Test</EditableComboBoxItem>
+        </EditableComboBox>
+      </StackPanel>
     </Panel>
   </Design.PreviewWith>
 
@@ -573,5 +585,9 @@
     <Setter Property="Height" Value="{DynamicResource EditableComboBoxHeight}" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Top" />
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+    </Style>
   </ControlTheme>
 </ResourceDictionary>

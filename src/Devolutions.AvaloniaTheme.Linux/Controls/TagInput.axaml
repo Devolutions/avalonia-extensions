@@ -24,11 +24,7 @@
     <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Margin">
-      <Binding Source="{StaticResource FocusBorderThickness}"
-               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
-               ConverterParameter="{StaticResource NegativeThicknessFactors}" />
-    </Setter>
+    <Setter Property="Margin" Value="0" />
     <Setter Property="MinHeight" Value="32" />
     <Setter Property="MaxWidth" Value="800" />
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
@@ -50,8 +46,7 @@
       <ControlTemplate TargetType="u:TagInput">
         <DataValidationErrors>
           <Panel Name="ReservedSpaceForFocus"
-                 ClipToBounds="False"
-                 Margin="{DynamicResource FocusBorderThickness}">
+                 ClipToBounds="False">
             <Border
               Name="PART_BorderElement"
               Background="{TemplateBinding Background}"

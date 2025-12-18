@@ -14,122 +14,146 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
-      <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
-        - Default mode (platform-specific)
-      </TextBlock>
-      <EditableComboBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="10 0 20 0">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 3 (Default)</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-      </EditableComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Default mode (platform-specific)
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="10 0 20 0">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3 (Default)</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+        </EditableComboBox>
 
-      <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
-        - watermark:
-      </TextBlock>
-      <EditableComboBox Grid.Column="1" Grid.Row="2" Watermark="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-      </EditableComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
+          - watermark:
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="2" Watermark="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+        </EditableComboBox>
 
-      <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 15">
-        - Disabled
-      </TextBlock>
-      <EditableComboBox Grid.Column="1" Grid.Row="3" IsEnabled="False" VerticalAlignment="Top"
-                        Margin="10 0 20 0">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-      </EditableComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Disabled
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="3" IsEnabled="False" VerticalAlignment="Top"
+                          Margin="10 0 20 0">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+        </EditableComboBox>
 
-      <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 10 15">
-        - Scrolling options list
-      </TextBlock>
-      <EditableComboBox
-        Grid.Column="1" Grid.Row="4"
-        MaxDropDownHeight="100" VerticalAlignment="Top"
-        Margin="10 0 20 20">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 5</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 6</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 7</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 8</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 9</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 10</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 11</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 12</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 13</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 14</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 15</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 16</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 17</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 18</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 19</EditableComboBoxItem>
-      </EditableComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 5 10 15">
+          - Disabled (with selected value)
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="4" IsEnabled="False" VerticalAlignment="Top"
+                          Value="Option 1"
+                          Margin="10 0 20 0">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+        </EditableComboBox>
 
-      <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
-        - "Immediate" mode:<LineBreak />(default in the DevExpress theme)
-      </TextBlock>
-      <EditableComboBox
-        Grid.Column="1" Grid.Row="5"
-        VerticalAlignment="Top"
-        Mode="Immediate"
-        Margin="10 0 20 20">
-        <EditableComboBoxItem>gpt-5</EditableComboBoxItem>
-        <EditableComboBoxItem>gpt-5-chat-latest</EditableComboBoxItem>
-        <EditableComboBoxItem>gpt-5-mini</EditableComboBoxItem>
-        <EditableComboBoxItem>gpt-4.1</EditableComboBoxItem>
-        <EditableComboBoxItem>gpt-4.1-mini</EditableComboBoxItem>
-      </EditableComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
+          - ComboBox (to validate alignment)
+        </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="5" IsEnabled="False"
+                  VerticalAlignment="Top"
+                  HorizontalContentAlignment="Left"
+                  SelectedIndex="0"
+                  Margin="10 0 20 0">
+          <ComboBoxItem>Option 1</ComboBoxItem>
+          <ComboBoxItem>Option 2</ComboBoxItem>
+          <ComboBoxItem>Option 3</ComboBoxItem>
+        </ComboBox>
 
-      <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
-        - "Filter" mode:<LineBreak />
-      </TextBlock>
-      <EditableComboBox
-        Grid.Column="1" Grid.Row="6"
-        VerticalAlignment="Top"
-        Mode="Filter"
-        Margin="10 0 20 20">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 5</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 6</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 7</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 8</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 9</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 10</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 11</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 12</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 13</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 14</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 15</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 16</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 17</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 18</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 19</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 20</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 21</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 22</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 23</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 24</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 25</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 26</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 27</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 28</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 29</EditableComboBoxItem>
-      </EditableComboBox>
-    </Grid>
-  </Border>
+        <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Scrolling options list
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="6"
+          MaxDropDownHeight="100" VerticalAlignment="Top"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 6</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 7</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 8</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 9</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 10</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 11</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 12</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 13</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 14</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 15</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 16</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 17</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 18</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 19</EditableComboBoxItem>
+        </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" Margin="0 5 10 15">
+          - "Immediate" mode:<LineBreak />(default in the DevExpress theme)
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="7"
+          VerticalAlignment="Top"
+          Mode="Immediate"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>gpt-5</EditableComboBoxItem>
+          <EditableComboBoxItem>gpt-5-chat-latest</EditableComboBoxItem>
+          <EditableComboBoxItem>gpt-5-mini</EditableComboBoxItem>
+          <EditableComboBoxItem>gpt-4.1</EditableComboBoxItem>
+          <EditableComboBoxItem>gpt-4.1-mini</EditableComboBoxItem>
+        </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Top" Margin="0 5 10 15">
+          - "Filter" mode:<LineBreak />
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="8"
+          VerticalAlignment="Top"
+          Mode="Filter"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 6</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 7</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 8</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 9</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 10</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 11</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 12</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 13</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 14</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 15</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 16</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 17</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 18</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 19</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 20</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 21</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 22</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 23</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 24</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 25</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 26</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 27</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 28</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 29</EditableComboBoxItem>
+        </EditableComboBox>
+      </Grid>
+    </Border>
   </StackPanel>
 </UserControl>

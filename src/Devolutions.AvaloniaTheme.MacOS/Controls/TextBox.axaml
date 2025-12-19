@@ -222,18 +222,20 @@
                 </Grid>
               </Border>
               <Border Name="BottomBorder"
+                      Height="{TemplateBinding Height}"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
                       CornerRadius="{TemplateBinding CornerRadius}"
-                      Margin="0.6 0  " />
+                      Margin="0.6 0" />
               <Border Name="BottomBorderShadow"
+                      Height="{TemplateBinding Height}"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
                       BoxShadow="{DynamicResource TextBoxBorderShadows}"
                       Margin="0.6 0 0.6 -0.6 " />
               <Border Name="FocusBorderElement"
+                      Height="{TemplateBinding Height}"
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"
                       CornerRadius="2" />

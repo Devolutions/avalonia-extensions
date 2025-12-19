@@ -8,7 +8,7 @@ public partial class ControlAlignment : UserControl
   public ControlAlignment()
   {
     this.InitializeComponent();
-    this.Animals.ItemsSource = this.Animals2.ItemsSource = this.Animals3.ItemsSource = this.Animals4.ItemsSource = new[]
+    this.Animals.ItemsSource = this.Animals2.ItemsSource = this.Animals3.ItemsSource = this.Animals4.ItemsSource = this.AnimalsCustomHeight.ItemsSource = new[]
         { "cat", "camel", "cow", "chameleon", "mouse", "lion", "zebra" }
       .OrderBy(x => x);
 
@@ -21,6 +21,11 @@ public partial class ControlAlignment : UserControl
     if (this.HorizontalStackPanelTagInput is not null)
     {
       this.HorizontalStackPanelTagInput.Tags.Add("Tag");
+    }
+
+    if (this.HorizontalStackPanelTagInputCustomHeight is not null)
+    {
+      this.HorizontalStackPanelTagInputCustomHeight.Tags.Add("Tag");
     }
   }
 }

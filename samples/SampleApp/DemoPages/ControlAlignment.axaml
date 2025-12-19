@@ -23,28 +23,28 @@
         <ComboBox Grid.Column="3" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Combo</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
         <ComboBox Grid.Column="4" IsEditable="True" SelectedIndex="2">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
-        <MultiComboBox Grid.Column="5" Watermark="select...">
+        <EditableComboBox Grid.Column="5">
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+        </EditableComboBox>
+        <MultiComboBox Grid.Column="6" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Column="6" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-        <EditableComboBox Grid.Column="7">
-          <EditableComboBoxItem Value="Option 1" />
-          <EditableComboBoxItem Value="Option 2" />
-          <EditableComboBoxItem Value="Option 3" />
-        </EditableComboBox>
+        <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
         <AutoCompleteBox Grid.Column="8" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
         <NumericUpDown Grid.Column="9" Value="0"
                        Increment="1"
@@ -67,28 +67,28 @@
         <ComboBox Grid.Row="4" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Combo</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
         <ComboBox Grid.Row="5" IsEditable="True" SelectedIndex="2">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
-        <MultiComboBox Grid.Row="6" Watermark="select...">
+        <EditableComboBox Grid.Row="6">
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+        </EditableComboBox>
+        <MultiComboBox Grid.Row="7" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Row="7" Watermark="TagInput" />
-        <EditableComboBox Grid.Row="8">
-          <EditableComboBoxItem Value="test1" />
-          <EditableComboBoxItem Value="test2" />
-          <EditableComboBoxItem Value="test3" />
-        </EditableComboBox>
+        <TagInput Grid.Row="8" Watermark="TagInput" />
         <AutoCompleteBox Grid.Row="9" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
         <NumericUpDown Grid.Row="10" Value="0"
                        Increment="1"
@@ -111,16 +111,21 @@
           <ComboBox SelectedIndex="2" IsEnabled="False">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Combo</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-            <ComboBoxItem>Option 1</ComboBoxItem>
-            <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <MultiComboBox Watermark="select...">
+          <EditableComboBox IsEnabled="False">
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+          </EditableComboBox>
+          <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
             <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
             <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
@@ -128,11 +133,6 @@
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-          <EditableComboBox IsEnabled="False">
-            <EditableComboBoxItem Value="test1" />
-            <EditableComboBoxItem Value="test2" />
-            <EditableComboBoxItem Value="test3" />
-          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
@@ -150,16 +150,21 @@
           <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Combo</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-            <ComboBoxItem>Option 1</ComboBoxItem>
-            <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <MultiComboBox Watermark="select...">
+          <EditableComboBox>
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+          </EditableComboBox>
+          <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
             <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
             <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
@@ -167,11 +172,6 @@
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput Watermark="TagInput" />
-          <EditableComboBox>
-            <EditableComboBoxItem Value="test1" />
-            <EditableComboBoxItem Value="test2" />
-            <EditableComboBoxItem Value="test3" />
-          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"

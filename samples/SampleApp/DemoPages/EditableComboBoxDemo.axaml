@@ -59,19 +59,6 @@
           <EditableComboBoxItem>Option 3</EditableComboBoxItem>
         </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
-          - ComboBox (to validate alignment)
-        </TextBlock>
-        <ComboBox Grid.Column="1" Grid.Row="5" IsEnabled="False"
-                  VerticalAlignment="Top"
-                  HorizontalContentAlignment="Left"
-                  SelectedIndex="0"
-                  Margin="10 0 20 0">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
-        </ComboBox>
-
         <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
           - Scrolling options list
         </TextBlock>

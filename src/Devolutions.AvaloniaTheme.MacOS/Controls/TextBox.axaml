@@ -224,9 +224,8 @@
               <Border Name="BottomBorder"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
                       CornerRadius="{TemplateBinding CornerRadius}"
-                      Margin="0.6 0  " />
+                      Margin="0.6 0" />
               <Border Name="BottomBorderShadow"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{TemplateBinding BorderBrush}"

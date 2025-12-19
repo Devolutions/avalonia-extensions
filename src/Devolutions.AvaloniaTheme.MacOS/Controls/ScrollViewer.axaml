@@ -1,6 +1,7 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters">
 
   <Design.PreviewWith>
     <ScrollViewer Width="200" Height="200"
@@ -59,8 +60,15 @@
                   Grid.Row="1"
                   Grid.Column="1"
                   Background="{DynamicResource ScrollBarTrackBrush}"
-                  BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
-                  Opacity="0">
+                  BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}">
+            <Border.Opacity>
+              <MultiBinding Converter="{x:Static converters:MacOSConverters.AndToOpacityConverter}">
+                <Binding ElementName="PART_HorizontalScrollBar" Path="IsVisible" />
+                <Binding ElementName="PART_VerticalScrollBar" Path="IsVisible" />
+                <Binding ElementName="PART_HorizontalScrollBar" Path="IsExpanded" />
+                <Binding ElementName="PART_VerticalScrollBar" Path="IsExpanded" />
+              </MultiBinding>
+            </Border.Opacity>
             <Border.BorderThickness>
               <Binding Source="{StaticResource ScrollBarTrackBorderThickness}"
                        Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
@@ -96,7 +104,7 @@
     </Style>
     <Style Selector="^[AllowAutoHide=False]">
       <Style Selector="^ /template/ Border#PART_ScrollBarsSeparator">
-        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Transitions" Value="{x:Null}" />
       </Style>
       <Style Selector="^ /template/ ScrollContentPresenter#PART_ContentPresenter">
         <Setter Property="Grid.RowSpan" Value="1" />

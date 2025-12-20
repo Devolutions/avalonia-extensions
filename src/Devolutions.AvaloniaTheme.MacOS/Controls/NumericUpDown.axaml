@@ -77,6 +77,7 @@
                          ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
                          ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
             <TextBox Name="PART_TextBox"
+                     Height="{TemplateBinding Height}"
                      ClipToBounds="False"
                      Watermark="{TemplateBinding Watermark}"
                      IsReadOnly="{TemplateBinding IsReadOnly}"

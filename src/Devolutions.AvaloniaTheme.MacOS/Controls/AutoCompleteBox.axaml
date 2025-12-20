@@ -1,14 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:generic="using:System.Collections.Generic"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Margin="20">
-      <AutoCompleteBox Width="200">
-
-      </AutoCompleteBox>
+        <AutoCompleteBox Width="200" />
         <TextBox />
       </StackPanel>
     </design:ThemePreviewer>
@@ -28,8 +25,9 @@
     <Setter Property="MaxDropDownHeight" Value="{DynamicResource AutoCompleteListMaxHeight}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Grid Name="PART_LayoutRoot">
+        <Panel Name="PART_LayoutRoot">
           <TextBox Name="PART_TextBox"
+                   Height="{TemplateBinding Height}"
                    Watermark="{TemplateBinding Watermark}"
                    Width="{TemplateBinding Width}"
                    Foreground="{TemplateBinding Foreground}"
@@ -43,7 +41,7 @@
                    MaxLength="{TemplateBinding MaxLength}"
                    InnerLeftContent="{TemplateBinding InnerLeftContent}"
                    InnerRightContent="{TemplateBinding InnerRightContent}" />
-          
+
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  MaxHeight="{TemplateBinding MaxDropDownHeight}"
@@ -71,7 +69,7 @@
                        Margin="{DynamicResource AutoCompleteListPadding}" />
             </Border>
           </Popup>
-        </Grid>
+        </Panel>
       </ControlTemplate>
     </Setter>
   </ControlTheme>

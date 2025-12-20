@@ -77,7 +77,8 @@
 
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus" Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
           <Border
             Name="border"
             Background="{TemplateBinding Background}"

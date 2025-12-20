@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ControlAlignment">
@@ -115,15 +114,15 @@
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-          <ComboBoxItem>Avalonia</ComboBoxItem>
-          <ComboBoxItem>ComboBox</ComboBoxItem>
-          <ComboBoxItem>IsEditable</ComboBoxItem>
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <EditableComboBox IsEnabled="False">
-          <EditableComboBoxItem Value="Devolutions" />
-          <EditableComboBoxItem Value="EditableComboBox" />
-          <EditableComboBoxItem Value="Option 3" />
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
           <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
@@ -159,15 +158,15 @@
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox Height="30" SelectedIndex="2" IsEditable="True">
-          <ComboBoxItem>Avalonia</ComboBoxItem>
-          <ComboBoxItem>ComboBox</ComboBoxItem>
-          <ComboBoxItem>IsEditable</ComboBoxItem>
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <EditableComboBox Height="30" IsEnabled="False">
-          <EditableComboBoxItem Value="Devolutions" />
-          <EditableComboBoxItem Value="EditableComboBox" />
-          <EditableComboBoxItem Value="Option 3" />
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
           <MultiComboBox Height="30" Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
@@ -198,15 +197,15 @@
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-          <ComboBoxItem>Avalonia</ComboBoxItem>
-          <ComboBoxItem>ComboBox</ComboBoxItem>
-          <ComboBoxItem>IsEditable</ComboBoxItem>
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <EditableComboBox>
-          <EditableComboBoxItem Value="Devolutions" />
-          <EditableComboBoxItem Value="EditableComboBox" />
-          <EditableComboBoxItem Value="Option 3" />
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
           <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>

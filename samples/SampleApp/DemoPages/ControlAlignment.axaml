@@ -38,8 +38,8 @@
         </EditableComboBox>
         <MultiComboBox Grid.Column="6" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+          <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
@@ -82,8 +82,8 @@
         </EditableComboBox>
         <MultiComboBox Grid.Row="7" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+          <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
@@ -107,7 +107,7 @@
                    IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
           </TextBox>
-          <ComboBox SelectedIndex="2" IsEnabled="False">
+          <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
             <ComboBoxItem>Combo</ComboBoxItem>
@@ -119,15 +119,15 @@
             <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <EditableComboBox IsEnabled="False">
+          <EditableComboBox>
             <EditableComboBoxItem Value="Devolutions" />
             <EditableComboBoxItem Value="EditableComboBox" />
             <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
           <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
@@ -143,47 +143,50 @@
           <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
           <TextBlock Text="🙂" FontSize="45" />
         </StackPanel>
-        <TextBlock Text="Custom Height: 30" />
+
+        <TextBlock>Custom Height:</TextBlock>
+        <TextBlock IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">(Visible height 30 requires <TextBlock Classes="code">Height="33"</TextBlock> !)</TextBlock>
+ 
         <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
-          <TextBlock Height="30">TextBlock</TextBlock>
-          <TextBox Height="30" Watermark="TextBox" />
+          <TextBlock Height="33">TextBlock</TextBlock>
+          <TextBox Height="33" Watermark="TextBox" />
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
                    IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
           </TextBox>
-          <ComboBox Height="30" SelectedIndex="2" IsEnabled="False">
+          <ComboBox Height="33" SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
             <ComboBoxItem>Combo</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <ComboBox Height="30" SelectedIndex="2" IsEditable="True">
+          <ComboBox Height="33" SelectedIndex="2" IsEditable="True">
             <ComboBoxItem>Avalonia</ComboBoxItem>
             <ComboBoxItem>ComboBox</ComboBoxItem>
             <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <EditableComboBox Height="30" IsEnabled="False">
+          <EditableComboBox Height="33">
             <EditableComboBoxItem Value="Devolutions" />
             <EditableComboBoxItem Value="EditableComboBox" />
             <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
-          <MultiComboBox Height="30" Watermark="MultiSelect...">
+          <MultiComboBox Height="33" Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput Height="30" x:Name="HorizontalStackPanelTagInputCustomHeight" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-          <AutoCompleteBox Height="30" x:Name="AnimalsCustomHeight" FilterMode="Contains" Watermark="AutoComplete" />
-          <NumericUpDown Height="30" Value="0"
+          <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" Watermark="AutoComplete" />
+          <NumericUpDown Height="33" Value="0"
                          Increment="1"
                          Watermark="mm" />
-          <CalendarDatePicker Height="30" />
-          <Button Height="30" Content="Button" />
-          <CheckBox Height="30" Content="Checkbox" IsChecked="True" />
-          <RadioButton Height="30" Content="RadioButton" IsChecked="True" />
+          <CalendarDatePicker Height="33" />
+          <Button Height="33" Content="Button" />
+          <CheckBox Height="33" Content="Checkbox" IsChecked="True" />
+          <RadioButton Height="33" Content="RadioButton" IsChecked="True" />
           <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
           <TextBlock Text="🙂" FontSize="45" />
         </StackPanel>
@@ -209,8 +212,8 @@
           </EditableComboBox>
           <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>

@@ -82,7 +82,7 @@
     </Style>
 
     <Style Selector="^.accent">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler AccentButtonBackgroundBrush, ControlBackgroundHighBrush}" />
       <Setter Property="Foreground" Value="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ForegroundHighBrush}" />
       <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ButtonBorderAccentBrush, ControlBorderRaisedBrush}" />
 

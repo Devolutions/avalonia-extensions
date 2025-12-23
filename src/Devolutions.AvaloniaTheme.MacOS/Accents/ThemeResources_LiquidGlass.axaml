@@ -11,6 +11,8 @@
 
   <!-- MARK: Solid Colours -->
 
+  <SolidColorBrush x:Key="SystemAccent" Color="{DynamicResource SystemAccentColor}" />
+
   <!-- MARK: Transparent Brushes -->
   <SolidColorBrush x:Key="Transparent" Color="Transparent" />
 
@@ -51,6 +53,7 @@
       <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ButtonBackgroundBrush' />
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
 
     </ResourceDictionary>
 
@@ -64,6 +67,7 @@
       <StaticResource x:Key='ButtonBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

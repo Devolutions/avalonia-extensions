@@ -152,6 +152,7 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
 
     </ResourceDictionary>
 
@@ -302,6 +303,7 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

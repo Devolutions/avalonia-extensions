@@ -87,7 +87,7 @@
       <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ButtonBorderAccentBrush, ControlBorderRaisedBrush}" />
 
       <Style Selector="^:pressed">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundAccentRecessedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AccentButtonPressedBackgroundBrush}" />
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />

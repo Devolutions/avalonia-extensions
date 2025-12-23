@@ -81,6 +81,15 @@
   <StaticResource x:Key='ButtonCornerRadius' ResourceKey='Radius6' />
   <StaticResource x:Key='ButtonPadding' ResourceKey='ThicknessL12R11' />
 
+  <VisualBrush x:Key="AccentButtonPressedBackgroundBrush" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT010}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
   <!-- DEVELOPMENT ONLY -->
 
   <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource BackgroundColor}" Opacity="0.8" />

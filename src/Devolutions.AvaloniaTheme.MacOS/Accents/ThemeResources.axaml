@@ -150,6 +150,7 @@
       <!-- Button Resources  -->
       <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
 
     </ResourceDictionary>
 
@@ -298,6 +299,7 @@
       <!-- Button Resources  -->
       <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

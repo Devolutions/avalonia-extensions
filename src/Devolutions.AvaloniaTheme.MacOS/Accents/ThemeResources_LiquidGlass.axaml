@@ -20,7 +20,7 @@
   <SolidColorBrush x:Key="SurfaceT007" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
   <SolidColorBrush x:Key="SurfaceT008" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
   <SolidColorBrush x:Key="SurfaceT010" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
-
+  <SolidColorBrush x:Key="SurfaceT016" Color="{DynamicResource ForegroundColor}" Opacity="0.16" />
   <!-- MARK: Shadows -->
 
   <BoxShadows x:Key="NoShadow">0 0 Transparent</BoxShadows>
@@ -50,6 +50,7 @@
       <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT004' />
       <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ButtonBackgroundBrush' />
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
 
     </ResourceDictionary>
 
@@ -62,6 +63,7 @@
       <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT003' />
       <StaticResource x:Key='ButtonBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

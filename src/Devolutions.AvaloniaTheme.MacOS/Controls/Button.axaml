@@ -73,7 +73,7 @@
     </Style>
 
     <Style Selector="^:pressed">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundActiveHighBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ButtonPressedBackgroundBrush}" />
     </Style>
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />

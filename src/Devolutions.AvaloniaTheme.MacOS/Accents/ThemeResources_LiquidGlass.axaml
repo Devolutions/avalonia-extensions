@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters;assembly=Devolutions.AvaloniaTheme.MacOS">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -12,6 +13,10 @@
   <!-- MARK: Solid Colours -->
 
   <SolidColorBrush x:Key="SystemAccent" Color="{DynamicResource SystemAccentColor}" />
+
+  <!-- MARK: Converters -->
+  <converters:ColorAdjustmentConverter x:Key="LightFocusColorConverter" SaturationAdjustment="-50" />
+  <converters:ColorAdjustmentConverter x:Key="DarkFocusColorConverter" SaturationAdjustment="-20" BrightnessAdjustment="-33" />
 
   <!-- MARK: Transparent Brushes -->
   <SolidColorBrush x:Key="Transparent" Color="Transparent" />
@@ -54,6 +59,7 @@
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightFocusColorConverter}}" />
 
     </ResourceDictionary>
 
@@ -68,6 +74,7 @@
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkFocusColorConverter}}" />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

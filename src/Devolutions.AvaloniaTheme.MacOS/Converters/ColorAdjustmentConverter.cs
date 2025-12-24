@@ -75,7 +75,7 @@ public class ColorAdjustmentConverter : IValueConverter
 
     if (h < 0) h += 360;
 
-    double s = max == 0 ? 0 : delta / max;
+    double s = max <= double.Epsilon ? 0 : delta / max;
     double v = max;
 
     return (h, s, v);

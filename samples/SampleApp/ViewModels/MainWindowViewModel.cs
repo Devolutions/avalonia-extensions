@@ -9,7 +9,7 @@ public partial class MainWindowViewModel : ObservableObject
   private Theme currentTheme;
 
   [ObservableProperty]
-  private bool showWallpaper = true;
+  private bool showWallpaper = false;
 
   public MainWindowViewModel()
   {

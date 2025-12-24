@@ -1,18 +1,101 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters;assembly=Devolutions.AvaloniaTheme.MacOS">
 
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <!-- <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>       -->
+
+  <!-- MARK: Solid Colours -->
+
+  <SolidColorBrush x:Key="SystemAccent" Color="{DynamicResource SystemAccentColor}" />
+
+  <!-- MARK: Converters -->
+  <converters:ColorAdjustmentConverter x:Key="LightFocusColorConverter" SaturationAdjustment="-50" />
+  <converters:ColorAdjustmentConverter x:Key="DarkFocusColorConverter" SaturationAdjustment="-20" BrightnessAdjustment="-33" />
+
+  <!-- MARK: Transparent Brushes -->
+  <SolidColorBrush x:Key="Transparent" Color="Transparent" />
+
+  <SolidColorBrush x:Key="SurfaceT003" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
+  <SolidColorBrush x:Key="SurfaceT004" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
+  <SolidColorBrush x:Key="SurfaceT005" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
+  <SolidColorBrush x:Key="SurfaceT007" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
+  <SolidColorBrush x:Key="SurfaceT008" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
+  <SolidColorBrush x:Key="SurfaceT010" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
+  <SolidColorBrush x:Key="SurfaceT016" Color="{DynamicResource ForegroundColor}" Opacity="0.16" />
+  <!-- MARK: Shadows -->
+
+  <BoxShadows x:Key="NoShadow">0 0 Transparent</BoxShadows>
+
+  <!-- MARK: Thicknesses -->
+
+  <Thickness x:Key="Thickness0">0</Thickness>
+  <Thickness x:Key="ThicknessT1">0 1 0 0</Thickness>
+  <Thickness x:Key="ThicknessL12R11">12 0 11 0</Thickness>
+
+  <!-- MARK: Measurements -->
+
+  <x:Double x:Key="ControlHeight24">24</x:Double>
+
+  <!-- MARK: Radii -->
+
+  <CornerRadius x:Key="Radius6">6</CornerRadius>
+
+
+  <!-- MARK: Light Mode -->
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <Color x:Key="BackgroundColor">#ffffff</Color>
+
+      <StaticResource x:Key='ButtonBackgroundBrush' ResourceKey='SurfaceT007' />
+      <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT004' />
+      <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ButtonBackgroundBrush' />
+      <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightFocusColorConverter}}" />
+
     </ResourceDictionary>
+
+    <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="BackgroundColor">#21222f</Color>
+
+      <StaticResource x:Key='ButtonBackgroundBrush' ResourceKey='SurfaceT008' />
+      <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT003' />
+      <StaticResource x:Key='ButtonBorderBrush' ResourceKey='Transparent' />
+      <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkFocusColorConverter}}" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
+  <!-- MARK: Common Resources -->
 
+  <StaticResource x:Key='ButtonBorderBoxShadow' ResourceKey='NoShadow' />
+  <StaticResource x:Key='ButtonBorderThickness' ResourceKey='Thickness0' />
+  <StaticResource x:Key='ButtonMinHeight' ResourceKey='ControlHeight24' />
+  <StaticResource x:Key='ButtonTextMargin' ResourceKey='ThicknessT1' />
+  <StaticResource x:Key='ButtonCornerRadius' ResourceKey='Radius6' />
+  <StaticResource x:Key='ButtonPadding' ResourceKey='ThicknessL12R11' />
+
+  <VisualBrush x:Key="AccentButtonPressedBackgroundBrush" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT010}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
 
   <!-- DEVELOPMENT ONLY -->
 

@@ -63,10 +63,10 @@
 
   <!-- Shifting the tab to the left to cover the divider of its left neighbour -->
   <Thickness x:Key="TabItemDividerMargin">-2, 0, 0, 0</Thickness>
-  
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="ButtonBorderThickness" />
+      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="TabBorderThickness" />
       <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
       <Thickness x:Key="LightTabItemInnerBorderThickness">0</Thickness>
       <StaticResource x:Key="TabItemInnerBorderThickness" ResourceKey="LightTabItemInnerBorderThickness" />
@@ -76,7 +76,7 @@
       <Thickness x:Key="DarkTabItemOuterBorderThickness">0.4</Thickness>
       <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="DarkTabItemOuterBorderThickness" />
       <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="TransparentBrush" />
-      <StaticResource x:Key="TabItemInnerBorderThickness" ResourceKey="ButtonBorderThickness" />
+      <StaticResource x:Key="TabItemInnerBorderThickness" ResourceKey="TabBorderThickness" />
       <StaticResource x:Key="TabItemInnerBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

@@ -128,7 +128,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+            <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ListBoxDemo />
         </TabItem>

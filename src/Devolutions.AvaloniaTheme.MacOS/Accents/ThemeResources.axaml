@@ -1,6 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+  <!-- MARK: Light Mode -->
+
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <Color x:Key="BackgroundColor">#ffffff</Color>
@@ -53,6 +55,7 @@
 
       <SolidColorBrush x:Key="ControlBackgroundDisabledHighBrush" Color="{DynamicResource BackgroundColor}"
                        Opacity="0.5" />
+
       <BoxShadows x:Key="ControlBackgroundRecessedShadow">inset 0 5 3 -2 #bfbfbf</BoxShadows>
       <BoxShadows x:Key="PopupShadow">0 0 1 0 #66000000, 0 0 1.5 00 #4D000000, 0 7 22 0 #40000000</BoxShadows>
 
@@ -75,7 +78,9 @@
       <BoxShadows x:Key="ButtonBorderBoxShadow">0 0.5 1 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
       <BoxShadows x:Key="ComboBoxDisabledBoxShadow">0 1 1.5 0 #26000000, 0 0 0 0.5 #08000000</BoxShadows>
       <BoxShadows x:Key="ToolTipBorderShadow">0 0 1 0 #66000000, 0 7 17 0 #30000000</BoxShadows>
-      <Thickness x:Key="ButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
+      <Thickness x:Key="AccentButtonDisabledBorderThickness">0.6 0.6 0.6 1</Thickness>
+      <Thickness x:Key="RepeatButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
+      <Thickness x:Key="TabBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="ControlBorderThickness">0.6</Thickness>
       <Thickness x:Key="TabControlBorderThickness">0 0.6 0 0</Thickness>
       <Thickness x:Key="ToolTipBorderThickness">0</Thickness>
@@ -142,7 +147,17 @@
       <Thickness x:Key="ExpanderButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0 0 0 1</Thickness>
 
+      <!-- Button Resources  -->
+      <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
+      <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+
     </ResourceDictionary>
+
+
+    <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="BackgroundColor">#000000</Color>
@@ -214,7 +229,9 @@
       <BoxShadows x:Key="ComboBoxDisabledBoxShadow">0 0.5 2.5 0 #26ffffff, 0 0 0 0.5 #08ffffff</BoxShadows>
       <BoxShadows x:Key="ToolTipBorderShadow">0 0 1 0 #ff000000</BoxShadows>
 
-      <Thickness x:Key="ButtonBorderThickness">0 1 0 0</Thickness>
+      <Thickness x:Key="AccentButtonDisabledBorderThickness">0 1 0 0</Thickness>
+      <Thickness x:Key="RepeatButtonBorderThickness">0 1 0 0</Thickness>
+      <Thickness x:Key="TabBorderThickness">0 1 0 0</Thickness>
       <Thickness x:Key="ButtonBorderAccentThickness">0 1 0 0</Thickness>
       <Thickness x:Key="ControlBorderThickness">0 0.6 0 0</Thickness>
       <Thickness x:Key="TabControlBorderThickness">0 0.6 0 0.6</Thickness>
@@ -280,8 +297,22 @@
       <StaticResource x:Key="ExpanderBackgroundDisabledBrush" ResourceKey="DarkExpanderBackgroundDisabledBrush" />
       <Thickness x:Key="ExpanderButtonBorderThickness">0.6 1 0.6 0</Thickness>
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0</Thickness>
+
+      <!-- Button Resources  -->
+      <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
+      <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
+      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
+      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+
+  <!-- MARK: Common Resources -->
+
+  <Thickness x:Key="Thickness0">0</Thickness>
+
+  <x:Double x:Key="ControlHeight21">21</x:Double>
 
 
   <!-- TODO: Appkit buttons have DD at the bottom, EE at the top & fading -> try sub-pixel rendering (UseLayoutRounding) (s. `default button issues.psd` ... -->
@@ -363,7 +394,16 @@
 
   <SolidColorBrush x:Key="DefaultIconFillBrush" Color="{DynamicResource DefaultIconColor}" />
 
+  <!-- TODO: Button Resources -->
+
   <!-- Button Resources (& button-like parts of other controls) -->
+  <StaticResource x:Key='ButtonBackgroundBrush' ResourceKey='ControlBackgroundHighBrush' />
+  <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ControlBorderRaisedBrush' />
+  <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='ControlBorderDisabledBrush' />
+  <StaticResource x:Key='ButtonMinHeight' ResourceKey='ControlHeight21' />
+  <StaticResource x:Key='ButtonTextMargin' ResourceKey='Thickness0' />
+  <StaticResource x:Key='ButtonCornerRadius' ResourceKey='ControlCornerRadius' />
+
   <Thickness x:Key="ButtonPadding">10 0</Thickness>
   <FontWeight x:Key="ButtonFontWeight">400</FontWeight>
   <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource ControlBorderAccentColor}" />

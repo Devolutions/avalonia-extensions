@@ -87,7 +87,7 @@
                               Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
                               Background="{DynamicResource ControlBackgroundHighColor}"
                               BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
-                              BorderThickness="{DynamicResource ButtonBorderThickness}"
+                              BorderThickness="{DynamicResource RepeatButtonBorderThickness}"
                               CornerRadius="5 5 0 0"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Center"
@@ -111,7 +111,7 @@
                               Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
                               Background="{DynamicResource ControlBackgroundHighColor}"
                               BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
-                              BorderThickness="{DynamicResource ButtonBorderThickness}"
+                              BorderThickness="{DynamicResource RepeatButtonBorderThickness}"
                               CornerRadius="0 0 5 5"
                               VerticalAlignment="Center"
                               VerticalContentAlignment="Center">

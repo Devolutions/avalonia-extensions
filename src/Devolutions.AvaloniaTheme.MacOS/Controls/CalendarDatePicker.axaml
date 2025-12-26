@@ -37,7 +37,7 @@
       </Setter.Value>
     </Setter>
   </ControlTheme>
-  
+
   <ControlTheme x:Key="{x:Type CalendarDatePicker}" TargetType="CalendarDatePicker">
     <Setter Property="IsTodayHighlighted" Value="True" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
@@ -58,6 +58,7 @@
                  HorizontalAlignment="Stretch">
             <Panel ClipToBounds="False">
               <TextBox Name="PART_TextBox"
+                       Height="{TemplateBinding Height}"
                        Watermark="{TemplateBinding Watermark}"
                        UseFloatingWatermark="{TemplateBinding UseFloatingWatermark}"
                        Width="{TemplateBinding Width}"
@@ -67,29 +68,31 @@
                        BorderThickness="{TemplateBinding BorderThickness}"
                        CornerRadius="{TemplateBinding CornerRadius}">
                 <TextBox.InnerRightContent>
-                  <Rectangle Width="20" Fill="Transparent"/>
+                  <Rectangle Width="20" Fill="Transparent" />
                 </TextBox.InnerRightContent>
               </TextBox>
-                  <!-- Brittle Button placement! Placing the Button as TextBox.InnerRightContent breaks functionality,
+              <!-- Brittle Button placement! Placing the Button as TextBox.InnerRightContent breaks functionality,
                        But this placement breaks if ValidationError text is positioned _above_ the TextBox 
                        Also: centering the button via setting a top margin gives inconsistent results on different monitors -->
-              <Panel Height="{DynamicResource CalendarControlHeight}" VerticalAlignment="Top">
-                  <Button Name="PART_Button"
-                                Theme="{StaticResource DatePickerButton}"
-                                ClipToBounds="False"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Margin="0 0 8 0">
-                    <Panel>
-                      <PathIcon Data="{StaticResource CalendarIconPath}"
-                                Height="13" />
-                    </Panel>
-                  </Button>
+              <Panel Height="{TemplateBinding Height}"
+                     MinHeight="{DynamicResource CalendarControlHeight}" VerticalAlignment="Top">
+                <Button Name="PART_Button"
+                        Theme="{StaticResource DatePickerButton}"
+                        ClipToBounds="False"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0 0 8 0">
+                  <Panel>
+                    <PathIcon Data="{StaticResource CalendarIconPath}"
+                              Height="13" />
+                  </Panel>
+                </Button>
               </Panel>
 
               <Popup Name="PART_Popup"
-                     PlacementTarget="{TemplateBinding}"
+                     PlacementTarget="{Binding ElementName=PART_TextBox}"
                      Placement="BottomEdgeAlignedLeft"
+
                      HorizontalOffset="-10"
                      WindowManagerAddShadowHint="False"
                      IsLightDismissEnabled="True">
@@ -100,13 +103,13 @@
                         Margin="{DynamicResource PopupMargin}"
                         Padding="{DynamicResource PopupPadding}"
                         BoxShadow="{DynamicResource PopupShadow}">
-                <Calendar Name="PART_Calendar"
-                          FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
-                          IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
-                          SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
-                          DisplayDate="{TemplateBinding DisplayDate}"
-                          DisplayDateStart="{TemplateBinding DisplayDateStart}"
-                          DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
+                  <Calendar Name="PART_Calendar"
+                            FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
+                            IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
+                            SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
+                            DisplayDate="{TemplateBinding DisplayDate}"
+                            DisplayDateStart="{TemplateBinding DisplayDateStart}"
+                            DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
                 </Border>
               </Popup>
             </Panel>
@@ -128,7 +131,7 @@
     <Style Selector="^:flyout-open /template/ Button#PART_Button PathIcon">
       <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackground}" />
     </Style>
-    
+
     <!-- Error State -->
     <Style Selector="^:error /template/ TextBox#PART_TextBox">
       <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />

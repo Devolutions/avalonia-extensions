@@ -59,7 +59,6 @@
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness} "
                 CornerRadius="{TemplateBinding CornerRadius}"
-                Height="{TemplateBinding Height}"
                 Padding="{TemplateBinding Padding}">
                 <Panel VerticalAlignment="Stretch">
                   <!-- Watermark -->

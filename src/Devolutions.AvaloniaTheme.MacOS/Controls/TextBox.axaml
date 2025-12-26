@@ -134,7 +134,6 @@
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">
               <Border Name="PART_BorderElement"
-                      Height="{TemplateBinding Height}"
                       BorderThickness="{TemplateBinding BorderThickness}"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       Background="{TemplateBinding Background}"
@@ -222,25 +221,21 @@
                 </Grid>
               </Border>
               <Border Name="BottomBorder"
-                      Height="{TemplateBinding Height}"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
                       Margin="0.6 0" />
               <Border Name="BottomBorderShadow"
-                      Height="{TemplateBinding Height}"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
                       BoxShadow="{DynamicResource TextBoxBorderShadows}"
                       Margin="0.6 0 0.6 -0.6 " />
               <Border Name="FocusBorderElement"
-                      Height="{TemplateBinding Height}"
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"
                       CornerRadius="2" />
             </Panel>
-
           </DataValidationErrors>
         </Panel>
       </ControlTemplate>

@@ -35,7 +35,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <Grid ColumnDefinitions="Auto,5,*" MinHeight="20" ClipToBounds="False">
             <Border
               Name="FocusBorderElement"

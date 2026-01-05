@@ -38,7 +38,7 @@
     <Setter Property="Template">
       <ControlTemplate TargetType="RadioButton">
         <Panel Name="ReservedSpaceForFocus"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <Grid ColumnDefinitions="Auto,5,*">
             <Border
               Name="FocusBorderElement"

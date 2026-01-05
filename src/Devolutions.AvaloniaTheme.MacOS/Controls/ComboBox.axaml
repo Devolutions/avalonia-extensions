@@ -161,7 +161,7 @@
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
                ClipToBounds="False"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <Border
             Name="BorderElement"
             Background="{TemplateBinding Background}"

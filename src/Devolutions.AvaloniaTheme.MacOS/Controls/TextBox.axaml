@@ -130,7 +130,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="ReservedSpaceForFocus"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">
               <Border Name="PART_BorderElement"

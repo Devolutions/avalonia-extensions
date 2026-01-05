@@ -48,7 +48,7 @@
     <Setter Property="Template">
       <ControlTemplate TargetType="u:TagInput">
         <Panel Name="ReservedSpaceForFocus"
-               Margin="{StaticResource InputControlsSpaceForFocusBorder}"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}"
                ClipToBounds="False">
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">

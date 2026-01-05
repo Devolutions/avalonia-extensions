@@ -11,6 +11,7 @@
     <MergeResourceInclude Source="CalendarDayButton.axaml" />
     <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
+    <MergeResourceInclude Source="CheckBoxListBox.axaml" />
     <MergeResourceInclude Source="ClosableTag.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />

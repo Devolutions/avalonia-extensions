@@ -1,0 +1,6 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ControlTheme x:Key="{x:Type CheckBoxListBox}" TargetType="CheckBoxListBox">
+    <Setter Property="Padding" Value="1.5 0 0 0" />
+  </ControlTheme>
+</ResourceDictionary>

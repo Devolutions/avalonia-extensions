@@ -34,7 +34,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ButtonDemo />
         </TabItem>

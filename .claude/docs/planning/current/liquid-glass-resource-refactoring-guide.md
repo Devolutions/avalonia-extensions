@@ -72,3 +72,47 @@ Define the new resource in both theme files.
 *   **New Resources:** `src/Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml`
 *   **Classic Resources:** `src/Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources.axaml`
 *   **Control Templates:** `src/Devolutions.AvaloniaTheme.MacOS/Controls/*.axaml`
+
+## Refactoring Progress Checklist
+
+- [ ] AutoCompleteBox
+- [x] Button
+- [ ] ButtonSpinner
+- [ ] Calendar
+- [ ] CalendarButton
+- [ ] CalendarDatePicker
+- [ ] CalendarDayButton
+- [ ] CalendarItem
+- [ ] CheckBox
+- [ ] ClosableTag
+- [ ] ComboBox
+- [ ] ComboBoxItem
+- [ ] ContextMenu
+- [ ] DataGrid
+- [ ] EditableComboBox
+- [ ] EmbeddableControlRoot
+- [ ] Expander
+- [ ] GridSplitter
+- [ ] ListBox
+- [ ] ListBoxItem
+- [ ] Menu
+- [ ] MenuFlyoutPresenter
+- [ ] MenuItem
+- [ ] MultiComboBox
+- [ ] MultiComboBoxItem
+- [ ] NumericUpDown
+- [ ] RadioButton
+- [ ] ScrollBar
+- [ ] ScrollViewer
+- [ ] Separator
+- [ ] TabControl
+- [ ] TabItem
+- [ ] TabPane
+- [ ] TagInput
+- [ ] TextBlock
+- [ ] TextBox
+- [ ] ToggleSwitch
+- [ ] ToolTip
+- [ ] TreeView
+- [ ] TreeViewItem
+- [ ] Window

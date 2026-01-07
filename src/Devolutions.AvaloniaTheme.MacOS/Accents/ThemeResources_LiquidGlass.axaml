@@ -12,22 +12,87 @@
 
   <!-- MARK: Solid Colours -->
 
-  <SolidColorBrush x:Key="SystemAccent" Color="{DynamicResource SystemAccentColor}" />
+  <Color x:Key="AccentForegroundColor">#ffffff</Color>
 
   <!-- MARK: Converters -->
   <converters:ColorAdjustmentConverter x:Key="LightFocusColorConverter" SaturationAdjustment="-50" />
   <converters:ColorAdjustmentConverter x:Key="DarkFocusColorConverter" SaturationAdjustment="-20" BrightnessAdjustment="-33" />
 
-  <!-- MARK: Transparent Brushes -->
+  <!-- MARK: Brushes -->
+
+  <!-- Brush naming scheme: -->
+  <!--   Surface = low-opacity Foreground brushes for surfaces (vs. lines and text) -->
+  <!--   T = Transparent (with opacity in %) -->
+  <!--   H = Highlighted (with ForegroundColor overlay in %) -->
+  <!--   D = Dimmed (with BackgroundColor overlay in %) -->
+
   <SolidColorBrush x:Key="Transparent" Color="Transparent" />
 
-  <SolidColorBrush x:Key="SurfaceT003" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
-  <SolidColorBrush x:Key="SurfaceT004" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
-  <SolidColorBrush x:Key="SurfaceT005" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
-  <SolidColorBrush x:Key="SurfaceT007" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
-  <SolidColorBrush x:Key="SurfaceT008" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
-  <SolidColorBrush x:Key="SurfaceT010" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
-  <SolidColorBrush x:Key="SurfaceT016" Color="{DynamicResource ForegroundColor}" Opacity="0.16" />
+  <SolidColorBrush x:Key="SurfaceT03" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
+  <SolidColorBrush x:Key="SurfaceT04" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
+  <SolidColorBrush x:Key="SurfaceT05" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
+  <SolidColorBrush x:Key="SurfaceT07" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
+  <SolidColorBrush x:Key="SurfaceT08" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
+  <SolidColorBrush x:Key="SurfaceT10" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
+  <SolidColorBrush x:Key="SurfaceT13" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
+  <SolidColorBrush x:Key="SurfaceT14" Color="{DynamicResource ForegroundColor}" Opacity="0.14" />
+  <SolidColorBrush x:Key="SurfaceT15" Color="{DynamicResource ForegroundColor}" Opacity="0.15" />
+  <SolidColorBrush x:Key="SurfaceT16" Color="{DynamicResource ForegroundColor}" Opacity="0.16" />
+  <SolidColorBrush x:Key="SurfaceT18" Color="{DynamicResource ForegroundColor}" Opacity="0.18" />
+  <SolidColorBrush x:Key="SurfaceT19" Color="{DynamicResource ForegroundColor}" Opacity="0.19" />
+
+  <SolidColorBrush x:Key="ForegroundT24" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />
+  <SolidColorBrush x:Key="ForegroundT26" Color="{DynamicResource ForegroundColor}" Opacity="0.26" />
+  <SolidColorBrush x:Key="ForegroundT85" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
+
+  <SolidColorBrush x:Key="BackgroundT03" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
+  <SolidColorBrush x:Key="BackgroundT04" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
+
+  <SolidColorBrush x:Key="AccentForeground" Color="{DynamicResource AccentForegroundColor}" />
+  <SolidColorBrush x:Key="AccentForegroundT25" Color="{DynamicResource AccentForegroundColor}" Opacity="0.25" />
+  <SolidColorBrush x:Key="AccentForegroundT49" Color="{DynamicResource AccentForegroundColor}" Opacity="0.49" />
+  <SolidColorBrush x:Key="AccentForegroundT51" Color="{DynamicResource AccentForegroundColor}" Opacity="0.51" />
+  <SolidColorBrush x:Key="AccentForegroundT84" Color="{DynamicResource AccentForegroundColor}" Opacity="0.84" />
+
+  <SolidColorBrush x:Key="SystemAccent" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="SystemAccentT48" Color="{DynamicResource SystemAccentColor}" Opacity="0.48" />
+
+  <VisualBrush x:Key="SystemAccentH10" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT10}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
+  <VisualBrush x:Key="SystemAccentH13" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT13}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
+  <VisualBrush x:Key="SystemAccentD03" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource BackgroundT03}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
+  <VisualBrush x:Key="SystemAccentD04" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource BackgroundT04}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
   <!-- MARK: Shadows -->
 
   <BoxShadows x:Key="NoShadow">0 0 Transparent</BoxShadows>
@@ -40,65 +105,114 @@
 
   <!-- MARK: Measurements -->
 
-  <x:Double x:Key="ControlHeight24">24</x:Double>
+  <x:Double x:Key="ControlSize24">24</x:Double>
+  <x:Double x:Key="ControlSize16">16</x:Double>
+  <x:Double x:Key="ControlSize10">10</x:Double>
+  <x:Double x:Key="ControlSize9">9</x:Double>
+  <x:Double x:Key="ControlSize3">3</x:Double>
 
   <!-- MARK: Radii -->
 
   <CornerRadius x:Key="Radius6">6</CornerRadius>
+  <CornerRadius x:Key="Radius5">5</CornerRadius>
+
+
+  <!-- Resource naming scheme: -->
+  <!-- Class - Control - Control-state - disabled - inactive / Interaction-state - Element - Property / Resource-type -->
 
 
   <!-- MARK: Light Mode -->
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <Color x:Key="BackgroundColor">#ffffff</Color>
 
-      <StaticResource x:Key='ButtonBackgroundBrush' ResourceKey='SurfaceT007' />
-      <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT004' />
-      <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ButtonBackgroundBrush' />
-      <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
-      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
-      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <!-- Generic resources shared across controls (use sparingly!) -->
+
       <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightFocusColorConverter}}" />
+      <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
+
+      <!-- Control-specific resources -->
+
+      <StaticResource x:Key="ButtonBackgroundBrush" ResourceKey="SurfaceT07" />
+      <StaticResource x:Key="ButtonBorderBrush" ResourceKey="ButtonBackgroundBrush" />
+      <StaticResource x:Key="ButtonDisabledBackgroundBrush" ResourceKey="SurfaceT04" />
+      <StaticResource x:Key="ButtonDisabledBorderBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="ButtonPressedBackgroundBrush" ResourceKey="SurfaceT16" />
+      <StaticResource x:Key="AccentButtonBackgroundBrush" ResourceKey="SystemAccent" />
+      <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
+
+      <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
+      <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT19" />
+      <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="SystemAccentD04" />
+      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
+      <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="SurfaceT15" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="SystemAccentT48" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT08" />
+      <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
+      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="AccentForegroundT49" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="ForegroundT26" />
+      <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="BackgroundColor">#21222f</Color>
 
-      <StaticResource x:Key='ButtonBackgroundBrush' ResourceKey='SurfaceT008' />
-      <StaticResource x:Key='ButtonDisabledBackground' ResourceKey='SurfaceT003' />
-      <StaticResource x:Key='ButtonBorderBrush' ResourceKey='Transparent' />
-      <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
-      <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
-      <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <!-- Generic resources shared across controls (use sparingly!) -->
+
       <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkFocusColorConverter}}" />
+      <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
+
+      <!-- Control-specific resources -->
+
+      <StaticResource x:Key="ButtonBackgroundBrush" ResourceKey="SurfaceT08" />
+      <StaticResource x:Key="ButtonBorderBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="ButtonDisabledBackgroundBrush" ResourceKey="SurfaceT03" />
+      <StaticResource x:Key="ButtonDisabledBorderBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="ButtonPressedBackgroundBrush" ResourceKey="SurfaceT16" />
+      <StaticResource x:Key="AccentButtonBackgroundBrush" ResourceKey="SystemAccent" />
+      <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
+
+      <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
+      <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT18" />
+      <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="SystemAccentD03" />
+      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentH13" />
+      <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="SurfaceT14" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="SystemAccentT48" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT07" />
+      <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
+      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="AccentForegroundT51" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="AccentForegroundT84" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="AccentForegroundT25" />
+      <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
   <!-- MARK: Common Resources -->
 
-  <StaticResource x:Key='ButtonBorderBoxShadow' ResourceKey='NoShadow' />
-  <StaticResource x:Key='ButtonBorderThickness' ResourceKey='Thickness0' />
-  <StaticResource x:Key='ButtonMinHeight' ResourceKey='ControlHeight24' />
-  <StaticResource x:Key='ButtonTextMargin' ResourceKey='ThicknessT1' />
-  <StaticResource x:Key='ButtonCornerRadius' ResourceKey='Radius6' />
-  <StaticResource x:Key='ButtonPadding' ResourceKey='ThicknessL12R11' />
+  <StaticResource x:Key="ButtonBorderBoxShadow" ResourceKey="NoShadow" />
+  <StaticResource x:Key="ButtonBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="ButtonMinHeight" ResourceKey="ControlSize24" />
+  <StaticResource x:Key="ButtonTextMargin" ResourceKey="ThicknessT1" />
+  <StaticResource x:Key="ButtonCornerRadius" ResourceKey="Radius6" />
+  <StaticResource x:Key="ButtonPadding" ResourceKey="ThicknessL12R11" />
 
-  <VisualBrush x:Key="AccentButtonPressedBackgroundBrush" Stretch="Fill">
-    <VisualBrush.Visual>
-      <Panel>
-        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource SurfaceT010}" Width="16" Height="16" />
-      </Panel>
-    </VisualBrush.Visual>
-  </VisualBrush>
+  <StaticResource x:Key="CheckBoxCornerRadius" ResourceKey="Radius5" />
+  <StaticResource x:Key="CheckBoxBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="CheckBoxSize" ResourceKey="ControlSize16" />
+  <StaticResource x:Key="CheckBoxCheckMarkSize" ResourceKey="ControlSize10" />
+  <StaticResource x:Key="CheckBoxIndeterminateMarkWidth" ResourceKey="ControlSize9" />
+  <StaticResource x:Key="CheckBoxIndeterminateMarkHeight" ResourceKey="ControlSize3" />
 
   <!-- DEVELOPMENT ONLY -->
 
-  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource BackgroundColor}" Opacity="0.8" />
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemRegionColor}" Opacity="0.8" />
 
 </ResourceDictionary>

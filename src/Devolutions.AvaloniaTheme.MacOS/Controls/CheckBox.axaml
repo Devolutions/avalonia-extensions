@@ -20,10 +20,10 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ControlLabelBrush}" />
     <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource CheckBoxBorderThickness}" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Left" />
@@ -45,40 +45,40 @@
               CornerRadius="5">
               <Border
                 Name="ControlBorder"
-                Width="14"
-                Height="14"
+                Width="{DynamicResource CheckBoxSize}"
+                Height="{DynamicResource CheckBoxSize}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
-                BoxShadow="{DynamicResource ControlBackgroundRecessedShadow}">
+                BoxShadow="{DynamicResource CheckBoxBoxShadow}">
                 <Panel>
                   <Path
                     Name="CheckMark"
                     IsVisible="False"
-                    Width="9"
-                    Height="9"
+                    Width="{DynamicResource CheckBoxCheckMarkSize}"
+                    Height="{DynamicResource CheckBoxCheckMarkSize}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Data="{DynamicResource CheckMarkPath}"
                     FlowDirection="LeftToRight"
                     Stretch="Fill"
                     Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkFill, CheckBoxDisabledCheckMarkFill}, 
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkFill, CheckBoxDisabledInactiveCheckMarkFill}}" />
 
                   <Rectangle
                     Name="IndeterminateMark"
                     IsVisible="False"
-                    Width="8"
-                    Height="2"
+                    Width="{DynamicResource CheckBoxIndeterminateMarkWidth}"
+                    Height="{DynamicResource CheckBoxIndeterminateMarkHeight}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Stretch="Uniform"
                     Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkFill, CheckBoxDisabledCheckMarkFill}, 
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkFill, CheckBoxDisabledInactiveCheckMarkFill}}" />
                 </Panel>
               </Border>
             </Border>
@@ -108,7 +108,7 @@
 
     <!--  Checked State  -->
     <Style Selector="^:checked">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler CheckBoxCheckedBackgroundBrush, CheckBoxCheckedInactiveBackgroundBrush}" />
       <Style Selector="^/template/ Border#ControlBorder">
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
         <Setter Property="BoxShadow" Value="0 0 Transparent" /> <!-- TODO: How do you set it to None? -->
@@ -118,7 +118,7 @@
       </Style>
     </Style>
     <Style Selector="^:indeterminate">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler CheckBoxCheckedBackgroundBrush, CheckBoxCheckedInactiveBackgroundBrush}" />
       <Style Selector="^/template/ Border#ControlBorder">
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
         <Setter Property="BoxShadow" Value="0 0 Transparent" /> <!-- TODO: How do you set it to None? -->
@@ -134,23 +134,24 @@
         <Setter Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}" />
       </Style>
       <Style Selector="^:checked /template/ Border#ControlBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedCheckedBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedPressedBackgroundBrush}" />
       </Style>
     </Style>
 
     <!--  Disabled State  -->
     <Style Selector="^:disabled">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
+      <Setter Property="Background" Value="{DynamicResource CheckBoxDisabledBackgroundBrush}" />
       <Style Selector="^/template/ Border#ControlBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderDisabledBrush}" />
       </Style>
       <Style Selector="^/template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ControlDisabledLabelBrush}" />
       </Style>
       <Style Selector="^:checked">
+        <Setter Property="Background" Value="{WindowActiveResourceToggler CheckBoxCheckedDisabledBackgroundBrush, CheckBoxCheckedDisabledInactiveBackgroundBrush}" />
         <Style Selector="^/template/ Border#ControlBorder">
-          <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-          <Setter Property="BoxShadow" Value="{DynamicResource ControlBackgroundRecessedShadow}" />
+          <Setter Property="BorderThickness" Value="{DynamicResource CheckBoxBorderThickness}" />
+          <Setter Property="BoxShadow" Value="{DynamicResource CheckBoxBoxShadow}" />
         </Style>
         <Style Selector="^/template/ Path#CheckMark">
           <Setter Property="IsVisible" Value="True" />
@@ -158,8 +159,9 @@
         </Style>
       </Style>
       <Style Selector="^:indeterminate">
+        <Setter Property="Background" Value="{WindowActiveResourceToggler CheckBoxCheckedDisabledBackgroundBrush, CheckBoxCheckedDisabledInactiveBackgroundBrush}" />
         <Style Selector="^/template/ Border#ControlBorder">
-          <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+          <Setter Property="BorderThickness" Value="{DynamicResource CheckBoxBorderThickness}" />
         </Style>
         <Style Selector="^/template/ Rectangle#IndeterminateMark">
           <Setter Property="IsVisible" Value="True" />

@@ -134,7 +134,7 @@
         <Setter Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}" />
       </Style>
       <Style Selector="^:checked /template/ Border#ControlBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedCheckedBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedPressedBackgroundBrush}" />
       </Style>
     </Style>
 

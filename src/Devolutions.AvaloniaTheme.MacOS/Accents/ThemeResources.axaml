@@ -76,7 +76,7 @@
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxPressedCheckedBackgroundBrush" ResourceKey="SystemAccentColor" />
+      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
 
 
       <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.10" />
@@ -240,7 +240,7 @@
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxPressedCheckedBackgroundBrush" ResourceKey="SystemAccentColor" />
+      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
 
       <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.14" />
       <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />

@@ -83,7 +83,7 @@ Define the new resource in both theme files.
 - [ ] CalendarDatePicker
 - [ ] CalendarDayButton
 - [ ] CalendarItem
-- [ ] CheckBox
+- [x] CheckBox
 - [ ] ClosableTag
 - [ ] ComboBox
 - [ ] ComboBoxItem

@@ -44,6 +44,15 @@
   <SolidColorBrush x:Key="AccentForegroundT051" Color="{DynamicResource AccentForegroundColor}" Opacity="0.51" />
   <SolidColorBrush x:Key="AccentForegroundT084" Color="{DynamicResource AccentForegroundColor}" Opacity="0.84" />
 
+  <VisualBrush x:Key="SystemAccentPlusSurfaceT010" Stretch="Fill">
+    <VisualBrush.Visual>
+      <Panel>
+        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT010}" Width="16" Height="16" />
+      </Panel>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
   <!-- MARK: Shadows -->
 
   <BoxShadows x:Key="NoShadow">0 0 Transparent</BoxShadows>
@@ -80,6 +89,7 @@
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='SystemAccentPlusSurfaceT010' />
 
       <StaticResource x:Key='CheckBoxBackgroundBrush' ResourceKey='SurfaceT010' />
       <StaticResource x:Key='CheckBoxCheckedBackgroundBrush' ResourceKey='SystemAccent' />
@@ -109,6 +119,7 @@
       <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='Transparent' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='SurfaceT016' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='SystemAccent' />
+      <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='SystemAccentPlusSurfaceT010' />
 
       <StaticResource x:Key='CheckBoxBackgroundBrush' ResourceKey='SurfaceT010' />
       <StaticResource x:Key='CheckBoxCheckedBackgroundBrush' ResourceKey='SystemAccent' />
@@ -139,15 +150,6 @@
 
   <StaticResource x:Key='CheckBoxCornerRadius' ResourceKey='Radius5' />
   <StaticResource x:Key='CheckBoxBorderThickness' ResourceKey='Thickness0' />
-
-  <VisualBrush x:Key="AccentButtonPressedBackgroundBrush" Stretch="Fill">
-    <VisualBrush.Visual>
-      <Panel>
-        <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource SurfaceT010}" Width="16" Height="16" />
-      </Panel>
-    </VisualBrush.Visual>
-  </VisualBrush>
 
   <!-- DEVELOPMENT ONLY -->
 

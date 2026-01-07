@@ -69,12 +69,12 @@
       <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
       <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
-      <StaticResource x:Key="CheckBoxCheckMarkBrush" ResourceKey="ControlForegroundAccentHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledCheckMarkBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxInactiveCheckMarkBrush" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="ControlForegroundAccentHighBrush" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
 
@@ -160,7 +160,7 @@
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0 0 0 1</Thickness>
 
       <!-- Button Resources  -->
-      <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
+      <StaticResource x:Key="ButtonDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
@@ -233,12 +233,12 @@
       <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
       <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
-      <StaticResource x:Key="CheckBoxCheckMarkBrush" ResourceKey="ControlForegroundAccentHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledCheckMarkBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxInactiveCheckMarkBrush" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="ControlForegroundAccentHighBrush" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
-      <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
+      <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
 
@@ -323,7 +323,7 @@
       <Thickness x:Key="ExpanderContentTrayBottomBorder">0</Thickness>
 
       <!-- Button Resources  -->
-      <StaticResource x:Key="ButtonDisabledBackground" ResourceKey="ControlBackgroundDisabledHighBrush" />
+      <StaticResource x:Key="ButtonDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
@@ -388,6 +388,8 @@
   <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
 
   <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
+  <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundHighBrush" />
+
   <!-- <SolidColorBrush x:Key="ForegroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.5" /> -->
   <SolidColorBrush x:Key="ForegroundMidLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.34" />
   <!-- <SolidColorBrush x:Key="ForegroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.25" /> -->

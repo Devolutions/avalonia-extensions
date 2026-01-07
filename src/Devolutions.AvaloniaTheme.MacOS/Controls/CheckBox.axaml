@@ -20,7 +20,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ControlLabelBrush}" />
     <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource CheckBoxBorderThickness}" />
@@ -65,8 +65,8 @@
                     FlowDirection="LeftToRight"
                     Stretch="Fill"
                     Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush}, 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkFill, CheckBoxDisabledCheckMarkFill}, 
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkFill, CheckBoxDisabledInactiveCheckMarkFill}}" />
 
                   <Rectangle
                     Name="IndeterminateMark"
@@ -77,8 +77,8 @@
                     VerticalAlignment="Center"
                     Stretch="Uniform"
                     Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush}, 
-                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkFill, CheckBoxDisabledCheckMarkFill}, 
+                        {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkFill, CheckBoxDisabledInactiveCheckMarkFill}}" />
                 </Panel>
               </Border>
             </Border>
@@ -145,7 +145,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderDisabledBrush}" />
       </Style>
       <Style Selector="^/template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource CheckBoxDisabledTextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ControlDisabledLabelBrush}" />
       </Style>
       <Style Selector="^:checked">
         <Setter Property="Background" Value="{WindowActiveResourceToggler CheckBoxCheckedDisabledBackgroundBrush, CheckBoxCheckedDisabledInactiveBackgroundBrush}" />

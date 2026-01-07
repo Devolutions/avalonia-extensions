@@ -34,6 +34,7 @@
   <SolidColorBrush x:Key="SurfaceT07" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
   <SolidColorBrush x:Key="SurfaceT08" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
   <SolidColorBrush x:Key="SurfaceT10" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
+  <SolidColorBrush x:Key="SurfaceT13" Color="{DynamicResource ForegroundColor}" Opacity="0.13" />
   <SolidColorBrush x:Key="SurfaceT14" Color="{DynamicResource ForegroundColor}" Opacity="0.14" />
   <SolidColorBrush x:Key="SurfaceT15" Color="{DynamicResource ForegroundColor}" Opacity="0.15" />
   <SolidColorBrush x:Key="SurfaceT16" Color="{DynamicResource ForegroundColor}" Opacity="0.16" />
@@ -209,5 +210,9 @@
   <StaticResource x:Key="CheckBoxCheckMarkSize" ResourceKey="ControlSize10" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkWidth" ResourceKey="ControlSize9" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkHeight" ResourceKey="ControlSize3" />
+
+  <!-- DEVELOPMENT ONLY -->
+
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemRegionColor}" Opacity="0.8" />
 
 </ResourceDictionary>

@@ -19,3 +19,9 @@ Please see commits if you're curious. However we will do our best to call out ke
 
 - BREAKING: default vertical alignment of `TextBlock` changed to centred. You may see unwanted changes in
   your layouts.
+-
+
+## v2026.01.08
+
+- BREAKING: Changes to how controls respond to custom height settings. This makes the controls behave more consistently.
+  But if you had your own work-arounds, you may see unwanted changes in your layouts.

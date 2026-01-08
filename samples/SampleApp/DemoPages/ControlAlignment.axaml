@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ControlAlignment">
@@ -23,28 +22,28 @@
         <ComboBox Grid.Column="3" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Combo</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
         <ComboBox Grid.Column="4" IsEditable="True" SelectedIndex="2">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
           <ComboBoxItem>Option 4 much longer</ComboBoxItem>
         </ComboBox>
-        <MultiComboBox Grid.Column="5" Watermark="select...">
+        <EditableComboBox Grid.Column="5">
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+        </EditableComboBox>
+        <MultiComboBox Grid.Column="6" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+          <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Column="6" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-        <EditableComboBox Grid.Column="7">
-          <EditableComboBoxItem Value="Option 1" />
-          <EditableComboBoxItem Value="Option 2" />
-          <EditableComboBoxItem Value="Option 3" />
-        </EditableComboBox>
+        <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
         <AutoCompleteBox Grid.Column="8" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
         <NumericUpDown Grid.Column="9" Value="0"
                        Increment="1"
@@ -67,28 +66,28 @@
         <ComboBox Grid.Row="4" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Combo</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
         <ComboBox Grid.Row="5" IsEditable="True" SelectedIndex="2">
-          <ComboBoxItem>Option 1</ComboBoxItem>
-          <ComboBoxItem>Option 2</ComboBoxItem>
-          <ComboBoxItem>Option 3</ComboBoxItem>
+          <ComboBoxItem>Avalonia</ComboBoxItem>
+          <ComboBoxItem>ComboBox</ComboBoxItem>
+          <ComboBoxItem>IsEditable</ComboBoxItem>
           <ComboBoxItem>Option 4</ComboBoxItem>
         </ComboBox>
-        <MultiComboBox Grid.Row="6" Watermark="select...">
+        <EditableComboBox Grid.Row="6">
+          <EditableComboBoxItem Value="Devolutions" />
+          <EditableComboBoxItem Value="EditableComboBox" />
+          <EditableComboBoxItem Value="Option 3" />
+        </EditableComboBox>
+        <MultiComboBox Grid.Row="7" Watermark="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+          <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Row="7" Watermark="TagInput" />
-        <EditableComboBox Grid.Row="8">
-          <EditableComboBoxItem Value="test1" />
-          <EditableComboBoxItem Value="test2" />
-          <EditableComboBoxItem Value="test3" />
-        </EditableComboBox>
+        <TagInput Grid.Row="8" Watermark="TagInput" />
         <AutoCompleteBox Grid.Row="9" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
         <NumericUpDown Grid.Row="10" Value="0"
                        Increment="1"
@@ -108,31 +107,31 @@
                    IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
           </TextBox>
-          <ComboBox SelectedIndex="2" IsEnabled="False">
+          <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Combo</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-            <ComboBoxItem>Option 1</ComboBoxItem>
-            <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <MultiComboBox Watermark="select...">
+          <EditableComboBox>
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
+          </EditableComboBox>
+          <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-          <EditableComboBox IsEnabled="False">
-            <EditableComboBoxItem Value="test1" />
-            <EditableComboBoxItem Value="test2" />
-            <EditableComboBoxItem Value="test3" />
-          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
@@ -144,34 +143,81 @@
           <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
           <TextBlock Text="🙂" FontSize="45" />
         </StackPanel>
+
+        <TextBlock>Custom Height:</TextBlock>
+        <TextBlock IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">(Visible height 30 requires <TextBlock Classes="code">Height="33"</TextBlock> !)</TextBlock>
+ 
+        <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
+          <TextBlock Height="33">TextBlock</TextBlock>
+          <TextBox Height="33" Watermark="TextBox" />
+          <TextBox Height="22" MinHeight="22" MaxHeight="22"
+                   IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
+            thin
+          </TextBox>
+          <ComboBox Height="33" SelectedIndex="2">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Combo</ComboBoxItem>
+            <ComboBoxItem>Option 4</ComboBoxItem>
+          </ComboBox>
+          <ComboBox Height="33" SelectedIndex="2" IsEditable="True">
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
+            <ComboBoxItem>Option 4</ComboBoxItem>
+          </ComboBox>
+          <EditableComboBox Height="33">
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
+          </EditableComboBox>
+          <MultiComboBox Height="33" Watermark="MultiSelect...">
+            <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 4</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 5</MultiComboBoxItem>
+          </MultiComboBox>
+          <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" Watermark="AutoComplete" />
+          <NumericUpDown Height="33" Value="0"
+                         Increment="1"
+                         Watermark="mm" />
+          <CalendarDatePicker Height="33" />
+          <Button Height="33" Content="Button" />
+          <CheckBox Height="33" Content="Checkbox" IsChecked="True" />
+          <RadioButton Height="33" Content="RadioButton" IsChecked="True" />
+          <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
+          <TextBlock Text="🙂" FontSize="45" />
+        </StackPanel>
         <StackPanel Orientation="Vertical" Width="150" Margin="10 5" Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Left">
           <TextBlock>TextBlock</TextBlock>
           <TextBox Watermark="TextBox" />
           <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Combo</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
           <ComboBox SelectedIndex="2" IsEditable="True">
-            <ComboBoxItem>Option 1</ComboBoxItem>
-            <ComboBoxItem>Option 2</ComboBoxItem>
-            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxItem>Avalonia</ComboBoxItem>
+            <ComboBoxItem>ComboBox</ComboBoxItem>
+            <ComboBoxItem>IsEditable</ComboBoxItem>
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
-          <MultiComboBox Watermark="select...">
+          <EditableComboBox>
+            <EditableComboBoxItem Value="Devolutions" />
+            <EditableComboBoxItem Value="EditableComboBox" />
+            <EditableComboBoxItem Value="Option 3" />
+          </EditableComboBox>
+          <MultiComboBox Watermark="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput Watermark="TagInput" />
-          <EditableComboBox>
-            <EditableComboBoxItem Value="test1" />
-            <EditableComboBoxItem Value="test2" />
-            <EditableComboBoxItem Value="test3" />
-          </EditableComboBox>
           <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"

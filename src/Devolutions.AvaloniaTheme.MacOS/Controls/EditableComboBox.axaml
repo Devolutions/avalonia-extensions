@@ -57,7 +57,7 @@
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
 
   <!-- Need to override default height in EditableComboBox control -->
-  <x:Double x:Key="EditableComboBoxHeight">20</x:Double>
+  <x:Double x:Key="EditableComboBoxHeight">24</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">22</x:Double>
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">
@@ -147,135 +147,139 @@
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
-        <DataValidationErrors ClipToBounds="False">
-          <Panel ClipToBounds="False">
-            <Border
-              Name="BorderElement"
-              Background="{TemplateBinding Background}"
-              BorderBrush="{TemplateBinding BorderBrush}"
-              BorderThickness="{TemplateBinding BorderThickness}"
-              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
-              CornerRadius="{TemplateBinding CornerRadius}"
-              MinWidth="{TemplateBinding MinWidth}"
-              MinHeight="{TemplateBinding MinHeight}"
-              ZIndex="0" />
-
-            <Border
-              Name="BorderHighlightElement"
-              Background="Transparent"
-              BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
-              BorderThickness="{TemplateBinding BorderThickness, 
-                Converter={x:Static DevoConverters.ThicknessExtractor}, 
-                ConverterParameter={x:Static ThicknessSubset.Bottom}}"
-              CornerRadius="{TemplateBinding CornerRadius}"
-              MinWidth="{TemplateBinding MinWidth}"
-              MinHeight="{TemplateBinding MinHeight}"
-              ZIndex="1" />
-
-            <Grid ColumnDefinitions="Auto,*,24,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
-              <ItemsControl
-                Grid.Column="0"
-                Name="PART_InnerLeftContent"
-                ItemsSource="{TemplateBinding InnerLeftContent}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="4 2 0 2" Spacing="2" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-              </ItemsControl>
-
-              <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
-
-              <!-- Background="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}"  -->
+        <Panel Name="ReservedSpaceForFocus"
+               ClipToBounds="False"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <DataValidationErrors ClipToBounds="False">
+            <Panel ClipToBounds="False">
+              <Border
+                Name="BorderElement"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                BoxShadow="{DynamicResource ControlBorderBoxShadow}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                MinWidth="{TemplateBinding MinWidth}"
+                MinHeight="{TemplateBinding MinHeight}"
+                ZIndex="0" />
 
               <Border
-                Name="DropDownGlyphBackground"
-                Grid.Column="2"
-                Width="16"
-                Height="16"
-                CornerRadius="{DynamicResource ControlCornerRadius}"
-                HorizontalAlignment="Right"
-                Margin="0"
-                VerticalAlignment="Center">
-                <PathIcon
-                  Name="DropDownGlyph"
-                  UseLayoutRounding="False"
-                  IsHitTestVisible="False"
-                  Height="8"
-                  Width="9"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Foreground="{WindowActiveBindingToggler 
+                Name="BorderHighlightElement"
+                Background="Transparent"
+                BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
+                BorderThickness="{TemplateBinding BorderThickness, 
+                Converter={x:Static DevoConverters.ThicknessExtractor}, 
+                ConverterParameter={x:Static ThicknessSubset.Bottom}}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                MinWidth="{TemplateBinding MinWidth}"
+                MinHeight="{TemplateBinding MinHeight}"
+                ZIndex="1" />
+
+              <Grid ColumnDefinitions="Auto,*,24,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
+                <ItemsControl
+                  Grid.Column="0"
+                  Name="PART_InnerLeftContent"
+                  ItemsSource="{TemplateBinding InnerLeftContent}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Margin="4 2 0 2" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
+
+                <!-- Background="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundRecessedBrush}"  -->
+
+                <Border
+                  Name="DropDownGlyphBackground"
+                  Grid.Column="2"
+                  Width="16"
+                  Height="16"
+                  CornerRadius="{DynamicResource ControlCornerRadius}"
+                  HorizontalAlignment="Right"
+                  Margin="0"
+                  VerticalAlignment="Center">
+                  <PathIcon
+                    Name="DropDownGlyph"
+                    UseLayoutRounding="False"
+                    IsHitTestVisible="False"
+                    Height="8"
+                    Width="9"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{WindowActiveBindingToggler 
                         {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
                         {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
-                  Data="{StaticResource ChevronPath}">
-                  <PathIcon.RenderTransform>
-                    <ScaleTransform ScaleY="-1" />
-                  </PathIcon.RenderTransform>
-                </PathIcon>
-              </Border>
+                    Data="{StaticResource ChevronPath}">
+                    <PathIcon.RenderTransform>
+                      <ScaleTransform ScaleY="-1" />
+                    </PathIcon.RenderTransform>
+                  </PathIcon>
+                </Border>
 
-              <ItemsControl
-                Grid.Column="3"
-                Name="PART_InnerRightContent"
-                ItemsSource="{TemplateBinding InnerRightContent}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0 2 2 2" Spacing="2" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-              </ItemsControl>
-              <Popup
-                Name="PART_Popup"
-                WindowManagerAddShadowHint="False"
-                IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-                MinWidth="{AddBinding
+                <ItemsControl
+                  Grid.Column="3"
+                  Name="PART_InnerRightContent"
+                  ItemsSource="{TemplateBinding InnerRightContent}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Margin="0 2 2 2" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Popup
+                  Name="PART_Popup"
+                  WindowManagerAddShadowHint="False"
+                  IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                  MinWidth="{AddBinding
                                     {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
                                     24
                                 }"
-                MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                VerticalOffset="2"
-                HorizontalAlignment="Stretch"
-                IsLightDismissEnabled="True"
-                OverlayDismissEventPassThrough="True"
-                InheritsTransform="True"
-                ClipToBounds="False">
-                <Border
-                  x:Name="PopupBorder"
-                  Background="{DynamicResource PopupBackgroundBrush}"
-                  BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                  BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                  Padding="{DynamicResource PopupPadding}"
+                  MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                  VerticalOffset="2"
                   HorizontalAlignment="Stretch"
-                  BoxShadow="{DynamicResource PopupShadow}"
-                  Margin="{DynamicResource PopupMargin}"
-                  CornerRadius="{DynamicResource LayoutCornerRadius}">
-                  <ScrollViewer
-                    CornerRadius="{DynamicResource LayoutCornerRadius}"
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                    IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
-                    <ItemsPresenter
-                      Name="PART_ItemsPresenter"
-                      Margin="{DynamicResource AutoCompleteListPadding}"
-                      ItemsPanel="{TemplateBinding ItemsPanel}">
-                      <ItemsPresenter.Styles>
-                        <Style Selector="StackPanel">
-                          <Setter Property="Spacing" Value="1" />
-                        </Style>
-                      </ItemsPresenter.Styles>
-                    </ItemsPresenter>
-                  </ScrollViewer>
-                </Border>
-              </Popup>
-            </Grid>
+                  IsLightDismissEnabled="True"
+                  OverlayDismissEventPassThrough="True"
+                  InheritsTransform="True"
+                  ClipToBounds="False">
+                  <Border
+                    x:Name="PopupBorder"
+                    Background="{DynamicResource PopupBackgroundBrush}"
+                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                    BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
+                    Padding="{DynamicResource PopupPadding}"
+                    HorizontalAlignment="Stretch"
+                    BoxShadow="{DynamicResource PopupShadow}"
+                    Margin="{DynamicResource PopupMargin}"
+                    CornerRadius="{DynamicResource LayoutCornerRadius}">
+                    <ScrollViewer
+                      CornerRadius="{DynamicResource LayoutCornerRadius}"
+                      HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                      IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
+                      <ItemsPresenter
+                        Name="PART_ItemsPresenter"
+                        Margin="{DynamicResource AutoCompleteListPadding}"
+                        ItemsPanel="{TemplateBinding ItemsPanel}">
+                        <ItemsPresenter.Styles>
+                          <Style Selector="StackPanel">
+                            <Setter Property="Spacing" Value="1" />
+                          </Style>
+                        </ItemsPresenter.Styles>
+                      </ItemsPresenter>
+                    </ScrollViewer>
+                  </Border>
+                </Popup>
+              </Grid>
 
-            <Border Name="FocusBorderElement"
-                    Margin="-3"
-                    BorderThickness="4"
-                    CornerRadius="5" />
-          </Panel>
-        </DataValidationErrors>
+              <Border Name="FocusBorderElement"
+                      Margin="{StaticResource FocusBorderMargin}"
+                      BorderThickness="{StaticResource FocusBorderThickness}"
+                      CornerRadius="7" />
+            </Panel>
+          </DataValidationErrors>
+        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -338,12 +342,13 @@
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="MinHeight" Value="20" />
     <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource TextBoxBorderThickness}" />
-    <Setter Property="Padding" Value="4 3 2 3" />
+    <Setter Property="Padding" Value="4 0 2 0" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
     <Setter Property="ClipToBounds" Value="False" />
   </ControlTheme>

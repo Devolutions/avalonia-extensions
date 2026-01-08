@@ -60,7 +60,7 @@
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
@@ -77,7 +77,8 @@
 
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus" Margin="{StaticResource InputControlsSpaceForFocusBorder}">
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <Border
             Name="border"
             Background="{TemplateBinding Background}"

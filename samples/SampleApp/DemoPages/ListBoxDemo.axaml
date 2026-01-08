@@ -75,6 +75,45 @@
         </ItemsControl.ItemTemplate>
       </ListBox>
     </Grid>
+    
+    <ListBox
+         Name="animals8"
+         HorizontalAlignment="Stretch">
+      <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+              <VirtualizingStackPanel HorizontalAlignment="Stretch" />
+          </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.ItemTemplate>
+          <DataTemplate>
+              <Grid RowDefinitions="*,*" Height="34" ColumnDefinitions="Auto,2*,*">
+                <Rectangle Width="24"
+                           Height="24"
+                           RadiusX="12"
+                           RadiusY="12"
+                           Fill="Red"
+                           Margin="5"/>
+
+                  <TextBlock Grid.Row="0" Grid.Column="1"
+                             Text="Name"
+                             FontWeight="Bold"
+                             TextTrimming="CharacterEllipsis"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Center" />
+
+                  <!-- Item Type -->
+                  <TextBlock Grid.Row="0" Grid.Column="2"
+                             Text="Relatively/Long/Path/To/Item"
+                             Opacity="0.6"
+                             TextTrimming="CharacterEllipsis"
+                             TextAlignment="Right"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center" />
+                
+              </Grid>
+          </DataTemplate>
+      </ListBox.ItemTemplate>
+  </ListBox>
   </StackPanel>
 
 </UserControl>

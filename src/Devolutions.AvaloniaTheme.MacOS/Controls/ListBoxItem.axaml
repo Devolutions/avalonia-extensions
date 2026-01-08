@@ -10,7 +10,7 @@
   <!-- <ResourceDictionary.MergedDictionaries> -->
   <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
   <!-- </ResourceDictionary.MergedDictionaries> -->
-  
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="10">
       <StackPanel Width="200">
@@ -32,9 +32,9 @@
         <Border Name="RootPanel"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Background="Transparent">
-          <StackPanel Orientation="Horizontal"
-                      Margin="{TemplateBinding Padding}">
+          <DockPanel Margin="{TemplateBinding Padding}">
             <Path Name="CheckMark"
+                  DockPanel.Dock="Left"
                   Width="10"
                   Height="10"
                   HorizontalAlignment="Center"
@@ -57,7 +57,7 @@
                               BorderThickness="{TemplateBinding BorderThickness}"
                               Content="{TemplateBinding Content}"
                               ContentTemplate="{TemplateBinding ContentTemplate}" />
-          </StackPanel>
+          </DockPanel>
         </Border>
       </ControlTemplate>
     </Setter>

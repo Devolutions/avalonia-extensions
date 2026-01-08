@@ -77,8 +77,7 @@
     </Grid>
     
     <ListBox
-         Name="animals8"
-         HorizontalAlignment="Stretch">
+         Name="animals8">
       <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
               <VirtualizingStackPanel HorizontalAlignment="Stretch" />

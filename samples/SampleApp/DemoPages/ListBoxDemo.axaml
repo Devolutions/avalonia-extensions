@@ -2,18 +2,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.ListBoxDemo">
 
 
   <StackPanel Margin="20" Spacing="20" VerticalAlignment="Stretch">
-    <ListBox>
-      <ListBoxItem>No</ListBoxItem>
-      <ListBoxItem IsSelected="True">Yes</ListBoxItem>
-      <ListBoxItem IsEnabled="False">Disabled</ListBoxItem>
-    </ListBox>
+    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="20">
+      <ListBox Grid.Column="0" HorizontalAlignment="Left">
+        <ListBoxItem>No</ListBoxItem>
+        <ListBoxItem IsSelected="True">Yes</ListBoxItem>
+        <ListBoxItem IsEnabled="False">Disabled</ListBoxItem>
+      </ListBox>
+      <ListBox Grid.Column="1">
+        <ListBoxItem>
+          <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+            <TextBlock Grid.Column="0">No</TextBlock>
+            <TextBlock Grid.Column="1">(reject)</TextBlock>
+          </Grid>
+        </ListBoxItem>
+        <ListBoxItem IsSelected="True">
+          <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+            <TextBlock Grid.Column="0">Yes</TextBlock>
+            <TextBlock Grid.Column="1">(affirmative)</TextBlock>
+          </Grid>
+        </ListBoxItem>
+        <ListBoxItem IsEnabled="False">
+          <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+            <TextBlock Grid.Column="0">Disabled</TextBlock>
+            <TextBlock Grid.Column="1">(you can't pick this)</TextBlock>
+          </Grid>
+        </ListBoxItem>
+      </ListBox>
+    </Grid>
     <!-- Top row of simple ListBoxes -->
     <StackPanel Orientation="Horizontal" Spacing="20" Height="122">
       <TextBlock VerticalAlignment="Top" Margin="0 5">Single selection:<LineBreak />(custom width)</TextBlock>
@@ -22,7 +43,7 @@
       <ListBox x:Name="animals2" SelectionMode="Multiple" />
 
       <TextBlock VerticalAlignment="Top" Margin="15 5 0 5" TextWrapping="Wrap" Width="130">Scrolling: <LineBreak /> (requires <TextBlock Classes="code">Width</TextBlock> set to fit longest entry, or the width will change during scrolling)</TextBlock>
-      <ListBox x:Name="animals4" Width="115" CornerRadius="8" HorizontalAlignment="Left"/>
+      <ListBox x:Name="animals4" Width="115" CornerRadius="8" HorizontalAlignment="Left" />
     </StackPanel>
 
     <!-- Bottom row of multi-column ListBoxes -->

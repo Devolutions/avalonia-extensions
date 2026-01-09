@@ -46,10 +46,10 @@
                         {DynamicResource MultiColumnListBoxBorderPadding},
                         {DynamicResource ComboBoxItemBorderPadding}}">
             
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Stretch">
+            <DockPanel HorizontalAlignment="Stretch">
               <Border
                 Name="SingleColumnListBox_SelectionHighlight"
+                DockPanel.Dock="Left"
                 IsVisible="{Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsNotMultiColumnListBox}}"
                 Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
                 Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
@@ -67,7 +67,7 @@
                 Content="{TemplateBinding Content}"
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-            </StackPanel>
+            </DockPanel>
           </Border>
           <Border Name="MultiColumnListBox_SelectionBorder"
                   IsVisible="{Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}}"

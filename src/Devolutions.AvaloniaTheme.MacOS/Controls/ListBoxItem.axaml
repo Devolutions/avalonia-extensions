@@ -10,7 +10,7 @@
   <!-- <ResourceDictionary.MergedDictionaries> -->
   <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
   <!-- </ResourceDictionary.MergedDictionaries> -->
-  
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="10">
       <StackPanel Width="200">
@@ -27,38 +27,47 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="RootPanel"
-                CornerRadius="{TemplateBinding CornerRadius}"
-                Background="Transparent">
-          <StackPanel Orientation="Horizontal"
-                      Margin="{TemplateBinding Padding}">
-            <Path Name="CheckMark"
-                  Width="10"
-                  Height="10"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Data="{DynamicResource CheckMarkPath}"
-                  Fill="Transparent"
-                  FlowDirection="LeftToRight"
-                  Stretch="Fill">
-              <Path.IsVisible>
-                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBox}" Path="Classes" Converter="{x:Static DevoConverters.HasNotClass}"
-                         ConverterParameter="selection_checkmark_off" />
-              </Path.IsVisible>
-            </Path>
-            <ContentPresenter Name="PART_ContentPresenter"
-                              Padding=" 4 0 2 0"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              Foreground="{TemplateBinding Foreground}"
-                              BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="{TemplateBinding BorderThickness}"
-                              Content="{TemplateBinding Content}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}" />
-          </StackPanel>
-        </Border>
+        <Panel Name="ReservedSpaceForFocus">
+          <Border Name="RootPanel"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Background="Transparent">
+            <DockPanel Margin="{TemplateBinding Padding}">
+              <Path Name="CheckMark"
+                    DockPanel.Dock="Left"
+                    Width="10"
+                    Height="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="{DynamicResource CheckMarkPath}"
+                    Fill="Transparent"
+                    FlowDirection="LeftToRight"
+                    Stretch="Fill">
+                <Path.IsVisible>
+                  <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBox}" Path="Classes" Converter="{x:Static DevoConverters.HasNotClass}"
+                           ConverterParameter="selection_checkmark_off" />
+                </Path.IsVisible>
+              </Path>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Padding=" 4 0 2 0"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Foreground="{TemplateBinding Foreground}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </DockPanel>
+          </Border>
+          <Border Name="FocusBorderElement"
+                  IsHitTestVisible="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  CornerRadius="7" />
+        </Panel>
       </ControlTemplate>
     </Setter>
     <Style Selector="^:selected /template/ Path#CheckMark">
@@ -78,6 +87,13 @@
 
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+    </Style>
+
+    <Style Selector="^:focus-visible">
+      <Setter Property="ZIndex" Value="1" />
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+      </Style>
     </Style>
 
   </ControlTheme>

@@ -9,8 +9,10 @@
              x:Name="Root">
 
   <UserControl.Resources>
-    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter2" LightnessAdjustment="-0.00806" ChromaAdjustment="-0.00446" HueAdjustment="5.07" /> <!-- correct!!! -->
-    <SolidColorBrush x:Key="TestOklchCheckBox" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchCheckBoxLightConverter2}}" Opacity="0.43" />
+    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter" LightnessAdjustment="-0.00806" ChromaAdjustment="-0.00446" HueAdjustment="5.07" /> <!-- correct!!! -->
+    <converters:OklchAdjustmentConverter x:Key="OklchFocusLightConverter" LightnessAdjustment="-0.02985" ChromaAdjustment="0.03737" HueAdjustment="7" />
+    <SolidColorBrush x:Key="OklchCheckBoxBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchCheckBoxLightConverter}}" Opacity="0.43" />
+    <SolidColorBrush x:Key="OklchFocusOutlineBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchFocusLightConverter}}" Opacity="0.49" />
   </UserControl.Resources>
 
   <StackPanel>
@@ -106,13 +108,23 @@
         </ItemsControl>
       </Border>
     </StackPanel>
-    
+
+    <TextBlock>LiquidGlass checked disabled CheckBox colour</TextBlock>
     <StackPanel Orientation="Horizontal">
       <Border Background="White">
-        <Rectangle Fill="{StaticResource TestOklchCheckBox}" Width="50" Height="50" ToolTip.Tip="TestOklchCheckBox" />
+        <Rectangle Fill="{StaticResource OklchCheckBoxBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxBrush" />
       </Border>
       <Border Background="Black">
-        <Rectangle Fill="{StaticResource TestOklchCheckBox}" Width="50" Height="50" ToolTip.Tip="TestOklchCheckBox" />
+        <Rectangle Fill="{StaticResource OklchCheckBoxBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxBrush" />
+      </Border>
+    </StackPanel>
+    <TextBlock>LiquidGlass Focus outline colour</TextBlock>
+    <StackPanel Orientation="Horizontal">
+      <Border Background="White">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineBrush" />
+      </Border>
+      <Border Background="Black">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineBrush" />
       </Border>
     </StackPanel>
   </StackPanel>

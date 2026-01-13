@@ -9,9 +9,9 @@
              x:Name="Root">
 
   <UserControl.Resources>
-    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter" LightnessAdjustment="-0.00806" ChromaAdjustment="-0.00446" HueAdjustment="5.07" /> <!-- correct!!! -->
-    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxDarkConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.07" />
-    <converters:OklchAdjustmentConverter x:Key="OklchFocusLightConverter" LightnessAdjustment="-0.02985" ChromaAdjustment="0.03737" HueAdjustment="7" />
+    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" /> <!-- correct!!! -->
+    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxDarkConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
+    <converters:OklchAdjustmentConverter x:Key="OklchFocusLightConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
     <converters:OklchAdjustmentConverter x:Key="OklchFocusDarkConverter" LightnessAdjustment="0.15" ChromaAdjustment="0" HueAdjustment="3" />
     <SolidColorBrush x:Key="OklchCheckBoxLightModeBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchCheckBoxLightConverter}}"
                      Opacity="0.43" />
@@ -124,7 +124,7 @@
       <Border Background="Black">
         <Rectangle Fill="{StaticResource OklchCheckBoxLightModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxLightModeBrush" />
       </Border>
-      <TextBlock>LiquidGlass checked disabled CheckBox colour Light mode</TextBlock>
+      <TextBlock Margin="10 0 0 0">LiquidGlass checked disabled CheckBox colour Light mode</TextBlock>
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <Border Background="White">
@@ -133,7 +133,7 @@
       <Border Background="Black">
         <Rectangle Fill="{StaticResource OklchCheckBoxDarkModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxDarkModeBrush" />
       </Border>
-      <TextBlock>LiquidGlass checked disabled CheckBox colour Dark mode</TextBlock>
+      <TextBlock Margin="10 0 0 0">LiquidGlass checked disabled CheckBox colour Dark mode</TextBlock>
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <Border Background="White">
@@ -142,7 +142,7 @@
       <Border Background="Black">
         <Rectangle Fill="{StaticResource OklchFocusOutlineLightBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineLightBrush" />
       </Border>
-      <TextBlock>LiquidGlass Focus outline colour Light mode</TextBlock>
+      <TextBlock Margin="10 0 0 0">LiquidGlass Focus outline colour Light mode</TextBlock>
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <Border Background="White">
@@ -151,7 +151,7 @@
       <Border Background="Black">
         <Rectangle Fill="{StaticResource OklchFocusOutlineDarkBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineDarkBrush" />
       </Border>
-      <TextBlock>LiquidGlass Focus outline colour Dark mode</TextBlock>
+      <TextBlock Margin="10 0 0 0">LiquidGlass Focus outline colour Dark mode</TextBlock>
     </StackPanel>
   </StackPanel>
 </UserControl>

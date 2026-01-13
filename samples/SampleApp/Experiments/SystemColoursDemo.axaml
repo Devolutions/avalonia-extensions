@@ -2,40 +2,156 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
+             xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters;assembly=Devolutions.AvaloniaTheme.MacOS"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SampleApp.Experiments.SystemColoursDemo">
+             x:Class="SampleApp.Experiments.SystemColoursDemo"
+             x:Name="Root">
+
+  <UserControl.Resources>
+    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" /> <!-- correct!!! -->
+    <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxDarkConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
+    <converters:OklchAdjustmentConverter x:Key="OklchFocusLightConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
+    <converters:OklchAdjustmentConverter x:Key="OklchFocusDarkConverter" LightnessAdjustment="0.15" ChromaAdjustment="0" HueAdjustment="3" />
+    <SolidColorBrush x:Key="OklchCheckBoxLightModeBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchCheckBoxLightConverter}}"
+                     Opacity="0.43" />
+    <SolidColorBrush x:Key="OklchCheckBoxDarkModeBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchCheckBoxDarkConverter}}"
+                     Opacity="0.43" />
+    <SolidColorBrush x:Key="OklchFocusOutlineLightBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchFocusLightConverter}}"
+                     Opacity="0.49" />
+    <SolidColorBrush x:Key="OklchFocusOutlineDarkBrush" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource OklchFocusDarkConverter}}"
+                     Opacity="0.49" />
+  </UserControl.Resources>
+
   <StackPanel>
-    <TextBlock Margin="0 10" TextWrapping="Wrap">System accent colours are exposed by the operating system and retrieved through Avalonia Fluent (<HyperlinkButton HorizontalAlignment="Center" Margin="0" Padding="0" NavigateUri="https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs">SystemAccentColors.cs</HyperlinkButton>)
-      where lighter and darker variants are also calculated. </TextBlock>
+    <TextBlock Margin="0 10" TextWrapping="Wrap">
+      System accent colours are exposed by the operating system and retrieved through Avalonia Fluent (
+      <HyperlinkButton HorizontalAlignment="Center" Margin="0" Padding="0"
+                       NavigateUri="https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs">
+        SystemAccentColors.cs
+      </HyperlinkButton>
+      )
+      where lighter and darker variants are also calculated.
+    </TextBlock>
     <TextBlock Margin="0 0 0 10"
                TextWrapping="Wrap"
                IsVisible="{ext:ThemeIsOneOf 'Linux'}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
-      </TextBlock>
+    </TextBlock>
     <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">
-    <TextBlock Grid.Row="0" Grid.Column="0">SystemAccentColorLight3</TextBlock>
-    <TextBlock Grid.Row="1" Grid.Column="0">SystemAccentColorLight2</TextBlock>
-    <TextBlock Grid.Row="2" Grid.Column="0">SystemAccentColorLight1</TextBlock>
-    <TextBlock Grid.Row="3" Grid.Column="0">SystemAccentColor</TextBlock>
-    <TextBlock Grid.Row="4" Grid.Column="0">SystemAccentColorDark1</TextBlock>
-    <TextBlock Grid.Row="5" Grid.Column="0">SystemAccentColorDark2</TextBlock>
-    <TextBlock Grid.Row="6" Grid.Column="0">SystemAccentColorDark3</TextBlock>
-    <Rectangle Grid.Row="0" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight3}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="1" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight2}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="2" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight1}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="3" Grid.Column="1" Fill="{StaticResource SystemAccentColor}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="4" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark1}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="5" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark2}" Width="20"
-               Height="20" />
-    <Rectangle Grid.Row="6" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark3}" Width="20"
-               Height="20" />
-  </Grid>
+      <TextBlock Grid.Row="0" Grid.Column="0">SystemAccentColorLight3</TextBlock>
+      <TextBlock Grid.Row="1" Grid.Column="0">SystemAccentColorLight2</TextBlock>
+      <TextBlock Grid.Row="2" Grid.Column="0">SystemAccentColorLight1</TextBlock>
+      <TextBlock Grid.Row="3" Grid.Column="0">SystemAccentColor</TextBlock>
+      <TextBlock Grid.Row="4" Grid.Column="0">SystemAccentColorDark1</TextBlock>
+      <TextBlock Grid.Row="5" Grid.Column="0">SystemAccentColorDark2</TextBlock>
+      <TextBlock Grid.Row="6" Grid.Column="0">SystemAccentColorDark3</TextBlock>
+      <Rectangle Grid.Row="0" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight3}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="1" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight2}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="2" Grid.Column="1" Fill="{StaticResource SystemAccentColorLight1}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="3" Grid.Column="1" Fill="{StaticResource SystemAccentColor}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="4" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark1}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="5" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark2}" Width="20"
+                 Height="20" />
+      <Rectangle Grid.Row="6" Grid.Column="1" Fill="{StaticResource SystemAccentColorDark3}" Width="20"
+                 Height="20" />
+    </Grid>
+
+    <TextBlock Classes="section-title" Margin="0 50 0 0">SystemAccentColor with Transparency (1-100%)</TextBlock>
+    <StackPanel Orientation="Horizontal" Spacing="30">
+      <Border Background="White" Margin="0,20,0,0" Padding="10" HorizontalAlignment="Left">
+        <ItemsControl ItemsSource="{Binding #Root.OpacityValues}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Columns="10" Rows="10" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Rectangle Width="30" Height="30" Margin="2"
+                         Fill="{StaticResource SystemAccentColor}"
+                         Opacity="{Binding}"
+                         ToolTip.Tip="{Binding StringFormat={}{0:P0}}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <Border Background="Transparent" Margin="0,20,0,0" Padding="10" HorizontalAlignment="Left">
+        <ItemsControl ItemsSource="{Binding #Root.OpacityValues}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Columns="10" Rows="10" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Rectangle Width="30" Height="30" Margin="2"
+                         Fill="{StaticResource SystemAccentColor}"
+                         Opacity="{Binding}"
+                         ToolTip.Tip="{Binding StringFormat={}{0:P0}}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <Border Background="#21222F" Margin="0,20,0,0" Padding="10" HorizontalAlignment="Left">
+        <ItemsControl ItemsSource="{Binding #Root.OpacityValues}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Columns="10" Rows="10" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Rectangle Width="30" Height="30" Margin="2"
+                         Fill="{StaticResource SystemAccentColor}"
+                         Opacity="{Binding}"
+                         ToolTip.Tip="{Binding StringFormat={}{0:P0}}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Orientation="Horizontal">
+      <Border Background="White">
+        <Rectangle Fill="{StaticResource OklchCheckBoxLightModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxLightModeBrush" />
+      </Border>
+      <Border Background="Black">
+        <Rectangle Fill="{StaticResource OklchCheckBoxLightModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxLightModeBrush" />
+      </Border>
+      <TextBlock Margin="10 0 0 0">LiquidGlass checked disabled CheckBox colour Light mode</TextBlock>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Border Background="White">
+        <Rectangle Fill="{StaticResource OklchCheckBoxDarkModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxDarkModeBrush" />
+      </Border>
+      <Border Background="Black">
+        <Rectangle Fill="{StaticResource OklchCheckBoxDarkModeBrush}" Width="50" Height="50" ToolTip.Tip="OklchCheckBoxDarkModeBrush" />
+      </Border>
+      <TextBlock Margin="10 0 0 0">LiquidGlass checked disabled CheckBox colour Dark mode</TextBlock>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Border Background="White">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineLightBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineLightBrush" />
+      </Border>
+      <Border Background="Black">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineLightBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineLightBrush" />
+      </Border>
+      <TextBlock Margin="10 0 0 0">LiquidGlass Focus outline colour Light mode</TextBlock>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Border Background="White">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineDarkBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineDarkBrush" />
+      </Border>
+      <Border Background="Black">
+        <Rectangle Fill="{StaticResource OklchFocusOutlineDarkBrush}" Width="50" Height="50" ToolTip.Tip="OklchFocusOutlineDarkBrush" />
+      </Border>
+      <TextBlock Margin="10 0 0 0">LiquidGlass Focus outline colour Dark mode</TextBlock>
+    </StackPanel>
   </StackPanel>
 </UserControl>

@@ -15,8 +15,11 @@
   <Color x:Key="AccentForegroundColor">#ffffff</Color>
 
   <!-- MARK: Converters -->
-  <converters:ColorAdjustmentConverter x:Key="LightFocusColorConverter" SaturationAdjustment="-50" />
-  <converters:ColorAdjustmentConverter x:Key="DarkFocusColorConverter" SaturationAdjustment="-20" BrightnessAdjustment="-33" />
+  <converters:OklchAdjustmentConverter x:Key="LightModeFocusColorConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
+  <converters:OklchAdjustmentConverter x:Key="DarkModeFocusColorConverter" LightnessAdjustment="0.15" ChromaAdjustment="0" HueAdjustment="3" />
+
+  <converters:OklchAdjustmentConverter x:Key="LightModeAccentBackgroundWashConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" />
+  <converters:OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
   <!-- MARK: Brushes -->
 
@@ -125,10 +128,12 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
+                       Opacity="0.43" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightFocusColorConverter}}" />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
@@ -147,7 +152,7 @@
       <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="SystemAccentD04" />
       <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
       <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="SurfaceT15" />
-      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="SystemAccentT48" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="AccentBackgroundWash" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT08" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
       <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />
@@ -161,10 +166,11 @@
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}" Opacity="0.43" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkFocusColorConverter}}" />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
@@ -183,7 +189,7 @@
       <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="SystemAccentD03" />
       <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentH13" />
       <StaticResource x:Key="CheckBoxCheckedInactiveBackgroundBrush" ResourceKey="SurfaceT14" />
-      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="SystemAccentT48" />
+      <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="AccentBackgroundWash" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT07" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
       <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />

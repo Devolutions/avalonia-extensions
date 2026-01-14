@@ -62,6 +62,12 @@
           </TabItem.Header>
           <demoPages:ContextMenuDemo />
         </TabItem>
+        <TabItem IsSelected="True">
+          <TabItem.Header>
+            <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="DevExpress" />
+          </TabItem.Header>
+          <demoPages:DropDownButtonDemo />
+        </TabItem>
         <TabItem>
           <TabItem.Header>
             <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />

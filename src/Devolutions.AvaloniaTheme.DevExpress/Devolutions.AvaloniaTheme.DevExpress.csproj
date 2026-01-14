@@ -38,6 +38,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.3.7,)"/>
     <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="[11.3.7,)"/>
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
     <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
     <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 

@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
+             x:Class="SampleApp.DemoPages.ColorPickerDemo">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      <TextBlock Classes="h1">ColorPicker</TextBlock>
+
+      <Grid ColumnDefinitions="400 *">
+        <StackPanel Grid.Column="0" Spacing="20">
+          <TextBlock Classes="section-title">Default ColorPicker</TextBlock>
+          <ColorPicker />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Spacing="40">
+          <StackPanel Spacing="20">
+            <TextBlock Classes="section-title">ColorView (Embedded)</TextBlock>
+            <ColorView HorizontalAlignment="Left" />
+          </StackPanel>
+
+          <StackPanel Spacing="20">
+            <TextBlock Classes="section-title">ColorSpectrum</TextBlock>
+            <WrapPanel>
+              <ColorSpectrum Width="200" Height="200" />
+              <ColorSpectrum Width="200" Height="200" Shape="Ring" Margin="20,0,0,0" />
+            </WrapPanel>
+          </StackPanel>
+
+          <StackPanel Spacing="20">
+            <TextBlock Classes="section-title">ColorSlider</TextBlock>
+            <ColorSlider Width="200" Orientation="Horizontal" ColorModel="Hsva" ColorComponent="Component1" HorizontalAlignment="Left" />
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

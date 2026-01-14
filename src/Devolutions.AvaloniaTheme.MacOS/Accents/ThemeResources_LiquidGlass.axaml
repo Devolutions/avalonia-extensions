@@ -112,10 +112,12 @@
   <x:Double x:Key="ControlSize16">16</x:Double>
   <x:Double x:Key="ControlSize10">10</x:Double>
   <x:Double x:Key="ControlSize9">9</x:Double>
+  <x:Double x:Key="ControlSize5">5</x:Double>
   <x:Double x:Key="ControlSize3">3</x:Double>
 
   <!-- MARK: Radii -->
 
+  <CornerRadius x:Key="Radius8">8</CornerRadius>
   <CornerRadius x:Key="Radius6">6</CornerRadius>
   <CornerRadius x:Key="Radius5">5</CornerRadius>
 
@@ -155,11 +157,25 @@
       <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="AccentBackgroundWash" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT08" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
-      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />
-      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="AccentForegroundT49" />
-      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="ForegroundT85" />
-      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="ForegroundT26" />
+      <StaticResource x:Key="CheckBoxCheckMarkBrush" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkBrush" ResourceKey="AccentForegroundT49" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkBrush" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
+
+      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
 
     </ResourceDictionary>
 
@@ -192,11 +208,25 @@
       <StaticResource x:Key="CheckBoxCheckedDisabledBackgroundBrush" ResourceKey="AccentBackgroundWash" />
       <StaticResource x:Key="CheckBoxCheckedDisabledInactiveBackgroundBrush" ResourceKey="SurfaceT07" />
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="SurfaceT05" />
-      <StaticResource x:Key="CheckBoxCheckMarkFill" ResourceKey="AccentForeground" />
-      <StaticResource x:Key="CheckBoxDisabledCheckMarkFill" ResourceKey="AccentForegroundT51" />
-      <StaticResource x:Key="CheckBoxInactiveCheckMarkFill" ResourceKey="AccentForegroundT84" />
-      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkFill" ResourceKey="AccentForegroundT25" />
+      <StaticResource x:Key="CheckBoxCheckMarkBrush" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="CheckBoxDisabledCheckMarkBrush" ResourceKey="AccentForegroundT51" />
+      <StaticResource x:Key="CheckBoxInactiveCheckMarkBrush" ResourceKey="AccentForegroundT84" />
+      <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="AccentForegroundT25" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
+
+      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
+      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
@@ -216,6 +246,12 @@
   <StaticResource x:Key="CheckBoxCheckMarkSize" ResourceKey="ControlSize10" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkWidth" ResourceKey="ControlSize9" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkHeight" ResourceKey="ControlSize3" />
+
+  <StaticResource x:Key="RadioButtonCornerRadius" ResourceKey="Radius8" />
+  <StaticResource x:Key="RadioButtonBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="RadioButtonSize" ResourceKey="ControlSize16" />
+  <StaticResource x:Key="RadioButtonCheckMarkSize" ResourceKey="ControlSize5" />
+  <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
 
   <!-- DEVELOPMENT ONLY -->
 

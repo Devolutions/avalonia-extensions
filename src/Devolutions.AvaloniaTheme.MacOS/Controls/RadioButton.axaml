@@ -25,9 +25,10 @@
 
   <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource RadioButtonBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource RadioButtonBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource RadioButtonCornerRadius}" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Left" />
@@ -48,22 +49,22 @@
               CornerRadius="10">
               <Border
                 Name="ControlBorder"
-                Width="14"
-                Height="14"
+                Width="{DynamicResource RadioButtonSize}"
+                Height="{DynamicResource RadioButtonSize}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="7"
-                BoxShadow="{DynamicResource ControlBackgroundRecessedShadow}">
+                CornerRadius="{TemplateBinding CornerRadius}"
+                BoxShadow="{DynamicResource RadioButtonBoxShadow}">
                 <Ellipse
                   Name="CheckGlyph"
                   IsVisible="False"
-                  Width="6"
-                  Height="6"
+                  Width="{DynamicResource RadioButtonCheckMarkSize}"
+                  Height="{DynamicResource RadioButtonCheckMarkSize}"
                   Fill="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
+                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonCheckMarkBrush, RadioButtonDisabledCheckMarkBrush}, 
+                        {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonInactiveCheckMarkBrush, RadioButtonDisabledInactiveCheckMarkBrush}}"
                   UseLayoutRounding="False" />
               </Border>
             </Border>
@@ -95,7 +96,7 @@
 
     <!--  Checked State  -->
     <Style Selector="^:checked">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler RadioButtonCheckedBackgroundBrush, RadioButtonCheckedInactiveBackgroundBrush}" />
       <Style Selector="^/template/ Border#ControlBorder">
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
         <Setter Property="BoxShadow" Value="0 0 Transparent" /> <!-- TODO: How do you set it to None? -->
@@ -108,26 +109,27 @@
     <!--  Pressed State  -->
     <Style Selector="^:pressed">
       <Style Selector="^ /template/ Border#ControlBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource RadioButtonPressedBackgroundBrush}" />
       </Style>
       <Style Selector="^:checked /template/ Border#ControlBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedPressedBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource RadioButtonCheckedPressedBackgroundBrush}" />
       </Style>
     </Style>
 
     <!--  Disabled State  -->
     <Style Selector="^:disabled">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
+      <Setter Property="Background" Value="{DynamicResource RadioButtonDisabledBackgroundBrush}" />
       <Style Selector="^/template/ Border#ControlBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderDisabledBrush}" />
       </Style>
       <Style Selector="^/template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ControlDisabledLabelBrush}" />
       </Style>
       <Style Selector="^:checked">
+        <Setter Property="Background" Value="{WindowActiveResourceToggler RadioButtonCheckedDisabledBackgroundBrush, RadioButtonCheckedDisabledInactiveBackgroundBrush}" />
         <Style Selector="^/template/ Border#ControlBorder">
-          <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-          <Setter Property="BoxShadow" Value="{DynamicResource ControlBackgroundRecessedShadow}" />
+          <Setter Property="BorderThickness" Value="{DynamicResource RadioButtonBorderThickness}" />
+          <Setter Property="BoxShadow" Value="{DynamicResource RadioButtonBoxShadow}" />
         </Style>
         <Style Selector="^/template/ Ellipse#CheckGlyph">
           <Setter Property="IsVisible" Value="True" />

@@ -152,7 +152,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+            <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:RadioButtonDemo />
         </TabItem>

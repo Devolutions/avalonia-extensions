@@ -29,6 +29,7 @@
       <FluentTheme />
       <addons:DataGridFluentTheme />
       <addons:TreeDataGridFluentTheme />
+      <addons:ColorPickerFluentTheme />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">

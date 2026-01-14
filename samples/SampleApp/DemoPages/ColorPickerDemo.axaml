@@ -9,17 +9,10 @@
     <StackPanel Spacing="20" Margin="20">
       <TextBlock Classes="h1">ColorPicker</TextBlock>
 
-      <Grid ColumnDefinitions="400 *">
-        <StackPanel Grid.Column="0" Spacing="20">
-          <TextBlock Classes="section-title">Default ColorPicker</TextBlock>
-          <ColorPicker />
-        </StackPanel>
+      <Grid ColumnDefinitions="400 *" RowDefinitions="Auto Auto" RowSpacing="40">
+        <ColorPicker Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" />
 
-        <StackPanel Grid.Column="1" Spacing="40">
-          <StackPanel Spacing="20">
-            <TextBlock Classes="section-title">ColorView (Embedded)</TextBlock>
-            <ColorView HorizontalAlignment="Left" />
-          </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Spacing="40">
 
           <StackPanel Spacing="20">
             <TextBlock Classes="section-title">ColorSpectrum</TextBlock>
@@ -33,6 +26,15 @@
             <TextBlock Classes="section-title">ColorSlider</TextBlock>
             <ColorSlider Width="200" Orientation="Horizontal" ColorModel="Hsva" ColorComponent="Component1" HorizontalAlignment="Left" />
           </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="20">
+          <TextBlock Classes="section-title">ColorView (Embedded)</TextBlock>
+          <WrapPanel Orientation="Horizontal">
+            <ColorView HorizontalAlignment="Left" SelectedIndex="0" Margin="0,0,20,20" />
+            <ColorView HorizontalAlignment="Left" SelectedIndex="1" Margin="0,0,20,20" />
+            <ColorView HorizontalAlignment="Left" SelectedIndex="2" Margin="0,0,20,20" />
+          </WrapPanel>
         </StackPanel>
       </Grid>
 

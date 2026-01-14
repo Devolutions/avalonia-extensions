@@ -52,6 +52,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="ColorPicker" ApplicableTo="DevExpress" />
+          </TabItem.Header>
+          <demoPages:ColorPickerDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo />

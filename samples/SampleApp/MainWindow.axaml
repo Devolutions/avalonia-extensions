@@ -54,7 +54,11 @@
           <TabItem.Header>
             <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
-          <demoPages:ComboBoxDemo />
+          <demoPages:ComboBoxDemo>
+            <demoPages:ComboBoxDemo.DataContext>
+              <vm:ComboBoxViewModel />
+            </demoPages:ComboBoxDemo.DataContext>
+          </demoPages:ComboBoxDemo>
         </TabItem>
         <TabItem>
           <TabItem.Header>
@@ -86,7 +90,11 @@
           <TabItem.Header>
             <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
           </TabItem.Header>
-          <demoPages:EditableComboBoxDemo />
+          <demoPages:EditableComboBoxDemo>
+            <demoPages:EditableComboBoxDemo.DataContext>
+              <vm:EditableComboBoxViewModel />
+            </demoPages:EditableComboBoxDemo.DataContext>
+          </demoPages:EditableComboBoxDemo>
         </TabItem>
         <TabItem>
           <TabItem.Header>

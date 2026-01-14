@@ -29,7 +29,7 @@
     <Setter Property="MinHeight" Value="1" />
     <Setter Property="Height" Value="26" />
     <Setter Property="Padding" Value="10 2" />
-    
+
     <Style Selector="^:pointerover">
 
       <Style Selector="^ /template/ Border#SingleColumnListBox_SelectionHighlight">
@@ -83,7 +83,7 @@
               Name="PART_SuggestionsContainer"
               Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
               BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-              BorderBrush="{DynamicResource ComboBoxDropDownBorderBrushTransparent}"
+              BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
               Background="{DynamicResource BackgroundColor}"
               CornerRadius="{DynamicResource OverlayCornerRadius}"
               Margin="{DynamicResource ComboBoxPopupBorderMargin}"

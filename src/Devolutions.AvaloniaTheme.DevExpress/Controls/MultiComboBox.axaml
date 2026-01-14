@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+  xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="400" Width="400">
@@ -29,6 +30,16 @@
           <MultiComboBoxItem Content="Option 3" IsSelected="True" />
           <MultiComboBoxItem Content="Option 4" IsSelected="True" />
           <MultiComboBoxItem Content="Option 5" IsSelected="True" />
+        </MultiComboBox>
+
+        <MultiComboBox Width="300" Watermark="Error" Margin="10" OverflowMode="Wrap">
+          <DataValidationErrors.Error>
+            <system:Exception>
+              <x:Arguments>
+                <x:String>Error</x:String>
+              </x:Arguments>
+            </system:Exception>
+          </DataValidationErrors.Error>
         </MultiComboBox>
 
         <MultiComboBox Watermark="fill" Margin="10">
@@ -145,7 +156,7 @@
                     {TemplateBinding IsAllSelected, Converter={x:Static BoolConverters.Not}}
                   }"
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
-                  Background="{x:Null}"
+                  Background="Transparent"
                   Margin="1"
                   MinHeight="21"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
@@ -191,11 +202,11 @@
                 Background="{TemplateBinding Background}"
                 BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                 BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                CornerRadius="{DynamicResource OverlayCornerRadius}"
                 Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                 HorizontalAlignment="Stretch"
                 BoxShadow="{DynamicResource ComboBoxBoxShadow}"
-                Margin="6 0 6 6"
-                CornerRadius="0">
+                Margin="6 0 6 6">
                 <DockPanel LastChildFill="True" Margin="{DynamicResource ComboBoxDropdownBorderPadding}">
                   <TextBox
                     Name="PART_FilterTextBox"

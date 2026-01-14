@@ -28,6 +28,8 @@
       <Color x:Key='TextBoxBackgroundColor'>#fff</Color>
       <Color x:Key='TextBoxBorderBottomColor'>#9f9f9f</Color>
 
+      <Color x:Key='ComboBoxDropDownBorderColor'>#c3c3c3</Color>
+
       <Color x:Key='ExpanderHeaderBackgroundColor'>#fbfbfb</Color>
       <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#f6f6f6</Color>
       <Color x:Key='ExpanderBodyBackgroundColor'>#fbfbfb</Color>
@@ -94,6 +96,8 @@
 
       <Color x:Key='TextBoxBackgroundColor'>#202020</Color>
       <Color x:Key='TextBoxBorderBottomColor'>#666666</Color>
+
+      <Color x:Key='ComboBoxDropDownBorderColor'>#414141</Color>
 
       <Color x:Key='ExpanderHeaderBackgroundColor'>#2e2e2e</Color>
       <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#343434</Color>
@@ -206,18 +210,19 @@
   <x:Double x:Key="TextBasedInputMinHeight">22</x:Double>
 
   <SolidColorBrush x:Key="ComboBoxItemBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
-  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrushTransparent" Color="{DynamicResource ForegroundColor}"
-                   Opacity="0.28" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{DynamicResource ComboBoxDropDownBorderColor}" />
   <Thickness x:Key="ComboBoxPadding">5,0</Thickness>
   <Thickness x:Key="ComboBoxDropDownInnerPadding">4</Thickness>
   <Thickness x:Key="ComboBoxPopupBorderMargin">0 0 0 10</Thickness>
+  <Thickness x:Key="ComboBoxDropdownContentMargin">4</Thickness>
   <BoxShadows x:Key="ComboBoxDropDownShadow"> 0 3 7 0 #30000000</BoxShadows>
   <Thickness x:Key="ComboBoxItemPadding">10 0</Thickness>
   <Thickness x:Key="ComboBoxItemBorderPadding">0 0 6 0</Thickness>
   <Thickness x:Key="MultiColumnListBoxBorderPadding">6</Thickness>
   <Thickness x:Key="ComboBoxItemBorderMargin">0</Thickness>
   <Thickness x:Key="MultiColumnListBoxItemBorderMargin">5 1</Thickness>
-  <x:Double x:Key="ComboBoxItemMinHeight">24</x:Double>
+  <x:Double x:Key="ComboBoxItemSelectionHighlightHeight">14</x:Double>
+  <x:Double x:Key="ComboBoxItemMinHeight">28</x:Double>
   <x:Double x:Key="ComboBoxSelectionHighlightWidth">3</x:Double>
   <Thickness x:Key="ComboBoxSelectionHighlightMargin">0 1 6 1</Thickness>
   <CornerRadius x:Key="ComboBoxSelectionHighlightRadius">2</CornerRadius>
@@ -240,7 +245,7 @@
   <Thickness x:Key="TabsContainerMargin">0</Thickness>
   <Thickness x:Key="NavBarTabsContainerMargin">5 10 10 10</Thickness>
 
-  <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
+  <CornerRadius x:Key="OverlayCornerRadius">4</CornerRadius>
   <CornerRadius x:Key="ContextMenuCornerRadius">4</CornerRadius>
   <Thickness x:Key="MenuFlyoutScrollerMargin">0 4</Thickness>
 
@@ -255,7 +260,7 @@
   <x:Double x:Key="OpacityHidden">0</x:Double>
 
   <x:Double x:Key="ScrollBarSize">17.4</x:Double>
-  <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="{DynamicResource SystemRegionColor}" />
+  <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="Transparent" />
   <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ScrollBarThumbColor}" />
   <CornerRadius x:Key="ScrollBarThumbCornerRadius">2</CornerRadius>
   <CornerRadius x:Key="ScrollBarThumbExpandedCornerRadius">4</CornerRadius>

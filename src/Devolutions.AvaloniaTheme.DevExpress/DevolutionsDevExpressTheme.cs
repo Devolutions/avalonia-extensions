@@ -11,6 +11,11 @@ public class DevolutionsDevExpressTheme : Styles, ISupportInitialize
 {
     private readonly IServiceProvider? sp;
 
+    static DevolutionsDevExpressTheme()
+    {
+        AvaloniaControls.Initialization.Initialize();
+    }
+
     /// <summary> 
     /// Initializes a new instance of the <see cref="DevolutionsDevExpressTheme"/> class.
     ///
@@ -44,8 +49,6 @@ public class DevolutionsDevExpressTheme : Styles, ISupportInitialize
 #endif
     }
 
-    private static bool IsTreeDataGridAvailable()
-    {
-        return Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
-    }
+    private static bool IsTreeDataGridAvailable() =>
+        Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
 }

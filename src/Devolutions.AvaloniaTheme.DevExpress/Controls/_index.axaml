@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-<!-- Note: this used to be the complete list of styled controls
+  <!-- Note: this used to be the complete list of styled controls
      but context-sensitive controls can be 'upgraded' from a simple
      ResourceDictionary to a Styles file with more complex logic, 
      especially referencing parent controls. They are loaded in ThemeRoot.axaml.
@@ -24,6 +24,7 @@
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
+    <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="MultiComboBox.axaml" />

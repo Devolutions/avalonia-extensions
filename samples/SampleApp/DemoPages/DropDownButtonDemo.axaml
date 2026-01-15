@@ -5,6 +5,18 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.DropDownButtonDemo">
   <StackPanel Spacing="20" Margin="20">
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0 0 0 20">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <DropDownButton Content="Click Me!">
+        <DropDownButton.Flyout>
+          <MenuFlyout>
+            <MenuItem Header="Item 1" />
+            <MenuItem Header="Item 2" />
+          </MenuFlyout>
+        </DropDownButton.Flyout>
+      </DropDownButton>
+    </StackPanel>
+
     <TextBlock Classes="h1">DropDownButton</TextBlock>
 
     <StackPanel Spacing="10" HorizontalAlignment="Left">

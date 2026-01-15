@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.HyperlinkButtonDemo">
+  <StackPanel Spacing="10" Margin="20">
+    <TextBlock Classes="h1">HyperlinkButton</TextBlock>
+    
+    <TextBlock>A button that looks like a hyperlink.</TextBlock>
+
+    <StackPanel Orientation="Horizontal" Spacing="20">
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold">Default</TextBlock>
+        <HyperlinkButton Content="Devolutions" NavigateUri="https://devolutions.net" />
+      </StackPanel>
+
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold">Disabled</TextBlock>
+        <HyperlinkButton Content="Devolutions (Disabled)" NavigateUri="https://devolutions.net" IsEnabled="False" />
+      </StackPanel>
+      
+      <StackPanel Spacing="10">
+         <TextBlock FontWeight="Bold">No URI</TextBlock>
+         <HyperlinkButton Content="Click Me (No URI)" />
+      </StackPanel>
+    </StackPanel>
+    
+    <TextBlock Classes="h2" Margin="0 20 0 0">Long Text</TextBlock>
+    <HyperlinkButton NavigateUri="https://avaloniaui.net">
+        <TextBlock TextWrapping="Wrap" MaxWidth="300">
+            This is a hyperlink button with a lot of text inside it to see how it wraps and behaves when the content is larger.
+        </TextBlock>
+    </HyperlinkButton>
+
+    <TextBlock Classes="h2" Margin="0 20 0 0">Inline Text</TextBlock>
+    <WrapPanel Orientation="Horizontal">
+      <TextBlock Text="You can also place a" VerticalAlignment="Center"/>
+      <HyperlinkButton Content="Link" NavigateUri="https://avaloniaui.net" Margin="3 0 -2 0" VerticalAlignment="Center" Padding="0"/>
+      <TextBlock Text=" inside a sentence to create natural flows." VerticalAlignment="Center"/>
+    </WrapPanel>
+
+  </StackPanel>
+</UserControl>

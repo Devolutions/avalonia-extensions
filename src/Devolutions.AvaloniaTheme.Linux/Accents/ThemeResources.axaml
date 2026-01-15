@@ -10,6 +10,9 @@
       <Color x:Key='ScrollControlBackgroundColor'>#fcfcfc</Color>
       <Color x:Key='BorderColor'>#d1d1d1</Color>
 
+      <Color x:Key="HyperLinkColor">#0066CC</Color>
+      <Color x:Key="HyperLinkVisitedColor">#551A8B</Color>
+
       <Color x:Key="ErrorTextColor">#C50500</Color>
 
       <Color x:Key='InputBackgroundColor'>#ffffff</Color>
@@ -55,6 +58,24 @@
 
       <Color x:Key="SampleAppBackgroundColor">#ffffff</Color>
 
+      <!-- HyperlinkButton Resources -->
+      <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPressed" Color="{DynamicResource HyperLinkColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisited" Color="{DynamicResource HyperLinkVisitedColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPointerOver" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPressed" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundDisabled" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
+
+      <SolidColorBrush x:Key="HyperlinkButtonBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPointerOver" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPressed" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
@@ -67,6 +88,9 @@
       <Color x:Key='BackgroundColor'>#2c2c2c</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#272727</Color>
       <Color x:Key='BorderColor'>#181818</Color>
+
+      <Color x:Key="HyperLinkColor">#4493F8</Color>
+      <Color x:Key="HyperLinkVisitedColor">#B894E6</Color>
 
       <Color x:Key="ErrorTextColor">#ed7083</Color>
 
@@ -111,6 +135,25 @@
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
 
       <Color x:Key="SampleAppBackgroundColor">#202020</Color>
+
+      <!-- HyperlinkButton Resources -->
+      <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPressed" Color="{DynamicResource HyperLinkColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisited" Color="{DynamicResource HyperLinkVisitedColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPointerOver" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPressed" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundDisabled" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
+
+      <SolidColorBrush x:Key="HyperlinkButtonBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPointerOver" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPressed" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

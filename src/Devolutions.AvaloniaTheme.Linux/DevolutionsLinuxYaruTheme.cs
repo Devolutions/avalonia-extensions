@@ -9,6 +9,11 @@ using Avalonia.Styling;
 /// </summary>
 public class DevolutionsLinuxYaruTheme : Styles
 {
+    static DevolutionsLinuxYaruTheme()
+    {
+        AvaloniaControls.Initialization.Initialize();
+    }
+
     /// <summary> 
     /// Initializes a new instance of the <see cref="DevolutionsLinuxYaruTheme"/> class.
     /// </summary>

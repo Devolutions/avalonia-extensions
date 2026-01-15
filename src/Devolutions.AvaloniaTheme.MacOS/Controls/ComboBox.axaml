@@ -1,7 +1,8 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -157,13 +158,15 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="behaviors:ComboBoxValidationBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus"
-               ClipToBounds="False"
-               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
-          <Border
-            Name="BorderElement"
+        <DataValidationErrors>
+          <Panel Name="ReservedSpaceForFocus"
+                 ClipToBounds="False"
+                 Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+            <Border
+              Name="BorderElement"
             Background="{TemplateBinding Background}"
             BorderThickness="{DynamicResource ControlBorderThickness}"
             BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
@@ -265,7 +268,8 @@
               </ScrollViewer>
             </Border>
           </Popup>
-        </Panel>
+          </Panel>
+        </DataValidationErrors>
       </ControlTemplate>
     </Setter>
 
@@ -281,6 +285,12 @@
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
       <Style Selector="^ /template/ Border#BorderElement">
         <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDisabledBoxShadow}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:error">
+      <Style Selector="^ /template/ Border#BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
       </Style>
     </Style>
 

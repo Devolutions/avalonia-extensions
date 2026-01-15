@@ -5,6 +5,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     x:ClassModifier="internal">
 
   <!-- 
@@ -24,6 +25,15 @@
           <TextBox Classes="clearButton">Clear</TextBox>
           <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
           <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
+          <TextBox Watermark="Error">
+            <DataValidationErrors.Error>
+              <system:Exception>
+                <x:Arguments>
+                  <x:String>Some error</x:String>
+                </x:Arguments>
+              </system:Exception>
+            </DataValidationErrors.Error>
+          </TextBox>
           <TextBox Watermark="Watermark" />
           <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True" />
           <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>

@@ -38,6 +38,16 @@
           </DataValidationErrors.Error>
         </ComboBox>
 
+        <ComboBox PlaceholderText="Error (editable)" IsEditable="True">
+          <DataValidationErrors.Error>
+            <sys:Exception>
+              <x:Arguments>
+                <x:String>Error</x:String>
+              </x:Arguments>
+            </sys:Exception>
+          </DataValidationErrors.Error>
+        </ComboBox>
+
         <ComboBox PlaceholderText="Search Highlight" Classes="search-highlight">
           <ComboBoxItem>External</ComboBoxItem>
           <ComboBoxItem Classes="search-highlight">Embedded (tabbed)</ComboBoxItem>
@@ -89,6 +99,7 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}" />
+    <Setter Property="ComboBoxValidationBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -178,7 +189,7 @@
                      InheritsTransform="True">
                 <Border Name="PopupBorder"
                         Background="{DynamicResource BackgroundColor}"
-                        BorderBrush="{DynamicResource ComboBoxDropDownBorderBrushTransparent}"
+                        BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                         BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                         Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                         HorizontalAlignment="Stretch"

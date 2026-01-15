@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public partial class TextBoxViewModel : ObservableValidator
 {
-  [ObservableProperty] [Required(ErrorMessage = "This Input is required.", AllowEmptyStrings = false)] [NotifyDataErrorInfo]
-  private string _requiredInput = string.Empty;
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "This Input is required.")]
+    private string requiredInput = string.Empty;
 }

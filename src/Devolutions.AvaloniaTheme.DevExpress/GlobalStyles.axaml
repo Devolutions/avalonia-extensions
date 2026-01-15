@@ -23,11 +23,18 @@
     - sbergerondrouin 2025-06-09
   -->
 
+  <Style Selector="MultiComboBox Popup ScrollBar:vertical">
+    <Setter Property="Margin" Value="0 -4 -4 -4" />
+  </Style>
+
+  <!-- 
+    START: 
+    Search highlights 
+  -->
   <Style Selector="Label.search-highlight > AccessText, Label.secondary-search-highlight > AccessText">
     <Setter Property="HorizontalAlignment" Value="Left" />
   </Style>
 
-  <!-- Search highlight -->
   <Style Selector="Button.search-highlight > TextBlock, Label.search-highlight > AccessText, CheckBox.search-highlight > AccessText, RadioButton.search-highlight > AccessText">
     <Setter Property="Background" Value="{DynamicResource SearchHighlightBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource SearchHighlightForeground}" />
@@ -76,4 +83,8 @@
     <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
     <Setter Property="FontWeight" Value="Bold" />
   </Style>
+  <!-- 
+    END 
+    Search highlights 
+  -->
 </Styles>

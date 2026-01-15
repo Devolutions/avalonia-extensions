@@ -61,7 +61,7 @@
                             Height="12"
                             Width="12"
                             Margin="0,0,10,0"
-                            Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
+                            Data="{StaticResource DropDownGlyphPath}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />

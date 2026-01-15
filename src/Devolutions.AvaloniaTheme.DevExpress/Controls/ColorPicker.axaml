@@ -1,11 +1,10 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="using:Avalonia.Controls"
-                    xmlns:primitives="using:Avalonia.Controls.Primitives"
-                    >
+                    xmlns:primitives="using:Avalonia.Controls.Primitives">
 
   <PlacementMode x:Key="ColorPickerFlyoutPlacement">Top</PlacementMode>
-  
+
   <ControlTheme x:Key="{x:Type ColorPicker}"
                 TargetType="ColorPicker">
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -14,8 +13,8 @@
     <Setter Property="Height" Value="32" />
     <Setter Property="Width" Value="64" />
     <Setter Property="MinWidth" Value="64" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
     <Setter Property="Content">
       <Template>
         <Panel>
@@ -32,6 +31,7 @@
         </Panel>
       </Template>
     </Setter>
+
     <Setter Property="Palette">
       <controls:FluentColorPalette />
     </Setter>
@@ -46,6 +46,7 @@
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         Padding="0,0,10,0"
                         UseLayoutRounding="False">
+
           <DropDownButton.Styles>
             <Style Selector="FlyoutPresenter.nopadding">
               <Setter Property="Padding" Value="0" />

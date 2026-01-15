@@ -73,6 +73,7 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="NumericUpDownBehavior.NumericOnly" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>

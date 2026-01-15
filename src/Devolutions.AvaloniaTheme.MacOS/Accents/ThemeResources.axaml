@@ -1,5 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
+                    xmlns:converters1="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls.ColorPicker">
 
   <!-- MARK: Light Mode -->
 
@@ -696,6 +698,42 @@
   <Thickness x:Key="ToggleSwitchHeaderMargin">8 4</Thickness>
   <Thickness x:Key="ToggleSwitchOnContentMargin">8 4</Thickness>
   <x:Double x:Key="SimpleToggleSwitchFontSize">14</x:Double>
+
+  <!-- ColorPicker Resources -->
+  <VisualBrush x:Key="ColorControlCheckeredBackgroundBrush"
+               TileMode="Tile"
+               Stretch="Uniform"
+               DestinationRect="0,0,8,8">
+    <VisualBrush.Visual>
+      <Image Width="8" Height="8">
+        <Image.Source>
+          <DrawingImage>
+            <DrawingImage.Drawing>
+              <DrawingGroup>
+                <GeometryDrawing Geometry="M0,0 L2,0 2,2, 0,2Z" Brush="Transparent" />
+                <GeometryDrawing Geometry="M0,1 L2,1 2,2, 1,2 1,0 0,0Z" Brush="#19808080" />
+              </DrawingGroup>
+            </DrawingImage.Drawing>
+          </DrawingImage>
+        </Image.Source>
+      </Image>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
+  <SolidColorBrush x:Key="ColorControlLightSelectorBrush" Color="#FFFFFFFF" />
+  <SolidColorBrush x:Key="ColorControlDarkSelectorBrush" Color="#E4000000" />
+
+  <SolidColorBrush x:Key="ColorViewContentBackgroundBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="ColorViewContentBorderBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="ColorViewTabBorderBrush" Color="Transparent" />
+
+  <!-- ColorPicker Converters -->
+  <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+  <converters1:ToBrushConverter x:Key="ToBrushConverter" />
+
+  <converters:CornerRadiusToDoubleConverter x:Key="TopLeftCornerRadiusConverter" Corner="TopLeft" />
+  <converters:CornerRadiusToDoubleConverter x:Key="BottomRightCornerRadiusConverter" Corner="BottomRight" />
+
 
   <!-- DEVELOPMENT ONLY -->
 

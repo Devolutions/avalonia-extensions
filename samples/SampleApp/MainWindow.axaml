@@ -62,7 +62,7 @@
           </TabItem.Header>
           <demoPages:ContextMenuDemo />
         </TabItem>
-        <TabItem IsSelected="True">
+        <TabItem>
           <TabItem.Header>
             <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="DevExpress" />
           </TabItem.Header>

@@ -27,8 +27,6 @@
   <Thickness x:Key="TabItemHeaderMargin">4, 0</Thickness>
 
   <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
-    <!-- <Setter Property="FontSize" Value="{DynamicResource TabItemHeaderFontSize}" /> -->
-    <!-- <Setter Property="FontWeight" Value="{DynamicResource TabItemHeaderThemeFontWeight}" /> -->
     <Setter Property="FontSize" Value="14" />
     <Setter Property="FontWeight" Value="Light" />
     <Setter Property="Background" Value="{DynamicResource TabItemHeaderBackgroundUnselected}" />

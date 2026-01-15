@@ -11,56 +11,62 @@
     </Border>
   </Design.PreviewWith>
 
-  <x:Double x:Key="DropDownButtonMinHeight">32</x:Double>
+  <x:Double x:Key="DropDownButtonMinHeight">26</x:Double>
 
   <ControlTheme x:Key="{x:Type DropDownButton}" TargetType="DropDownButton">
-    <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
+    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
     <Setter Property="MinHeight" Value="{DynamicResource DropDownButtonMinHeight}" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <Border x:Name="RootBorder"
+            <Panel>
+                <Border
+                  Name="BackgroundElement"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}"
-                  ClipToBounds="True">
-            <Grid x:Name="InnerGrid">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+                <Border
+                  Name="ButtonActiveElement"
+                  Background="Transparent"
+                  BorderBrush="{DynamicResource TransparentBrush}"
+                  BorderThickness="2"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
 
-              <ContentPresenter x:Name="PART_ContentPresenter"
-                                Grid.Column="0"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
+                  <ContentPresenter x:Name="PART_ContentPresenter"
+                                    Grid.Column="0"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    Padding="{TemplateBinding Padding}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    FontWeight="{TemplateBinding FontWeight}" />
 
-              <PathIcon x:Name="DropDownGlyph"
-                        Grid.Column="1"
-                        UseLayoutRounding="False"
-                        IsHitTestVisible="False"
-                        Height="12"
-                        Width="12"
-                        Margin="0,0,10,0"
-                        Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Foreground="{DynamicResource ComboBoxDropDownGlyphForeground}" />
-            </Grid>
-          </Border>
+                  <PathIcon x:Name="DropDownGlyph"
+                            Grid.Column="1"
+                            UseLayoutRounding="False"
+                            IsHitTestVisible="False"
+                            Height="12"
+                            Width="12"
+                            Margin="0,0,10,0"
+                            Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Grid>
+            </Panel>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -70,37 +76,111 @@
     </Style>
 
     <!-- PointerOver State -->
-    <Style Selector="^:pointerover /template/ Border#RootBorder">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
-      <Setter Property="TextElement.Foreground" Value="{DynamicResource ButtonForegroundPointerOver}" />
-    </Style>
-    <Style Selector="^:pointerover /template/ PathIcon#DropDownGlyph">
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}" />
+    <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
+      <Setter Property="Background" Value="{DynamicResource ButtonPointerOverBrushTransparent}" />
     </Style>
 
     <!-- Pressed State -->
     <Style Selector="^:pressed">
-      <Setter Property="RenderTransform" Value="scale(0.98)" />
+      <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+      <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+      </Style>
     </Style>
-
-    <Style Selector="^:pressed /template/ Border#RootBorder">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
-      <Setter Property="TextElement.Foreground" Value="{DynamicResource ButtonForegroundPressed}" />
-    </Style>
-    <Style Selector="^:pressed /template/ PathIcon#DropDownGlyph">
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPressed}" />
+    
+    <!-- Focus State -->
+    <Style Selector="^:focus, ^:focus-visible">
+      <Style Selector="^ /template/ Border#ButtonActiveElement">
+        <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBackgroundAccentBrush, ControlBorderRaisedBrush}" />
+      </Style>
     </Style>
 
     <!-- Disabled State -->
-    <Style Selector="^:disabled /template/ Border#RootBorder">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
-      <Setter Property="TextElement.Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabledBrush}" />
+      <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
     </Style>
-    <Style Selector="^:disabled /template/ PathIcon#DropDownGlyph">
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+
+    <!-- ValuePicker variant (ComboBox-like look) -->
+    <Style Selector="^.ValuePicker">
+      <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+      <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThemeThickness}" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
+      <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate>
+            <Panel>
+              <Border Name="BorderElement"
+                      Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="1 1 1 0"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      MinWidth="{TemplateBinding MinWidth}"
+                      MinHeight="{TemplateBinding MinHeight}" />
+              <Border Name="BottomBorderElement"
+                      Background="Transparent"
+                      BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
+                      BorderThickness="0 0 0 1"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      MinWidth="{TemplateBinding MinWidth}"
+                      MinHeight="{TemplateBinding MinHeight}" />
+
+              <DockPanel LastChildFill="True" Margin="1">
+                <Border Name="DropDownGlyphBackground"
+                        DockPanel.Dock="Right"
+                        Background="Transparent"
+                        Margin="{DynamicResource DropdownButtonMargin}"
+                        Width="{DynamicResource DropdownButtonWidth}"
+                        Height="{DynamicResource DropdownButtonHeight}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                  <PathIcon Name="DropDownGlyph"
+                            UseLayoutRounding="False"
+                            IsHitTestVisible="False"
+                            Width="{DynamicResource DropdownButtonIconWidth}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="{TemplateBinding Foreground}"
+                            Data="{StaticResource ChevronPath}" />
+                </Border>
+
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  FontSize="{TemplateBinding FontSize}"
+                                  FontWeight="{TemplateBinding FontWeight}" />
+              </DockPanel>
+            </Panel>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+
+      <!-- Interaction Styles for ValuePicker -->
+      <!-- Pointer Over -->
+      <Style Selector="^:pointerover /template/ Border#DropDownGlyphBackground">
+        <Setter Property="Background" Value="{DynamicResource ControlBackgroundPointerOverBrush}" />
+      </Style>
+
+      <!-- Pressed / Flyout Open -->
+      <Style Selector="^:pressed, ^:flyout-open">
+        <Style Selector="^ /template/ Border#BottomBorderElement">
+          <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
+          <Setter Property="BorderThickness" Value="0 0 0 1.6" />
+        </Style>
+        <Style Selector="^ /template/ Border#DropDownGlyphBackground">
+          <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+        </Style>
+      </Style>
     </Style>
   </ControlTheme>
 

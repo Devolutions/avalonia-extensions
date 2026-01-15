@@ -17,6 +17,7 @@
     <MergeResourceInclude Source="DropDownButton.axaml" />
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
+    <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />

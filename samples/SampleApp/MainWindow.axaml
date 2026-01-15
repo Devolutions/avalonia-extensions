@@ -134,6 +134,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+          </TabItem.Header>
+          <demoPages:HyperlinkButtonDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ListBoxDemo />

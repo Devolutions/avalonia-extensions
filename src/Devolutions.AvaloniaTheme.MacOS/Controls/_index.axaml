@@ -22,6 +22,7 @@
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
     <MergeResourceInclude Source="GridSplitter.axaml" />
+    <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="Menu.axaml" />

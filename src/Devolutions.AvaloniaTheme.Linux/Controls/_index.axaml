@@ -10,6 +10,11 @@
     <MergeResourceInclude Source="CalendarDayButton.axaml" />
     <MergeResourceInclude Source="CalendarItem.axaml" />
     <MergeResourceInclude Source="CheckBox.axaml" />
+    <MergeResourceInclude Source="ColorPicker.axaml" />
+    <MergeResourceInclude Source="ColorPreviewer.axaml" />
+    <MergeResourceInclude Source="ColorSlider.axaml" />
+    <MergeResourceInclude Source="ColorSpectrum.axaml" />
+    <MergeResourceInclude Source="ColorView.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />

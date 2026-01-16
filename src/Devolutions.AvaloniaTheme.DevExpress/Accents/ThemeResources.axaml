@@ -345,6 +345,11 @@
 
   <SolidColorBrush x:Key="ColorPickerSwatchBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
 
+  <PlacementMode x:Key="ColorPickerFlyoutPlacement">Top</PlacementMode>
+  <Thickness x:Key="ColorPickerFlyoutMargin">2 1 4 4</Thickness>
+  <BoxShadows x:Key="ColorPickerFlyoutShadow">2 3 8 1 #30000000</BoxShadows>
+
+
   <!-- ColorPicker Converters -->
   <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
   <converters1:ToBrushConverter x:Key="ToBrushConverter" />

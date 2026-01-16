@@ -343,6 +343,8 @@
   <SolidColorBrush x:Key="ColorViewContentBorderBrush" Color="Transparent" />
   <SolidColorBrush x:Key="ColorViewTabBorderBrush" Color="Transparent" />
 
+  <SolidColorBrush x:Key="ColorPickerSwatchBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
+
   <!-- ColorPicker Converters -->
   <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
   <converters1:ToBrushConverter x:Key="ToBrushConverter" />

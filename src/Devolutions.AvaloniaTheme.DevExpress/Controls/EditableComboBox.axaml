@@ -15,7 +15,7 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
-      <StackPanel Width="200" Height="200" Spacing="20">
+      <StackPanel Width="200" Spacing="20">
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
@@ -67,6 +67,17 @@
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
+        </EditableComboBox>
+        
+        <EditableComboBox Value="Left and Right content" HorizontalAlignment="Center">
+          <EditableComboBoxItem>A</EditableComboBoxItem>
+          
+          <EditableComboBox.InnerLeftContent>
+            <Border Width="12" Height="12" Background="Green" />
+          </EditableComboBox.InnerLeftContent>
+          <EditableComboBox.InnerRightContent>
+            <Border Width="12" Height="12" Background="Blue" />
+          </EditableComboBox.InnerRightContent>
         </EditableComboBox>
       </StackPanel>
     </design:ThemePreviewer>
@@ -262,7 +273,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
-          <Grid ColumnDefinitions="Auto,*,24,Auto" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,18" HorizontalAlignment="Stretch">
             <Border
               Name="BorderElement"
               Grid.Column="0"
@@ -299,8 +310,9 @@
             <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
 
             <ItemsControl
-              Grid.Column="3"
+              Grid.Column="2"
               Name="PART_InnerRightContent"
+              Margin="4 0 0 0"
               ItemsSource="{TemplateBinding InnerRightContent}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -309,7 +321,7 @@
               </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <Panel Grid.Column="2"
+            <Panel Grid.Column="3"
                    Margin="-1"
                    Name="DropDownGlyphContainer"
                    Background="Transparent"

@@ -48,6 +48,18 @@
         <MultiComboBox Watermark="Select All" Margin="10" IsEnabled="False">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
         </MultiComboBox>
+        
+        <MultiComboBox Watermark="Left and Right content" Margin="10">
+          <MultiComboBoxItem>A</MultiComboBoxItem>
+          <MultiComboBoxItem>B</MultiComboBoxItem>
+          
+          <MultiComboBox.InnerLeftContent>
+            <Border Width="12" Height="12" Background="Green" />
+          </MultiComboBox.InnerLeftContent>
+          <MultiComboBox.InnerRightContent>
+            <Border Width="12" Height="12" Background="Blue" />
+          </MultiComboBox.InnerRightContent>
+        </MultiComboBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -96,10 +108,50 @@
                 MinWidth="{TemplateBinding MinWidth}"
                 MinHeight="{TemplateBinding MinHeight}"
                 IsHitTestVisible="False" />
-              <DockPanel Name="PART_Dock" HorizontalAlignment="Stretch">
+              <Grid HorizontalAlignment="Stretch"
+                    ColumnDefinitions="Auto, *, Auto, Auto">
+                <ContentPresenter
+                  Grid.Column="0"
+                  Margin="8 0 0 0"
+                  IsHitTestVisible="False"
+                  VerticalAlignment="Center"
+                  Content="{TemplateBinding InnerLeftContent}"
+                  Foreground="{DynamicResource TextBoxInnerForeground}"
+                  IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                
+                <TextBlock
+                  Name="PlaceholderTextBlock"
+                  Grid.Column="1"
+                  Opacity="0.5"
+                  FontSize="{TemplateBinding FontSize}"
+                  Margin="{TemplateBinding Padding}"
+                  Text="{TemplateBinding Watermark}"
+                  IsVisible="False" />
+
+                <TextBlock
+                  Name="AllSelectedTextBlock"
+                  Grid.Column="1"
+                  Text="{TemplateBinding AllSelectedText}"
+                  Foreground="{TemplateBinding Foreground}"
+                  FontSize="{TemplateBinding FontSize}"
+                  Margin="{TemplateBinding Padding}"
+                  TextTrimming="CharacterEllipsis"
+                  IsVisible="{AndBinding
+                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNotNullOrEmpty}},
+                    {Binding !!IsAllSelected, RelativeSource={RelativeSource TemplatedParent}}
+                  }" />
+                
+                <ContentPresenter
+                  Grid.Column="2"
+                  IsHitTestVisible="False"
+                  VerticalAlignment="Center"
+                  Content="{TemplateBinding InnerRightContent}"
+                  Foreground="{DynamicResource TextBoxInnerForeground}"
+                  IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                
                 <Border
                   Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
-                  DockPanel.Dock="Right"
+                  Grid.Column="3"
                   Background="Transparent"
                   IsHitTestVisible="True"
                   Margin="{DynamicResource DropdownButtonMargin}"
@@ -117,26 +169,6 @@
                     Foreground="{TemplateBinding Foreground}"
                     Data="{StaticResource ChevronPath}" />
                 </Border>
-
-                <TextBlock
-                  Name="PlaceholderTextBlock"
-                  Opacity="0.5"
-                  FontSize="{TemplateBinding FontSize}"
-                  Margin="{TemplateBinding Padding}"
-                  Text="{TemplateBinding Watermark}"
-                  IsVisible="False" />
-
-                <TextBlock
-                  Name="AllSelectedTextBlock"
-                  Text="{TemplateBinding AllSelectedText}"
-                  Foreground="{TemplateBinding Foreground}"
-                  FontSize="{TemplateBinding FontSize}"
-                  Margin="{TemplateBinding Padding}"
-                  TextTrimming="CharacterEllipsis"
-                  IsVisible="{AndBinding
-                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNotNullOrEmpty}},
-                    {Binding !!IsAllSelected, RelativeSource={RelativeSource TemplatedParent}}
-                  }" />
 
                 <SmallScrollViewer
                   Name="PART_SelectionScrollViewer"
@@ -158,7 +190,7 @@
                     RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                     ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
                 </SmallScrollViewer>
-              </DockPanel>
+              </Grid>
             </Panel>
 
             <Popup

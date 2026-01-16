@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
              x:Class="SampleApp.DemoPages.EditableComboBoxDemo">
 
   <StackPanel>
@@ -14,7 +14,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -139,6 +139,24 @@
           <EditableComboBoxItem>Option 27</EditableComboBoxItem>
           <EditableComboBoxItem>Option 28</EditableComboBoxItem>
           <EditableComboBoxItem>Option 29</EditableComboBoxItem>
+        </EditableComboBox>
+        
+        <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Inner left and right content
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="9"
+          VerticalAlignment="Top"
+          Mode="Filter"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          
+          <EditableComboBox.InnerLeftContent>
+            <Border Width="12" Height="12" Background="Green" />
+          </EditableComboBox.InnerLeftContent>
+          <EditableComboBox.InnerRightContent>
+            <Border Width="12" Height="12" Background="Blue" />
+          </EditableComboBox.InnerRightContent>
         </EditableComboBox>
       </Grid>
     </Border>

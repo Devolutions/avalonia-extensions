@@ -5,7 +5,22 @@
                     xmlns:primitives="using:Avalonia.Controls.Primitives"
                     xmlns:pc="using:Avalonia.Controls.Primitives.Converters"
                     xmlns:globalization="using:System.Globalization"
-                    >
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="20">
+      <ColorView />
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
 
   <pc:ContrastBrushConverter x:Key="ContrastBrushConverter" />
   <converters:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
@@ -76,8 +91,6 @@
     17.7761 14 17.5 14H9.94999ZM7.5 16C6.67157 16 6 15.3284 6 14.5C6 13.6716 6.67157 13 7.5
     13C8.32843 13 9 13.6716 9 14.5C9 15.3284 8.32843 16 7.5 16Z
   </PathGeometry>
-  <!-- This radius should follow ControlCornerRadius -->
-  <CornerRadius x:Key="ColorViewTabBackgroundCornerRadius">3</CornerRadius>
 
   <ControlTheme x:Key="ColorViewPaletteListBoxTheme"
                 TargetType="ListBox">
@@ -100,7 +113,7 @@
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}">
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="{TemplateBinding Padding}"/>
+                            Margin="{TemplateBinding Padding}" />
           </ScrollViewer>
         </Border>
       </ControlTemplate>
@@ -262,7 +275,7 @@
                     VerticalAlignment="Bottom"
                     Background="{DynamicResource TabItemHeaderSelectedPipeFill}"
                     CornerRadius="{DynamicResource ControlCornerRadius}"
-                    IsVisible="False"/>
+                    IsVisible="False" />
           </Panel>
         </Border>
       </ControlTemplate>
@@ -317,9 +330,9 @@
                   Height="48"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top"
-                  Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                  Background="{TemplateBinding Background}"
                   BorderBrush="{DynamicResource ColorViewTabBorderBrush}"
-                  CornerRadius="{DynamicResource ColorViewTabBackgroundCornerRadius}" />
+                  CornerRadius="{DynamicResource ControlCornerRadius}" />
           <Border x:Name="ContentBackgroundBorder"
                   Grid.Row="0"
                   Grid.RowSpan="2"
@@ -327,27 +340,25 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                  Background="{DynamicResource ColorViewContentBackgroundBrush}"
-                  BorderBrush="{DynamicResource ColorViewContentBorderBrush}"
-                  BorderThickness="0,1,0,0" />
+                  Background="{TemplateBinding Background}" />
 
-          <TabControl x:Name="PART_TabControl"
-                      Grid.Row="0"
-                      Height="338"
-                      Width="350"
-                      Padding="0"
-                      SelectedIndex="{Binding SelectedIndex, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-            <TabControl.ItemsPanel>
+          <TabPane x:Name="PART_TabControl"
+                   Grid.Row="0"
+                   Height="338"
+                   Width="350"
+                   Padding="0"
+                   SelectedIndex="{Binding SelectedIndex, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+            <TabPane.ItemsPanel>
               <ItemsPanelTemplate>
                 <UniformGrid Columns="0"
                              Rows="1" />
               </ItemsPanelTemplate>
-            </TabControl.ItemsPanel>
+            </TabPane.ItemsPanel>
             <!-- Spectrum Tab -->
             <TabItem Theme="{StaticResource ColorViewTabItemTheme}"
                      IsVisible="{TemplateBinding IsColorSpectrumVisible}">
               <TabItem.Header>
-                <Border Height="{DynamicResource ColorViewTabStripHeight}">
+                <Border Height="{DynamicResource ColorViewTabStripHeight}" Margin="10 0 ">
                   <PathIcon Width="20"
                             Height="20"
                             Data="{DynamicResource ColorViewSpectrumIconGeometry}" />
@@ -374,7 +385,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Stretch"
                                         Margin="0,0,12,0"
-                                        IsVisible="{TemplateBinding IsColorSpectrumSliderVisible}"/>
+                                        IsVisible="{TemplateBinding IsColorSpectrumSliderVisible}" />
                 <primitives:ColorSpectrum x:Name="ColorSpectrum"
                                           Grid.Column="1"
                                           Components="{TemplateBinding ColorSpectrumComponents}"
@@ -529,7 +540,7 @@
                     <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
                                FontWeight="SemiBold"
                                Text="R"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}"/>
+                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
                     <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
                                FontWeight="SemiBold"
                                Text="H"
@@ -740,7 +751,7 @@
                 </primitives:ColorSlider>
               </Grid>
             </TabItem>
-          </TabControl>
+          </TabPane>
           <!-- Previewer -->
           <!-- Note that the drop shadow is allowed to extend past the control bounds -->
           <primitives:ColorPreviewer Grid.Row="1"

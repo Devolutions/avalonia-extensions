@@ -353,6 +353,7 @@
   <PlacementMode x:Key="ColorPickerFlyoutPlacement">Top</PlacementMode>
   <Thickness x:Key="ColorPickerFlyoutMargin">2 1 4 4</Thickness>
   <BoxShadows x:Key="ColorPickerFlyoutShadow">2 3 8 1 #30000000</BoxShadows>
+  <Thickness x:Key="ColorViewFakeInnerLeftContentMargin">7,2,0,0</Thickness>
 
 
   <!-- ColorPicker Converters -->

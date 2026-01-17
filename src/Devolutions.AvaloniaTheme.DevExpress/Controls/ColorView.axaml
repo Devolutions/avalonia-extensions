@@ -18,7 +18,7 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
-      <ColorView />
+      <ColorView SelectedIndex="2" />
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
@@ -170,73 +170,6 @@
            converter. This should be revisited if Avalonia supports the above code in the future. -->
       <Setter Property="Stroke" Value="{Binding Converter={StaticResource ContrastBrushConverter}}" />
       <Setter Property="Opacity" Value="1" />
-    </Style>
-  </ControlTheme>
-
-  <!-- Based on the Fluent ToggleButton ControlTheme -->
-  <ControlTheme x:Key="ColorViewColorModelRadioButtonTheme"
-                TargetType="RadioButton">
-    <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ToggleButtonBorderThemeThickness}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
-    <Setter Property="HorizontalAlignment" Value="Stretch" />
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="FontWeight" Value="Normal" />
-    <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
-    <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <ContentPresenter x:Name="PART_ContentPresenter"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          CornerRadius="{TemplateBinding CornerRadius}"
-                          Content="{TemplateBinding Content}"
-                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                          Padding="{TemplateBinding Padding}"
-                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-      </ControlTemplate>
-    </Setter>
-
-    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="RecognizesAccessKey" Value="True" />
-    </Style>
-
-    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundPointerOver}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrushPointerOver}" />
-      <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundPointerOver}" />
-    </Style>
-
-    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundPressed}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrushPressed}" />
-      <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundPressed}" />
-    </Style>
-
-    <Style Selector="^:checked">
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundChecked}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrushChecked}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundChecked}" />
-      </Style>
-
-      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundCheckedPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrushCheckedPointerOver}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundCheckedPointerOver}" />
-      </Style>
-
-      <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundCheckedPressed}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrushCheckedPressed}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundCheckedPressed}" />
-      </Style>
     </Style>
   </ControlTheme>
 
@@ -464,104 +397,80 @@
                             Data="{DynamicResource ColorViewComponentsIconGeometry}" />
                 </Border>
               </TabItem.Header>
-              <Grid ColumnDefinitions="Auto,Auto,*"
+              <Grid ColumnDefinitions="Auto *"
                     RowDefinitions="Auto,24,1*,1*,1*,1*,12"
+                    ColumnSpacing="5"
                     Margin="12">
                 <!-- Top color model & Hex input -->
                 <Grid Grid.Column="0"
-                      Grid.ColumnSpan="3"
+                      Grid.ColumnSpan="2"
                       Grid.Row="0"
-                      ColumnDefinitions="1*,12,1*">
+                      ColumnDefinitions="1*,1*">
                   <!-- Content RGB/HSV names are hard-coded and considered universal -->
-                  <!-- RadioButtons are styled to look like a 'SegmentedControl' or 'ButtonGroup' -->
-                  <Grid ColumnDefinitions="1*,1*"
-                        IsVisible="{TemplateBinding IsColorModelVisible}">
-                    <RadioButton x:Name="RgbRadioButton"
-                                 Theme="{StaticResource ColorViewColorModelRadioButtonTheme}"
-                                 Grid.Column="0"
-                                 Content="RGB"
-                                 CornerRadius="4,0,0,4"
-                                 BorderThickness="1,1,0,1"
-                                 Height="{Binding ElementName=PART_HexTextBox, Path=Bounds.Height}"
-                                 IsChecked="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=TwoWay}" />
-                    <RadioButton x:Name="HsvRadioButton"
-                                 Theme="{StaticResource ColorViewColorModelRadioButtonTheme}"
-                                 Grid.Column="1"
-                                 Content="HSV"
-                                 CornerRadius="0,4,4,0"
-                                 BorderThickness="0,1,1,1"
-                                 Height="{Binding ElementName=PART_HexTextBox, Path=Bounds.Height}"
-                                 IsChecked="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=TwoWay}" />
-                  </Grid>
-                  <Grid x:Name="HexInputGrid"
-                        Grid.Column="2"
-                        IsVisible="{TemplateBinding IsHexInputVisible}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="30" />
-                      <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0"
-                            Height="32"
-                            Background="{DynamicResource TextControlBackgroundDisabled}"
-                            BorderBrush="{DynamicResource TextControlBorderBrush}"
-                            BorderThickness="1,1,0,1"
-                            CornerRadius="4,0,0,4">
-                      <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
+                  <ToggleButtonGroup Grid.Column="0"
+                                     ItemsMinWidth="54"
+                                     HorizontalAlignment="Left"
+                                     Margin="-4, 0,0,0"
+                                     IsVisible="{TemplateBinding IsColorModelVisible}">
+                    <ToggleButtonGroupItem Content="RGB"
+                                           Height="{Binding ElementName=PART_HexTextBox, Path=Bounds.Height}"
+                                           IsSelected="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=TwoWay}" />
+                    <ToggleButtonGroupItem Content="HSV"
+                                           Height="{Binding ElementName=PART_HexTextBox, Path=Bounds.Height}"
+                                           IsSelected="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=TwoWay}" />
+                  </ToggleButtonGroup>
+
+                  <!-- Color updated in code-behind -->
+                  <!-- Max length must include an optional '#' prefix (#FFFFFFFF) -->
+                  <TextBox x:Name="PART_HexTextBox"
+                           Grid.Column="1"
+                           IsVisible="{TemplateBinding IsHexInputVisible}"
+
+                           AutomationProperties.Name="Hexadecimal Color"
+                           Height="26"
+                           MaxLength="9"
+                           HorizontalAlignment="Stretch"
+                           CornerRadius="{DynamicResource ControlCornerRadius}">
+                    <TextBox.InnerLeftContent>
+                      <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
                                  FontWeight="SemiBold"
+                                 FontSize="14"
+                                 Margin="0 0 0  2"
                                  Text="#"
-                                 HorizontalAlignment="Center"
-                                 VerticalAlignment="Center" />
-                    </Border>
-                    <!-- Color updated in code-behind -->
-                    <!-- Max length must include an optional '#' prefix (#FFFFFFFF) -->
-                    <TextBox x:Name="PART_HexTextBox"
-                             Grid.Column="1"
-                             AutomationProperties.Name="Hexadecimal Color"
-                             Height="32"
-                             MaxLength="9"
-                             HorizontalAlignment="Stretch"
-                             CornerRadius="0,4,4,0" />
-                  </Grid>
+                                 IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
+                    </TextBox.InnerLeftContent>
+                  </TextBox>
                 </Grid>
-                <!-- Color component editing controls -->
-                <!-- Component 1 RGB:Red HSV:Hue -->
-                <Border Grid.Column="0"
-                        Grid.Row="2"
-                        Height="{Binding ElementName=Component1NumericUpDown, Path=Bounds.Height}"
-                        Width="{DynamicResource ColorViewComponentLabelWidth}"
-                        Background="{DynamicResource TextControlBackgroundDisabled}"
-                        BorderBrush="{DynamicResource TextControlBorderBrush}"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="4,0,0,4"
-                        VerticalAlignment="Center"
-                        IsVisible="{TemplateBinding IsComponentTextInputVisible}">
-                  <Panel HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="R"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="H"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
-                  </Panel>
-                </Border>
-                <NumericUpDown x:Name="Component1NumericUpDown"
-                               Grid.Column="1"
-                               Grid.Row="2"
-                               AllowSpin="True"
-                               ShowButtonSpinner="False"
-                               Height="32"
-                               Width="{DynamicResource ColorViewComponentTextInputWidth}"
-                               CornerRadius="0,4,4,0"
-                               Margin="0,0,12,0"
-                               VerticalAlignment="Center"
-                               NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
-                               Minimum="{Binding Minimum, ElementName=Component1Slider}"
-                               Maximum="{Binding Maximum, ElementName=Component1Slider}"
-                               Value="{Binding Value, ElementName=Component1Slider}"
-                               IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                <Panel Grid.Column="0"
+                       Grid.Row="2"
+                       IsVisible="{TemplateBinding IsComponentTextInputVisible}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                  <NumericUpDown x:Name="Component1NumericUpDown"
+                                 AllowSpin="True"
+                                 ShowButtonSpinner="False"
+                                 Height="32"
+                                 Width="{DynamicResource ColorViewComponentTextInputWidth}"
+                                 CornerRadius="0,4,4,0"
+                                 Margin="0,0,12,0"
+                                 VerticalAlignment="Center"
+                                 NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
+                                 Minimum="{Binding Minimum, ElementName=Component1Slider}"
+                                 Maximum="{Binding Maximum, ElementName=Component1Slider}"
+                                 Value="{Binding Value, ElementName=Component1Slider}"
+                                 IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="R"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="H"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
+                </Panel>
+
                 <primitives:ColorSlider x:Name="Component1Slider"
                                         Grid.Column="2"
                                         Grid.Row="2"
@@ -576,45 +485,37 @@
                                         VerticalAlignment="Center"
                                         IsVisible="{TemplateBinding IsComponentSliderVisible}" />
                 <!-- Component 2 RGB:Green HSV:Saturation -->
-                <Border Grid.Column="0"
-                        Grid.Row="3"
-                        Width="{DynamicResource ColorViewComponentLabelWidth}"
-                        Height="{Binding ElementName=Component2NumericUpDown, Path=Bounds.Height}"
-                        Background="{DynamicResource TextControlBackgroundDisabled}"
-                        BorderBrush="{DynamicResource TextControlBorderBrush}"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="4,0,0,4"
-                        VerticalAlignment="Center"
-                        IsVisible="{TemplateBinding IsComponentTextInputVisible}">
-                  <Panel HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="G"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="S"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
-                  </Panel>
-                </Border>
-                <NumericUpDown x:Name="Component2NumericUpDown"
-                               Grid.Column="1"
-                               Grid.Row="3"
-                               AllowSpin="True"
-                               ShowButtonSpinner="False"
-                               Height="32"
-                               Width="{DynamicResource ColorViewComponentTextInputWidth}"
-                               CornerRadius="0,4,4,0"
-                               Margin="0,0,12,0"
-                               VerticalAlignment="Center"
-                               NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
-                               Minimum="{Binding Minimum, ElementName=Component2Slider}"
-                               Maximum="{Binding Maximum, ElementName=Component2Slider}"
-                               Value="{Binding Value, ElementName=Component2Slider}"
-                               IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                <Panel Grid.Column="0"
+                       Grid.Row="3"
+                       IsVisible="{TemplateBinding IsComponentTextInputVisible}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                  <NumericUpDown x:Name="Component2NumericUpDown"
+                                 AllowSpin="True"
+                                 ShowButtonSpinner="False"
+                                 Height="32"
+                                 Width="{DynamicResource ColorViewComponentTextInputWidth}"
+                                 CornerRadius="0,4,4,0"
+                                 Margin="0,0,12,0"
+                                 VerticalAlignment="Center"
+                                 NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
+                                 Minimum="{Binding Minimum, ElementName=Component2Slider}"
+                                 Maximum="{Binding Maximum, ElementName=Component2Slider}"
+                                 Value="{Binding Value, ElementName=Component2Slider}"
+                                 IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="G"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="S"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
+                </Panel>
                 <primitives:ColorSlider x:Name="Component2Slider"
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Grid.Row="3"
                                         Orientation="Horizontal"
                                         IsRoundingEnabled="True"
@@ -627,45 +528,37 @@
                                         VerticalAlignment="Center"
                                         IsVisible="{TemplateBinding IsComponentSliderVisible}" />
                 <!-- Component 3 RGB:Blue HSV:Value -->
-                <Border Grid.Column="0"
-                        Grid.Row="4"
-                        Width="{DynamicResource ColorViewComponentLabelWidth}"
-                        Height="{Binding ElementName=Component3NumericUpDown, Path=Bounds.Height}"
-                        Background="{DynamicResource TextControlBackgroundDisabled}"
-                        BorderBrush="{DynamicResource TextControlBorderBrush}"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="4,0,0,4"
-                        VerticalAlignment="Center"
-                        IsVisible="{TemplateBinding IsComponentTextInputVisible}">
-                  <Panel HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="B"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
-                    <TextBlock Foreground="{DynamicResource TextControlForegroundDisabled}"
-                               FontWeight="SemiBold"
-                               Text="V"
-                               IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
-                  </Panel>
-                </Border>
-                <NumericUpDown x:Name="Component3NumericUpDown"
-                               Grid.Column="1"
-                               Grid.Row="4"
-                               AllowSpin="True"
-                               ShowButtonSpinner="False"
-                               Height="32"
-                               Width="{DynamicResource ColorViewComponentTextInputWidth}"
-                               CornerRadius="0,4,4,0"
-                               Margin="0,0,12,0"
-                               VerticalAlignment="Center"
-                               NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
-                               Minimum="{Binding Minimum, ElementName=Component3Slider}"
-                               Maximum="{Binding Maximum, ElementName=Component3Slider}"
-                               Value="{Binding Value, ElementName=Component3Slider}"
-                               IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                <Panel Grid.Column="0"
+                       Grid.Row="4"
+                       IsVisible="{TemplateBinding IsComponentTextInputVisible}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                  <NumericUpDown x:Name="Component3NumericUpDown"
+                                 AllowSpin="True"
+                                 ShowButtonSpinner="False"
+                                 Height="32"
+                                 Width="{DynamicResource ColorViewComponentTextInputWidth}"
+                                 CornerRadius="0,4,4,0"
+                                 Margin="0,0,12,0"
+                                 VerticalAlignment="Center"
+                                 NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
+                                 Minimum="{Binding Minimum, ElementName=Component3Slider}"
+                                 Maximum="{Binding Maximum, ElementName=Component3Slider}"
+                                 Value="{Binding Value, ElementName=Component3Slider}"
+                                 IsVisible="{TemplateBinding IsComponentTextInputVisible}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="B"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Rgba}, Mode=OneWay}" />
+                  <TextBlock Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
+                             FontWeight="SemiBold"
+                             Text="V"
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}"
+                             IsVisible="{TemplateBinding ColorModel, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static controls:ColorModel.Hsva}, Mode=OneWay}" />
+                </Panel>
                 <primitives:ColorSlider x:Name="Component3Slider"
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Grid.Row="4"
                                         Orientation="Horizontal"
                                         IsRoundingEnabled="True"
@@ -678,57 +571,49 @@
                                         VerticalAlignment="Center"
                                         IsVisible="{TemplateBinding IsComponentSliderVisible}" />
                 <!-- Alpha Component -->
-                <Border Grid.Column="0"
-                        Grid.Row="5"
-                        Width="{DynamicResource ColorViewComponentLabelWidth}"
-                        Height="{Binding ElementName=AlphaComponentNumericUpDown, Path=Bounds.Height}"
-                        Background="{DynamicResource TextControlBackgroundDisabled}"
-                        BorderBrush="{DynamicResource TextControlBorderBrush}"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="4,0,0,4"
-                        VerticalAlignment="Center"
-                        IsEnabled="{TemplateBinding IsAlphaEnabled}">
+                <Panel Grid.Column="0"
+                       Grid.Row="5"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       IsEnabled="{TemplateBinding IsAlphaEnabled}">
+                  <Panel.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                               Path="IsAlphaVisible" />
+                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                               Path="IsComponentTextInputVisible" />
+                    </MultiBinding>
+                  </Panel.IsVisible>
+                  <NumericUpDown x:Name="AlphaComponentNumericUpDown"
+                                 AllowSpin="True"
+                                 ShowButtonSpinner="False"
+                                 Height="32"
+                                 Width="{DynamicResource ColorViewComponentTextInputWidth}"
+                                 CornerRadius="0,4,4,0"
+                                 Margin="0,0,12,0"
+                                 VerticalAlignment="Center"
+                                 NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
+                                 Minimum="{Binding Minimum, ElementName=AlphaComponentSlider}"
+                                 Maximum="{Binding Maximum, ElementName=AlphaComponentSlider}"
+                                 Value="{Binding Value, ElementName=AlphaComponentSlider}"
+                                 IsEnabled="{TemplateBinding IsAlphaEnabled}">
+                    <NumericUpDown.IsVisible>
+                      <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                 Path="IsAlphaVisible" />
+                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                 Path="IsComponentTextInputVisible" />
+                      </MultiBinding>
+                    </NumericUpDown.IsVisible>
+                  </NumericUpDown>
                   <TextBlock x:Name="AlphaComponentTextBlock"
-                             Foreground="{DynamicResource TextControlForegroundDisabled}"
+                             Foreground="{DynamicResource ToggleButtonGroupSelectedForegroundColor}"
                              FontWeight="SemiBold"
                              Text="A"
-                             HorizontalAlignment="Center"
-                             VerticalAlignment="Center" />
-                  <Border.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                               Path="IsAlphaVisible" />
-                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                               Path="IsComponentTextInputVisible" />
-                    </MultiBinding>
-                  </Border.IsVisible>
-                </Border>
-                <NumericUpDown x:Name="AlphaComponentNumericUpDown"
-                               Grid.Column="1"
-                               Grid.Row="5"
-                               AllowSpin="True"
-                               ShowButtonSpinner="False"
-                               Height="32"
-                               Width="{DynamicResource ColorViewComponentTextInputWidth}"
-                               CornerRadius="0,4,4,0"
-                               Margin="0,0,12,0"
-                               VerticalAlignment="Center"
-                               NumberFormat="{StaticResource ColorViewComponentNumberFormat}"
-                               Minimum="{Binding Minimum, ElementName=AlphaComponentSlider}"
-                               Maximum="{Binding Maximum, ElementName=AlphaComponentSlider}"
-                               Value="{Binding Value, ElementName=AlphaComponentSlider}"
-                               IsEnabled="{TemplateBinding IsAlphaEnabled}">
-                  <NumericUpDown.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                               Path="IsAlphaVisible" />
-                      <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                               Path="IsComponentTextInputVisible" />
-                    </MultiBinding>
-                  </NumericUpDown.IsVisible>
-                </NumericUpDown>
+                             Margin="{DynamicResource ColorViewFakeInnerLeftContentMargin}" />
+                </Panel>
                 <primitives:ColorSlider x:Name="AlphaComponentSlider"
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Grid.Row="5"
                                         Orientation="Horizontal"
                                         IsRoundingEnabled="True"
@@ -762,22 +647,6 @@
         </Grid>
       </ControlTemplate>
     </Setter>
-
-    <!--
-    <Style Selector="^ /template/ primitives|ColorSlider#ColorSpectrumThirdComponentSlider[ColorComponent=Component1]">
-      <Setter Property="IsPerceptive" Value="True" />
-    </Style>
-
-    <Style Selector="^ /template/ primitives|ColorSlider#Component1Slider[ColorModel=Rgba]">
-      <Setter Property="IsPerceptive" Value="False" />
-    </Style>
-    <Style Selector="^ /template/ primitives|ColorSlider#Component2Slider[ColorModel=Rgba]">
-      <Setter Property="IsPerceptive" Value="False" />
-    </Style>
-    <Style Selector="^ /template/ primitives|ColorSlider#Component3Slider[ColorModel=Rgba]">
-      <Setter Property="IsPerceptive" Value="False" />
-    </Style>
-    -->
 
   </ControlTheme>
 

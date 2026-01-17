@@ -181,6 +181,11 @@
 
   <!-- MARK: Common Resources -->
 
+  <converters:CornerRadiusFilterConverter x:Key="TopCornerRadiusFilterConverter" Filter="TopLeft, TopRight" />
+  <converters:CornerRadiusFilterConverter x:Key="RightCornerRadiusFilterConverter" Filter="TopRight, BottomRight" />
+  <converters:CornerRadiusFilterConverter x:Key="BottomCornerRadiusFilterConverter" Filter="BottomLeft, BottomRight" />
+  <converters:CornerRadiusFilterConverter x:Key="LeftCornerRadiusFilterConverter" Filter="TopLeft, BottomLeft" />
+
   <CornerRadius x:Key="ControlCornerRadius">3</CornerRadius>
 
   <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />

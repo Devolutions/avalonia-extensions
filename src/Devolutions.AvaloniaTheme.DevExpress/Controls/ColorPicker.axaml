@@ -11,7 +11,7 @@
   <ResourceDictionary.MergedDictionaries>
     <ResourceInclude Source="/Accents/ThemeResources.axaml" />
   </ResourceDictionary.MergedDictionaries>
-  
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="0">
       <Border Padding="20" Width="400" Height="500">
@@ -89,7 +89,8 @@
           <DropDownButton.Flyout>
             <Flyout FlyoutPresenterClasses="nopadding"
                     Placement="{DynamicResource ColorPickerFlyoutPlacement}">
-              <ColorView Background="{TemplateBinding Background}" />
+              <ColorView Background="{TemplateBinding Background}"
+                         HsvColor="{Binding HsvColor, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
             </Flyout>
           </DropDownButton.Flyout>
         </DropDownButton>

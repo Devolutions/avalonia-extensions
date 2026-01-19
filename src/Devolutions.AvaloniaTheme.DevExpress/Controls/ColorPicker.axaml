@@ -26,23 +26,10 @@
     <!-- Alpha position should match CSS (and default slider order) instead of XAML/WinUI -->
     <Setter Property="HexInputAlphaPosition" Value="Trailing" />
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
-    <Setter Property="Width" Value="41" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />
-    <Setter Property="Content">
-      <Template>
-        <Panel Width="16" Height="16" Margin="3 0 0 0 ">
-          <Border Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
-          <Border Background="{TemplateBinding HsvColor, Converter={StaticResource ToBrushConverter}}"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
-          <Border BorderBrush="{DynamicResource ColorPickerSwatchBorderBrush}"
-                  BorderThickness="1"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
-        </Panel>
-      </Template>
-    </Setter>
-
+    <Setter Property="Content" Value="{x:Null}" />
     <Setter Property="Palette">
       <controls:FluentColorPalette />
     </Setter>
@@ -52,12 +39,26 @@
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Height="{TemplateBinding Height}"
                         Width="{TemplateBinding Width}"
-                        Content="{TemplateBinding Content}"
-                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         Padding="0,0,10,0"
                         UseLayoutRounding="False">
+          <DropDownButton.Content>
+            <Panel HorizontalAlignment="Stretch"
+                   MinWidth="16"
+                   Height="16"
+                   Margin="0 0 -3 0">
+              <Border Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+              <Border Name="ColorSwatch"
+                      Background="{Binding HsvColor, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ToBrushConverter}}"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+              <Border BorderBrush="{DynamicResource ColorPickerSwatchBorderBrush}"
+                      BorderThickness="1"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+            </Panel>
+          </DropDownButton.Content>
 
           <DropDownButton.Styles>
             <Style Selector="FlyoutPresenter.nopadding">

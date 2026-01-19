@@ -3,7 +3,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
-    <Border Padding="20">
+    <Border Padding="20" Width="200">
       <StackPanel Spacing="20">
         <DropDownButton Content="Click Me!" />
         <DropDownButton Content="Disabled" IsEnabled="False" />
@@ -49,6 +49,7 @@
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 Foreground="{TemplateBinding Foreground}"
                                 Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                 FontSize="{TemplateBinding FontSize}"
@@ -110,7 +111,7 @@
       <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
       <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
       <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate>

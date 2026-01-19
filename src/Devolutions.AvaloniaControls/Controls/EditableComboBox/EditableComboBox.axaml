@@ -24,6 +24,17 @@
           <EditableComboBoxItem>C</EditableComboBoxItem>
           <EditableComboBoxItem>Test</EditableComboBoxItem>
         </EditableComboBox>
+        
+        <EditableComboBox Value="Left and Right content">
+          <EditableComboBoxItem>A</EditableComboBoxItem>
+          
+          <EditableComboBox.InnerLeftContent>
+            <Border Width="12" Height="12" Background="Green" />
+          </EditableComboBox.InnerLeftContent>
+          <EditableComboBox.InnerRightContent>
+            <Border Width="12" Height="12" Background="Blue" />
+          </EditableComboBox.InnerRightContent>
+        </EditableComboBox>
       </StackPanel>
     </Panel>
   </Design.PreviewWith>
@@ -235,7 +246,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
-          <Grid ColumnDefinitions="Auto,*,32,Auto" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,32" HorizontalAlignment="Stretch">
             <Border x:Name="Background"
                     Grid.Column="0"
                     Grid.ColumnSpan="4"
@@ -254,6 +265,7 @@
 
             <ItemsControl
               Name="PART_InnerLeftContent"
+              Margin="8 0 0 0"
               Grid.Column="0"
               ItemsSource="{TemplateBinding InnerLeftContent}">
               <ItemsControl.ItemsPanel>
@@ -264,33 +276,12 @@
               </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" />
-
-            <Border
-              x:Name="DropDownOverlay"
-              Grid.Column="2"
-              Background="Transparent"
-              Margin="0,1,1,1"
-              Width="30"
-              IsVisible="False"
-              HorizontalAlignment="Right" />
-
-            <PathIcon
-              x:Name="DropDownGlyph"
-              Grid.Column="2"
-              UseLayoutRounding="False"
-              IsHitTestVisible="False"
-              Height="12"
-              Width="12"
-              Margin="0,0,10,0"
-              HorizontalAlignment="Right"
-              VerticalAlignment="Center"
-              Foreground="{TemplateBinding Foreground}"
-              Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
-
+            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" Margin="0" Padding="0" />
+            
             <ItemsControl
-              Grid.Column="3"
+              Grid.Column="2"
               Name="PART_InnerRightContent"
+              Margin="8 0 0 0"
               ItemsSource="{TemplateBinding InnerRightContent}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -299,6 +290,28 @@
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>
+
+            <Border
+              x:Name="DropDownOverlay"
+              Grid.Column="3"
+              Background="Transparent"
+              Margin="0,1,1,1"
+              Width="30"
+              IsVisible="False"
+              HorizontalAlignment="Right" />
+
+            <PathIcon
+              x:Name="DropDownGlyph"
+              Grid.Column="3"
+              UseLayoutRounding="False"
+              IsHitTestVisible="False"
+              Height="12"
+              Width="12"
+              Margin="0 0 10 0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Foreground="{TemplateBinding Foreground}"
+              Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
 
             <!-- ReSharper disable once Xaml.MissingGridIndex -->
             <Popup

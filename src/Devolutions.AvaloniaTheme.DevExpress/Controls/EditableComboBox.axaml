@@ -273,7 +273,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
-          <Grid ColumnDefinitions="Auto,*,Auto,24" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto" HorizontalAlignment="Stretch">
             <Border
               Name="BorderElement"
               Grid.Column="0"

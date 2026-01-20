@@ -68,10 +68,10 @@
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
         </EditableComboBox>
-        
+
         <EditableComboBox Value="Left and Right content" HorizontalAlignment="Center">
           <EditableComboBoxItem>A</EditableComboBoxItem>
-          
+
           <EditableComboBox.InnerLeftContent>
             <Border Width="12" Height="12" Background="Green" />
           </EditableComboBox.InnerLeftContent>
@@ -273,7 +273,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
-          <Grid ColumnDefinitions="Auto,*,Auto,18" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,24" HorizontalAlignment="Stretch">
             <Border
               Name="BorderElement"
               Grid.Column="0"
@@ -322,7 +322,7 @@
             </ItemsControl>
 
             <Panel Grid.Column="3"
-                   Margin="-1"
+                   Margin="0"
                    Name="DropDownGlyphContainer"
                    Background="Transparent"
                    HorizontalAlignment="Right" VerticalAlignment="Stretch"
@@ -333,16 +333,17 @@
                 Name="DropDownGlyphBackground"
                 Background="Transparent"
                 IsHitTestVisible="False"
-                Margin="1 1 2 1"
+                Margin="{DynamicResource DropdownButtonMargin}"
                 CornerRadius="{DynamicResource ControlCornerRadius}"
                 HorizontalAlignment="Right" VerticalAlignment="Center"
-                Width="17" Height="16" />
+                Width="{DynamicResource DropdownButtonWidth}"
+                Height="{DynamicResource DropdownButtonHeight}" />
               <PathIcon
                 Name="DropDownGlyph"
                 UseLayoutRounding="False"
                 IsHitTestVisible="False"
-                Height="8"
-                Width="8"
+                Height="{DynamicResource DropdownButtonIconWidth}"
+                Width="{DynamicResource DropdownButtonIconWidth}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Foreground="{TemplateBinding Foreground}"

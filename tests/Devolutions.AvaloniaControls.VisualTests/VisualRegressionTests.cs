@@ -149,8 +149,8 @@ public class VisualRegressionTests
         // 3. Create a window to host it
         var window = new Window
         {
-            Width = 1024,
-            Height = 768,
+            Width = 1200,
+            Height = 920,
             Content = content
         };
 

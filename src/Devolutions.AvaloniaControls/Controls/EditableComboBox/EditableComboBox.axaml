@@ -267,7 +267,8 @@
               Name="PART_InnerLeftContent"
               Margin="8 0 0 0"
               Grid.Column="0"
-              ItemsSource="{TemplateBinding InnerLeftContent}">
+              ItemsSource="{TemplateBinding InnerLeftContent}"
+              IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Name="PART_InnerLeftContentPanel" Orientation="Horizontal"
@@ -282,7 +283,8 @@
               Grid.Column="2"
               Name="PART_InnerRightContent"
               Margin="8 0 0 0"
-              ItemsSource="{TemplateBinding InnerRightContent}">
+              ItemsSource="{TemplateBinding InnerRightContent}"
+              IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal"

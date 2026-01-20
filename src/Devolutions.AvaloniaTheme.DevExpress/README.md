@@ -30,6 +30,7 @@ the Avalonia community to add more DevExpress-style controls.
       - [CalendarDayButton](#calendardaybutton)
       - [CalendarItem](#calendaritem)
     - [CheckBox](#checkbox)
+    - [ColorPicker](#colorpicker)
     - [ComboBox](#combobox)
       - [ComboBoxItem](#comboboxitem)
     - [DataGrid](#datagrid)
@@ -106,6 +107,8 @@ Most of the images below are screenshots from the [SampleApp test and demo pages
 |||
 |✅ | <h3>CheckBox</h3> |
 || <img alt="CheckBox demos" src="https://github.com/user-attachments/assets/784deb51-1566-4c5b-abf1-be7e995ecacf" style="width: 659px; max-width: 100%;" /> <br /><img alt="CheckBox demos - dark mode" src="https://github.com/user-attachments/assets/9bbe6be9-7174-48c0-a83b-b94bbdfaee8b" style="width: 659px; max-width: 100%;" /> <br /><img alt="CheckBox interactivity" src="https://github.com/user-attachments/assets/476336ef-4ca8-4ed1-ba82-a5bd5e127375" style="width: 300px; max-width: 100%;" /> <img alt="CheckBox interactivity" src="https://github.com/user-attachments/assets/70fed8bd-62c0-4df2-88d7-55dd62f29539" style="width: 300px; max-width: 100%;" /> |
+|✅ | <h3>ColorPicker</h3> |
+|| <img alt="ColorPicker" src="https://github.com/user-attachments/assets/8b3ebce8-6cd8-405e-9817-ead388d282f1" style="width: 1166px; max-width: 100%;" /> <br /><img alt="ColorPicker - dark mode" src="https://github.com/user-attachments/assets/4b85f0f6-7aa1-43c0-9dbe-2f5e56e3ff52" style="width: 1166px; max-width: 100%;" /> |
 |✅ | <h3>ComboBox</h3> <h4>ComboBoxItem</h4> |
 || <img src="https://github.com/user-attachments/assets/f0e107c0-a4b2-4eec-bc0b-789e0f90cad6" alt="ComboBox demo" style="width: 232px; max-width: 100%;" /> |
 |🚧 | <h3>ContextMenu</h3> |

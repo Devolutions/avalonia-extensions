@@ -45,6 +45,7 @@
   <x:Double x:Key="EditableComboBoxHeight">32</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">32</x:Double>
   <SolidColorBrush x:Key="ComboBoxBackgroundBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
+  <StreamGeometry x:Key="DropDownGlyphPath">M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z</StreamGeometry>
 
   <MenuFlyout x:Key="DefaultTextBoxContextFlyout">
     <MenuItem Header="{DynamicResource StringTextFlyoutCutText}" Command="{Binding $parent[TextBox].Cut}"
@@ -313,7 +314,7 @@
               HorizontalAlignment="Right"
               VerticalAlignment="Center"
               Foreground="{TemplateBinding Foreground}"
-              Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+              Data="{StaticResource DropDownGlyphPath}" />
 
             <!-- ReSharper disable once Xaml.MissingGridIndex -->
             <Popup

@@ -3,7 +3,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
-    <Border Padding="20">
+    <Border Padding="20" Width="200">
       <StackPanel Spacing="20">
         <DropDownButton Content="Click Me!" />
         <DropDownButton Content="Disabled" IsEnabled="False" />
@@ -28,45 +28,46 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-            <Panel>
-                <Border
-                  Name="BackgroundElement"
-                  Background="{TemplateBinding Background}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
-                <Border
-                  Name="ButtonActiveElement"
-                  Background="Transparent"
-                  BorderBrush="{DynamicResource TransparentBrush}"
-                  BorderThickness="2"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Panel>
+            <Border
+              Name="BackgroundElement"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}" />
+            <Border
+              Name="ButtonActiveElement"
+              Background="Transparent"
+              BorderBrush="{DynamicResource TransparentBrush}"
+              BorderThickness="2"
+              CornerRadius="{TemplateBinding CornerRadius}" />
 
-                <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
-                  <ContentPresenter x:Name="PART_ContentPresenter"
-                                    Grid.Column="0"
-                                    Content="{TemplateBinding Content}"
-                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    Padding="{TemplateBinding Padding}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    FontSize="{TemplateBinding FontSize}"
-                                    FontWeight="{TemplateBinding FontWeight}" />
+            <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Grid.Column="0"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Foreground="{TemplateBinding Foreground}"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                FontSize="{TemplateBinding FontSize}"
+                                FontWeight="{TemplateBinding FontWeight}" />
 
-                  <PathIcon x:Name="DropDownGlyph"
-                            Grid.Column="1"
-                            UseLayoutRounding="False"
-                            IsHitTestVisible="False"
-                            Height="12"
-                            Width="12"
-                            Margin="0,0,10,0"
-                            Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
-                </Grid>
-            </Panel>
+              <PathIcon x:Name="DropDownGlyph"
+                        Grid.Column="1"
+                        UseLayoutRounding="False"
+                        IsHitTestVisible="False"
+                        Height="12"
+                        Width="12"
+                        Margin="0,0,10,0"
+                        Data="{StaticResource DropDownGlyphPath}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+            </Grid>
+          </Panel>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -87,7 +88,7 @@
         <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
       </Style>
     </Style>
-    
+
     <!-- Focus State -->
     <Style Selector="^:focus, ^:focus-visible">
       <Style Selector="^ /template/ Border#ButtonActiveElement">
@@ -107,10 +108,10 @@
       <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
       <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
       <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThemeThickness}" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="HorizontalContentAlignment" Value="Left" />
       <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
       <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate>
@@ -130,9 +131,20 @@
                       MinWidth="{TemplateBinding MinWidth}"
                       MinHeight="{TemplateBinding MinHeight}" />
 
-              <DockPanel LastChildFill="True" Margin="1">
+              <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Grid.Column="0"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  FontSize="{TemplateBinding FontSize}"
+                                  FontWeight="{TemplateBinding FontWeight}" />
+
                 <Border Name="DropDownGlyphBackground"
-                        DockPanel.Dock="Right"
+                        Grid.Column="1"
                         Background="Transparent"
                         Margin="{DynamicResource DropdownButtonMargin}"
                         Width="{DynamicResource DropdownButtonWidth}"
@@ -149,17 +161,7 @@
                             Foreground="{TemplateBinding Foreground}"
                             Data="{StaticResource ChevronPath}" />
                 </Border>
-
-                <ContentPresenter x:Name="PART_ContentPresenter"
-                                  Content="{TemplateBinding Content}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Foreground="{TemplateBinding Foreground}"
-                                  Padding="{TemplateBinding Padding}"
-                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  FontSize="{TemplateBinding FontSize}"
-                                  FontWeight="{TemplateBinding FontWeight}" />
-              </DockPanel>
+              </Grid>
             </Panel>
           </ControlTemplate>
         </Setter.Value>

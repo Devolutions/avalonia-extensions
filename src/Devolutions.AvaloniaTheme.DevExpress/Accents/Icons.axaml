@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
   <StreamGeometry x:Key="ChevronPath">M1881.76,1.56l-876.76,876.76L126.68,0C82.97,0,0,158.32,0,158.32l1005,1005L2010,158.32,1881.76,1.56Z</StreamGeometry>
+  <StreamGeometry x:Key="DropDownGlyphPath">M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z</StreamGeometry>
   <StreamGeometry x:Key="CheckMarkPath">M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z</StreamGeometry>
   <StreamGeometry x:Key="CheckMarkPathFat">M5.5,9.6l-3.8-3.8c-.4-.4-1,.6-1.4,1-.4.4-1.4,1-1,1.4l5.5,5.5c.4.4,1,.4,1.4,0L18.2,1.7c.4-.4-.6-1-1-1.4-.4-.4-1-1.4-1.4-1L5.5,9.6Z</StreamGeometry>
   <StreamGeometry x:Key="CheckMarkIndeterminatePath">M1536 1536v-1024h-1024v1024h1024z</StreamGeometry>

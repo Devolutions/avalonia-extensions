@@ -66,7 +66,6 @@
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="MaxDropDownHeight" Value="300" />
     <Setter Property="MaxSelectionBoxHeight" Value="270" />
     <Setter Property="MinHeight" Value="32" />

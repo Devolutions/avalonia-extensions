@@ -78,7 +78,6 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
     <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="ItemTemplate">
       <DataTemplate>

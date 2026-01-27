@@ -70,7 +70,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="DevExpress" />
+            <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="MacClassic, DevExpress" />
           </TabItem.Header>
           <demoPages:DropDownButtonDemo />
         </TabItem>

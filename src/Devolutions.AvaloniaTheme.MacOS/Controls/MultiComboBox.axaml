@@ -71,7 +71,6 @@
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-    <Setter Property="BoxShadow" Value="{DynamicResource ControlBorderBoxShadow}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
     <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
@@ -98,7 +97,7 @@
               Background="{TemplateBinding Background}"
               BorderThickness="{TemplateBinding BorderThickness}"
               BorderBrush="{TemplateBinding BorderBrush}"
-              BoxShadow="{TemplateBinding BoxShadow}"
+              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
               MinHeight="{TemplateBinding MinHeight}"
               CornerRadius="{TemplateBinding CornerRadius}">
               <Grid ColumnDefinitions="Auto,*,Auto, Auto">

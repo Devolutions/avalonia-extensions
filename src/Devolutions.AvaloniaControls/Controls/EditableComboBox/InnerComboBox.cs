@@ -83,9 +83,6 @@ public partial class EditableComboBox
             set => this.SetValue(ValueFilterDropdownProperty, value);
         }
 
-        internal void SetErrorState(bool hasError) =>
-            this.PseudoClasses.Set(":error", hasError);
-
         public IInputElement? GetControl(NavigationDirection direction, IInputElement? from, bool wrap)
         {
             return direction switch

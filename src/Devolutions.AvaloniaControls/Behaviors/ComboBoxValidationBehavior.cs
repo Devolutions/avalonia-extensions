@@ -19,7 +19,7 @@ public static class ComboBoxValidationBehavior
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxValidationBehavior));
 
-    private static readonly ConditionalWeakTable<ComboBox, ValidationState> States = new();
+    private static readonly ConditionalWeakTable<ComboBox, ValidationState> States = [];
 
     static ComboBoxValidationBehavior()
     {
@@ -177,13 +177,13 @@ public static class ComboBoxValidationBehavior
 
     private sealed class ValidationState : IDisposable
     {
-        private readonly ComboBox _comboBox;
-        private INotifyDataErrorInfo? _currentDataErrorInfo;
-        private EventHandler<DataErrorsChangedEventArgs>? _errorsChangedHandler;
+        private readonly ComboBox comboBox;
+        private INotifyDataErrorInfo? currentDataErrorInfo;
+        private EventHandler<DataErrorsChangedEventArgs>? errorsChangedHandler;
 
         public ValidationState(ComboBox comboBox)
         {
-            this._comboBox = comboBox;
+            this.comboBox = comboBox;
         }
 
         public string? BindingPath { get; set; }
@@ -192,9 +192,9 @@ public static class ComboBoxValidationBehavior
         {
             this.UnsubscribeFromDataContext();
 
-            this._currentDataErrorInfo = ndei;
-            this._errorsChangedHandler = (sender, args) => this.OnErrorsChanged(args, comboBox);
-            ndei.ErrorsChanged += this._errorsChangedHandler;
+            this.currentDataErrorInfo = ndei;
+            this.errorsChangedHandler = (_, args) => this.OnErrorsChanged(args, comboBox);
+            ndei.ErrorsChanged += this.errorsChangedHandler;
 
             // Check for existing errors immediately
             this.UpdateValidationErrors(comboBox);
@@ -202,13 +202,13 @@ public static class ComboBoxValidationBehavior
 
         public void UnsubscribeFromDataContext()
         {
-            if (this._currentDataErrorInfo != null && this._errorsChangedHandler != null)
+            if (this.currentDataErrorInfo != null && this.errorsChangedHandler != null)
             {
-                this._currentDataErrorInfo.ErrorsChanged -= this._errorsChangedHandler;
+                this.currentDataErrorInfo.ErrorsChanged -= this.errorsChangedHandler;
             }
 
-            this._currentDataErrorInfo = null;
-            this._errorsChangedHandler = null;
+            this.currentDataErrorInfo = null;
+            this.errorsChangedHandler = null;
         }
 
         private void OnErrorsChanged(DataErrorsChangedEventArgs args, ComboBox comboBox)
@@ -222,21 +222,19 @@ public static class ComboBoxValidationBehavior
 
         private void UpdateValidationErrors(ComboBox comboBox)
         {
-            if (this._currentDataErrorInfo == null || string.IsNullOrEmpty(this.BindingPath))
+            if (this.currentDataErrorInfo == null || string.IsNullOrEmpty(this.BindingPath))
             {
                 return;
             }
 
-            var errors = this._currentDataErrorInfo.GetErrors(this.BindingPath);
-            var errorList = errors?.Cast<object>().ToList() ?? [];
+            var errors = this.currentDataErrorInfo.GetErrors(this.BindingPath);
+            var errorList = errors.Cast<object>().ToList();
 
             if (errorList.Count > 0)
             {
                 // Set the first error (most common pattern)
                 var firstError = errorList[0];
-                var exception = firstError is Exception ex
-                    ? ex
-                    : new DataValidationException(firstError?.ToString() ?? "Validation error");
+                var exception = firstError as Exception ?? new DataValidationException(firstError?.ToString() ?? "Validation error");
 
                 DataValidationErrors.SetError(comboBox, exception);
             }
@@ -249,7 +247,7 @@ public static class ComboBoxValidationBehavior
         public void Dispose()
         {
             this.UnsubscribeFromDataContext();
-            DataValidationErrors.SetError(this._comboBox, null);
+            DataValidationErrors.SetError(this.comboBox, null);
         }
     }
 }

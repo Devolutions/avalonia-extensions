@@ -13,11 +13,13 @@ public static class Initialization
     }
 
     /// <summary>
-    /// Enables data validation on ComboBox.TextProperty using reflection.
-    /// This is a workaround for Avalonia not enabling validation by default on ComboBox.Text,
-    /// unlike TextBox.Text which has enableDataValidation: true.
-    ///
+    /// Enables data validation on ComboBox.Text bindings by modifying the property metadata to set EnableDataValidation=true.
+    /// <para>
     /// This is a workaround until this is fixed in Avalonia: https://github.com/AvaloniaUI/Avalonia/issues/20462
+    /// </para>
+    /// <para>
+    /// See: <see cref="Devolutions.AvaloniaControls.Behaviors.ComboBoxValidationBehavior" />
+    /// </para>
     /// </summary>
     private static void EnableComboBoxTextValidation()
     {

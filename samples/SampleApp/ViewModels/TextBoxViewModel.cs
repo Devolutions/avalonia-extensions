@@ -9,4 +9,9 @@ public partial class TextBoxViewModel : ObservableValidator
     [NotifyDataErrorInfo]
     [Required(ErrorMessage = "This Input is required.")]
     private string requiredInput = string.Empty;
+
+    public TextBoxViewModel()
+    {
+        this.ValidateAllProperties();
+    }
 }

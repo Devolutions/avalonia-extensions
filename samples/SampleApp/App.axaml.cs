@@ -9,6 +9,7 @@ using ActiproSoftware.UI.Avalonia.Themes;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
@@ -369,15 +370,15 @@ public class App : Application
 
     private void FixCommunityToolkitMvvmDataValidation()
     {
-        // // Get an array of plugins to remove
-        // var dataValidationPluginsToRemove =
-        //     BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-        //
-        // // remove each entry found
-        // foreach (var plugin in dataValidationPluginsToRemove)
-        // {
-        //     BindingPlugins.DataValidators.Remove(plugin);
-        // }
+        // Get an array of plugins to remove
+        var dataValidationPluginsToRemove =
+            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+
+        // remove each entry found
+        foreach (var plugin in dataValidationPluginsToRemove)
+        {
+            BindingPlugins.DataValidators.Remove(plugin);
+        }
     }
 
     public void AttachDevToolsOnce()

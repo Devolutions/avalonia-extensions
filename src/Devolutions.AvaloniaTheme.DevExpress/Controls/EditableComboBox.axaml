@@ -325,7 +325,7 @@
           <ItemsControl
             Grid.Column="2"
             Name="PART_InnerRightContent"
-              Margin="4 0 0 0"
+            Margin="4 0 0 0"
             ItemsSource="{TemplateBinding InnerRightContent}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
@@ -350,7 +350,7 @@
               CornerRadius="{DynamicResource ControlCornerRadius}"
               HorizontalAlignment="Right" VerticalAlignment="Center"
               Width="{DynamicResource DropdownButtonWidth}"
-                Height="{DynamicResource DropdownButtonHeight}" />
+              Height="{DynamicResource DropdownButtonHeight}" />
             <PathIcon
               Name="DropDownGlyph"
               UseLayoutRounding="False"

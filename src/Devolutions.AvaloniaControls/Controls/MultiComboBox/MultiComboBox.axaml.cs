@@ -4,6 +4,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
+using System.Linq;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -77,7 +78,17 @@ public partial class MultiComboBox : SelectingItemsControl
 
     public new static readonly StyledProperty<IList?> SelectedItemsProperty =
         AvaloniaProperty.Register<MultiComboBox, IList?>(
-            nameof(SelectedItems));
+            nameof(SelectedItems),
+            enableDataValidation: true,
+            defaultBindingMode: BindingMode.TwoWay,
+            coerce: CoerceSelectedItems);
+
+    private static IList? CoerceSelectedItems(AvaloniaObject instance, IList? value)
+    {
+        // Coercion callback that just returns the value unchanged
+        // This is needed so that CoerceValue() will trigger binding re-evaluation
+        return value;
+    }
 
     public static readonly StyledProperty<object?> InnerLeftContentProperty =
         AvaloniaProperty.Register<MultiComboBox, object?>(
@@ -146,6 +157,10 @@ public partial class MultiComboBox : SelectingItemsControl
     private ScrollViewer? selectionScrollViewer;
 
     private bool updateInternal;
+    
+    private System.ComponentModel.INotifyDataErrorInfo? boundDataErrorInfo;
+    
+    private string? boundPropertyName;
 
     static MultiComboBox()
     {
@@ -470,6 +485,97 @@ public partial class MultiComboBox : SelectingItemsControl
         this.selectAllItem?.UpdateSelection();
     }
 
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+
+        if (property == SelectedItemsProperty)
+        {
+            // When the binding is established, subscribe to the DataContext's INotifyDataErrorInfo
+            // to monitor validation state changes
+            this.SubscribeToDataContextValidation();
+            
+            DataValidationErrors.SetError(this, error);
+        }
+    }
+    
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        
+        // Re-subscribe when DataContext changes
+        this.SubscribeToDataContextValidation();
+    }
+    
+    private void SubscribeToDataContextValidation()
+    {
+        // Unsubscribe from previous DataContext
+        if (this.boundDataErrorInfo != null)
+        {
+            this.boundDataErrorInfo.ErrorsChanged -= this.OnBoundPropertyErrorsChanged;
+            this.boundDataErrorInfo = null;
+            this.boundPropertyName = null;
+        }
+        
+        // Subscribe to new DataContext if it implements INotifyDataErrorInfo
+        if (this.DataContext is System.ComponentModel.INotifyDataErrorInfo ndei && this.SelectedItems != null)
+        {
+            // Find the property name in the DataContext that matches our SelectedItems collection
+            var dataContextType = this.DataContext.GetType();
+            foreach (var prop in dataContextType.GetProperties())
+            {
+                if (prop.CanRead)
+                {
+                    var propValue = prop.GetValue(this.DataContext);
+                    bool matches = object.ReferenceEquals(propValue, this.SelectedItems);
+                    
+                    if (matches)
+                    {
+                        this.boundDataErrorInfo = ndei;
+                        this.boundPropertyName = prop.Name;
+                        this.boundDataErrorInfo.ErrorsChanged += this.OnBoundPropertyErrorsChanged;
+                        
+                        // Trigger initial validation check
+                        this.UpdateValidationStateFromDataContext();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    private void OnBoundPropertyErrorsChanged(object? sender, System.ComponentModel.DataErrorsChangedEventArgs e)
+    {
+        // Only handle errors for our bound property
+        if (e.PropertyName == this.boundPropertyName || string.IsNullOrEmpty(e.PropertyName))
+        {
+            this.UpdateValidationStateFromDataContext();
+        }
+    }
+    
+    private void UpdateValidationStateFromDataContext()
+    {
+        if (this.boundDataErrorInfo != null && this.boundPropertyName != null)
+        {
+            var errors = this.boundDataErrorInfo.GetErrors(this.boundPropertyName);
+            Exception? error = null;
+            
+            if (errors != null)
+            {
+                var errorList = errors.Cast<object>().ToList();
+                
+                if (errorList.Count > 0)
+                {
+                    // Convert first error to an exception
+                    string errorMessage = errorList[0]?.ToString() ?? "Validation error";
+                    error = new DataValidationException(errorMessage);
+                }
+            }
+            
+            DataValidationErrors.SetError(this, error);
+        }
+    }
+
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -608,11 +714,58 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             @new.CollectionChanged += this.OnSelectedItemsCollectionChanged;
         }
+        
+        // Re-subscribe to validation when SelectedItems changes
+        // This ensures we track the correct property in the DataContext
+        this.SubscribeToDataContextValidation();
     }
 
     private void OnSelectedItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         this.ApplyCurrentSelectionState();
+        
+        // Trigger validation automatically when collection mutates
+        // This works with any INotifyDataErrorInfo implementation
+        this.TriggerCollectionValidation();
+    }
+    
+    private void TriggerCollectionValidation()
+    {
+        // If we already know the bound property name from subscription, use it directly
+        if (this.boundPropertyName != null && this.DataContext != null)
+        {
+            var dataContextType = this.DataContext.GetType();
+            
+            // Get the actual collection value
+            var property = dataContextType.GetProperty(this.boundPropertyName);
+            var collectionValue = property?.GetValue(this.DataContext);
+            
+            // Try to call the protected ValidateProperty method from ObservableValidator base class
+            // We need to search in base types as well
+            System.Reflection.MethodInfo? validateMethod = null;
+            var currentType = dataContextType;
+            while (currentType != null && validateMethod == null)
+            {
+                validateMethod = currentType.GetMethod("ValidateProperty",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                    null,
+                    new[] { typeof(object), typeof(string) },
+                    null);
+                currentType = currentType.BaseType;
+            }
+            
+            if (validateMethod != null)
+            {
+                try
+                {
+                    validateMethod.Invoke(this.DataContext, new object?[] { collectionValue, this.boundPropertyName });
+                }
+                catch
+                {
+                    // Silently ignore validation errors
+                }
+            }
+        }
     }
 
     private void ApplyCurrentSelectionState()

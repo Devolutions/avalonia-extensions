@@ -312,6 +312,10 @@
           <ItemsControl
             Grid.Column="0"
             Name="PART_InnerLeftContent"
+            Margin="{TemplateBinding Padding,
+              Converter={x:Static DevoConverters.ThicknessExtractor},
+              ConverterParameter={x:Static ThicknessSubset.Left}
+            }"
             ItemsSource="{TemplateBinding InnerLeftContent}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>

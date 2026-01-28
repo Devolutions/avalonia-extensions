@@ -66,6 +66,15 @@
             <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
             <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless</TextBox>
 
+            <TextBox Watermark="Inner left and right">
+              <TextBox.InnerLeftContent>
+                <Border Width="12" Height="12" Background="Green" />
+              </TextBox.InnerLeftContent>
+              <TextBox.InnerRightContent>
+                <Border Width="12" Height="12" Background="Blue" />
+              </TextBox.InnerRightContent>
+            </TextBox>
+
           </StackPanel>
         </StackPanel>
       </Border>

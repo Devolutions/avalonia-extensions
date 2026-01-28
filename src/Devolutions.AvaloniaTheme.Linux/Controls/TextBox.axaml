@@ -250,7 +250,7 @@
     </Style>
 
     <Style Selector="^:error /template/ Border#PART_BorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorBorderBrush}" />
     </Style>
 
     <Style Selector="^ /template/ TextBlock#PART_FloatingWatermark">

@@ -122,7 +122,10 @@
                     ColumnDefinitions="Auto, *, Auto, Auto">
                 <ContentPresenter
                   Grid.Column="0"
-                  Margin="8 0 0 0"
+                  Margin="{TemplateBinding Padding,
+                    Converter={x:Static DevoConverters.ThicknessExtractor},
+                    ConverterParameter={x:Static ThicknessSubset.Left}
+                  }"
                   VerticalAlignment="Center"
                   Content="{TemplateBinding InnerLeftContent}"
                   Foreground="{DynamicResource TextBoxInnerForeground}"

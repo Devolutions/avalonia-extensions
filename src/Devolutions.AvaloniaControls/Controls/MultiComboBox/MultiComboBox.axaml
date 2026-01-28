@@ -117,7 +117,6 @@
               <ContentPresenter
                 Grid.Column="0"
                 Margin="8 0 0 0"
-                IsHitTestVisible="False"
                 VerticalAlignment="Center"
                 Content="{TemplateBinding InnerLeftContent}"
                 Foreground="{DynamicResource TextBoxInnerForeground}"
@@ -178,7 +177,6 @@
               <ContentPresenter
                 Grid.Column="3"
                 VerticalAlignment="Center"
-                IsHitTestVisible="False"
                 Content="{TemplateBinding InnerRightContent}"
                 Foreground="{DynamicResource TextBoxInnerForeground}"
                 IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />

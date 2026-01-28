@@ -104,6 +104,8 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.
 
+For an always up-to-date visual reference you can also browse the [baseline screenshots](https://github.com/Devolutions/avalonia-extensions/tree/master/tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline/MacClassic).
+
 ||| 
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 |||

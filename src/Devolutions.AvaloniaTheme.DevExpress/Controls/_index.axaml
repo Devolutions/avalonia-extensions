@@ -26,8 +26,8 @@
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />
-    <MergeResourceInclude Source="DataValidationErrors.axaml" />
     <MergeResourceInclude Source="DropDownButton.axaml" />
+    <MergeResourceInclude Source="DataValidationErrors.axaml" />
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="EditableComboBox.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />

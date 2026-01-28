@@ -281,6 +281,7 @@
   <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
   <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
 
+  <SolidColorBrush x:Key="CheckBoxSelectedForegroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="CheckBoxForegroundDisabledBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.56" />
   <SolidColorBrush x:Key="CheckBoxCheckedBackgroundDisabledBrush" Color="{DynamicResource ForegroundColor}"
                    Opacity="0.2" />

@@ -72,7 +72,7 @@
                 Name="CheckGlyph"
                 Width="8"
                 Height="8"
-                Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                Fill="{DynamicResource TransparentBrush}"
                 VerticalAlignment="Center"
                 UseLayoutRounding="False" />
             </Border>
@@ -131,7 +131,7 @@
       </Style>
 
       <Style Selector="^ /template/ Ellipse#CheckGlyph">
-        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxSelectedForegroundBrush}" />
       </Style>
 
       <!-- Checked focussed State -->
@@ -155,7 +155,7 @@
         </Style>
 
         <Style Selector="^ /template/ Ellipse#CheckGlyph">
-          <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+          <Setter Property="Fill" Value="{DynamicResource CheckBoxSelectedForegroundBrush}" />
           <Setter Property="Width" Value="9" />
         </Style>
       </Style>
@@ -172,7 +172,7 @@
           <Setter Property="Width" Value="8" />
         </Style>
       </Style>
-      
+
       <!-- Checked Disabled State -->
       <Style Selector="^:disabled">
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">
@@ -189,6 +189,6 @@
         </Style>
       </Style>
     </Style>
-    
+
   </ControlTheme>
 </ResourceDictionary>

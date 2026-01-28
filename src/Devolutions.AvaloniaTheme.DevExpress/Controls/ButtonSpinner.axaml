@@ -74,53 +74,58 @@
           <Border Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}"
-                  Margin="0 0 3 0">
-            <StackPanel Name="PART_SpinnerPanel"
-                        TabIndex="2"
-                        DockPanel.Dock="Right"
-                        Orientation="Vertical"
-                        VerticalAlignment="Center"
-                        IsVisible="{TemplateBinding ShowButtonSpinner}">
-              <RepeatButton Name="PART_IncreaseButton"
-                            IsTabStop="{TemplateBinding IsTabStop}"
-                            Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource ButtonSpinnerLeftThickness}}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Foreground="{TemplateBinding Foreground}"
-                            Padding="{TemplateBinding Padding}">
-                <PathIcon
-                  Width="9"
-                  Height="9"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Foreground="{TemplateBinding Foreground}"
-                  RenderTransform="scaleY(-1)"
-                  Data="{StaticResource ChevronPath}" />
-              </RepeatButton>
-
-              <RepeatButton Name="PART_DecreaseButton"
-                            IsTabStop="{TemplateBinding IsTabStop}"
-                            Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource ButtonSpinnerLeftThickness}}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Foreground="{TemplateBinding Foreground}"
-                            Margin="0 -1 0 0 "
-                            Padding="{TemplateBinding Padding}">
-                <PathIcon Width="9"
-                          Height="9"
-                          HorizontalAlignment="Center"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+            <DockPanel>
+              <StackPanel Name="PART_SpinnerPanel"
+                          TabIndex="2"
+                          DockPanel.Dock="Right"
+                          Orientation="Vertical"
                           VerticalAlignment="Center"
-                          Foreground="{DynamicResource ForegroundColor}"
-                          Data="{StaticResource ChevronPath}" />
-              </RepeatButton>
-            </StackPanel>
+                          IsVisible="{TemplateBinding ShowButtonSpinner}">
+                <RepeatButton Name="PART_IncreaseButton"
+                              IsTabStop="{TemplateBinding IsTabStop}"
+                              Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              Foreground="{TemplateBinding Foreground}"
+                              Padding="{TemplateBinding Padding}">
+                  <PathIcon
+                    Width="9"
+                    Height="9"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{TemplateBinding Foreground}"
+                    RenderTransform="scaleY(-1)"
+                    Data="{StaticResource ChevronPath}" />
+                </RepeatButton>
+
+                <RepeatButton Name="PART_DecreaseButton"
+                              IsTabStop="{TemplateBinding IsTabStop}"
+                              Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              Foreground="{TemplateBinding Foreground}"
+                              Margin="0 -1 0 0 "
+                              Padding="{TemplateBinding Padding}">
+                  <PathIcon Width="9"
+                            Height="9"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource ForegroundColor}"
+                            Data="{StaticResource ChevronPath}" />
+                </RepeatButton>
+              </StackPanel>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                TabIndex="1"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </DockPanel>
           </Border>
         </DataValidationErrors>
       </ControlTemplate>
@@ -128,6 +133,11 @@
 
     <Style Selector="^ /template/ RepeatButton:disabled PathIcon, ^ /template/ RepeatButton:pressed PathIcon">
       <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
+    </Style>
+
+    <Style Selector="^:left /template/ StackPanel#PART_SpinnerPanel">
+      <Setter Property="DockPanel.Dock" Value="Left" />
+      <Setter Property="Margin" Value="3 0 2 0" />
     </Style>
   </ControlTheme>
 

@@ -1,5 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
+                    xmlns:converters1="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls.ColorPicker">
 
   <!-- MARK: Light Mode -->
 
@@ -9,6 +11,9 @@
       <Color x:Key="ForegroundColor">#000000</Color>
 
       <Color x:Key="SystemRegionColor">#ffffff</Color>
+
+      <Color x:Key="HyperLinkColor">#0066CC</Color>
+      <Color x:Key="HyperLinkVisitedColor">#551A8B</Color>
 
       <Color x:Key="AccentForegroundColor">#ffffff</Color>
       <Color x:Key="ErrorTextColor">#C50500</Color>
@@ -183,6 +188,24 @@
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
 
+      <!-- HyperlinkButton Resources -->
+      <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPressed" Color="{DynamicResource HyperLinkColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisited" Color="{DynamicResource HyperLinkVisitedColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPointerOver" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPressed" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundDisabled" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
+
+      <SolidColorBrush x:Key="HyperlinkButtonBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPointerOver" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPressed" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+
     </ResourceDictionary>
 
 
@@ -193,6 +216,9 @@
       <Color x:Key="ForegroundColor">#ffffff</Color>
 
       <Color x:Key="SystemRegionColor">#21222F</Color>
+
+      <Color x:Key="HyperLinkColor">#4493F8</Color>
+      <Color x:Key="HyperLinkVisitedColor">#B894E6</Color>
 
       <Color x:Key="AccentForegroundColor">#deecf9</Color>
       <Color x:Key="ErrorTextColor">#ed7083</Color>
@@ -363,6 +389,24 @@
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+
+      <!-- HyperlinkButton Resources -->
+      <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundPressed" Color="{DynamicResource HyperLinkColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisited" Color="{DynamicResource HyperLinkVisitedColor}" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPointerOver" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.8" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundVisitedPressed" Color="{DynamicResource HyperLinkVisitedColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="HyperlinkButtonForegroundDisabled" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
+
+      <SolidColorBrush x:Key="HyperlinkButtonBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPointerOver" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundPressed" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -654,6 +698,42 @@
   <Thickness x:Key="ToggleSwitchHeaderMargin">8 4</Thickness>
   <Thickness x:Key="ToggleSwitchOnContentMargin">8 4</Thickness>
   <x:Double x:Key="SimpleToggleSwitchFontSize">14</x:Double>
+
+  <!-- ColorPicker Resources -->
+  <VisualBrush x:Key="ColorControlCheckeredBackgroundBrush"
+               TileMode="Tile"
+               Stretch="Uniform"
+               DestinationRect="0,0,8,8">
+    <VisualBrush.Visual>
+      <Image Width="8" Height="8">
+        <Image.Source>
+          <DrawingImage>
+            <DrawingImage.Drawing>
+              <DrawingGroup>
+                <GeometryDrawing Geometry="M0,0 L2,0 2,2, 0,2Z" Brush="Transparent" />
+                <GeometryDrawing Geometry="M0,1 L2,1 2,2, 1,2 1,0 0,0Z" Brush="#19808080" />
+              </DrawingGroup>
+            </DrawingImage.Drawing>
+          </DrawingImage>
+        </Image.Source>
+      </Image>
+    </VisualBrush.Visual>
+  </VisualBrush>
+
+  <SolidColorBrush x:Key="ColorControlLightSelectorBrush" Color="#FFFFFFFF" />
+  <SolidColorBrush x:Key="ColorControlDarkSelectorBrush" Color="#E4000000" />
+
+  <SolidColorBrush x:Key="ColorViewContentBackgroundBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="ColorViewContentBorderBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="ColorViewTabBorderBrush" Color="Transparent" />
+
+  <!-- ColorPicker Converters -->
+  <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+  <converters1:ToBrushConverter x:Key="ToBrushConverter" />
+
+  <converters:CornerRadiusToDoubleConverter x:Key="TopLeftCornerRadiusConverter" Corner="TopLeft" />
+  <converters:CornerRadiusToDoubleConverter x:Key="BottomRightCornerRadiusConverter" Corner="BottomRight" />
+
 
   <!-- DEVELOPMENT ONLY -->
 

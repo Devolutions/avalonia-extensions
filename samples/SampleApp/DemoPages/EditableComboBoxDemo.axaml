@@ -145,6 +145,24 @@
           <EditableComboBoxItem>Option 28</EditableComboBoxItem>
           <EditableComboBoxItem>Option 29</EditableComboBoxItem>
         </EditableComboBox>
+        
+        <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Inner left and right content
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="9"
+          VerticalAlignment="Top"
+          Mode="Filter"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          
+          <EditableComboBox.InnerLeftContent>
+            <Border Width="12" Height="12" Background="Green" />
+          </EditableComboBox.InnerLeftContent>
+          <EditableComboBox.InnerRightContent>
+            <Border Width="12" Height="12" Background="Blue" />
+          </EditableComboBox.InnerRightContent>
+        </EditableComboBox>
 
         <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
           - Required error:<LineBreak />

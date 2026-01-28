@@ -1,0 +1,103 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:Avalonia.Controls"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+
+  <!-- 
+    Un-comment to allow auto-completion;
+    DO NOT INCLUDE WHEN PUBLISHING!
+  -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="/Accents/ThemeResources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer Padding="0">
+      <Border Padding="20" Width="400" Height="500">
+        <ColorPicker Color="#ff0000" VerticalAlignment="Top" />
+      </Border>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type ColorPicker}"
+                TargetType="ColorPicker">
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <!-- Alpha position should match CSS (and default slider order) instead of XAML/WinUI -->
+    <Setter Property="HexInputAlphaPosition" Value="Trailing" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Content" Value="{x:Null}" />
+    <Setter Property="Palette">
+      <controls:FluentColorPalette />
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="{x:Type ColorPicker}">
+        <DropDownButton Classes="ValuePicker"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="0,0,10,0"
+                        UseLayoutRounding="False">
+          <DropDownButton.Content>
+            <Panel HorizontalAlignment="Stretch"
+                   MinWidth="16"
+                   Height="16"
+                   Margin="0 0 -3 0">
+              <Border Background="{StaticResource ColorControlCheckeredBackgroundBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+              <Border Name="ColorSwatch"
+                      Background="{Binding HsvColor, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ToBrushConverter}}"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+              <Border BorderBrush="{DynamicResource ColorPickerSwatchBorderBrush}"
+                      BorderThickness="1"
+                      CornerRadius="{TemplateBinding CornerRadius}" />
+            </Panel>
+          </DropDownButton.Content>
+
+          <DropDownButton.Styles>
+            <Style Selector="FlyoutPresenter.nopadding">
+              <Setter Property="Padding" Value="0" />
+              <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+              <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxDropDownBorderBrushTransparent}" />
+              <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxDropdownBorderThickness}" />
+              <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+              <Setter Property="Template">
+                <ControlTemplate>
+                  <Border Name="LayoutRoot"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          Margin="{DynamicResource ColorPickerFlyoutMargin}"
+                          BoxShadow="{DynamicResource ColorPickerFlyoutShadow}">
+                    <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                      <ContentPresenter Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        Margin="{TemplateBinding Padding}" />
+                    </ScrollViewer>
+                  </Border>
+                </ControlTemplate>
+              </Setter>
+            </Style>
+          </DropDownButton.Styles>
+          <DropDownButton.Flyout>
+            <Flyout FlyoutPresenterClasses="nopadding"
+                    Placement="{DynamicResource ColorPickerFlyoutPlacement}">
+              <ColorView Background="{TemplateBinding Background}"
+                         HsvColor="{Binding HsvColor, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+            </Flyout>
+          </DropDownButton.Flyout>
+        </DropDownButton>
+      </ControlTemplate>
+    </Setter>
+
+  </ControlTheme>
+
+</ResourceDictionary>

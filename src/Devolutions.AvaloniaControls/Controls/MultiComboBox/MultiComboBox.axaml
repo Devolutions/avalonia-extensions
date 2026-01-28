@@ -46,6 +46,18 @@
       <MultiComboBox Watermark="disabled" Margin="10" IsEnabled="False">
         <MultiComboBoxItem Content="Option 1" IsSelected="True" />
       </MultiComboBox>
+      
+      <MultiComboBox Watermark="Left and Right content" Margin="10">
+        <MultiComboBoxItem>A</MultiComboBoxItem>
+        <MultiComboBoxItem>B</MultiComboBoxItem>
+          
+        <MultiComboBox.InnerLeftContent>
+          <Border Width="12" Height="12" Background="Green" />
+        </MultiComboBox.InnerLeftContent>
+        <MultiComboBox.InnerRightContent>
+          <Border Width="12" Height="12" Background="Blue" />
+        </MultiComboBox.InnerRightContent>
+      </MultiComboBox>
     </StackPanel>
   </Design.PreviewWith>
 
@@ -54,7 +66,6 @@
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="MaxDropDownHeight" Value="300" />
     <Setter Property="MaxSelectionBoxHeight" Value="270" />
     <Setter Property="MinHeight" Value="32" />
@@ -94,7 +105,7 @@
 
               <ContentPresenter
                 Grid.Column="0"
-                Margin="8,0"
+                Margin="8 0 0 0"
                 IsHitTestVisible="False"
                 VerticalAlignment="Center"
                 Content="{TemplateBinding InnerLeftContent}"
@@ -152,10 +163,9 @@
                   ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
 
               </SmallScrollViewer>
-
+              
               <ContentPresenter
                 Grid.Column="3"
-                Margin="8,0"
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Content="{TemplateBinding InnerRightContent}"
@@ -182,7 +192,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Foreground="{TemplateBinding Foreground}"
-                Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+                Data="{StaticResource DropDownGlyphPath}" />
             </Grid>
 
             <Popup

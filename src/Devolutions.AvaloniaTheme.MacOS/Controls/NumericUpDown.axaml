@@ -59,6 +59,7 @@
   <ControlTheme x:Key="{x:Type NumericUpDown}" TargetType="NumericUpDown">
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="NumericUpDownBehavior.NumericOnly" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors ClipToBounds="False">

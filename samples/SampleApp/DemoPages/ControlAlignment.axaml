@@ -44,19 +44,20 @@
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
         <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
-        <AutoCompleteBox Grid.Column="8" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Column="9" Value="0"
+        <ColorPicker Grid.Column="8" />
+        <AutoCompleteBox Grid.Column="9" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Column="10" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Column="10" />
-        <Button Grid.Column="11" Content="Button" />
-        <CheckBox Grid.Column="12" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Column="13" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Column="11" />
+        <Button Grid.Column="12" Content="Button" />
+        <CheckBox Grid.Column="13" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Column="14" Content="RadioButton" IsChecked="True" />
         <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-        <TextBlock Grid.Column="14" Text="🙂" FontSize="45" />
+        <TextBlock Grid.Column="15" Text="🙂" FontSize="45" />
       </Grid>
 
-      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *, *"
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *"
             RowSpacing="5"
             Width="150"
             HorizontalAlignment="Left"
@@ -88,14 +89,15 @@
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
         <TagInput Grid.Row="8" Watermark="TagInput" />
-        <AutoCompleteBox Grid.Row="9" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
-        <NumericUpDown Grid.Row="10" Value="0"
+        <ColorPicker Grid.Row="9" />
+        <AutoCompleteBox Grid.Row="10" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
+        <NumericUpDown Grid.Row="11" Value="0"
                        Increment="1"
                        Watermark="mm" />
-        <CalendarDatePicker Grid.Row="11" />
-        <Button Grid.Row="12" Content="Button" />
-        <CheckBox Grid.Row="13" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Row="14" Content="RadioButton" IsChecked="True" />
+        <CalendarDatePicker Grid.Row="12" />
+        <Button Grid.Row="13" Content="Button" />
+        <CheckBox Grid.Row="14" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Row="15" Content="RadioButton" IsChecked="True" />
       </Grid>
 
       <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
@@ -132,6 +134,7 @@
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <ColorPicker />
           <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
@@ -146,7 +149,7 @@
 
         <TextBlock>Custom Height:</TextBlock>
         <TextBlock IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">(Visible height 30 requires <TextBlock Classes="code">Height="33"</TextBlock> !)</TextBlock>
- 
+
         <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
           <TextBlock Height="33">TextBlock</TextBlock>
           <TextBox Height="33" Watermark="TextBox" />
@@ -179,6 +182,7 @@
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <ColorPicker Height="33" />
           <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Height="33" Value="0"
                          Increment="1"
@@ -218,6 +222,8 @@
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
           <TagInput Watermark="TagInput" />
+          <ColorPicker HorizontalAlignment="Stretch" Width="NaN" />
+          <ColorPicker />
           <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" Watermark="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"

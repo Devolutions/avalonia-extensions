@@ -52,6 +52,12 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
+            <controls:SampleItemHeader Title="ColorPicker" ApplicableTo="DevExpress" />
+          </TabItem.Header>
+          <demoPages:ColorPickerDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
             <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo>
@@ -65,6 +71,12 @@
             <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ContextMenuDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
+            <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="DevExpress" />
+          </TabItem.Header>
+          <demoPages:DropDownButtonDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>
@@ -133,6 +145,12 @@
             <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:GridSplitterDemo />
+        </TabItem>
+        <TabItem>
+          <TabItem.Header>
+            <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+          </TabItem.Header>
+          <demoPages:HyperlinkButtonDemo />
         </TabItem>
         <TabItem>
           <TabItem.Header>

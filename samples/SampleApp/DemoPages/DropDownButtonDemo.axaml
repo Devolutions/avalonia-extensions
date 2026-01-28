@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.DropDownButtonDemo">
+  <StackPanel Spacing="20" Margin="20">
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0 0 0 20">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <DropDownButton Content="Click Me!">
+        <DropDownButton.Flyout>
+          <MenuFlyout>
+            <MenuItem Header="Item 1" />
+            <MenuItem Header="Item 2" />
+          </MenuFlyout>
+        </DropDownButton.Flyout>
+      </DropDownButton>
+    </StackPanel>
+
+    <TextBlock Classes="h1">DropDownButton</TextBlock>
+
+    <StackPanel Spacing="10" HorizontalAlignment="Left">
+      <TextBlock Classes="section-title">Standard DropDownButton</TextBlock>
+      <TextBlock>Default style for use in toolbars</TextBlock>
+      <DropDownButton Content="Click Me!">
+        <DropDownButton.Flyout>
+          <MenuFlyout>
+            <MenuItem Header="Item 1" />
+            <MenuItem Header="Item 2" />
+            <MenuItem Header="Item 3" />
+          </MenuFlyout>
+        </DropDownButton.Flyout>
+      </DropDownButton>
+      <DropDownButton Content="Disabled" IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="section-title">ValuePicker Variant</TextBlock>
+      <TextBlock>Use with <TextBlock Classes="code">Classes=&quot;ValuePicker&quot;</TextBlock> for placement in forms</TextBlock>
+      <StackPanel Orientation="Horizontal" Spacing="20">
+        <StackPanel Spacing="5">
+          <TextBlock Text="DropDownButton.ValuePicker" FontSize="10" />
+          <DropDownButton Classes="ValuePicker" Content="ValuePicker Style">
+            <DropDownButton.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="Item A" />
+                <MenuItem Header="Item B" />
+                <MenuItem Header="Item C" />
+              </MenuFlyout>
+            </DropDownButton.Flyout>
+          </DropDownButton>
+          <DropDownButton Classes="ValuePicker" Content="Disabled" IsEnabled="False" />
+        </StackPanel>
+        <StackPanel Spacing="5">
+          <TextBlock Text="Standard ComboBox (for comparison)" FontSize="10" />
+          <ComboBox SelectedIndex="0">
+            <ComboBoxItem>Item A</ComboBoxItem>
+            <ComboBoxItem>Item B</ComboBoxItem>
+            <ComboBoxItem>Item C</ComboBoxItem>
+          </ComboBox>
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

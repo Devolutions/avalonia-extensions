@@ -18,6 +18,7 @@
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
         <WrapPanel Orientation="Horizontal" />

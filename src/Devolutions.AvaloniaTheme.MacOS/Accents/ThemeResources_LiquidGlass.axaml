@@ -163,26 +163,13 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
-
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}" Opacity="0.43" />
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
+                       Opacity="0.43" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
@@ -214,20 +201,6 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="AccentForegroundT25" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
-
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -247,11 +220,42 @@
   <StaticResource x:Key="CheckBoxIndeterminateMarkWidth" ResourceKey="ControlSize9" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkHeight" ResourceKey="ControlSize3" />
 
+  <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+
   <StaticResource x:Key="RadioButtonCornerRadius" ResourceKey="Radius8" />
   <StaticResource x:Key="RadioButtonBorderThickness" ResourceKey="Thickness0" />
   <StaticResource x:Key="RadioButtonSize" ResourceKey="ControlSize16" />
   <StaticResource x:Key="RadioButtonCheckMarkSize" ResourceKey="ControlSize5" />
-  <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+
+  <!-- ComboBox Resources -->
+  <StaticResource x:Key="ComboBoxBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
+  <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ButtonPressedBackgroundBrush" />
+  <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="NoShadow" />
+
+  <!-- ComboBox Button (ToggleButton) -->
+  <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonInactiveBackgroundBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonInactiveBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="Thickness0" />
+
+  <StaticResource x:Key="ComboBoxChevronBrush" ResourceKey="ControlLabelBrush" />
+  <StaticResource x:Key="ComboBoxChevronInactiveBrush" ResourceKey="ControlLabelBrush" />
+
 
   <!-- DEVELOPMENT ONLY -->
 

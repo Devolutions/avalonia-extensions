@@ -112,13 +112,13 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             Spacing="2">
-            <Path Height="4.4"
+            <Path Height="4.6"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
                   Fill="{TemplateBinding Foreground}" />
-            <Path Height="4.4"
+            <Path Height="4.6"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"

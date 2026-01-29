@@ -177,7 +177,7 @@
               <Border
                 Name="BorderHighlightElement"
                 Background="Transparent"
-                BorderBrush="{DynamicResource ComboBoxBorderHighlightBrush}"
+                BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
                 BorderThickness="{TemplateBinding BorderThickness, 
                 Converter={x:Static DevoConverters.ThicknessExtractor}, 
                 ConverterParameter={x:Static ThicknessSubset.Bottom}}"
@@ -351,15 +351,15 @@
 
   <ControlTheme x:Key="{x:Type EditableComboBox}" TargetType="EditableComboBox" BasedOn="{StaticResource {x:Type EditableComboBox}}">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="MinHeight" Value="20" />
     <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource TextBoxBorderThickness}" />
     <Setter Property="Padding" Value="4 0 2 0" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
     <Setter Property="ClipToBounds" Value="False" />

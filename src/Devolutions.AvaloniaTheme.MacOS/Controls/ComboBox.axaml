@@ -267,13 +267,18 @@
                   <Binding Source="{StaticResource PopupTrimHeight}" />
                 </MultiBinding>
               </Popup.VerticalOffset>
-              <Border Background="{DynamicResource PopupBackgroundBrush}"
-                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      CornerRadius="{DynamicResource LayoutCornerRadius}"
-                      Margin="{DynamicResource PopupMargin}"
-                      Padding="{DynamicResource PopupPadding}"
-                      BoxShadow="{DynamicResource PopupShadow}">
+            <Border
+              BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}"
+              BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
+              CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+              Margin="{DynamicResource PopupMargin}"
+              BoxShadow="{DynamicResource PopupShadow}">
+              <Border Name="InnerBorderHighlight"
+                      Background="{DynamicResource PopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                      BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                      CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+                      Padding="{DynamicResource PopupPadding}">
                 <ScrollViewer
                   Classes="MacOS_TransparentTrack"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
@@ -281,6 +286,7 @@
                   IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                   <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
                 </ScrollViewer>
+              </Border>
               </Border>
             </Popup>
           </Panel>

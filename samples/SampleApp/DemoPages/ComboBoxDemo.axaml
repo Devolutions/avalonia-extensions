@@ -122,7 +122,6 @@
             <ComboBoxItem>Option 4</ComboBoxItem>
             <ComboBoxItem>Option 5</ComboBoxItem>
             <ComboBoxItem>Option 6</ComboBoxItem>
-            <ComboBoxItem>Option 7</ComboBoxItem>
           </ComboBox>
           <StackPanel Orientation="Horizontal" Spacing="10">
             <Button Content="Default" />

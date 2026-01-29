@@ -187,6 +187,12 @@
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
 
+      <!-- ComboBox Resources -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
+      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
+      <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="ControlBorderThickness" />
+      <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="ControlBorderThickness" />
+
       <!-- HyperlinkButton Resources -->
       <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
       <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
@@ -390,6 +396,12 @@
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
 
+      <!-- ComboBox Resources -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
+      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
+      <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="ControlBorderThickness" />
+      <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="ControlBorderThickness" />
+
       <!-- HyperlinkButton Resources -->
       <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="{DynamicResource HyperLinkColor}" />
       <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{DynamicResource HyperLinkColor}" Opacity="0.8" />
@@ -568,19 +580,20 @@
   <StaticResource x:Key="ComboBoxButtonInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
   <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
   <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
-  <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="ControlBorderThickness" />
-  <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
+  <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="LayoutCornerRadius" />
 
   <!-- ComboBox Button (ToggleButton) -->
 
   <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
   <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
   <StaticResource x:Key="ComboBoxButtonInactiveBorderBrush" ResourceKey="ControlBorderBrush" />
-  <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="ControlBorderThickness" />
   <StaticResource x:Key="ComboBoxChevronBrush" ResourceKey="ControlForegroundAccentHighBrush" />
   <StaticResource x:Key="ComboBoxChevronInactiveBrush" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
 
   <!-- Resources for ComboBoxItem.xaml -->
+  <StaticResource x:Key='ComboBoxItemCornerRadius' ResourceKey='ControlCornerRadius' />
+  <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+
   <Thickness x:Key="ComboBoxItemMargin">2 0</Thickness>
   <Thickness x:Key="ComboBoxItemPadding">5 3</Thickness>
   <x:Int32 x:Key="ComboBoxItemHeight">22</x:Int32>
@@ -596,7 +609,9 @@
   <x:Int32 x:Key="PopupSideMarginWidth">12</x:Int32> <!-- must match PopupMargin l/r values -->
   <Thickness x:Key="PopupMargin">12 1 12 29</Thickness> <!-- to accommodate shadow -->
   <Thickness x:Key="PopupPadding">3 5</Thickness>
+  <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />
+  <SolidColorBrush x:Key="PopupInnerBorderHighlightBrush" Color="Transparent" />
 
   <!-- TextBox Resources -->
   <SolidColorBrush x:Key="TextBoxClearButtonBackgroundBrush"

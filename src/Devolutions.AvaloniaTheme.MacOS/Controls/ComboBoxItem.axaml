@@ -11,7 +11,7 @@
   <!-- <ResourceDictionary.MergedDictionaries> -->
   <!--   <ResourceInclude Source="/Accents/ThemeResources.axaml" /> -->
   <!-- </ResourceDictionary.MergedDictionaries> -->
-  
+
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="10">
       <StackPanel>
@@ -27,7 +27,7 @@
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Template">
@@ -65,7 +65,7 @@
     </Style>
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^:selected /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />

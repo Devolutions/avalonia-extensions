@@ -48,9 +48,6 @@
   <SolidColorBrush x:Key="ForegroundT26" Color="{DynamicResource ForegroundColor}" Opacity="0.26" />
   <SolidColorBrush x:Key="ForegroundT85" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
 
-  <SolidColorBrush x:Key="BackgroundT03" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
-  <SolidColorBrush x:Key="BackgroundT04" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
-
   <SolidColorBrush x:Key="AccentForeground" Color="{DynamicResource AccentForegroundColor}" />
   <SolidColorBrush x:Key="AccentForegroundT25" Color="{DynamicResource AccentForegroundColor}" Opacity="0.25" />
   <SolidColorBrush x:Key="AccentForegroundT49" Color="{DynamicResource AccentForegroundColor}" Opacity="0.49" />
@@ -82,7 +79,7 @@
     <VisualBrush.Visual>
       <Panel>
         <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource BackgroundT03}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT03}" Width="16" Height="16" />
       </Panel>
     </VisualBrush.Visual>
   </VisualBrush>
@@ -91,7 +88,7 @@
     <VisualBrush.Visual>
       <Panel>
         <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource BackgroundT04}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT04}" Width="16" Height="16" />
       </Panel>
     </VisualBrush.Visual>
   </VisualBrush>

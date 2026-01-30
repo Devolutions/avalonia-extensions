@@ -172,7 +172,7 @@
           VerticalAlignment="Top"
           Watermark="Required error"
           Value="{Binding RequiredTextValue}"
-          Margin="10 0 0 20" />
+          Margin="10 0 20 20" />
       </Grid>
     </Border>
   </StackPanel>

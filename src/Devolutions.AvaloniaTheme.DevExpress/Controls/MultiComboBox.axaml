@@ -152,6 +152,28 @@
                     {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNotNullOrEmpty}},
                     {Binding !!IsAllSelected, RelativeSource={RelativeSource TemplatedParent}}
                   }" />
+                
+                <SmallScrollViewer
+                  Name="PART_SelectionScrollViewer"
+                  Grid.Column="1"
+                  IsVisible="{OrBinding
+                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNullOrEmpty}},
+                    {TemplateBinding IsAllSelected, Converter={x:Static BoolConverters.Not}}
+                  }"
+                  MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
+                  Background="Transparent"
+                  Margin="1"
+                  MinHeight="21"
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
+                  HorizontalWheelBehavior.Enable="True"
+                  VerticalScrollBarVisibility="Disabled">
+                  <u:MultiComboBoxSelectedItemList
+                    VerticalAlignment="Center"
+                    ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
+                    ItemsSource="{TemplateBinding SelectedItems}"
+                    RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
+                    ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
+                </SmallScrollViewer>
 
                 <ContentPresenter
                   Grid.Column="2"
@@ -180,27 +202,6 @@
                     Foreground="{TemplateBinding Foreground}"
                     Data="{StaticResource ChevronPath}" />
                 </Border>
-
-                <SmallScrollViewer
-                  Name="PART_SelectionScrollViewer"
-                  IsVisible="{OrBinding
-                    {TemplateBinding AllSelectedText, Converter={x:Static StringConverters.IsNullOrEmpty}},
-                    {TemplateBinding IsAllSelected, Converter={x:Static BoolConverters.Not}}
-                  }"
-                  MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
-                  Background="Transparent"
-                  Margin="1"
-                  MinHeight="21"
-                  HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
-                  HorizontalWheelBehavior.Enable="True"
-                  VerticalScrollBarVisibility="Disabled">
-                  <u:MultiComboBoxSelectedItemList
-                    VerticalAlignment="Center"
-                    ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
-                    ItemsSource="{TemplateBinding SelectedItems}"
-                    RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
-                    ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
-                </SmallScrollViewer>
               </Grid>
             </Panel>
 

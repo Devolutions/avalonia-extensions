@@ -37,6 +37,7 @@
             <Border
               Name="SelectionHighlight"
               Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+              Height="{StaticResource ComboBoxItemSelectionHighlightHeight}"
               Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
               VerticalAlignment="Stretch"
               Background="Transparent"
@@ -125,6 +126,7 @@
             <Border
               Name="SelectionHighlight"
               Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+              Height="{StaticResource ComboBoxItemSelectionHighlightHeight}"
               Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
               VerticalAlignment="Stretch"
               Background="Transparent"

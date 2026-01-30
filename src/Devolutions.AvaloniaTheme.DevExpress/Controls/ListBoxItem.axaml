@@ -39,7 +39,7 @@
           <Border
             Name="LayoutRoot"
             Background="Transparent"
-            MinHeight="{DynamicResource ComboBoxItemMinHeight}"
+            MinHeight="{DynamicResource ListBoxItemMinHeight}"
             CornerRadius="{TemplateBinding CornerRadius}"
             Padding="{BindingToggler
                         {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},

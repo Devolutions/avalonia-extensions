@@ -288,6 +288,17 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         set => this.SetValue(WatermarkProperty, value);
     }
 
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+
+        if (property == ValueProperty)
+        {
+            DataValidationErrors.SetError(this, error);
+            this.innerComboBox.Classes.Set("error", error != null);
+        }
+    }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);

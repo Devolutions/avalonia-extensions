@@ -177,10 +177,11 @@
                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                   Content="{TemplateBinding InnerLeftContent}"
                                   Padding="{Binding 
-                                            Padding, 
-                                            RelativeSource={RelativeSource TemplatedParent}, 
-                                            Converter={x:Static  DevoConverters.ThicknessToSelectiveThicknessConverter},
-                                            ConverterParameter={StaticResource TextBoxPrefixPaddingFactors}}"
+                                    Padding, 
+                                    RelativeSource={RelativeSource TemplatedParent}, 
+                                    Converter={x:Static  DevoConverters.ThicknessExtractor},
+                                    ConverterParameter={x:Static ThicknessSubset.Left}
+                                  }"
                                   IsVisible="{Binding Content, RelativeSource={RelativeSource Self}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 <ScrollViewer Name="PART_ScrollViewer"
                               Grid.Column="1"

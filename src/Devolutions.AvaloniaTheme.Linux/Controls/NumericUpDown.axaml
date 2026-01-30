@@ -127,9 +127,17 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
     <!-- Focused State -->
     <Style Selector="^:focus-within /template/ Border#PART_FocusBorder">
       <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="^:error">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorBorderBrush}" />
+      <Style Selector="^ /template/ Border#PART_FocusBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorBorderBrush}" />
+      </Style>
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Left] /template/ TextBox">

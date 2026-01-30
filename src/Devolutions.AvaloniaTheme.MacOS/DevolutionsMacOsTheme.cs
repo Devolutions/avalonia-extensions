@@ -11,6 +11,11 @@ public class DevolutionsMacOsTheme : Styles, ISupportInitialize
 {
     private readonly IServiceProvider? sp;
 
+    static DevolutionsMacOsTheme()
+    {
+        AvaloniaControls.Initialization.Initialize();
+    }
+
     /// <summary> 
     /// Initializes a new instance of the <see cref="DevolutionsMacOsTheme"/> class.
     ///

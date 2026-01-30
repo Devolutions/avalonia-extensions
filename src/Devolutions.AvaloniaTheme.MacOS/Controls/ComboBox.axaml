@@ -1,7 +1,9 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls"
+  xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -66,6 +68,20 @@
               <ComboBoxItem>Option 7</ComboBoxItem>
               <ComboBoxItem>Option 8</ComboBoxItem>
               <ComboBoxItem>Option 9</ComboBoxItem>
+            </ComboBox>
+
+            <ComboBox MaxDropDownHeight="100" PlaceholderText="Choose one">
+              <ComboBoxItem>Option 1</ComboBoxItem>
+              <ComboBoxItem>Option 2</ComboBoxItem>
+              <ComboBoxItem>Option 3</ComboBoxItem>
+
+              <DataValidationErrors.Error>
+                <system:Exception>
+                  <x:Arguments>
+                    <x:String>Error</x:String>
+                  </x:Arguments>
+                </system:Exception>
+              </DataValidationErrors.Error>
             </ComboBox>
           </StackPanel>
         </Border>
@@ -157,115 +173,118 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="behaviors:ComboBoxValidationBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus"
-               ClipToBounds="False"
-               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
-          <Border
-            Name="BorderElement"
-            Background="{TemplateBinding Background}"
-            BorderThickness="{DynamicResource ControlBorderThickness}"
-            BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
-            BoxShadow="{DynamicResource ControlBorderBoxShadow}"
-            CornerRadius="{TemplateBinding CornerRadius}">
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBlock
-                Name="PlaceholderTextBlock"
-                Grid.Column="0"
-                Margin="{TemplateBinding Padding}"
-                Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                Text="{TemplateBinding PlaceholderText}">
-                <TextBlock.IsVisible>
-                  <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}"
-                             Converter="{x:Static ObjectConverters.IsNull}" />
-                    <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
-                  </MultiBinding>
-                </TextBlock.IsVisible>
-              </TextBlock>
-              <ContentControl
-                Grid.Column="0"
-                Margin="{TemplateBinding Padding}"
-                Foreground="{TemplateBinding Foreground}"
-                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                Content="{TemplateBinding SelectionBoxItem}"
-                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
-              <TextBox Name="PART_EditableTextBox"
-                       Grid.Column="0"
-                       Theme="{StaticResource ComboBoxEditableTextBox}"
-                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                       Foreground="{TemplateBinding Foreground}"
-                       Background="Transparent"
-                       Text="{TemplateBinding Text, Mode=TwoWay}"
-                       Watermark="{TemplateBinding PlaceholderText}"
-                       BorderThickness="0"
-                       MinHeight="0"
-                       FocusAdorner="{x:Null}"
-                       IsVisible="{TemplateBinding IsEditable}" />
-              <ToggleButton
-                Name="Toggle"
-                Grid.Column="1"
-                Theme="{StaticResource PopUpToggleButton}"
-                Width="16"
-                Height="16"
-                Margin="2"
-                ClickMode="Press"
-                Focusable="False"
-                IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
-            </Grid>
-          </Border>
-          <Border Name="FocusBorderElement"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  CornerRadius="7" />
-          <Popup
-            Name="PART_Popup"
-            MaxHeight="{TemplateBinding MaxDropDownHeight}"
-            IsLightDismissEnabled="True"
-            IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-            PlacementTarget="{TemplateBinding}"
-            InheritsTransform="True"
-            Placement="AnchorAndGravity"
-            PlacementAnchor="Bottom"
-            PlacementGravity="Bottom"
-            HorizontalOffset="-13">
-            <Popup.MinWidth>
-              <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">
-                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Width" />
-                <Binding Source="{StaticResource PopupSideMarginWidth}" />
-              </MultiBinding>
-            </Popup.MinWidth>
-            <Popup.VerticalOffset>
-              <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
-                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex" />
-                <Binding Source="{StaticResource ComboBoxItemHeight}" />
-                <Binding Source="{StaticResource InitialFirstItemDistance}" />
-                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight" />
-                <Binding Source="{StaticResource PopupTrimHeight}" />
-              </MultiBinding>
-            </Popup.VerticalOffset>
-            <Border Background="{DynamicResource PopupBackgroundBrush}"
-                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                    BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                    CornerRadius="{DynamicResource LayoutCornerRadius}"
-                    Margin="{DynamicResource PopupMargin}"
-                    Padding="{DynamicResource PopupPadding}"
-                    BoxShadow="{DynamicResource PopupShadow}">
-              <ScrollViewer
-                Classes="MacOS_TransparentTrack"
-                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
-                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
-              </ScrollViewer>
+        <DataValidationErrors ClipToBounds="False">
+          <Panel Name="ReservedSpaceForFocus"
+                 ClipToBounds="False"
+                 Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+            <Border
+              Name="BorderElement"
+              Background="{TemplateBinding Background}"
+              BorderThickness="{DynamicResource ControlBorderThickness}"
+              BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
+              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
+              CornerRadius="{TemplateBinding CornerRadius}">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock
+                  Name="PlaceholderTextBlock"
+                  Grid.Column="0"
+                  Margin="{TemplateBinding Padding}"
+                  Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                  Text="{TemplateBinding PlaceholderText}">
+                  <TextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}"
+                               Converter="{x:Static ObjectConverters.IsNull}" />
+                      <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                    </MultiBinding>
+                  </TextBlock.IsVisible>
+                </TextBlock>
+                <ContentControl
+                  Grid.Column="0"
+                  Margin="{TemplateBinding Padding}"
+                  Foreground="{TemplateBinding Foreground}"
+                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                  Content="{TemplateBinding SelectionBoxItem}"
+                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                  IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+                <TextBox Name="PART_EditableTextBox"
+                         Grid.Column="0"
+                         Theme="{StaticResource ComboBoxEditableTextBox}"
+                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                         Foreground="{TemplateBinding Foreground}"
+                         Background="Transparent"
+                         Text="{TemplateBinding Text, Mode=TwoWay}"
+                         Watermark="{TemplateBinding PlaceholderText}"
+                         BorderThickness="0"
+                         MinHeight="0"
+                         FocusAdorner="{x:Null}"
+                         IsVisible="{TemplateBinding IsEditable}" />
+                <ToggleButton
+                  Name="Toggle"
+                  Grid.Column="1"
+                  Theme="{StaticResource PopUpToggleButton}"
+                  Width="16"
+                  Height="16"
+                  Margin="2"
+                  ClickMode="Press"
+                  Focusable="False"
+                  IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
+              </Grid>
             </Border>
-          </Popup>
-        </Panel>
+            <Border Name="FocusBorderElement"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    CornerRadius="7" />
+            <Popup
+              Name="PART_Popup"
+              MaxHeight="{TemplateBinding MaxDropDownHeight}"
+              IsLightDismissEnabled="True"
+              IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+              PlacementTarget="{TemplateBinding}"
+              InheritsTransform="True"
+              Placement="AnchorAndGravity"
+              PlacementAnchor="Bottom"
+              PlacementGravity="Bottom"
+              HorizontalOffset="-13">
+              <Popup.MinWidth>
+                <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Width" />
+                  <Binding Source="{StaticResource PopupSideMarginWidth}" />
+                </MultiBinding>
+              </Popup.MinWidth>
+              <Popup.VerticalOffset>
+                <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex" />
+                  <Binding Source="{StaticResource ComboBoxItemHeight}" />
+                  <Binding Source="{StaticResource InitialFirstItemDistance}" />
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight" />
+                  <Binding Source="{StaticResource PopupTrimHeight}" />
+                </MultiBinding>
+              </Popup.VerticalOffset>
+              <Border Background="{DynamicResource PopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
+                      CornerRadius="{DynamicResource LayoutCornerRadius}"
+                      Margin="{DynamicResource PopupMargin}"
+                      Padding="{DynamicResource PopupPadding}"
+                      BoxShadow="{DynamicResource PopupShadow}">
+                <ScrollViewer
+                  Classes="MacOS_TransparentTrack"
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                  IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
+                  <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+              </Border>
+            </Popup>
+          </Panel>
+        </DataValidationErrors>
       </ControlTemplate>
     </Setter>
 
@@ -281,6 +300,13 @@
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundDisabledHighBrush}" />
       <Style Selector="^ /template/ Border#BorderElement">
         <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDisabledBoxShadow}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:error">
+      <Style Selector="^ /template/ Border#BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+        <Setter Property="BorderThickness" Value="0.6" />
       </Style>
     </Style>
 

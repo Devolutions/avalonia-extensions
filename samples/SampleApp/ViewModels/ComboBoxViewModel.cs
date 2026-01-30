@@ -3,14 +3,14 @@ namespace SampleApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-public partial class TextBoxViewModel : ObservableValidator
+public partial class ComboBoxViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "This Input is required.")]
-    private string requiredInput = string.Empty;
+    [Required]
+    private string requiredTextValue = string.Empty;
 
-    public TextBoxViewModel()
+    public ComboBoxViewModel()
     {
         this.ValidateAllProperties();
     }

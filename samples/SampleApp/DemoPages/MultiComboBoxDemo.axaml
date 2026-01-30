@@ -4,7 +4,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:vm="clr-namespace:SampleApp.ViewModels"
-  mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="550"
+  mc:Ignorable="d" d:DesignWidth="500"
   x:Class="SampleApp.DemoPages.MultiComboBoxDemo"
   x:DataType="vm:MultiComboBoxViewModel">
 
@@ -146,6 +146,13 @@
             <Border Width="12" Height="12" Background="Blue" />
           </MultiComboBox.InnerRightContent>
         </MultiComboBox>
+
+        <TextBlock>Required</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          SelectedItems="{Binding RequiredValues}"
+          ItemsSource="{Binding Items}"
+          Watermark="Required" />
       </StackPanel>
     </StackPanel>
   </Border>

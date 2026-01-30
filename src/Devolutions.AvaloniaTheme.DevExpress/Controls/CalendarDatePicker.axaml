@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="using:System"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
-  
+
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Margin="20" Spacing="20" Width="230">
@@ -24,11 +24,11 @@
           </DataValidationErrors.Error>
         </CalendarDatePicker>
         <CalendarDatePicker HorizontalAlignment="Left" SelectedDateFormat="Long" SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
-        
+
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-  
+
   <x:Double x:Key="CalendarDatePickerCurrentDayFontSize">12</x:Double>
   <x:Double x:Key="CalendarDatePickerMinHeight">32</x:Double>
 
@@ -114,20 +114,20 @@
                      IsLightDismissEnabled="True">
                 <Border Name="PopupBorder"
                         Background="{DynamicResource BackgroundColor}"
-                        BorderBrush="{DynamicResource ComboBoxDropDownBorderBrushTransparent}"
+                        BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                         BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                         Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                         HorizontalAlignment="Stretch"
                         CornerRadius="{DynamicResource OverlayCornerRadius}"
                         Margin="{DynamicResource ComboBoxPopupBorderMargin}"
                         BoxShadow="{DynamicResource ComboBoxDropDownShadow}">
-                <Calendar Name="PART_Calendar"
-                          FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
-                          IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
-                          SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
-                          DisplayDate="{TemplateBinding DisplayDate}"
-                          DisplayDateStart="{TemplateBinding DisplayDateStart}"
-                          DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
+                  <Calendar Name="PART_Calendar"
+                            FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
+                            IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
+                            SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
+                            DisplayDate="{TemplateBinding DisplayDate}"
+                            DisplayDateStart="{TemplateBinding DisplayDateStart}"
+                            DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
                 </Border>
               </Popup>
             </Panel>

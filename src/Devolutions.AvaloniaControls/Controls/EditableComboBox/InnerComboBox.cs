@@ -175,6 +175,7 @@ public partial class EditableComboBox
                     }
                 }
 
+                containerChild = this.parent;
                 while (containerChild?.FindAncestorOfType<Grid>() is { } grid)
                 {
                     int index = -1;

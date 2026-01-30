@@ -25,10 +25,13 @@ public enum ThicknessSubset
   Right = 0b_0100,
   Bottom = 0b_1000,
 
-  AllButLeft = 0b_1110,
-  AllButTop = 0b_1101,
-  AllButRight = 0b_1011,
-  AllButBottom = 0b_0111,
-
-  All = 0b_1111
+  AllButLeft = Bottom | Right | Top,
+  AllButTop = Bottom | Right | Left,
+  AllButRight = Bottom | Top | Left,
+  AllButBottom = Right | Top | Left,
+  
+  Horizontal = Left | Right,
+  Vertical = Top | Bottom,
+  
+  All = Left | Top | Right | Bottom,
 }

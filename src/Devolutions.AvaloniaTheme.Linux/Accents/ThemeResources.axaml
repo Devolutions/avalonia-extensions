@@ -180,6 +180,7 @@
   <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
   <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.6" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
+  <SolidColorBrush x:Key="SystemControlErrorBorderBrush" Color="{DynamicResource ErrorTextColor}" />
 
   <SolidColorBrush x:Key='BackgroundBrush' Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.06" />

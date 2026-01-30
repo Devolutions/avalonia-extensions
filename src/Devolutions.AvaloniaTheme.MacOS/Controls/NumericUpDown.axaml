@@ -98,7 +98,7 @@
     </Setter>
 
     <Style Selector="^:error /template/ TextBox#PART_TextBox">
-      <Setter Property="BorderBrush" Value="{DynamicResource SystemErrorTextColor}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
       <Setter Property="BorderThickness" Value="1" />
     </Style>
   </ControlTheme>

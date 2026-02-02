@@ -111,9 +111,11 @@
 
       <!-- Transparency Test Area -->
       <StackPanel Margin="20" Spacing="20">
-        <TextBlock FontWeight="Bold">Overlap / Transparency Test</TextBlock>
+        <TextBlock FontWeight="Bold">Transparency Test</TextBlock>
         <StackPanel Spacing="5">
-          <ComboBox PlaceholderText="Expand me to see overlap">
+          <ComboBox PlaceholderText="Options"
+                    Width="90" Margin="10 0 0 0"
+                    SelectedIndex="3">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
             <ComboBoxItem>Option 3</ComboBoxItem>
@@ -121,13 +123,10 @@
             <ComboBoxItem>Option 5</ComboBoxItem>
             <ComboBoxItem>Option 6</ComboBoxItem>
             <ComboBoxItem>Option 7</ComboBoxItem>
-            <ComboBoxItem>Option 8</ComboBoxItem>
-            <ComboBoxItem>Option 9</ComboBoxItem>
-            <ComboBoxItem>Option 10</ComboBoxItem>
           </ComboBox>
           <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="Default Button" Width="100"/>
-            <Button Classes="Accent" Content="Accent Button" Width="100"/>
+            <Button Content="Default" />
+            <Button Classes="accent" Content="Accent" />
           </StackPanel>
         </StackPanel>
       </StackPanel>

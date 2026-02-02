@@ -61,10 +61,44 @@ public partial class MainWindow : Window
   private void UpdatePreviewBackground()
   {
     if (this.currentViewModel == null) return;
-    Panel? panel = this.FindControl<Panel>("PreviewWallpaper");
-    if (panel == null) return;
+    Panel? wallpaperPanel = this.FindControl<Panel>("PreviewWallpaper");
+    Panel? contentPanel = this.FindControl<Panel>("MainContentPanel");
+    if (wallpaperPanel == null || contentPanel == null) return;
 
-    panel.Background = this.currentViewModel.ShowWallpaper ? this.tieDyeBrush : Brushes.Transparent;
+    switch (this.currentViewModel.SelectedWallpaper.Option)
+    {
+      case WallpaperOption.Psychodelic:
+        wallpaperPanel.Background = this.tieDyeBrush;
+        contentPanel.SetValue(Panel.BackgroundProperty, AvaloniaProperty.UnsetValue);
+        break;
+      case WallpaperOption.CustomLight:
+        wallpaperPanel.Background = Brushes.Transparent;
+        if (this.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightResource) && lightResource is IBrush lightBrush)
+        {
+          contentPanel.Background = lightBrush;
+        }
+        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightAppResource) && lightAppResource is IBrush lightAppBrush)
+        {
+          contentPanel.Background = lightAppBrush;
+        }
+        break;
+      case WallpaperOption.CustomDark:
+        wallpaperPanel.Background = Brushes.Transparent;
+        if (this.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkResource) && darkResource is IBrush darkBrush)
+        {
+          contentPanel.Background = darkBrush;
+        }
+        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkAppResource) && darkAppResource is IBrush darkAppBrush)
+        {
+          contentPanel.Background = darkAppBrush;
+        }
+        break;
+      case WallpaperOption.None:
+      default:
+        wallpaperPanel.Background = Brushes.Transparent;
+        contentPanel.SetValue(Panel.BackgroundProperty, AvaloniaProperty.UnsetValue);
+        break;
+    }
   }
 
   // When switching Themes, the ViewModel survives across window recreation, but the window itself is brand new.
@@ -105,7 +139,7 @@ public partial class MainWindow : Window
 
   private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    if (e.PropertyName == nameof(MainWindowViewModel.ShowWallpaper))
+    if (e.PropertyName == nameof(MainWindowViewModel.SelectedWallpaper))
     {
       this.UpdatePreviewBackground();
     }

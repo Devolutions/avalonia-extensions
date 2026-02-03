@@ -40,7 +40,6 @@
   </Design.PreviewWith>
 
 
-  
   <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="Transparent" />
@@ -156,6 +155,8 @@
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -174,6 +175,8 @@
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -189,6 +192,8 @@
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -218,6 +223,8 @@
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -235,6 +242,8 @@
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>

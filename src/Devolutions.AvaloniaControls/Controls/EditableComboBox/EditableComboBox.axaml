@@ -601,7 +601,7 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="MinWidth" Value="{DynamicResource EditableComboBoxMinWidth}" />
     <Setter Property="Height" Value="{DynamicResource EditableComboBoxHeight}" />
-    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
 
     <Style Selector="^:disabled">

@@ -99,28 +99,5 @@ public class TabBorderVisibilityConverter : IMultiValueConverter
         }
 
         return (previousTabIndex, tabIndex, nextTabIndex);
-
-        // int previousTabIndex = -1, nextTabIndex = -1;
-        // int tabIndex = tabControl.IndexFromContainer(tabItem);
-        //
-        // for (int i = tabIndex; i >= 0; --i)
-        // {
-        //     if (tabControl.ContainerFromIndex(i) is TabItem { IsVisible: true })
-        //     {
-        //         previousTabIndex = i;
-        //         break;
-        //     }
-        // }
-        //
-        // for (int i = tabIndex; i < tabControl.Items.Count; ++i)
-        // {
-        //     if (tabControl.ContainerFromIndex(i) is TabItem { IsVisible: true })
-        //     {
-        //         nextTabIndex = i;
-        //         break;
-        //     }
-        // }
-        //
-        // return (previousTabIndex, tabIndex, nextTabIndex);
     }
 }

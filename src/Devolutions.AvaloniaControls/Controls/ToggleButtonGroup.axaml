@@ -6,7 +6,7 @@
     <ThemeVariantScope RequestedThemeVariant="Dark">
       <Border Background="Black">
         <StackPanel Spacing="10">
-          <ToggleButtonGroup ItemsMinWidth="94">
+          <ToggleButtonGroup ItemsMinWidth="120">
             <ToggleButtonGroupItem Content="System" />
             <ToggleButtonGroupItem Content="Light" />
             <ToggleButtonGroupItem Content="Dark" />
@@ -15,7 +15,7 @@
           <ToggleButtonGroup EqualItemsSize="True">
             <ToggleButtonGroupItem Content="System" />
             <ToggleButtonGroupItem Content="Light" />
-            <ToggleButtonGroupItem Content="Dark Mode Extended" />
+            <ToggleButtonGroupItem Content="Dark" />
           </ToggleButtonGroup>
 
           <ToggleButtonGroup ItemsPadding="10 5">

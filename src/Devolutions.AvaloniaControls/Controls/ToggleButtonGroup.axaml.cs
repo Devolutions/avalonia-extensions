@@ -18,13 +18,13 @@ public class ToggleButtonGroup : ListBox
         AvaloniaProperty.Register<ToggleButtonGroup, bool>(nameof(EqualItemsSize));
 
     public static readonly StyledProperty<Thickness> ItemsPaddingProperty =
-        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsPadding), new Thickness(5));
+        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsPadding));
 
     public static readonly StyledProperty<Thickness> ItemsLeftContentPaddingProperty =
-        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsLeftContentPadding), new Thickness(0));
+        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsLeftContentPadding));
 
     public static readonly StyledProperty<Thickness> ItemsRightContentPaddingProperty =
-        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsRightContentPadding), new Thickness(0));
+        AvaloniaProperty.Register<ToggleButtonGroup, Thickness>(nameof(ItemsRightContentPadding));
 
     private bool isUpdatingEqualSizes;
 
@@ -133,7 +133,7 @@ public class ToggleButtonGroup : ListBox
 
     private void OnEqualItemsSizeChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        if ((bool)e.NewValue!)
+        if (e.NewValue is true)
         {
             this.UpdateEqualItemsSizes();
         }

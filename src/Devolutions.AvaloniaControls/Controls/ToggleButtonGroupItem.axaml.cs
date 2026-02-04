@@ -25,9 +25,27 @@ public class ToggleButtonGroupItem : ListBoxItem
             static o => o.InnerRightContent,
             static (o, v) => o.InnerRightContent = v);
 
+    public static readonly StyledProperty<Thickness> LeftContentPaddingProperty =
+        AvaloniaProperty.Register<ToggleButtonGroupItem, Thickness>(nameof(LeftContentPadding), new Thickness(0));
+
+    public static readonly StyledProperty<Thickness> RightContentPaddingProperty =
+        AvaloniaProperty.Register<ToggleButtonGroupItem, Thickness>(nameof(RightContentPadding), new Thickness(0));
+
     public IEnumerable InnerLeftContent { get; set; } = new AvaloniaList<Control>();
 
     public IEnumerable InnerRightContent { get; set; } = new AvaloniaList<Control>();
+
+    public Thickness LeftContentPadding
+    {
+        get => this.GetValue(LeftContentPaddingProperty);
+        set => this.SetValue(LeftContentPaddingProperty, value);
+    }
+
+    public Thickness RightContentPadding
+    {
+        get => this.GetValue(RightContentPaddingProperty);
+        set => this.SetValue(RightContentPaddingProperty, value);
+    }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {

@@ -5,11 +5,19 @@
   <Design.PreviewWith>
     <ThemeVariantScope RequestedThemeVariant="Dark">
       <Border Background="Black">
-        <ToggleButtonGroup ItemsMinWidth="94">
-          <ToggleButtonGroupItem Content="System" />
-          <ToggleButtonGroupItem Content="Light" />
-          <ToggleButtonGroupItem Content="Dark" />
-        </ToggleButtonGroup>
+        <StackPanel Spacing="10">
+          <ToggleButtonGroup>
+            <ToggleButtonGroupItem Content="System" />
+            <ToggleButtonGroupItem Content="Light" />
+            <ToggleButtonGroupItem Content="Dark" />
+          </ToggleButtonGroup>
+
+          <ToggleButtonGroup EqualItemsSize="True">
+            <ToggleButtonGroupItem Content=" System" />
+            <ToggleButtonGroupItem Content="Light" />
+            <ToggleButtonGroupItem Content="Dark" />
+          </ToggleButtonGroup>
+        </StackPanel>
       </Border>
     </ThemeVariantScope>
   </Design.PreviewWith>
@@ -18,7 +26,9 @@
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundColor}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonGroupBorderColor}" />
     <Setter Property="BorderThickness" Value="1 1 0 1" />
-    <Setter Property="Padding" Value="5" />
+    <Setter Property="Padding" Value="{Binding $parent[ToggleButtonGroup].ItemsPadding}" />
+    <Setter Property="LeftContentPadding" Value="{Binding $parent[ToggleButtonGroup].ItemsLeftContentPadding}" />
+    <Setter Property="RightContentPadding" Value="{Binding $parent[ToggleButtonGroup].ItemsRightContentPadding}" />
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="MinWidth" Value="{Binding $parent[ToggleButtonGroup].ItemsMinWidth}" />
@@ -51,6 +61,7 @@
             <ItemsControl
               Name="PART_InnerLeftContent"
               Grid.Column="0"
+              Margin="{TemplateBinding LeftContentPadding}"
               ItemsSource="{TemplateBinding InnerLeftContent}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -82,6 +93,7 @@
             <ItemsControl
               Name="PART_InnerRightContent"
               Grid.Column="2"
+              Margin="{TemplateBinding RightContentPadding}"
               ItemsSource="{TemplateBinding InnerRightContent}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

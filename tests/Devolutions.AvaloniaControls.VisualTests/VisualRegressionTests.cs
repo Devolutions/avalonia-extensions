@@ -15,12 +15,24 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 [Collection("VisualTests")]
 public class VisualRegressionTests
 {
-    private const string BaselinesDirectory = "../../../Screenshots/Baseline";
+    private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
     private const string TestResultsDirectory = "../../../Screenshots/Test";
     private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
 
     private static Dictionary<string, List<string>>? _pageThemes;
     private static Dictionary<string, string>? _pageViewModels;
+
+    private static string GetCurrentOS()
+    {
+        if (OperatingSystem.IsWindows())
+            return "Windows";
+        if (OperatingSystem.IsMacOS())
+            return "macOS";
+        if (OperatingSystem.IsLinux())
+            return "Linux";
+        
+        return "Unknown";
+    }
 
     // Finds applicable themes and ViewModel for each control by parsing MainWindow.axaml
     private static void EnsureMetadataLoaded()

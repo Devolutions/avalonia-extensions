@@ -225,7 +225,6 @@
               InheritsTransform="True">
               <Interaction.Behaviors>
                 <PositionedPopupBehavior
-                  PositionToTemplatedParent="True"
                   InjectFusionMask="False"
                   PopupBorderThickness="1" />
               </Interaction.Behaviors>

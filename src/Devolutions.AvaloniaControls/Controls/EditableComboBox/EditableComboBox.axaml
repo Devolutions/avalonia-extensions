@@ -344,12 +344,11 @@
               <Interaction.Behaviors>
                 <PositionedPopupBehavior
                   PositionTo="{Binding #PART_Root}"
-                  PositionToTemplatedParent="True"
                   InjectFusionMask="True"
                   PopupBorderThickness="{
-                  Binding FocusedBorderThickness, 
-                  RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-                }" />
+                    Binding FocusedBorderThickness, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+                  }" />
               </Interaction.Behaviors>
 
               <Border
@@ -570,8 +569,8 @@
         }" />
     </Style>
 
-    <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="Green" />
+    <Style Selector="^:pointerover:not(:dropdownopen)">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}" />
     </Style>
 

@@ -1,7 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
-                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
@@ -81,7 +80,7 @@
     <Setter Property="Background" Value="{DynamicResource ScrollBarBackgroundBrush}" />
     <Setter Property="ShowDelay" Value="0:0:0.0" />
     <Setter Property="HideDelay" Value="0:0:0.0" />
-    <Setter Property="behaviors:ScrollBarThumbDragBehavior.Enable" Value="True" />
+    <Setter Property="ScrollBarThumbDragBehavior.Enable" Value="True" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">

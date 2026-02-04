@@ -37,6 +37,9 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
     private IDisposable? popupChildSubscription;
 
+    // Target for pseudoclasses and fusion mask (usually TemplatedParent)
+    private Control? pseudoClassTarget;
+
     [ResolveByName]
     public Control? PositionTo
     {
@@ -105,9 +108,17 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
     private void OnPositionChanged(object? sender, PixelPointEventArgs e) => this.UpdatePseudoClasses();
 
-    private void AddTargetPseudoClass(string classToAdd) => (this.PositionTo?.Classes as IPseudoClasses)?.Add(classToAdd);
+    private void AddTargetPseudoClass(string classToAdd)
+    {
+        var target = this.pseudoClassTarget ?? this.PositionTo;
+        (target?.Classes as IPseudoClasses)?.Add(classToAdd);
+    }
 
-    private void RemoveTargetPseudoClass(string classToRemove) => (this.PositionTo?.Classes as IPseudoClasses)?.Remove(classToRemove);
+    private void RemoveTargetPseudoClass(string classToRemove)
+    {
+        var target = this.pseudoClassTarget ?? this.PositionTo;
+        (target?.Classes as IPseudoClasses)?.Remove(classToRemove);
+    }
 
     private void ToggleTargetPseudoClass(string classToRemove, bool toggle)
     {
@@ -227,14 +238,37 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         if (this.AssociatedObject is null) return disposable;
 
+        // Set pseudoClassTarget (for styles and fusion mask)
         if (this.PositionToTemplatedParent)
         {
-            this.PositionTo = this.AssociatedObject.TemplatedParent as Control;
+            this.pseudoClassTarget = this.AssociatedObject.TemplatedParent as Control;
         }
 
+        // Set PositionTo (for bounds and positioning calculations)
         this.PositionTo ??= this.AssociatedObject.PlacementTarget;
 
-        if (this.PositionTo is null) return disposable;
+        // If PositionTo is still null, observe PlacementTarget changes
+        if (this.PositionTo is null)
+        {
+            disposable.Add(this.AssociatedObject.GetObservable(Popup.PlacementTargetProperty).Subscribe(target =>
+            {
+                if (target is Control control && this.PositionTo is null)
+                {
+                    this.PositionTo = control;
+                    this.SetupPositionToObservables(disposable);
+                }
+            }));
+            return disposable;
+        }
+
+        this.SetupPositionToObservables(disposable);
+
+        return disposable;
+    }
+
+    private void SetupPositionToObservables(CompositeDisposable disposable)
+    {
+        if (this.AssociatedObject is null || this.PositionTo is null) return;
 
         this.AssociatedObject.Opened += this.OnOpened;
         this.AssociatedObject.Closed += this.OnClosed;
@@ -245,7 +279,10 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             this.CalculatePopupBorderMask(null, b);
         }));
 
-        if (this.InjectFusionMask && this.PositionTo is TemplatedControl { Background: var background })
+        // Use pseudoClassTarget (TemplatedParent) for fusion mask if available, otherwise fall back to PositionTo
+        var fusionTarget = this.pseudoClassTarget ?? this.PositionTo;
+
+        if (this.InjectFusionMask && fusionTarget is TemplatedControl { Background: var background })
         {
             this.fusionMask ??= new Border
             {
@@ -269,7 +306,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             };
             this.AssociatedObject.Child = this.fusionMaskPanel;
 
-            disposable.Add(this.PositionTo.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
+            disposable.Add(fusionTarget.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
             {
                 this.fusionMask.BorderBrush = newBg;
             }));
@@ -293,7 +330,5 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             });
 
         disposable.Add(this.popupChildSubscription);
-
-        return disposable;
     }
 }

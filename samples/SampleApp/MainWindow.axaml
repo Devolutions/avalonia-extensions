@@ -58,7 +58,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo>
             <demoPages:ComboBoxDemo.DataContext>
@@ -100,7 +100,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:EditableComboBoxDemo>
             <demoPages:EditableComboBoxDemo.DataContext>
@@ -132,7 +132,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:MultiComboBoxDemo>
             <demoPages:MultiComboBoxDemo.DataContext>

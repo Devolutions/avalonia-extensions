@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+             mc:Ignorable="d" d:DesignWidth="560"
              x:Class="SampleApp.DemoPages.ButtonDemo">
 
   <StackPanel>
@@ -11,68 +11,119 @@
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
       <Button Content="Cancel" />
     </StackPanel>
-    <Border Margin="20 0">
-      <Grid ColumnDefinitions="130, 72, Auto" RowDefinitions="50, 50, 50, 50, 50, 50" Margin="20">
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
-        <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Cancel" />
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
-        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False">Cancel</Button>
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
-        <Button Grid.Row="2" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
-        <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
-        <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
-        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center">With custom ContentTemplate:</TextBlock>
-        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Computer">
-          <Button.ContentTemplate>
-            <DataTemplate>
-              <Border Padding="5">
-                <StackPanel Orientation="Vertical" Spacing="2">
-                  <Svg Path="/Assets/Computer.svg" Width="16" Height="16" />
-                  <TextBlock Text="{Binding $parent[Button].Content}" VerticalAlignment="Center" />
-                </StackPanel>
-              </Border>
-            </DataTemplate>
-          </Button.ContentTemplate>
-        </Button>
-        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
-                    IsVisible="{ext:ThemeIsOneOf 'MacClassic'}">
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 0 0">/</TextBlock>
-          <Button Classes="accentPrecise" VerticalAlignment="Center">Open</Button>
-          <TextBlock VerticalAlignment="Center" Margin="5 0 0 0">(<TextBlock Classes="code" Text="Classes=&quot;accentPrecise&quot;" />More precise look, but not responsive to custom accent colour / inactive window)</TextBlock>
-        </StackPanel>
-      </Grid>
-    </Border>
-    <Border Background="{DynamicResource LayoutBackgroundLowBrush}" Margin="20 0">
-      <Grid ColumnDefinitions="100, 72, 40, 72, Auto" RowDefinitions="50, 50, 50" Margin="20">
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
-        <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">Cancel</Button>
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
-        <Button Grid.Row="1" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
-        <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
-      </Grid>
-    </Border>
 
-    <Border Background="{DynamicResource LayoutBackgroundLowBrush}" Margin="20 0">
-      <ToggleButtonGroup ItemsMinWidth="94">
-        <ToggleButtonGroupItem Content="System">
-          <ToggleButtonGroupItem.InnerLeftContent>
-            <Svg Path="/Assets/ThemeDefault.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
-          </ToggleButtonGroupItem.InnerLeftContent>
-        </ToggleButtonGroupItem>
+    <StackPanel Orientation="Horizontal">
+      <Border Margin="20 0">
+        <Grid ColumnDefinitions="130, 72, Auto" RowDefinitions="50, 50, 50, 50, 50, 50" Margin="20">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
+          <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Cancel" />
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+          <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False">Cancel</Button>
+          <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
+          <Button Grid.Row="2" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
+          <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+          <Button Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
+          <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center">With custom ContentTemplate:</TextBlock>
+          <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Computer">
+            <Button.ContentTemplate>
+              <DataTemplate>
+                <Border Padding="5">
+                  <StackPanel Orientation="Vertical" Spacing="2">
+                    <Svg Path="/Assets/Computer.svg" Width="16" Height="16" />
+                    <TextBlock Text="{Binding $parent[Button].Content}" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </Button.ContentTemplate>
+          </Button>
+          <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
+                      IsVisible="{ext:ThemeIsOneOf 'MacClassic'}">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 0 0">/</TextBlock>
+            <Button Classes="accentPrecise" VerticalAlignment="Center">Open</Button>
+            <TextBlock VerticalAlignment="Center" Margin="5 0 0 0">(<TextBlock Classes="code" Text="Classes=&quot;accentPrecise&quot;" />More precise look, but not responsive to custom accent colour / inactive window)</TextBlock>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Border Background="{DynamicResource LayoutBackgroundLowBrush}" Margin="20 0">
+        <Grid ColumnDefinitions="100, 72, 40, 72, Auto" RowDefinitions="50, 50, 50" Margin="20">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
+          <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">Cancel</Button>
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Accent</TextBlock>
+          <Button Grid.Row="1" Grid.Column="1" Classes="accent" VerticalAlignment="Center">Open</Button>
+          <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+          <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
+        </Grid>
+      </Border>
+    </StackPanel>
 
-        <ToggleButtonGroupItem Content="Light">
-          <ToggleButtonGroupItem.InnerLeftContent>
-            <Svg Path="/Assets/ThemeLight.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
-          </ToggleButtonGroupItem.InnerLeftContent>
-        </ToggleButtonGroupItem>
+    <Border Margin="20">
+      <StackPanel Orientation="Vertical" Spacing="10">
+        <TextBlock Text="ToggleButtonGroup" FontWeight="Bold" Margin="0 20 0 0" />
 
-        <ToggleButtonGroupItem Content="Dark">
-          <ToggleButtonGroupItem.InnerLeftContent>
-            <Svg Path="/Assets/ThemeDark.svg" Margin="2 0 0 0" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
-          </ToggleButtonGroupItem.InnerLeftContent>
-        </ToggleButtonGroupItem>
-      </ToggleButtonGroup>
+        <TextBlock Text="Default:" Margin="0 10 0 0" />
+        <ToggleButtonGroup>
+          <ToggleButtonGroupItem Content="{Binding #SystemText.Text}" LeftContentPadding="0 0 6 0">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDefault.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Light">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeLight.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Dark">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDark.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+        </ToggleButtonGroup>
+
+        <TextBlock Text="ItemsMinWidth 120:" Margin="0 10 0 0" />
+        <ToggleButtonGroup ItemsMinWidth="120">
+          <ToggleButtonGroupItem Content="{Binding #SystemText.Text}">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDefault.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Light">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeLight.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Dark">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDark.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+        </ToggleButtonGroup>
+
+        <TextBlock Text="EqualItemsSize:" Margin="0 10 0 0" />
+        <ToggleButtonGroup EqualItemsSize="True">
+          <ToggleButtonGroupItem Content="{Binding #SystemText.Text}">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDefault.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Light">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeLight.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+
+          <ToggleButtonGroupItem Content="Dark">
+            <ToggleButtonGroupItem.InnerLeftContent>
+              <Svg Path="/Assets/ThemeDark.svg" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+            </ToggleButtonGroupItem.InnerLeftContent>
+          </ToggleButtonGroupItem>
+        </ToggleButtonGroup>
+        <TextBox Name="SystemText" Text="System" />
+      </StackPanel>
     </Border>
   </StackPanel>
 </UserControl>

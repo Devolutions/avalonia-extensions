@@ -51,7 +51,7 @@ public class SimpleVisualTest
         using var bitmap = frame;
         
         System.Console.WriteLine($"Bitmap size: {bitmap.PixelSize}");
-        var path = "/tmp/button_test.png";
+        var path = Path.Combine(Path.GetTempPath(), "button_test.png");
         if (File.Exists(path)) File.Delete(path);
         
         bitmap.Save(path);
@@ -90,7 +90,7 @@ public class SimpleVisualTest
         if (frame == null) throw new System.Exception("CaptureRenderedFrame returned null");
         using var bitmap = frame;
         
-        var path = "/tmp/ButtonDemo.png";
+        var path = Path.Combine(Path.GetTempPath(), "ButtonDemo.png");
         if (File.Exists(path)) File.Delete(path);
         bitmap.Save(path);
         

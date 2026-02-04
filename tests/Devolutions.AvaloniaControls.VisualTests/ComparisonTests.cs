@@ -9,9 +9,9 @@ public class ComparisonTests
     [Fact]
     public void IdenticalImagesAreEqual()
     {
-        var path1 = "/tmp/img1.png";
-        var path2 = "/tmp/img2.png";
-        var diff = "/tmp/diff.png";
+        var path1 = Path.Combine(Path.GetTempPath(), "img1.png");
+        var path2 = Path.Combine(Path.GetTempPath(), "img2.png");
+        var diff = Path.Combine(Path.GetTempPath(), "diff.png");
 
         CreateTestImage(path1, SKColors.Blue);
         CreateTestImage(path2, SKColors.Blue);
@@ -23,9 +23,9 @@ public class ComparisonTests
     [Fact]
     public void DifferentImagesAreNotEqual()
     {
-        var path1 = "/tmp/img1_diff.png";
-        var path2 = "/tmp/img2_diff.png";
-        var diff = "/tmp/diff_out.png";
+        var path1 = Path.Combine(Path.GetTempPath(), "img1_diff.png");
+        var path2 = Path.Combine(Path.GetTempPath(), "img2_diff.png");
+        var diff = Path.Combine(Path.GetTempPath(), "diff_out.png");
 
         CreateTestImage(path1, SKColors.Blue);
         CreateTestImage(path2, SKColors.Red);

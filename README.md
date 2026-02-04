@@ -57,15 +57,26 @@ There is limited visual regression testing available. DemoPagea are compared aga
 - Interactive behaviours (e.g. pointerOver, popUpOpen, focus, etc.) are not tested
 - Accelerate controls that depend on a licence (e.g. TreeDataGrid) are not tested
 
+### Platform-Specific Baselines
+Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linux`) due to rendering differences. When updating baselines, they only update for your current platform.
+
 ### Usage
-- `dotnet test --filter "DisplayName~VisualRegressionTests”` - runs all tests
+- `dotnet test --filter "DisplayName~VisualRegressionTests"` - runs all tests
 - `dotnet test` - runs all tests, plus some little unit tests (worth it for the time saved typing!)
-- `dotnet test --filter "DisplayName~DevExpress”` - runs tests for all controls implemented in DevExpress
-- `dotnet test --filter "DisplayName~Button”` - runs tests for Button under each of the themes it's implemented in
-- `UPDATE_BASELINES=true dotnet test [filters]` - updates baseline screenshots when changes are expected
+- `dotnet test --filter "DisplayName~DevExpress"` - runs tests for all controls implemented in DevExpress
+- `dotnet test --filter "DisplayName~Button"` - runs tests for Button under each of the themes it's implemented in
 - `dotnet test --list-tests` - lists all test cases
+
+**Updating baseline screenshots** when changes are intentional:
+- **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`
+- **Windows (PowerShell):** `$env:UPDATE_BASELINES="true"; dotnet test [filters]; Remove-Item env:UPDATE_BASELINES`
+- **Windows (Command Prompt):** `set UPDATE_BASELINES=true && dotnet test [filters] && set UPDATE_BASELINES=`
   
 🤍🖤 All tests are run for light & dark mode
+**However** to keep things reasonably quick, the dark mode test only runs if the light mode test for the same 
+control has passed. This can lead to missed issues, when both versions have _different_ problems. (If in doubt, 
+update, then delete the new dark baseline shot, and run the test again (light will no longer fail, and you can see 
+what happens in dark))
 
 ## AI Assistant Instructions
 

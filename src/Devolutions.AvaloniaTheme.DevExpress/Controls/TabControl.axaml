@@ -12,7 +12,7 @@
               <TextBox Width="200" />
             </StackPanel>
           </TabItem>
-          <TabItem Header="Communication">
+          <TabItem Header="Communication" IsVisible="False">
             <TextBlock Text="Content 2" />
           </TabItem>
           <TabItem Header="Contact Details">
@@ -39,10 +39,6 @@
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-
-  <ControlTheme x:Key="Default_TabItem" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
-    <!-- Can't figure out how to reference the default TabItem in TabItem.axaml, so this is just a shortcut -->
-  </ControlTheme>
 
   <ControlTheme x:Key="Devo_NavBar_TabItem" TargetType="TabItem">
     <Setter Property="ClipToBounds" Value="False" />
@@ -107,13 +103,14 @@
 
 
   <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
+    <Setter Property="TabItemVisibilityObserverBehavior.Enable" Value="True" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Padding" Value="25 20" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />
-    <Setter Property="ItemContainerTheme" Value="{DynamicResource Default_TabItem}" />
+    <Setter Property="ItemContainerTheme" Value="{StaticResource {x:Type TabItem}}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="RootBorder"

@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Converters">
   <Design.PreviewWith>
     <design:ThemePreviewer Width="450">
       <StackPanel Orientation="Vertical">
@@ -40,7 +41,6 @@
   </Design.PreviewWith>
 
 
-  
   <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="Transparent" />
@@ -151,11 +151,13 @@
                     Background="Transparent"
                     BorderThickness="0 0 1 0 ">
               <Border.IsVisible>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.TabBorderVisibilityConverter}"
+                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
                               ConverterParameter="RightBorder">
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -169,11 +171,13 @@
                     BorderThickness="0 0 1 1   "
                     CornerRadius="0 0 4 0 ">
               <Border.IsVisible>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.TabBorderVisibilityConverter}"
+                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
                               ConverterParameter="BottomLeftCorner">
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -184,11 +188,13 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="0 0 0 1">
               <Border.IsVisible>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.TabBorderVisibilityConverter}"
+                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
                               ConverterParameter="BottomLeftBorder">
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -213,11 +219,13 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="0 0 0 1">
               <Border.IsVisible>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.TabBorderVisibilityConverter}"
+                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
                               ConverterParameter="BottomRightBorder">
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -230,11 +238,13 @@
                     BorderThickness="1 0 0 1"
                     CornerRadius="0 0 0 4 ">
               <Border.IsVisible>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.TabBorderVisibilityConverter}"
+                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
                               ConverterParameter="BottomRightCorner">
                   <Binding Path="$parent[TabItem]" />
                   <Binding Path="$parent[TabControl]" />
                   <Binding Path="$parent[TabControl].SelectedIndex" />
+                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
+                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>

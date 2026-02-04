@@ -77,7 +77,6 @@ internal static class TabItemVisibilityObserverBehavior
     {
         private readonly Dictionary<TabItem, IDisposable> subscriptions = new();
         private readonly TabControl tabControl;
-        private bool isLoadedHandlerAttached;
 
         public TabItemObservationState(TabControl tabControl)
         {
@@ -97,14 +96,12 @@ internal static class TabItemVisibilityObserverBehavior
             else
             {
                 tabControl.Loaded += this.OnTabControlLoaded;
-                this.isLoadedHandlerAttached = true;
             }
         }
 
         private void OnTabControlLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             this.tabControl.Loaded -= this.OnTabControlLoaded;
-            this.isLoadedHandlerAttached = false;
             this.ObserveExistingTabItems();
         }
 
@@ -143,7 +140,8 @@ internal static class TabItemVisibilityObserverBehavior
             if (!this.subscriptions.ContainsKey(tabItem))
             {
                 // Subscribe to IsVisible property changes
-                var subscription = tabItem.GetObservable(Visual.IsVisibleProperty)
+                var subscription = tabItem
+                    .GetObservable(Visual.IsVisibleProperty)
                     .Subscribe(_ => this.OnTabItemVisibilityChanged());
                 this.subscriptions[tabItem] = subscription;
             }
@@ -167,12 +165,7 @@ internal static class TabItemVisibilityObserverBehavior
 
         public void Dispose()
         {
-            // Unsubscribe from Loaded event if still attached
-            if (this.isLoadedHandlerAttached)
-            {
-                this.tabControl.Loaded -= this.OnTabControlLoaded;
-                this.isLoadedHandlerAttached = false;
-            }
+            this.tabControl.Loaded -= this.OnTabControlLoaded;
 
             // Unsubscribe from items collection
             if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)

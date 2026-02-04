@@ -40,10 +40,6 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="Default_TabItem" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
-    <!-- Can't figure out how to reference the default TabItem in TabItem.axaml, so this is just a shortcut -->
-  </ControlTheme>
-
   <ControlTheme x:Key="Devo_NavBar_TabItem" TargetType="TabItem">
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="Transparent" />

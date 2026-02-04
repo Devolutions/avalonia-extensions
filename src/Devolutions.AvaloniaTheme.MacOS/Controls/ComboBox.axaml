@@ -91,13 +91,13 @@
 
 
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
-    <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{WindowActiveResourceToggler ComboBoxButtonBackgroundBrush, ComboBoxButtonInactiveBackgroundBrush}" />
     <Setter Property="Foreground"
             Value="{WindowActiveBindingToggler 
-      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
-    <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ComboBoxChevronBrush, ForegroundLowBrush}, 
+      {DynamicResourceToggler {Binding $parent[ComboBox].IsEnabled}, ComboBoxChevronInactiveBrush, ForegroundLowBrush}}" />
+    <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ComboBoxButtonBorderBrush, ComboBoxButtonInactiveBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxButtonBorderThickness}" />
     <Setter Property="CornerRadius" Value="{StaticResource SelectionCornerRadius}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -112,13 +112,13 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             Spacing="2">
-            <Path Height="4.4"
+            <Path Height="4.6"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Data="{DynamicResource ChevronPath}"
                   Fill="{TemplateBinding Foreground}" />
-            <Path Height="4.4"
+            <Path Height="4.6"
                   Stretch="Uniform"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
@@ -159,7 +159,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
@@ -183,9 +183,9 @@
             <Border
               Name="BorderElement"
               Background="{TemplateBinding Background}"
-              BorderThickness="{DynamicResource ControlBorderThickness}"
-              BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
-              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
+              BorderThickness="{DynamicResource ComboBoxBorderThickness}"
+              BorderBrush="{DynamicResource ComboBoxBorderBrush}"
+              BoxShadow="{DynamicResource ComboBoxBoxShadow}"
               CornerRadius="{TemplateBinding CornerRadius}">
               <Grid ColumnDefinitions="*,Auto">
                 <TextBlock
@@ -267,20 +267,26 @@
                   <Binding Source="{StaticResource PopupTrimHeight}" />
                 </MultiBinding>
               </Popup.VerticalOffset>
-              <Border Background="{DynamicResource PopupBackgroundBrush}"
-                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      CornerRadius="{DynamicResource LayoutCornerRadius}"
-                      Margin="{DynamicResource PopupMargin}"
-                      Padding="{DynamicResource PopupPadding}"
-                      BoxShadow="{DynamicResource PopupShadow}">
-                <ScrollViewer
-                  Classes="MacOS_TransparentTrack"
-                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                  IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
-                  <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
-                </ScrollViewer>
+              <Border
+                BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}"
+                BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
+                CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+                Margin="{DynamicResource PopupMargin}"
+                BoxShadow="{DynamicResource PopupShadow}">
+                <Border Name="InnerBorderHighlight"
+                        Background="{DynamicResource PopupBackgroundBrush}"
+                        BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                        BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                        CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+                        Padding="{DynamicResource PopupPadding}">
+                  <ScrollViewer
+                    Classes="MacOS_TransparentTrack"
+                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                    IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                  </ScrollViewer>
+                </Border>
               </Border>
             </Popup>
           </Panel>
@@ -288,8 +294,12 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^:pressed /template/ Border#BorderElement">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxPressedBackgroundBrush}" />
+    </Style>
+
     <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible, ^:focus-within">
+    <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#FocusBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
       </Style>

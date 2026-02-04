@@ -168,7 +168,7 @@
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                BoxShadow="{DynamicResource ControlBorderBoxShadow}"
+                BoxShadow="{DynamicResource ComboBoxBoxShadow}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 MinWidth="{TemplateBinding MinWidth}"
                 MinHeight="{TemplateBinding MinHeight}"
@@ -231,8 +231,8 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Foreground="{WindowActiveBindingToggler 
-                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}"
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ComboBoxChevronBrush, ForegroundLowBrush}, 
+                        {DynamicResourceToggler {Binding $parent[EditableComboBox].IsEnabled}, ComboBoxChevronInactiveBrush, ForegroundLowBrush}}"
                     Data="{StaticResource ChevronPath}">
                     <PathIcon.RenderTransform>
                       <ScaleTransform ScaleY="-1" />
@@ -296,9 +296,9 @@
     </Setter>
 
     <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-      <Setter Property="Background" Value="{WindowActiveResourceToggler ControlBackgroundAccentRaisedBrush, ControlBackgroundHighBrush}" />
-      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBorderAccentBrush, ControlBorderBrush}" />
-      <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+      <Setter Property="Background" Value="{WindowActiveResourceToggler ComboBoxButtonBackgroundBrush, ComboBoxButtonInactiveBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ComboBoxButtonBorderBrush, ComboBoxButtonInactiveBorderBrush}" />
+      <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxButtonBorderThickness}" />
     </Style>
 
     <!-- Error State -->

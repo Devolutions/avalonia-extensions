@@ -21,6 +21,9 @@
   <converters:OklchAdjustmentConverter x:Key="LightModeAccentBackgroundWashConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" />
   <converters:OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
+  <converters:OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
+  <converters:OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="0.04" ChromaAdjustment="-0.02" HueAdjustment="-4.4" />
+
   <!-- MARK: Brushes -->
 
   <!-- Brush naming scheme: -->
@@ -30,6 +33,8 @@
   <!--   D = Dimmed (with BackgroundColor overlay in %) -->
 
   <SolidColorBrush x:Key="Transparent" Color="Transparent" />
+
+  <SolidColorBrush x:Key="Highlight" Color="{DynamicResource BackgroundColor}" />
 
   <SolidColorBrush x:Key="SurfaceT03" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
   <SolidColorBrush x:Key="SurfaceT04" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
@@ -44,12 +49,10 @@
   <SolidColorBrush x:Key="SurfaceT18" Color="{DynamicResource ForegroundColor}" Opacity="0.18" />
   <SolidColorBrush x:Key="SurfaceT19" Color="{DynamicResource ForegroundColor}" Opacity="0.19" />
 
+  <SolidColorBrush x:Key="ForegroundT20" Color="{DynamicResource ForegroundColor}" Opacity="0.20" />
   <SolidColorBrush x:Key="ForegroundT24" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />
   <SolidColorBrush x:Key="ForegroundT26" Color="{DynamicResource ForegroundColor}" Opacity="0.26" />
   <SolidColorBrush x:Key="ForegroundT85" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
-
-  <SolidColorBrush x:Key="BackgroundT03" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
-  <SolidColorBrush x:Key="BackgroundT04" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
 
   <SolidColorBrush x:Key="AccentForeground" Color="{DynamicResource AccentForegroundColor}" />
   <SolidColorBrush x:Key="AccentForegroundT25" Color="{DynamicResource AccentForegroundColor}" Opacity="0.25" />
@@ -82,7 +85,7 @@
     <VisualBrush.Visual>
       <Panel>
         <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource BackgroundT03}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT03}" Width="16" Height="16" />
       </Panel>
     </VisualBrush.Visual>
   </VisualBrush>
@@ -91,7 +94,7 @@
     <VisualBrush.Visual>
       <Panel>
         <Rectangle Fill="{StaticResource SystemAccent}" Width="16" Height="16" />
-        <Rectangle Fill="{StaticResource BackgroundT04}" Width="16" Height="16" />
+        <Rectangle Fill="{StaticResource SurfaceT04}" Width="16" Height="16" />
       </Panel>
     </VisualBrush.Visual>
   </VisualBrush>
@@ -117,7 +120,9 @@
 
   <!-- MARK: Radii -->
 
+  <CornerRadius x:Key="Radius12">12</CornerRadius>
   <CornerRadius x:Key="Radius8">8</CornerRadius>
+  <CornerRadius x:Key="Radius7">7</CornerRadius>
   <CornerRadius x:Key="Radius6">6</CornerRadius>
   <CornerRadius x:Key="Radius5">5</CornerRadius>
 
@@ -130,14 +135,21 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
+
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
+      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentHighlightConverter}}"
+                       Opacity="0.64" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
       <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
+
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Highlight" />
 
       <!-- Control-specific resources -->
 
@@ -163,32 +175,30 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT20" />
+      <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+
 
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}" Opacity="0.43" />
+      <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
+
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
+                       Opacity="0.43" />
+      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
+                       Opacity="0.69" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
       <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
+
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Transparent" />
 
       <!-- Control-specific resources -->
 
@@ -214,19 +224,9 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="AccentForegroundT25" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
-      <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT26" />
+      <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
@@ -247,14 +247,59 @@
   <StaticResource x:Key="CheckBoxIndeterminateMarkWidth" ResourceKey="ControlSize9" />
   <StaticResource x:Key="CheckBoxIndeterminateMarkHeight" ResourceKey="ControlSize3" />
 
+  <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedInactiveBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedDisabledBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckedDisabledInactiveBackgroundBrush" ResourceKey="CheckBoxCheckedDisabledInactiveBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
+  <StaticResource x:Key="RadioButtonCheckMarkBrush" ResourceKey="CheckBoxCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonDisabledCheckMarkBrush" ResourceKey="CheckBoxDisabledCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonInactiveCheckMarkBrush" ResourceKey="CheckBoxInactiveCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonDisabledInactiveCheckMarkBrush" ResourceKey="CheckBoxDisabledInactiveCheckMarkBrush" />
+  <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+
   <StaticResource x:Key="RadioButtonCornerRadius" ResourceKey="Radius8" />
   <StaticResource x:Key="RadioButtonBorderThickness" ResourceKey="Thickness0" />
   <StaticResource x:Key="RadioButtonSize" ResourceKey="ControlSize16" />
   <StaticResource x:Key="RadioButtonCheckMarkSize" ResourceKey="ControlSize5" />
-  <StaticResource x:Key="RadioButtonBoxShadow" ResourceKey="NoShadow" />
+
+  <!-- ComboBox -->
+  <StaticResource x:Key="ComboBoxBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
+  <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ButtonPressedBackgroundBrush" />
+  <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="NoShadow" />
+  <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="Radius12" />
+
+
+  <!-- ComboBox Button (ToggleButton) -->
+  <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonInactiveBackgroundBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonInactiveBorderBrush" ResourceKey="Transparent" />
+  <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="Thickness0" />
+  <StaticResource x:Key="ComboBoxChevronBrush" ResourceKey="ControlLabelBrush" />
+  <StaticResource x:Key="ComboBoxChevronInactiveBrush" ResourceKey="ControlLabelBrush" />
+
+  <!-- ComboBoxItem -->
+  <StaticResource x:Key='ComboBoxItemCornerRadius' ResourceKey='Radius7' />
+  <Thickness x:Key="ComboBoxItemPadding">5 4</Thickness>
+  <x:Int32 x:Key="ComboBoxItemHeight">24</x:Int32>
+
+  <!-- Popup -->
+  <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
+  <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
+
 
   <!-- DEVELOPMENT ONLY -->
 
   <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemRegionColor}" Opacity="0.8" />
+
+  <!-- Custom wallpaper colours for testing transparency issues -->
+  <SolidColorBrush x:Key="LiquidGlassCustomWallpaperLight" Color="White" />
+  <SolidColorBrush x:Key="LiquidGlassCustomWallpaperDark" Color="Black" />
 
 </ResourceDictionary>

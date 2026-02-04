@@ -61,9 +61,6 @@
 
     <!-- Focused state -->
     <Style Selector="^:focus, ^[IsFocused=True]">
-      <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
-      </Style>
       <Style Selector="^:selected /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>

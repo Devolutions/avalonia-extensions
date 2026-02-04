@@ -18,7 +18,7 @@
   <!-- TODO: move the margins into the theme ?? -->
   <Panel>
     <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}" />
-    <Panel Classes="mainControl">
+    <Panel Name="MainContentPanel" Classes="mainControl">
       <TabControl x:Name="MainTabControl" TabStripPlacement="Left" VerticalAlignment="Stretch">
         <TabItem IsSelected="True">
           <TabItem.Header>
@@ -58,7 +58,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:ComboBoxDemo>
             <demoPages:ComboBoxDemo.DataContext>
@@ -100,7 +100,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:EditableComboBoxDemo>
             <demoPages:EditableComboBoxDemo.DataContext>
@@ -132,7 +132,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
           </TabItem.Header>
           <demoPages:MultiComboBoxDemo>
             <demoPages:MultiComboBoxDemo.DataContext>
@@ -298,10 +298,12 @@
                   BorderBrush="Gray"
                   Padding="5">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-              <CheckBox Content="Show wallpaper"
-                        IsChecked="{Binding ShowWallpaper, Mode=TwoWay}"
+              <TextBlock Text="Wallpaper:" VerticalAlignment="Center" Margin="0 0 10 0" />
+              <ComboBox ItemsSource="{Binding AvailableWallpapers}"
+                        SelectedItem="{Binding SelectedWallpaper}"
                         VerticalAlignment="Center"
-                        Margin="0 0 10 0" />
+                        HorizontalAlignment="Stretch"
+                        MinWidth="100" />
             </StackPanel>
           </Border>
         </actipro:ShadowChrome>

@@ -68,10 +68,10 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type MultiComboBox}" TargetType="MultiComboBox">
-    <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThickness}" />
     <Setter Property="MaxDropDownHeight" Value="504" />
     <Setter Property="MaxSelectionBoxHeight" Value="Infinity" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -97,7 +97,7 @@
               Background="{TemplateBinding Background}"
               BorderThickness="{TemplateBinding BorderThickness}"
               BorderBrush="{TemplateBinding BorderBrush}"
-              BoxShadow="{DynamicResource ControlBorderBoxShadow}"
+              BoxShadow="{DynamicResource ComboBoxBoxShadow}"
               MinHeight="{TemplateBinding MinHeight}"
               CornerRadius="{TemplateBinding CornerRadius}">
               <Grid ColumnDefinitions="Auto,*,Auto, Auto">
@@ -123,9 +123,8 @@
                   IsHitTestVisible="False"
                   Focusable="False"
                   Foreground="{WindowActiveBindingToggler 
-      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ControlForegroundAccentHighBrush, ForegroundLowBrush}, 
-      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ControlForegroundAccentInactiveHighBrush, ForegroundLowBrush}}" />
-
+      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronBrush, ForegroundLowBrush}, 
+      {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronInactiveBrush, ForegroundLowBrush}}" />
                 <Border
                   Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
                   Grid.Column="0"

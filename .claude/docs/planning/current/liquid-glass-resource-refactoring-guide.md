@@ -101,7 +101,7 @@ Define the new resource in both theme files.
 - [ ] MultiComboBox
 - [ ] MultiComboBoxItem
 - [ ] NumericUpDown
-- [ ] RadioButton
+- [x] RadioButton
 - [ ] ScrollBar
 - [ ] ScrollViewer
 - [ ] Separator

@@ -36,12 +36,6 @@
               </DataTemplate>
             </Button.ContentTemplate>
           </Button>
-          <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="20"
-                      IsVisible="{ext:ThemeIsOneOf 'MacClassic'}">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 0 0">/</TextBlock>
-            <Button Classes="accentPrecise" VerticalAlignment="Center">Open</Button>
-            <TextBlock VerticalAlignment="Center" Margin="5 0 0 0">(<TextBlock Classes="code" Text="Classes=&quot;accentPrecise&quot;" />More precise look, but not responsive to custom accent colour / inactive window)</TextBlock>
-          </StackPanel>
         </Grid>
       </Border>
       <Border Background="{DynamicResource LayoutBackgroundLowBrush}" Margin="20 0">
@@ -125,5 +119,12 @@
         <TextBox Name="SystemText" Text="System" />
       </StackPanel>
     </Border>
+
+
+    <StackPanel Orientation="Horizontal" Spacing="20" Margin="20"
+                IsVisible="{ext:ThemeIsOneOf 'MacClassic'}">
+      <Button Classes="accentPrecise" VerticalAlignment="Center">Open</Button>
+      <TextBlock VerticalAlignment="Center" Margin="5 0 0 0">(<TextBlock Classes="code" Text="Classes=&quot;accentPrecise&quot;" />More precise look, but not responsive to custom accent colour / inactive window)</TextBlock>
+    </StackPanel>
   </StackPanel>
 </UserControl>

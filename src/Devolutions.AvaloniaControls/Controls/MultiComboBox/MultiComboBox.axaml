@@ -93,8 +93,8 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
-          <Panel>
-            <Grid Name="PART_RootGrid" ColumnDefinitions="Auto, *, Auto, Auto, Auto, AUto">
+          <Panel Name="PART_Root">
+            <Grid ColumnDefinitions="Auto, *, Auto, Auto, Auto, AUto">
               <Border
                 Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
                 Grid.Column="0"
@@ -208,14 +208,14 @@
               Name="PART_Popup"
               WindowManagerAddShadowHint="False"
               IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-              MinWidth="{Binding Bounds.Width, ElementName=PART_RootGrid}"
+              MinWidth="{Binding #PART_Root.Bounds.Width}"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
-              PlacementTarget="PART_RootGrid"
-              OverlayInputPassThroughElement="{Binding #PART_RootGrid}"
+              PlacementTarget="{Binding #PART_Root}"
+              OverlayInputPassThroughElement="{Binding #PART_Root}"
               Placement="AnchorAndGravity"
               PlacementAnchor="BottomLeft"
               PlacementGravity="BottomRight"
-              HorizontalAlignment="Stretch"
+              HorizontalAlignment="Left"
               HorizontalOffset="0"
               VerticalOffset="0"
               IsLightDismissEnabled="True"
@@ -223,7 +223,7 @@
               InheritsTransform="True">
               <Interaction.Behaviors>
                 <PositionedPopupBehavior
-                  PositionTo="{Binding #PART_RootGrid}"
+                  PositionTo="{Binding #PART_Root}"
                   InjectFusionMask="True"
                   PopupBorderThickness="2" />
               </Interaction.Behaviors>
@@ -310,7 +310,7 @@
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
-    <Style Selector="^:error">
+    <Style Selector="^:error:not(:dropdownopen)">
       <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
     </Style>
 

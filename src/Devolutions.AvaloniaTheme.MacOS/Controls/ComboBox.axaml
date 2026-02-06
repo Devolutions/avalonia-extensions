@@ -2,7 +2,6 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
-  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls"
   xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
   <!-- 
@@ -173,7 +172,7 @@
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
-    <Setter Property="behaviors:ComboBoxValidationBehavior.Enable" Value="True" />
+    <Setter Property="ComboBoxValidationBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors ClipToBounds="False">

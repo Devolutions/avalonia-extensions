@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors"
   xmlns:system="clr-namespace:System;assembly=System.Runtime"
   x:ClassModifier="internal">
   <Design.PreviewWith>
@@ -256,121 +255,123 @@
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Grid ColumnDefinitions="Auto,*,Auto,32" HorizontalAlignment="Stretch">
-          <Border x:Name="Background"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="4"
-                  Background="{TemplateBinding Background}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}"
-                  MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
-          <Border x:Name="HighlightBackground"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="4"
-                  Background="Transparent"
-                  BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushFocused}"
-                  CornerRadius="{TemplateBinding CornerRadius}"
-                  IsVisible="False" />
+        <Panel Name="PART_Root">
+          <Grid ColumnDefinitions="Auto,*,Auto,32" HorizontalAlignment="Stretch">
+            <Border x:Name="Background"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
+            <Border x:Name="HighlightBackground"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Background="Transparent"
+                    BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushFocused}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    IsVisible="False" />
 
-          <ItemsControl
-            Name="PART_InnerLeftContent"
-            Margin="8 0 0 0" Grid.Column="0"
-            ItemsSource="{TemplateBinding InnerLeftContent}"
-            IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Name="PART_InnerLeftContentPanel" Orientation="Horizontal"
-                            Margin="2 2 0 2" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
+            <ItemsControl
+              Name="PART_InnerLeftContent"
+              Margin="8 0 0 0" Grid.Column="0"
+              ItemsSource="{TemplateBinding InnerLeftContent}"
+              IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerLeftContentPanel" Orientation="Horizontal"
+                              Margin="2 2 0 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
-          <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" Margin="0" Padding="0" />
+            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" Margin="0" Padding="0" />
 
-          <ItemsControl
-            Grid.Column="2"
-            Name="PART_InnerRightContent"
-            Margin="8 0 0 0"
-            ItemsSource="{TemplateBinding InnerRightContent}"
-            IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal"
-                            Margin="0 2 3 2" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
-
-          <Border
-            x:Name="DropDownOverlay"
-            Grid.Column="3"
-            Background="Transparent"
-            Margin="0,1,1,1"
-            Width="30"
-            IsVisible="False"
-            HorizontalAlignment="Right" />
-
-          <PathIcon
-            x:Name="DropDownGlyph"
-            Grid.Column="3"
-            UseLayoutRounding="False"
-            IsHitTestVisible="False"
-            Height="12"
-            Width="12"
-            Margin="0 0 10 0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Foreground="{TemplateBinding Foreground}"
-            Data="{StaticResource DropDownGlyphPath}" />
-
-          <!-- ReSharper disable once Xaml.MissingGridIndex -->
-          <Popup
-            Name="PART_Popup"
-            WindowManagerAddShadowHint="False"
-            IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-            MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-            MaxWidth="{TemplateBinding MaxDropDownWidth}"
-            MaxHeight="{TemplateBinding MaxDropDownHeight}"
-            Placement="AnchorAndGravity"
-            PlacementAnchor="BottomLeft"
-            PlacementGravity="BottomRight"
-            HorizontalAlignment="Stretch"
-            HorizontalOffset="0"
-            VerticalOffset="0"
-            IsLightDismissEnabled="True"
-            OverlayDismissEventPassThrough="True"
-            InheritsTransform="True">
-            <Interaction.Behaviors>
-              <behaviors:PositionedPopupBehavior
-                PositionToTemplatedParent="True"
-                InjectFusionMask="True"
-                PopupBorderThickness="{
-                  Binding FocusedBorderThickness, 
-                  RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
-                }" />
-            </Interaction.Behaviors>
+            <ItemsControl
+              Grid.Column="2"
+              Name="PART_InnerRightContent"
+              Margin="8 0 0 0"
+              ItemsSource="{TemplateBinding InnerRightContent}"
+              IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal"
+                              Margin="0 2 3 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
             <Border
-              x:Name="PopupBorder"
-              Background="{TemplateBinding Background}"
-              BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-              BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
-              Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
-              HorizontalAlignment="Stretch"
-              CornerRadius="{DynamicResource OverlayCornerRadius}">
-              <ScrollViewer
-                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
-                IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
-                <ItemsPresenter
-                  Name="PART_ItemsPresenter"
-                  Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                  ItemsPanel="{TemplateBinding ItemsPanel}" />
-              </ScrollViewer>
-            </Border>
-          </Popup>
-        </Grid>
+              x:Name="DropDownOverlay"
+              Grid.Column="3"
+              Background="Transparent"
+              Margin="0,1,1,1"
+              Width="30"
+              IsVisible="False"
+              HorizontalAlignment="Right" />
+
+            <PathIcon
+              x:Name="DropDownGlyph"
+              Grid.Column="3"
+              UseLayoutRounding="False"
+              IsHitTestVisible="False"
+              Height="12"
+              Width="12"
+              Margin="0 0 10 0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Foreground="{TemplateBinding Foreground}"
+              Data="{StaticResource DropDownGlyphPath}" />
+
+            <!-- ReSharper disable once Xaml.MissingGridIndex -->
+            <Popup
+              Name="PART_Popup"
+              WindowManagerAddShadowHint="False"
+              IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+              MinWidth="{Binding #PART_Root.Bounds.Width}"
+              MaxWidth="{TemplateBinding MaxDropDownWidth}"
+              MaxHeight="{TemplateBinding MaxDropDownHeight}"
+              Placement="AnchorAndGravity"
+              PlacementAnchor="BottomLeft"
+              PlacementGravity="BottomRight"
+              HorizontalAlignment="Left"
+              HorizontalOffset="0"
+              VerticalOffset="0"
+              IsLightDismissEnabled="True"
+              OverlayDismissEventPassThrough="True"
+              InheritsTransform="True">
+              <Interaction.Behaviors>
+                <PositionedPopupBehavior
+                  PositionTo="{Binding #PART_Root}"
+                  InjectFusionMask="True"
+                  PopupBorderThickness="{
+                    Binding FocusedBorderThickness, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}
+                  }" />
+              </Interaction.Behaviors>
+
+              <Border
+                x:Name="PopupBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                HorizontalAlignment="Stretch"
+                CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer
+                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                  IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
+                  <ItemsPresenter
+                    Name="PART_ItemsPresenter"
+                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+              </Border>
+            </Popup>
+          </Grid>
+        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -573,6 +574,10 @@
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}" />
     </Style>
 
+    <Style Selector="^.error:not(:dropdownopen) /template/ Border#Background">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    </Style>
+
     <Setter Property="Transitions">
       <Transitions>
         <BrushTransition Property="Background" Duration="0:0:0.049" />
@@ -606,10 +611,6 @@
 
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
-    </Style>
-
-    <Style Selector="^:error">
-      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

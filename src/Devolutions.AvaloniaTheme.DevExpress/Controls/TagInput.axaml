@@ -11,7 +11,13 @@
         <TagInput Watermark="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+        <TagInput x:Name="PrePopulated">
+          <TagInput.Items>
+            <ClosableTag>a</ClosableTag>
+            <ClosableTag>b</ClosableTag>
+            <TextBlock></TextBlock>
+          </TagInput.Items>
+        </TagInput>
 
         <TextBlock>Disabled:</TextBlock>
         <TagInput IsEnabled="False" Watermark="Disabled..." />
@@ -33,7 +39,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="1 1 1 0" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ItemTemplate">
@@ -62,6 +68,7 @@
               Background="Transparent"
               BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
               BorderThickness="0 0 0 1"
+              Margin="1 0"
               CornerRadius="{TemplateBinding CornerRadius}"
               MinHeight="{TemplateBinding MinHeight}"
               IsHitTestVisible="False" />
@@ -77,13 +84,14 @@
 
             <!-- Content area with proper margin for borders -->
             <Border Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
-              <Panel>
+              <Panel Margin="1 1 1 2">
                 <!-- Watermark -->
                 <TextBlock
                   Name="{x:Static u:TagInput.PART_Watermark}"
                   Text="{TemplateBinding Watermark}"
                   Foreground="{TemplateBinding Foreground}"
                   FontSize="{DynamicResource ControlFontSize}"
+                  Margin="3 0 0 0"
                   Opacity="0.5"
                   IsVisible="False"
                   VerticalAlignment="Center"
@@ -100,15 +108,9 @@
                   ItemsSource="{TemplateBinding Items}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:TagInputPanel VerticalAlignment="Center" />
+                      <u:TagInputPanel VerticalAlignment="Top" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
-                  <ItemsControl.Styles>
-                    <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
-                    <Style Selector="ContentPresenter:nth-last-child(2)">
-                      <Setter Property="Margin" Value="0,0,6,0" />
-                    </Style>
-                  </ItemsControl.Styles>
                 </ItemsControl>
               </Panel>
             </Border>
@@ -163,6 +165,7 @@
     <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextBoxSelectionForeground}" />
     <Setter Property="CaretBrush" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Cursor" Value="Ibeam" />
+    <Setter Property="Margin" Value="3 0 0 0" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
@@ -170,30 +173,28 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="Template">
       <ControlTemplate TargetType="TextBox">
-        <Border Padding="0,4">
-          <ScrollViewer
-            AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
-            HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
-            IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
-            VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
-            <TextPresenter
-              Name="PART_TextPresenter"
-              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-              CaretBrush="{TemplateBinding CaretBrush}"
-              CaretIndex="{TemplateBinding CaretIndex}"
-              LineHeight="{TemplateBinding LineHeight}"
-              PasswordChar="{TemplateBinding PasswordChar}"
-              RevealPassword="{TemplateBinding RevealPassword}"
-              SelectionBrush="{TemplateBinding SelectionBrush}"
-              SelectionEnd="{TemplateBinding SelectionEnd}"
-              SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
-              SelectionStart="{TemplateBinding SelectionStart}"
-              Text="{TemplateBinding Text, Mode=TwoWay}"
-              TextAlignment="{TemplateBinding TextAlignment}"
-              TextWrapping="{TemplateBinding TextWrapping}" />
-          </ScrollViewer>
-        </Border>
+        <ScrollViewer
+          AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+          HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+          IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+          VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+          <TextPresenter
+            Name="PART_TextPresenter"
+            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+            CaretBrush="{TemplateBinding CaretBrush}"
+            CaretIndex="{TemplateBinding CaretIndex}"
+            LineHeight="{TemplateBinding LineHeight}"
+            PasswordChar="{TemplateBinding PasswordChar}"
+            RevealPassword="{TemplateBinding RevealPassword}"
+            SelectionBrush="{TemplateBinding SelectionBrush}"
+            SelectionEnd="{TemplateBinding SelectionEnd}"
+            SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+            SelectionStart="{TemplateBinding SelectionStart}"
+            Text="{TemplateBinding Text, Mode=TwoWay}"
+            TextAlignment="{TemplateBinding TextAlignment}"
+            TextWrapping="{TemplateBinding TextWrapping}" />
+        </ScrollViewer>
       </ControlTemplate>
     </Setter>
   </ControlTheme>

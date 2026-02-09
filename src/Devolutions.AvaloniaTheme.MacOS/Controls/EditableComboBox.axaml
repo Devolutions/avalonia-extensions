@@ -1,7 +1,8 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
+  xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -59,6 +60,19 @@
           <EditableComboBox.InnerRightContent>
             <Border Width="12" Height="12" Background="Blue" />
           </EditableComboBox.InnerRightContent>
+        </EditableComboBox>
+
+        <EditableComboBox
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Watermark="Error">
+          <DataValidationErrors.Error>
+            <system:Exception>
+              <x:Arguments>
+                <x:String>Some error</x:String>
+              </x:Arguments>
+            </system:Exception>
+          </DataValidationErrors.Error>
         </EditableComboBox>
       </StackPanel>
     </design:ThemePreviewer>
@@ -363,5 +377,9 @@
     <Setter Property="Padding" Value="4 0 2 0" />
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
     <Setter Property="ClipToBounds" Value="False" />
+
+    <Style Selector="^:error">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    </Style>
   </ControlTheme>
 </ResourceDictionary>

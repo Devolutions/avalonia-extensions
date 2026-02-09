@@ -11,11 +11,22 @@ using Avalonia.Xaml.Interactions.Custom;
 
 public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 {
+    /// <summary>
+    /// Control onto which the state will be reported.
+    /// This target control will receive the relevant pseudoclasses.
+    /// <br /><br />
+    /// Defaults to the TemplateParent if not set.
+    /// </summary>
+    public static readonly StyledProperty<Control?> ReportToProperty =
+        AvaloniaProperty.Register<PositionedPopupBehavior, Control?>(nameof(ReportTo));
+
+    /// <summary>
+    /// Visual relative to which the popup will be positioned.
+    /// <br /><br />
+    /// Defaults to the TemplateParent if not set.
+    /// </summary>
     public static readonly StyledProperty<Control?> PositionToProperty =
         AvaloniaProperty.Register<PositionedPopupBehavior, Control?>(nameof(PositionTo));
-
-    public static readonly StyledProperty<bool> PositionToTemplatedParentProperty =
-        AvaloniaProperty.Register<PositionedPopupBehavior, bool>(nameof(PositionToTemplatedParent));
 
     // Inject a border that will mask the border between the input and the popup
     public static readonly StyledProperty<bool> InjectFusionMaskProperty =
@@ -37,17 +48,20 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
     private IDisposable? popupChildSubscription;
 
+    private Control? positionTarget;
+    private Control? reportTarget;
+
+    public Control? ReportTo
+    {
+        get => this.GetValue(ReportToProperty);
+        set => this.SetValue(ReportToProperty, value);
+    }
+
     [ResolveByName]
     public Control? PositionTo
     {
         get => this.GetValue(PositionToProperty);
         set => this.SetValue(PositionToProperty, value);
-    }
-
-    public bool PositionToTemplatedParent
-    {
-        get => this.GetValue(PositionToTemplatedParentProperty);
-        set => this.SetValue(PositionToTemplatedParentProperty, value);
     }
 
     public bool InjectFusionMask
@@ -93,9 +107,9 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
     private void OnClosed(object? sender, EventArgs e)
     {
-        this.RemoveTargetPseudoClass(":dropdown-open-from-top");
-        this.RemoveTargetPseudoClass(":dropdown-overflow-left");
-        this.RemoveTargetPseudoClass(":dropdown-overflow-right");
+        this.RemovePseudoClass(":dropdown-open-from-top");
+        this.RemovePseudoClass(":dropdown-overflow-left");
+        this.RemovePseudoClass(":dropdown-overflow-right");
 
         if (this.AssociatedObject?.Child?.GetVisualRoot() is PopupRoot popupRoot)
         {
@@ -105,38 +119,38 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
     private void OnPositionChanged(object? sender, PixelPointEventArgs e) => this.UpdatePseudoClasses();
 
-    private void AddTargetPseudoClass(string classToAdd) => (this.PositionTo?.Classes as IPseudoClasses)?.Add(classToAdd);
+    private void AddPseudoClass(string classToAdd) => (this.reportTarget?.Classes as IPseudoClasses)?.Add(classToAdd);
 
-    private void RemoveTargetPseudoClass(string classToRemove) => (this.PositionTo?.Classes as IPseudoClasses)?.Remove(classToRemove);
+    private void RemovePseudoClass(string classToRemove) => (this.reportTarget?.Classes as IPseudoClasses)?.Remove(classToRemove);
 
-    private void ToggleTargetPseudoClass(string classToRemove, bool toggle)
+    private void TogglePseudoClass(string classToRemove, bool toggle)
     {
         if (toggle)
         {
-            this.AddTargetPseudoClass(classToRemove);
+            this.AddPseudoClass(classToRemove);
         }
         else
         {
-            this.RemoveTargetPseudoClass(classToRemove);
+            this.RemovePseudoClass(classToRemove);
         }
     }
 
     private void UpdateDropdownOverflowPseudoClass(Rect? newDropdownBounds, Rect? newPopupBounds, int? offsetLeft = null)
     {
-        if (this.PositionTo is null || this.AssociatedObject?.Child?.IsAttachedToVisualTree() != true) return;
+        if (this.positionTarget is null || this.AssociatedObject?.Child?.IsAttachedToVisualTree() != true) return;
 
         offsetLeft ??= this.CalculateOffsetLeft();
 
-        double dropdownWidth = (newDropdownBounds ?? this.PositionTo.Bounds).Width;
+        double dropdownWidth = (newDropdownBounds ?? this.positionTarget.Bounds).Width;
         double popupWidth = (newPopupBounds ?? this.AssociatedObject.Child.Bounds).Width;
 
-        this.ToggleTargetPseudoClass(":dropdown-overflow-right", popupWidth - offsetLeft > dropdownWidth);
-        this.ToggleTargetPseudoClass(":dropdown-overflow-left", offsetLeft > 0);
+        this.TogglePseudoClass(":dropdown-overflow-right", popupWidth - offsetLeft > dropdownWidth);
+        this.TogglePseudoClass(":dropdown-overflow-left", offsetLeft > 0);
 
         if (Design.IsDesignMode)
         {
-            this.ToggleTargetPseudoClass(":dropdown-overflow-right", popupWidth > dropdownWidth);
-            this.RemoveTargetPseudoClass(":dropdown-overflow-left");
+            this.TogglePseudoClass(":dropdown-overflow-right", popupWidth > dropdownWidth);
+            this.RemovePseudoClass(":dropdown-overflow-left");
         }
     }
 
@@ -144,7 +158,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
     {
         if (Design.IsDesignMode || this.AssociatedObject?.Child == null) return null;
 
-        return this.PositionTo?.PointToScreen(new Point(0, 0)).X - this.AssociatedObject.Child.PointToScreen(new Point(0, 0)).X;
+        return this.positionTarget?.PointToScreen(new Point(0, 0)).X - this.AssociatedObject.Child.PointToScreen(new Point(0, 0)).X;
     }
 
     private void UpdatePseudoClasses()
@@ -162,17 +176,17 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         if (Design.IsDesignMode || this.AssociatedObject?.Child == null) return;
 
         this.isOpenedFromTop = this.AssociatedObject.PointToScreen(new Point(0, 0)).Y > this.AssociatedObject.Child.PointToScreen(new Point(0, 0)).Y;
-        this.ToggleTargetPseudoClass(":dropdown-open-from-top", this.isOpenedFromTop);
+        this.TogglePseudoClass(":dropdown-open-from-top", this.isOpenedFromTop);
     }
 
     private void CalculatePopupBorderMask(Thickness? newFocusBorderThickness, Rect? newBounds, int? offsetLeft = null)
     {
-        if (this.PositionTo is null) return;
+        if (this.positionTarget is null) return;
 
         if (this.fusionMask is not null)
         {
             Thickness focusBorderThickness = newFocusBorderThickness ?? this.PopupBorderThickness;
-            Rect bounds = newBounds ?? this.PositionTo.Bounds;
+            Rect bounds = newBounds ?? this.positionTarget.Bounds;
 
             this.fusionMask.Margin = new Thickness(focusBorderThickness.Left, 0, 0, 0);
             this.fusionMask.Width = bounds.Width - focusBorderThickness.Left - focusBorderThickness.Right;
@@ -180,10 +194,10 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         if (this.AssociatedObject?.Child?.IsAttachedToVisualTree() != true) return;
 
-        (bool isOutsideScreensBoundaries, bool isSplitBetweenScreens) = IsCutByScreenEdge(this.PositionTo);
-        this.ToggleTargetPseudoClass(":is-split-between-screens", isSplitBetweenScreens);
-        this.ToggleTargetPseudoClass(":is-outside-screens-boundaries", isOutsideScreensBoundaries);
-        this.ToggleTargetPseudoClass(":is-cut-by-screen-edge", isSplitBetweenScreens || isOutsideScreensBoundaries);
+        (bool isOutsideScreensBoundaries, bool isSplitBetweenScreens) = IsCutByScreenEdge(this.positionTarget);
+        this.TogglePseudoClass(":is-split-between-screens", isSplitBetweenScreens);
+        this.TogglePseudoClass(":is-outside-screens-boundaries", isOutsideScreensBoundaries);
+        this.TogglePseudoClass(":is-cut-by-screen-edge", isSplitBetweenScreens || isOutsideScreensBoundaries);
 
         if (this.fusionMask is not null)
         {
@@ -227,25 +241,21 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         if (this.AssociatedObject is null) return disposable;
 
-        if (this.PositionToTemplatedParent)
-        {
-            this.PositionTo = this.AssociatedObject.TemplatedParent as Control;
-        }
+        this.reportTarget = this.ReportTo ?? this.AssociatedObject.TemplatedParent as Control;
+        this.positionTarget = this.PositionTo ?? this.AssociatedObject.PlacementTarget ?? this.AssociatedObject.TemplatedParent as Control;
 
-        this.PositionTo ??= this.AssociatedObject.PlacementTarget;
-
-        if (this.PositionTo is null) return disposable;
+        if (this.reportTarget is null || this.positionTarget is null) return disposable;
 
         this.AssociatedObject.Opened += this.OnOpened;
         this.AssociatedObject.Closed += this.OnClosed;
 
-        disposable.Add(this.PositionTo.GetObservable(Visual.BoundsProperty).Subscribe(b =>
+        disposable.Add(this.positionTarget.GetObservable(Visual.BoundsProperty).Subscribe(b =>
         {
             this.UpdateDropdownOverflowPseudoClass(b, null);
             this.CalculatePopupBorderMask(null, b);
         }));
 
-        if (this.InjectFusionMask && this.PositionTo is TemplatedControl { Background: var background })
+        if (this.InjectFusionMask && this.reportTarget is TemplatedControl { Background: var background })
         {
             this.fusionMask ??= new Border
             {
@@ -269,7 +279,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
             };
             this.AssociatedObject.Child = this.fusionMaskPanel;
 
-            disposable.Add(this.PositionTo.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
+            disposable.Add(this.reportTarget.GetObservable(Border.BackgroundProperty).Subscribe(newBg =>
             {
                 this.fusionMask.BorderBrush = newBg;
             }));

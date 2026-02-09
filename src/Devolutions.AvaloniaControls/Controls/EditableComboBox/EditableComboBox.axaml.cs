@@ -306,6 +306,18 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
         this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
         this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
+
+        // Design-time support: Check if DataValidationErrors.Error is set in the previewer
+        if (Design.IsDesignMode)
+        {
+            this.compositeDisposable.Add(
+                this.GetObservable(DataValidationErrors.ErrorsProperty).Subscribe(error =>
+                {
+                    if (error is null) return;
+                    using var enumerator = error.GetEnumerator();
+                    this.innerComboBox.Classes.Set("error", enumerator.MoveNext());
+                }));
+        }
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)

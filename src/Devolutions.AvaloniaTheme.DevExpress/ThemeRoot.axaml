@@ -6,7 +6,7 @@
   <FluentTheme />
   
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
-  <StyleInclude Source="/Controls/SeparatorStyles.axaml" />
+  <StyleInclude Source="/Controls/Separator.Styles.axaml" />
 
   <Styles.Resources>
     <ResourceDictionary>

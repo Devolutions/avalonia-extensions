@@ -1,0 +1,55 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Label.search-highlight > AccessText, Label.secondary-search-highlight > AccessText">
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+
+  <Style Selector="Button.search-highlight > TextBlock, Label.search-highlight > AccessText, CheckBox.search-highlight > AccessText, RadioButton.search-highlight > AccessText">
+    <Setter Property="Background" Value="{DynamicResource SearchHighlightBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource SearchHighlightForeground}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style
+    Selector="Button.secondary-search-highlight > TextBlock, Label.secondary-search-highlight > AccessText, CheckBox.secondary-search-highlight > AccessText, RadioButton.secondary-search-highlight > AccessText">
+    <Setter Property="Background" Value="{DynamicResource SecondarySearchHighlightBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+
+  <Style Selector="SearchHighlightTextBlock">
+    <Setter Property="HighlightBackground" Value="{DynamicResource SearchHighlightBackground}" />
+    <Setter Property="HighlightForeground" Value="{DynamicResource SearchHighlightForeground}" />
+  </Style>
+
+  <Style Selector="EditableComboBox.search-highlight /template/ :is(ComboBox) /template/ Border#DropDownGlyphBackground:pointerover">
+    <Setter Property="Background">
+      <SolidColorBrush Color="{DynamicResource SearchHighlightForeground}" Opacity="0.2" />
+    </Setter>
+  </Style>
+  <Style Selector="EditableComboBox.secondary-search-highlight /template/ :is(ComboBox) /template/ Border#DropDownGlyphBackground:pointerover">
+    <Setter Property="Background">
+      <SolidColorBrush Color="{DynamicResource SecondarySearchHighlightForeground}" Opacity="0.2" />
+    </Setter>
+  </Style>
+  <Style Selector="EditableComboBox.search-highlight /template/ :is(ComboBox):dropdownopen /template/ Border#DropDownGlyphBackground">
+    <Setter Property="Background">
+      <SolidColorBrush Color="{DynamicResource SearchHighlightForeground}" Opacity="0.1" />
+    </Setter>
+  </Style>
+  <Style Selector="EditableComboBox.secondary-search-highlight /template/ :is(ComboBox):dropdownopen /template/ Border#DropDownGlyphBackground">
+    <Setter Property="Background">
+      <SolidColorBrush Color="{DynamicResource SecondarySearchHighlightForeground}" Opacity="0.1" />
+    </Setter>
+  </Style>
+
+  <Style Selector="EditableComboBoxItem.search-highlight /template/ SearchHighlightTextBlock /template/ TextBlock">
+    <Setter Property="Background" Value="{DynamicResource SearchHighlightBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource SearchHighlightForeground}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector="EditableComboBoxItem.secondary-search-highlight /template/ SearchHighlightTextBlock /template/ TextBlock">
+    <Setter Property="Background" Value="{DynamicResource SecondarySearchHighlightBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource SecondarySearchHighlightForeground}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+</Styles>

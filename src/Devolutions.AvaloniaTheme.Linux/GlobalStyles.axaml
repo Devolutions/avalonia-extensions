@@ -1,34 +1,24 @@
-<Styles x:Class="Devolutions.AvaloniaTheme.DevExpress.DevolutionsDevExpressThemeGlobalStyles"
+<Styles x:Class="Devolutions.AvaloniaTheme.Linux.DevolutionsLinuxYaruThemeGlobalStyles"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <!--
     All styles defined here will "bleed-out" of our isolated ControlTheme!
     These should be limited as much as possible.
-    
+
     We only have this here to support some scenarios where it might be conveninent to
     provide some default styling to children of some elements.
     For example, when a MenuItem.Icon contain a Svg and that menu item is disabled, we want to
-    colorize that Svg in grey. 
-    
-    These styles are opt-out; consumers can use `<DevolutionsDevExpressTheme GlobalStyles="False" />`
+    colorize that Svg in grey.
+
+    These styles are opt-out; consumers can use `<DevolutionsLinuxYaruTheme GlobalStyles="False" />`
     to opt-out of these global styles.
-    
+
     They are also provided as a separate tag to cover scenarios where consumers would like to scope
     them to some control instead of including them globally;
-    They are thus available through the (very verbose) `<DevolutionsDevExpressThemeGlobalStyles />` tag.
+    They are thus available through the (very verbose) `<DevolutionsLinuxYaruThemeGlobalStyles />` tag.
 
     This is to ensure consumers are granted enough control to prevent styles "bleeding-out" in cases
     where that might be undesirable.
-    
-    - sbergerondrouin 2025-06-09
   -->
-  
-  <StyleInclude Source="/Controls/TextBox.styles.axaml" />
-
-  <Style Selector="MultiComboBox Popup ScrollBar:vertical">
-    <Setter Property="Margin" Value="0 -4 -4 -4" />
-  </Style>
-
   <StyleInclude Source="/Controls/Separator.Styles.axaml" />
-  <StyleInclude Source="/SearchHighlightStyles.axaml" />
 </Styles>

@@ -22,6 +22,8 @@
     
     - sbergerondrouin 2025-06-09
   -->
+  
+  <StyleInclude Source="/Controls/TextBox.styles.axaml" />
 
   <Style Selector="MultiComboBox Popup ScrollBar:vertical">
     <Setter Property="Margin" Value="0 -4 -4 -4" />

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "samples\SampleApp\SampleApp.csproj", "{8FB0A38F-D80A-45A1-9796-FD22FDB14064}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.MacOS", "src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj", "{052424E1-48F3-4D8E-A780-DEB4D33B4482}"
@@ -18,6 +18,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A091072B-6B14-4D57-B6CE-B7DEEA212054}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaControls.VisualTests", "tests\Devolutions.AvaloniaControls.VisualTests\Devolutions.AvaloniaControls.VisualTests.csproj", "{37A56EB5-31A4-493F-B411-F2D310F7D976}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCACF9CC-93E0-436D-A82F-929F797E74F2}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		Directory.Build.props = Directory.Build.props
+		AGENTS.md = AGENTS.md
+		.filenesting.json = .filenesting.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,7 +2,7 @@
   "help": "https://www.jetbrains.com/help/rider/File_Nesting_Dialog.html",
   "root": {
     ".axaml": {
-      ".Styles.axaml": {},
+      ".styles.axaml": {},
       ".axaml.cs": {}
     }
   }

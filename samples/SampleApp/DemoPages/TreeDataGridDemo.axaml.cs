@@ -22,17 +22,17 @@ public partial class TreeDataGridDemo : UserControl
           if (template == null) return;
 
           // Add to CellSelectionSource
-          if (vm.CellSelectionSource != null && vm.CellSelectionSource.Columns.Count > 0 && vm.CellSelectionSource.Columns[0].Header as string != "Name")
+          if (vm.TreeCellSelectionSource != null && vm.TreeCellSelectionSource.Columns.Count > 0 && vm.TreeCellSelectionSource.Columns[0].Header as string != "Name")
           {
               var col = CreateNameExpanderColumn(template);
-              vm.CellSelectionSource.Columns.Insert(0, col);
+              vm.TreeCellSelectionSource.Columns.Insert(0, col);
           }
 
           // Add to RowSelectionSource
-          if (vm.RowSelectionSource != null && vm.RowSelectionSource.Columns.Count > 0 && vm.RowSelectionSource.Columns[0].Header as string != "Name")
+          if (vm.TreeRowSelectionSource != null && vm.TreeRowSelectionSource.Columns.Count > 0 && vm.TreeRowSelectionSource.Columns[0].Header as string != "Name")
           {
               var col = CreateNameExpanderColumn(template);
-              vm.RowSelectionSource.Columns.Insert(0, col);
+              vm.TreeRowSelectionSource.Columns.Insert(0, col);
           }
       }
   }

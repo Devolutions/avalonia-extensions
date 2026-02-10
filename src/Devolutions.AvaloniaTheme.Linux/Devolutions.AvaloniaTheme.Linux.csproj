@@ -52,20 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Design\ThemePreviewer.axaml.cs">
-      <DependentUpon>ThemePreviewer.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Design\ThemePreviewer.axaml.cs">
-      <DependentUpon>ThemePreviewer.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Internal\DevExpressThemeWithGlobalStyles.axaml.cs">
-      <DependentUpon>DevExpressThemeWithGlobalStyles.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <AdditionalFiles Include="Design\ThemePreviewer.axaml"/>
   </ItemGroup>
 

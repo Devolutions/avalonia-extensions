@@ -135,6 +135,10 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
+      
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#1b1d1a" />
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#494a47" />
+      <Thickness x:Key="MenuFlyoutItemChevronMargin">0 0 7 0</Thickness>
 
       <Color x:Key="SampleAppBackgroundColor">#202020</Color>
 

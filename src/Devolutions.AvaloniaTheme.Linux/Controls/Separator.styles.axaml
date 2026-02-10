@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design1="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+
+    <Design.PreviewWith>
+      <design1:ThemePreviewer>
+        <StackPanel Orientation="Vertical" Margin="10">
+          <TextBlock Text="Some text" />
+          <Separator />
+          <TextBlock Text="Separated by a separator" />
+        </StackPanel>
+      </design1:ThemePreviewer>
+    </Design.PreviewWith>
+
+    <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Separator.Background" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+    </Style>
+</Styles>

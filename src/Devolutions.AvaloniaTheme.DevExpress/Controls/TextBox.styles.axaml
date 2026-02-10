@@ -1,0 +1,18 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+    <Design.PreviewWith>
+        <design:ThemePreviewer>
+            <StackPanel Margin="10" Spacing="10">
+                <TextBox InnerLeftContent="http://" InnerRightContent=".com" Text="google" />
+            </StackPanel>
+        </design:ThemePreviewer>
+    </Design.PreviewWith>
+    
+    
+    <Style Selector="TextBox /template/ ContentPresenter#PrefixContent :is(TextBlock),
+                     TextBox /template/ ContentPresenter#SufixContent :is(TextBlock)">
+        <Setter Property="TextBlock.Margin" Value="0 -1.6 0 0" />
+    </Style>
+</Styles>

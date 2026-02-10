@@ -135,6 +135,8 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
+      <Color x:Key="TextBoxBackgroundColor">#ffffff</Color>
+
       <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
@@ -184,6 +186,8 @@
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
+      <Color x:Key="TextBoxBackgroundColor">#20212e</Color>
+
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"

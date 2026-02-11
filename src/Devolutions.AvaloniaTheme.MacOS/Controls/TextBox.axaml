@@ -304,6 +304,7 @@
     </Style>
 
     <Style Selector="^[AcceptsReturn=True]">
+      <Setter Property="Background" Value="{DynamicResource TextBoxMultiLineBackgroundBrush}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ZeroCornerRadius}" />
       <Setter Property="VerticalAlignment" Value="Stretch" />
       <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">

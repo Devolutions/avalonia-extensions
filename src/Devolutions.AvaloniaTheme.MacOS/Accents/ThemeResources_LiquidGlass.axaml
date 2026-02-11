@@ -190,6 +190,7 @@
 
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="TextBoxBackgroundColor">#20212e</Color>
+      <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="#1e1e1e" />
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 

@@ -618,6 +618,7 @@
                    Color="{DynamicResource TextBoxClearButtonBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxSelectionHighlightBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.3" />
   <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
+  <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxBackgroundDisabledHighBrush"
                    Color="{DynamicResource BackgroundColor}" Opacity="0.5" />
   <SolidColorBrush x:Key="TagInputTagBackgroundBrush" Color="{DynamicResource TagInputTagBackgroundColor}" />

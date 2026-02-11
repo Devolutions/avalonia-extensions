@@ -138,6 +138,7 @@
                       BorderBrush="{TemplateBinding BorderBrush}"
                       Background="{TemplateBinding Background}"
                       CornerRadius="{TemplateBinding CornerRadius}"
+                      BoxShadow="{DynamicResource TextBoxBoxShadow}"
                       Padding="2 0 2 0 ">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                   <ContentPresenter Name="PrefixContent"
@@ -224,13 +225,15 @@
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
-                      Margin="0.6 0" />
+                      Margin="0.6 0"
+                      IsVisible="{DynamicResource TextBoxBottomBorderIsVisible}" />
               <Border Name="BottomBorderShadow"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
                       BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                      Margin="0.6 0 0.6 -0.6 " />
+                      Margin="0.6 0 0.6 -0.6 "
+                      IsVisible="{DynamicResource TextBoxBottomBorderShadowIsVisible}" />
               <Border Name="FocusBorderElement"
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"

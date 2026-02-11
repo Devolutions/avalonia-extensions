@@ -134,11 +134,6 @@
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">
               <Border Name="PART_BorderElement"
-                      BorderThickness="{TemplateBinding BorderThickness}"
-                      BorderBrush="{TemplateBinding BorderBrush}"
-                      Background="{TemplateBinding Background}"
-                      CornerRadius="{TemplateBinding CornerRadius}"
-                      BoxShadow="{DynamicResource TextBoxBoxShadow}"
                       Padding="2 0 2 0 ">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                   <ContentPresenter Name="PrefixContent"
@@ -225,15 +220,13 @@
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
-                      Margin="0.6 0"
-                      IsVisible="{DynamicResource TextBoxBottomBorderIsVisible}" />
+                      Margin="0.6 0" />
               <Border Name="BottomBorderShadow"
                       BorderThickness="0 0 0 0.6"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       CornerRadius="{TemplateBinding CornerRadius}"
                       BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                      Margin="0.6 0 0.6 -0.6 "
-                      IsVisible="{DynamicResource TextBoxBottomBorderShadowIsVisible}" />
+                      Margin="0.6 0 0.6 -0.6 " />
               <Border Name="FocusBorderElement"
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"
@@ -244,6 +237,20 @@
       </ControlTemplate>
     </Setter>
 
+    <!-- These properties are defined as Styles so they can be overridden by derived ControlThemes (e.g. ComboBoxEditableTextBox) -->
+    <Style Selector="^ /template/ Border#PART_BorderElement">
+      <Setter Property="BoxShadow" Value="{DynamicResource TextBoxBoxShadow}" />
+      <Setter Property="Background" Value="{TemplateBinding Background}" />
+      <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+      <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
+      <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
+    </Style>
+    <Style Selector="^ /template/ Border#BottomBorder">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderIsVisible}" />
+    </Style>
+    <Style Selector="^ /template/ Border#BottomBorderShadow">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderShadowIsVisible}" />
+    </Style>
 
     <Style Selector="^.borderless">
       <Style Selector="^ /template/ Border#PART_BorderElement">

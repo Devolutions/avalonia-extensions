@@ -624,6 +624,7 @@
   <SolidColorBrush x:Key="TagInputTagBackgroundBrush" Color="{DynamicResource TagInputTagBackgroundColor}" />
   <Thickness x:Key="TextBoxBorderThickness">0.6</Thickness>
   <CornerRadius x:Key="TextBoxCornerRadius">0</CornerRadius>
+  <CornerRadius x:Key="TextBoxFocusCornerRadius">2</CornerRadius>
   <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 0 Transparent</BoxShadows>
   <x:Double x:Key="TextBoxMinDimensions">19</x:Double>
   <x:Boolean x:Key="TextBoxBottomBorderIsVisible">True</x:Boolean>

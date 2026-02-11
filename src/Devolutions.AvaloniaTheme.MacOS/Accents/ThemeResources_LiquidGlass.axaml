@@ -306,6 +306,9 @@
 
   <!-- TextBox -->
   <StaticResource x:Key="TextBoxCornerRadius" ResourceKey="ButtonCornerRadius" />
+  <!-- Focus radius = BorderRadius (6) + Margin (3) = 9 -->
+  <CornerRadius x:Key="TextBoxFocusCornerRadius">9</CornerRadius>
+
   <!-- Use BoxShadow instead of BorderThickness for LiquidGlass to ensure border is drawn "outside" 
        and avoids anti-aliasing artifacts with semi-transparent borders overlapping TextBox background -->
   <StaticResource x:Key="TextBoxBorderThickness" ResourceKey="Thickness0" />

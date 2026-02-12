@@ -106,11 +106,13 @@
   <!-- MARK: Thicknesses -->
 
   <Thickness x:Key="Thickness0">0</Thickness>
+  <Thickness x:Key="Thickness1">1</Thickness>
   <Thickness x:Key="ThicknessT1">0 1 0 0</Thickness>
   <Thickness x:Key="ThicknessL12R11">12 0 11 0</Thickness>
 
   <!-- MARK: Measurements -->
 
+  <x:Double x:Key="ControlSize27">27</x:Double>
   <x:Double x:Key="ControlSize24">24</x:Double>
   <x:Double x:Key="ControlSize16">16</x:Double>
   <x:Double x:Key="ControlSize10">10</x:Double>
@@ -179,7 +181,11 @@
 
       <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT20" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <!-- Note: Shadow used to render a border on the _outside_ -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
+      <StaticResource x:Key="TextBoxBorderBrush" ResourceKey="Transparent" />
+      <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 1 #0A000000</BoxShadows>
 
     </ResourceDictionary>
 
@@ -187,6 +193,7 @@
 
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="TextBoxBackgroundColor">#20212e</Color>
+      <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="#1e1e1e" />
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 
@@ -230,7 +237,11 @@
 
       <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <!-- Note: Shadow used to render a border on the _outside_ -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
+      <StaticResource x:Key="TextBoxBorderBrush" ResourceKey="Transparent" />
+      <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 1 #0AFFFFFF</BoxShadows>
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
@@ -271,11 +282,11 @@
   <StaticResource x:Key="RadioButtonCheckMarkSize" ResourceKey="ControlSize5" />
 
   <!-- ComboBox -->
+  <StaticResource x:Key="ComboBoxMinHeight" ResourceKey="ControlSize27" />
   <StaticResource x:Key="ComboBoxBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
   <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ButtonPressedBackgroundBrush" />
   <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Transparent" />
   <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="Thickness0" />
-  <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="NoShadow" />
   <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="Radius12" />
 
 
@@ -297,6 +308,19 @@
   <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
 
+
+  <!-- TextBox -->
+  <StaticResource x:Key="TextBoxMinDimensions" ResourceKey="ControlSize27" />
+  <StaticResource x:Key="TextBoxCornerRadius" ResourceKey="ButtonCornerRadius" />
+  <!-- Focus radius = BorderRadius (6) + Margin (3) = 9 -->
+  <CornerRadius x:Key="TextBoxFocusCornerRadius">9</CornerRadius>
+
+  <!-- Use BoxShadow instead of BorderThickness for LiquidGlass to ensure border is drawn "outside" 
+       and avoids anti-aliasing artifacts with semi-transparent borders overlapping TextBox background -->
+  <StaticResource x:Key="TextBoxBorderThickness" ResourceKey="Thickness0" />
+  <Thickness x:Key="TextBoxPadding">3 0</Thickness>
+  <x:Boolean x:Key="TextBoxBottomBorderIsVisible">False</x:Boolean>
+  <x:Boolean x:Key="TextBoxBottomBorderShadowIsVisible">False</x:Boolean>
 
   <!-- DEVELOPMENT ONLY -->
 

@@ -628,6 +628,7 @@
   <CornerRadius x:Key="TextBoxFocusCornerRadius">2</CornerRadius>
   <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 0 Transparent</BoxShadows>
   <x:Double x:Key="TextBoxMinDimensions">19</x:Double>
+  <Thickness x:Key="TextBoxPadding">2 0 2 0</Thickness>
   <x:Boolean x:Key="TextBoxBottomBorderIsVisible">True</x:Boolean>
   <x:Boolean x:Key="TextBoxBottomBorderShadowIsVisible">True</x:Boolean>
 

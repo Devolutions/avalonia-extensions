@@ -315,6 +315,7 @@
   <!-- Use BoxShadow instead of BorderThickness for LiquidGlass to ensure border is drawn "outside" 
        and avoids anti-aliasing artifacts with semi-transparent borders overlapping TextBox background -->
   <StaticResource x:Key="TextBoxBorderThickness" ResourceKey="Thickness0" />
+  <Thickness x:Key="TextBoxPadding">3 0</Thickness>
   <x:Boolean x:Key="TextBoxBottomBorderIsVisible">False</x:Boolean>
   <x:Boolean x:Key="TextBoxBottomBorderShadowIsVisible">False</x:Boolean>
 

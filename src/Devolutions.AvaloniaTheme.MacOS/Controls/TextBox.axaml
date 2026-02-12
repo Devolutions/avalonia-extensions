@@ -133,8 +133,7 @@
                Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">
-              <Border Name="PART_BorderElement"
-                      Padding="2 0 2 0 ">
+              <Border Name="PART_BorderElement">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                   <ContentPresenter Name="PrefixContent"
                                     Grid.Column="0"
@@ -244,6 +243,7 @@
       <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
       <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
       <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
+      <Setter Property="Padding" Value="{DynamicResource TextBoxPadding}" />
     </Style>
     <Style Selector="^ /template/ Border#BottomBorder">
       <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderIsVisible}" />

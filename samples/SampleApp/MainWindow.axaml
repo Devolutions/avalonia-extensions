@@ -202,7 +202,7 @@
         </TabItem>
         <TabItem>
           <TabItem.Header>
-            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
           </TabItem.Header>
           <demoPages:TextBoxDemo />
         </TabItem>

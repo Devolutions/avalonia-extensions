@@ -171,7 +171,7 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Padding" Value="8 0 6 0" />
-    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="MinHeight" Value="{DynamicResource ComboBoxMinHeight}" />
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ThemeForegroundBrush}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />

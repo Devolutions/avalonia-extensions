@@ -593,6 +593,7 @@
   <!-- Resources for ComboBoxItem.xaml -->
   <StaticResource x:Key='ComboBoxItemCornerRadius' ResourceKey='ControlCornerRadius' />
   <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+  <x:Double x:Key="ComboBoxMinHeight">20</x:Double>
 
   <Thickness x:Key="ComboBoxItemMargin">2 0</Thickness>
   <Thickness x:Key="ComboBoxItemPadding">5 3</Thickness>

@@ -181,6 +181,8 @@
 
       <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT20" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <!-- Note: Shadow used to render a border on the _outside_ -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
       <StaticResource x:Key="TextBoxBorderBrush" ResourceKey="Transparent" />
       <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 1 #0A000000</BoxShadows>
@@ -235,6 +237,8 @@
 
       <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <!-- Note: Shadow used to render a border on the _outside_ -->
+      <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
       <StaticResource x:Key="TextBoxBorderBrush" ResourceKey="Transparent" />
       <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 1 #0AFFFFFF</BoxShadows>
@@ -283,7 +287,6 @@
   <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ButtonPressedBackgroundBrush" />
   <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Transparent" />
   <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="Thickness0" />
-  <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="NoShadow" />
   <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="Radius12" />
 
 

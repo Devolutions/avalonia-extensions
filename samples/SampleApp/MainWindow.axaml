@@ -9,8 +9,7 @@
         xmlns:controls="clr-namespace:SampleApp.Controls"
         xmlns:experiments="clr-namespace:SampleApp.Experiments"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
-        Width="1720"
-        Height="1050"
+        WindowState="Maximized"
         x:Class="SampleApp.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Devolutions Theme Sampler">
@@ -18,9 +17,9 @@
   <!-- TODO: move the margins into the theme ?? -->
   <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <!-- Canvas wrapper sized for the scaled content so ScrollViewer knows bounds -->
-    <Canvas Name="ScaledWrapper" Width="1720" Height="1050">
+    <Canvas Name="ScaledWrapper">
       <!-- Content container that gets scaled -->
-      <Border Name="ScaledContainer" Width="1720" Height="1050">
+      <Border Name="ScaledContainer">
         <Panel>
           <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}" />
           <Panel Name="MainContentPanel" Classes="mainControl">

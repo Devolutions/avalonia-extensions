@@ -22,11 +22,12 @@ public partial class MainWindow : Window
     this.InitializeComponent();
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
-    // Once the window is fully loaded, update backroung & detect scale
+    // Once the window is fully loaded, update background, detect scale, and size containers
     this.Loaded += (s, e) =>
     {
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
+      this.InitializeContainerSizes();
     };
 
 #if ENABLE_ACCELERATE
@@ -72,14 +73,18 @@ public partial class MainWindow : Window
     Border? container = this.FindControl<Border>("ScaledContainer");
     Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
     if (container == null || wrapper == null) return;
+    
+    // Use window's client area dimensions as base size
+    double baseWidth = this.ClientSize.Width;
+    double baseHeight = this.ClientSize.Height;
 
     if (scaleOption.Scale == 0) // System Default
     {
       container.RenderTransform = null;
-      container.Width = 1720;
-      container.Height = 1050;
-      wrapper.Width = 1720;
-      wrapper.Height = 1050;
+      container.Width = baseWidth;
+      container.Height = baseHeight;
+      wrapper.Width = baseWidth;
+      wrapper.Height = baseHeight;
     }
     else
     {
@@ -90,13 +95,29 @@ public partial class MainWindow : Window
       // Apply transform to container
       container.RenderTransform = new ScaleTransform(relativeScale, relativeScale);
       container.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Relative);
-      container.Width = 1720;
-      container.Height = 1050;
+      container.Width = baseWidth;
+      container.Height = baseHeight;
       
       // Size the wrapper Canvas so ScrollViewer knows the scaled bounds
-      wrapper.Width = 1720 * relativeScale;
-      wrapper.Height = 1050 * relativeScale;
+      wrapper.Width = baseWidth * relativeScale;
+      wrapper.Height = baseHeight * relativeScale;
     }
+  }
+
+  private void InitializeContainerSizes()
+  {
+    Border? container = this.FindControl<Border>("ScaledContainer");
+    Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
+    if (container == null || wrapper == null) return;
+    
+    // Set initial sizes to match window
+    double baseWidth = this.ClientSize.Width;
+    double baseHeight = this.ClientSize.Height;
+    
+    container.Width = baseWidth;
+    container.Height = baseHeight;
+    wrapper.Width = baseWidth;
+    wrapper.Height = baseHeight;
   }
 
   private void DetectSystemScale()

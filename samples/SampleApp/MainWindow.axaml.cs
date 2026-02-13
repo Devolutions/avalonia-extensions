@@ -7,6 +7,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using Controls;
+using DemoPages;
 using ViewModels;
 
 public partial class MainWindow : Window
@@ -19,14 +21,18 @@ public partial class MainWindow : Window
   {
     this.InitializeComponent();
     this.tieDyeBrush = this.GenerateTieDyeBrush();
-    
-    // Update preview background once the window is fully loaded
-    this.Loaded += (s, e) => this.UpdatePreviewBackground();
+
+    // Once the window is fully loaded, update backroung & detect scale
+    this.Loaded += (s, e) =>
+    {
+      this.UpdatePreviewBackground();
+      this.DetectSystemScale();
+    };
 
 #if ENABLE_ACCELERATE
     this.AddTreeDataGridTab();
 #endif
-    
+
 #if DEBUG
     bool useAccelerateDevTools = Environment.GetEnvironmentVariable("USE_AVALONIA_ACCELERATE_TOOLS")?.ToLowerInvariant() == "true";
 
@@ -58,6 +64,49 @@ public partial class MainWindow : Window
     if (cb?.SelectedItem is Theme newTheme) App.SetTheme(newTheme);
   }
 
+  private void Scale_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+  {
+    SelectingItemsControl? cb = sender as SelectingItemsControl;
+    if (cb?.SelectedItem is not ScaleOption scaleOption) return;
+
+    Border? container = this.FindControl<Border>("ScaledContainer");
+    Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
+    if (container == null || wrapper == null) return;
+
+    if (scaleOption.Scale == 0) // System Default
+    {
+      container.RenderTransform = null;
+      container.Width = 1720;
+      container.Height = 1050;
+      wrapper.Width = 1720;
+      wrapper.Height = 1050;
+    }
+    else
+    {
+      // Calculate scale relative to system scale
+      // e.g., if system is 200% and user selects 100%, scale = 100/200 = 0.5
+      double relativeScale = scaleOption.Scale / this.RenderScaling;
+      
+      // Apply transform to container
+      container.RenderTransform = new ScaleTransform(relativeScale, relativeScale);
+      container.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Relative);
+      container.Width = 1720;
+      container.Height = 1050;
+      
+      // Size the wrapper Canvas so ScrollViewer knows the scaled bounds
+      wrapper.Width = 1720 * relativeScale;
+      wrapper.Height = 1050 * relativeScale;
+    }
+  }
+
+  private void DetectSystemScale()
+  {
+    if (this.DataContext is not MainWindowViewModel vm) return;
+
+    // RenderScaling reflects the actual system/display scaling
+    vm.SystemScale = this.RenderScaling;
+  }
+
   private void UpdatePreviewBackground()
   {
     if (this.currentViewModel == null) return;
@@ -73,25 +122,31 @@ public partial class MainWindow : Window
         break;
       case WallpaperOption.CustomLight:
         wallpaperPanel.Background = Brushes.Transparent;
-        if (this.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightResource) && lightResource is IBrush lightBrush)
+        if (this.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightResource) &&
+            lightResource is IBrush lightBrush)
         {
           contentPanel.Background = lightBrush;
         }
-        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightAppResource) && lightAppResource is IBrush lightAppBrush)
+        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightAppResource) &&
+                 lightAppResource is IBrush lightAppBrush)
         {
           contentPanel.Background = lightAppBrush;
         }
+
         break;
       case WallpaperOption.CustomDark:
         wallpaperPanel.Background = Brushes.Transparent;
-        if (this.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkResource) && darkResource is IBrush darkBrush)
+        if (this.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkResource) &&
+            darkResource is IBrush darkBrush)
         {
           contentPanel.Background = darkBrush;
         }
-        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkAppResource) && darkAppResource is IBrush darkAppBrush)
+        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkAppResource) &&
+                 darkAppResource is IBrush darkAppBrush)
         {
           contentPanel.Background = darkAppBrush;
         }
+
         break;
       case WallpaperOption.None:
       default:
@@ -109,7 +164,7 @@ public partial class MainWindow : Window
     base.OnDataContextChanged(e);
 
     MainWindowViewModel? vm = this.DataContext as MainWindowViewModel;
-    
+
     // Only unsubscribe if we're switching to a different ViewModel
     if (this.currentViewModel != null && this.currentViewModel != vm)
     {
@@ -121,7 +176,7 @@ public partial class MainWindow : Window
     {
       vm.PropertyChanged += this.OnViewModelPropertyChanged;
     }
-    
+
     this.currentViewModel = vm;
   }
 
@@ -165,18 +220,18 @@ public partial class MainWindow : Window
 #if ENABLE_ACCELERATE
   private void AddTreeDataGridTab()
   {
-    var tabControl = this.FindControl<TabControl>("MainTabControl");
+    TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
     if (tabControl == null) return;
 
-    var tabItem = new TabItem();
-    var header = new SampleApp.Controls.SampleItemHeader
+    TabItem tabItem = new();
+    SampleItemHeader header = new()
     {
       Title = "TreeDataGrid (Accelerate)",
       ApplicableTo = "Fluent"
     };
     tabItem.Header = header;
 
-    var demo = new SampleApp.DemoPages.TreeDataGridDemo();
+    TreeDataGridDemo demo = new();
     demo.DataContext = new TreeDataGridViewModel();
     tabItem.Content = demo;
 
@@ -184,7 +239,7 @@ public partial class MainWindow : Window
     int insertIndex = -1;
     for (int i = 0; i < tabControl.Items.Count; i++)
     {
-      if (tabControl.Items[i] is TabItem ti && ti.Header is SampleApp.Controls.SampleItemHeader h && h.Title == "TreeView")
+      if (tabControl.Items[i] is TabItem ti && ti.Header is SampleItemHeader h && h.Title == "TreeView")
       {
         insertIndex = i;
         break;

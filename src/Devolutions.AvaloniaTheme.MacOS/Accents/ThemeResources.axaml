@@ -518,7 +518,6 @@
   <StaticResource x:Key='ButtonBorderBrush' ResourceKey='ControlBorderRaisedBrush' />
   <StaticResource x:Key='ButtonDisabledBorderBrush' ResourceKey='ControlBorderDisabledBrush' />
   <StaticResource x:Key='ButtonMinHeight' ResourceKey='ControlHeight21' />
-  <StaticResource x:Key='ButtonTextMargin' ResourceKey='Thickness0' />
   <StaticResource x:Key='ButtonCornerRadius' ResourceKey='ControlCornerRadius' />
 
   <Thickness x:Key="ButtonPadding">10 0</Thickness>

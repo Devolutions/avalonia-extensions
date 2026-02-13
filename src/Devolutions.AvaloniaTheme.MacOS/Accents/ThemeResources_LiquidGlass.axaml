@@ -251,7 +251,6 @@
   <StaticResource x:Key="ButtonBorderBoxShadow" ResourceKey="NoShadow" />
   <StaticResource x:Key="ButtonBorderThickness" ResourceKey="Thickness0" />
   <StaticResource x:Key="ButtonMinHeight" ResourceKey="ControlSize24" />
-  <StaticResource x:Key="ButtonTextMargin" ResourceKey="ThicknessT1" />
   <StaticResource x:Key="ButtonCornerRadius" ResourceKey="Radius6" />
   <StaticResource x:Key="ButtonPadding" ResourceKey="ThicknessL12R11" />
 

@@ -9,306 +9,335 @@
         xmlns:controls="clr-namespace:SampleApp.Controls"
         xmlns:experiments="clr-namespace:SampleApp.Experiments"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
-        Width="1720"
-        Height="1050"
+        WindowState="Maximized"
         x:Class="SampleApp.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Devolutions Theme Sampler">
 
   <!-- TODO: move the margins into the theme ?? -->
-  <Panel>
-    <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}" />
-    <Panel Name="MainContentPanel" Classes="mainControl">
-      <TabControl x:Name="MainTabControl" TabStripPlacement="Left" VerticalAlignment="Stretch">
-        <TabItem IsSelected="True">
-          <TabItem.Header>
-            <TextBlock FontWeight="600">Overview</TextBlock>
-          </TabItem.Header>
-          <demoPages:Overview />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:AutoCompleteBoxDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ButtonDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:CalendarDatePickerDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:CheckBoxDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ColorPicker" ApplicableTo="DevExpress" />
-          </TabItem.Header>
-          <demoPages:ColorPickerDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ComboBoxDemo>
-            <demoPages:ComboBoxDemo.DataContext>
-              <vm:ComboBoxViewModel />
-            </demoPages:ComboBoxDemo.DataContext>
-          </demoPages:ComboBoxDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ContextMenuDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="MacClassic, DevExpress" />
-          </TabItem.Header>
-          <demoPages:DropDownButtonDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
-          </TabItem.Header>
-          <demoPages:DataGridDemo>
-            <demoPages:DataGridDemo.DataContext>
-              <vm:DataGridViewModel />
-            </demoPages:DataGridDemo.DataContext>
-          </demoPages:DataGridDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
-          </TabItem.Header>
-          <demoPages:DataGridGroupedDemo>
-            <demoPages:DataGridGroupedDemo.DataContext>
-              <vm:DataGridGroupedViewModel />
-            </demoPages:DataGridGroupedDemo.DataContext>
-          </demoPages:DataGridGroupedDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
-          </TabItem.Header>
-          <demoPages:EditableComboBoxDemo>
-            <demoPages:EditableComboBoxDemo.DataContext>
-              <vm:EditableComboBoxViewModel />
-            </demoPages:EditableComboBoxDemo.DataContext>
-          </demoPages:EditableComboBoxDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress" />
-          </TabItem.Header>
-          <demoPages:TagInputDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ExpanderDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
-          </TabItem.Header>
-          <demoPages:CheckBoxListBoxDemo>
-            <demoPages:CheckBoxListBoxDemo.DataContext>
-              <vm:CheckBoxListBoxViewModel />
-            </demoPages:CheckBoxListBoxDemo.DataContext>
-          </demoPages:CheckBoxListBoxDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
-          </TabItem.Header>
-          <demoPages:MultiComboBoxDemo>
-            <demoPages:MultiComboBoxDemo.DataContext>
-              <vm:MultiComboBoxViewModel />
-            </demoPages:MultiComboBoxDemo.DataContext>
-          </demoPages:MultiComboBoxDemo>
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:GridSplitterDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
-          </TabItem.Header>
-          <demoPages:HyperlinkButtonDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ListBoxDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:MenuDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:MenuFlyoutDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:NumericUpDownDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:RadioButtonDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ScrollViewerDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:SeparatorDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:TabControlDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:TextBoxDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacClassic, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ToggleSwitchDemo />
-        </TabItem>
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacClassic, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:ToolTipDemo />
-        </TabItem>
-        <!-- TabItem "TreeDataGrid" inserted here through code-behind if Accelerate is enabled -->
-        <TabItem>
-          <TabItem.Header>
-            <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
-          </TabItem.Header>
-          <demoPages:TreeViewDemo />
-        </TabItem>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <!-- Canvas wrapper sized for the scaled content so ScrollViewer knows bounds -->
+    <Canvas Name="ScaledWrapper">
+      <!-- Content container that gets scaled -->
+      <Border Name="ScaledContainer">
+        <Panel>
+          <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}" />
+          <Panel Name="MainContentPanel" Classes="mainControl">
+            <TabControl x:Name="MainTabControl" TabStripPlacement="Left" VerticalAlignment="Stretch">
+              <TabItem IsSelected="True">
+                <TabItem.Header>
+                  <TextBlock FontWeight="600">Overview</TextBlock>
+                </TabItem.Header>
+                <demoPages:Overview />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="AutoCompleteBox" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:AutoCompleteBoxDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ButtonDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:CalendarDatePickerDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:CheckBoxDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ColorPicker" ApplicableTo="DevExpress" />
+                </TabItem.Header>
+                <demoPages:ColorPickerDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ComboBoxDemo>
+                  <demoPages:ComboBoxDemo.DataContext>
+                    <vm:ComboBoxViewModel />
+                  </demoPages:ComboBoxDemo.DataContext>
+                </demoPages:ComboBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ContextMenuDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="MacClassic, DevExpress" />
+                </TabItem.Header>
+                <demoPages:DropDownButtonDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+                </TabItem.Header>
+                <demoPages:DataGridDemo>
+                  <demoPages:DataGridDemo.DataContext>
+                    <vm:DataGridViewModel />
+                  </demoPages:DataGridDemo.DataContext>
+                </demoPages:DataGridDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="DataGrid grouped" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+                </TabItem.Header>
+                <demoPages:DataGridGroupedDemo>
+                  <demoPages:DataGridGroupedDemo.DataContext>
+                    <vm:DataGridGroupedViewModel />
+                  </demoPages:DataGridGroupedDemo.DataContext>
+                </demoPages:DataGridGroupedDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:EditableComboBoxDemo>
+                  <demoPages:EditableComboBoxDemo.DataContext>
+                    <vm:EditableComboBoxViewModel />
+                  </demoPages:EditableComboBoxDemo.DataContext>
+                </demoPages:EditableComboBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress" />
+                </TabItem.Header>
+                <demoPages:TagInputDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ExpanderDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:CheckBoxListBoxDemo>
+                  <demoPages:CheckBoxListBoxDemo.DataContext>
+                    <vm:CheckBoxListBoxViewModel />
+                  </demoPages:CheckBoxListBoxDemo.DataContext>
+                </demoPages:CheckBoxListBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:MultiComboBoxDemo>
+                  <demoPages:MultiComboBoxDemo.DataContext>
+                    <vm:MultiComboBoxViewModel />
+                  </demoPages:MultiComboBoxDemo.DataContext>
+                </demoPages:MultiComboBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:GridSplitterDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+                </TabItem.Header>
+                <demoPages:HyperlinkButtonDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ListBoxDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:MenuDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:MenuFlyoutDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:NumericUpDownDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="RadioButton" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:RadioButtonDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ScrollViewerDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:SeparatorDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:TabControlDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="TextBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:TextBoxDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacClassic, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ToggleSwitchDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ToolTip" ApplicableTo="MacClassic, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ToolTipDemo />
+              </TabItem>
+              <!-- TabItem "TreeDataGrid" inserted here through code-behind if Accelerate is enabled -->
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="TreeView" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:TreeViewDemo />
+              </TabItem>
 
-        <TabItem Header="✜ Control Alignment">
-          <demoPages:ControlAlignment />
-        </TabItem>
+              <TabItem Header="✜ Control Alignment">
+                <demoPages:ControlAlignment />
+              </TabItem>
 
 
-        <TabItem>
-          <TabItem.Header>
-            <StackPanel Orientation="Horizontal">
-              <Svg Path="/Assets/Padlock.svg" Height="16" Width="16" Margin="-2 -2 2 0" Css=".st0 {fill : #3E6CB0; }" />
-              <TextBlock Text="Experiments" />
-            </StackPanel>
-          </TabItem.Header>
-          <TabControl>
-            <TabItem Header="ActiPro Controls">
-              <experiments:ActiProDemo />
-            </TabItem>
-            <TabItem Header="System Colours">
-              <experiments:SystemColoursDemo />
-            </TabItem>
-            <TabItem Header="Toggle Buttons">
-              <experiments:ToggleButtonExperiments />
-            </TabItem>
-            <TabItem Header="Search Highlights">
-              <experiments:SearchHighlights />
-            </TabItem>
-            <TabItem Header="Animated Icon">
-              <experiments:AnimatedIcon />
-            </TabItem>
-          </TabControl>
-        </TabItem>
-      </TabControl>
+              <TabItem>
+                <TabItem.Header>
+                  <StackPanel Orientation="Horizontal">
+                    <Svg Path="/Assets/Padlock.svg" Height="16" Width="16" Margin="-2 -2 2 0" Css=".st0 {fill : #3E6CB0; }" />
+                    <TextBlock Text="Experiments" />
+                  </StackPanel>
+                </TabItem.Header>
+                <TabControl>
+                  <TabItem Header="ActiPro Controls">
+                    <experiments:ActiProDemo />
+                  </TabItem>
+                  <TabItem Header="System Colours">
+                    <experiments:SystemColoursDemo />
+                  </TabItem>
+                  <TabItem Header="Toggle Buttons">
+                    <experiments:ToggleButtonExperiments />
+                  </TabItem>
+                  <TabItem Header="Search Highlights">
+                    <experiments:SearchHighlights />
+                  </TabItem>
+                  <TabItem Header="Animated Icon">
+                    <experiments:AnimatedIcon />
+                  </TabItem>
+                </TabControl>
+              </TabItem>
+            </TabControl>
 
-      <Border HorizontalAlignment="Right"
-              VerticalAlignment="Bottom"
-              Width="250"
-              Padding="0 0 8 8 ">
-        <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-          <Border Background="{DynamicResource BackgroundColor}"
-                  CornerRadius="5"
-                  BorderThickness="1"
-                  BorderBrush="Gray"
-                  Padding="5">
-            <DockPanel>
-              <actipro:ToggleThemeButton
-                DockPanel.Dock="Right"
-                Classes.theme-outline="True"
-                VerticalAlignment="Center"
-                Margin="10 0 0 0 " />
-              <ComboBox x:Name="Themes"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                        DisplayMemberBinding="{Binding DisplayName, x:DataType=sampleApp:Theme}"
-                        ItemsSource="{Binding AvailableThemes}"
-                        SelectedItem="{Binding CurrentTheme}"
-                        SelectionChanged="Themes_OnSelectionChanged" />
-            </DockPanel>
-          </Border>
-        </actipro:ShadowChrome>
+            <Border HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="400"
+                    Padding="0 0 8 8">
+              <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
+                <Border Background="{DynamicResource BackgroundColor}"
+                        CornerRadius="5"
+                        BorderThickness="1"
+                        BorderBrush="Gray"
+                        Padding="5">
+                  <StackPanel>
+                    <TextBlock Text="{Binding SystemScale, StringFormat='Default System scale: {0:P0}'}"
+                               FontSize="11"
+                               Opacity="0.7"
+                               Margin="2 0 0 4" />
+                    <Grid ColumnDefinitions="Auto,5,*,5,Auto">
+                      <!-- Scale Selector -->
+                      <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Scale:"
+                                   VerticalAlignment="Center"
+                                   Margin="0 0 5 0" />
+                        <ComboBox Width="100"
+                                  MaxDropDownHeight="500"
+                                  VerticalAlignment="Center"
+                                  ItemsSource="{Binding AvailableScales}"
+                                  SelectedItem="{Binding SelectedScale}"
+                                  SelectionChanged="Scale_OnSelectionChanged" />
+                      </StackPanel>
+
+                      <!-- Theme Selector -->
+                      <ComboBox x:Name="Themes"
+                                Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                DisplayMemberBinding="{Binding DisplayName, x:DataType=sampleApp:Theme}"
+                                ItemsSource="{Binding AvailableThemes}"
+                                SelectedItem="{Binding CurrentTheme}"
+                                SelectionChanged="Themes_OnSelectionChanged" />
+
+                      <!-- Dark/Light Toggle -->
+                      <actipro:ToggleThemeButton
+                        Grid.Column="4"
+                        Classes.theme-outline="True"
+                        VerticalAlignment="Center" />
+                    </Grid>
+                  </StackPanel>
+                </Border>
+              </actipro:ShadowChrome>
+            </Border>
+
+            <Border HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Width="250"
+                    Padding="0 8 8 0"
+                    IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}">
+              <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
+                <Border Background="{DynamicResource BackgroundColor}"
+                        CornerRadius="5"
+                        BorderThickness="1"
+                        BorderBrush="Gray"
+                        Padding="5">
+                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Wallpaper:" VerticalAlignment="Center" Margin="0 0 10 0" />
+                    <ComboBox ItemsSource="{Binding AvailableWallpapers}"
+                              SelectedItem="{Binding SelectedWallpaper}"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              MinWidth="100" />
+                  </StackPanel>
+                </Border>
+              </actipro:ShadowChrome>
+            </Border>
+          </Panel>
+        </Panel>
       </Border>
-
-      <Border HorizontalAlignment="Right"
-              VerticalAlignment="Top"
-              Width="250"
-              Padding="0 8 8 0"
-              IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}">
-        <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-          <Border Background="{DynamicResource BackgroundColor}"
-                  CornerRadius="5"
-                  BorderThickness="1"
-                  BorderBrush="Gray"
-                  Padding="5">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-              <TextBlock Text="Wallpaper:" VerticalAlignment="Center" Margin="0 0 10 0" />
-              <ComboBox ItemsSource="{Binding AvailableWallpapers}"
-                        SelectedItem="{Binding SelectedWallpaper}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch"
-                        MinWidth="100" />
-            </StackPanel>
-          </Border>
-        </actipro:ShadowChrome>
-      </Border>
-    </Panel>
-  </Panel>
+    </Canvas>
+  </ScrollViewer>
 
 </Window>

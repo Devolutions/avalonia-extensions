@@ -78,7 +78,7 @@ public partial class MainWindow : Window
     double baseWidth = this.ClientSize.Width;
     double baseHeight = this.ClientSize.Height;
 
-    if (scaleOption.Scale == 0) // System Default
+    if (Math.Abs(scaleOption.Scale) < 1e-9) // System Default
     {
       container.RenderTransform = null;
       container.Width = baseWidth;

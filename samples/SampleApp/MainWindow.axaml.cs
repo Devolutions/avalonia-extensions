@@ -73,7 +73,7 @@ public partial class MainWindow : Window
     Border? container = this.FindControl<Border>("ScaledContainer");
     Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
     if (container == null || wrapper == null) return;
-    
+
     // Use window's client area dimensions as base size
     double baseWidth = this.ClientSize.Width;
     double baseHeight = this.ClientSize.Height;
@@ -88,16 +88,21 @@ public partial class MainWindow : Window
     }
     else
     {
-      // Calculate scale relative to system scale
+      // Calculate scale relative to system scale (unless its 0/null)
+      if (this.RenderScaling <= 0)
+      {
+        return;
+      }
+
       // e.g., if system is 200% and user selects 100%, scale = 100/200 = 0.5
       double relativeScale = scaleOption.Scale / this.RenderScaling;
-      
+
       // Apply transform to container
       container.RenderTransform = new ScaleTransform(relativeScale, relativeScale);
       container.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Relative);
       container.Width = baseWidth;
       container.Height = baseHeight;
-      
+
       // Size the wrapper Canvas so ScrollViewer knows the scaled bounds
       wrapper.Width = baseWidth * relativeScale;
       wrapper.Height = baseHeight * relativeScale;
@@ -109,11 +114,11 @@ public partial class MainWindow : Window
     Border? container = this.FindControl<Border>("ScaledContainer");
     Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
     if (container == null || wrapper == null) return;
-    
+
     // Set initial sizes to match window
     double baseWidth = this.ClientSize.Width;
     double baseHeight = this.ClientSize.Height;
-    
+
     container.Width = baseWidth;
     container.Height = baseHeight;
     wrapper.Width = baseWidth;

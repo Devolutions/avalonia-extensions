@@ -24,13 +24,13 @@ public record ScaleOption(string Name, double Scale)
 public partial class MainWindowViewModel : ObservableObject
 {
   [ObservableProperty]
-  private Theme currentTheme;
+  private Theme? currentTheme;
 
   [ObservableProperty]
-  private ScaleOption selectedScale;
+  private ScaleOption? selectedScale;
 
   [ObservableProperty]
-  private WallpaperItem selectedWallpaper;
+  private WallpaperItem? selectedWallpaper;
 
   [ObservableProperty]
   private double systemScale;
@@ -39,7 +39,7 @@ public partial class MainWindowViewModel : ObservableObject
   {
     this.SelectedWallpaper = this.AvailableWallpapers[0];
     this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
-    this.SelectedScale = this.AvailableScales[0]; // 0 = System Default, 9 = 300%
+    this.SelectedScale = this.AvailableScales[0]; // 0 = System Default, 10 = 400%
   }
 
   public WallpaperItem[] AvailableWallpapers { get; } =

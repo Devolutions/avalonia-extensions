@@ -134,18 +134,6 @@
     <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
     <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
     <Border Width="500" Padding="0" HorizontalAlignment="Left">
-      <!-- <TabPane TabStripPlacement="Top" ItemsSource="{Binding TabItems}"> -->
-      <!--   ~1~ <TabItem Header="General"> @1@ -->
-      <!--   ~1~   <TextBlock Text="Horizontal TabPane" /> @1@ -->
-      <!--   ~1~ </TabItem> @1@ -->
-      <!--   ~1~ <TabItem Header="Settings"> @1@ -->
-      <!--   ~1~   <TextBlock Text="Content 2" /> @1@ -->
-      <!--   ~1~ </TabItem> @1@ -->
-      <!--   ~1~ <TabItem Header="Disabled Tab" IsEnabled="False" /> @1@ -->
-      <!--   ~1~ <TabItem Header="Advanced"> @1@ -->
-      <!--   ~1~   <TextBlock Text="Content 3" /> @1@ -->
-      <!--   ~1~ </TabItem> @1@ -->
-      <!-- </TabPane> -->
       <TabControl ItemsSource="{Binding TabItems}"
                   SelectedIndex="{Binding SelectedIndex}"
                   TabStripPlacement="Top">

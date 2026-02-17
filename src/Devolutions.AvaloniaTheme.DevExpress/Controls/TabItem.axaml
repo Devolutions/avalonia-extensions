@@ -290,7 +290,7 @@
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="FontSize" Value="{StaticResource TabItemSelectedFontSize}" />
       
-      <!-- Visibility of the tab border corners in the 9-slice grid is handled through TabBorderVisibilityConverter -->
+      <!-- Visibility of the tab border elements is handled through pseudo-classes from TabItemPositionBehavior -->
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="IsVisible" Value="False" />
       </Style>

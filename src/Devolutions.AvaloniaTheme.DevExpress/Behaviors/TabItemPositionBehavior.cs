@@ -76,25 +76,13 @@ internal static class TabItemPositionBehavior
         {
             this.tabControl = tabControl;
 
-            // Watch for selected index changes
-            var selectedIndexSubscription = tabControl
-                .GetObservable(SelectingItemsControl.SelectedIndexProperty)
-                .Subscribe(_ => this.UpdateAllTabItemPositions());
-            this.subscriptions.Add(selectedIndexSubscription);
-
-            // Watch for items collection changes
-            if (tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
-            {
-                notifyCollection.CollectionChanged += this.OnItemsCollectionChanged;
-            }
-
             // Clean up when control is unloaded
             tabControl.Unloaded += this.OnTabControlUnloaded;
 
             // Initial update when control is loaded
             if (tabControl.IsLoaded)
             {
-                this.SubscribeToVisibilityChanges();
+                this.SetupSubscriptions();
                 this.UpdateAllTabItemPositions();
             }
             else
@@ -109,7 +97,7 @@ internal static class TabItemPositionBehavior
             
             this.tabControl.Loaded -= this.OnTabControlLoaded;
             
-            this.SubscribeToVisibilityChanges();
+            this.SetupSubscriptions();
             this.UpdateAllTabItemPositions();
         }
 
@@ -124,6 +112,28 @@ internal static class TabItemPositionBehavior
             this.tabControl.Loaded += this.OnTabControlLoaded;
         }
 
+        /// <summary>
+        /// Sets up all subscriptions: selected index, collection changes, and visibility.
+        /// Called on load and re-load.
+        /// </summary>
+        private void SetupSubscriptions()
+        {
+            // Watch for selected index changes
+            var selectedIndexSubscription = this.tabControl
+                .GetObservable(SelectingItemsControl.SelectedIndexProperty)
+                .Subscribe(_ => this.UpdateAllTabItemPositions());
+            this.subscriptions.Add(selectedIndexSubscription);
+
+            // Watch for items collection changes
+            if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
+            {
+                notifyCollection.CollectionChanged += this.OnItemsCollectionChanged;
+            }
+
+            // Subscribe to visibility changes on realized containers
+            this.SubscribeToVisibilityChanges();
+        }
+
         private void SubscribeToVisibilityChanges()
         {
             if (this.disposed) return;
@@ -136,7 +146,6 @@ internal static class TabItemPositionBehavior
             this.visibilitySubscriptions.Clear();
 
             // Get actual TabItem containers (works for both direct children and ItemsSource)
-            // var tabItems = this.GetTabItemContainers();
             foreach (var item in this.tabControl.GetRealizedContainers().OfType<TabItem>())
             {
                 var subscription = item
@@ -215,6 +224,19 @@ internal static class TabItemPositionBehavior
 
         private void CleanupSubscriptions()
         {
+            // Dispose observable subscriptions (SelectedIndex, etc.)
+            foreach (var subscription in this.subscriptions)
+            {
+                subscription.Dispose();
+            }
+            this.subscriptions.Clear();
+
+            // Unsubscribe from items collection changes
+            if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
+            {
+                notifyCollection.CollectionChanged -= this.OnItemsCollectionChanged;
+            }
+
             // Dispose visibility subscriptions
             foreach (var subscription in this.visibilitySubscriptions.Values)
             {
@@ -231,27 +253,14 @@ internal static class TabItemPositionBehavior
             this.tabControl.Loaded -= this.OnTabControlLoaded;
             this.tabControl.Unloaded -= this.OnTabControlUnloaded;
 
-            // Unsubscribe from items collection
-            if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
-            {
-                notifyCollection.CollectionChanged -= this.OnItemsCollectionChanged;
-            }
+            // Clean up all subscriptions
+            this.CleanupSubscriptions();
 
             // Clear pseudo-classes from all tab item containers
             foreach (var tabItem in this.tabControl.GetRealizedContainers().OfType<TabItem>())
             {
                 this.ClearPseudoClasses(tabItem);
             }
-
-            // Dispose all subscriptions
-            foreach (var subscription in this.subscriptions)
-            {
-                subscription.Dispose();
-            }
-            this.subscriptions.Clear();
-
-            // Clean up visibility subscriptions
-            this.CleanupSubscriptions();
         }
     }
 }

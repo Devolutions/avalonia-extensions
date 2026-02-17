@@ -63,9 +63,8 @@ internal static class TabItemMinWidthBehavior
     {
         tab.Loaded -= OnTabLoaded;
 
-        // Clear the MinWidth we set on the ContentPanel
-        var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
-        contentPanel?.SetValue(Panel.MinWidthProperty, AvaloniaProperty.UnsetValue);
+        tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel")
+            ?.SetValue(Panel.MinWidthProperty, AvaloniaProperty.UnsetValue);
     }
 
     private static void OnTabLoaded(object? sender, RoutedEventArgs e)
@@ -77,10 +76,6 @@ internal static class TabItemMinWidthBehavior
         }
     }
 
-    /// <summary>
-    /// Schedules the measurement for the next render pass so the template is fully
-    /// applied and the content presenter has gone through at least one layout pass.
-    /// </summary>
     private static void ScheduleMeasurement(TabItem tab)
     {
         Dispatcher.UIThread.Post(() => MeasureAndSetMinWidth(tab), DispatcherPriority.Loaded);
@@ -90,13 +85,9 @@ internal static class TabItemMinWidthBehavior
     {
         if (!tab.IsAttachedToVisualTree()) return;
 
-        // Find the content presenter inside the TabItem template
-        var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(
-            static c => c.Name == "PART_ContentPresenter");
-
+        var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
         if (contentPresenter is null) return;
 
-        // Find the ContentPanel that wraps the content presenter
         var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
         if (contentPanel is null) return;
 
@@ -138,9 +129,6 @@ internal static class TabItemMinWidthBehavior
         }
     }
 
-    /// <summary>
-    /// Finds the first descendant of the specified type matching a predicate.
-    /// </summary>
     private static T? FindDescendantOfType<T>(this Visual visual, Func<T, bool> predicate)
         where T : Visual
     {

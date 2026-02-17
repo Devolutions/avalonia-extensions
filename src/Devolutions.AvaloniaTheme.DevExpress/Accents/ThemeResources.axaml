@@ -289,7 +289,6 @@
   <SolidColorBrush x:Key="CheckBoxEmptyPointeroverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
 
   <Thickness x:Key="TabItemHeaderPadding">4 0</Thickness>
-  <Thickness x:Key="FirstTabItemHeaderPadding">6 0 4 0</Thickness>
   <Thickness x:Key="TabsContainerMargin">0</Thickness>
   <Thickness x:Key="NavBarTabsContainerMargin">5 10 10 10</Thickness>
 

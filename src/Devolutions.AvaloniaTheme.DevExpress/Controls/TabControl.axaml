@@ -104,6 +104,7 @@
 
   <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
     <Setter Property="TabItemVisibilityObserverBehavior.Enable" Value="True" />
+    <Setter Property="TabItemPositionBehavior.Enable" Value="True" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Padding" Value="25 20" />

@@ -77,6 +77,7 @@ internal static class TabItemVisibilityObserverBehavior
     {
         private readonly Dictionary<TabItem, IDisposable> subscriptions = new();
         private readonly TabControl tabControl;
+        private bool disposed;
 
         public TabItemObservationState(TabControl tabControl)
         {
@@ -87,6 +88,9 @@ internal static class TabItemVisibilityObserverBehavior
             {
                 notifyCollection.CollectionChanged += this.OnItemsCollectionChanged;
             }
+
+            // Clean up when control is unloaded
+            tabControl.Unloaded += this.OnTabControlUnloaded;
 
             // Wait for template to be applied and items to be available
             if (tabControl.IsLoaded)
@@ -101,12 +105,27 @@ internal static class TabItemVisibilityObserverBehavior
 
         private void OnTabControlLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
+            if (this.disposed) return;
+            
             this.tabControl.Loaded -= this.OnTabControlLoaded;
             this.ObserveExistingTabItems();
         }
 
+        private void OnTabControlUnloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (this.disposed) return;
+            
+            // Clean up subscriptions but don't fully dispose - we'll re-enable when loaded again
+            this.CleanupSubscriptions();
+            
+            // Re-subscribe to Loaded event to re-enable when control is loaded again
+            this.tabControl.Loaded += this.OnTabControlLoaded;
+        }
+
         public void ObserveExistingTabItems()
         {
+            if (this.disposed) return;
+
             // Observe all current TabItems
             foreach (var item in this.tabControl.Items.OfType<TabItem>())
             {
@@ -116,6 +135,8 @@ internal static class TabItemVisibilityObserverBehavior
 
         private void OnItemsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if (this.disposed) return;
+
             // Handle added items
             if (e.NewItems != null)
             {
@@ -137,6 +158,8 @@ internal static class TabItemVisibilityObserverBehavior
 
         private void ObserveTabItem(TabItem tabItem)
         {
+            if (this.disposed) return;
+
             if (!this.subscriptions.ContainsKey(tabItem))
             {
                 // Subscribe to IsVisible property changes
@@ -158,14 +181,30 @@ internal static class TabItemVisibilityObserverBehavior
 
         private void OnTabItemVisibilityChanged()
         {
+            if (this.disposed) return;
+
             // Increment the version counter to trigger binding updates
             int currentVersion = GetVisibilityVersion(this.tabControl);
             SetVisibilityVersion(this.tabControl, currentVersion + 1);
         }
 
+        private void CleanupSubscriptions()
+        {
+            // Dispose all TabItem subscriptions
+            foreach (var subscription in this.subscriptions.Values)
+            {
+                subscription.Dispose();
+            }
+            this.subscriptions.Clear();
+        }
+
         public void Dispose()
         {
+            if (this.disposed) return;
+            this.disposed = true;
+
             this.tabControl.Loaded -= this.OnTabControlLoaded;
+            this.tabControl.Unloaded -= this.OnTabControlUnloaded;
 
             // Unsubscribe from items collection
             if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
@@ -173,13 +212,8 @@ internal static class TabItemVisibilityObserverBehavior
                 notifyCollection.CollectionChanged -= this.OnItemsCollectionChanged;
             }
 
-            // Dispose all subscriptions
-            foreach (var subscription in this.subscriptions.Values)
-            {
-                subscription.Dispose();
-            }
-
-            this.subscriptions.Clear();
+            // Clean up all TabItem subscriptions
+            this.CleanupSubscriptions();
         }
     }
 }

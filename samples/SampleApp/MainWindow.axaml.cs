@@ -28,6 +28,7 @@ public partial class MainWindow : Window
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
       this.InitializeContainerSizes();
+      this.ApplyCurrentScale(); // Apply any pre-selected scale
     };
 
 #if ENABLE_ACCELERATE
@@ -131,6 +132,28 @@ public partial class MainWindow : Window
 
     // RenderScaling reflects the actual system/display scaling
     vm.SystemScale = this.RenderScaling;
+  }
+
+  private void ApplyCurrentScale()
+  {
+    if (this.DataContext is not MainWindowViewModel vm) return;
+    if (vm.SelectedScale == null || vm.SelectedScale.Scale == 0) return;
+
+    Border? container = this.FindControl<Border>("ScaledContainer");
+    Canvas? wrapper = this.FindControl<Canvas>("ScaledWrapper");
+    if (container == null || wrapper == null) return;
+
+    double baseWidth = this.ClientSize.Width;
+    double baseHeight = this.ClientSize.Height;
+    double relativeScale = vm.SelectedScale.Scale / this.RenderScaling;
+
+    container.RenderTransform = new ScaleTransform(relativeScale, relativeScale);
+    container.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Relative);
+    container.Width = baseWidth;
+    container.Height = baseHeight;
+
+    wrapper.Width = baseWidth * relativeScale;
+    wrapper.Height = baseHeight * relativeScale;
   }
 
   private void UpdatePreviewBackground()

@@ -10,7 +10,7 @@ For detailed instructions on working with this repository as an AI assistant, pl
 - Architecture and design patterns
 - Coding rules and best practices
 - Version control guidelines
-- Custom commands (`/workon`, `/commit`, etc.)
+- Custom commands (`/worksetup`, `/commit`, etc.)
 
 ## Quick Reference
 

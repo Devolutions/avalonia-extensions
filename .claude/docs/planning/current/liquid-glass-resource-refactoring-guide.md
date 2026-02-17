@@ -110,7 +110,7 @@ Define the new resource in both theme files.
 - [ ] TabPane
 - [ ] TagInput
 - [ ] TextBlock
-- [ ] TextBox
+- [x] TextBox
 - [ ] ToggleSwitch
 - [ ] ToolTip
 - [ ] TreeView

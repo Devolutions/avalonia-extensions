@@ -119,7 +119,8 @@
                     BorderThickness="0 2 0 0" />
             <Border Name="CenterContent" Grid.Row="1" Grid.Column="1"
                     MinHeight="20"
-                    Padding="{DynamicResource TabItemHeaderPadding}">
+                    Padding="{DynamicResource TabItemHeaderPadding}"
+                    Margin="0 0 2 0">
               <Panel Name="ContentPanel" Margin="0">
                 <ContentPresenter
                   Name="PART_ContentPresenter"
@@ -130,17 +131,6 @@
                   Content="{TemplateBinding Header}"
                   ContentTemplate="{TemplateBinding HeaderTemplate}"
                   RecognizesAccessKey="True" />
-                <!-- <ContentPresenter -->
-                <!--   Name="PART_ContentBoldWidthFix" -->
-                <!--   FontFamily="{TemplateBinding FontFamily}" -->
-                <!--   FontSize="{StaticResource ControlFontSize}" -->
-                <!--   FontWeight="Bold" -->
-                <!--   HorizontalAlignment="Left"   -->
-                <!--   VerticalAlignment="Center" -->
-                <!--   Content="{TemplateBinding Header}" -->
-                <!--   ContentTemplate="{TemplateBinding HeaderTemplate}" -->
-                <!--   RecognizesAccessKey="False" -->
-                <!--   Opacity="0" /> -->
               </Panel>
             </Border>
             <Border Name="RightBorder"

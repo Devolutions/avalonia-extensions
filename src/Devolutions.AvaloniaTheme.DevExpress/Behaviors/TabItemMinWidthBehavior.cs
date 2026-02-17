@@ -5,7 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -14,11 +13,11 @@ using Avalonia.VisualTree;
 /// don't shift when the selected tab gets bold/larger font.
 /// </summary>
 /// <remarks>
-/// After the TabItem is loaded, the behavior finds the PART_ContentPresenter inside
-/// the template, temporarily applies the selected-state font properties (Bold, larger
-/// font size) as local values, measures the presenter, and sets MinWidth on the
-/// ContentPanel to the measured width. This works with arbitrary header templates,
-/// not just string headers.
+/// After the TabItem is loaded, the behavior temporarily toggles the :selected
+/// pseudo-class to trigger all selected-state styles (font weight, size, padding, etc.),
+/// measures the content presenter in both states, and sets MinWidth on the ContentPanel
+/// to the maximum of the two. This is theme-agnostic — any style changes applied by
+/// :selected will be captured automatically.
 /// </remarks>
 internal static class TabItemMinWidthBehavior
 {
@@ -92,7 +91,8 @@ internal static class TabItemMinWidthBehavior
         if (!tab.IsAttachedToVisualTree()) return;
 
         // Find the content presenter inside the TabItem template
-        var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
+        var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(
+            static c => c.Name == "PART_ContentPresenter");
 
         if (contentPresenter is null) return;
 
@@ -100,58 +100,31 @@ internal static class TabItemMinWidthBehavior
         var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
         if (contentPanel is null) return;
 
-        // Save original values
-        bool hadFontWeight = contentPresenter.IsSet(ContentPresenter.FontWeightProperty);
-        var originalFontWeight = contentPresenter.FontWeight;
-        bool hadFontSize = contentPresenter.IsSet(ContentPresenter.FontSizeProperty);
-        var originalFontSize = contentPresenter.FontSize;
-
-        // Look up the selected font size from resources, fall back to 13
-        double selectedFontSize = 13;
-        if (tab.TryFindResource("TabItemSelectedFontSize", tab.ActualThemeVariant, out var resource)
-            && resource is double fontSize)
-        {
-            selectedFontSize = fontSize;
-        }
+        bool wasSelected = ((IPseudoClasses)tab.Classes).Contains(":selected");
 
         try
         {
-            // Apply selected-state font properties as local values on the presenter
-            contentPresenter.FontWeight = FontWeight.Bold;
-            contentPresenter.FontSize = selectedFontSize;
+            // Temporarily apply :selected pseudo-class to trigger all selected-state styles
+            // (font weight, font size, padding, etc.) — this is theme-agnostic
+            if (!wasSelected)
+            {
+                ((IPseudoClasses)tab.Classes).Set(":selected", true);
+            }
 
-            // Force a measure with unconstrained space
+            // Force styles to re-evaluate and measure the content presenter
             contentPresenter.InvalidateMeasure();
             contentPresenter.Measure(Size.Infinity);
+            double selectedWidth = contentPresenter.DesiredSize.Width;
 
-            double boldWidth = contentPresenter.DesiredSize.Width;
-
-            // Now measure with normal properties to get the base width
-            if (hadFontWeight)
-            {
-                contentPresenter.FontWeight = originalFontWeight;
-            }
-            else
-            {
-                contentPresenter.SetValue(ContentPresenter.FontWeightProperty, AvaloniaProperty.UnsetValue);
-            }
-
-            if (hadFontSize)
-            {
-                contentPresenter.FontSize = originalFontSize;
-            }
-            else
-            {
-                contentPresenter.SetValue(ContentPresenter.FontSizeProperty, AvaloniaProperty.UnsetValue);
-            }
+            // Measure with normal (unselected) state
+            ((IPseudoClasses)tab.Classes).Set(":selected", false);
 
             contentPresenter.InvalidateMeasure();
             contentPresenter.Measure(Size.Infinity);
-
             double normalWidth = contentPresenter.DesiredSize.Width;
 
-            // Set MinWidth on the ContentPanel to the maximum of bold and normal widths
-            double minWidth = Math.Max(boldWidth, normalWidth);
+            // Set MinWidth on the ContentPanel to the maximum of both states
+            double minWidth = Math.Max(selectedWidth, normalWidth);
             if (minWidth > 0)
             {
                 contentPanel.MinWidth = minWidth;
@@ -159,25 +132,8 @@ internal static class TabItemMinWidthBehavior
         }
         finally
         {
-            // Ensure we always restore original values even if something goes wrong
-            if (hadFontWeight)
-            {
-                contentPresenter.FontWeight = originalFontWeight;
-            }
-            else
-            {
-                contentPresenter.SetValue(ContentPresenter.FontWeightProperty, AvaloniaProperty.UnsetValue);
-            }
-
-            if (hadFontSize)
-            {
-                contentPresenter.FontSize = originalFontSize;
-            }
-            else
-            {
-                contentPresenter.SetValue(ContentPresenter.FontSizeProperty, AvaloniaProperty.UnsetValue);
-            }
-
+            // Always restore the original :selected state
+            ((IPseudoClasses)tab.Classes).Set(":selected", wasSelected);
             contentPresenter.InvalidateMeasure();
         }
     }

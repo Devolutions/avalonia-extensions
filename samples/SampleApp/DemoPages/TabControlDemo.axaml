@@ -72,6 +72,9 @@
             <TabItem Header="General">
               <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
             </TabItem>
+            <TabItem Header="General">
+              <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
+            </TabItem>
             <TabItem Header="Settings">
               <TextBlock Text="Content 2" VerticalAlignment="Top" />
             </TabItem>
@@ -142,6 +145,7 @@
             <TextBlock Text="{Binding Header}" />
           </DataTemplate>
         </TabControl.ItemTemplate>
+        
         <TabControl.ContentTemplate>
           <DataTemplate x:DataType="vm:TabItemModel">
             <StackPanel Margin="10">
@@ -152,6 +156,7 @@
             </StackPanel>
           </DataTemplate>
         </TabControl.ContentTemplate>
+        
         <TabControl.ItemContainerTheme>
           <ControlTheme x:DataType="vm:TabItemModel" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
             <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />

@@ -121,17 +121,16 @@
                     MinHeight="20"
                     Padding="{DynamicResource TabItemHeaderPadding}"
                     Margin="0 0 2 0">
-              <Panel Name="ContentPanel" Margin="0">
-                <ContentPresenter
-                  Name="PART_ContentPresenter"
-                  FontFamily="{TemplateBinding FontFamily}"
-                  FontSize="{StaticResource ControlFontSize}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center"
-                  Content="{TemplateBinding Header}"
-                  ContentTemplate="{TemplateBinding HeaderTemplate}"
-                  RecognizesAccessKey="True" />
-              </Panel>
+              <ContentPresenter
+                Name="PART_ContentPresenter"
+                Margin="0"
+                FontFamily="{TemplateBinding FontFamily}"
+                FontSize="{StaticResource ControlFontSize}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="{TemplateBinding Header}"
+                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                RecognizesAccessKey="True" />
             </Border>
             <Border Name="RightBorder"
                     Grid.Row="1" Grid.Column="2"
@@ -211,8 +210,8 @@
     </Style>
 
     <!-- Non-first tabs get extra left margin to account for their left border -->
-    <Style Selector="^[TabStripPlacement=Top]:not(:first-tab) /template/ Panel#ContentPanel">
-      <Setter Property="Margin" Value="2 0 0 0" />
+    <Style Selector="^[TabStripPlacement=Top]:not(:first-tab) /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Margin" Value="3 0 -1 0" />
     </Style>
 
     <!-- Visibility rules based on position pseudo-classes -->
@@ -280,7 +279,6 @@
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="FontSize" Value="{StaticResource TabItemSelectedFontSize}" />
       
-      <!-- Visibility of the tab border elements is handled through pseudo-classes from TabItemPositionBehavior -->
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="IsVisible" Value="False" />
       </Style>

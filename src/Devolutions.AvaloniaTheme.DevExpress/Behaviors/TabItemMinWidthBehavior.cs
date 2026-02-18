@@ -63,7 +63,7 @@ internal static class TabItemMinWidthBehavior
     {
         tab.Loaded -= OnTabLoaded;
 
-        tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel")
+        tab.FindContentPresenter()
             ?.SetValue(Panel.MinWidthProperty, AvaloniaProperty.UnsetValue);
     }
 
@@ -85,11 +85,12 @@ internal static class TabItemMinWidthBehavior
     {
         if (!tab.IsAttachedToVisualTree()) return;
 
-        var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
-        if (contentPresenter is null) return;
+        // var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
+        // if (contentPresenter is null) return;
+        if (tab.FindContentPresenter() is not ContentPresenter contentPresenter) return;
 
-        var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
-        if (contentPanel is null) return;
+        // var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
+        // if (contentPanel is null) return;
 
         bool wasSelected = ((IPseudoClasses)tab.Classes).Contains(":selected");
 
@@ -118,7 +119,7 @@ internal static class TabItemMinWidthBehavior
             double minWidth = Math.Max(selectedWidth, normalWidth);
             if (minWidth > 0)
             {
-                contentPanel.MinWidth = minWidth;
+                contentPresenter.MinWidth = minWidth;
             }
         }
         finally
@@ -128,6 +129,8 @@ internal static class TabItemMinWidthBehavior
             contentPresenter.InvalidateMeasure();
         }
     }
+    
+    private static ContentPresenter? FindContentPresenter(this TabItem tab) => tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
 
     private static T? FindDescendantOfType<T>(this Visual visual, Func<T, bool> predicate)
         where T : Visual

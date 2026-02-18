@@ -1,9 +1,12 @@
 namespace Devolutions.AvaloniaTheme.DevExpress.Behaviors;
 
+using System.Collections.Specialized;
+using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 
 /// <summary>
 /// Behavior that adds pseudo-classes to TabItems indicating their position relative to the selected tab.
@@ -68,8 +71,8 @@ internal static class TabItemPositionBehavior
     private sealed class TabItemPositionState : IDisposable
     {
         private readonly TabControl tabControl;
-        private readonly List<IDisposable> subscriptions = new();
-        private readonly Dictionary<TabItem, IDisposable> visibilitySubscriptions = new();
+        private readonly CompositeDisposable compositeDisposable = new();
+        private readonly CompositeDisposable visibilitySubscriptions = new();
         private bool disposed;
 
         public TabItemPositionState(TabControl tabControl)
@@ -90,7 +93,7 @@ internal static class TabItemPositionBehavior
             }
         }
 
-        private void OnTabControlLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnTabControlLoaded(object? sender, RoutedEventArgs e)
         {
             if (this.disposed) return;
             
@@ -100,7 +103,7 @@ internal static class TabItemPositionBehavior
             this.UpdateAllTabItemPositions();
         }
 
-        private void OnTabControlUnloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnTabControlUnloaded(object? sender, RoutedEventArgs e)
         {
             if (this.disposed) return;
             
@@ -115,9 +118,9 @@ internal static class TabItemPositionBehavior
             var selectedIndexSubscription = this.tabControl
                 .GetObservable(SelectingItemsControl.SelectedIndexProperty)
                 .Subscribe(_ => this.UpdateAllTabItemPositions());
-            this.subscriptions.Add(selectedIndexSubscription);
+            this.compositeDisposable.Add(selectedIndexSubscription);
 
-            if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
+            if (this.tabControl.Items is INotifyCollectionChanged notifyCollection)
             {
                 notifyCollection.CollectionChanged += this.OnItemsCollectionChanged;
             }
@@ -129,22 +132,18 @@ internal static class TabItemPositionBehavior
         {
             if (this.disposed) return;
 
-            foreach (var sub in this.visibilitySubscriptions.Values)
-            {
-                sub.Dispose();
-            }
-            this.visibilitySubscriptions.Clear();
+            this.visibilitySubscriptions.Dispose();
 
             foreach (var item in this.tabControl.GetRealizedContainers().OfType<TabItem>())
             {
                 var subscription = item
                     .GetObservable(Visual.IsVisibleProperty)
                     .Subscribe(_ => this.UpdateAllTabItemPositions());
-                this.visibilitySubscriptions[item] = subscription;
+                this.visibilitySubscriptions.Add(subscription);
             }
         }
 
-        private void OnItemsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (this.disposed) return;
             
@@ -161,8 +160,6 @@ internal static class TabItemPositionBehavior
             bool isFirst = true;
             bool isSelectedFound = false;
             bool foundRightToSelected = false;
-            TabItem? previousVisibleTab = null;
-            
             TabItem? lastVisibleTab = null;
             foreach (var tab in this.tabControl.GetRealizedContainers().OfType<TabItem>())
             {
@@ -175,9 +172,9 @@ internal static class TabItemPositionBehavior
                     ((IPseudoClasses)tab.Classes).Set(":last-tab", false);
                     ((IPseudoClasses)tab.Classes).Set(":next-to-selected", false);
 
-                    if (isSelected && previousVisibleTab is not null)
+                    if (isSelected && lastVisibleTab is not null)
                     {
-                        ((IPseudoClasses)previousVisibleTab.Classes).Set(":next-to-selected", true);
+                        ((IPseudoClasses)lastVisibleTab.Classes).Set(":next-to-selected", true);
                     }
                     if (!isSelected && isSelectedFound && !foundRightToSelected)
                     {
@@ -188,7 +185,6 @@ internal static class TabItemPositionBehavior
                     isFirst = false;
                     isSelectedFound = isSelectedFound || isSelected;
                     lastVisibleTab = tab;
-                    previousVisibleTab = tab;
                 }
                 else
                 {
@@ -213,23 +209,14 @@ internal static class TabItemPositionBehavior
 
         private void CleanupSubscriptions()
         {
-            // Dispose observable subscriptions (SelectedIndex, etc.)
-            foreach (var subscription in this.subscriptions)
-            {
-                subscription.Dispose();
-            }
-            this.subscriptions.Clear();
+            this.compositeDisposable.Dispose();
 
-            if (this.tabControl.Items is System.Collections.Specialized.INotifyCollectionChanged notifyCollection)
+            if (this.tabControl.Items is INotifyCollectionChanged notifyCollection)
             {
                 notifyCollection.CollectionChanged -= this.OnItemsCollectionChanged;
             }
 
-            foreach (var subscription in this.visibilitySubscriptions.Values)
-            {
-                subscription.Dispose();
-            }
-            this.visibilitySubscriptions.Clear();
+            this.visibilitySubscriptions.Dispose();
         }
 
         public void Dispose()

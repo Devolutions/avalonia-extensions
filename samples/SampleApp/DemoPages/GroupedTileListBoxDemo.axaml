@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:demoPages="clr-namespace:SampleApp.DemoPages"
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             x:Class="SampleApp.DemoPages.GroupedTileListBoxDemo"
+             x:DataType="vm:GroupedTileListBoxViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="30">
+
+      <!-- Scenario 1: Named Groups -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 1: Named Groups</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          All items are organized into named groups (Fruits, Vegetables, Meats).
+        </TextBlock>
+        <GroupedTileListBox ItemsSource="{Binding GroupedItems}"
+                                      GroupSelector="{Binding CategoryGroupSelector}"
+                                      HorizontalAlignment="Left"
+                                      MaxWidth="650"
+                                      Height="400"
+                                      ItemWidth="120"
+                                      ItemHeight="100"
+                                      ItemSpacing="8"
+                                      Padding="8">
+          <GroupedTileListBox.ItemTemplate>
+            <DataTemplate DataType="vm:FoodItem">
+              <StackPanel Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Category}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                           TextAlignment="Center"/>
+              </StackPanel>
+            </DataTemplate>
+          </GroupedTileListBox.ItemTemplate>
+        </GroupedTileListBox>
+      </StackPanel>
+
+      <!-- Scenario 2: Empty Group First -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 2: Groups with Empty Group First</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          Items are grouped, with an empty/unnamed group appearing first (using GroupOrderSelector).
+        </TextBlock>
+        <GroupedTileListBox ItemsSource="{Binding EmptyGroupItems}"
+                                      GroupSelector="{Binding CategoryGroupSelector}"
+                                      GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                                      HorizontalAlignment="Left"
+                                      MaxWidth="650"
+                                      Height="400"
+                                      ItemWidth="120"
+                                      ItemHeight="100"
+                                      ItemSpacing="8"
+                                      Padding="8">
+          <GroupedTileListBox.ItemTemplate>
+            <DataTemplate DataType="vm:FoodItem">
+              <StackPanel Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Category}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                           TextAlignment="Center"/>
+              </StackPanel>
+            </DataTemplate>
+          </GroupedTileListBox.ItemTemplate>
+        </GroupedTileListBox>
+      </StackPanel>
+
+      <!-- Scenario 3: Flat List (No Grouping) -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Flat List (No Grouping)</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          Items displayed in a flat list without any grouping (GroupSelector is null).
+        </TextBlock>
+        <GroupedTileListBox ItemsSource="{Binding FlatItems}"
+                                      HorizontalAlignment="Left"
+                                      MaxWidth="650"
+                                      Height="400"
+                                      ItemWidth="120"
+                                      ItemHeight="100"
+                                      ItemSpacing="8"
+                                      Padding="8">
+          <GroupedTileListBox.ItemTemplate>
+            <DataTemplate DataType="vm:FoodItem">
+              <StackPanel Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Category}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                           TextAlignment="Center"/>
+              </StackPanel>
+            </DataTemplate>
+          </GroupedTileListBox.ItemTemplate>
+        </GroupedTileListBox>
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

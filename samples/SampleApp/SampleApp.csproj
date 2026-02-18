@@ -105,4 +105,10 @@
     <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.Linux" />
     <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.MacOS" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DemoPages\GroupedTileListBoxDemo.axaml.cs">
+      <DependentUpon>GroupedTileListBoxDemo.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

@@ -23,7 +23,9 @@
         <MergeResourceInclude Source="Controls/ToggleButtonGroup.axaml" />
         <MergeResourceInclude Source="Controls/ToggleButtonGroupItem.axaml" />
         
-        <MergeResourceInclude Source="Controls/GroupedTileListBox/GroupedTileListBox.axaml"></MergeResourceInclude>
+        <MergeResourceInclude Source="Controls/GroupedTileListBox/GroupedTileListBox.axaml" />
+        <MergeResourceInclude Source="Controls/GroupedTileListBox/GroupedTileListBoxItem.axaml" />
+        <MergeResourceInclude Source="Controls/GroupedTileListBox/GroupedTileListBoxGroupHeader.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 

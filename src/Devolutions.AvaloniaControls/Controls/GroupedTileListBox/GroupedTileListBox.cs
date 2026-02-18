@@ -5,11 +5,8 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace Devolutions.AvaloniaControls.Controls;
 
@@ -19,98 +16,94 @@ namespace Devolutions.AvaloniaControls.Controls;
 /// </summary>
 public class GroupedTileListBox : TemplatedControl
 {
-    private ItemsRepeater? _itemsRepeater;
-    private ScrollViewer? _scrollViewer;
-    private object? _selectedItem;
-    private int _selectedIndex = -1;
-    private int _cachedItemsPerRow = -1;
-    private double _lastKnownWidth = -1;
-    private bool _useGrouping = false;
-    private List<object>? _visualToSourceMap;
-    private Dictionary<object, int>? _sourceToVisualMap;
-    private bool _indexMappingsDirty = true;
-    private INotifyCollectionChanged? _collectionChangedSource;
-    private double? _cachedHeaderHeight = null;
-
-    #region Styled Properties
-
-    /// <summary>
-    /// Defines the <see cref="ItemsSource"/> property.
-    /// </summary>
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<GroupedTileListBox, IEnumerable?>(
             nameof(ItemsSource));
 
-    /// <summary>
-    /// Defines the <see cref="ItemTemplate"/> property.
-    /// </summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<GroupedTileListBox, IDataTemplate?>(
             nameof(ItemTemplate));
 
-    /// <summary>
-    /// Defines the <see cref="ItemWidth"/> property.
-    /// </summary>
     public static readonly StyledProperty<double> ItemWidthProperty =
         AvaloniaProperty.Register<GroupedTileListBox, double>(
-            nameof(ItemWidth), 150.0);
+            nameof(ItemWidth),
+            150.0);
 
-    /// <summary>
-    /// Defines the <see cref="ItemHeight"/> property.
-    /// </summary>
     public static readonly StyledProperty<double> ItemHeightProperty =
         AvaloniaProperty.Register<GroupedTileListBox, double>(
-            nameof(ItemHeight), 150.0);
+            nameof(ItemHeight),
+            150.0);
 
-    /// <summary>
-    /// Defines the <see cref="ItemSpacing"/> property.
-    /// </summary>
     public static readonly StyledProperty<double> ItemSpacingProperty =
         AvaloniaProperty.Register<GroupedTileListBox, double>(
-            nameof(ItemSpacing), 8.0);
+            nameof(ItemSpacing),
+            8.0);
 
-    /// <summary>
-    /// Defines the <see cref="SelectedItem"/> property.
-    /// </summary>
     public static readonly StyledProperty<object?> SelectedItemProperty =
         AvaloniaProperty.Register<GroupedTileListBox, object?>(
             nameof(SelectedItem),
             defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>
-    /// Defines the <see cref="SelectedIndex"/> property.
-    /// </summary>
     public static readonly StyledProperty<int> SelectedIndexProperty =
         AvaloniaProperty.Register<GroupedTileListBox, int>(
             nameof(SelectedIndex),
             -1,
             defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>
-    /// Defines the <see cref="GroupSelector"/> property.
-    /// </summary>
     public static readonly StyledProperty<Func<object, object>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, object>?>(
             nameof(GroupSelector));
 
-    /// <summary>
-    /// Defines the <see cref="GroupOrderSelector"/> property.
-    /// </summary>
     public static readonly StyledProperty<Func<object, int>?> GroupOrderSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, int>?>(
             nameof(GroupOrderSelector));
 
-    #endregion
+    private double? cachedHeaderHeight = null;
+    private int cachedItemsPerRow = -1;
+    private INotifyCollectionChanged? collectionChangedSource;
+    private bool indexMappingsDirty = true;
+    private ItemsRepeater? itemsRepeater;
+    private double lastKnownWidth = -1;
+    private ScrollViewer? scrollViewer;
+    private int selectedIndex = -1;
+    private object? selectedItem;
+    private Dictionary<object, int>? sourceToVisualMap;
+    private bool useGrouping = false;
+    private List<object>? visualToSourceMap;
 
-    #region Properties
+    static GroupedTileListBox()
+    {
+        ItemsSourceProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnItemsSourceChanged(e));
+
+        ItemWidthProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnLayoutPropertyChanged(e));
+
+        ItemHeightProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnLayoutPropertyChanged(e));
+
+        ItemSpacingProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnLayoutPropertyChanged(e));
+
+        SelectedItemProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnSelectedItemChanged(e));
+
+        SelectedIndexProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnSelectedIndexChanged(e));
+
+        GroupSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
+
+        GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
+
+        PaddingProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnPaddingChanged(e));
+    }
+
+    public GroupedTileListBox()
+    {
+        this.Focusable = true;
+    }
 
     /// <summary>
     /// Gets or sets the collection of items to display.
     /// </summary>
     public IEnumerable? ItemsSource
     {
-        get => GetValue(ItemsSourceProperty);
-        set => SetValue(ItemsSourceProperty, value);
+        get => this.GetValue(ItemsSourceProperty);
+        set => this.SetValue(ItemsSourceProperty, value);
     }
 
     /// <summary>
@@ -118,8 +111,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public IDataTemplate? ItemTemplate
     {
-        get => GetValue(ItemTemplateProperty);
-        set => SetValue(ItemTemplateProperty, value);
+        get => this.GetValue(ItemTemplateProperty);
+        set => this.SetValue(ItemTemplateProperty, value);
     }
 
     /// <summary>
@@ -127,8 +120,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public double ItemWidth
     {
-        get => GetValue(ItemWidthProperty);
-        set => SetValue(ItemWidthProperty, value);
+        get => this.GetValue(ItemWidthProperty);
+        set => this.SetValue(ItemWidthProperty, value);
     }
 
     /// <summary>
@@ -136,8 +129,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public double ItemHeight
     {
-        get => GetValue(ItemHeightProperty);
-        set => SetValue(ItemHeightProperty, value);
+        get => this.GetValue(ItemHeightProperty);
+        set => this.SetValue(ItemHeightProperty, value);
     }
 
     /// <summary>
@@ -145,8 +138,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public double ItemSpacing
     {
-        get => GetValue(ItemSpacingProperty);
-        set => SetValue(ItemSpacingProperty, value);
+        get => this.GetValue(ItemSpacingProperty);
+        set => this.SetValue(ItemSpacingProperty, value);
     }
 
     /// <summary>
@@ -154,8 +147,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public object? SelectedItem
     {
-        get => GetValue(SelectedItemProperty);
-        set => SetValue(SelectedItemProperty, value);
+        get => this.GetValue(SelectedItemProperty);
+        set => this.SetValue(SelectedItemProperty, value);
     }
 
     /// <summary>
@@ -163,8 +156,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public int SelectedIndex
     {
-        get => GetValue(SelectedIndexProperty);
-        set => SetValue(SelectedIndexProperty, value);
+        get => this.GetValue(SelectedIndexProperty);
+        set => this.SetValue(SelectedIndexProperty, value);
     }
 
     /// <summary>
@@ -173,8 +166,8 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public Func<object, object>? GroupSelector
     {
-        get => GetValue(GroupSelectorProperty);
-        set => SetValue(GroupSelectorProperty, value);
+        get => this.GetValue(GroupSelectorProperty);
+        set => this.SetValue(GroupSelectorProperty, value);
     }
 
     /// <summary>
@@ -184,55 +177,18 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     public Func<object, int>? GroupOrderSelector
     {
-        get => GetValue(GroupOrderSelectorProperty);
-        set => SetValue(GroupOrderSelectorProperty, value);
-    }
-
-    #endregion
-
-    static GroupedTileListBox()
-    {
-        ItemsSourceProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnItemsSourceChanged(e));
-
-        ItemWidthProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnLayoutPropertyChanged(e));
-
-        ItemHeightProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnLayoutPropertyChanged(e));
-
-        ItemSpacingProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnLayoutPropertyChanged(e));
-
-        SelectedItemProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnSelectedItemChanged(e));
-
-        SelectedIndexProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnSelectedIndexChanged(e));
-
-        GroupSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnGroupingPropertyChanged(e));
-
-        GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnGroupingPropertyChanged(e));
-
-        PaddingProperty.Changed.AddClassHandler<GroupedTileListBox>(
-            (x, e) => x.OnPaddingChanged(e));
-    }
-
-    public GroupedTileListBox()
-    {
-        Focusable = true;
+        get => this.GetValue(GroupOrderSelectorProperty);
+        set => this.SetValue(GroupOrderSelectorProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
 
-        _scrollViewer = e.NameScope.Find<ScrollViewer>("PART_ScrollViewer");
+        this.scrollViewer = e.NameScope.Find<ScrollViewer>("PART_ScrollViewer");
 
         // Always create ItemsRepeater(s) dynamically in UpdateItemsRepeater
-        UpdateItemsRepeater();
+        this.UpdateItemsRepeater();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -241,10 +197,10 @@ public class GroupedTileListBox : TemplatedControl
 
         // Re-subscribe to collection changes when control is re-attached
         // (in case ItemsSource was set while detached, or control was moved)
-        if (ItemsSource is INotifyCollectionChanged notifyCollection && _collectionChangedSource == null)
+        if (this.ItemsSource is INotifyCollectionChanged notifyCollection && this.collectionChangedSource == null)
         {
-            _collectionChangedSource = notifyCollection;
-            _collectionChangedSource.CollectionChanged += OnCollectionChanged;
+            this.collectionChangedSource = notifyCollection;
+            this.collectionChangedSource.CollectionChanged += this.OnCollectionChanged;
         }
     }
 
@@ -253,34 +209,34 @@ public class GroupedTileListBox : TemplatedControl
         base.OnDetachedFromVisualTree(e);
 
         // Unsubscribe from collection changes to prevent memory leaks
-        if (_collectionChangedSource != null)
+        if (this.collectionChangedSource != null)
         {
-            _collectionChangedSource.CollectionChanged -= OnCollectionChanged;
-            _collectionChangedSource = null;
+            this.collectionChangedSource.CollectionChanged -= this.OnCollectionChanged;
+            this.collectionChangedSource = null;
         }
     }
 
     private void OnItemsSourceChanged(AvaloniaPropertyChangedEventArgs e)
     {
         // Unsubscribe from old collection
-        if (_collectionChangedSource != null)
+        if (this.collectionChangedSource != null)
         {
-            _collectionChangedSource.CollectionChanged -= OnCollectionChanged;
-            _collectionChangedSource = null;
+            this.collectionChangedSource.CollectionChanged -= this.OnCollectionChanged;
+            this.collectionChangedSource = null;
         }
 
-        InvalidateIndexMappings();
+        this.InvalidateIndexMappings();
 
         // Subscribe to new collection if it supports change notifications
-        if (ItemsSource is INotifyCollectionChanged notifyCollection)
+        if (this.ItemsSource is INotifyCollectionChanged notifyCollection)
         {
-            _collectionChangedSource = notifyCollection;
-            _collectionChangedSource.CollectionChanged += OnCollectionChanged;
+            this.collectionChangedSource = notifyCollection;
+            this.collectionChangedSource.CollectionChanged += this.OnCollectionChanged;
         }
 
-        if (_itemsRepeater != null)
+        if (this.itemsRepeater != null)
         {
-            UpdateItemsRepeater();
+            this.UpdateItemsRepeater();
         }
     }
 
@@ -292,52 +248,52 @@ public class GroupedTileListBox : TemplatedControl
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // Invalidate cached index mappings - they'll rebuild on next access
-        InvalidateIndexMappings();
+        this.InvalidateIndexMappings();
 
         // Preserve selection by item reference if possible
-        object? previouslySelectedItem = _selectedItem;
+        object? previouslySelectedItem = this.selectedItem;
 
         // Rebuild UI (grouped mode needs full rebuild, non-grouped mode ItemsRepeater handles it automatically)
-        if (_useGrouping)
+        if (this.useGrouping)
         {
-            UpdateItemsRepeater();
+            this.UpdateItemsRepeater();
         }
 
         // Restore selection if item still exists in the collection
-        if (previouslySelectedItem != null && ItemsSource != null)
+        if (previouslySelectedItem != null && this.ItemsSource != null)
         {
-            bool itemStillExists = ItemsSource.Cast<object>().Contains(previouslySelectedItem);
+            bool itemStillExists = this.ItemsSource.Cast<object>().Contains(previouslySelectedItem);
             if (itemStillExists)
             {
-                SelectItem(previouslySelectedItem);
+                this.SelectItem(previouslySelectedItem);
             }
             else
             {
                 // Selected item was removed
-                SelectedItem = null;
-                SelectedIndex = -1;
+                this.SelectedItem = null;
+                this.SelectedIndex = -1;
             }
         }
     }
 
     private void OnLayoutPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        if (_itemsRepeater?.Layout is WrapLayout layout)
+        if (this.itemsRepeater?.Layout is WrapLayout layout)
         {
-            layout.HorizontalSpacing = ItemSpacing;
-            layout.VerticalSpacing = ItemSpacing;
+            layout.HorizontalSpacing = this.ItemSpacing;
+            layout.VerticalSpacing = this.ItemSpacing;
         }
 
         // Invalidate layout to recalculate with new dimensions
-        _itemsRepeater?.InvalidateArrange();
+        this.itemsRepeater?.InvalidateArrange();
     }
 
     private void OnPaddingChanged(AvaloniaPropertyChangedEventArgs e)
     {
         // Update margin on the ScrollViewer content to match the new Padding value
-        if (_scrollViewer?.Content is Control content)
+        if (this.scrollViewer?.Content is Control content)
         {
-            content.Margin = Padding;
+            content.Margin = this.Padding;
         }
     }
 
@@ -346,21 +302,16 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private IEnumerable<IGrouping<object, object>> GetOrderedGroups(IEnumerable<IGrouping<object, object>> groups)
     {
-        if (GroupOrderSelector != null)
+        if (this.GroupOrderSelector != null)
         {
             // Primary sort by order value, secondary sort alphabetically
             return groups
-                .OrderBy(g => GroupOrderSelector(g.Key ?? string.Empty))
+                .OrderBy(g => this.GroupOrderSelector(g.Key ?? string.Empty))
                 .ThenBy(g => g.Key?.ToString() ?? string.Empty);
         }
 
         return groups.OrderBy(g => g.Key?.ToString() ?? string.Empty);
     }
-
-    /// <summary>
-    /// Represents an item with its original index and group for navigation calculations.
-    /// </summary>
-    private sealed record IndexedItem(object Item, int Index, object Group);
 
     /// <summary>
     /// Groups items with their original indices, ordered by group key.
@@ -378,63 +329,65 @@ public class GroupedTileListBox : TemplatedControl
 
     private void UpdateItemsRepeater()
     {
-        if (_scrollViewer == null)
-            return;
-
-        // Determine if grouping is enabled
-        _useGrouping = GroupSelector != null;
-
-        // Unhook old ItemsRepeater if it exists
-        if (_itemsRepeater != null)
+        if (this.scrollViewer == null)
         {
-            _itemsRepeater.ElementPrepared -= OnElementPrepared;
-            _itemsRepeater = null;
+            return;
         }
 
-        if (_useGrouping)
+        // Determine if grouping is enabled
+        this.useGrouping = this.GroupSelector != null;
+
+        // Unhook old ItemsRepeater if it exists
+        if (this.itemsRepeater != null)
+        {
+            this.itemsRepeater.ElementPrepared -= this.OnElementPrepared;
+            this.itemsRepeater = null;
+        }
+
+        if (this.useGrouping)
         {
             // Create StackPanel to hold groups
-            var stackPanel = new StackPanel
+            StackPanel stackPanel = new()
             {
-                Spacing = ItemSpacing,
-                Margin = Padding
+                Spacing = this.ItemSpacing,
+                Margin = this.Padding
             };
 
-            if (ItemsSource != null && GroupSelector != null && _scrollViewer != null)
+            if (this.ItemsSource != null && this.GroupSelector != null && this.scrollViewer != null)
             {
                 // Group the items and apply ordering
-                var groups = ItemsSource.Cast<object>().GroupBy(GroupSelector);
-                var orderedGroups = GetOrderedGroups(groups);
+                IEnumerable<IGrouping<object, object>> groups = this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector);
+                IEnumerable<IGrouping<object, object>> orderedGroups = this.GetOrderedGroups(groups);
 
-                foreach (var group in orderedGroups)
+                foreach (IGrouping<object, object> group in orderedGroups)
                 {
                     // Create a container for each group
-                    var groupContainer = new StackPanel
+                    StackPanel groupContainer = new()
                     {
-                        Spacing = ItemSpacing,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch
+                        Spacing = this.ItemSpacing,
+                        HorizontalAlignment = HorizontalAlignment.Stretch
                     };
 
                     if (group.Key is string groupName && !string.IsNullOrEmpty(groupName))
                     {
                         // Add group header (not virtualized)
-                        var headerControl = new GroupedTileListBoxGroupHeader
+                        GroupedTileListBoxGroupHeader headerControl = new()
                         {
                             Text = groupName
                         };
 
-                        if (this._cachedHeaderHeight is null)
+                        if (this.cachedHeaderHeight is null)
                         {
                             EventHandler? layoutHandler = null;
                             layoutHandler = (sender, args) =>
+                            {
+                                if (sender is Control control && control.Bounds.Height > 0)
                                 {
-                                    if (sender is Control control && control.Bounds.Height > 0)
-                                    {
-                                        _cachedHeaderHeight = control.Bounds.Height;
-                                        // Unsubscribe to avoid memory leak
-                                        control.LayoutUpdated -= layoutHandler;
-                                    }
-                                };
+                                    this.cachedHeaderHeight = control.Bounds.Height;
+                                    // Unsubscribe to avoid memory leak
+                                    control.LayoutUpdated -= layoutHandler;
+                                }
+                            };
                             headerControl.LayoutUpdated += layoutHandler;
                         }
 
@@ -442,105 +395,109 @@ public class GroupedTileListBox : TemplatedControl
                     }
 
                     // Add ItemsRepeater for group items (virtualized)
-                    var groupRepeater = new ItemsRepeater
+                    ItemsRepeater groupRepeater = new()
                     {
                         ItemsSource = group.ToList(),
-                        Margin = new Thickness(0, 0, 0, ItemSpacing),
+                        Margin = new Thickness(0, 0, 0, this.ItemSpacing),
                         Layout = new WrapLayout
                         {
                             Orientation = Orientation.Horizontal,
-                            HorizontalSpacing = ItemSpacing,
-                            VerticalSpacing = ItemSpacing
+                            HorizontalSpacing = this.ItemSpacing,
+                            VerticalSpacing = this.ItemSpacing
                         }
                     };
 
                     // Create item template that wraps in container with fixed size
                     groupRepeater.ItemTemplate = new FuncDataTemplate<object>((item, scope) =>
                     {
-                        var content = ItemTemplate?.Build(item);
+                        Control? content = this.ItemTemplate?.Build(item);
                         if (content != null)
                         {
                             content.DataContext = item;
                             return new GroupedTileListBoxItem
                             {
                                 Content = content,
-                                Width = ItemWidth,
-                                Height = ItemHeight
+                                Width = this.ItemWidth,
+                                Height = this.ItemHeight
                             };
                         }
+
                         return new GroupedTileListBoxItem
                         {
-                            Width = ItemWidth,
-                            Height = ItemHeight
+                            Width = this.ItemWidth,
+                            Height = this.ItemHeight
                         };
                     });
 
-                    groupRepeater.ElementPrepared += OnElementPrepared;
+                    groupRepeater.ElementPrepared += this.OnElementPrepared;
 
                     groupContainer.Children.Add(groupRepeater);
                     stackPanel.Children.Add(groupContainer);
                 }
             }
 
-            if (_scrollViewer != null)
+            if (this.scrollViewer != null)
             {
-                _scrollViewer.Content = stackPanel;
+                this.scrollViewer.Content = stackPanel;
             }
         }
-        else if (_scrollViewer != null)
+        else if (this.scrollViewer != null)
         {
             // No grouping - create single ItemsRepeater dynamically
 
             // Create new ItemsRepeater for non-grouped mode
-            _itemsRepeater = new ItemsRepeater
+            this.itemsRepeater = new ItemsRepeater
             {
-                ItemsSource = ItemsSource,
-                Margin = Padding,
+                ItemsSource = this.ItemsSource,
+                Margin = this.Padding,
                 Layout = new WrapLayout
                 {
                     Orientation = Orientation.Horizontal,
-                    HorizontalSpacing = ItemSpacing,
-                    VerticalSpacing = ItemSpacing
+                    HorizontalSpacing = this.ItemSpacing,
+                    VerticalSpacing = this.ItemSpacing
                 }
             };
 
             // Wrap ItemTemplate in container with fixed size (matches grouped mode pattern)
-            _itemsRepeater.ItemTemplate = new FuncDataTemplate<object>((item, scope) =>
+            this.itemsRepeater.ItemTemplate = new FuncDataTemplate<object>((item, scope) =>
             {
-                var content = ItemTemplate?.Build(item);
+                Control? content = this.ItemTemplate?.Build(item);
                 if (content != null)
                 {
                     content.DataContext = item;
                     return new GroupedTileListBoxItem
                     {
                         Content = content,
-                        Width = ItemWidth,
-                        Height = ItemHeight
+                        Width = this.ItemWidth,
+                        Height = this.ItemHeight
                     };
                 }
+
                 return new GroupedTileListBoxItem
                 {
-                    Width = ItemWidth,
-                    Height = ItemHeight
+                    Width = this.ItemWidth,
+                    Height = this.ItemHeight
                 };
             });
 
-            _itemsRepeater.ElementPrepared += OnElementPrepared;
+            this.itemsRepeater.ElementPrepared += this.OnElementPrepared;
 
-            _scrollViewer.Content = _itemsRepeater;
+            this.scrollViewer.Content = this.itemsRepeater;
         }
     }
 
     private void OnGroupingPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        InvalidateIndexMappings();
-        UpdateItemsRepeater();
+        this.InvalidateIndexMappings();
+        this.UpdateItemsRepeater();
     }
 
     private void OnElementPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs e)
     {
         if (e.Element is not GroupedTileListBoxItem container || sender is not ItemsRepeater repeater)
+        {
             return;
+        }
 
         // Get the actual item from the repeater's ItemsSource at this index
         object? item = repeater.ItemsSource switch
@@ -557,24 +514,26 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         // Update selection state
-        container.IsSelected = IsItemSelected(item);
+        container.IsSelected = this.IsItemSelected(item);
         container.ItemIndex = e.Index;
 
         // Wire up pointer pressed event
-        container.PointerPressed -= OnContainerPointerPressed;
-        container.PointerPressed += OnContainerPointerPressed;
+        container.PointerPressed -= this.OnContainerPointerPressed;
+        container.PointerPressed += this.OnContainerPointerPressed;
     }
 
     private void OnContainerPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (sender is not GroupedTileListBoxItem container)
+        {
             return;
+        }
 
         // Get the actual data item from the content's DataContext
-        var item = (container.Content as Control)?.DataContext;
+        object? item = (container.Content as Control)?.DataContext;
         if (item != null)
         {
-            SelectItem(item);
+            this.SelectItem(item);
         }
     }
 
@@ -585,45 +544,47 @@ public class GroupedTileListBox : TemplatedControl
         this.SelectedIndex = newIndex;
 
         // Update visual state of realized containers
-        UpdateRealizedContainerSelection();
+        this.UpdateRealizedContainerSelection();
     }
 
     private void OnSelectedItemChanged(AvaloniaPropertyChangedEventArgs e)
     {
         // External change to SelectedItem property
-        if (!IsItemSelected(e.NewValue))
+        if (!this.IsItemSelected(e.NewValue))
         {
-            SelectItem(e.NewValue);
+            this.SelectItem(e.NewValue);
         }
     }
 
     private void OnSelectedIndexChanged(AvaloniaPropertyChangedEventArgs e)
     {
         // External change to SelectedIndex property
-        var newIndex = (int)e.NewValue!;
-        if (!IsIndexSelected(newIndex))
+        int newIndex = (int)e.NewValue!;
+        if (!this.IsIndexSelected(newIndex))
         {
-            SelectItemAtIndex(newIndex);
+            this.SelectItemAtIndex(newIndex);
         }
     }
 
     private void UpdateRealizedContainerSelection()
     {
-        if (_scrollViewer?.Content == null)
+        if (this.scrollViewer?.Content == null)
+        {
             return;
+        }
 
-        if (_useGrouping && _scrollViewer.Content is StackPanel stackPanel)
+        if (this.useGrouping && this.scrollViewer.Content is StackPanel stackPanel)
         {
             // Update selection in all group ItemsRepeaters
-            foreach (var repeater in GetAllItemsRepeaters(stackPanel))
+            foreach (ItemsRepeater repeater in GetAllItemsRepeaters(stackPanel))
             {
-                UpdateRepeaterSelection(repeater);
+                this.UpdateRepeaterSelection(repeater);
             }
         }
-        else if (_itemsRepeater != null)
+        else if (this.itemsRepeater != null)
         {
             // Update selection in single ItemsRepeater (non-grouped)
-            UpdateRepeaterSelection(_itemsRepeater);
+            this.UpdateRepeaterSelection(this.itemsRepeater);
         }
     }
 
@@ -641,7 +602,9 @@ public class GroupedTileListBox : TemplatedControl
     {
         // Get the total count of items in the ItemsSource
         if (repeater.ItemsSource is not IEnumerable itemsSource)
+        {
             return;
+        }
 
         int count = itemsSource is IList list
             ? list.Count
@@ -651,15 +614,17 @@ public class GroupedTileListBox : TemplatedControl
         // TryGetElement returns null for non-realized (virtualized) items
         for (int i = 0; i < count; i++)
         {
-            var element = repeater.TryGetElement(i);
+            Control? element = repeater.TryGetElement(i);
             if (element == null)
-                continue;  // Item not realized (not in viewport), skip
+            {
+                continue; // Item not realized (not in viewport), skip
+            }
 
             if (element is GroupedTileListBoxItem container)
             {
                 // Get the actual data item from the content's DataContext
-                var item = (container.Content as Control)?.DataContext;
-                container.IsSelected = IsItemSelected(item);
+                object? item = (container.Content as Control)?.DataContext;
+                container.IsSelected = this.IsItemSelected(item);
             }
         }
     }
@@ -669,10 +634,10 @@ public class GroupedTileListBox : TemplatedControl
         base.OnSizeChanged(e);
 
         // Invalidate cached items per row when width changes
-        if (Math.Abs(e.NewSize.Width - _lastKnownWidth) > 0.1)
+        if (Math.Abs(e.NewSize.Width - this.lastKnownWidth) > 0.1)
         {
-            _cachedItemsPerRow = -1;
-            _lastKnownWidth = e.NewSize.Width;
+            this.cachedItemsPerRow = -1;
+            this.lastKnownWidth = e.NewSize.Width;
         }
     }
 
@@ -680,26 +645,32 @@ public class GroupedTileListBox : TemplatedControl
     {
         base.OnKeyDown(e);
 
-        if (e.Handled || ItemsSource == null)
+        if (e.Handled || this.ItemsSource == null)
+        {
             return;
+        }
 
-        var currentIndex = _selectedIndex;
-        var itemCount = GetItemCount();
+        int currentIndex = this.selectedIndex;
+        int itemCount = this.GetItemCount();
 
         if (itemCount == 0)
+        {
             return;
+        }
 
         int newIndex = currentIndex;
 
         // For Left/Right, use visual order navigation (respects grouping)
         if (e.Key == Key.Left || e.Key == Key.Right)
         {
-            var currentItem = _selectedItem;
-            int currentVisualIndex = GetVisualIndexFromItem(currentItem);
+            object? currentItem = this.selectedItem;
+            int currentVisualIndex = this.GetVisualIndexFromItem(currentItem);
 
             // If mapping failed, fall back to source index as visual index
             if (currentVisualIndex < 0)
+            {
                 currentVisualIndex = currentIndex;
+            }
 
             int newVisualIndex;
             if (e.Key == Key.Left)
@@ -718,11 +689,11 @@ public class GroupedTileListBox : TemplatedControl
             }
 
             // Convert visual index back to source item
-            var newItem = GetItemFromVisualIndex(newVisualIndex);
+            object? newItem = this.GetItemFromVisualIndex(newVisualIndex);
             if (newItem != null)
             {
-                SelectItem(newItem);
-                newIndex = _selectedIndex;
+                this.SelectItem(newItem);
+                newIndex = this.selectedIndex;
             }
         }
         else
@@ -730,43 +701,48 @@ public class GroupedTileListBox : TemplatedControl
             // For Up/Down/Home/End, continue using source order
             switch (e.Key)
             {
-
                 case Key.Up:
                     // Don't change selection if already at the top
-                    if (IsInFirstRow(currentIndex))
+                    if (this.IsInFirstRow(currentIndex))
+                    {
                         return;
-                    newIndex = CalculateUpIndex(currentIndex);
+                    }
+
+                    newIndex = this.CalculateUpIndex(currentIndex);
                     break;
 
                 case Key.Down:
                     // Don't change selection if already at the bottom
-                    if (IsInLastRow(currentIndex, itemCount))
+                    if (this.IsInLastRow(currentIndex, itemCount))
+                    {
                         return;
-                    newIndex = CalculateDownIndex(currentIndex, itemCount);
+                    }
+
+                    newIndex = this.CalculateDownIndex(currentIndex, itemCount);
                     break;
 
                 case Key.Home:
                     // Select first item in visual order
+                {
+                    object? firstItem = this.GetItemFromVisualIndex(0);
+                    if (firstItem != null)
                     {
-                        var firstItem = GetItemFromVisualIndex(0);
-                        if (firstItem != null)
-                        {
-                            SelectItem(firstItem);
-                            newIndex = _selectedIndex;
-                        }
+                        this.SelectItem(firstItem);
+                        newIndex = this.selectedIndex;
                     }
+                }
                     break;
 
                 case Key.End:
                     // Select last item in visual order
+                {
+                    object? lastItem = this.GetItemFromVisualIndex(itemCount - 1);
+                    if (lastItem != null)
                     {
-                        var lastItem = GetItemFromVisualIndex(itemCount - 1);
-                        if (lastItem != null)
-                        {
-                            SelectItem(lastItem);
-                            newIndex = _selectedIndex;
-                        }
+                        this.SelectItem(lastItem);
+                        newIndex = this.selectedIndex;
                     }
+                }
                     break;
 
                 default:
@@ -775,36 +751,42 @@ public class GroupedTileListBox : TemplatedControl
 
             if (newIndex != currentIndex)
             {
-                SelectItemAtIndex(newIndex);
+                this.SelectItemAtIndex(newIndex);
             }
         }
 
         // Scroll to show the newly selected item
         if (newIndex != currentIndex)
         {
-            ScrollIntoView(newIndex);
+            this.ScrollIntoView(newIndex);
             e.Handled = true;
         }
     }
 
     private int CalculateItemsPerRow()
     {
-        if (_cachedItemsPerRow > 0)
-            return _cachedItemsPerRow;
+        if (this.cachedItemsPerRow > 0)
+        {
+            return this.cachedItemsPerRow;
+        }
 
-        if (_scrollViewer == null)
+        if (this.scrollViewer == null)
+        {
             return 1;
+        }
 
-        var availableWidth = _scrollViewer.Bounds.Width - _scrollViewer.Padding.Left - _scrollViewer.Padding.Right;
+        double availableWidth = this.scrollViewer.Bounds.Width - this.scrollViewer.Padding.Left - this.scrollViewer.Padding.Right;
 
         if (availableWidth <= 0)
+        {
             return 1;
+        }
 
         // Calculate items per row: floor((width) / (itemWidth + spacing))
-        var itemsPerRow = (int)Math.Floor(availableWidth / (ItemWidth + ItemSpacing));
-        _cachedItemsPerRow = Math.Max(1, itemsPerRow);
+        int itemsPerRow = (int)Math.Floor(availableWidth / (this.ItemWidth + this.ItemSpacing));
+        this.cachedItemsPerRow = Math.Max(1, itemsPerRow);
 
-        return _cachedItemsPerRow;
+        return this.cachedItemsPerRow;
     }
 
     /// <summary>
@@ -812,18 +794,14 @@ public class GroupedTileListBox : TemplatedControl
     /// Uses integer division: (itemCount - 1) / itemsPerRow.
     /// The -1 ensures correct rounding for exact multiples (e.g., 20 items, 5 per row → row 3, not row 4).
     /// </summary>
-    private static int CalculateLastRowNumber(int itemCount, int itemsPerRow)
-    {
-        return (itemCount - 1) / itemsPerRow;
-    }
+    private static int CalculateLastRowNumber(int itemCount, int itemsPerRow) =>
+        (itemCount - 1) / itemsPerRow;
 
     /// <summary>
     /// Calculates the starting index of the last row for a given item count and items per row.
     /// </summary>
-    private static int CalculateLastRowStart(int itemCount, int itemsPerRow)
-    {
-        return CalculateLastRowNumber(itemCount, itemsPerRow) * itemsPerRow;
-    }
+    private static int CalculateLastRowStart(int itemCount, int itemsPerRow) =>
+        CalculateLastRowNumber(itemCount, itemsPerRow) * itemsPerRow;
 
     /// <summary>
     /// Checks if the current index is in the first row.
@@ -831,36 +809,46 @@ public class GroupedTileListBox : TemplatedControl
     private bool IsInFirstRow(int currentIndex)
     {
         if (currentIndex < 0)
+        {
             return false;
+        }
 
-        var itemsPerRow = CalculateItemsPerRow();
+        int itemsPerRow = this.CalculateItemsPerRow();
 
-        if (!_useGrouping || ItemsSource == null)
+        if (!this.useGrouping || this.ItemsSource == null)
         {
             // Simple case: first row is indices 0 to itemsPerRow-1
             return currentIndex < itemsPerRow;
         }
 
         // Grouped case: check if in first row of first group
-        if (GroupSelector == null)
+        if (this.GroupSelector == null)
+        {
             return currentIndex < itemsPerRow;
+        }
 
-        var allItems = ItemsSource.Cast<object>().ToList();
+        List<object> allItems = this.ItemsSource.Cast<object>().ToList();
         if (currentIndex >= allItems.Count)
+        {
             return false;
+        }
 
-        var groups = GetIndexedGroups(allItems, GroupSelector);
+        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(allItems, this.GroupSelector);
 
         // Find the first group
-        var firstGroup = groups.FirstOrDefault();
+        IGrouping<object, IndexedItem>? firstGroup = groups.FirstOrDefault();
         if (firstGroup == null)
+        {
             return false;
+        }
 
-        var firstGroupItems = firstGroup.ToList();
-        var indexInGroup = firstGroupItems.FindIndex(x => x.Index == currentIndex);
+        List<IndexedItem> firstGroupItems = firstGroup.ToList();
+        int indexInGroup = firstGroupItems.FindIndex(x => x.Index == currentIndex);
 
         if (indexInGroup < 0)
+        {
             return false; // Not in first group
+        }
 
         // Check if in first row of first group
         return indexInGroup < itemsPerRow;
@@ -872,33 +860,41 @@ public class GroupedTileListBox : TemplatedControl
     private bool IsInLastRow(int currentIndex, int itemCount)
     {
         if (currentIndex < 0 || currentIndex >= itemCount)
+        {
             return false;
+        }
 
-        var itemsPerRow = CalculateItemsPerRow();
+        int itemsPerRow = this.CalculateItemsPerRow();
 
-        if (!_useGrouping || ItemsSource == null || GroupSelector == null)
+        if (!this.useGrouping || this.ItemsSource == null || this.GroupSelector == null)
         {
             int lastRowStart = CalculateLastRowStart(itemCount, itemsPerRow);
             return currentIndex >= lastRowStart;
         }
 
         // Grouped case: check if in last row of last group
-        var allItems = ItemsSource.Cast<object>().ToList();
+        List<object> allItems = this.ItemsSource.Cast<object>().ToList();
         if (currentIndex >= allItems.Count)
+        {
             return false;
+        }
 
-        var groups = GetIndexedGroups(allItems, this.GroupSelector);
+        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(allItems, this.GroupSelector);
 
         // Find the last group
-        var lastGroup = groups.LastOrDefault();
+        IGrouping<object, IndexedItem>? lastGroup = groups.LastOrDefault();
         if (lastGroup == null)
+        {
             return false;
+        }
 
-        var lastGroupItems = lastGroup.ToList();
-        var indexInGroup = lastGroupItems.FindIndex(x => x.Index == currentIndex);
+        List<IndexedItem> lastGroupItems = lastGroup.ToList();
+        int indexInGroup = lastGroupItems.FindIndex(x => x.Index == currentIndex);
 
         if (indexInGroup < 0)
+        {
             return false; // Not in last group
+        }
 
         // Check if in last row of last group
         int lastGroupRowStart = CalculateLastRowStart(lastGroupItems.Count, itemsPerRow);
@@ -910,33 +906,33 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private int CalculateVerticalNavigationIndex(int currentIndex, int itemCount, bool moveUp)
     {
-        var itemsPerRow = CalculateItemsPerRow();
-        var offset = moveUp ? -itemsPerRow : itemsPerRow;
-        var fallback = moveUp
+        int itemsPerRow = this.CalculateItemsPerRow();
+        int offset = moveUp ? -itemsPerRow : itemsPerRow;
+        int fallback = moveUp
             ? Math.Max(0, currentIndex + offset)
             : Math.Min(itemCount - 1, currentIndex + offset);
 
         // If no grouping, use simple calculation
-        if (!_useGrouping || ItemsSource == null)
+        if (!this.useGrouping || this.ItemsSource == null)
         {
             return fallback;
         }
 
         // Get all items and group them
-        var allItems = ItemsSource.Cast<object>().ToList();
+        List<object> allItems = this.ItemsSource.Cast<object>().ToList();
 
-        if (GroupSelector == null || currentIndex < 0 || currentIndex >= allItems.Count)
+        if (this.GroupSelector == null || currentIndex < 0 || currentIndex >= allItems.Count)
         {
             return fallback;
         }
 
-        var groups = GetIndexedGroups(allItems, this.GroupSelector);
+        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(allItems, this.GroupSelector);
 
         // Find current item's group and position within group
-        foreach (var group in groups)
+        foreach (IGrouping<object, IndexedItem> group in groups)
         {
-            var groupItems = group.ToList();
-            var indexInGroup = groupItems.FindIndex(x => x.Index == currentIndex);
+            List<IndexedItem> groupItems = group.ToList();
+            int indexInGroup = groupItems.FindIndex(x => x.Index == currentIndex);
 
             if (indexInGroup >= 0)
             {
@@ -958,10 +954,10 @@ public class GroupedTileListBox : TemplatedControl
                     else
                     {
                         // Move to previous group's last row
-                        var groupIndex = groups.IndexOf(group);
+                        int groupIndex = groups.IndexOf(group);
                         if (groupIndex > 0)
                         {
-                            var prevGroup = groups[groupIndex - 1].ToList();
+                            List<IndexedItem> prevGroup = groups[groupIndex - 1].ToList();
                             if (prevGroup.Count > 0)
                             {
                                 int prevGroupLastRow = CalculateLastRowNumber(prevGroup.Count, itemsPerRow);
@@ -985,10 +981,10 @@ public class GroupedTileListBox : TemplatedControl
                     else
                     {
                         // Move to next group's first row
-                        var groupIndex = groups.IndexOf(group);
+                        int groupIndex = groups.IndexOf(group);
                         if (groupIndex < groups.Count - 1)
                         {
-                            var nextGroup = groups[groupIndex + 1].ToList();
+                            List<IndexedItem> nextGroup = groups[groupIndex + 1].ToList();
                             if (nextGroup.Count > 0)
                             {
                                 int targetIndexInNextGroup = Math.Min(col, nextGroup.Count - 1);
@@ -997,6 +993,7 @@ public class GroupedTileListBox : TemplatedControl
                         }
                     }
                 }
+
                 break;
             }
         }
@@ -1007,64 +1004,64 @@ public class GroupedTileListBox : TemplatedControl
     /// <summary>
     /// Calculates the index when navigating up, accounting for group boundaries.
     /// </summary>
-    private int CalculateUpIndex(int currentIndex)
-    {
-        return CalculateVerticalNavigationIndex(currentIndex, 0, moveUp: true);
-    }
+    private int CalculateUpIndex(int currentIndex) =>
+        this.CalculateVerticalNavigationIndex(currentIndex, 0, true);
 
     /// <summary>
     /// Calculates the index when navigating down, accounting for group boundaries.
     /// </summary>
-    private int CalculateDownIndex(int currentIndex, int itemCount)
-    {
-        return CalculateVerticalNavigationIndex(currentIndex, itemCount, moveUp: false);
-    }
+    private int CalculateDownIndex(int currentIndex, int itemCount) =>
+        this.CalculateVerticalNavigationIndex(currentIndex, itemCount, false);
 
-    private int GetItemCount()
-    {
-        return GetItemCount(ItemsSource);
-    }
+    private int GetItemCount() =>
+        GetItemCount(this.ItemsSource);
 
     private static int GetItemCount(IEnumerable? itemsSource)
     {
         if (itemsSource == null)
+        {
             return 0;
+        }
 
         if (itemsSource is IList list)
+        {
             return list.Count;
+        }
 
         return itemsSource.Cast<object?>().Count();
     }
 
     private void InvalidateIndexMappings()
     {
-        _indexMappingsDirty = true;
-        _visualToSourceMap = null;
-        _sourceToVisualMap = null;
+        this.indexMappingsDirty = true;
+        this.visualToSourceMap = null;
+        this.sourceToVisualMap = null;
     }
 
     private void BuildIndexMappings()
     {
-        if (!_indexMappingsDirty || ItemsSource == null)
+        if (!this.indexMappingsDirty || this.ItemsSource == null)
+        {
             return;
+        }
 
-        _visualToSourceMap = new List<object>();
-        _sourceToVisualMap = new Dictionary<object, int>();
+        this.visualToSourceMap = new List<object>();
+        this.sourceToVisualMap = new Dictionary<object, int>();
 
-        if (_useGrouping && GroupSelector != null)
+        if (this.useGrouping && this.GroupSelector != null)
         {
             // Group the items and apply ordering
-            var groups = ItemsSource.Cast<object>().GroupBy(GroupSelector);
-            var orderedGroups = GetOrderedGroups(groups);
+            IEnumerable<IGrouping<object, object>> groups = this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector);
+            IEnumerable<IGrouping<object, object>> orderedGroups = this.GetOrderedGroups(groups);
 
             // Add all items from ordered groups to List (this is the visual order)
-            foreach (var group in orderedGroups)
+            foreach (IGrouping<object, object> group in orderedGroups)
             {
                 foreach (var item in group)
                 {
                     if (item != null)
                     {
-                        _visualToSourceMap.Add(item);
+                        this.visualToSourceMap.Add(item);
                     }
                 }
             }
@@ -1072,122 +1069,136 @@ public class GroupedTileListBox : TemplatedControl
         else
         {
             // No grouping - add items in source order
-            foreach (var item in ItemsSource)
+            foreach (object? item in this.ItemsSource)
             {
                 if (item != null)
                 {
-                    _visualToSourceMap.Add(item);
+                    this.visualToSourceMap.Add(item);
                 }
             }
         }
 
         // Build Dictionary from List (item → visual index)
-        for (int i = 0; i < _visualToSourceMap.Count; i++)
+        for (int i = 0; i < this.visualToSourceMap.Count; i++)
         {
-            object item = _visualToSourceMap[i];
-            this._sourceToVisualMap.TryAdd(item, i);
+            object item = this.visualToSourceMap[i];
+            this.sourceToVisualMap.TryAdd(item, i);
         }
 
-        _indexMappingsDirty = false;
+        this.indexMappingsDirty = false;
     }
 
     private int GetVisualIndexFromItem(object? item)
     {
         if (item == null)
+        {
             return -1;
+        }
 
-        BuildIndexMappings();
+        this.BuildIndexMappings();
 
-        return _sourceToVisualMap != null && _sourceToVisualMap.TryGetValue(item, out int index)
+        return this.sourceToVisualMap != null && this.sourceToVisualMap.TryGetValue(item, out int index)
             ? index
             : -1;
     }
 
     private object? GetItemFromVisualIndex(int visualIndex)
     {
-        BuildIndexMappings();
+        this.BuildIndexMappings();
 
-        return visualIndex >= 0 && visualIndex < (_visualToSourceMap?.Count ?? 0)
-            ? _visualToSourceMap![visualIndex]
+        return visualIndex >= 0 && visualIndex < (this.visualToSourceMap?.Count ?? 0)
+            ? this.visualToSourceMap![visualIndex]
             : null;
     }
 
     private void ScrollIntoView(int sourceIndex)
     {
-        if (_scrollViewer == null || ItemsSource == null)
+        if (this.scrollViewer == null || this.ItemsSource == null)
+        {
             return;
+        }
 
         // Get the item at this source index
-        var allItems = ItemsSource.Cast<object>().ToList();
+        List<object> allItems = this.ItemsSource.Cast<object>().ToList();
         if (sourceIndex < 0 || sourceIndex >= allItems.Count)
+        {
             return;
+        }
 
-        var item = allItems[sourceIndex];
+        object item = allItems[sourceIndex];
 
         // Find the visual element for this item
         Control? targetElement = null;
 
-        if (_useGrouping)
+        if (this.useGrouping)
         {
             // In grouped mode, find the element in one of the group ItemsRepeaters
-            targetElement = FindElementInGroupedLayout(sourceIndex);
+            targetElement = this.FindElementInGroupedLayout(sourceIndex);
         }
-        else if (_itemsRepeater != null)
+        else if (this.itemsRepeater != null)
         {
             // In non-grouped mode, get element from main ItemsRepeater
-            targetElement = _itemsRepeater.TryGetElement(sourceIndex) as Control;
+            targetElement = this.itemsRepeater.TryGetElement(sourceIndex) as Control;
         }
 
         if (targetElement != null)
         {
             // Check if element is already fully visible
-            if (IsElementFullyVisible(targetElement))
+            if (this.IsElementFullyVisible(targetElement))
             {
                 return; // Already visible, no need to scroll
             }
 
             // Scroll to make the element visible with minimal movement
-            ScrollToElement(targetElement);
+            this.ScrollToElement(targetElement);
         }
         else
         {
             // Element is not realized, calculate estimated scroll offset
-            double targetY = CalculateScrollOffsetForItem(item);
-            _scrollViewer.Offset = new Vector(_scrollViewer.Offset.X, targetY);
+            double targetY = this.CalculateScrollOffsetForItem(item);
+            this.scrollViewer.Offset = new Vector(this.scrollViewer.Offset.X, targetY);
         }
     }
 
     private double CalculateScrollOffsetForItem(object item)
     {
-        if (_scrollViewer == null)
+        if (this.scrollViewer == null)
+        {
             return 0;
+        }
 
-        int visualIndex = GetVisualIndexFromItem(item);
+        int visualIndex = this.GetVisualIndexFromItem(item);
         if (visualIndex < 0)
+        {
             return 0;
+        }
 
-        var itemsPerRow = CalculateItemsPerRow();
+        int itemsPerRow = this.CalculateItemsPerRow();
         if (itemsPerRow <= 0)
+        {
             return 0;
+        }
 
-        if (!_useGrouping)
+        if (!this.useGrouping)
         {
             // Simple calculation for non-grouped mode
-            var row = visualIndex / itemsPerRow;
-            return row * (ItemHeight + ItemSpacing);
+            int row = visualIndex / itemsPerRow;
+            return row * (this.ItemHeight + this.ItemSpacing);
         }
 
         // Grouped mode: account for group headers
-        if (GroupSelector == null || ItemsSource == null)
+        if (this.GroupSelector == null || this.ItemsSource == null)
+        {
             return 0;
+        }
 
-        var groups = ItemsSource.Cast<object>().GroupBy(GroupSelector);
-        var orderedGroups = GetOrderedGroups(groups);
+        IEnumerable<IGrouping<object, object>> groups = this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector);
+        IEnumerable<IGrouping<object, object>> orderedGroups = this.GetOrderedGroups(groups);
 
         double offset = 0;
         int itemsSoFar = 0;
 
-        foreach (var group in orderedGroups)
+        foreach (IGrouping<object, object> group in orderedGroups)
         {
             int groupItemCount = group.Count();
             bool hasHeader = group.Key is string groupName && !string.IsNullOrEmpty(groupName);
@@ -1195,7 +1206,7 @@ public class GroupedTileListBox : TemplatedControl
             // Add header height for this group (only if it has a visible header)
             if (hasHeader)
             {
-                offset += (_cachedHeaderHeight ?? 0) + ItemSpacing;
+                offset += (this.cachedHeaderHeight ?? 0) + this.ItemSpacing;
             }
 
             if (itemsSoFar + groupItemCount > visualIndex)
@@ -1203,15 +1214,15 @@ public class GroupedTileListBox : TemplatedControl
                 // Target item is in this group - calculate position within this group
                 int itemIndexInGroup = visualIndex - itemsSoFar;
                 int rowInGroup = itemIndexInGroup / itemsPerRow;
-                offset += rowInGroup * (ItemHeight + ItemSpacing);
+                offset += rowInGroup * (this.ItemHeight + this.ItemSpacing);
 
                 break;
             }
 
             // Add remaining group height (items + spacing)
             int rowsInGroup = (int)Math.Ceiling((double)groupItemCount / itemsPerRow);
-            offset += rowsInGroup * (ItemHeight + ItemSpacing);
-            offset += ItemSpacing; // Group spacing
+            offset += rowsInGroup * (this.ItemHeight + this.ItemSpacing);
+            offset += this.ItemSpacing; // Group spacing
 
             itemsSoFar += groupItemCount;
         }
@@ -1224,32 +1235,40 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Control? FindElementInGroupedLayout(int index)
     {
-        if (_scrollViewer?.Content is not StackPanel stackPanel)
+        if (this.scrollViewer?.Content is not StackPanel stackPanel)
+        {
             return null;
+        }
 
-        var allItems = ItemsSource?.Cast<object>().ToList();
+        List<object>? allItems = this.ItemsSource?.Cast<object>().ToList();
         if (allItems == null || index < 0 || index >= allItems.Count)
+        {
             return null;
+        }
 
-        var targetItem = allItems[index];
+        object targetItem = allItems[index];
 
         // Search through all group ItemsRepeaters
-        foreach (var repeater in GetAllItemsRepeaters(stackPanel))
+        foreach (ItemsRepeater repeater in GetAllItemsRepeaters(stackPanel))
         {
             int count = GetItemCount(repeater.ItemsSource);
             if (count == 0)
+            {
                 continue;
+            }
 
             // Search through all ItemsSource indices
             for (int i = 0; i < count; i++)
             {
-                var element = repeater.TryGetElement(i);
+                Control? element = repeater.TryGetElement(i);
                 if (element == null)
-                    continue;  // Item not realized (not in viewport), skip
+                {
+                    continue; // Item not realized (not in viewport), skip
+                }
 
                 if (element is GroupedTileListBoxItem container)
                 {
-                    var itemDataContext = (container.Content as Control)?.DataContext;
+                    object? itemDataContext = (container.Content as Control)?.DataContext;
                     if (ReferenceEquals(itemDataContext, targetItem))
                     {
                         return container;
@@ -1267,12 +1286,16 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Rect? GetElementRectInScrollViewer(Control element)
     {
-        if (_scrollViewer == null)
+        if (this.scrollViewer == null)
+        {
             return null;
+        }
 
-        var elementPosition = element.TranslatePoint(new Point(0, 0), _scrollViewer);
+        Point? elementPosition = element.TranslatePoint(new Point(0, 0), this.scrollViewer);
         if (elementPosition == null)
+        {
             return null;
+        }
 
         return new Rect(elementPosition.Value, element.Bounds.Size);
     }
@@ -1282,14 +1305,18 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private bool IsElementFullyVisible(Control element)
     {
-        if (_scrollViewer == null)
+        if (this.scrollViewer == null)
+        {
             return false;
+        }
 
-        var elementRect = GetElementRectInScrollViewer(element);
+        Rect? elementRect = this.GetElementRectInScrollViewer(element);
         if (elementRect == null)
+        {
             return false;
+        }
 
-        var viewportBounds = new Rect(0, 0, _scrollViewer.Viewport.Width, _scrollViewer.Viewport.Height);
+        Rect viewportBounds = new(0, 0, this.scrollViewer.Viewport.Width, this.scrollViewer.Viewport.Height);
 
         // Check if element is fully contained within viewport
         return viewportBounds.Contains(elementRect.Value);
@@ -1300,15 +1327,19 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private void ScrollToElement(Control element)
     {
-        if (_scrollViewer == null)
+        if (this.scrollViewer == null)
+        {
             return;
+        }
 
-        var elementRect = GetElementRectInScrollViewer(element);
+        Rect? elementRect = this.GetElementRectInScrollViewer(element);
         if (elementRect == null)
+        {
             return;
+        }
 
-        var currentOffset = _scrollViewer.Offset;
-        var viewportHeight = _scrollViewer.Viewport.Height;
+        Vector currentOffset = this.scrollViewer.Offset;
+        double viewportHeight = this.scrollViewer.Viewport.Height;
 
         double newY = currentOffset.Y;
 
@@ -1327,88 +1358,88 @@ public class GroupedTileListBox : TemplatedControl
         // Only update offset if it changed
         if (Math.Abs(newY - currentOffset.Y) > 0.1)
         {
-            _scrollViewer.Offset = new Vector(currentOffset.X, newY);
+            this.scrollViewer.Offset = new Vector(currentOffset.X, newY);
         }
     }
-
-    #region Selection Management
 
     private void SelectItem(object? item)
     {
         if (item == null)
         {
-            ClearSelection();
+            this.ClearSelection();
             return;
         }
 
-        int index = GetIndexOfItem(item);
+        int index = this.GetIndexOfItem(item);
         if (index < 0)
         {
-            ClearSelection();
+            this.ClearSelection();
             return;
         }
 
-        _selectedItem = item;
-        _selectedIndex = index;
+        this.selectedItem = item;
+        this.selectedIndex = index;
 
-        OnSelectionChanged(_selectedItem, _selectedIndex);
+        this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     }
 
     private void SelectItemAtIndex(int index)
     {
         if (index < 0)
         {
-            ClearSelection();
+            this.ClearSelection();
             return;
         }
 
-        object? item = GetItemAtIndex(index);
+        object? item = this.GetItemAtIndex(index);
         if (item == null)
         {
-            ClearSelection();
+            this.ClearSelection();
             return;
         }
 
-        _selectedItem = item;
-        _selectedIndex = index;
+        this.selectedItem = item;
+        this.selectedIndex = index;
 
-        OnSelectionChanged(_selectedItem, _selectedIndex);
+        this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     }
 
     private void ClearSelection()
     {
-        if (_selectedItem == null)
+        if (this.selectedItem == null)
+        {
             return;
+        }
 
-        _selectedItem = null;
-        _selectedIndex = -1;
+        this.selectedItem = null;
+        this.selectedIndex = -1;
 
-        OnSelectionChanged(_selectedItem, _selectedIndex);
+        this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     }
 
-    private bool IsItemSelected(object? item)
-    {
-        return item != null && ReferenceEquals(item, _selectedItem);
-    }
+    private bool IsItemSelected(object? item) =>
+        item != null && ReferenceEquals(item, this.selectedItem);
 
-    private bool IsIndexSelected(int index)
-    {
-        return index >= 0 && index == _selectedIndex;
-    }
+    private bool IsIndexSelected(int index) =>
+        index >= 0 && index == this.selectedIndex;
 
     private object? GetItemAtIndex(int index)
     {
-        if (ItemsSource == null || index < 0)
+        if (this.ItemsSource == null || index < 0)
+        {
             return null;
+        }
 
-        if (ItemsSource is IList list)
+        if (this.ItemsSource is IList list)
         {
             if (index < list.Count)
+            {
                 return list[index];
+            }
         }
         else
         {
-            return ItemsSource.Cast<object?>().ElementAtOrDefault(index);
+            return this.ItemsSource.Cast<object?>().ElementAtOrDefault(index);
         }
 
         return null;
@@ -1416,19 +1447,24 @@ public class GroupedTileListBox : TemplatedControl
 
     private int GetIndexOfItem(object? item)
     {
-        if (ItemsSource == null || item == null)
+        if (this.ItemsSource == null || item == null)
+        {
             return -1;
+        }
 
-        if (ItemsSource is IList list)
+        if (this.ItemsSource is IList list)
         {
             return list.IndexOf(item);
         }
 
-        return ItemsSource.Cast<object?>()
+        return this.ItemsSource.Cast<object?>()
             .Select((currentItem, index) => new { Item = currentItem, Index = index })
             .FirstOrDefault(x => ReferenceEquals(x.Item, item))
             ?.Index ?? -1;
     }
 
-    #endregion
+    /// <summary>
+    /// Represents an item with its original index and group for navigation calculations.
+    /// </summary>
+    private sealed record IndexedItem(object Item, int Index, object Group);
 }

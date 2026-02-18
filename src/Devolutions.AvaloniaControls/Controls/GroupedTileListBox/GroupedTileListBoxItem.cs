@@ -12,27 +12,27 @@ namespace Devolutions.AvaloniaControls.Controls;
 [PseudoClasses(":selected")]
 public class GroupedTileListBoxItem : ContentControl
 {
-    /// <summary>
-    /// Defines the <see cref="IsSelected"/> property.
-    /// </summary>
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<GroupedTileListBoxItem, bool>(
             nameof(IsSelected));
 
-    /// <summary>
-    /// Defines the <see cref="ItemIndex"/> property.
-    /// </summary>
     public static readonly StyledProperty<int> ItemIndexProperty =
         AvaloniaProperty.Register<GroupedTileListBoxItem, int>(
-            nameof(ItemIndex), -1);
+            nameof(ItemIndex),
+            -1);
+
+    static GroupedTileListBoxItem()
+    {
+        IsSelectedProperty.Changed.AddClassHandler<GroupedTileListBoxItem>((x, e) => x.OnIsSelectedChanged(e));
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether this item is selected.
     /// </summary>
     public bool IsSelected
     {
-        get => GetValue(IsSelectedProperty);
-        set => SetValue(IsSelectedProperty, value);
+        get => this.GetValue(IsSelectedProperty);
+        set => this.SetValue(IsSelectedProperty, value);
     }
 
     /// <summary>
@@ -40,18 +40,12 @@ public class GroupedTileListBoxItem : ContentControl
     /// </summary>
     public int ItemIndex
     {
-        get => GetValue(ItemIndexProperty);
-        set => SetValue(ItemIndexProperty, value);
-    }
-
-    static GroupedTileListBoxItem()
-    {
-        IsSelectedProperty.Changed.AddClassHandler<GroupedTileListBoxItem>(
-            (x, e) => x.OnIsSelectedChanged(e));
+        get => this.GetValue(ItemIndexProperty);
+        set => this.SetValue(ItemIndexProperty, value);
     }
 
     private void OnIsSelectedChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        PseudoClasses.Set(":selected", IsSelected);
+        this.PseudoClasses.Set(":selected", this.IsSelected);
     }
 }

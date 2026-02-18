@@ -9,9 +9,6 @@ namespace Devolutions.AvaloniaControls.Controls;
 /// </summary>
 public class GroupedTileListBoxGroupHeader : TemplatedControl
 {
-    /// <summary>
-    /// Defines the <see cref="Text"/> property.
-    /// </summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<GroupedTileListBoxGroupHeader, string?>(
             nameof(Text));
@@ -21,7 +18,7 @@ public class GroupedTileListBoxGroupHeader : TemplatedControl
     /// </summary>
     public string? Text
     {
-        get => GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        get => this.GetValue(TextProperty);
+        set => this.SetValue(TextProperty, value);
     }
 }

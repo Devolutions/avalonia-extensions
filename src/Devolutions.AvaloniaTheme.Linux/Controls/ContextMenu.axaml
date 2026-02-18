@@ -1,12 +1,11 @@
 <!-- 
     Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/603a2bdb43b7e8b2d1c8919f9d0669af7b33f117/src/Avalonia.Themes.Fluent/Controls/ContextMenu.xaml
+    https://github.com/AvaloniaUI/Avalonia/blob/abe839e1c133b12524d8ba24fbc831e29e354a29/src/Avalonia.Themes.Fluent/Controls/ContextMenu.xaml
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
-
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <Border Background="{DynamicResource SystemAccentColor}"
@@ -38,22 +37,39 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
+  <!--  Added missing resource  -->
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
-  <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
 
-  <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}">
-    <Setter Property="Margin" Value="0" />
-    <Setter Property="Background" Value="{DynamicResource BorderColor}" />
-  </ControlTheme>
-
-  <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-    <Setter Property="Padding" Value="4 6 10 6" />
-  </ControlTheme>
-
-  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu" BasedOn="{StaticResource {x:Type ContextMenu}}">
-    <Setter Property="Background" Value="{DynamicResource ScrollControlBackground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-    <!-- <Setter Property="FontSize" Value="13" /> -->
-    <Setter Property="FontFamily" Value="{DynamicResource OpenSans}" />
+  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="WindowManagerAddShadowHint" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                MaxWidth="{TemplateBinding MaxWidth}"
+                MinHeight="{TemplateBinding MinHeight}"
+                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                            KeyboardNavigation.TabNavigation="Continue"
+                            Grid.IsSharedSizeScope="True" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
   </ControlTheme>
 </ResourceDictionary>

@@ -133,12 +133,7 @@
                Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
           <DataValidationErrors ClipToBounds="False">
             <Panel ClipToBounds="False">
-              <Border Name="PART_BorderElement"
-                      BorderThickness="{TemplateBinding BorderThickness}"
-                      BorderBrush="{TemplateBinding BorderBrush}"
-                      Background="{TemplateBinding Background}"
-                      CornerRadius="{TemplateBinding CornerRadius}"
-                      Padding="2 0 2 0 ">
+              <Border Name="PART_BorderElement">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                   <ContentPresenter Name="PrefixContent"
                                     Grid.Column="0"
@@ -234,13 +229,28 @@
               <Border Name="FocusBorderElement"
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"
-                      CornerRadius="2" />
+                      CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
             </Panel>
           </DataValidationErrors>
         </Panel>
       </ControlTemplate>
     </Setter>
 
+    <!-- These properties are defined as Styles so they can be overridden by derived ControlThemes (e.g. ComboBoxEditableTextBox) -->
+    <Style Selector="^ /template/ Border#PART_BorderElement">
+      <Setter Property="BoxShadow" Value="{DynamicResource TextBoxBoxShadow}" />
+      <Setter Property="Background" Value="{TemplateBinding Background}" />
+      <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+      <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
+      <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
+      <Setter Property="Padding" Value="{DynamicResource TextBoxPadding}" />
+    </Style>
+    <Style Selector="^ /template/ Border#BottomBorder">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderIsVisible}" />
+    </Style>
+    <Style Selector="^ /template/ Border#BottomBorderShadow">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderShadowIsVisible}" />
+    </Style>
 
     <Style Selector="^.borderless">
       <Style Selector="^ /template/ Border#PART_BorderElement">
@@ -301,9 +311,15 @@
     </Style>
 
     <Style Selector="^[AcceptsReturn=True]">
+      <Setter Property="Background" Value="{DynamicResource TextBoxMultiLineBackgroundBrush}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ZeroCornerRadius}" />
       <Setter Property="VerticalAlignment" Value="Stretch" />
       <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">
         <Setter Property="VerticalAlignment" Value="Top" />
+      </Style>
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <!-- Revert to default focus radius (2) for square multiline textboxes -->
+        <Setter Property="CornerRadius" Value="2" />
       </Style>
     </Style>
 

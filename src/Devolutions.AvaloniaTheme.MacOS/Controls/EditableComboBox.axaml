@@ -127,7 +127,7 @@
 
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^[IsSelected=True] /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />

@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
-             x:Class="SampleApp.DemoPages.TabControlDemo">
-
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000"
+             x:Class="SampleApp.DemoPages.TabControlDemo"
+             x:DataType="vm:TabControlViewModel">
 
   <StackPanel Orientation="Vertical" Spacing="20" Margin="5">
     <TextBlock TextWrapping="Wrap">Note that the whole TabControl will not automatically grow to the height of the longest Tab contents, so unless you set to a specific height or stretch, the height will jump when switching tabs. </TextBlock>
@@ -49,9 +49,9 @@
           </Border>
         </StackPanel>
       </StackPanel>
-
+    
       <StackPanel Spacing="20" Margin="5">
-        <Border Width="500" Padding="20">
+        <Border Width="500" Padding="20 0">
         <TabControl TabStripPlacement="Top">
           <TabItem Header="General">
             <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
@@ -72,19 +72,22 @@
             <TabItem Header="General">
               <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
             </TabItem>
+            <TabItem Header="General">
+              <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
+            </TabItem>
             <TabItem Header="Settings">
               <TextBlock Text="Content 2" VerticalAlignment="Top" />
             </TabItem>
-            <TabItem Header="Disabled Tab" IsEnabled="False" />
             <TabItem Header="Advanced">
               <TextBlock Text="Content 3" VerticalAlignment="Top" />
             </TabItem>
+            <TabItem Header="Disabled Tab" IsEnabled="False" />
           </TabControl>
       </Border>
     </StackPanel>
     </StackPanel>
-
-    <TextBlock Classes="section-title" Margin="0 50 0 0" Text="TabPane" />
+    
+    <TextBlock Classes="section-title" Margin="0 10 0 0" Text="TabPane" />
     <TextBlock>Custom control <TextBlock Classes="code" Text="TabPane" /> - use exactly like <TextBlock Classes="code" Text="TabControl" /></TextBlock>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">
       <Border Width="400">
@@ -98,7 +101,7 @@
           <TabItem Header="Tab3" IsEnabled="False" />
         </TabPane>
       </Border>
-
+    
       <StackPanel>
         <Border Width="500" Padding="20">
         <TabPane TabStripPlacement="Top">
@@ -108,10 +111,10 @@
           <TabItem Header="Settings">
             <TextBlock Text="Content 2" />
           </TabItem>
-          <TabItem Header="Disabled Tab" IsEnabled="False" />
           <TabItem Header="Advanced">
             <TextBlock Text="Content 3" />
           </TabItem>
+          <TabItem Header="Disabled Tab" IsEnabled="False" />
         </TabPane>
       </Border>
         <Border Width="500" Classes="alternativeBackground" Padding="20">
@@ -122,13 +125,44 @@
             <TabItem Header="Settings">
               <TextBlock Text="Content 2" />
             </TabItem>
-            <TabItem Header="Disabled Tab" IsEnabled="False" />
             <TabItem Header="Advanced">
               <TextBlock Text="Content 3" />
             </TabItem>
+            <TabItem Header="Disabled Tab" IsEnabled="False" />
           </TabPane>
         </Border>
+      </StackPanel>
     </StackPanel>
-    </StackPanel>
+    
+    <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
+    <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
+    <Border Width="500" Padding="0" HorizontalAlignment="Left">
+      <TabControl ItemsSource="{Binding TabItems}"
+                  SelectedIndex="{Binding SelectedIndex}"
+                  TabStripPlacement="Top">
+        <TabControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:TabItemModel">
+            <TextBlock Text="{Binding Header}" />
+          </DataTemplate>
+        </TabControl.ItemTemplate>
+        
+        <TabControl.ContentTemplate>
+          <DataTemplate x:DataType="vm:TabItemModel">
+            <StackPanel Margin="10">
+              <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
+              <TextBlock Margin="0 10 0 0" FontStyle="Italic" Foreground="{DynamicResource ThemeForegroundLowBrush}">
+                This content is bound from the ViewModel
+              </TextBlock>
+            </StackPanel>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
+        
+        <TabControl.ItemContainerTheme>
+          <ControlTheme x:DataType="vm:TabItemModel" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+            <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+          </ControlTheme>
+        </TabControl.ItemContainerTheme>
+      </TabControl>
+    </Border>
   </StackPanel>
 </UserControl>

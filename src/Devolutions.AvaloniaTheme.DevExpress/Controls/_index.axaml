@@ -43,7 +43,8 @@
     <MergeResourceInclude Source="RadioButton.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />
-    <!-- SeparatorStyles.axaml loaded in ThemeRoot.axaml -->
+    <MergeResourceInclude Source="Separator.axaml" />
+    <!-- SeparatorStyles.axaml loaded in GlobalStyles.axaml -->
     <MergeResourceInclude Source="SplitButton.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />

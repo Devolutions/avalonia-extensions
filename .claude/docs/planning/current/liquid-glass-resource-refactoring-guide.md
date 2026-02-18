@@ -85,11 +85,11 @@ Define the new resource in both theme files.
 - [ ] CalendarItem
 - [x] CheckBox
 - [ ] ClosableTag
-- [ ] ComboBox
-- [ ] ComboBoxItem
+- [x] ComboBox
+- [x] ComboBoxItem
 - [ ] ContextMenu
 - [ ] DataGrid
-- [ ] EditableComboBox
+- [x] EditableComboBox
 - [ ] EmbeddableControlRoot
 - [ ] Expander
 - [ ] GridSplitter
@@ -98,8 +98,8 @@ Define the new resource in both theme files.
 - [ ] Menu
 - [ ] MenuFlyoutPresenter
 - [ ] MenuItem
-- [ ] MultiComboBox
-- [ ] MultiComboBoxItem
+- [x] MultiComboBox
+- [x] MultiComboBoxItem
 - [ ] NumericUpDown
 - [x] RadioButton
 - [ ] ScrollBar

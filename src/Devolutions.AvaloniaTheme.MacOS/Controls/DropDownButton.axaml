@@ -42,7 +42,7 @@
                   BoxShadow="{DynamicResource ButtonBorderBoxShadow}"
                   CornerRadius="{TemplateBinding CornerRadius}" />
 
-          <Grid Name="InnerGrid" ColumnDefinitions="*,Auto" Margin="{DynamicResource ButtonTextMargin}">
+          <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="0"
                               Content="{TemplateBinding Content}"

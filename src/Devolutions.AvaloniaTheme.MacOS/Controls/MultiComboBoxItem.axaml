@@ -49,12 +49,12 @@
 
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^:selected /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Style Selector="^ /template/ CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>
@@ -112,12 +112,12 @@
 
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^:selected /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Style Selector="^ /template/ CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>

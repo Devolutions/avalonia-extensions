@@ -1,7 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
-                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Converters">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
   <Design.PreviewWith>
     <design:ThemePreviewer Width="450">
       <StackPanel Orientation="Vertical">
@@ -42,6 +41,7 @@
 
 
   <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
+    <Setter Property="TabItemMinWidthBehavior.Enable" Value="True" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
@@ -119,28 +119,18 @@
                     BorderThickness="0 2 0 0" />
             <Border Name="CenterContent" Grid.Row="1" Grid.Column="1"
                     MinHeight="20"
-                    Padding="{DynamicResource TabItemHeaderPadding}">
-              <Panel>
-                <TextBlock
-                  Name="ReserveWidthForSelectedTabText"
-                  FontFamily="{TemplateBinding FontFamily}"
-                  FontSize="{StaticResource TabItemSelectedFontSize}"
-                  FontWeight="Bold"
-                  Foreground="Transparent"
-                  Background="Transparent"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center"
-                  Text="{TemplateBinding Header}" />
-                <ContentPresenter
-                  Name="PART_ContentPresenter"
-                  FontFamily="{TemplateBinding FontFamily}"
-                  FontSize="{StaticResource ControlFontSize}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center"
-                  Content="{TemplateBinding Header}"
-                  ContentTemplate="{TemplateBinding HeaderTemplate}"
-                  RecognizesAccessKey="True" />
-              </Panel>
+                    Padding="{DynamicResource TabItemHeaderPadding}"
+                    Margin="0 0 2 0">
+              <ContentPresenter
+                Name="PART_ContentPresenter"
+                Margin="0"
+                FontFamily="{TemplateBinding FontFamily}"
+                FontSize="{StaticResource ControlFontSize}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="{TemplateBinding Header}"
+                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                RecognizesAccessKey="True" />
             </Border>
             <Border Name="RightBorder"
                     Grid.Row="1" Grid.Column="2"
@@ -149,18 +139,7 @@
                     VerticalAlignment="Stretch"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     Background="Transparent"
-                    BorderThickness="0 0 1 0 ">
-              <Border.IsVisible>
-                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
-                              ConverterParameter="RightBorder">
-                  <Binding Path="$parent[TabItem]" />
-                  <Binding Path="$parent[TabControl]" />
-                  <Binding Path="$parent[TabControl].SelectedIndex" />
-                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
-                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
-                </MultiBinding>
-              </Border.IsVisible>
-            </Border>
+                    BorderThickness="0 0 1 0 " />
             <Border Name="BottomLeftCorner"
                     Grid.Row="2" Grid.Column="0"
                     Width="4"
@@ -169,35 +148,13 @@
                     Background="Transparent"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="0 0 1 1   "
-                    CornerRadius="0 0 4 0 ">
-              <Border.IsVisible>
-                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
-                              ConverterParameter="BottomLeftCorner">
-                  <Binding Path="$parent[TabItem]" />
-                  <Binding Path="$parent[TabControl]" />
-                  <Binding Path="$parent[TabControl].SelectedIndex" />
-                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
-                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
-                </MultiBinding>
-              </Border.IsVisible>
-            </Border>
+                    CornerRadius="0 0 4 0 " />
             <Border Name="BottomLeftBorder"
                     Grid.Row="2" Grid.Column="0"
                     Height="4"
                     HorizontalAlignment="Stretch"
                     BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="0 0 0 1">
-              <Border.IsVisible>
-                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
-                              ConverterParameter="BottomLeftBorder">
-                  <Binding Path="$parent[TabItem]" />
-                  <Binding Path="$parent[TabControl]" />
-                  <Binding Path="$parent[TabControl].SelectedIndex" />
-                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
-                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
-                </MultiBinding>
-              </Border.IsVisible>
-            </Border>
+                    BorderThickness="0 0 0 1" />
             <Border Name="TopLeftBorderSelected"
                     Grid.Row="0" Grid.Column="0"
                     Grid.RowSpan="3" Grid.ColumnSpan="3"
@@ -217,18 +174,7 @@
                     Height="4"
                     HorizontalAlignment="Stretch"
                     BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="0 0 0 1">
-              <Border.IsVisible>
-                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
-                              ConverterParameter="BottomRightBorder">
-                  <Binding Path="$parent[TabItem]" />
-                  <Binding Path="$parent[TabControl]" />
-                  <Binding Path="$parent[TabControl].SelectedIndex" />
-                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
-                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
-                </MultiBinding>
-              </Border.IsVisible>
-            </Border>
+                    BorderThickness="0 0 0 1" />
             <Border Name="BottomRightCorner"
                     Grid.Row="2" Grid.Column="2"
                     Width="4"
@@ -236,24 +182,13 @@
                     HorizontalAlignment="Right"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="1 0 0 1"
-                    CornerRadius="0 0 0 4 ">
-              <Border.IsVisible>
-                <MultiBinding Converter="{x:Static converters:DevExpressConverters.TabBorderVisibilityConverter}"
-                              ConverterParameter="BottomRightCorner">
-                  <Binding Path="$parent[TabItem]" />
-                  <Binding Path="$parent[TabControl]" />
-                  <Binding Path="$parent[TabControl].SelectedIndex" />
-                  <Binding RelativeSource="{RelativeSource AncestorType=TabControl}"
-                           Path="(TabItemVisibilityObserverBehavior.VisibilityVersion)" />
-                </MultiBinding>
-              </Border.IsVisible>
-            </Border>
+                    CornerRadius="0 0 0 4 " />
           </Grid>
         </Border>
       </ControlTemplate>
     </Setter>
 
-    <Style Selector="^[TabStripPlacement=Top]:nth-child(1)">
+    <Style Selector="^[TabStripPlacement=Top]:first-tab">
       <Style Selector="^ /template/ Border#TopLeftCorner">
         <Setter Property="IsVisible" Value="False" />
       </Style>
@@ -266,9 +201,6 @@
       <Style Selector="^ /template/ Border#FirstTabLeftBorder">
         <Setter Property="IsVisible" Value="True" />
       </Style>
-      <Style Selector="^ /template/ Border#CenterContent">
-        <Setter Property="Padding" Value="{DynamicResource FirstTabItemHeaderPadding}" />
-      </Style>
       <Style Selector="^ /template/ Border#TopBorderSelected">
         <Setter Property="Margin" Value="1 0 4 0" />
       </Style>
@@ -277,11 +209,76 @@
       </Style>
     </Style>
 
+    <!-- Non-first tabs get extra left margin to account for their left border -->
+    <Style Selector="^[TabStripPlacement=Top]:not(:first-tab) /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Margin" Value="3 0 -1 0" />
+    </Style>
+
+    <!-- Visibility rules based on position pseudo-classes -->
+    <Style Selector="^:left-of-selected /template/ Border#LeftBorder, ^:selected /template/ Border#LeftBorder">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:right-of-selected /template/ Border#LeftBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- First tab overrides: LeftBorder should never be visible for first tab (FirstTabLeftBorder is used instead) -->
+    <Style Selector="^:first-tab /template/ Border#LeftBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+    <!-- RightBorder: visible for last tab, right-of-selected tabs, or selected tab -->
+    <Style Selector="^:last-tab /template/ Border#RightBorder, ^:right-of-selected /template/ Border#RightBorder, ^:selected /template/ Border#RightBorder">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:left-of-selected /template/ Border#RightBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- BottomLeftCorner: visible for non-first tabs that are left-of-selected or selected -->
+    <Style Selector="^:left-of-selected /template/ Border#BottomLeftCorner, ^:selected /template/ Border#BottomLeftCorner">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:right-of-selected /template/ Border#BottomLeftCorner">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- First tab overrides: BottomLeftCorner should never be visible for first tab -->
+    <Style Selector="^:first-tab /template/ Border#BottomLeftCorner">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- First tab overrides: BottomLeftBorder should never be visible for first tab -->
+    <Style Selector="^:first-tab:selected /template/ Border#BottomLeftBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- BottomRightCorner: visible for last tab, right-of-selected tabs, or selected tab -->
+    <Style Selector="^:last-tab /template/ Border#BottomRightCorner, ^:right-of-selected /template/ Border#BottomRightCorner, ^:selected /template/ Border#BottomRightCorner">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:left-of-selected /template/ Border#BottomRightCorner">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- BottomLeftBorder: hidden if previous tab is selected or current tab is selected -->
+    <Style Selector="^:right-of-selected /template/ Border#BottomLeftBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^:selected /template/ Border#BottomLeftBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- BottomRightBorder: hidden if next tab is selected or current tab is selected -->
+    <Style Selector="^:left-of-selected /template/ Border#BottomRightBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^:selected /template/ Border#BottomRightBorder">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
     <Style Selector="^:selected">
       <Setter Property="ZIndex" Value="2" />
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="FontSize" Value="{StaticResource TabItemSelectedFontSize}" />
-      <!-- Visibility of the tab border corners in the 9-slice grid is handled through TabBorderVisibilityConverter -->
+      
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="IsVisible" Value="False" />
       </Style>
@@ -312,6 +309,10 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="Margin" Value="0,-3,0,-4" />
+        <Setter Property="IsVisible" Value="False" />
+      </Style>
+      <Style Selector="^:selected /template/ Border#RightBorder">
+        <Setter Property="IsVisible" Value="True" />
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderThickness" Value="0" />
@@ -323,6 +324,7 @@
         <Setter Property="Margin" Value="4,0,0,0" />
         <Setter Property="BorderThickness" Value="1 0 0 1" />
         <Setter Property="CornerRadius" Value="0 0 0 4" />
+        <Setter Property="IsVisible" Value="True" />
       </Style>
       <Style Selector="^ /template/ Border#BottomRightBorder">
         <Setter Property="BorderThickness" Value="0" />
@@ -330,7 +332,7 @@
       <Style Selector="^ /template/ Border#BottomLeftBorder">
         <Setter Property="BorderThickness" Value="0" />
       </Style>
-      <Style Selector="^:nth-last-child(1) /template/ Border#BottomBorder">
+      <Style Selector="^:last-tab /template/ Border#BottomBorder">
         <Setter Property="BorderThickness" Value="0 0 0 1" />
       </Style>
 
@@ -373,7 +375,7 @@
       <Style Selector="^ /template/ Border#BottomLeftBorder">
         <Setter Property="BorderThickness" Value="0" />
       </Style>
-      <Style Selector="^:nth-last-child(1) /template/ Border#BottomBorder">
+      <Style Selector="^:last-tab /template/ Border#BottomBorder">
         <Setter Property="BorderThickness" Value="0 0 0 1" />
       </Style>
     </Style>
@@ -410,7 +412,7 @@
       <Style Selector="^ /template/ Border#LeftBorder">
         <Setter Property="BorderThickness" Value="0" />
       </Style>
-      <Style Selector="^:nth-child(1) /template/ Border#LeftBorder">
+      <Style Selector="^:first-tab /template/ Border#LeftBorder">
         <Setter Property="BorderThickness" Value="1 0 0 0" />
       </Style>
     </Style>

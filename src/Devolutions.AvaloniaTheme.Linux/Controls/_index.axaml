@@ -25,7 +25,9 @@
     <MergeResourceInclude Source="Expander.axaml" />
     <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="ListBox.axaml" />
+    <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
+    <MergeResourceInclude Source="Separator.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TagInput.axaml" />

@@ -16,13 +16,31 @@ public enum WallpaperOption
   CustomDark
 }
 
+public record ScaleOption(string Name, double Scale)
+{
+  public override string ToString() => this.Name;
+}
+
 public partial class MainWindowViewModel : ObservableObject
 {
   [ObservableProperty]
-  private Theme currentTheme;
+  private Theme? currentTheme;
 
   [ObservableProperty]
-  private WallpaperItem selectedWallpaper;
+  private ScaleOption? selectedScale;
+
+  [ObservableProperty]
+  private WallpaperItem? selectedWallpaper;
+
+  [ObservableProperty]
+  private double systemScale;
+
+  public MainWindowViewModel()
+  {
+    this.SelectedWallpaper = this.AvailableWallpapers[0];
+    this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
+    this.SelectedScale = this.AvailableScales[0]; // 0 = System Default, 10 = 400%
+  }
 
   public WallpaperItem[] AvailableWallpapers { get; } =
   [
@@ -32,11 +50,20 @@ public partial class MainWindowViewModel : ObservableObject
     new("Custom Dark", WallpaperOption.CustomDark)
   ];
 
-  public MainWindowViewModel()
-  {
-    this.SelectedWallpaper = this.AvailableWallpapers[0];
-    this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
-  }
+  public ScaleOption[] AvailableScales { get; } =
+  [
+    new("Default", 0),
+    new("100%", 1.0),
+    new("125%", 1.25),
+    new("150%", 1.5),
+    new("175%", 1.75),
+    new("200%", 2.0),
+    new("225%", 2.25),
+    new("250%", 2.5),
+    new("275%", 2.75),
+    new("300%", 3.0),
+    new("400%", 4.0)
+  ];
 
   public Theme[] AvailableThemes { get; } =
   [

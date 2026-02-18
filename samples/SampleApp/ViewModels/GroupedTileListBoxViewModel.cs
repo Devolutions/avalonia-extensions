@@ -9,6 +9,16 @@ public record FoodItem(string Name, string Category);
 
 public partial class GroupedTileListBoxViewModel : ObservableObject
 {
+    // Selected items for each scenario
+    [ObservableProperty]
+    private FoodItem? _selectedGroupedItem;
+
+    [ObservableProperty]
+    private FoodItem? _selectedEmptyGroupItem;
+
+    [ObservableProperty]
+    private FoodItem? _selectedFlatItem;
+
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()
     {

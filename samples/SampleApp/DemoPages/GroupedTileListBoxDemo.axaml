@@ -112,6 +112,14 @@
               </DataTemplate>
             </GroupedTileListBox.ItemTemplate>
           </GroupedTileListBox>
+
+          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
+
+          <TextBlock Grid.Column="2"
+                     Text="← Drag splitter to resize"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
         </Grid>
       </StackPanel>
 
@@ -159,6 +167,14 @@
               </DataTemplate>
             </GroupedTileListBox.ItemTemplate>
           </GroupedTileListBox>
+
+          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
+
+          <TextBlock Grid.Column="2"
+                     Text="← Drag splitter to resize"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
         </Grid>
       </StackPanel>
 

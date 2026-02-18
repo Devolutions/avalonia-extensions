@@ -48,18 +48,18 @@
                      Orientation="Horizontal"
                      Background="{DynamicResource ScrollBarTrackBrush}"
                      BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
-                     BorderThickness="1" />
+                     BorderThickness="{DynamicResource ScrollBarTrackBorderThickness}" />
           <ScrollBar Name="PART_VerticalScrollBar"
                      Grid.Row="0" Grid.RowSpan="2"
                      Grid.Column="1"
                      Orientation="Vertical"
                      Background="{DynamicResource ScrollBarTrackBrush}"
                      BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
-                     BorderThickness="1" />
+                     BorderThickness="{DynamicResource ScrollBarTrackBorderThickness}" />
           <Border Name="PART_ScrollBarsSeparator"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Background="{DynamicResource ScrollBarTrackBrush}"
+                  Background="{DynamicResource ScrollBarTrackSeparatorBrush}"
                   BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}">
             <Border.Opacity>
               <MultiBinding Converter="{x:Static converters:MacOSConverters.AndToOpacityConverter}">

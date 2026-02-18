@@ -68,7 +68,7 @@
 
       <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.44" />
       <SolidColorBrush x:Key="ScrollBarDisabledThumbBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
-      <x:Double x:Key="ScrollBarThumbOpacity">0.33</x:Double>
+      <x:Double x:Key="ScrollBarThumbOpacity">0.6</x:Double>
 
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
       <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
@@ -630,6 +630,11 @@
   <Thickness x:Key="TextBoxPadding">2 0 2 0</Thickness>
   <x:Boolean x:Key="TextBoxBottomBorderIsVisible">True</x:Boolean>
   <x:Boolean x:Key="TextBoxBottomBorderShadowIsVisible">True</x:Boolean>
+  <Thickness x:Key="TextBoxInnerDockPanelMargin">2 2 3 1</Thickness>
+  <Thickness x:Key="TextBoxScrollViewerMargin">0 0 -4 0</Thickness>
+  <Thickness x:Key="TextBoxScrollPanelMargin">0</Thickness>
+  <Thickness x:Key="TextBoxScrollBarMargin">0</Thickness>
+
 
   <!-- TreeView Resources -->
   <SolidColorBrush x:Key="TreeViewItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" />
@@ -678,16 +683,21 @@
   <x:Double x:Key="MenuHeaderFontSizeSmall">10</x:Double>
 
   <!-- ScrollBar Resources -->
+  <x:Double x:Key="ScrollBarSize">16</x:Double>
   <x:Double x:Key="ScrollBarThumbWidth">6</x:Double>
   <x:Double x:Key="ScrollBarExpandedStaticThumbWidth">8</x:Double>
   <x:Double x:Key="ScrollBarExpandedThumbWidth">9</x:Double>
   <x:Double x:Key="ScrollBarMinLength">10</x:Double>
   <SolidColorBrush x:Key="ScrollBarTrackBrush" Color="{DynamicResource ScrollBarTrackColor}" />
+  <SolidColorBrush x:Key="ScrollBarTrackSeparatorBrush" Color="{DynamicResource ScrollBarTrackColor}" />
   <SolidColorBrush x:Key="ScrollBarTrackBorderBrush" Color="{DynamicResource ScrollBarTrackBorderColor}" />
+  <Thickness x:Key="ScrollBarMargin">0</Thickness>
   <Thickness x:Key="ScrollBarTrackBorderThickness">1</Thickness>
   <Thickness x:Key="ScrollBarSeparatorBorderFactors">0 0 1 1</Thickness>
   <Thickness x:Key="ScrollBarTrackHorizontalBorderFactors">0 1 0 1</Thickness>
   <Thickness x:Key="ScrollBarTrackVerticalBorderFactors">1 0 1 0</Thickness>
+  <StaticResource x:Key="ScrollBarThumbCornerRadius" ResourceKey="ControlCornerRadius" />
+  <CornerRadius x:Key="ScrollBarTrackCornerRadius">0</CornerRadius>
 
   <!-- ToolTip Resources -->
   <x:Double x:Key="ToolTipContentMaxWidth">320</x:Double>

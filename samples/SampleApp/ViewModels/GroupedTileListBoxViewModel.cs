@@ -11,13 +11,23 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
 {
     // Selected items for each scenario
     [ObservableProperty]
-    private FoodItem? _selectedGroupedItem;
+    private FoodItem? selectedGroupedItem;
 
     [ObservableProperty]
-    private FoodItem? _selectedEmptyGroupItem;
+    private FoodItem? selectedEmptyGroupItem;
 
     [ObservableProperty]
-    private FoodItem? _selectedFlatItem;
+    private FoodItem? selectedFlatItem;
+
+    // Double-clicked items for each scenario
+    [ObservableProperty]
+    private FoodItem? doubleClickedGroupedItem;
+
+    [ObservableProperty]
+    private FoodItem? doubleClickedEmptyGroupItem;
+
+    [ObservableProperty]
+    private FoodItem? doubleClickedFlatItem;
 
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()

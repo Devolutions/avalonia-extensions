@@ -2,7 +2,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
+    <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox" BasedOn="{StaticResource {x:Type GroupedTileListBox}}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Padding" Value="2" />
         <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}"/>

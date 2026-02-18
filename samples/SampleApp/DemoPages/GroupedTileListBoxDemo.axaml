@@ -120,7 +120,7 @@
                               ItemWidth="120"
                               ItemHeight="100"
                               DoubleTapped="EmptyGroupListBox_OnDoubleTapped">
-            <GroupedTileListBox.ItemTemplate>
+            <GroupedTileListBox.DataTemplates>
               <DataTemplate DataType="vm:FoodItem">
                 <StackPanel Spacing="4" VerticalAlignment="Center">
                   <TextBlock Text="{Binding Name}"
@@ -132,7 +132,7 @@
                              TextAlignment="Center"/>
                 </StackPanel>
               </DataTemplate>
-            </GroupedTileListBox.ItemTemplate>
+            </GroupedTileListBox.DataTemplates>
           </GroupedTileListBox>
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>

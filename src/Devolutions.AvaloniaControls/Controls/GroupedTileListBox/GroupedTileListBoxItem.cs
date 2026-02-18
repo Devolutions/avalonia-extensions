@@ -1,9 +1,8 @@
+namespace Devolutions.AvaloniaControls.Controls;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
-using Avalonia.Controls.Primitives;
-
-namespace Devolutions.AvaloniaControls.Controls;
 
 /// <summary>
 /// Container for items in the GroupedTileListBox.

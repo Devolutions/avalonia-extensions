@@ -1,7 +1,7 @@
+namespace Devolutions.AvaloniaControls.Controls;
+
 using Avalonia;
 using Avalonia.Controls.Primitives;
-
-namespace Devolutions.AvaloniaControls.Controls;
 
 /// <summary>
 /// Header control for groups in the GroupedTileListBox.

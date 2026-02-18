@@ -1,24 +1,25 @@
 <ResourceDictionary
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Padding" Value="4" />
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Border
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}">
-                    <ScrollViewer Name="PART_ScrollViewer"
-                                  Background="{TemplateBinding Background}"
-                                  HorizontalScrollBarVisibility="Disabled"
-                                  VerticalScrollBarVisibility="Auto"/>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
+  <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="4" />
+    <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}">
+          <ScrollViewer Name="PART_ScrollViewer"
+                        Background="{TemplateBinding Background}"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
 
 </ResourceDictionary>

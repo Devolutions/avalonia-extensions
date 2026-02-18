@@ -18,12 +18,13 @@ Follow the Git commit guidelines documented in `documentation/processes/GIT_COMM
 IMPORTANT: Read and follow `docs/processes/git_commit.md` for detailed guidelines.
 </instructions>
 
-<workon_exclusion>
-**CRITICAL: Never commit /workon development changes**
+<worksetup_exclusion>
+**CRITICAL: Never commit /worksetup development changes**
 
-The `/workon` command modifies these files for local development only:
+The `/worksetup` command modifies these files for local development only:
 - `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
 - `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
+- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (SelectedScale initialization)
 
 **Master branch defaults** (never change these):
 - Theme: All themes commented out (automatically selects platform-appropriate theme)
@@ -35,27 +36,29 @@ The `/workon` command modifies these files for local development only:
   <!-- <DevolutionsLinuxYaruTheme /> -->
   ```
 - Tab: `IsSelected="True"` on Overview tab only
+- Scale: `this.SelectedScale = this.AvailableScales[0];` (System Default)
 
 **Pre-commit workflow**:
-1. Check if App.axaml or MainWindow.axaml have changes
+1. Check if App.axaml, MainWindow.axaml, or MainWindowViewModel.cs have changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/workon Default Overview` to restore defaults (all themes commented)
-   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme and tab`
+   - First, run `/worksetup Default Overview` to restore defaults (all themes commented, Overview tab, Default scale)
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme, tab, and scale`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them
-   - Changes are structural (not just theme/tab selection)
+   - Changes are structural (not just theme/tab/scale selection)
    - Changes involve new code/features in these files
 
 **Detection**: When running `git status`, if you see:
 ```
 M samples/SampleApp/App.axaml
 M samples/SampleApp/MainWindow.axaml
+M samples/SampleApp/ViewModels/MainWindowViewModel.cs
 ```
 
-Check the actual diff. If changes are only theme toggles or IsSelected attributes, SKIP these files from the commit.
-</workon_exclusion>
+Check the actual diff. If changes are only theme toggles, IsSelected attributes, or SelectedScale array index, SKIP these files from the commit.
+</worksetup_exclusion>
 
 <input_processing>
 Optional arguments:

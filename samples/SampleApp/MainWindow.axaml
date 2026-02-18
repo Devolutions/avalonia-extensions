@@ -188,7 +188,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ScrollViewerDemo />
               </TabItem>

@@ -775,15 +775,17 @@ public class GroupedTileListBox : TemplatedControl
             return 1;
         }
 
-        double availableWidth = this.scrollViewer.Bounds.Width - this.scrollViewer.Padding.Left - this.scrollViewer.Padding.Right;
+        double availableWidth = this.scrollViewer.Bounds.Width - this.Padding.Left - this.Padding.Right;
 
         if (availableWidth <= 0)
         {
             return 1;
         }
 
-        // Calculate items per row: floor((width) / (itemWidth + spacing))
-        int itemsPerRow = (int)Math.Floor(availableWidth / (this.ItemWidth + this.ItemSpacing));
+        // Calculate items per row: N * ItemWidth + (N-1) * ItemSpacing <= availableWidth
+        // Solving for N: N <= (availableWidth + ItemSpacing) / (ItemWidth + ItemSpacing)
+        // The last item doesn't have trailing spacing, so we add ItemSpacing to the numerator
+        int itemsPerRow = (int)Math.Floor((availableWidth + this.ItemSpacing) / (this.ItemWidth + this.ItemSpacing));
         this.cachedItemsPerRow = Math.Max(1, itemsPerRow);
 
         return this.cachedItemsPerRow;

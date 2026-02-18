@@ -4,8 +4,8 @@
 
     <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Padding" Value="4" />
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Template">
             <ControlTemplate>

@@ -23,6 +23,9 @@
     <MergeResourceInclude Source="DataValidationErrors.axaml" />
     <MergeResourceInclude Source="EmbeddableControlRoot.axaml" />
     <MergeResourceInclude Source="Expander.axaml" />
+    <MergeResourceInclude Source="GroupedTileListBox.axaml" />
+    <MergeResourceInclude Source="GroupedTileListBoxGroupHeader.axaml" />
+    <MergeResourceInclude Source="GroupedTileListBoxItem.axaml" />
     <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />

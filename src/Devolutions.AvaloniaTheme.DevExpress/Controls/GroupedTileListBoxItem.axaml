@@ -21,6 +21,7 @@
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Foreground="{TemplateBinding Foreground}"
                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                 </Border>
@@ -29,13 +30,13 @@
 
         <!-- Pointer over state -->
         <Style Selector="^:pointerover /template/ Border#PART_Border">
-            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource GroupedTileListBoxItemPointerOverBrush}"/>
         </Style>
 
         <!-- Selected state -->
         <Style Selector="^:selected /template/ Border#PART_Border">
-            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightAccentBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource GroupedTileListBoxItemPointerOverBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}"/>
         </Style>
     </ControlTheme>
 

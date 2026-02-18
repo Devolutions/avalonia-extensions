@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Padding" Value="4" />
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundColor}"/>
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderColor}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Template">
             <ControlTemplate>

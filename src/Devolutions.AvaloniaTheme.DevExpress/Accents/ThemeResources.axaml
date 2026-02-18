@@ -91,6 +91,9 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="#EEEEEE" />
+      <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
@@ -180,6 +183,9 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#3C3C3C" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

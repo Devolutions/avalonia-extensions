@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:demoPages="clr-namespace:SampleApp.DemoPages"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.GroupedTileListBoxDemo"
@@ -23,9 +22,7 @@
                                       MaxWidth="650"
                                       Height="400"
                                       ItemWidth="120"
-                                      ItemHeight="100"
-                                      ItemSpacing="8"
-                                      Padding="8">
+                                      ItemHeight="100">
           <GroupedTileListBox.ItemTemplate>
             <DataTemplate DataType="vm:FoodItem">
               <StackPanel Spacing="4" VerticalAlignment="Center">
@@ -35,7 +32,6 @@
                            TextWrapping="Wrap"/>
                 <TextBlock Text="{Binding Category}"
                            FontSize="11"
-                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
                            TextAlignment="Center"/>
               </StackPanel>
             </DataTemplate>
@@ -56,9 +52,7 @@
                                       MaxWidth="650"
                                       Height="400"
                                       ItemWidth="120"
-                                      ItemHeight="100"
-                                      ItemSpacing="8"
-                                      Padding="8">
+                                      ItemHeight="100">
           <GroupedTileListBox.ItemTemplate>
             <DataTemplate DataType="vm:FoodItem">
               <StackPanel Spacing="4" VerticalAlignment="Center">
@@ -68,7 +62,6 @@
                            TextWrapping="Wrap"/>
                 <TextBlock Text="{Binding Category}"
                            FontSize="11"
-                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
                            TextAlignment="Center"/>
               </StackPanel>
             </DataTemplate>
@@ -87,9 +80,7 @@
                                       MaxWidth="650"
                                       Height="400"
                                       ItemWidth="120"
-                                      ItemHeight="100"
-                                      ItemSpacing="8"
-                                      Padding="8">
+                                      ItemHeight="100">
           <GroupedTileListBox.ItemTemplate>
             <DataTemplate DataType="vm:FoodItem">
               <StackPanel Spacing="4" VerticalAlignment="Center">
@@ -99,7 +90,6 @@
                            TextWrapping="Wrap"/>
                 <TextBlock Text="{Binding Category}"
                            FontSize="11"
-                           Foreground="{DynamicResource TextControlPlaceholderForeground}"
                            TextAlignment="Center"/>
               </StackPanel>
             </DataTemplate>

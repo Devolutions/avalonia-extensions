@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.3.7,)" />
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="[11.1.5,)" />
     <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />
@@ -37,6 +38,15 @@
   <ItemGroup>
     <Compile Update="Controls\MultiComboBox\InnerMultiComboBoxList.cs">
       <DependentUpon>InnerMultiComboBoxList.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\GroupedTileListBox\GroupedTileListBox.cs">
+      <DependentUpon>GroupedTileListBox.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\GroupedTileListBox\GroupedTileListBoxGroupHeader.cs">
+      <DependentUpon>GroupedTileListBoxGroupHeader.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\GroupedTileListBox\GroupedTileListBoxItem.cs">
+      <DependentUpon>GroupedTileListBoxItem.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

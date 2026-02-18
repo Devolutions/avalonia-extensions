@@ -29,6 +29,7 @@
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ListBoxItemMinHeight}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel
@@ -39,7 +40,7 @@
           <Border
             Name="LayoutRoot"
             Background="Transparent"
-            MinHeight="{DynamicResource ListBoxItemMinHeight}"
+            MinHeight="{TemplateBinding MinHeight}"
             CornerRadius="{TemplateBinding CornerRadius}"
             Padding="{BindingToggler
                         {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},

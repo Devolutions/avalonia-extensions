@@ -387,7 +387,7 @@ public class GroupedTileListBox : TemplatedControl
                             {
                                 if (sender is Control { Bounds.Height: > 0 } control)
                                 {
-                                    this.cachedHeaderHeight = control.Bounds.Height;
+                                    this.cachedHeaderHeight = control.Bounds.Height + control.Margin.Top + control.Margin.Bottom;
                                     // Unsubscribe to avoid memory leak
                                     control.LayoutUpdated -= layoutHandler;
                                 }
@@ -806,10 +806,9 @@ public class GroupedTileListBox : TemplatedControl
             return false;
         }
 
-        (int index, IndexedItem? item) = firstGroup.Index().FirstOrDefault(indexedItem => indexedItem.Item.Index == currentIndex);
-        int indexInGroup = item is null ? -1 : index;
+        (int indexInGroup, IndexedItem? item) = firstGroup.Index().FirstOrDefault(indexedItem => indexedItem.Item.Index == currentIndex);
 
-        if (indexInGroup < 0)
+        if (item is null)
         {
             return false; // Not in first group
         }
@@ -823,14 +822,14 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private bool IsInLastRow(int currentIndex, int itemCount)
     {
-        if (currentIndex < 0 || currentIndex >= itemCount)
+        if (currentIndex < 0 || currentIndex >= itemCount || this.ItemsSource is null)
         {
             return false;
         }
 
         int itemsPerRow = this.CalculateItemsPerRow();
 
-        if (!this.useGrouping || this.ItemsSource is null || this.GroupSelector is null)
+        if (!this.useGrouping || this.GroupSelector is null)
         {
             int lastRowStart = CalculateLastRowStart(itemCount, itemsPerRow);
             return currentIndex >= lastRowStart;
@@ -861,6 +860,11 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private int CalculateVerticalNavigationIndex(int currentIndex, int itemCount, bool moveUp)
     {
+        if (this.ItemsSource is null)
+        {
+            return -1;
+        }
+        
         int itemsPerRow = this.CalculateItemsPerRow();
         int offset = moveUp ? -itemsPerRow : itemsPerRow;
         int fallback = moveUp
@@ -868,20 +872,12 @@ public class GroupedTileListBox : TemplatedControl
             : Math.Min(itemCount - 1, currentIndex + offset);
 
         // If no grouping, use simple calculation
-        if (!this.useGrouping || this.ItemsSource is null)
+        if (!this.useGrouping || this.GroupSelector is null)
         {
             return fallback;
         }
 
-        // Get all items and group them
-        List<object> allItems = this.ItemsSource.Cast<object>().ToList();
-
-        if (this.GroupSelector is null || currentIndex < 0 || currentIndex >= allItems.Count)
-        {
-            return fallback;
-        }
-
-        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(allItems, this.GroupSelector).ToList();
+        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(this.ItemsSource.Cast<object>(), this.GroupSelector).ToList();
 
         // Find current item's group and position within group
         foreach (IGrouping<object, IndexedItem> group in groups)
@@ -931,7 +927,7 @@ public class GroupedTileListBox : TemplatedControl
                         int targetIndexInGroup = (row + 1) * itemsPerRow + col;
                         return targetIndexInGroup < groupItems.Count
                             ? groupItems[targetIndexInGroup].Index
-                            : groupItems[groupItems.Count - 1].Index;
+                            : groupItems[^1].Index;
                     }
                     else
                     {
@@ -978,12 +974,8 @@ public class GroupedTileListBox : TemplatedControl
             return 0;
         }
 
-        if (itemsSource is IList list)
-        {
-            return list.Count;
-        }
-
-        return itemsSource.Cast<object?>().Count();
+        IEnumerable<object> items = itemsSource.Cast<object>();
+        return items.TryGetNonEnumeratedCount(out int count) ? count : items.Count();
     }
 
     private void InvalidateIndexMappings()
@@ -1110,7 +1102,7 @@ public class GroupedTileListBox : TemplatedControl
 
     private double CalculateScrollOffsetForItem(object item)
     {
-        if (this.scrollViewer is null)
+        if (this.scrollViewer is null || this.ItemsSource is null)
         {
             return 0;
         }
@@ -1127,26 +1119,19 @@ public class GroupedTileListBox : TemplatedControl
             return 0;
         }
 
-        if (!this.useGrouping)
+        if (!this.useGrouping || this.GroupSelector is null)
         {
             // Simple calculation for non-grouped mode
             int row = visualIndex / itemsPerRow;
             return row * (this.ItemHeight + this.ItemSpacing);
         }
 
-        // Grouped mode: account for group headers
-        if (this.GroupSelector is null || this.ItemsSource is null)
-        {
-            return 0;
-        }
-
-        IEnumerable<IGrouping<string, object>> groups = this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector);
-        IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(groups);
+        IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector));
 
         double offset = 0;
         int itemsSoFar = 0;
 
-        foreach (IGrouping<object, object> group in orderedGroups)
+        foreach (IGrouping<string, object> group in orderedGroups)
         {
             int groupItemCount = group.Count();
             bool hasHeader = group.Key is string groupName && !string.IsNullOrEmpty(groupName);

@@ -73,6 +73,7 @@ public class GroupedTileListBox : TemplatedControl
     
     private ItemsRepeater? itemsRepeater;
     private ScrollViewer? scrollViewer;
+    private Control? content;
     
     private int selectedIndex = -1;
     private object? selectedItem;
@@ -334,13 +335,15 @@ public class GroupedTileListBox : TemplatedControl
             this.itemsRepeater = null;
         }
 
+        this.content = null;
+
         if (this.useGrouping)
         {
             // Create StackPanel to hold groups
             StackPanel stackPanel = new()
             {
                 Spacing = this.ItemSpacing,
-                Margin = this.Padding
+                [!MarginProperty] = this[!PaddingProperty]
             };
 
             if (this.ItemsSource != null && this.GroupSelector != null && this.scrollViewer != null)
@@ -423,10 +426,7 @@ public class GroupedTileListBox : TemplatedControl
                 }
             }
 
-            if (this.scrollViewer != null)
-            {
-                this.scrollViewer.Content = stackPanel;
-            }
+            this.content = stackPanel;
         }
         else if (this.scrollViewer != null)
         {
@@ -464,7 +464,12 @@ public class GroupedTileListBox : TemplatedControl
 
             this.itemsRepeater.ElementPrepared += this.OnElementPrepared;
 
-            this.scrollViewer.Content = this.itemsRepeater;
+            this.content = this.itemsRepeater;
+        }
+
+        if (this.scrollViewer != null)
+        {
+            this.scrollViewer.Content = this.content;
         }
     }
 
@@ -544,12 +549,12 @@ public class GroupedTileListBox : TemplatedControl
 
     private void UpdateRealizedContainerSelection()
     {
-        if (this.scrollViewer?.Content == null)
+        if (this.content == null)
         {
             return;
         }
 
-        if (this.useGrouping && this.scrollViewer.Content is StackPanel stackPanel)
+        if (this.useGrouping && this.content is StackPanel stackPanel)
         {
             // Update selection in all group ItemsRepeaters
             foreach (ItemsRepeater repeater in GetAllItemsRepeaters(stackPanel))
@@ -746,12 +751,13 @@ public class GroupedTileListBox : TemplatedControl
             return this.cachedItemsPerRow;
         }
 
-        if (this.scrollViewer == null)
+        if (this.content == null)
         {
             return 1;
         }
-
-        double availableWidth = this.scrollViewer.Bounds.Width - this.Padding.Left - this.Padding.Right;
+        
+        // Bounds already exclude margins, so no need to subtract those
+        double availableWidth = this.content.Bounds.Width;
 
         if (availableWidth <= 0)
         {
@@ -1209,7 +1215,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Control? FindElementInGroupedLayout(int index)
     {
-        if (this.scrollViewer?.Content is not StackPanel stackPanel)
+        if (this.content is not StackPanel stackPanel)
         {
             return null;
         }

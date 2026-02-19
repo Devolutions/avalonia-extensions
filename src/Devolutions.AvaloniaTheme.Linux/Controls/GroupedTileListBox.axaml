@@ -5,7 +5,7 @@
 
   <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox" BasedOn="{StaticResource {x:Type GroupedTileListBox}}">
     <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundColor}" />
-    <Setter Property="Padding" Value="0" />
+    <Setter Property="Padding" Value="2" />
     <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderColor}" />
   </ControlTheme>
 

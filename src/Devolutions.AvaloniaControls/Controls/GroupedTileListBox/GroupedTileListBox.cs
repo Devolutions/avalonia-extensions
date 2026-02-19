@@ -55,6 +55,9 @@ public class GroupedTileListBox : TemplatedControl
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, string>?>(
             nameof(GroupSelector));
+    
+    public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, bool>(nameof(GroupOrderAlphabetical));
 
     public static readonly StyledProperty<Func<string, int>?> GroupOrderSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<string, int>?>(
@@ -173,6 +176,15 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
+    /// Gets or sets whether groups are sorted alphabetically by key. Applied as a secondary sort after <see cref="GroupOrderSelector"/>, if set.
+    /// </summary>
+    public bool GroupOrderAlphabetical
+    {
+        get => this.GetValue(GroupOrderAlphabeticalProperty);
+        set => this.SetValue(GroupOrderAlphabeticalProperty, value);
+    }
+    
+    /// <summary>
     /// Gets or sets the function used to determine the sort order for each group.
     /// Lower numbers appear first. If null, groups are sorted alphabetically by key.
     /// Can be bound from a ViewModel for compile-time safety and MVVM support.
@@ -290,19 +302,16 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
-    /// Orders groups according to GroupOrderSelector (if provided), otherwise alphabetically.
+    /// Returns groups sorted by <see cref="GroupOrderSelector"/> first (if set), then alphabetically by key (if <see cref="GroupOrderAlphabetical"/> is enabled).
     /// </summary>
     private IEnumerable<IGrouping<string, object>> GetOrderedGroups(IEnumerable<IGrouping<string, object>> groups)
     {
-        if (this.GroupOrderSelector is not null)
-        {
-            // Primary sort by order value, secondary sort alphabetically
-            return groups
-                .OrderBy(g => this.GroupOrderSelector(g.Key))
-                .ThenBy(g => g.Key);
-        }
+        if (this.GroupOrderSelector is { } selector)
+            return this.GroupOrderAlphabetical
+                ? groups.OrderBy(g => selector(g.Key)).ThenBy(g => g.Key)
+                : groups.OrderBy(g => selector(g.Key));
 
-        return groups.OrderBy(g => g.Key);
+        return this.GroupOrderAlphabetical ? groups.OrderBy(g => g.Key) : groups;
     }
 
     /// <summary>

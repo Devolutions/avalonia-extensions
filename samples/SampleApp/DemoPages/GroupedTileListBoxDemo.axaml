@@ -49,6 +49,7 @@
                               ItemsSource="{Binding GroupedItems}"
                               SelectedItem="{Binding SelectedGroupedItem}"
                               GroupSelector="{Binding CategoryGroupSelector}"
+                              GroupOrderAlphabetical="True"
                               ItemWidth="120"
                               ItemHeight="100"
                               DoubleTapped="GroupedListBox_OnDoubleTapped">

@@ -319,7 +319,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private static IEnumerable<IGrouping<object, IndexedItem>> GetIndexedGroups(
         IEnumerable<object> allItems,
-        Func<object, object> groupSelector)
+        Func<object, string> groupSelector)
     {
         return allItems
             .Select((item, index) => new IndexedItem(item, index, groupSelector(item)))
@@ -1168,18 +1168,16 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Control? FindElementInGroupedLayout(int index)
     {
-        if (this.content is not StackPanel stackPanel)
+        if (this.content is not StackPanel stackPanel || !this.useGrouping || this.GroupSelector is null)
         {
             return null;
         }
 
-        List<object>? allItems = this.ItemsSource?.Cast<object>().ToList();
-        if (allItems is null || index < 0 || index >= allItems.Count)
+        object? targetItem = this.ItemsSource?.Cast<object>().ElementAtOrDefault(index);
+        if (targetItem is null)
         {
             return null;
         }
-
-        object targetItem = allItems[index];
 
         // Search through all group ItemsRepeaters
         foreach (ItemsRepeater repeater in GetAllItemsRepeaters(stackPanel))
@@ -1191,13 +1189,9 @@ public class GroupedTileListBox : TemplatedControl
             }
 
             // Search through all ItemsSource indices
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
             {
                 Control? element = repeater.TryGetElement(i);
-                if (element is null)
-                {
-                    continue; // Item not realized (not in viewport), skip
-                }
 
                 if (element is GroupedTileListBoxItem container)
                 {
@@ -1285,7 +1279,6 @@ public class GroupedTileListBox : TemplatedControl
         else if (elementRect.Value.Y + elementRect.Value.Height > viewportHeight)
         {
             // Element is below viewport, scroll down to show it
-            // TODO: Improve this to be more accurate
             newY = currentOffset.Y + (elementRect.Value.Y + elementRect.Value.Height - viewportHeight);
         }
 
@@ -1364,19 +1357,7 @@ public class GroupedTileListBox : TemplatedControl
             return null;
         }
 
-        if (this.ItemsSource is IList list)
-        {
-            if (index < list.Count)
-            {
-                return list[index];
-            }
-        }
-        else
-        {
-            return this.ItemsSource.Cast<object?>().ElementAtOrDefault(index);
-        }
-
-        return null;
+        return this.ItemsSource.Cast<object?>().ElementAtOrDefault(index);
     }
 
     private int GetIndexOfItem(object? item)
@@ -1391,14 +1372,14 @@ public class GroupedTileListBox : TemplatedControl
             return list.IndexOf(item);
         }
 
-        return this.ItemsSource.Cast<object?>()
-            .Select((currentItem, index) => new { Item = currentItem, Index = index })
-            .FirstOrDefault(x => ReferenceEquals(x.Item, item))
-            ?.Index ?? -1;
+        (int index, object? indexedItem) = this.ItemsSource.Cast<object?>()
+            .Index()
+            .FirstOrDefault(x => ReferenceEquals(x.Item, item));
+        return indexedItem is null ? -1 : index;
     }
 
     /// <summary>
     /// Represents an item with its original index and group for navigation calculations.
     /// </summary>
-    private sealed record IndexedItem(object Item, int Index, object Group);
+    private sealed record IndexedItem(object Item, int Index, string Group);
 }

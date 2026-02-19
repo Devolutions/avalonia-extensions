@@ -317,29 +317,6 @@ public class GroupedTileListBox : TemplatedControl
             .OrderBy(g => g.Key?.ToString() ?? string.Empty);
     }
 
-    private IDataTemplate? FindTemplateForItem(object item)
-    {
-        if (this.ItemTemplate != null)
-        {
-            return this.ItemTemplate;
-        }
-
-        // Walk up the logical tree
-        Control? current = this;
-        while (current != null)
-        {
-            foreach (IDataTemplate template in current.DataTemplates.Where(template => template.Match(item)))
-            {
-                return template;
-            }
-
-            current = current.Parent as Control;
-        }
-
-        // Fall back to Application-level templates
-        return Application.Current?.DataTemplates.FirstOrDefault(template => template.Match(item));
-    }
-
     private void UpdateItemsRepeater()
     {
         if (this.scrollViewer == null)

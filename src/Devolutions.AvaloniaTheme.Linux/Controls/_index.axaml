@@ -32,6 +32,7 @@
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TagInput.axaml" />
     <MergeResourceInclude Source="TextBox.axaml" />
+    <MergeResourceInclude Source="TreeDataGrid.axaml" />
     <MergeResourceInclude Source="Window.axaml" />
   </ResourceDictionary.MergedDictionaries>
 

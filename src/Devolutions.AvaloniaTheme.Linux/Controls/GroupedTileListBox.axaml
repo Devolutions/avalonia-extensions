@@ -1,3 +1,4 @@
+
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -6,19 +7,6 @@
     <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundColor}" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderColor}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="{TemplateBinding BorderThickness}">
-          <ScrollViewer Name="PART_ScrollViewer"
-                        Background="{TemplateBinding Background}"
-                        HorizontalScrollBarVisibility="Disabled"
-                        VerticalScrollBarVisibility="Auto" />
-        </Border>
-      </ControlTemplate>
-    </Setter>
   </ControlTheme>
 
 </ResourceDictionary>

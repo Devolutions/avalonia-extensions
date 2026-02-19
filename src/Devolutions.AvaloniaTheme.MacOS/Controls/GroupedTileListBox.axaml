@@ -6,19 +6,6 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="2" />
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="{TemplateBinding BorderThickness}">
-          <ScrollViewer Name="PART_ScrollViewer"
-                        Background="{TemplateBinding Background}"
-                        HorizontalScrollBarVisibility="Disabled"
-                        VerticalScrollBarVisibility="Auto" />
-        </Border>
-      </ControlTemplate>
-    </Setter>
   </ControlTheme>
 
 </ResourceDictionary>

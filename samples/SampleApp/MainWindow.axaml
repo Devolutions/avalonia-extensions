@@ -152,6 +152,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="GroupedTileListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:GroupedTileListBoxDemo>
+                  <demoPages:GroupedTileListBoxDemo.DataContext>
+                    <vm:GroupedTileListBoxViewModel />
+                  </demoPages:GroupedTileListBoxDemo.DataContext>
+                </demoPages:GroupedTileListBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
                 </TabItem.Header>
                 <demoPages:HyperlinkButtonDemo />

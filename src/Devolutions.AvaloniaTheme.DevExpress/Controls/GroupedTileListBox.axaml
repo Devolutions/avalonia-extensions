@@ -1,0 +1,11 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox" BasedOn="{StaticResource {x:Type GroupedTileListBox}}">
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}"/>
+    </ControlTheme>
+
+</ResourceDictionary>

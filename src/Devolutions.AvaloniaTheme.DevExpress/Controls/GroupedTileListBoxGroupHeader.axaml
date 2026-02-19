@@ -1,0 +1,9 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type GroupedTileListBoxGroupHeader}" TargetType="GroupedTileListBoxGroupHeader" BasedOn="{StaticResource {x:Type GroupedTileListBoxGroupHeader}}">
+    <Setter Property="Background" Value="{DynamicResource GroupedTileListBoxGroupHeaderBackgroundBrush}" />
+  </ControlTheme>
+
+</ResourceDictionary>

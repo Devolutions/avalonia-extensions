@@ -1,0 +1,22 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type GroupedTileListBoxItem}" TargetType="GroupedTileListBoxItem" BasedOn="{StaticResource {x:Type GroupedTileListBoxItem}}">
+    <!-- Pointer over state -->
+    <Style Selector="^:pointerover /template/ Border#PART_Border">
+      <Setter Property="Background" Value="{DynamicResource GroupedTileListBoxItemPointerOverBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+    </Style>
+
+    <!-- Selected state -->
+    <Style Selector="^:selected">
+      <Setter Property="Foreground" Value="White" />
+      <Style Selector="^ /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

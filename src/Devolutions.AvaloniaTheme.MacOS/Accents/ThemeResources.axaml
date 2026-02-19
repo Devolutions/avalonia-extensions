@@ -185,7 +185,9 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonInactiveBackgroundBrush' ResourceKey='ControlBackgroundHighBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+      <StaticResource x:Key='AccentButtonDisabledBorderBrush' ResourceKey='ButtonBorderBrush' />
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
@@ -394,7 +396,9 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonInactiveBackgroundBrush' ResourceKey='ControlBackgroundHighBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+      <StaticResource x:Key='AccentButtonDisabledBorderBrush' ResourceKey='ButtonBorderBrush' />
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />

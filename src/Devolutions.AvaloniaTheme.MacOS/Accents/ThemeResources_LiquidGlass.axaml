@@ -165,7 +165,9 @@
       <StaticResource x:Key="ButtonDisabledBorderBrush" ResourceKey="Transparent" />
       <StaticResource x:Key="ButtonPressedBackgroundBrush" ResourceKey="SurfaceT16" />
       <StaticResource x:Key="AccentButtonBackgroundBrush" ResourceKey="SystemAccent" />
+      <StaticResource x:Key="AccentButtonInactiveBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
       <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
+      <StaticResource x:Key="AccentButtonDisabledBorderBrush" ResourceKey="ButtonDisabledBorderBrush" />
 
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT19" />
@@ -221,7 +223,9 @@
       <StaticResource x:Key="ButtonDisabledBorderBrush" ResourceKey="Transparent" />
       <StaticResource x:Key="ButtonPressedBackgroundBrush" ResourceKey="SurfaceT16" />
       <StaticResource x:Key="AccentButtonBackgroundBrush" ResourceKey="SystemAccent" />
+      <StaticResource x:Key="AccentButtonInactiveBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
       <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
+      <StaticResource x:Key="AccentButtonDisabledBorderBrush" ResourceKey="ButtonDisabledBorderBrush" />
 
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT18" />

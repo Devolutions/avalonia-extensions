@@ -304,7 +304,7 @@ public class GroupedTileListBox : TemplatedControl
     /// <summary>
     /// Returns groups sorted by <see cref="GroupOrderSelector"/> first (if set), then alphabetically by key (if <see cref="GroupOrderAlphabetical"/> is enabled).
     /// </summary>
-    private IEnumerable<IGrouping<string, object>> GetOrderedGroups(IEnumerable<IGrouping<string, object>> groups)
+    private IEnumerable<IGrouping<string, T>> GetOrderedGroups<T>(IEnumerable<IGrouping<string, T>> groups)
     {
         if (this.GroupOrderSelector is { } selector)
             return this.GroupOrderAlphabetical
@@ -317,14 +317,13 @@ public class GroupedTileListBox : TemplatedControl
     /// <summary>
     /// Groups items with their original indices, ordered by group key.
     /// </summary>
-    private static IEnumerable<IGrouping<object, IndexedItem>> GetIndexedGroups(
+    private IEnumerable<IGrouping<object, IndexedItem>> GetGroupedIndexedItems(
         IEnumerable<object> allItems,
         Func<object, string> groupSelector)
     {
-        return allItems
+        return this.GetOrderedGroups(allItems
             .Select((item, index) => new IndexedItem(item, index, groupSelector(item)))
-            .GroupBy(x => x.Group)
-            .OrderBy(g => g.Key?.ToString() ?? string.Empty);
+            .GroupBy(x => x.Group));
     }
 
     private void UpdateItemsRepeater()
@@ -800,7 +799,7 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         // Find the first group
-        IGrouping<object, IndexedItem>? firstGroup = GetIndexedGroups(this.ItemsSource.Cast<object>(), this.GroupSelector).FirstOrDefault();
+        IGrouping<object, IndexedItem>? firstGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).FirstOrDefault();
         if (firstGroup is null)
         {
             return false;
@@ -836,7 +835,7 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         // Find the last group
-        IGrouping<object, IndexedItem>? lastGroup = GetIndexedGroups(this.ItemsSource.Cast<object>(), this.GroupSelector).LastOrDefault();
+        IGrouping<object, IndexedItem>? lastGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).LastOrDefault();
         if (lastGroup == null)
         {
             return false;
@@ -877,7 +876,7 @@ public class GroupedTileListBox : TemplatedControl
             return fallback;
         }
 
-        List<IGrouping<object, IndexedItem>> groups = GetIndexedGroups(this.ItemsSource.Cast<object>(), this.GroupSelector).ToList();
+        List<IGrouping<object, IndexedItem>> groups = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).ToList();
 
         // Find current item's group and position within group
         foreach (IGrouping<object, IndexedItem> group in groups)

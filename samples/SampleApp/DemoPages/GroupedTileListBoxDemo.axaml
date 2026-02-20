@@ -49,6 +49,7 @@
                               ItemsSource="{Binding GroupedItems}"
                               SelectedItem="{Binding SelectedGroupedItem}"
                               GroupSelector="{Binding CategoryGroupSelector}"
+                              GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
                               GroupOrderAlphabetical="True"
                               ItemWidth="120"
                               ItemHeight="100"

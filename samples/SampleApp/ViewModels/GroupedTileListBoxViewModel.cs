@@ -97,6 +97,14 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
 
     // Group selector function - extracts Category from FoodItem
     public Func<object, string> CategoryGroupSelector { get; } = item => ((FoodItem)item).Category;
+    
+    public Func<string, int> CategoryGroupOrderSelector { get; } = group => group switch
+    {
+        "Meats" => 0,
+        "Fruits" => 1,
+        "Vegetables" => 2,
+        _ => 999
+    };
 
     // Group order selector - empty groups first, then alphabetical
     public Func<string, int> EmptyGroupFirstSelector { get; } = group => string.IsNullOrEmpty((string)group) ? 0 : 1;

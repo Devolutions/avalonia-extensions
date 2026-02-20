@@ -503,6 +503,7 @@ public class GroupedTileListBox : TemplatedControl
         };
 
         // Update selection state
+        container.Content = item;
         container.IsSelected = this.IsItemSelected(item);
         container.ItemIndex = e.Index;
 

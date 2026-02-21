@@ -129,6 +129,7 @@
   <CornerRadius x:Key="Radius7">7</CornerRadius>
   <CornerRadius x:Key="Radius6">6</CornerRadius>
   <CornerRadius x:Key="Radius5">5</CornerRadius>
+  <CornerRadius x:Key="Radius0">0</CornerRadius>
 
 
   <!-- Resource naming scheme: -->
@@ -140,6 +141,9 @@
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <Color x:Key="TextBoxBackgroundColor">#ffffff</Color>
+
+      <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
+      <SolidColorBrush x:Key="OpaqueSurfaceT07" Color="#ececec" />
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
 
@@ -168,6 +172,22 @@
       <StaticResource x:Key="AccentButtonInactiveBackgroundBrush" ResourceKey="ButtonBackgroundBrush" />
       <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
       <StaticResource x:Key="AccentButtonDisabledBorderBrush" ResourceKey="ButtonDisabledBorderBrush" />
+
+      <StaticResource x:Key="TabControlTabstripBackgroundBrush" ResourceKey="OpaqueSurfaceT07" />
+
+      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="Thickness0" />
+      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="TabItemForegroundBrush" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="TabItemInactiveForegroundBrush" ResourceKey="ForegroundT50" />
+      <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="AccentButtonBackgroundBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="SurfaceT19" />
+      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="AccentButtonPressedBackgroundBrush" />
+
+      <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="TabItemSelectedBackgroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveBackgroundBrush" ResourceKey="TabItemSelectedInactiveBackgroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedForegroundBrush" ResourceKey="TabItemSelectedForegroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedPressedBackgroundBrush" ResourceKey="TabItemSelectedPressedBackgroundBrush" />
 
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT19" />
@@ -199,6 +219,9 @@
       <Color x:Key="TextBoxBackgroundColor">#20212e</Color>
       <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="#1e1e1e" />
 
+      <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
+      <SolidColorBrush x:Key="OpaqueSurfaceT08" Color="#323341" />
+
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
@@ -227,6 +250,23 @@
       <StaticResource x:Key="AccentButtonPressedBackgroundBrush" ResourceKey="SystemAccentH10" />
       <StaticResource x:Key="AccentButtonDisabledBorderBrush" ResourceKey="ButtonDisabledBorderBrush" />
 
+      <StaticResource x:Key="TabControlTabstripBackgroundBrush" ResourceKey="OpaqueSurfaceT08" />
+
+      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="Thickness0" />
+      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="TabItemForegroundBrush" ResourceKey="ForegroundT85" />
+      <StaticResource x:Key="TabItemInactiveForegroundBrush" ResourceKey="ForegroundT50" />
+      <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="AccentButtonBackgroundBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="SurfaceT19" />
+      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="ControlForegroundAccentHighBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveForegroundBrush" ResourceKey="ForegroundT50" />
+      <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="AccentButtonPressedBackgroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="TabItemSelectedBackgroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveBackgroundBrush" ResourceKey="TabItemSelectedInactiveBackgroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedForegroundBrush" ResourceKey="TabItemSelectedForegroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveForegroundBrush" ResourceKey="TabItemSelectedInactiveForegroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedPressedBackgroundBrush" ResourceKey="TabItemSelectedPressedBackgroundBrush" />
+
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="SurfaceT18" />
       <StaticResource x:Key="CheckBoxCheckedBackgroundBrush" ResourceKey="SystemAccentD03" />
@@ -254,11 +294,21 @@
 
   <!-- MARK: Common Resources -->
 
+  <x:Boolean x:Key="IsLiquidGlassTheme">True</x:Boolean>
+  <x:Boolean x:Key="IsClassicTheme">False</x:Boolean>
+
   <StaticResource x:Key="ButtonBorderBoxShadow" ResourceKey="NoShadow" />
   <StaticResource x:Key="ButtonBorderThickness" ResourceKey="Thickness0" />
   <StaticResource x:Key="ButtonMinHeight" ResourceKey="ControlSize24" />
   <StaticResource x:Key="ButtonCornerRadius" ResourceKey="Radius6" />
   <StaticResource x:Key="ButtonPadding" ResourceKey="ThicknessL12R11" />
+
+  <!-- TabControl & TabItem -->
+  <Thickness x:Key="TabControlBorderThickness">0</Thickness>
+  <Thickness x:Key="TabControlTabStripBorderThickness">0</Thickness>
+  <StaticResource x:Key="TabItemDividerBorderBrush" ResourceKey="SurfaceT10" />
+  <Thickness x:Key="TabItemPadding">16 4</Thickness>
+  <x:Double x:Key="TabItemDividerHeight">14</x:Double>
 
   <StaticResource x:Key="CheckBoxCornerRadius" ResourceKey="Radius5" />
   <StaticResource x:Key="CheckBoxBorderThickness" ResourceKey="Thickness0" />

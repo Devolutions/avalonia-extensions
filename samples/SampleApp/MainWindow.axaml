@@ -200,7 +200,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:TabControlDemo />
               </TabItem>

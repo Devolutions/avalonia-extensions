@@ -15,7 +15,7 @@
           <TabItem Header="Tab3" IsEnabled="False" />
         </TabControl>
 
-        <TabControl TabStripPlacement="Top" Margin="5">
+        <TabControl TabStripPlacement="Top" Margin="5" Width="500">
           <TabItem Header="General">
             <TextBlock Text="Horizontal tab view" />
           </TabItem>
@@ -31,45 +31,55 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 2</Thickness>
-
   <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
     <Setter Property="Padding" Value="10" />
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TabControlTabstripBackgroundBrush}" />
 
     <Style Selector="^[TabStripPlacement=Top]">
       <Setter Property="BorderBrush" Value="{DynamicResource LayoutBorderMidBrush}" />
-      <Setter Property="BorderThickness" Value="0.6" />
+      <Setter Property="BorderThickness" Value="{DynamicResource TabControlBorderThickness}" />
       <Setter Property="CornerRadius" Value="{DynamicResource LayoutCornerRadius}" />
       <Setter Property="ClipToBounds" Value="False" />
       <Setter Property="Padding" Value="10 -10 10 10" />
       <Setter Property="Template">
         <ControlTemplate>
-          <Border Background="{TemplateBinding Background}"
+          <Border Background="Transparent"
                   ClipToBounds="False"
                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                   VerticalAlignment="{TemplateBinding VerticalAlignment}">
             <DockPanel ClipToBounds="False">
-              <Border Name="TabstripPanel"
-                      ClipToBounds="False"
-                      UseLayoutRounding="False"
-                      Background="{DynamicResource TabControlBackgroundBrush}"
-                      HorizontalAlignment="Center"
-                      BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-                      BorderThickness="0.5 0.5 0.5 0.6"
-                      CornerRadius="{DynamicResource ControlCornerRadius}"
-                      Padding="2 0 0 0"
-                      ZIndex="1"
-                      DockPanel.Dock="{TemplateBinding TabStripPlacement}">
-                <Border.Margin>
+              <Panel DockPanel.Dock="{TemplateBinding TabStripPlacement}"
+                     HorizontalAlignment="Center"
+                     ZIndex="1"
+                     UseLayoutRounding="False"
+                     ClipToBounds="False">
+                <Panel.Margin>
                   <Binding Source="{StaticResource InputControlsSpaceForFocusBorder}"
                            Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
                            ConverterParameter="{StaticResource TabControlSpaceForFocusFactors}" />
-                </Border.Margin>
-                <ItemsPresenter Name="PART_ItemsPresenter"
-                                ClipToBounds="False"
-                                ItemsPanel="{TemplateBinding ItemsPanel}" />
-              </Border>
+                </Panel.Margin>
+                <Border Name="TabStripBackgroundClassic"
+                        IsVisible="{DynamicResource IsClassicTheme}"
+                        Background="{DynamicResource TabControlTabstripBackgroundBrush}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}" />
+                <Border Name="TabStripBackgroundLiquidGlass"
+                        IsVisible="{DynamicResource IsLiquidGlassTheme}"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}" />
+
+                <Border Name="TabstripPanel"
+                        ClipToBounds="False"
+                        BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+                        BorderThickness="{DynamicResource TabControlTabStripBorderThickness}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                        Padding="2 0 0 0">
+
+                  <ItemsPresenter Name="PART_ItemsPresenter"
+                                  ClipToBounds="False"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </Border>
+              </Panel>
+
               <ContentPresenter Name="PART_SelectedContentHost"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -107,7 +117,7 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
                   CornerRadius="{TemplateBinding CornerRadius}"
-                  Background="{TemplateBinding Background}"
+                  Background="Transparent"
                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                   VerticalAlignment="{TemplateBinding VerticalAlignment}">
             <DockPanel ClipToBounds="False">

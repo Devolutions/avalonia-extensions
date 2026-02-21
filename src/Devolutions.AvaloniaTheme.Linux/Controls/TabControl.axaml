@@ -9,20 +9,20 @@
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
-    <Border Width="400">
-      <TabControl>
-        <TabItem Header="Arch">
-          <Border Background="AntiqueWhite" Height="100">
-            <TextBlock Text="Content" Foreground="Black" FontSize="20" />
-          </Border>
-        </TabItem>
-        <TabItem Header="Leaf">
-          <Border Background="Green" Height="100" />
-        </TabItem>
-        <TabItem Header="Disabled" IsEnabled="False" />
-      </TabControl>
-    </Border>
-  </design:ThemePreviewer>
+      <Border Width="400">
+        <TabControl>
+          <TabItem Header="Arch">
+            <Border Background="AntiqueWhite" Height="100">
+              <TextBlock Text="Content" Foreground="Black" FontSize="20" />
+            </Border>
+          </TabItem>
+          <TabItem Header="Leaf">
+            <Border Background="Green" Height="100" />
+          </TabItem>
+          <TabItem Header="Disabled" IsEnabled="False" />
+        </TabControl>
+      </Border>
+    </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 0</Thickness>
@@ -32,14 +32,13 @@
     <Setter Property="BorderThickness" Value="1" />
 
     <Setter Property="Padding" Value="10" />
-    <Setter Property="Background" Value="{DynamicResource TabControlBackground}" />
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
-                Background="{TemplateBinding Background}"
+                Background="Transparent"
                 HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                 VerticalAlignment="{TemplateBinding VerticalAlignment}">
           <DockPanel>

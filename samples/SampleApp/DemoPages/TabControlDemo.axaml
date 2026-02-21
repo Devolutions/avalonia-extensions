@@ -68,18 +68,26 @@
           </TabControl>
         </Border>
         <Border Width="500" Classes="alternativeBackground" Padding="20">
-          <TabControl TabStripPlacement="Top">
-            <TabItem Header="General">
-              <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
-            </TabItem>
-            <TabItem Header="Settings">
-              <TextBlock Text="Content 2" VerticalAlignment="Top" />
-            </TabItem>
-            <TabItem Header="Advanced">
-              <TextBlock Text="Content 3" VerticalAlignment="Top" />
-            </TabItem>
-            <TabItem Header="Disabled Tab" IsEnabled="False" />
-          </TabControl>
+          <StackPanel Spacing="15">
+            <TabControl TabStripPlacement="Top" Background="{DynamicResource AlternativeBackgroundTabControlTabStripBrush}">
+              <TabItem Header="General">
+                <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
+              </TabItem>
+              <TabItem Header="Settings">
+                <TextBlock Text="Content 2" VerticalAlignment="Top" />
+              </TabItem>
+              <TabItem Header="Advanced">
+                <TextBlock Text="Content 3" VerticalAlignment="Top" />
+              </TabItem>
+              <TabItem Header="Disabled Tab" IsEnabled="False" />
+            </TabControl>
+            <TextBlock TextWrapping="Wrap"
+                       IsVisible="{ext:ThemeIsOneOf 'LiquidGlass'}">
+              Native Liquid Glass tabs adjust their colour to the effective background colour without being truly transparent.
+              Avalonia does not support this. When placing a TabControl on a different background than the standard window colour, you can adjust the
+              TabStrip colour by setting the TabControl's Background property. This will not affect any of the other themes.
+            </TextBlock>
+          </StackPanel>
         </Border>
       </StackPanel>
     </StackPanel>
@@ -147,7 +155,7 @@
           <DataTemplate x:DataType="vm:TabItemModel">
             <StackPanel Margin="10">
               <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
-              <TextBlock Margin="0 10 0 0" FontStyle="Italic" Foreground="{DynamicResource ThemeForegroundLowBrush}">
+              <TextBlock Margin="0 10 0 0" FontStyle="Italic">
                 This content is bound from the ViewModel
               </TextBlock>
             </StackPanel>

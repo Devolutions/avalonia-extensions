@@ -61,26 +61,6 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <!-- Shifting the tab to the left to cover the divider of its left neighbour -->
-  <Thickness x:Key="TabItemDividerMargin">-2, 0, 0, 0</Thickness>
-
-  <ResourceDictionary.ThemeDictionaries>
-    <ResourceDictionary x:Key="Light">
-      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="TabBorderThickness" />
-      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
-      <Thickness x:Key="LightTabItemInnerBorderThickness">0</Thickness>
-      <StaticResource x:Key="TabItemInnerBorderThickness" ResourceKey="LightTabItemInnerBorderThickness" />
-      <StaticResource x:Key="TabItemInnerBorderBrush" ResourceKey="ControlBackgroundHighBrush" />
-    </ResourceDictionary>
-    <ResourceDictionary x:Key="Dark">
-      <Thickness x:Key="DarkTabItemOuterBorderThickness">0.4</Thickness>
-      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="DarkTabItemOuterBorderThickness" />
-      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="TransparentBrush" />
-      <StaticResource x:Key="TabItemInnerBorderThickness" ResourceKey="TabBorderThickness" />
-      <StaticResource x:Key="TabItemInnerBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
-    </ResourceDictionary>
-  </ResourceDictionary.ThemeDictionaries>
-
   <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
@@ -88,9 +68,10 @@
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <!-- TabItemDividerMargin: Shifting the tab to the left to cover the divider of its left neighbour -->
     <Setter Property="Margin" Value="{DynamicResource TabItemDividerMargin}" />
-    <Setter Property="Padding" Value="{DynamicResource TabItemPadding} " />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource TabItemPadding}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource TabItemCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
 
@@ -99,15 +80,17 @@
     </Style>
 
     <Style Selector="^[TabStripPlacement=Top], ^[TabStripPlacement=Bottom]">
+      <Setter Property="Background" Value="{DynamicResource TabItemBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{WindowActiveResourceToggler TabItemForegroundBrush, TabItemInactiveForegroundBrush}" />
       <Setter Property="Template">
         <ControlTemplate>
           <Panel>
             <Border Name="TabDivider"
-                    Height="12"
+                    Height="{DynamicResource TabItemDividerHeight}"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness=" 0 0  1 0"
-                    BorderBrush="{DynamicResource ForegroundLowBrush}" />
+                    BorderBrush="{DynamicResource TabItemDividerBorderBrush}" />
             <Border Name="OuterBorder"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{DynamicResource TabItemOuterBorderThickness}"
@@ -117,15 +100,13 @@
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
                                 Content="{TemplateBinding Header}"
                                 ContentTemplate="{TemplateBinding HeaderTemplate}"
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 RecognizesAccessKey="True" />
             </Border>
             <Border Name="FocusBorderElement"
-                    Margin="-1 -3 -3 -3"
+                    Margin="-3"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     CornerRadius="7" />
           </Panel>
@@ -142,22 +123,27 @@
       <Style Selector="^:nth-last-child(1) /template/ Border#TabDivider">
         <Setter Property="BorderBrush" Value="Transparent" />
       </Style>
-      <Style Selector="^:selected /template/ Border#TabDivider">
-        <Setter Property="BorderBrush" Value="Transparent" />
-      </Style>
-      <Style Selector="^:selected /template/ Border#OuterBorder">
-        <Setter Property="BorderBrush" Value="{DynamicResource TabItemOuterBorderBrush}" />
-      </Style>
-      <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TabItemInnerBorderBrush}" />
-      </Style>
-      <Style Selector="^:selected:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource TabItemSelectedPressedBrush}" />
+
+      <Style Selector="^:selected">
+        <Style Selector="^ /template/ Border#TabDivider">
+          <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ Border#OuterBorder">
+          <Setter Property="BorderBrush" Value="{DynamicResource TabItemOuterBorderBrush}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{WindowActiveResourceToggler TabItemSelectedBackgroundBrush, TabItemSelectedInactiveBackgroundBrush}" />
+          <Setter Property="Foreground" Value="{WindowActiveResourceToggler TabItemSelectedForegroundBrush, TabItemSelectedInactiveForegroundBrush}" />
+        </Style>
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource TabItemSelectedPressedBackgroundBrush}" />
+        </Style>
       </Style>
     </Style>
 
     <Style Selector="^[TabStripPlacement=Right], ^[TabStripPlacement=Left]">
+      <Setter Property="Background" Value="{DynamicResource TabItemBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{WindowActiveResourceToggler TabItemForegroundBrush, TabItemInactiveForegroundBrush}" />
       <Setter Property="Padding" Value="8 4" />
       <Setter Property="Template">
         <ControlTemplate>
@@ -170,8 +156,6 @@
                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                               Background="{TemplateBinding Background}"
-                              BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="{TemplateBinding BorderThickness}"
                               Content="{TemplateBinding Header}"
                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                               CornerRadius="{TemplateBinding CornerRadius}"
@@ -188,8 +172,12 @@
       </Style>
 
       <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{WindowActiveResourceToggler TabItemVerticalSelectedBackgroundBrush, TabItemVerticalSelectedInactiveBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{WindowActiveResourceToggler TabItemVerticalSelectedForegroundBrush, TabItemVerticalSelectedInactiveForegroundBrush}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+      </Style>
+      <Style Selector="^:selected:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource TabItemVerticalSelectedPressedBackgroundBrush}" />
       </Style>
     </Style>
     <Style Selector="^[TabStripPlacement=Right]">

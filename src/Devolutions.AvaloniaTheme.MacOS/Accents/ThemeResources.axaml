@@ -104,6 +104,21 @@
       <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.20" />
 
       <SolidColorBrush x:Key="TabItemSelectedPressedBrush" Color="#f0f0f0" />
+      <StaticResource x:Key="TabItemOuterBorderThickness" ResourceKey="TabBorderThickness" />
+      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
+      <StaticResource x:Key="TabItemBackgroundBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="TabItemForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="TabItemSelectedPressedBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedPressedBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
 
       <BoxShadows x:Key="TextBoxBorderShadows">0 0.5 2.5 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
       <BoxShadows x:Key="ControlBorderBoxShadow">0 1 1.5 0 #4d000000, 0 0 0 0.5 #03000000</BoxShadows>
@@ -114,7 +129,7 @@
       <Thickness x:Key="RepeatButtonBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="TabBorderThickness">0.6 0.6 0.6 1</Thickness>
       <Thickness x:Key="ControlBorderThickness">0.6</Thickness>
-      <Thickness x:Key="TabControlBorderThickness">0 0.6 0 0</Thickness>
+      <Thickness x:Key="TabControlBorderThickness">0.6</Thickness>
       <Thickness x:Key="ToolTipBorderThickness">0</Thickness>
       <StaticResource x:Key="CheckBoxBorderThickness" ResourceKey="ControlBorderThickness" />
       <StaticResource x:Key="RadioButtonBorderThickness" ResourceKey="CheckBoxBorderThickness" />
@@ -185,7 +200,9 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonInactiveBackgroundBrush' ResourceKey='ControlBackgroundHighBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+      <StaticResource x:Key='AccentButtonDisabledBorderBrush' ResourceKey='ButtonBorderBrush' />
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
@@ -311,6 +328,21 @@
       <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />
 
       <SolidColorBrush x:Key="TabItemSelectedPressedBrush" Color="#666666" />
+      <Thickness x:Key="TabItemOuterBorderThickness">0.4</Thickness>
+      <StaticResource x:Key="TabItemOuterBorderBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="TabItemBackgroundBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="TabItemForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="TabItemSelectedPressedBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveForegroundBrush" ResourceKey="ForegroundHighBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedPressedBackgroundBrush" ResourceKey="ControlBackgroundMidBrush" />
 
       <BoxShadows x:Key="TextBoxBorderShadows">0 1 1 0 #4dffffff</BoxShadows>
       <BoxShadows x:Key="ControlBorderBoxShadow">0 0 Transparent</BoxShadows>
@@ -324,7 +356,7 @@
       <Thickness x:Key="TabBorderThickness">0 1 0 0</Thickness>
       <Thickness x:Key="ButtonBorderAccentThickness">0 1 0 0</Thickness>
       <Thickness x:Key="ControlBorderThickness">0 0.6 0 0</Thickness>
-      <Thickness x:Key="TabControlBorderThickness">0 0.6 0 0.6</Thickness>
+      <Thickness x:Key="TabControlBorderThickness">0.6</Thickness>
       <Thickness x:Key="ToolTipBorderThickness">0.6</Thickness>
       <StaticResource x:Key="CheckBoxBorderThickness" ResourceKey="ControlBorderThickness" />
       <StaticResource x:Key="RadioButtonBorderThickness" ResourceKey="CheckBoxBorderThickness" />
@@ -394,7 +426,9 @@
       <StaticResource x:Key='ButtonBorderThickness' ResourceKey='ControlBorderThickness' />
       <StaticResource x:Key='ButtonPressedBackgroundBrush' ResourceKey='ControlBackgroundActiveHighBrush' />
       <StaticResource x:Key='AccentButtonBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+      <StaticResource x:Key='AccentButtonInactiveBackgroundBrush' ResourceKey='ControlBackgroundHighBrush' />
       <StaticResource x:Key='AccentButtonPressedBackgroundBrush' ResourceKey='ButtonBackgroundAccentRecessedBrush' />
+      <StaticResource x:Key='AccentButtonDisabledBorderBrush' ResourceKey='ButtonBorderBrush' />
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
@@ -424,6 +458,9 @@
 
 
   <!-- MARK: Common Resources -->
+
+  <x:Boolean x:Key="IsLiquidGlassTheme">False</x:Boolean>
+  <x:Boolean x:Key="IsClassicTheme">True</x:Boolean>
 
   <Thickness x:Key="Thickness0">0</Thickness>
 
@@ -566,8 +603,14 @@
   </VisualBrush>
 
   <!-- TabControl & TabItem Resources -->
+  <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 2</Thickness>
+  <Thickness x:Key="TabControlTabStripBorderThickness">0.5 0.5 0.5 0.6</Thickness>
+  <x:Double x:Key="TabItemDividerHeight">12</x:Double>
+  <Thickness x:Key="TabItemDividerMargin">-2 0 0 0</Thickness>
   <Thickness x:Key="TabItemPadding">16 2</Thickness>
-  <SolidColorBrush x:Key="TabControlBackgroundBrush" Color="{DynamicResource TabControlBackgroundColor}" />
+  <StaticResource x:Key="TabItemCornerRadius" ResourceKey="ControlCornerRadius" />
+  <StaticResource x:Key="TabItemDividerBorderBrush" ResourceKey="ForegroundLowBrush" />
+  <SolidColorBrush x:Key="TabControlTabstripBackgroundBrush" Color="{DynamicResource TabControlBackgroundColor}" />
 
   <!-- CheckBox Resources -->
   <CornerRadius x:Key="CheckBoxCornerRadius">3</CornerRadius>

@@ -182,11 +182,13 @@
       <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="AccentButtonBackgroundBrush" />
       <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="SurfaceT19" />
       <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="AccentForeground" />
+      <StaticResource x:Key="TabItemSelectedInactiveForegroundBrush" ResourceKey="ForegroundT50" />
       <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="AccentButtonPressedBackgroundBrush" />
 
       <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="TabItemSelectedBackgroundBrush" />
       <StaticResource x:Key="TabItemVerticalSelectedInactiveBackgroundBrush" ResourceKey="TabItemSelectedInactiveBackgroundBrush" />
       <StaticResource x:Key="TabItemVerticalSelectedForegroundBrush" ResourceKey="TabItemSelectedForegroundBrush" />
+      <StaticResource x:Key="TabItemVerticalSelectedInactiveForegroundBrush" ResourceKey="TabItemSelectedInactiveForegroundBrush" />
       <StaticResource x:Key="TabItemVerticalSelectedPressedBackgroundBrush" ResourceKey="TabItemSelectedPressedBackgroundBrush" />
 
       <StaticResource x:Key="CheckBoxBackgroundBrush" ResourceKey="SurfaceT10" />
@@ -258,7 +260,7 @@
       <StaticResource x:Key="TabItemInactiveForegroundBrush" ResourceKey="ForegroundT50" />
       <StaticResource x:Key="TabItemSelectedBackgroundBrush" ResourceKey="AccentButtonBackgroundBrush" />
       <StaticResource x:Key="TabItemSelectedInactiveBackgroundBrush" ResourceKey="SurfaceT19" />
-      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="ControlForegroundAccentHighBrush" />
+      <StaticResource x:Key="TabItemSelectedForegroundBrush" ResourceKey="AccentForeground" />
       <StaticResource x:Key="TabItemSelectedInactiveForegroundBrush" ResourceKey="ForegroundT50" />
       <StaticResource x:Key="TabItemSelectedPressedBackgroundBrush" ResourceKey="AccentButtonPressedBackgroundBrush" />
       <StaticResource x:Key="TabItemVerticalSelectedBackgroundBrush" ResourceKey="TabItemSelectedBackgroundBrush" />

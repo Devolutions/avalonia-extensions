@@ -214,7 +214,7 @@
             </MenuItem>
             <MenuItem Header="-" />
           </Menu>
-          <Border Background="{DynamicResource BackgroundBrush}" Padding="15">
+          <Border Background="{DynamicResource SystemRegionColor}" Padding="15">
             <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap"
                        IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
               <Bold>Use the following classes for menu styling:</Bold><LineBreak /><LineBreak />

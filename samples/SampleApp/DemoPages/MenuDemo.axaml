@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:sampleApp="clr-namespace:SampleApp"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.MenuDemo">
@@ -215,18 +214,46 @@
             <MenuItem Header="-" />
           </Menu>
           <Border Background="{DynamicResource SystemRegionColor}" Padding="15">
-            <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap"
-                       IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
-              <Bold>Use the following classes for menu styling:</Bold><LineBreak /><LineBreak />
-              • <TextBlock Classes="code" Text="MacOS_Theme_MenuLabelBelowIcon" /> for a toolbar-style menu
-              <LineBreak />
-              • <TextBlock Classes="code" Text="MacOS_Theme_MenuItemIconOnly" /> for a toolbar-style menu without labels (Header content appears in a ToolTip instead)
-              <LineBreak /><LineBreak />
-              • <TextBlock Classes="code" Text="MacOS_Theme_MenuOpensAbove" /> for bottom-placed menus, opening upwards
-              <LineBreak /><LineBreak />
-              • <TextBlock Classes="code" Text="ContentPresenter#PART_HeaderPresenter" /> of the top-level menu items has a class
-              <TextBlock Classes="code" Text="TopLevelMenuItem" /> attached that allows easier styling without affecting sub-menu items. E.g. setting MaxWidth to force long names to wrap
-            </TextBlock>
+            <StackPanel Spacing="20">
+              <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap"
+                         IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
+                <Bold>Use the following classes for menu styling:</Bold><LineBreak /><LineBreak />
+                • <TextBlock Classes="code" Text="MacOS_Theme_MenuLabelBelowIcon" /> for a toolbar-style menu
+                <LineBreak />
+                • <TextBlock Classes="code" Text="MacOS_Theme_MenuItemIconOnly" /> for a toolbar-style menu without labels (Header content appears in a ToolTip instead)
+                <LineBreak /><LineBreak />
+                • <TextBlock Classes="code" Text="MacOS_Theme_MenuOpensAbove" /> for bottom-placed menus, opening upwards
+                <LineBreak /><LineBreak />
+                • <TextBlock Classes="code" Text="ContentPresenter#PART_HeaderPresenter" /> of the top-level menu items has a class
+                <TextBlock Classes="code" Text="TopLevelMenuItem" /> attached that allows easier styling without affecting sub-menu items. E.g. setting MaxWidth to force long names to wrap
+              </TextBlock>
+              <TextBlock Classes="section-title">Open Menu example for Visual Regression testing</TextBlock>
+              <Border HorizontalAlignment="Left">
+                <MenuFlyoutPresenter>
+                  <MenuItem Header="Open session" InputGesture="&#x2318;+O" />
+                  <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
+                    <MenuItem Header="Open (embedded/tabbed)" />
+                    <MenuItem Header="Open embedded SFTP connection" />
+                    <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
+                    <MenuItem Header="-" />
+                    <MenuItem Header="Open (select credentials)..." />
+                  </MenuItem>
+                  <MenuItem Header="View password" />
+                  <MenuItem Header="Copy name" />
+                  <MenuItem Header="Copy password" />
+                  <Separator />
+                  <MenuItem Header="Focus session" />
+                  <MenuItem Header="Edit" IsEnabled="False">
+                    <MenuItem Header="Dummy1" />
+                    <MenuItem Header="Dummy2" />
+                  </MenuItem>
+                  <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
+                    <MenuItem Header="Option 1" ToggleType="CheckBox" />
+                    <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
+                  </MenuItem>
+                </MenuFlyoutPresenter>
+              </Border>
+            </StackPanel>
           </Border>
         </DockPanel>
       </Border>

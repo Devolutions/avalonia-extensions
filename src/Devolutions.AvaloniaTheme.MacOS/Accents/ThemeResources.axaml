@@ -206,7 +206,7 @@
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
-      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
+      <StaticResource x:Key="PopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="ControlBorderThickness" />
       <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="ControlBorderThickness" />
 
@@ -432,7 +432,7 @@
 
       <!-- ComboBox Resources -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="ControlBorderBoxShadow" />
-      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
+      <StaticResource x:Key="PopupBorderBrush" ResourceKey="MenuFlyoutPresenterBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="ControlBorderThickness" />
       <StaticResource x:Key="ComboBoxButtonBorderThickness" ResourceKey="ControlBorderThickness" />
 
@@ -622,7 +622,7 @@
   <StaticResource x:Key="ComboBoxButtonInactiveBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
   <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ControlBackgroundHighBrush" />
   <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlBorderRaisedBrush" />
-  <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="LayoutCornerRadius" />
+  <StaticResource x:Key="PopupCornerRadius" ResourceKey="LayoutCornerRadius" />
 
   <!-- ComboBox Button (ToggleButton) -->
 
@@ -715,11 +715,15 @@
   <Thickness x:Key="MenuIconPresenterMargin">0,0,4,0</Thickness>
   <Thickness x:Key="MenuInputGestureTextMargin">24,0,0,0</Thickness>
   <Thickness x:Key="MenuItemPadding">9 4 7 2</Thickness>
+  <x:Double x:Key="MenuItemMinHeight">22</x:Double>
   <Thickness x:Key="MenuToolBarItemPadding">4 0 4 4</Thickness>
   <Thickness x:Key="MenuToolBarItemIconPadding">10 5 8 5</Thickness>
   <Thickness x:Key="MenuToolBarItemActiveBackgroundMargin">-10 -3 -8 -3</Thickness>
   <Thickness x:Key="MenuItemActiveBackgroundMargin">-6,-2,-7,-2</Thickness>
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
+  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
+  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
+  <StaticResource x:Key="MenuItemPointerOverForegroundBrush" ResourceKey="ForegroundHighBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <SolidColorBrush x:Key="SvgIconDisabledColorBrush" Color="{DynamicResource SvgIconDisabledColor}" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

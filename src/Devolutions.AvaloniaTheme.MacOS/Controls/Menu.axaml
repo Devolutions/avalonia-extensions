@@ -249,21 +249,26 @@
                 </MultiBinding>
               </Popup.VerticalOffset>
               <Border Margin="{StaticResource PopupMargin} "
-                      Background="{DynamicResource PopupBackgroundBrush}"
-                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                      BorderBrush="{DynamicResource PopupBorderBrush}"
                       BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      Padding="{DynamicResource MenuFlyoutPadding}"
                       MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                       MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                       HorizontalAlignment="Stretch"
                       BoxShadow="{DynamicResource PopupShadow}"
-                      CornerRadius="{DynamicResource LayoutCornerRadius}">
-                <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
-                  <ItemsPresenter Name="PART_ItemsPresenter"
-                                  ItemsPanel="{TemplateBinding ItemsPanel}"
-                                  Margin="{DynamicResource MenuFlyoutScrollerMargin}"
-                                  Grid.IsSharedSizeScope="True" />
-                </ScrollViewer>
+                      CornerRadius="{DynamicResource PopupCornerRadius}">
+                <Border Name="InnerBorderHighlight"
+                        Background="{DynamicResource PopupBackgroundBrush}"
+                        BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                        BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                        CornerRadius="{DynamicResource PopupCornerRadius}"
+                        Padding="{DynamicResource MenuFlyoutPadding}">
+                  <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                    Grid.IsSharedSizeScope="True" />
+                  </ScrollViewer>
+                </Border>
               </Border>
             </Popup>
           </Panel>

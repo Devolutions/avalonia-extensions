@@ -34,8 +34,8 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThickness}" />
     <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}" />
     <Setter Property="Focusable" Value="True" />
@@ -44,29 +44,34 @@
     <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="WindowManagerAddShadowHint" Value="False" />
-    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource PopupCornerRadius}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border
           Margin="{StaticResource PopupMargin}"
-          Background="{TemplateBinding Background}"
           BorderBrush="{TemplateBinding BorderBrush}"
           BorderThickness="{TemplateBinding BorderThickness}"
-          Padding="{DynamicResource MenuFlyoutPadding}"
           CornerRadius="{TemplateBinding CornerRadius}"
           BoxShadow="{DynamicResource PopupShadow}"
           MaxWidth="{TemplateBinding MaxWidth}"
           MinHeight="{TemplateBinding MinHeight}"
           HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
-          <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}"
-                        HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-            <ItemsPresenter Name="PART_ItemsPresenter"
-                            ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="{DynamicResource MenuFlyoutScrollerMargin}"
-                            KeyboardNavigation.TabNavigation="Continue"
-                            Grid.IsSharedSizeScope="True" />
-          </ScrollViewer>
+          <Border Name="InnerBorderHighlight"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                  BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Padding="{DynamicResource MenuFlyoutPadding}">
+            <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}"
+                          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+              <ItemsPresenter Name="PART_ItemsPresenter"
+                              ItemsPanel="{TemplateBinding ItemsPanel}"
+                              Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                              KeyboardNavigation.TabNavigation="Continue"
+                              Grid.IsSharedSizeScope="True" />
+            </ScrollViewer>
+          </Border>
         </Border>
       </ControlTemplate>
     </Setter>

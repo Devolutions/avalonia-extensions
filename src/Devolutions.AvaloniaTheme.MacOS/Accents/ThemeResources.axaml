@@ -702,8 +702,8 @@
 
   <!-- Menu & MenuItem Resources -->
   <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="{DynamicResource PopupBackgroundColor}" />
-  <x:Double x:Key="MenuFlyoutSubItemPopupHorizontalOffset">-14</x:Double>
-  <x:Double x:Key="MenuFlyoutSubItemPopupVerticalOffset">-7</x:Double>
+  <x:Double x:Key="SubMenuPopupHorizontalOffset">-14</x:Double>
+  <x:Double x:Key="SubMenuPopupVerticalOffset">-7</x:Double>
   <x:Double x:Key="MenuPopupHorizontalOffset">-12</x:Double>
   <x:Double x:Key="MenuPopupVerticalOffset">6</x:Double>
   <x:Double x:Key="MenuToolBarPopupVerticalOffset">-10</x:Double>

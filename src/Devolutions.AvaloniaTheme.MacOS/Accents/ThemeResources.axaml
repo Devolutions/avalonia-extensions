@@ -723,7 +723,6 @@
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
-  <StaticResource x:Key="MenuItemPointerOverForegroundBrush" ResourceKey="ForegroundHighBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <SolidColorBrush x:Key="SvgIconDisabledColorBrush" Color="{DynamicResource SvgIconDisabledColor}" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

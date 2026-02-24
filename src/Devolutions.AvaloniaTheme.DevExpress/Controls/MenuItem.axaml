@@ -175,9 +175,6 @@
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver}" />
       </Style>
-      <Style Selector="^ /template/ PathIcon#PART_ChevronPath">
-        <Setter Property="Foreground" Value="{DynamicResource SubMenuChevronPointerOver}" />
-      </Style>
     </Style>
 
     <!--  Listen for PART_LayoutRoot:pointerover, so it will not be triggered when subitem is pressed  -->
@@ -188,9 +185,6 @@
       </Style>
       <Style Selector="^ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed}" />
-      </Style>
-      <Style Selector="^ PathIcon#PART_ChevronPath">
-        <Setter Property="Foreground" Value="{DynamicResource SubMenuChevronPressed}" />
       </Style>
     </Style>
 
@@ -205,12 +199,8 @@
         <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ PathIcon#PART_ChevronPath">
-        <Setter Property="Foreground" Value="{DynamicResource SubMenuChevronDisabled}" />
+        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
       </Style>
-    </Style>
-
-    <Style Selector="^:open /template/ PathIcon#PART_ChevronPath">
-      <Setter Property="Foreground" Value="{DynamicResource SubMenuChevronSubMenuOpened}" />
     </Style>
 
     <Style Selector="^:empty /template/ PathIcon#PART_ChevronPath">

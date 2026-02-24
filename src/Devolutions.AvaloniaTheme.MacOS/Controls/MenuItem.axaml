@@ -192,15 +192,13 @@
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource MenuItemPointerOverForegroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
       </Style>
     </Style>
     <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource MenuItemPointerOverBackgroundBrush}" />
-      </Style>
-      <Style Selector="^">
-        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />

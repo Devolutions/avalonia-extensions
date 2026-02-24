@@ -608,7 +608,7 @@
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="ScrollBar.AllowAutoHide" Value="False" />
+    <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
         <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}"
@@ -652,7 +652,7 @@
                     Grid.Column="2"
                     Background="{DynamicResource ScrollBarTrackBrush}"
                     BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
-                    IsVisible="{TemplateBinding ScrollBar.AllowAutoHide, Converter={x:Static BoolConverters.Not}}">
+                    IsVisible="{TemplateBinding (ScrollViewer.AllowAutoHide), Converter={x:Static BoolConverters.Not}}">
               <Border.BorderThickness>
                 <Binding Source="{StaticResource ScrollBarTrackBorderThickness}"
                          Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
@@ -666,7 +666,7 @@
                        Background="{DynamicResource ScrollBarTrackBrush}"
                        BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
                        BorderThickness="1"
-                       AllowAutoHide="{TemplateBinding ScrollBar.AllowAutoHide}"
+                       AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                        Width="{DynamicResource ScrollBarSize}" />
 
             <Grid Name="HorizontalScrollbarGrid"
@@ -680,7 +680,7 @@
                          Background="{DynamicResource ScrollBarTrackBrush}"
                          BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}"
                          BorderThickness="1"
-                         AllowAutoHide="{TemplateBinding ScrollBar.AllowAutoHide}"
+                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                          Height="{DynamicResource ScrollBarSize}" />
             </Grid>
             <Border Name="PART_DisabledVisualElement"

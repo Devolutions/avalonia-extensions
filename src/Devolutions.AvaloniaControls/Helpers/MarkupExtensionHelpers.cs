@@ -14,13 +14,13 @@ public static class MarkupExtensionHelpers
 
     // Dynamic approach is slightly faster than using reflection, see: https://stackoverflow.com/a/78582306
     // However, we support both for AoT compatibility (auto-detected at runtime)
-    public static IBinding? GetBinding<TIn>(object? v)
+    public static BindingBase? GetBinding<TIn>(object? v)
     {
         switch (v)
         {
             case null:
                 return null;
-            case IBinding binding:
+            case BindingBase binding:
                 return binding;
             case ClrPropertyInfo clrProperty:
                 // Support for Avalonia compiled bindings
@@ -54,13 +54,13 @@ public static class MarkupExtensionHelpers
             : null;
     }
 
-    public static IBinding? GetBinding(object? v, Type type)
+    public static BindingBase? GetBinding(object? v, Type type)
     {
         switch (v)
         {
             case null:
                 return null;
-            case IBinding binding:
+            case BindingBase binding:
                 return binding;
             case ClrPropertyInfo clrProperty:
                 // Support for Avalonia compiled bindings

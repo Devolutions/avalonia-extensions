@@ -266,50 +266,50 @@
                     VerticalAlignment="Bottom"
                     Width="400"
                     Padding="0 0 8 8">
-              <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-                <Border Background="{DynamicResource BackgroundColor}"
-                        CornerRadius="5"
-                        BorderThickness="1"
-                        BorderBrush="Gray"
-                        Padding="5">
-                  <StackPanel>
-                    <TextBlock Text="{Binding SystemScale, StringFormat='Default System scale: {0:P0}'}"
-                               FontSize="11"
-                               Opacity="0.7"
-                               Margin="2 0 0 4" />
-                    <Grid ColumnDefinitions="Auto,5,*,5,Auto">
-                      <!-- Scale Selector -->
-                      <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Scale:"
-                                   VerticalAlignment="Center"
-                                   Margin="0 0 5 0" />
-                        <ComboBox Width="100"
-                                  MaxDropDownHeight="500"
-                                  VerticalAlignment="Center"
-                                  ItemsSource="{Binding AvailableScales}"
-                                  SelectedItem="{Binding SelectedScale}"
-                                  SelectionChanged="Scale_OnSelectionChanged" />
-                      </StackPanel>
-
-                      <!-- Theme Selector -->
-                      <ComboBox x:Name="Themes"
-                                Grid.Column="2"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center"
-                                DisplayMemberBinding="{Binding DisplayName, x:DataType=sampleApp:Theme}"
-                                ItemsSource="{Binding AvailableThemes}"
-                                SelectedItem="{Binding CurrentTheme}"
-                                SelectionChanged="Themes_OnSelectionChanged" />
-
-                      <!-- Dark/Light Toggle -->
-                      <actipro:ToggleThemeButton
-                        Grid.Column="4"
-                        Classes.theme-outline="True"
-                        VerticalAlignment="Center" />
-                    </Grid>
-                  </StackPanel>
-                </Border>
-              </actipro:ShadowChrome>
+              <!-- <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7"> -->
+              <!--   <Border Background="{DynamicResource BackgroundColor}" -->
+              <!--           CornerRadius="5" -->
+              <!--           BorderThickness="1" -->
+              <!--           BorderBrush="Gray" -->
+              <!--           Padding="5"> -->
+              <!--     <StackPanel> -->
+              <!--       <TextBlock Text="{Binding SystemScale, StringFormat='Default System scale: {0:P0}'}" -->
+              <!--                  FontSize="11" -->
+              <!--                  Opacity="0.7" -->
+              <!--                  Margin="2 0 0 4" /> -->
+              <!--       <Grid ColumnDefinitions="Auto,5,*,5,Auto"> -->
+              <!--         ~1~ Scale Selector @1@ -->
+              <!--         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"> -->
+              <!--           <TextBlock Text="Scale:" -->
+              <!--                      VerticalAlignment="Center" -->
+              <!--                      Margin="0 0 5 0" /> -->
+              <!--           <ComboBox Width="100" -->
+              <!--                     MaxDropDownHeight="500" -->
+              <!--                     VerticalAlignment="Center" -->
+              <!--                     ItemsSource="{Binding AvailableScales}" -->
+              <!--                     SelectedItem="{Binding SelectedScale}" -->
+              <!--                     SelectionChanged="Scale_OnSelectionChanged" /> -->
+              <!--         </StackPanel> -->
+              <!-- -->
+              <!--         ~1~ Theme Selector @1@ -->
+              <!--         <ComboBox x:Name="Themes" -->
+              <!--                   Grid.Column="2" -->
+              <!--                   HorizontalAlignment="Stretch" -->
+              <!--                   VerticalAlignment="Center" -->
+              <!--                   DisplayMemberBinding="{Binding DisplayName, x:DataType=sampleApp:Theme}" -->
+              <!--                   ItemsSource="{Binding AvailableThemes}" -->
+              <!--                   SelectedItem="{Binding CurrentTheme}" -->
+              <!--                   SelectionChanged="Themes_OnSelectionChanged" /> -->
+              <!-- -->
+              <!--         ~1~ Dark/Light Toggle @1@ -->
+              <!--         <actipro:ToggleThemeButton -->
+              <!--           Grid.Column="4" -->
+              <!--           Classes.theme-outline="True" -->
+              <!--           VerticalAlignment="Center" /> -->
+              <!--       </Grid> -->
+              <!--     </StackPanel> -->
+              <!--   </Border> -->
+              <!-- </actipro:ShadowChrome> -->
             </Border>
 
             <Border HorizontalAlignment="Right"
@@ -317,22 +317,22 @@
                     Width="250"
                     Padding="0 8 8 0"
                     IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}">
-              <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
-                <Border Background="{DynamicResource BackgroundColor}"
-                        CornerRadius="5"
-                        BorderThickness="1"
-                        BorderBrush="Gray"
-                        Padding="5">
-                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Wallpaper:" VerticalAlignment="Center" Margin="0 0 10 0" />
-                    <ComboBox ItemsSource="{Binding AvailableWallpapers}"
-                              SelectedItem="{Binding SelectedWallpaper}"
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Stretch"
-                              MinWidth="100" />
-                  </StackPanel>
-                </Border>
-              </actipro:ShadowChrome>
+              <!-- <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7"> -->
+              <!--   <Border Background="{DynamicResource BackgroundColor}" -->
+              <!--           CornerRadius="5" -->
+              <!--           BorderThickness="1" -->
+              <!--           BorderBrush="Gray" -->
+              <!--           Padding="5"> -->
+              <!--     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"> -->
+              <!--       <TextBlock Text="Wallpaper:" VerticalAlignment="Center" Margin="0 0 10 0" /> -->
+              <!--       <ComboBox ItemsSource="{Binding AvailableWallpapers}" -->
+              <!--                 SelectedItem="{Binding SelectedWallpaper}" -->
+              <!--                 VerticalAlignment="Center" -->
+              <!--                 HorizontalAlignment="Stretch" -->
+              <!--                 MinWidth="100" /> -->
+              <!--     </StackPanel> -->
+              <!--   </Border> -->
+              <!-- </actipro:ShadowChrome> -->
             </Border>
           </Panel>
         </Panel>

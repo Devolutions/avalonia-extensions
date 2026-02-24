@@ -1,42 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>13</LangVersion>
-    <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
-    <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
-  </PropertyGroup>
+    <Import Project="../../Common.props" />
 
-  <PropertyGroup>
-    <Version>1.0.0</Version>
-    <Company>Devolutions</Company>
-    <Description>Devolutions Avalonia Controls Library</Description>
-    <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions/tree/master/src/Devolutions.AvaloniaControls</PackageProjectUrl>
-    <PackageId>Devolutions.AvaloniaControls</PackageId>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>
-      See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/CHANGELOG.md
-    </PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
+        <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <Company>Devolutions</Company>
+        <Description>Devolutions Avalonia Controls Library</Description>
+        <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions/tree/master/src/Devolutions.AvaloniaControls</PackageProjectUrl>
+        <PackageId>Devolutions.AvaloniaControls</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>
+            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/CHANGELOG.md
+        </PackageReleaseNotes>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.3.7,)" />
-    <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
-    <PackageReference Include="System.Reactive" Version="*" />
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
-    <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(MinAvaloniaVersion)" />
+        <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
+        <PackageReference Include="System.Reactive" Version="*" />
 
-  <ItemGroup>
-    <Compile Update="Controls\MultiComboBox\InnerMultiComboBoxList.cs">
-      <DependentUpon>InnerMultiComboBoxList.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+        <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
+    </ItemGroup>
 </Project>

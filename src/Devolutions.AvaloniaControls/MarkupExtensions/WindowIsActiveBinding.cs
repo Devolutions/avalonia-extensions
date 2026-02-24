@@ -8,7 +8,7 @@ using Converters;
 
 public class WindowIsActiveBindingExtension : MarkupExtension
 {
-    public static IBinding CreateIsActiveBinding() =>
+    public static BindingBase CreateIsActiveBinding() =>
         new MultiBinding
         {
             Converter = DevoMultiConverters.FirstNonNullValueMultiConverter,

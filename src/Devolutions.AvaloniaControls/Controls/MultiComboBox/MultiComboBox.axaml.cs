@@ -204,6 +204,11 @@ public partial class MultiComboBox : SelectingItemsControl
         ObservableExtension.Subscribe(IsDropDownOpenProperty.Changed, args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
     }
 
+    public void Clear()
+    {
+        this.SelectedItems?.Clear();
+    }
+
     public AvaloniaList<object?> FilteredItems { get; } = [];
 
     public ITemplate<Panel>? SelectedItemsPanel

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using ActiproSoftware.UI.Avalonia.Themes;
+// using ActiproSoftware.UI.Avalonia.Themes;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -165,12 +165,12 @@ public class App : Application
     {
         Styles styles = new();
 
-        // Recreate the same structure as in App.axaml's MacOsStyles resource
-        // Order is important: base theme must be added before global styles
-        styles.Add(new ModernTheme
-        {
-            AreNativeControlThemesEnabled = false,
-        });
+        // // Recreate the same structure as in App.axaml's MacOsStyles resource
+        // // Order is important: base theme must be added before global styles
+        // styles.Add(new ModernTheme
+        // {
+        //     AreNativeControlThemesEnabled = false,
+        // });
 
         // Create and manually initialize the theme
         // ISupportInitialize requires calling BeginInit() and EndInit()
@@ -368,17 +368,18 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
+    // TODO: FIX THIS FOR AVALONIA 12
     private void FixCommunityToolkitMvvmDataValidation()
     {
-        // Get an array of plugins to remove
-        var dataValidationPluginsToRemove =
-            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-
-        // remove each entry found
-        foreach (var plugin in dataValidationPluginsToRemove)
-        {
-            BindingPlugins.DataValidators.Remove(plugin);
-        }
+        // // Get an array of plugins to remove
+        // var dataValidationPluginsToRemove =
+        //     BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+        //
+        // // remove each entry found
+        // foreach (var plugin in dataValidationPluginsToRemove)
+        // {
+        //     BindingPlugins.DataValidators.Remove(plugin);
+        // }
     }
 
     public void AttachDevToolsOnce()

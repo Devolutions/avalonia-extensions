@@ -8,24 +8,24 @@
 
   <Application.Resources>
     <Styles x:Key="LinuxYaruStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsLinuxYaruTheme />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="DevExpressStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsDevExpressTheme GlobalStyles="False" />
       <DevolutionsDevExpressThemeGlobalStyles />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="MacOsStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <DevolutionsMacOsTheme GlobalStyles="False" />
       <DevolutionsMacOsThemeGlobalStyles />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="FluentStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <FluentTheme />
       <addons:DataGridFluentTheme />
       <addons:TreeDataGridFluentTheme />
@@ -33,12 +33,12 @@
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">
-      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <!-- <actipro:ModernTheme AreNativeControlThemesEnabled="False" /> -->
       <SimpleTheme />
       <local:SampleAppStyles />
     </Styles>
-    <actipro:ComparisonConverter x:Key="EqualToComparisonConverter" Operator="EqualTo" />
-    <actipro:ComparisonConverter x:Key="NotEqualToComparisonConverter" Operator="NotEqualTo" />
+    <!-- <actipro:ComparisonConverter x:Key="EqualToComparisonConverter" Operator="EqualTo" /> -->
+    <!-- <actipro:ComparisonConverter x:Key="NotEqualToComparisonConverter" Operator="NotEqualTo" /> -->
   </Application.Resources>
 
   <!-- KEPT FOR DESIGNER! -->
@@ -48,10 +48,10 @@
     <!-- <local:MacOsClassicThemeStyle /> -->
     <!-- <local:MacOsLiquidGlassThemeStyle /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
-    <!-- <DevolutionsLinuxYaruTheme /> -->
+    <DevolutionsLinuxYaruTheme />
     <!-- <local:FluentThemePlusAddOns /> -->
 
     <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
-    <Style />
+    <!-- <Style /> -->
   </Application.Styles>
 </Application>

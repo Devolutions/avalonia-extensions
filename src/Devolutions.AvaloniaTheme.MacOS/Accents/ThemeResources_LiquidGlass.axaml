@@ -148,7 +148,7 @@
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
@@ -204,7 +204,7 @@
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" Color="{Binding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}" Opacity="0.49" />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 

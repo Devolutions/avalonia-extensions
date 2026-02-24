@@ -1,108 +1,110 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-  </PropertyGroup>
+    <Import Project="../../Common.props" />
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <PublishAot>true</PublishAot>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <!-- Prevent automatic attachment of regular free dev tools to avoid duplicate mapping of F12 key -->
-    <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
 
-  <!-- Only enable Accelerate if a license key is present or explicitly enabled. 
-       (To enable manually, use: `dotnet run /p:EnableAccelerate=true`, will still throw an error though if no valid licence key is found -->
-  <PropertyGroup>
-    <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
-    <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
-    <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <!-- Prevent automatic attachment of regular free dev tools to avoid duplicate mapping of F12 key -->
+        <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
+    </PropertyGroup>
 
-    <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
-    <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+    <!-- Only enable Accelerate if a license key is present or explicitly enabled. 
+         (To enable manually, use: `dotnet run /p:EnableAccelerate=true`, will still throw an error though if no valid licence key is found -->
+    <PropertyGroup>
+        <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
 
-    <!-- If Accelerate is not enabled, exclude files that require it from the build  -->
-    <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs;**\TreeDataGridViewModel.cs</DefaultItemExcludes>
-  </PropertyGroup>
+        <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
 
-  <!-- Register the license key for Avalonia Accelerate if present -->
-  <ItemGroup>
-    <AvaloniaUILicenseKey Include="$(AVALONIA_LICENSE_KEY)" Condition="'$(AVALONIA_LICENSE_KEY)' != ''" />
-  </ItemGroup>
+        <!-- If Accelerate is not enabled, exclude files that require it from the build  -->
+        <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\TreeDataGridFluentTheme.axaml;**\TreeDataGridDemo.axaml;**\TreeDataGridDemo.axaml.cs;**\TreeDataGridViewModel.cs</DefaultItemExcludes>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.4" Condition="'$(EnableAccelerate)' == 'true'" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
+    <!-- Register the license key for Avalonia Accelerate if present -->
+    <ItemGroup>
+        <AvaloniaUILicenseKey Include="$(AVALONIA_LICENSE_KEY)" Condition="'$(AVALONIA_LICENSE_KEY)' != ''" />
+    </ItemGroup>
 
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
 
-  <ItemGroup>
-    <!--Add both, Classic and Accelerate Dev Tools-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.12" />
-    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1">
-      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
-      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+        <PackageReference Include="Avalonia.Themes.Simple" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
 
-  <ItemGroup>
-    <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.9.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.2" />
-  </ItemGroup>
+        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.4" Condition="'$(EnableAccelerate)' == 'true'" />
+    </ItemGroup>
 
-  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <!-- 
-        More recent versions of SkiaSharp are currently broken on Linux.
-        See: https://github.com/mono/SkiaSharp/issues/3117#issuecomment-2896259517
-        - sbergerondrouin 2025-06-18
-    -->
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <!--Add both, Classic and Accelerate Dev Tools-->
+<!--        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />-->
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\**" />
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.9.2" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+<!--        <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.2" />-->
+    </ItemGroup>
 
-  <!-- Temporary link for development. 
-       (To use the published nuget, uncomment PackageReference above (update version) or install with Nuget manager) -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
-    <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj" />
-    <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
-    <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />
-  </ItemGroup>
+<!--    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">-->
+<!--        &lt;!&ndash; -->
+<!--            More recent versions of SkiaSharp are currently broken on Linux.-->
+<!--            See: https://github.com/mono/SkiaSharp/issues/3117#issuecomment-2896259517-->
+<!--            - sbergerondrouin 2025-06-18-->
+<!--        &ndash;&gt;-->
+<!--        <PackageReference Include="SkiaSharp" Version="3.116.1" />-->
+<!--        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />-->
+<!--    </ItemGroup>-->
 
-  <ItemGroup>
-    <!-- Avalonia core assemblies -->
-    <TrimmerRootAssembly Include="Avalonia.Themes.Simple" />
-    <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
-    <TrimmerRootAssembly Include="Avalonia.Controls.DataGrid" />
+    <ItemGroup>
+        <None Remove="Assets\**" />
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
 
-    <!-- ActiPro assemblies -->
-    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Bars" />-->
-    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Shared" />-->
-    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Core" />-->
-    <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />-->
+    <!-- Temporary link for development. 
+         (To use the published nuget, uncomment PackageReference above (update version) or install with Nuget manager) -->
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
+        <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj" />
+        <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
+        <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />
+    </ItemGroup>
 
-    <!-- Devolutions Avalonia assemblies -->
-    <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />
-    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.DevExpress" />
-    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.Linux" />
-    <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.MacOS" />
-  </ItemGroup>
+    <ItemGroup>
+        <!-- Avalonia core assemblies -->
+        <TrimmerRootAssembly Include="Avalonia.Themes.Simple" />
+        <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
+        <TrimmerRootAssembly Include="Avalonia.Controls.DataGrid" />
+
+        <!-- ActiPro assemblies -->
+        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Bars" />-->
+        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Shared" />-->
+        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Core" />-->
+        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />-->
+
+        <!-- Devolutions Avalonia assemblies -->
+        <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />
+        <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.DevExpress" />
+        <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.Linux" />
+        <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.MacOS" />
+    </ItemGroup>
 </Project>

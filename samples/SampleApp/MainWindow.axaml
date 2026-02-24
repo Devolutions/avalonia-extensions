@@ -72,7 +72,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ContextMenuDemo />
               </TabItem>
@@ -174,13 +174,13 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="Menu" ApplicableTo="MacClassic, LiquidGlass, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:MenuDemo />
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="MenuFlyout" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:MenuFlyoutDemo />
               </TabItem>

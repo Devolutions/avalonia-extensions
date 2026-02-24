@@ -2,60 +2,110 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
              x:Class="SampleApp.DemoPages.ContextMenuDemo">
 
-  <!-- <Border Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"> -->
-  <Border Margin="20" Background="{DynamicResource LayoutBackgroundLowBrush}"
-          BorderBrush="{DynamicResource LayoutBorderMidBrush}" BorderThickness="{DynamicResource BorderThickness}"
-          CornerRadius="{DynamicResource LayoutCornerRadius}">
-    <Border.ContextMenu>
-      <ContextMenu>
-        <MenuItem Header="Standard _Menu Item">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/User.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Disabled" IsEnabled="False">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/DisableUser.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Copy">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyName.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Paste">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyPassword.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <Separator />
-        <MenuItem Header="Menu with _Submenu">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/Folder.svg" />
-          </MenuItem.Icon>
-          <MenuItem Header="Submenu _1">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/Add.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Header="Submenu _2">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/Properties.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <Separator />
-          <MenuItem Header="Submenu _3">
+  <StackPanel Margin="20">
+    <!-- <Border Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"> -->
+    <Border Background="{DynamicResource LayoutBackgroundLowBrush}"
+            Height="400"
+            BorderBrush="{DynamicResource LayoutBorderMidBrush}" BorderThickness="{DynamicResource BorderThickness}"
+            CornerRadius="{DynamicResource LayoutCornerRadius}">
+      <Border.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Standard _Menu Item">
             <MenuItem.Icon>
               <Svg Path="/Assets/User.svg" />
             </MenuItem.Icon>
           </MenuItem>
+          <MenuItem Header="Disabled" IsEnabled="False">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/DisableUser.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Copy">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyName.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Paste">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyPassword.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator />
+          <MenuItem Header="Menu with _Submenu">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Folder.svg" />
+            </MenuItem.Icon>
+            <MenuItem Header="Submenu _1">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Add.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Submenu _2">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Properties.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Submenu _3">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/User.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </MenuItem>
+        </ContextMenu>
+      </Border.ContextMenu>
+      <TextBlock Margin="10" VerticalAlignment="Top">Right-click anywhere in this space</TextBlock>
+    </Border>
+    <TextBlock Classes="section-title"
+               Margin="0 20">
+      Open Menu example for Visual Regression testing
+    </TextBlock>
+    <ContextMenu HorizontalAlignment="Left">
+      <MenuItem Header="Standard _Menu Item">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/User.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Disabled" IsEnabled="False">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/DisableUser.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Copy">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/CopyName.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Paste">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/CopyPassword.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <Separator />
+      <MenuItem Header="Menu with _Submenu">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/Folder.svg" />
+        </MenuItem.Icon>
+        <MenuItem Header="Submenu _1">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Add.svg" />
+          </MenuItem.Icon>
         </MenuItem>
-      </ContextMenu>
-    </Border.ContextMenu>
-    <TextBlock Margin="10" VerticalAlignment="Top">Right-click anywhere in this space</TextBlock>
-  </Border>
-
+        <MenuItem Header="Submenu _2">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Properties.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Submenu _3">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/User.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+    </ContextMenu>
+  </StackPanel>
 </UserControl>

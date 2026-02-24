@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
              x:Class="SampleApp.DemoPages.MenuFlyoutDemo">
 
-  <Panel Margin="20">
+  <StackPanel Margin="20">
     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Height="20"
                Text="Right-click me">
       <TextBlock.ContextFlyout>
@@ -81,6 +81,80 @@
         </MenuFlyout>
       </TextBlock.ContextFlyout>
     </TextBlock>
-  </Panel>
+    <TextBlock Classes="section-title"
+               Margin="0 300 0 20">
+      Open Menu example for Visual Regression testing
+    </TextBlock>
+    <MenuFlyoutPresenter HorizontalAlignment="Left">
+      <MenuItem Header="Open session" InputGesture="&#x2318;+O">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/Computer.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Open with parameters">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/Folder.svg" />
+        </MenuItem.Icon>
+        <MenuItem Header="Open (embedded/tabbed)">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Computer.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Open embedded SFTP connection">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Computer.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Computer.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="-" />
+        <MenuItem Header="Open (select credentials)...">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/User.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="View password">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/PasswordAnalyser.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Copy name">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/CopyName.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Copy password">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/CopyPassword.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <Separator />
+      <MenuItem Header="Focus session">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/Details.svg" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Edit" IsEnabled="False">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/Properties.svg" />
+        </MenuItem.Icon>
+        <MenuItem Header="Dummy1" />
+        <MenuItem Header="Dummy2" />
+      </MenuItem>
+      <MenuItem Header="-" />
+      <MenuItem Header="^ NOT a &lt;Separator&gt;" />
+      <MenuItem Header="Toggle Options">
+        <MenuItem.Icon>
+          <Svg Path="/Assets/More.svg" />
+        </MenuItem.Icon>
+        <MenuItem Header="Option 1" ToggleType="CheckBox" />
+        <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
+      </MenuItem>
+    </MenuFlyoutPresenter>
+  </StackPanel>
 
 </UserControl>

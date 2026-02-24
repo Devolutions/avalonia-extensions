@@ -152,6 +152,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="GroupedTileListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:GroupedTileListBoxDemo>
+                  <demoPages:GroupedTileListBoxDemo.DataContext>
+                    <vm:GroupedTileListBoxViewModel />
+                  </demoPages:GroupedTileListBoxDemo.DataContext>
+                </demoPages:GroupedTileListBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="HyperlinkButton" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
                 </TabItem.Header>
                 <demoPages:HyperlinkButtonDemo />
@@ -188,7 +198,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ScrollViewerDemo />
               </TabItem>
@@ -200,7 +210,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:TabControlDemo />
               </TabItem>

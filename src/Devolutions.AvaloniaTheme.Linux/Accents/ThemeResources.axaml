@@ -77,6 +77,8 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#F1F1F1" />
 
     </ResourceDictionary>
 
@@ -159,6 +161,8 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#363636" />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

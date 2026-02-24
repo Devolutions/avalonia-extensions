@@ -39,7 +39,7 @@
       <Setter.Value>
         <ControlTemplate>
           <Border Background="{TemplateBinding Background }"
-                  CornerRadius="{DynamicResource ControlCornerRadius}" />
+                  CornerRadius="{DynamicResource ScrollBarThumbCornerRadius}" />
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -70,6 +70,7 @@
   <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
     <Setter Property="MinWidth" Value="{DynamicResource ScrollBarSize}" />
     <Setter Property="MinHeight" Value="{DynamicResource ScrollBarSize}" />
+    <Setter Property="Margin" Value="{DynamicResource ScrollBarMargin}" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">
@@ -80,6 +81,7 @@
                 <Border Name="TrackBorder"
                         Grid.Row="0"
                         Grid.RowSpan="3"
+                        CornerRadius="{DynamicResource ScrollBarTrackCornerRadius}"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness,
@@ -117,7 +119,7 @@
                   <Thumb Theme="{StaticResource ScrollBarThumbTheme}"
                          Width="{DynamicResource ScrollBarThumbWidth}"
                          MinHeight="{DynamicResource ScrollBarMinLength}"
-                         Opacity="0.6">
+                         Opacity="{DynamicResource ScrollBarThumbOpacity}">
                     <Thumb.Transitions>
                       <Transitions>
                         <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
@@ -143,6 +145,7 @@
                   Name="TrackBorder"
                   Grid.Column="0"
                   Grid.ColumnSpan="3"
+                  CornerRadius="{DynamicResource ScrollBarTrackCornerRadius}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness,

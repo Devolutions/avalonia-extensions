@@ -47,7 +47,7 @@ samples/
 ├── commands/                                 # Custom slash commands
 │   ├── explain.md                            # /explain command
 │   ├── simplify.md                           # /simplify command
-│   └── workon.md                             # /workon command
+│   └── worksetup.md                          # /worksetup command
 └── docs/                                     # Claude-specific documentation
     └── processes/                            # Process documentation
         └── ide_connection.md                 # IDE integration guide
@@ -87,7 +87,7 @@ dotnet build samples/SampleApp/SampleApp.csproj && cd samples/SampleApp/bin/Debu
 
 The SampleApp provides:
 - Visual demos of all styled controls
-- Theme switching via /workon command (see .claude/commands/workon.md)
+- Theme switching via /worksetup command (see .claude/commands/worksetup.md)
 - Inspection:
   - if `USE_AVALONIA_ACCELERATE_TOOLS=true` env var is set:
     - F12 opens Avalonia Accelerate Dev Tools
@@ -95,7 +95,7 @@ The SampleApp provides:
   - otherwise F12 opens classic Avalonia Dev Tools
 
 **Note on Theme Detection:**
-The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/workon` command.
+The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
 
 ### Testing
 There are no automated tests in this repository. Testing is done manually via the SampleApp.

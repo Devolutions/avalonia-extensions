@@ -102,15 +102,15 @@ Define the new resource in both theme files.
 - [x] MultiComboBoxItem
 - [ ] NumericUpDown
 - [x] RadioButton
-- [ ] ScrollBar
-- [ ] ScrollViewer
+- [x] ScrollBar
+- [x] ScrollViewer
 - [ ] Separator
 - [ ] TabControl
 - [ ] TabItem
 - [ ] TabPane
 - [ ] TagInput
 - [ ] TextBlock
-- [ ] TextBox
+- [x] TextBox
 - [ ] ToggleSwitch
 - [ ] ToolTip
 - [ ] TreeView

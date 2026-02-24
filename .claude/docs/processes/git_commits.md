@@ -78,33 +78,37 @@ Note: there may be other agents changing the code while you work.
 - When adding files with special characters, quote the path: `git add "path/with special chars/file.txt"`
 - If you are just making commits in the batches that you think are sensible and there are no deletions, then you don't need to ask me for permission to stage the commits each time.
 
-### Workon Development Changes
+### Worksetup Development Changes
 
-**CRITICAL: Never commit /workon development changes**
+**CRITICAL: Never commit /worksetup development changes**
 
-The `/workon` command modifies these files for local development only:
+The `/worksetup` command modifies these files for local development only:
 - `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
 - `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
+- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (SelectedScale initialization)
 
 **Master branch defaults**:
 - Theme: All themes commented out (automatically selects platform-appropriate theme)
   ```xml
   <!-- <DevolutionsMacOsTheme /> -->
+  <!-- <local:MacOsClassicThemeStyle /> -->
+  <!-- <local:MacOsLiquidGlassThemeStyle /> -->
   <!-- <DevolutionsDevExpressTheme /> -->
   <!-- <DevolutionsLinuxYaruTheme /> -->
   ```
 - Tab: `IsSelected="True"` on Overview tab only
+- Scale: `this.SelectedScale = this.AvailableScales[0];` (System Default)
 
 **Pre-commit workflow**:
-1. Check if App.axaml or MainWindow.axaml have changes
+1. Check if App.axaml, MainWindow.axaml, or MainWindowViewModel.cs have changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/workon Default Overview` to restore defaults (all themes commented)
-   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme and tab`
+   - First, run `/worksetup Default Overview` to restore defaults (all themes commented, Overview tab, Default scale)
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme, tab, and scale`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them
-   - Changes are structural (not just theme/tab selection)
+   - Changes are structural (not just theme/tab/scale selection)
    - Changes involve new code/features in these files
 
 ## Subagent

@@ -51,4 +51,6 @@
   <Style Selector=".MacOS_Theme_MenuLabelBelowIcon" />
   <Style Selector=".MacOS_Theme_MenuItemIconOnly" />
 
+  <StyleInclude Source="/Controls/TextBox.Styles.axaml" />
+
 </Styles>

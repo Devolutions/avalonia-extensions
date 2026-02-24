@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <Border Padding="20">
+        <TextBox AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Height="60"
+                 Width="100"
+                 Text="sdflasjdfsjfksj aslkj sjdfs jfksdjf alsdjfs dflasjd alsj sdf " />
+      </Border>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <Style Selector="TextBox ScrollViewer ScrollBar">
+    <Setter Property="Margin" Value="{DynamicResource TextBoxScrollBarMargin}" />
+  </Style>
+</Styles>

@@ -159,6 +159,7 @@ public partial class MainWindow : Window
   private void UpdatePreviewBackground()
   {
     if (this.currentViewModel == null) return;
+    if (this.currentViewModel.SelectedWallpaper == null) return;
     Panel? wallpaperPanel = this.FindControl<Panel>("PreviewWallpaper");
     Panel? contentPanel = this.FindControl<Panel>("MainContentPanel");
     if (wallpaperPanel == null || contentPanel == null) return;

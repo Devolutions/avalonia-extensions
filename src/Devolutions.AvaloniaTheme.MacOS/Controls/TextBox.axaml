@@ -147,15 +147,15 @@
                   </ContentPresenter>
                   <DockPanel Name="PART_InnerDockPanel"
                              Grid.Column="1"
-                             Margin="2 2 3 1 ">
+                             Margin="{DynamicResource TextBoxInnerDockPanelMargin}">
                     <ScrollViewer Name="PART_ScrollViewer"
-                                  Margin="0 0 -4 0"
+                                  Margin="{DynamicResource TextBoxScrollViewerMargin}"
                                   HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
                                   VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                                   IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                                   AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                                   BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
-                      <Panel>
+                      <Panel Margin="{DynamicResource TextBoxScrollPanelMargin}">
                         <TextBlock Name="PART_Watermark"
                                    Foreground="{DynamicResource ForegroundLowBrush}"
                                    LineHeight="{TemplateBinding LineHeight}"

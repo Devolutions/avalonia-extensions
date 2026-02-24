@@ -27,16 +27,11 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="[11.3.7,)" />
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="[11.1.5,)" />
     <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
     <PackageReference Include="System.Reactive" Version="*" />
 
     <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Controls\MultiComboBox\InnerMultiComboBoxList.cs">
-      <DependentUpon>InnerMultiComboBoxList.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

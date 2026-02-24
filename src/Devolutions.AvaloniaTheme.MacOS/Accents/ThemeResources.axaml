@@ -654,7 +654,7 @@
   <Thickness x:Key="PopupPadding">3 5</Thickness>
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />
-  <SolidColorBrush x:Key="PopupInnerBorderHighlightBrush" Color="Transparent" />
+  <SolidColorBrush x:Key="PopupInnerBorderHighlightBrush" Color="{DynamicResource PopupBackgroundColor}" />
 
   <!-- TextBox Resources -->
   <SolidColorBrush x:Key="TextBoxClearButtonBackgroundBrush"

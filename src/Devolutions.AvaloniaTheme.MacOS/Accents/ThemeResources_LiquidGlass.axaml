@@ -238,7 +238,7 @@
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
       <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
-      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="PopupBackgroundBrush" />
 
       <!-- Control-specific resources -->
 

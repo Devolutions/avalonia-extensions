@@ -43,15 +43,20 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
+    <!-- Geometry resources for sort icon and tree expand/collapse chevrons.
+         The sort icon uses a single descending path geometry: ascending is achieved via scaleY(-1) in the style.
+         Chevron paths match the DataGrid's row group header icons. -->
+    <StreamGeometry x:Key="DevoDataGridSortIconPath">M1875 1011l-787 787v-1798h-128v1798l-787 -787l-90 90l941 941l941 -941z</StreamGeometry>
+    <StreamGeometry x:Key="DevoDataGridItemCollapsedChevronPathData">M515 93l930 931l-930 931l90 90l1022 -1021l-1022 -1021z</StreamGeometry>
+    <StreamGeometry x:Key="DevoDataGridItemExpandedChevronPathData">M109 486 19 576 1024 1581 2029 576 1939 486 1024 1401z</StreamGeometry>
+
     <!-- Reuse DataGrid sizing where it makes sense -->
     <x:Double x:Key="DataGridRowHeight">25</x:Double>
-    <!-- <StaticResource x:Key="DataGridRowBackgroundBrush" ResourceKey="SystemControlTransparentBrush" /> -->
-    <!-- <StaticResource x:Key="DataGridFillerColumnGridLinesBrush" ResourceKey="SystemControlTransparentBrush" /> -->
 
     <!-- TreeDataGrid root: align with DataGrid container visuals -->
     <ControlTheme x:Key="{x:Type TreeDataGrid}" TargetType="TreeDataGrid">
         <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TableBorder}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
         <Setter Property="Template">
@@ -86,7 +91,7 @@
                                 <Border Name="ColumnHeadersPresenterBorder"
                                         BorderThickness="0,0,0,1"
                                         BorderBrush="{DynamicResource DataGridGridLinesBrush}"
-                                        Background="{DynamicResource TableHeaderBackground}"
+                                        Background="{DynamicResource DataGridColumnHeaderBackground}"
                                         CornerRadius="{TemplateBinding CornerRadius,
                                             Converter={x:Static DevoConverters.CornerRadiusExtractor},
                                             ConverterParameter={x:Static CornerRadiusSubset.Top}
@@ -191,13 +196,17 @@
             <Setter Property="Background" Value="{DynamicResource TreeDataGridHeaderBackgroundPointerOverBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridHeaderBorderBrushPointerOverBrush}" />
             <Setter Property="TextBlock.Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundPointerOverBrush}" />
-            <Setter Property="Path.Fill" Value="{DynamicResource TreeDataGridHeaderForegroundPointerOverBrush}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Path#SortIcon">
+            <Setter Property="Fill" Value="{DynamicResource TreeDataGridHeaderForegroundPointerOverBrush}" />
         </Style>
         <Style Selector="^:pressed /template/ Border#HeaderBorder">
             <Setter Property="Background" Value="{DynamicResource TreeDataGridHeaderBackgroundPressedBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridHeaderBorderBrushPressedBrush}" />
             <Setter Property="TextBlock.Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
-            <Setter Property="Path.Fill" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Path#SortIcon">
+            <Setter Property="Fill" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
         </Style>
         
         <!-- Sort Adorners -->
@@ -217,7 +226,7 @@
         <Setter Property="Background"
                 Value="{BindingToggler
               {Binding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
-              {DynamicResource DevoDataGridAlternatingRowBackground},
+               {DynamicResource DataGridAlternatingRowBackgroundBrush},
               {Binding $parent[TreeDataGrid].Background}
             }" />
         <Setter Property="Template">
@@ -246,7 +255,7 @@
 
         <!-- Selected row uses your selection toggler colors -->
         <Style Selector="^:nth-child(even) /template/ Rectangle#BackgroundRectangle">
-            <Setter Property="Fill" Value="{WindowActiveResourceToggler DataGridItemBackgroundAlternating, DataGridItemBackgroundAlternatingInInactiveWindow}" />
+            <Setter Property="Fill" Value="{DynamicResource DataGridAlternatingRowBackgroundBrush}" />
         </Style>
 
         <Style Selector="^:selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">

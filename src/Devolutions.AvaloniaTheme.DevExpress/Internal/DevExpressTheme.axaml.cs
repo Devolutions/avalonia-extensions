@@ -13,9 +13,21 @@ internal class DevExpressTheme : Styles
     public DevExpressTheme(IServiceProvider? sp = null)
     {
         AvaloniaXamlLoader.Load(sp, this);
+
+#if ENABLE_ACCELERATE
+        if (IsTreeDataGridAvailable())
+        {
+            Uri treeDataGridUri = new("avares://Devolutions.AvaloniaTheme.DevExpress/Controls/TreeDataGrid.axaml");
+            this.Resources.MergedDictionaries.Add(new ResourceInclude(treeDataGridUri) { Source = treeDataGridUri });
+        }
+#endif
+
 #if DEBUG
         Uri themePreviewerUri = new("avares://Devolutions.AvaloniaTheme.DevExpress/Design/ThemePreviewer.axaml");
         this.Resources.MergedDictionaries.Add(new ResourceInclude(themePreviewerUri) { Source = themePreviewerUri });
 #endif
     }
+
+    internal static bool IsTreeDataGridAvailable() =>
+        Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
 }

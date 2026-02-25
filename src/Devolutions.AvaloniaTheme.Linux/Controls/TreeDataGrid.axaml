@@ -139,7 +139,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundBrush}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="MinHeight" Value="26" />
-    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="BorderThickness" Value="0" />
@@ -257,19 +257,8 @@
         </Border>
       </ControlTemplate>
     </Setter>
-
-    <!-- Selected row uses your selection toggler colors -->
-    <Style Selector="^:nth-child(even) /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Fill" Value="{WindowActiveResourceToggler DataGridItemBackgroundAlternating, DataGridItemBackgroundAlternatingInInactiveWindow}" />
-    </Style>
-
+    
     <Style Selector="^:selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
-      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
-    </Style>
-    <Style Selector="^:selected:focus /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
-      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
-    </Style>
-    <Style Selector="^:selected:pointerover:focus /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
       <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
     </Style>
 
@@ -283,7 +272,7 @@
 
   <!-- Cells -->
   <ControlTheme x:Key="{x:Type TreeDataGridTextCell}" TargetType="TreeDataGridTextCell">
-    <Setter Property="Padding" Value="12,0,12,0" />
+    <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
@@ -305,7 +294,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridTemplateCell}" TargetType="TreeDataGridTemplateCell">
-    <Setter Property="Padding" Value="12 0 12 0" />
+    <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
@@ -324,7 +313,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridCheckBoxCell}" TargetType="TreeDataGridCheckBoxCell">
-    <Setter Property="Padding" Value="12 0 12 0" />
+    <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
@@ -346,8 +335,8 @@
   <!-- Expander: chevron + indent same as original, padding aligns with DataGrid feel -->
   <ControlTheme x:Key="TreeDataGridExpandCollapseChevron" TargetType="ToggleButton">
     <Setter Property="Margin" Value="0" />
-    <Setter Property="Width" Value="12" />
-    <Setter Property="Height" Value="12" />
+    <Setter Property="Width" Value="11" />
+    <Setter Property="Height" Value="11" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="Transparent"
@@ -379,7 +368,7 @@
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Padding="{TemplateBinding Indent, Converter={x:Static conv:IndentConverter.Instance}}">
           <DockPanel>
-            <Border DockPanel.Dock="Left" Margin="4 0" Width="12" Height="12">
+            <Border DockPanel.Dock="Left" Margin="4 0 0 0" Width="12" Height="12">
               <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
                             Focusable="False"
                             IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"

@@ -47,7 +47,7 @@
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
-        <DefaultItemExcludes>$(DefaultItemExcludes);Controls/TreeDataGrid.axaml</DefaultItemExcludes>
+        <DefaultItemExcludes>$(DefaultItemExcludes);Controls/TreeDataGrid.axaml;Controls/TreeDataGrid.styles.axaml</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">

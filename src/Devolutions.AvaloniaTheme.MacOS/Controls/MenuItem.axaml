@@ -74,6 +74,7 @@
     <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MenuItemMinHeight}" />
     <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
     <Setter Property="Padding" Value="{DynamicResource MenuItemPadding}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -81,6 +82,7 @@
       <ControlTemplate>
         <Panel>
           <Border Name="PART_LayoutRoot"
+                  MinHeight="{TemplateBinding MinHeight}"
                   Padding="{TemplateBinding Padding}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
@@ -147,26 +149,31 @@
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  Placement="RightEdgeAlignedTop"
-                 HorizontalOffset="{DynamicResource MenuFlyoutSubItemPopupHorizontalOffset}"
-                 VerticalOffset="{DynamicResource MenuFlyoutSubItemPopupVerticalOffset}"
+                 HorizontalOffset="{DynamicResource SubMenuPopupHorizontalOffset}"
+                 VerticalOffset="{DynamicResource SubMenuPopupVerticalOffset}"
                  IsLightDismissEnabled="False"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
             <Border Margin="{StaticResource PopupMargin} "
-                    Background="{DynamicResource PopupBackgroundBrush}"
-                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                    BorderBrush="{DynamicResource PopupBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                    Padding="{DynamicResource MenuFlyoutPadding}"
                     MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                     MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                     HorizontalAlignment="Stretch"
                     BoxShadow="{DynamicResource PopupShadow}"
-                    CornerRadius="{DynamicResource LayoutCornerRadius}">
-              <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
-                <ItemsPresenter Name="PART_ItemsPresenter"
-                                ItemsPanel="{TemplateBinding ItemsPanel}"
-                                Margin="{DynamicResource MenuFlyoutScrollerMargin}"
-                                Grid.IsSharedSizeScope="True" />
-              </ScrollViewer>
+                    CornerRadius="{DynamicResource PopupCornerRadius}">
+              <Border Name="InnerBorderHighlight"
+                      Background="{DynamicResource PopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                      BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                      CornerRadius="{DynamicResource PopupCornerRadius}"
+                      Padding="{DynamicResource MenuFlyoutPadding}">
+                <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                  <ItemsPresenter Name="PART_ItemsPresenter"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}"
+                                  Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                  Grid.IsSharedSizeScope="True" />
+                </ScrollViewer>
+              </Border>
             </Border>
           </Popup>
         </Panel>
@@ -184,13 +191,14 @@
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
       </Style>
+      <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+      </Style>
     </Style>
     <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentMidBrush}" />
-      </Style>
-      <Style Selector="^">
-        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MenuItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />

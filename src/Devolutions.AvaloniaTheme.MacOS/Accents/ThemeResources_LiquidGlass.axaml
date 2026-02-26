@@ -205,7 +205,7 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT20" />
+      <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT20" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
@@ -238,7 +238,7 @@
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
       <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
-      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Transparent" />
+      <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="PopupBackgroundBrush" />
 
       <!-- Control-specific resources -->
 
@@ -283,7 +283,7 @@
       <StaticResource x:Key="CheckBoxDisabledInactiveCheckMarkBrush" ResourceKey="AccentForegroundT25" />
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
-      <StaticResource x:Key="ComboBoxPopupBorderBrush" ResourceKey="ForegroundT26" />
+      <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
@@ -344,7 +344,7 @@
   <StaticResource x:Key="ComboBoxPressedBackgroundBrush" ResourceKey="ButtonPressedBackgroundBrush" />
   <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Transparent" />
   <StaticResource x:Key="ComboBoxBorderThickness" ResourceKey="Thickness0" />
-  <StaticResource x:Key="ComboBoxPopupCornerRadius" ResourceKey="Radius12" />
+  <StaticResource x:Key="PopupCornerRadius" ResourceKey="Radius12" />
 
 
   <!-- ComboBox Button (ToggleButton) -->
@@ -364,6 +364,13 @@
   <!-- Popup -->
   <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
+  <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
+
+  <!-- MenuItem -->
+  <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>
+  <x:Double x:Key="MenuItemMinHeight">24</x:Double>
+  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="ComboBoxItemPointerOverBackgroundBrush" />
+  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ComboBoxItemPointerOverBackgroundBrush" />
 
 
   <!-- TextBox -->

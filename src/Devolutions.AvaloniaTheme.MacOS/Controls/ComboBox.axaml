@@ -272,16 +272,16 @@
                 </MultiBinding>
               </Popup.VerticalOffset>
               <Border
-                BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}"
+                BorderBrush="{DynamicResource PopupBorderBrush}"
                 BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+                CornerRadius="{DynamicResource PopupCornerRadius}"
                 Margin="{DynamicResource PopupMargin}"
                 BoxShadow="{DynamicResource PopupShadow}">
                 <Border Name="InnerBorderHighlight"
                         Background="{DynamicResource PopupBackgroundBrush}"
                         BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
                         BorderThickness="{DynamicResource PopupInnerBorderThickness}"
-                        CornerRadius="{DynamicResource ComboBoxPopupCornerRadius}"
+                        CornerRadius="{DynamicResource PopupCornerRadius}"
                         Padding="{DynamicResource PopupPadding}">
                   <ScrollViewer
                     Classes="MacOS_TransparentTrack"

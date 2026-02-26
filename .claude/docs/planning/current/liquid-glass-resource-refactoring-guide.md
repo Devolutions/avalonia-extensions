@@ -105,9 +105,9 @@ Define the new resource in both theme files.
 - [x] ScrollBar
 - [x] ScrollViewer
 - [ ] Separator
-- [ ] TabControl
-- [ ] TabItem
-- [ ] TabPane
+- [x] TabControl
+- [x] TabItem
+- [x] TabPane
 - [ ] TagInput
 - [ ] TextBlock
 - [x] TextBox

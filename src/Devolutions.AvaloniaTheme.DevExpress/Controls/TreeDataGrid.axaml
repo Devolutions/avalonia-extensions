@@ -58,8 +58,8 @@
   <StaticResource x:Key="DataGridFillerColumnGridLinesBrush" ResourceKey="SystemControlTransparentBrush" />
 
   <!-- Sort/chevron geometry -->
-  <StreamGeometry x:Key="TreeDataGridItemCollapsedChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
-  <StreamGeometry x:Key="TreeDataGridItemExpandedChevronPathData">M0,1 L10,10 20,1 19,0 10,8 1,0 Z</StreamGeometry>
+  <StreamGeometry x:Key="TreeDataGridItemCollapsedChevronPathData">M 0,0 L 5,5 L 0,10 L 1,10 L 6,5 L 1,0 Z</StreamGeometry>
+  <StreamGeometry x:Key="TreeDataGridItemExpandedChevronPathData">M 0,0 L 5,5 L 10,0 L 10,1 L 5,6 L 0,1 Z</StreamGeometry>
   <StreamGeometry x:Key="TreeDataGridSortIconPath">M 0,0 H 1855.86 V 167.17 H 0 Z M 337.18,507 H 1518.54 V 674.17 H 337.18 Z M 673.74,1013 H 1181.97 V 1180.17 H 673.74 Z</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type TreeDataGrid}" TargetType="TreeDataGrid">
@@ -67,6 +67,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="TreeDataGridPseudoTypeBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
@@ -133,7 +134,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundBrush}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="MinHeight" Value="{StaticResource TreeDataGridHeaderHeight}" />
-    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="Padding" Value="6 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -222,15 +223,9 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridRow}" TargetType="TreeDataGridRow">
-    <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
-    <Setter Property="BorderThickness" Value="0 0 0 1" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="MinHeight" Value="{StaticResource TreeDataGridRowHeight}" />
-    <Setter Property="Background"
-            Value="{BindingToggler
-              {Binding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
-              {DynamicResource TreeDataGridAlternatingRowBackground},
-              {Binding $parent[TreeDataGrid].Background}
-            }" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="RowBorder"
@@ -252,20 +247,9 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- ~1~ Selected row uses your selection toggler colors @1@ -->
-    <!-- <Style Selector="^:nth-child(even) /template/ Rectangle#BackgroundRectangle"> -->
-    <!--     <Setter Property="Fill" Value="{WindowActiveResourceToggler DataGridItemBackgroundAlternating, DataGridItemBackgroundAlternatingInInactiveWindow}" /> -->
-    <!-- </Style> -->
-
-    <Style Selector="^:selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
+    <Style Selector="^:selected /template/ Border#RowBorder">
       <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedRowBackgroundBrush}" />
     </Style>
-    <!-- <Style Selector="^:selected:focus /template/ TreeDataGridCellsPresenter#PART_CellsPresenter"> -->
-    <!--     <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" /> -->
-    <!-- </Style> -->
-    <!-- <Style Selector="^:selected:pointerover:focus /template/ TreeDataGridCellsPresenter#PART_CellsPresenter"> -->
-    <!--     <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" /> -->
-    <!-- </Style> -->
 
     <Style Selector="^:invalid /template/ Rectangle#InvalidVisualElement">
       <Setter Property="Opacity" Value="0.4" />
@@ -277,9 +261,10 @@
 
   <!-- Cells -->
   <ControlTheme x:Key="{x:Type TreeDataGridTextCell}" TargetType="TreeDataGridTextCell">
-    <Setter Property="Padding" Value="12,0,12,0" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
-    <Setter Property="BorderThickness" Value="0 0 1 0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="6 0" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="CellBorder"
@@ -296,12 +281,17 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedRowBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridTemplateCell}" TargetType="TreeDataGridTemplateCell">
-    <Setter Property="Padding" Value="12 0 12 0" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
-    <Setter Property="BorderThickness" Value="0 0 1 0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="6 0" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter Name="PART_ContentPresenter"
@@ -315,12 +305,16 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedRowBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridCheckBoxCell}" TargetType="TreeDataGridCheckBoxCell">
-    <Setter Property="Padding" Value="12 0 12 0" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
-    <Setter Property="BorderThickness" Value="0 0 1 0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="6 0" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="CellBorder"
@@ -335,23 +329,35 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedRowBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
-  <!-- Expander: chevron + indent same as original, padding aligns with DataGrid feel -->
+  <!-- Expander: chevron + indent -->
   <ControlTheme x:Key="TreeDataGridExpandCollapseChevron" TargetType="ToggleButton">
     <Setter Property="Margin" Value="0" />
-    <Setter Property="Width" Value="12" />
-    <Setter Property="Height" Value="12" />
+    <Setter Property="Padding" Value="6 0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Height" Value="{StaticResource TreeDataGridRowHeight}" />
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="Transparent"
                 Width="{TemplateBinding Width}"
                 Height="{TemplateBinding Height}"
+                Padding="{TemplateBinding Padding}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
           <Path Name="ChevronPath"
                 Data="{StaticResource TreeDataGridItemCollapsedChevronPathData}"
                 Fill="{TemplateBinding Foreground}"
+                Width="6"
+                Height="10"
                 Stretch="Uniform"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" />
@@ -360,10 +366,13 @@
     </Setter>
     <Style Selector="^:checked /template/ Path#ChevronPath">
       <Setter Property="Data" Value="{StaticResource TreeDataGridItemExpandedChevronPathData}" />
+      <Setter Property="Width" Value="10" />
+      <Setter Property="Height" Value="6" />
     </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridExpanderCell}" TargetType="TreeDataGridExpanderCell">
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="CellBorder"
@@ -373,17 +382,22 @@
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Padding="{TemplateBinding Indent, Converter={x:Static conv:IndentConverter.Instance}}">
           <DockPanel>
-            <Border DockPanel.Dock="Left" Margin="4 0" Width="12" Height="12">
-              <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
+              <ToggleButton DockPanel.Dock="Left" 
+                            Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
                             Focusable="False"
+                            Width="22"
                             IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
-                            IsVisible="{TemplateBinding ShowExpander}" />
-            </Border>
+                            IsVisible="{TemplateBinding ShowExpander}"
+                            Margin="0 0 -6 0" />
             <Decorator Name="PART_Content" />
           </DockPanel>
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedRowBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
 </ResourceDictionary>

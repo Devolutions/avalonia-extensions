@@ -32,18 +32,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="[11.3.7,)"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="[11.3.7,)"/>
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
+        <PackageReference Include="Avalonia" Version="[11.3.7,)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="[11.3.7,)" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
+
         <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
         <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 
              Consumers who want to use TreeDataGrid must reference it themselves. -->
-        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All"/>
+        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="[11.2.3,)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
@@ -52,16 +53,16 @@
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.2.19,)"/>
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.2.19,)" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>
+        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <Compile Remove="Design\ThemePreviewer.axaml.cs"/>
-        <None Include="Design\ThemePreviewer.axaml.cs"/>
-        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml"/>
-        <None Include="Design\ThemePreviewer.axaml"/>
+        <Compile Remove="Design\ThemePreviewer.axaml.cs" />
+        <None Include="Design\ThemePreviewer.axaml.cs" />
+        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml" />
+        <None Include="Design\ThemePreviewer.axaml" />
     </ItemGroup>
 </Project>

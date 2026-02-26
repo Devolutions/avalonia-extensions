@@ -37,10 +37,10 @@
       <TextBlock Text="Cell Selection" Classes="section-title" FontSize="18" />
       
       <TextBlock Text="Flat mode" Classes="section-title" />
-      <TreeDataGrid Source="{Binding CellSelectionSource}" />
+      <TreeDataGrid Classes="no-grid-lines no-alternating-rows" Source="{Binding CellSelectionSource}" />
       
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
-      <TreeDataGrid Source="{Binding TreeCellSelectionSource}" />
+      <TreeDataGrid Classes="grid-lines alternating-rows" Source="{Binding TreeCellSelectionSource}" />
     </StackPanel>
   </StackPanel>
 </UserControl>

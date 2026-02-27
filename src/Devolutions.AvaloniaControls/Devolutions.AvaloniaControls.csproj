@@ -25,6 +25,16 @@
         <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
+    <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
+    <PropertyGroup>
+        <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+
+        <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="[11.3.7,)" />
         <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="[11.1.5,)" />
@@ -40,9 +50,7 @@
         <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="[11.2.3,)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Avalonia.Controls.TreeDataGrid">
-        <HintPath>..\..\..\..\.nuget\packages\avalonia.controls.treedatagrid\11.3.1\lib\net8.0\Avalonia.Controls.TreeDataGrid.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+    <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
+        <DefaultItemExcludes>$(DefaultItemExcludes);Behaviors/TreeDataGridPseudoTypeBehavior.cs</DefaultItemExcludes>
+    </PropertyGroup>
 </Project>

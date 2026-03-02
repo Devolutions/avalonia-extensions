@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaTheme.Linux.Internal;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using AvaloniaControls.Helpers;
 
 internal class LinuxYaruTheme : Styles
 {
@@ -15,7 +16,7 @@ internal class LinuxYaruTheme : Styles
         AvaloniaXamlLoader.Load(sp, this);
 
 #if ENABLE_ACCELERATE
-        if (IsTreeDataGridAvailable())
+        if (AvaloniaAccelerateHelpers.IsTreeDataGridAvailable)
         {
             Uri treeDataGridUri = new("avares://Devolutions.AvaloniaTheme.Linux/Controls/TreeDataGrid.axaml");
             this.Resources.MergedDictionaries.Add(new ResourceInclude(treeDataGridUri) { Source = treeDataGridUri });
@@ -27,7 +28,4 @@ internal class LinuxYaruTheme : Styles
         this.Resources.MergedDictionaries.Add(new ResourceInclude(themePreviewerUri) { Source = themePreviewerUri });
 #endif
     }
-
-    internal static bool IsTreeDataGridAvailable() =>
-        Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
 }

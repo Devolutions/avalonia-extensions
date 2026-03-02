@@ -2,22 +2,15 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="using:Avalonia.Controls.Converters">
+  <!-- NOTE:
+     Some resources from DataGrid.axaml are used here too.
+  -->
 
-  <!-- Theme dictionaries reuse DataGrid brush keys so both controls
-       draw from the same palette -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <SolidColorBrush x:Key="TreeDataGridBackgroundBrush" Color="#FFF" />
       <SolidColorBrush x:Key="TreeDataGridForegroundBrush" Color="#101010" />
 
-      <!-- Use the SAME keys your DataGrid theme uses -->
-      <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="{DynamicResource SystemBaseMediumLowColor}" Opacity="0.4" />
-      <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="{DynamicResource SystemBaseHighColor}" />
-      <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="{DynamicResource SystemAltMediumColor}" />
-      <SolidColorBrush x:Key="DataGridRowInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
-      <SolidColorBrush x:Key="DataGridCellInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
-      <SolidColorBrush x:Key="DataGridDetailsPresenterBackgroundBrush" Color="{DynamicResource SystemChromeMediumLowColor}" />
-      <!-- Selection background aligned with your DataGrid -->
       <SolidColorBrush x:Key="TreeDataGridSelectedCellBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.4" />
 
       <SolidColorBrush x:Key="TreeDataGridHeaderForegroundBrush" Color="#b1b1b1" />
@@ -30,13 +23,7 @@
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="TreeDataGridBackgroundBrush" Color="#1E1E1E" />
       <SolidColorBrush x:Key="TreeDataGridForegroundBrush" Color="#e0e0e0" />
-      
-      <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="{DynamicResource SystemBaseMediumLowColor}" Opacity="0.4" />
-      <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="{DynamicResource SystemBaseHighColor}" />
-      <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="{DynamicResource SystemAltMediumColor}" />
-      <SolidColorBrush x:Key="DataGridRowInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
-      <SolidColorBrush x:Key="DataGridCellInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
-      <SolidColorBrush x:Key="DataGridDetailsPresenterBackgroundBrush" Color="{DynamicResource SystemChromeMediumLowColor}" />
+
       <SolidColorBrush x:Key="TreeDataGridSelectedCellBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.4" />
 
       <SolidColorBrush x:Key="TreeDataGridHeaderForegroundBrush" Color="#757575" />
@@ -47,10 +34,6 @@
       <BoxShadows x:Key="TreeDataGridHeaderBoxShadow">0 0 4 0 #CC000000</BoxShadows>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
-
-  <!-- Reuse DataGrid sizing where it makes sense -->
-  <x:Double x:Key="DataGridRowHeight">25</x:Double>
-  <StaticResource x:Key="DataGridRowBackgroundBrush" ResourceKey="SystemControlTransparentBrush" />
 
   <!-- Sort/chevron geometry -->
   <StreamGeometry x:Key="DevoDataGridItemCollapsedChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
@@ -68,11 +51,11 @@
       <ControlTemplate>
         <Panel>
           <!--
-                        Note: This double-border trick is for fixing clipping issue with rounded corners.
-                              remove once this issue is fixed: 
-                              https://github.com/AvaloniaUI/Avalonia/issues/2105
-                              - sbergerondrouin 2026/01/29 
-                    -->
+              Note: This double-border trick is for fixing clipping issue with rounded corners.
+                    remove once this issue is fixed: 
+                    https://github.com/AvaloniaUI/Avalonia/issues/2105
+                    - sbergerondrouin 2026/01/29 
+          -->
           <Border Name="DataGridBorder"
                   Background="Transparent"
                   BorderBrush="{TemplateBinding BorderBrush}"
@@ -88,7 +71,7 @@
 
               <!-- Column headers: add bottom grid line, reuse DataGridGridLinesBrush -->
               <!-- Shadow overlay: sits in same Grid row as the header ScrollViewer,
-                                 rendered outside the ScrollViewer so it isn't clipped by ScrollContentPresenter -->
+                                   rendered outside the ScrollViewer so it isn't clipped by ScrollContentPresenter -->
               <Border Name="HeaderShadow"
                       Grid.Row="0"
                       ZIndex="1"

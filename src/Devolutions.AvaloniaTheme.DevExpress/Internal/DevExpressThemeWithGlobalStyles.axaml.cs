@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaTheme.DevExpress.Internal;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using AvaloniaControls.Helpers;
 
 internal class DevExpressThemeWithGlobalStyles : Styles
 {
@@ -11,7 +12,7 @@ internal class DevExpressThemeWithGlobalStyles : Styles
         AvaloniaXamlLoader.Load(sp, this);
 
 #if ENABLE_ACCELERATE
-        if (DevExpressTheme.IsTreeDataGridAvailable())
+        if (AvaloniaAccelerateHelpers.IsTreeDataGridAvailable)
         {
             Uri treeDataGridUri = new("avares://Devolutions.AvaloniaTheme.DevExpress/Controls/TreeDataGrid.axaml");
             this.Resources.MergedDictionaries.Add(new ResourceInclude(treeDataGridUri) { Source = treeDataGridUri });

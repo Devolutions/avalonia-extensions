@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaTheme.Linux;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using AvaloniaControls.Helpers;
 
 /// <summary>
 /// Include Devolution's Linux theme's optional global styles in an application.
@@ -18,14 +19,11 @@ public class DevolutionsLinuxYaruThemeGlobalStyles : Styles
         AvaloniaXamlLoader.Load(sp, this);
         
 #if ENABLE_ACCELERATE
-        if (IsTreeDataGridAvailable())
+        if (AvaloniaAccelerateHelpers.IsTreeDataGridAvailable)
         {
             Uri treeDataGridStylesUri = new("avares://Devolutions.AvaloniaTheme.Linux/Controls/TreeDataGrid.styles.axaml");
             this.Add(new StyleInclude(treeDataGridStylesUri) { Source = treeDataGridStylesUri });
         }
 #endif
     }
-    
-    internal static bool IsTreeDataGridAvailable() =>
-        Type.GetType("Avalonia.Controls.TreeDataGrid, Avalonia.Controls.TreeDataGrid") is not null;
 }

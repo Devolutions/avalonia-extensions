@@ -18,8 +18,8 @@ public static partial class DevoConverters
 [Flags]
 public enum ThicknessSide
 {
-    Left   = 0b_0001,
-    Top    = 0b_0010,
-    Right  = 0b_0100,
-    Bottom = 0b_1000,
+    Left,
+    Top,
+    Right,
+    Bottom,
 }

@@ -85,12 +85,7 @@ internal static class TabItemMinWidthBehavior
     {
         if (!tab.IsAttachedToVisualTree()) return;
 
-        // var contentPresenter = tab.FindDescendantOfType<ContentPresenter>(static c => c.Name == "PART_ContentPresenter");
-        // if (contentPresenter is null) return;
         if (tab.FindContentPresenter() is not ContentPresenter contentPresenter) return;
-
-        // var contentPanel = tab.FindDescendantOfType<Panel>(static p => p.Name == "ContentPanel");
-        // if (contentPanel is null) return;
 
         bool wasSelected = ((IPseudoClasses)tab.Classes).Contains(":selected");
 

@@ -152,7 +152,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="GroupedTileListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="GroupedTileListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
                 </TabItem.Header>
                 <demoPages:GroupedTileListBoxDemo>
                   <demoPages:GroupedTileListBoxDemo.DataContext>

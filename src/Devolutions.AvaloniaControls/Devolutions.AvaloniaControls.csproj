@@ -1,37 +1,56 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>13</LangVersion>
-    <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
-    <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>13</LangVersion>
+        <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
+        <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <Version>1.0.0</Version>
-    <Company>Devolutions</Company>
-    <Description>Devolutions Avalonia Controls Library</Description>
-    <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions/tree/master/src/Devolutions.AvaloniaControls</PackageProjectUrl>
-    <PackageId>Devolutions.AvaloniaControls</PackageId>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>
-      See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/CHANGELOG.md
-    </PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <Company>Devolutions</Company>
+        <Description>Devolutions Avalonia Controls Library</Description>
+        <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions/tree/master/src/Devolutions.AvaloniaControls</PackageProjectUrl>
+        <PackageId>Devolutions.AvaloniaControls</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>
+            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaControls/CHANGELOG.md
+        </PackageReleaseNotes>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.3.7,)" />
-    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="[11.1.5,)" />
-    <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
-    <PackageReference Include="System.Reactive" Version="*" />
+    <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
+    <PropertyGroup>
+        <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
 
-    <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
-  </ItemGroup>
+        <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="[11.3.7,)" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="[11.1.5,)" />
+        <PackageReference Include="Xaml.Behaviors" Version="[11.3.0,)" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />
+        <PackageReference Include="System.Reactive" Version="*" />
+
+        <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
+
+        <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
+        <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 
+             Consumers who want to use TreeDataGrid must reference it themselves. -->
+        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="[11.2.3,)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
+        <DefaultItemExcludes>$(DefaultItemExcludes);Behaviors/TreeDataGridPseudoTypeBehavior.cs</DefaultItemExcludes>
+    </PropertyGroup>
 </Project>

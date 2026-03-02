@@ -275,6 +275,8 @@
     <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -291,12 +293,18 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridTemplateCell}" TargetType="TreeDataGridTemplateCell">
     <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter Name="PART_ContentPresenter"
@@ -310,12 +318,17 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridCheckBoxCell}" TargetType="TreeDataGridCheckBoxCell">
     <Setter Property="Padding" Value="5 0 0 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -330,6 +343,10 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
   <!-- Expander: chevron + indent same as original, padding aligns with DataGrid feel -->
@@ -359,6 +376,8 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridExpanderCell}" TargetType="TreeDataGridExpanderCell">
+    <Setter Property="Background" Value="Transparent" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -379,6 +398,10 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:selected /template/ Border#CellBorder">
+      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+    </Style>
   </ControlTheme>
 
 </ResourceDictionary>

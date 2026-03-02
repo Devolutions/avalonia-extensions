@@ -15,10 +15,10 @@
     - .no-alternating-rows class: force alternating rows OFF (overrides flat default)
   -->
 
-  <!-- ============================================================ -->
+  <!-- ============================================================= -->
   <!--  GRID LINES                                                   -->
   <!--  Enabled by:  :flat (unless .no-grid-lines)  OR  .grid-lines  -->
-  <!-- ============================================================ -->
+  <!-- ============================================================= -->
 
   <!-- Flat default: grid lines ON -->
   <!-- Row bottom borders -->
@@ -60,11 +60,11 @@
     <Setter Property="BorderThickness" Value="0,0,1,0" />
   </Style>
 
-  <!-- ============================================================ -->
+  <!-- ============================================================= -->
   <!--  ALTERNATING ROWS                                             -->
   <!--  Enabled by:  :flat (unless .no-alternating-rows)             -->
   <!--            OR  .alternating-rows                              -->
-  <!-- ============================================================ -->
+  <!-- ============================================================= -->
 
   <!-- Flat default: alternating rows ON -->
   <Style Selector="TreeDataGrid:flat:not(.no-alternating-rows) :is(TreeDataGridRow)">

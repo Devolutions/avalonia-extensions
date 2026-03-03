@@ -45,7 +45,7 @@
     <Style Selector="^ :is(TreeDataGridRow)">
       <Setter Property="Background"
               Value="{BindingToggler
-              {Binding $parent[TreeDataGridRow].RowIndex, Converter={x:Static DevoConverters.IsOddConverter}},
+              {ReflectionBinding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
               {DynamicResource TreeDataGridAlternatingRowBackground},
               {Binding $parent[TreeDataGrid].Background}
             }" />

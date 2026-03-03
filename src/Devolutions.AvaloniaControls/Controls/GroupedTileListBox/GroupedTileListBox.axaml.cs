@@ -351,7 +351,9 @@ public class GroupedTileListBox : TemplatedControl
             StackPanel stackPanel = new()
             {
                 Spacing = this.ItemSpacing,
-                [!MarginProperty] = this[!PaddingProperty]
+                [!MarginProperty] = this[!PaddingProperty],
+                [!MinWidthProperty] = this[!ItemWidthProperty],
+                [!MinHeightProperty] = this[!ItemHeightProperty]
             };
 
             if (this.ItemsSource is not null && this.GroupSelector is not null && this.scrollViewer is not null)
@@ -449,7 +451,9 @@ public class GroupedTileListBox : TemplatedControl
                 {
                     Orientation = Orientation.Horizontal,
                     [!WrapLayout.HorizontalSpacingProperty] = this[!ItemSpacingProperty],
-                    [!WrapLayout.VerticalSpacingProperty] = this[!ItemSpacingProperty]
+                    [!WrapLayout.VerticalSpacingProperty] = this[!ItemSpacingProperty],
+                    [!MinWidthProperty] = this[!ItemWidthProperty],
+                    [!MinHeightProperty] = this[!ItemHeightProperty]
                 },
                 // Wrap ItemTemplate in container with fixed size (matches grouped mode pattern)
                 ItemTemplate = new FuncDataTemplate<object>((item, _) =>

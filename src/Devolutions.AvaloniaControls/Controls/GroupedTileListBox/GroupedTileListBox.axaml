@@ -1,25 +1,43 @@
 <ResourceDictionary
-  xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Padding" Value="4" />
-    <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Focusable" Value="True" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border
-          BorderBrush="{TemplateBinding BorderBrush}"
-          BorderThickness="{TemplateBinding BorderThickness}">
-          <ScrollViewer Name="PART_ScrollViewer"
-                        Background="{TemplateBinding Background}"
-                        HorizontalScrollBarVisibility="Disabled"
-                        VerticalScrollBarVisibility="Auto" />
-        </Border>
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
+    <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <!--
+                        Note: This double-border trick is for fixing clipping issue with rounded corners.
+                              remove once this issue is fixed: 
+                              https://github.com/AvaloniaUI/Avalonia/issues/2105
+                              - sbergerondrouin 2026/01/29 
+                    -->
+                    <Border Name="DataGridBorder"
+                            Background="Transparent"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            IsHitTestVisible="False"
+                            ZIndex="999" />
+                    <Border
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      Background="{TemplateBinding Background}"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+    </ControlTheme>
 
 </ResourceDictionary>

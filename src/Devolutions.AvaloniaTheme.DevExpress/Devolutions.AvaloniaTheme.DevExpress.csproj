@@ -1,19 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
-    <PropertyGroup>
-        <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
-        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
-        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
-
-        <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
-        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
-    </PropertyGroup>
+    <Import Project="../../Common.props" />
+    <Import Project="../../Accelerate.Packages.props" />
 
     <PropertyGroup>
         <Version>1.0.0</Version>
@@ -36,15 +23,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="[11.3.7,)" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)" />
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="[11.3.7,)" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)" />
-
-        <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
-        <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 
-             Consumers who want to use TreeDataGrid must reference it themselves. -->
-        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="[11.2.3,)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
+        <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaVersion)" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
@@ -53,7 +35,7 @@
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.2.19,)" />
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.03.03,)" />
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />

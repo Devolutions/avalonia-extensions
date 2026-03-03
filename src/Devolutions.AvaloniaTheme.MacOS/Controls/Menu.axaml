@@ -122,8 +122,8 @@
                 <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                               ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
                   <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                  <Binding Source="{x:False}" />
-                  <Binding Source="{x:True}" />
+                  <Binding x:DataType="sys:Boolean" Source="{x:False}" />
+                  <Binding x:DataType="sys:Boolean" Source="{x:True}" />
                 </MultiBinding>
               </Border.IsVisible>
             </Border>
@@ -156,8 +156,8 @@
                       <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                     ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
                         <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                        <Binding Source="{x:True}" />
-                        <Binding Source="{x:False}" />
+                        <Binding x:DataType="sys:Boolean" Source="{x:True}" />
+                        <Binding x:DataType="sys:Boolean" Source="{x:False}" />
                       </MultiBinding>
                     </Border.IsVisible>
                   </Border>
@@ -170,8 +170,8 @@
                       <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                     ConverterParameter="MacOS_Theme_MenuItemIconOnly">
                         <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                        <Binding Source="{x:True}" />
-                        <Binding Source="{x:False}" />
+                        <Binding x:DataType="sys:Boolean" Source="{x:True}" />
+                        <Binding x:DataType="sys:Boolean" Source="{x:False}" />
                       </MultiBinding>
                     </ToolTip.ServiceEnabled>
 
@@ -199,8 +199,8 @@
                             <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                           ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
                               <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                              <Binding Source="{x:True}" />
-                              <Binding Source="{x:False}" />
+                              <Binding x:DataType="sys:Boolean" Source="{x:True}" />
+                              <Binding x:DataType="sys:Boolean" Source="{x:False}" />
                             </MultiBinding>
                           </Path.IsVisible>
                         </Path>
@@ -225,8 +225,8 @@
                   <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                 ConverterParameter="MacOS_Theme_MenuItemIconOnly">
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                    <Binding Source="{x:False}" />
-                    <Binding Source="{x:True}" />
+                    <Binding x:DataType="sys:Boolean" Source="{x:False}" />
+                    <Binding x:DataType="sys:Boolean" Source="{x:True}" />
                   </MultiBinding>
                 </ContentPresenter.IsVisible>
               </ContentPresenter>

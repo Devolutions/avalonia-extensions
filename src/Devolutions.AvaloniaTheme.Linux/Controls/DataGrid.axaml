@@ -364,9 +364,15 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
+    <!-- TODO: CHECK THIS WORKS -->
+    <!-- <Setter Property="Background" -->
+    <!--         Value="{DynamicResourceToggler  -->
+    <!--           {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}}, -->
+    <!--           DataGridRowBackgroundBrush, DataGridAlternatingRowBackgroundBrush -->
+    <!--         }" /> -->
     <Setter Property="Background"
             Value="{DynamicResourceToggler 
-              {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+              {Binding $parent[DataGridRow].Index, Converter={x:Static DevoConverters.IsOddConverter}},
               DataGridRowBackgroundBrush, DataGridAlternatingRowBackgroundBrush
             }" />
     <Setter Property="Template">

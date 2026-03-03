@@ -356,11 +356,6 @@ public partial class MultiComboBox : SelectingItemsControl
         }
     }
 
-    public void Clear()
-    {
-        this.SelectedItems?.Clear();
-    }
-
     private void OnDropDownOpenChanged((bool oldValue, bool newValue) oldAndNewValue)
     {
         if (oldAndNewValue.oldValue == oldAndNewValue.newValue) return;
@@ -478,9 +473,24 @@ public partial class MultiComboBox : SelectingItemsControl
         this.updateInternal = false;
     }
 
+    public void Clear() => this.DeselectAll();
+    
     public void DeselectAll()
     {
         this.SelectedItems?.Clear();
+        
+        if (this.SelectedItems is null) return;
+        
+        bool notifiesChanges = this.SelectedItems is INotifyCollectionChanged;
+        
+        this.SelectedItems.Clear();
+        
+        if (!notifiesChanges)
+        {
+            // If SelectedItems is not INotifyCollectionChanged, clearing it
+            // won't fire our `OnSelectedItemsCollectionChanged` event
+            this.DoOnSelectedItemsCollectionChanged();
+        }
     }
 
     protected override void OnInitialized()
@@ -724,6 +734,9 @@ public partial class MultiComboBox : SelectingItemsControl
     }
 
     private void OnSelectedItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => this.DoOnSelectedItemsCollectionChanged();
+    
+    private void DoOnSelectedItemsCollectionChanged()
     {
         this.ApplyCurrentSelectionState();
         

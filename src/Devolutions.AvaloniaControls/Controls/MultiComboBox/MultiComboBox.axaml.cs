@@ -563,11 +563,11 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (this.boundDataErrorInfo != null && this.boundPropertyName != null)
         {
-            IEnumerable errors = this.boundDataErrorInfo.GetErrors(this.boundPropertyName);
             Exception? error = null;
             
-            object? errorObj = errors.Cast<object>().FirstOrDefault();
-            
+            IEnumerable? errors = this.boundDataErrorInfo.GetErrors(this.boundPropertyName);
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+            object? errorObj = errors?.Cast<object>().FirstOrDefault();
             if (errorObj is not null)
             {
                 // Convert first error to an exception

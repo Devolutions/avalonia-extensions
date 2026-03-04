@@ -5,6 +5,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -118,31 +119,31 @@ public partial class MultiComboBox : SelectingItemsControl
 
     public static readonly DirectProperty<MultiComboBox, ScrollBarVisibility> ScrollbarVisibilityProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, ScrollBarVisibility>(nameof(ScrollbarVisibility),
-            o => o.ScrollbarVisibility);
+            static o => o.ScrollbarVisibility);
 
     public static readonly DirectProperty<MultiComboBox, ITemplate<Panel>> EffectiveSelectedItemsPanelProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, ITemplate<Panel>>(nameof(EffectiveSelectedItemsPanel),
-            o => o.EffectiveSelectedItemsPanel);
+            static o => o.EffectiveSelectedItemsPanel);
 
     public static readonly DirectProperty<MultiComboBox, IDataTemplate?> EffectiveSelectedItemTemplateProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, IDataTemplate?>(nameof(EffectiveSelectedItemTemplate),
-            o => o.EffectiveSelectedItemTemplate);
+            static o => o.EffectiveSelectedItemTemplate);
 
     public static readonly DirectProperty<MultiComboBox, bool?> IsAllSelectedProperty =
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool?>(nameof(IsAllSelected),
-            o => o.IsAllSelected);
+            static o => o.IsAllSelected);
 
     private static readonly ITemplate<Panel> DefaultSelectedItemsPanel =
-        new FuncTemplate<Panel>(() => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
+        new FuncTemplate<Panel>(static () => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
 
 
     private static readonly ITemplate<Panel> DefaultSelectedItemsWrapPanel =
-        new FuncTemplate<Panel>(() => new WrapPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
+        new FuncTemplate<Panel>(static () => new WrapPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
 
 
     // Default panel for the inner control (forwarded via property binding)
     private static readonly ITemplate<Panel?> DefaultPanel =
-        new FuncTemplate<Panel?>(() => new VirtualizingStackPanel());
+        new FuncTemplate<Panel?>(static () => new VirtualizingStackPanel());
 
     private readonly InnerMultiComboBoxList innerList;
 
@@ -167,7 +168,7 @@ public partial class MultiComboBox : SelectingItemsControl
         FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
         AvaloniaPropertyExtension.AffectsPseudoClass<MultiComboBox>(IsDropDownOpenProperty, PC_DropDownOpen);
-        SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>((box, args) => box.OnSelectedItemsChanged(args));
+        SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>(static (box, args) => box.OnSelectedItemsChanged(args));
     }
 
     public MultiComboBox()
@@ -472,9 +473,24 @@ public partial class MultiComboBox : SelectingItemsControl
         this.updateInternal = false;
     }
 
+    public void Clear() => this.DeselectAll();
+    
     public void DeselectAll()
     {
         this.SelectedItems?.Clear();
+        
+        if (this.SelectedItems is null) return;
+        
+        bool notifiesChanges = this.SelectedItems is INotifyCollectionChanged;
+        
+        this.SelectedItems.Clear();
+        
+        if (!notifiesChanges)
+        {
+            // If SelectedItems is not INotifyCollectionChanged, clearing it
+            // won't fire our `OnSelectedItemsCollectionChanged` event
+            this.DoOnSelectedItemsCollectionChanged();
+        }
     }
 
     protected override void OnInitialized()
@@ -521,13 +537,13 @@ public partial class MultiComboBox : SelectingItemsControl
         if (this.DataContext is System.ComponentModel.INotifyDataErrorInfo ndei && this.SelectedItems != null)
         {
             // Find the property name in the DataContext that matches our SelectedItems collection
-            var dataContextType = this.DataContext.GetType();
-            foreach (var prop in dataContextType.GetProperties())
+            Type dataContextType = this.DataContext.GetType();
+            foreach (PropertyInfo prop in dataContextType.GetProperties())
             {
                 if (prop.CanRead)
                 {
-                    var propValue = prop.GetValue(this.DataContext);
-                    bool matches = object.ReferenceEquals(propValue, this.SelectedItems);
+                    object? propValue = prop.GetValue(this.DataContext);
+                    bool matches = ReferenceEquals(propValue, this.SelectedItems);
                     
                     if (matches)
                     {
@@ -557,19 +573,16 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (this.boundDataErrorInfo != null && this.boundPropertyName != null)
         {
-            var errors = this.boundDataErrorInfo.GetErrors(this.boundPropertyName);
             Exception? error = null;
             
-            if (errors != null)
+            IEnumerable? errors = this.boundDataErrorInfo.GetErrors(this.boundPropertyName);
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+            object? errorObj = errors?.Cast<object>().FirstOrDefault();
+            if (errorObj is not null)
             {
-                var errorList = errors.Cast<object>().ToList();
-                
-                if (errorList.Count > 0)
-                {
-                    // Convert first error to an exception
-                    string errorMessage = errorList[0]?.ToString() ?? "Validation error";
-                    error = new DataValidationException(errorMessage);
-                }
+                // Convert first error to an exception
+                string errorMessage = errorObj.ToString() ?? "Validation error";
+                error = new DataValidationException(errorMessage);
             }
             
             DataValidationErrors.SetError(this, error);
@@ -721,6 +734,9 @@ public partial class MultiComboBox : SelectingItemsControl
     }
 
     private void OnSelectedItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => this.DoOnSelectedItemsCollectionChanged();
+    
+    private void DoOnSelectedItemsCollectionChanged()
     {
         this.ApplyCurrentSelectionState();
         
@@ -734,22 +750,22 @@ public partial class MultiComboBox : SelectingItemsControl
         // If we already know the bound property name from subscription, use it directly
         if (this.boundPropertyName != null && this.DataContext != null)
         {
-            var dataContextType = this.DataContext.GetType();
+            Type dataContextType = this.DataContext.GetType();
             
             // Get the actual collection value
-            var property = dataContextType.GetProperty(this.boundPropertyName);
-            var collectionValue = property?.GetValue(this.DataContext);
+            PropertyInfo? property = dataContextType.GetProperty(this.boundPropertyName);
+            object? collectionValue = property?.GetValue(this.DataContext);
             
             // Try to call the protected ValidateProperty method from ObservableValidator base class
             // We need to search in base types as well
-            System.Reflection.MethodInfo? validateMethod = null;
-            var currentType = dataContextType;
+            MethodInfo? validateMethod = null;
+            Type? currentType = dataContextType;
             while (currentType != null && validateMethod == null)
             {
                 validateMethod = currentType.GetMethod("ValidateProperty",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                    BindingFlags.NonPublic | BindingFlags.Instance,
                     null,
-                    new[] { typeof(object), typeof(string) },
+                    [typeof(object), typeof(string)],
                     null);
                 currentType = currentType.BaseType;
             }
@@ -758,7 +774,7 @@ public partial class MultiComboBox : SelectingItemsControl
             {
                 try
                 {
-                    validateMethod.Invoke(this.DataContext, new object?[] { collectionValue, this.boundPropertyName });
+                    validateMethod.Invoke(this.DataContext, [collectionValue, this.boundPropertyName]);
                 }
                 catch
                 {

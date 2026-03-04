@@ -368,11 +368,12 @@
   <!-- Row -->
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
     <Setter Property="Background"
-            Value="{BindingToggler 
-              {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+            Value="{BindingToggler
+              {ReflectionBinding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
               {Binding $parent[DataGrid].RowBackground},
               {DynamicResource DataGridItemBackgroundAlternating}
             }" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="RowBorder"

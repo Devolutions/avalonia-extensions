@@ -28,6 +28,8 @@
             <Label>Notes:</Label>
             <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap"
                      Text="Create powerful dashboards, orchestrate tasks, and streamline administrative workflows — all from a unified, secure, and flexible automation platform. Automate with confidence. Design and run PowerShell scripts, scheduled jobs, and workflows. Build secure dashboards and portals with PowerShell. Create interactive dashboards, forms, and administrative portals." />
+            <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap"
+                     Watermark="More Notes ..." />
             <TextBox InnerLeftContent="http://" />
             <TextBox InnerRightContent=".com" />
             <TextBox

@@ -13,6 +13,7 @@
           <TextBlock>Password:</TextBlock>
           <TextBox PasswordChar="*" Watermark="Enter your password" />
           <TextBlock>Notes:</TextBlock>
+          <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Hello" VerticalContentAlignment="Top" />
           <TextBox Height="60" AcceptsReturn="True" TextWrapping="Wrap">
             Note: explicitly styling TextBlock causes massive problems, because there are so many dynamically created TextBlocks in controls' ContentPresenters (i.e. they only get created if the content provided is a simple string, and therefore they are not a part of the logical tree and do not receive the local template styling anymore if there is a general TextBlock rule, and cannot easily overwritten then - except with hard-coded styles rather than template bindings ...
           </TextBox>
@@ -314,7 +315,7 @@
       <Setter Property="Background" Value="{DynamicResource TextBoxMultiLineBackgroundBrush}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ZeroCornerRadius}" />
       <Setter Property="VerticalAlignment" Value="Stretch" />
-      <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">
+      <Style Selector="^ /template/ TextPresenter#PART_TextPresenter, ^ /template/ TextBlock#PART_Watermark">
         <Setter Property="VerticalAlignment" Value="Top" />
       </Style>
       <Style Selector="^ /template/ Border#FocusBorderElement">

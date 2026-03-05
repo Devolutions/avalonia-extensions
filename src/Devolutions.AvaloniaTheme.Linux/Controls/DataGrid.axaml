@@ -31,7 +31,6 @@
       <Color x:Key='DataGridColumnHeaderBackgroundColor'>#d1d1d1</Color>
       <Color x:Key='DataGridColumnHeaderForegroundColor'>#101010</Color>
 
-      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#fafafa" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#f2f6fb" />
     </ResourceDictionary>
 
@@ -39,7 +38,6 @@
       <Color x:Key='DataGridColumnHeaderBackgroundColor'>#1f1f1f</Color>
       <Color x:Key='DataGridColumnHeaderForegroundColor'>#f5f5f5</Color>
 
-      <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="#252525" />
       <SolidColorBrush x:Key="DataGridAlternatingRowBackgroundBrush" Color="#2c2c2c" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
@@ -64,7 +62,11 @@
   <SolidColorBrush x:Key="DataGridCellInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
   <SolidColorBrush x:Key="DataGridDetailsPresenterBackground" Color="{DynamicResource SystemChromeMediumLowColor}" />
   <SolidColorBrush x:Key="DataGridDropLocationIndicatorBackground" Color="{DynamicResource SystemAccentColor}" />
-  <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="{DynamicResource InputBorderColor}" />
+  <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="{DynamicResource SystemBaseMediumLowColor}" Opacity="0.4" />
+  <SolidColorBrush x:Key="DataGridDetailsPresenterBackgroundBrush" Color="{DynamicResource SystemChromeMediumLowColor}" />
+  <StaticResource x:Key="DataGridRowBackgroundBrush" ResourceKey="SystemControlTransparentBrush" />
+
+  <x:Double x:Key="DataGridRowHeight">25</x:Double>
 
   <x:Double x:Key="ListAccentLowOpacity">0.6</x:Double>
   <x:Double x:Key="ListAccentMediumOpacity">0.8</x:Double>
@@ -363,10 +365,11 @@
 
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
     <Setter Property="Background"
-            Value="{DynamicResourceToggler 
-              {Binding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+            Value="{DynamicResourceToggler
+              {ReflectionBinding Index, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
               DataGridRowBackgroundBrush, DataGridAlternatingRowBackgroundBrush
             }" />
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="RowBorder"

@@ -1,65 +1,54 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <Import Project="../../Common.props" />
+    <Import Project="../../Accelerate.Packages.props" />
+    
+    <PropertyGroup>
+        <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <Company>Devolutions</Company>
+        <Description>Devolutions Avalonia macOS Theme</Description>
+        <PackageId>Devolutions.AvaloniaTheme.MacOS</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions</PackageProjectUrl>
+        <PackageReleaseNotes>
+            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.MacOS/CHANGELOG.md
 
-  <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
-  <PropertyGroup>
-    <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
-    <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
-    <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+            BREAKING: 2026.01.08 - Changes to how controls respond to custom height settings
+        </PackageReleaseNotes>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
 
-    <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
-    <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
-  </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
-  <PropertyGroup>
-    <Version>1.0.0</Version>
-    <Company>Devolutions</Company>
-    <Description>Devolutions Avalonia macOS Theme</Description>
-    <PackageId>Devolutions.AvaloniaTheme.MacOS</PackageId>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions</PackageProjectUrl>
-    <PackageReleaseNotes>
-      See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.MacOS/CHANGELOG.md
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
+    </ItemGroup>
 
-      BREAKING: 2026.01.08 - Changes to how controls respond to custom height settings
-    </PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.2.19,)" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Accents/Assets/**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="[11.3.7,)"/>
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="[11.3.7,)"/>
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="[11.3.7,)"/>
-    <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="[11.2.3,)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All"/>
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="[11.3.7,)"/>
-    <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-    <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-    <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.2.19,)"/>
-  </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AvaloniaResource Include="Accents/Assets/**"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-    <Compile Remove="Design\ThemePreviewer.axaml.cs"/>
-    <None Include="Design\ThemePreviewer.axaml.cs"/>
-    <AvaloniaXaml Remove="Design\ThemePreviewer.axaml"/>
-    <None Include="Design\ThemePreviewer.axaml"/>
-  </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <Compile Remove="Design\ThemePreviewer.axaml.cs" />
+        <None Include="Design\ThemePreviewer.axaml.cs" />
+        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml" />
+        <None Include="Design\ThemePreviewer.axaml" />
+    </ItemGroup>
 </Project>

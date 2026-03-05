@@ -15,8 +15,9 @@ public partial class CheckBoxListBox : ItemsControl
     public static readonly DirectProperty<CheckBoxListBox, IList?> SelectedItemsProperty =
         AvaloniaProperty.RegisterDirect<CheckBoxListBox, IList?>(
             nameof(SelectedItems),
-            o => o.SelectedItems,
-            (o, v) => o.SelectedItems = v);
+            static o => o.SelectedItems,
+            static (o, v) => o.SelectedItems = v,
+            defaultBindingMode: BindingMode.TwoWay);
 
     private readonly InnerCheckBoxListBox inner = new()
     {
@@ -29,6 +30,7 @@ public partial class CheckBoxListBox : ItemsControl
         [~PaddingProperty] = new TemplateBinding(PaddingProperty),
         [~ItemsSourceProperty] = new TemplateBinding(ItemsSourceProperty),
         [~ListBox.SelectedItemsProperty] = new TemplateBinding(SelectedItemsProperty),
+        [~ItemTemplateProperty] =  new TemplateBinding(ItemTemplateProperty),
         HorizontalAlignment = HorizontalAlignment.Stretch,
         VerticalAlignment = VerticalAlignment.Stretch,
     };

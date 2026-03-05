@@ -1,0 +1,18 @@
+<Project>
+    <!-- Only enable Accelerate if a license key is present in the environment variable or explicitly enabled. -->
+    <PropertyGroup>
+        <!-- Set a variable (MSBuild Property) based on the presence of the environment variable holding the licence key -->
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+
+        <!-- Get the C# compiler to define an equivalent constant that can then be used in Preprocessor Directives to conditionally compile parts of the code (#if ...) -->
+        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Conditionally include the Accelerate licensed TreeDataGrid package -->
+        <!-- PrivateAssets="All" ensures this dependency is NOT propagated to consumers of our NuGet. 
+             Consumers who want to use TreeDataGrid must reference it themselves. -->
+        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="$(MinimumAvaloniaTreeDataGridVersion)" Condition="'$(EnableAccelerate)' == 'true'" PrivateAssets="All" />
+    </ItemGroup>
+</Project>

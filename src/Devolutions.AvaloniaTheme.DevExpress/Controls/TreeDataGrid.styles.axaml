@@ -1,0 +1,54 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Global styles for TreeDataGrid conditional features.
+    
+    The ControlTheme (TreeDataGrid.axaml) defaults to NO grid lines and NO alternating rows.
+    This file enables them based on pseudo-classes (:flat/:hierarchical) and CSS classes:
+    
+    - Flat source defaults:  grid lines ON, alternating rows ON
+    - Hierarchical source defaults: grid lines OFF, alternating rows OFF
+    - .grid-lines class: force grid lines ON regardless of source type
+    - .no-grid-lines class: force grid lines OFF (overrides flat default)
+    - .alternating-rows class: force alternating rows ON regardless of source type
+    - .no-alternating-rows class: force alternating rows OFF (overrides flat default)
+  -->
+
+  <!-- ============================================================= -->
+  <!--  GRID LINES                                                   -->
+  <!--  Enabled by:  :flat (unless .no-grid-lines)                   -->
+  <!--           OR  .grid-lines                                     -->
+  <!-- ============================================================= -->
+  <!-- Row bottom borders -->
+  <Style Selector="TreeDataGrid:flat:not(.no-grid-lines), TreeDataGrid.grid-lines">
+    <Style Selector="^ :is(TreeDataGridRow)">
+      <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
+      <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+  </Style>
+  <!-- Cell right borders -->
+  <Style Selector="TreeDataGrid:flat:not(.no-grid-lines), TreeDataGrid.grid-lines">
+    <Style Selector="^ :is(TreeDataGridCell)">
+      <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
+      <Setter Property="BorderThickness" Value="0,0,1,0" />
+    </Style>
+  </Style>
+
+  <!-- ============================================================= -->
+  <!--  ALTERNATING ROWS                                             -->
+  <!--  Enabled by:  :flat (unless .no-alternating-rows)             -->
+  <!--           OR  .alternating-rows                               -->
+  <!-- ============================================================= -->
+  <!-- Flat default: alternating rows ON -->
+  <Style Selector="TreeDataGrid:flat:not(.no-alternating-rows), TreeDataGrid.alternating-rows">
+    <Style Selector="^ :is(TreeDataGridRow)">
+      <Setter Property="Background"
+              Value="{BindingToggler
+              {ReflectionBinding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+              {DynamicResource TreeDataGridAlternatingRowBackground},
+              {Binding $parent[TreeDataGrid].Background}
+            }" />
+    </Style>
+  </Style>
+</Styles>

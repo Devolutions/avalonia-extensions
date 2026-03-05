@@ -11,8 +11,12 @@ internal static class EnumerableExtensions
 
   internal static IEnumerable<T> SkipNulls<T>(this IEnumerable<T?> enumerable)
   {
-    foreach (var value in enumerable)
-      if (value != null)
-        yield return value;
+      foreach (var value in enumerable)
+      {
+          if (value != null)
+          {
+              yield return value;
+          }
+      }
   }
 }

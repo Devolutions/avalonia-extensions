@@ -2,6 +2,8 @@
     <Import Project="../../Common.props" />
 
     <PropertyGroup>
+        <TargetFramework>$(DemoFramework)</TargetFramework>
+        
         <OutputType>WinExe</OutputType>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>

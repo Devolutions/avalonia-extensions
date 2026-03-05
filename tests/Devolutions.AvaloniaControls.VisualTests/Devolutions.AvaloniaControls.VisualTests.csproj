@@ -2,6 +2,8 @@
     <Import Project="../../Common.props" />
 
     <PropertyGroup>
+        <TargetFramework>$(DemoFramework)</TargetFramework>
+
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>

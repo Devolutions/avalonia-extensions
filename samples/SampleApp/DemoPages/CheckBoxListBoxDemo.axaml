@@ -29,6 +29,23 @@
         <TextBlock Text="Selected: " />
         <TextBlock Text="{Binding SelectedText}" />
       </StackPanel>
+      
+      <Separator Margin="0 10" />
+
+      <CheckBoxListBox HorizontalAlignment="Left"
+                       ItemsSource="{Binding Items2}"
+                       SelectedItems="{Binding SelectedItems2}">
+        <CheckBoxListBox.ItemTemplate>
+          <DataTemplate DataType="vm:CheckBoxListBoxDemoItem">
+            <TextBlock Text="{Binding Header}" />
+          </DataTemplate>
+        </CheckBoxListBox.ItemTemplate>
+      </CheckBoxListBox>
+      
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Selected: " />
+        <TextBlock Text="{Binding SelectedText2}" />
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

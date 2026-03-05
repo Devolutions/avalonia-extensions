@@ -34,18 +34,9 @@ public static class CalendarDatePickerBehavior
         if (sender is CalendarDatePicker datePicker)
         {
             Popup? popup = datePicker.GetVisualDescendants().OfType<Popup>().FirstOrDefault();
+            Calendar? calendar = popup?.Child?.FindDescendantOfType<Calendar>() ?? popup?.Child as Calendar;
 
-            if (popup == null)
-            {
-                return;
-            }
-
-            Calendar? calendar = popup.Child?.FindDescendantOfType<Calendar>() ?? popup.Child as Calendar;
-
-            if (calendar == null)
-            {
-                return;
-            }
+            if (calendar == null) return;
 
             calendar.DisplayDate = datePicker.SelectedDate ?? DateTime.Now;
         }

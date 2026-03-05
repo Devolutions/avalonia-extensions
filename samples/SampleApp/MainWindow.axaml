@@ -46,7 +46,11 @@
                 <TabItem.Header>
                   <controls:SampleItemHeader Title="CalendarDatePicker" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
-                <demoPages:CalendarDatePickerDemo />
+                <demoPages:CalendarDatePickerDemo>
+                  <demoPages:CalendarDatePickerDemo.DataContext>
+                    <vm:CalendarDatePickerViewModel />
+                  </demoPages:CalendarDatePickerDemo.DataContext>
+                </demoPages:CalendarDatePickerDemo>
               </TabItem>
               <TabItem>
                 <TabItem.Header>

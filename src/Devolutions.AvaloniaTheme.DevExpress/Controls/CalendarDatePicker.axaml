@@ -56,6 +56,8 @@
     <Setter Property="Padding" Value="4 0" />
     <Setter Property="MinWidth" Value="102" />
     <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="CalendarDatePickerBehavior.OpenOnSelectedDate" Value="True" />
+
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>

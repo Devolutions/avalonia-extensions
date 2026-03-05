@@ -1,0 +1,11 @@
+[*.md]
+indent_style = space
+indent_size = 2
+
+[*.{xml,csproj}]
+indent_style = space
+indent_size = 4
+
+[*.{xaml,axaml}]
+indent_style = space
+indent_size = 2

@@ -50,6 +50,8 @@
     <Setter Property="MinWidth" Value="132" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="CalendarDatePickerBehavior.OpenOnSelectedDate" Value="True" />
+
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors ClipToBounds="False">

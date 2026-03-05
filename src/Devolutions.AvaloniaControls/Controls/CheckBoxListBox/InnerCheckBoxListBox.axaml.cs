@@ -22,6 +22,16 @@ public partial class CheckBoxListBox
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
             this.NeedsContainer<CheckBoxListBoxItem>(item, out recycleKey);
 
+        protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
+        {
+            base.PrepareContainerForItemOverride(container, item, index);
+
+            if (container is CheckBoxListBoxItem checkBoxItem)
+            {
+                checkBoxItem.IsChecked = this.Selection.IsSelected(index);
+            }
+        }
+
         internal void UpdateSelectionFromItem(CheckBoxListBoxItem item)
         {
             int index = this.IndexFromContainer(item);

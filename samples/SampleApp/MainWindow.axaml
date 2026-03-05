@@ -304,6 +304,9 @@
                   <TabItem Header="Animated Icon">
                     <experiments:AnimatedIcon />
                   </TabItem>
+                  <TabItem Header="LG TextBox Token">
+                    <experiments:LiquidGlassTextBoxTokenDemo />
+                  </TabItem>
                 </TabControl>
               </TabItem>
             </TabControl>

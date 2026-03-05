@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="180"
+             x:Class="SampleApp.Experiments.LiquidGlassTextBoxTokenDemo">
+
+  <StackPanel Margin="24" Spacing="14" MaxWidth="700" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <TextBlock FontWeight="SemiBold" FontSize="17" Text="LiquidGlass TextBox token test" />
+    <TextBlock TextWrapping="Wrap" Opacity="0.85"
+               Text="TextBox background uses DynamicResource LG.TextBox.BackgroundBrush. The readout below resolves the current brush from Application resources." />
+
+    <TextBox Watermark="Type here…"
+             Width="360"
+             Background="{DynamicResource LG.TextBox.BackgroundBrush}" />
+
+    <Border Width="360" Height="90" CornerRadius="8"
+            BorderThickness="1" BorderBrush="Gray"
+            Background="{DynamicResource LG.TextBox.BackgroundBrush}" />
+
+    <TextBlock FontWeight="SemiBold" Text="Resolved token value" />
+    <TextBlock x:Name="TokenColorInfoTextBlock" TextWrapping="Wrap" Text="Token not resolved yet." />
+  </StackPanel>
+</UserControl>

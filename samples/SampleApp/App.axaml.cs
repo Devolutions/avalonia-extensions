@@ -299,6 +299,7 @@ public class App : Application
         object? dataContext = oldWindow?.DataContext;
 
         MainWindow newWindow = new() { DataContext = dataContext };
+        AttachTokenRefreshOnThemeVariantChange(newWindow);
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize
@@ -313,6 +314,24 @@ public class App : Application
         EnableThemeChangesWhenReady(newWindow);
 
         oldWindow?.Close();
+    }
+
+    private static void AttachTokenRefreshOnThemeVariantChange(Window window)
+    {
+        if (Current is not App app)
+        {
+            return;
+        }
+
+        window.PropertyChanged += (_, e) =>
+        {
+            if (e.Property?.Name is "RequestedThemeVariant" or "ActualThemeVariant")
+            {
+                Dispatcher.UIThread.Post(
+                    () => LiquidGlassPaletteApplier.ApplyTextBoxBackgroundFromSystem(app),
+                    DispatcherPriority.Background);
+            }
+        };
     }
 
     private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
@@ -352,10 +371,12 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         this.FixCommunityToolkitMvvmDataValidation();
+        LiquidGlassPaletteApplier.HookAndApply(this);
 
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             MainWindow mainWindow = new() { DataContext = new MainWindowViewModel() };
+            AttachTokenRefreshOnThemeVariantChange(mainWindow);
 
             // Suppress theme changes during initial window setup
             mainWindow.SuppressThemeChangeEvents(true);

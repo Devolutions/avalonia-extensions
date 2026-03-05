@@ -3,6 +3,7 @@
     <Import Project="../../Accelerate.Packages.props" />
     
     <PropertyGroup>
+        <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
         <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
         <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
     </PropertyGroup>

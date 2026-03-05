@@ -2,7 +2,6 @@ namespace SampleApp.DemoPages;
 
 using System;
 using Avalonia.Controls;
-using SampleApp.ViewModels;
 
 public partial class CalendarDatePickerDemo : UserControl
 {

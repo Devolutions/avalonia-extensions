@@ -41,6 +41,11 @@
           </DataTemplate>
         </CheckBoxListBox.ItemTemplate>
       </CheckBoxListBox>
+      
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Selected: " />
+        <TextBlock Text="{Binding SelectedText2}" />
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

@@ -14,13 +14,12 @@
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="400">
       <StackPanel Spacing="10" Width="200">
-  <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
-            BorderBrush="Transparent"
-                  BorderThickness="0">
+        <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False">
           <ComboBoxItem>External</ComboBoxItem>
           <ComboBoxItem>Embedded (tabbed)</ComboBoxItem>
           <ComboBoxItem>Undocked</ComboBoxItem>
         </ComboBox>
+
 
         <ComboBox IsEnabled="False"
                   Width="200"
@@ -78,6 +77,14 @@
           <ComboBoxItem>Item A</ComboBoxItem>
           <ComboBoxItem>Item b</ComboBoxItem>
           <ComboBoxItem>Item c</ComboBoxItem>
+        </ComboBox>
+        <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
+                  Classes="no-focus-border"
+                  BorderBrush="Transparent"
+                  BorderThickness="0">
+          <ComboBoxItem>External</ComboBoxItem>
+          <ComboBoxItem>Borderless</ComboBoxItem>
+          <ComboBoxItem>Undocked</ComboBoxItem>
         </ComboBox>
       </StackPanel>
     </design:ThemePreviewer>
@@ -226,7 +233,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
+    <Style Selector="^:focus:not(.no-focus-border), ^:focus-within:not(.no-focus-border), ^:focus-visible:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
@@ -234,7 +241,7 @@
     </Style>
 
     <Style Selector="^:dropdownopen">
-      <Style Selector="^ /template/ Border#BottomBorderElement">
+      <Style Selector="^:not(.no-focus-border) /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
       </Style>

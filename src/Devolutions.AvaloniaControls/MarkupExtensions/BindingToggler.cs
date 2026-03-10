@@ -34,8 +34,15 @@ public class BindingTogglerExtension : MarkupExtension
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
         IProvideValueTarget? provideTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
-        Setter? setter = provideTarget?.TargetObject as Setter;
-        Type? targetType = setter?.Property?.PropertyType;
+        Type? targetType = null;
+        if (provideTarget?.TargetObject is Setter setter)
+        {
+            targetType = setter?.Property?.PropertyType;
+        }
+        else if (provideTarget?.TargetProperty is AvaloniaProperty avaloniaProperty)
+        {
+            targetType = avaloniaProperty.PropertyType;
+        }
 
         this.resolvedWhenTrueBinding.TryGetTarget(out IBinding? resolvedTrueBinding);
         if (resolvedTrueBinding is null && this.WhenTrueBinding is not null)

@@ -2,8 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:SampleApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SampleApp.DemoPages.CheckBoxDemo">
+             x:Class="SampleApp.DemoPages.CheckBoxDemo"
+             x:DataType="viewModels:CheckboxViewModel">
+  
+  <Design.DataContext>
+    <viewModels:CheckboxViewModel />
+  </Design.DataContext>
+  
   <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
@@ -74,12 +81,29 @@
           Partially checked
         </CheckBox>
       </StackPanel>
-      <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="4" Margin="20">
+      <StackPanel Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Margin="20">
         <TextBlock Margin="0 0 0 24 ">
           <Bold>Text wrapping</Bold>
         </TextBlock>
         <CheckBox IsChecked="True" Margin="0 0 0 5">Longer checkbox labels will wrap</CheckBox>
         <CheckBox IsChecked="True">(Set bottom margin to 5 to make checkbox spacing larger than the line height) </CheckBox>
+      </StackPanel>
+      <StackPanel Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" Margin="20">
+        <TextBlock Margin="0 0 0 24 ">
+          <Bold>BindingToggler</Bold>
+        </TextBlock>
+        <CheckBox IsChecked="{Binding IsChecked}" Margin="0 0 0 5">Check to toggle message</CheckBox>
+        <TextBlock Text="{BindingToggler {Binding IsChecked}, 'Value is true', 'Value is false'}" Margin="0 0 0 5" />
+        <NumericUpDown IsEnabled="False" Value="{BindingToggler {Binding IsChecked}, 1, 0}" Margin="0 0 0 5" />
+        <Border
+          CornerRadius="4"
+          Padding="4 0"
+          Margin="0 0 0 5"
+          Background="{DynamicResource ButtonBackground}"
+          HorizontalAlignment="Left"
+          Width="{BindingToggler {Binding IsChecked}, 120, 60}">
+          <TextBlock Text="{BindingToggler {Binding IsChecked}, 'Wide', 'Thin'}" />
+        </Border>
       </StackPanel>
     </Grid>
   </StackPanel>

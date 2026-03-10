@@ -56,7 +56,11 @@
                 <TabItem.Header>
                   <controls:SampleItemHeader Title="CheckBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
-                <demoPages:CheckBoxDemo />
+                <demoPages:CheckBoxDemo>
+                  <demoPages:CheckBoxDemo.DataContext>
+                    <vm:CheckboxViewModel />
+                  </demoPages:CheckBoxDemo.DataContext>
+                </demoPages:CheckBoxDemo>
               </TabItem>
               <TabItem>
                 <TabItem.Header>

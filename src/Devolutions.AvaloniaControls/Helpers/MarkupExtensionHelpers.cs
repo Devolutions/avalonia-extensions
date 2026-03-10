@@ -56,6 +56,8 @@ public static class MarkupExtensionHelpers
 
     public static IBinding? GetBinding(object? v, Type type)
     {
+        // Unwrap Nullable<T> to get the underlying type for IParsable check
+        Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
         switch (v)
         {
             case null:
@@ -71,18 +73,24 @@ public static class MarkupExtensionHelpers
                 };
             case string str:
             {
-                var isParsable = type.GetInterfaces().Any(static c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>));
+                if (underlyingType == typeof(string))
+                {
+                    return ObservableHelpers.ValueBinding(str);
+                }
+                
+                bool isParsable = underlyingType.GetInterfaces()
+                    .Any(static c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>));
                 if (isParsable)
                 {
-                    var parseMethod = type.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)]);
-                    return ObservableHelpers.ValueBinding(parseMethod?.Invoke(type, [str, CultureInfo.InvariantCulture]));
+                    MethodInfo? parseMethod = underlyingType.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)]);
+                    return ObservableHelpers.ValueBinding(parseMethod?.Invoke(underlyingType, [str, CultureInfo.InvariantCulture]));
                 }
 
                 break;
             }
         }
 
-        var t = TypeDescriptor.GetConverter(v.GetType()).ConvertTo(v, type);
+        object? t = TypeDescriptor.GetConverter(underlyingType).ConvertFrom(null, CultureInfo.InvariantCulture, v);
         return t is not null
             ? ObservableHelpers.ValueBinding(t)
             : null;

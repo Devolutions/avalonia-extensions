@@ -148,7 +148,6 @@
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
       <SolidColorBrush x:Key="EditableComboBoxGlyphHoverBrush">#3c3c3c</SolidColorBrush>
       <SolidColorBrush x:Key="EditableComboBoxGlyphPressedBrush" Color="#363636" />
-      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#404040" />
       <BoxShadows x:Key='ComboBoxBoxShadow'>0 0 5 2 #99101010</BoxShadows>
 
       <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource ForegroundColor}" Opacity="0.13" />

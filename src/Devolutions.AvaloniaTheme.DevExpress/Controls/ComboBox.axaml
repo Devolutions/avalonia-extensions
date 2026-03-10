@@ -14,7 +14,9 @@
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="400">
       <StackPanel Spacing="10" Width="200">
-        <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False">
+  <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
+            BorderBrush="Transparent"
+                  BorderThickness="0">
           <ComboBoxItem>External</ComboBoxItem>
           <ComboBoxItem>Embedded (tabbed)</ComboBoxItem>
           <ComboBoxItem>Undocked</ComboBoxItem>
@@ -88,8 +90,8 @@
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThemeThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -106,15 +108,15 @@
           <Panel>
             <Border Name="BorderElement"
                     Background="{TemplateBinding Background}"
-                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                    BorderThickness="1 1 1 0"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness, Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}, ConverterParameter={StaticResource ComboBoxBorderThicknessFactors}}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" />
             <Border Name="BottomBorderElement"
                     Background="Transparent"
                     BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                    BorderThickness="0 0 0 1"
+                    BorderThickness="{TemplateBinding BorderThickness, Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}, ConverterParameter={StaticResource ComboBoxBottomBorderThicknessFactors}}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" />

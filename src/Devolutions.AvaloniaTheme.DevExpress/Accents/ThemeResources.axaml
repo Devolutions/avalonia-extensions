@@ -264,6 +264,9 @@
   <SolidColorBrush x:Key="ComboBoxItemBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{DynamicResource ComboBoxDropDownBorderColor}" />
   <Thickness x:Key="ComboBoxPadding">5,0</Thickness>
+  <Thickness x:Key="ComboBoxBorderThickness">1</Thickness>
+  <Thickness x:Key="ComboBoxBorderThicknessFactors">1 1 1 0</Thickness>
+  <Thickness x:Key="ComboBoxBottomBorderThicknessFactors">0 0 0 1</Thickness>
   <Thickness x:Key="ComboBoxDropDownInnerPadding">4</Thickness>
   <Thickness x:Key="ComboBoxPopupBorderMargin">0 0 0 10</Thickness>
   <Thickness x:Key="ComboBoxDropdownContentMargin">4</Thickness>

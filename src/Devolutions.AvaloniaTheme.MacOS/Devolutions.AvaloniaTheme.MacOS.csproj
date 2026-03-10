@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="../../Common.props" />
-    <Import Project="../../Accelerate.Packages.props" />
-    
+    <Import Project="../../Common.props"/>
+    <Import Project="../../Accelerate.Packages.props"/>
+
     <PropertyGroup>
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <Version>1.0.0</Version>
         <Company>Devolutions</Company>
@@ -22,33 +22,33 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
-        <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
+        <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)"/>
+        <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.03.05.3,)" />
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.03.10.1,)"/>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
+        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Accents/Assets/**" />
+        <AvaloniaResource Include="Accents/Assets/**"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <Compile Remove="Design\ThemePreviewer.axaml.cs" />
-        <None Include="Design\ThemePreviewer.axaml.cs" />
-        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml" />
-        <None Include="Design\ThemePreviewer.axaml" />
+        <Compile Remove="Design\ThemePreviewer.axaml.cs"/>
+        <None Include="Design\ThemePreviewer.axaml.cs"/>
+        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml"/>
+        <None Include="Design\ThemePreviewer.axaml"/>
     </ItemGroup>
 </Project>

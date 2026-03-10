@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaTheme.DevExpress.Behaviors;
+namespace Devolutions.AvaloniaControls.Behaviors;
 
 using System;
 using System.Runtime.CompilerServices;
@@ -9,13 +9,15 @@ using Avalonia.Layout;
 
 public static class ScrollBarShortBehavior
 {
-  private const double MinThumbSize = 43;
-  private static readonly ConditionalWeakTable<ScrollBar, IDisposable> Subscriptions = new();
+    private static readonly ConditionalWeakTable<ScrollBar, IDisposable> Subscriptions = new();
 
   public static readonly AttachedProperty<bool> EnabledProperty =
     AvaloniaProperty.RegisterAttached<ScrollBar, bool>("Enabled", typeof(ScrollBarShortBehavior));
 
-  static ScrollBarShortBehavior()
+    public static readonly AttachedProperty<double> MinThumbSizeProperty =
+      AvaloniaProperty.RegisterAttached<ScrollBar, double>("MinThumbSize", typeof(ScrollBarShortBehavior), 43.0);
+
+    static ScrollBarShortBehavior()
   {
     EnabledProperty.Changed.Subscribe(args =>
     {
@@ -30,9 +32,9 @@ public static class ScrollBarShortBehavior
             double relevantDimension = scrollBar.Orientation == Orientation.Vertical ? bounds.Height : bounds.Width;
             if (relevantDimension is 0.0) return;
 
-            bool isShort = relevantDimension < MinThumbSize;
+              bool isShort = relevantDimension < scrollBar.GetValue(MinThumbSizeProperty);
 
-            ((IPseudoClasses)scrollBar.Classes).Set(":short", isShort);
+              ((IPseudoClasses)scrollBar.Classes).Set(":short", isShort);
           });
 
           Subscriptions.Add(scrollBar, subscription);
@@ -53,4 +55,8 @@ public static class ScrollBarShortBehavior
   public static void SetEnabled(ScrollBar element, bool value) => element.SetValue(EnabledProperty, value);
 
   public static bool GetEnabled(ScrollBar element) => element.GetValue(EnabledProperty);
+
+    public static void SetMinThumbSize(ScrollBar element, double value) => element.SetValue(MinThumbSizeProperty, value);
+
+    public static double GetMinThumbSize(ScrollBar element) => element.GetValue(MinThumbSizeProperty);
 }

@@ -2,7 +2,7 @@
 
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.Linux.Behaviors">
+                    xmlns:controlsBehaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls">
   <Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Orientation="Horizontal" Spacing="20">
@@ -111,7 +111,8 @@
     <Setter Property="Background" Value="{DynamicResource ScrollBarBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource ScrollBarForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollBarBorderBrush}" />
-    <Setter Property="behaviors:ScrollBarShortBehavior.Enabled" Value="True" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.Enabled" Value="True" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.MinThumbSize" Value="48" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">

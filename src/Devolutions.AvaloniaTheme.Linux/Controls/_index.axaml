@@ -29,6 +29,7 @@
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
+    <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="Separator.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />

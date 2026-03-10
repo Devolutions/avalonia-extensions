@@ -91,7 +91,7 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
-      
+
       <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="#EEEEEE" />
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
     </ResourceDictionary>
@@ -183,7 +183,7 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
-      
+
       <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="Transparent" />
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#3C3C3C" />
     </ResourceDictionary>
@@ -313,6 +313,7 @@
   <x:Double x:Key="OpacityHidden">0</x:Double>
 
   <x:Double x:Key="ScrollBarSize">17.4</x:Double>
+  <x:Double x:Key="ScrollBarThumbMinLength">7</x:Double>
   <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="Transparent" />
   <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ScrollBarThumbColor}" />
   <CornerRadius x:Key="ScrollBarThumbCornerRadius">2</CornerRadius>

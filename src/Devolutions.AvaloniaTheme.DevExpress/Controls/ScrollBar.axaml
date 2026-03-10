@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
@@ -81,6 +82,7 @@
     <Setter Property="ShowDelay" Value="0:0:0.0" />
     <Setter Property="HideDelay" Value="0:0:0.0" />
     <Setter Property="ScrollBarThumbDragBehavior.Enable" Value="True" />
+    <Setter Property="behaviors:ScrollBarShortBehavior.Enabled" Value="True" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">
@@ -127,7 +129,7 @@
                   </Track.IncreaseButton>
                   <Thumb Theme="{StaticResource FluentScrollBarThumb}"
                          Width="7"
-                         MinHeight="{DynamicResource ScrollBarSize}"
+                         MinHeight="{DynamicResource ScrollBarThumbMinLength}"
                          RenderTransform="{StaticResource VerticalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="50%,100%" />
                 </Track>
@@ -204,7 +206,7 @@
                   </Track.IncreaseButton>
                   <Thumb Theme="{StaticResource FluentScrollBarThumb}"
                          Height="7"
-                         MinWidth="{DynamicResource ScrollBarSize}"
+                         MinWidth="{DynamicResource ScrollBarThumbMinLength}"
                          RenderTransform="{StaticResource HorizontalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="100%,50%" />
                 </Track>
@@ -337,7 +339,7 @@
       <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
     </Style>
 
-    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging">
+    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:short">
       <Style Selector="^ /template/ Thumb">
         <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ScrollBarThumbExpandedCornerRadius}" />

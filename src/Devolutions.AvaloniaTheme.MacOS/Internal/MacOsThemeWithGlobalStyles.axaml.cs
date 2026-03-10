@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using AvaloniaControls.Helpers;
 
 internal class MacOsThemeWithGlobalStyles : Styles
 {
@@ -22,6 +23,14 @@ internal class MacOsThemeWithGlobalStyles : Styles
       ResourceInclude liquidGlassInclude = new(liquidGlassUri) { Source = liquidGlassUri };
       this.Resources.MergedDictionaries.Add(liquidGlassInclude);
     }
+
+#if ENABLE_ACCELERATE
+    if (AvaloniaAccelerateHelpers.IsTreeDataGridAvailable)
+    {
+      Uri treeDataGridUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Controls/TreeDataGrid.axaml");
+      this.Resources.MergedDictionaries.Add(new ResourceInclude(treeDataGridUri) { Source = treeDataGridUri });
+    }
+#endif
 
 #if DEBUG
     Uri themePreviewerUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Design/ThemePreviewer.axaml");

@@ -1,0 +1,42 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Global styles for TreeDataGrid conditional features (macOS).
+
+    The ControlTheme (TreeDataGrid.axaml) provides the base styling.
+    This file adds mode-specific visual differences via :flat / :hierarchical
+    pseudo-classes set by TreeDataGridPseudoTypeBehavior.
+
+    NOTE: macOS DataGrid has no grid lines (GridLinesVisibility=None), so we
+    don't include any grid-line logic in this theme.
+
+    FLAT mode (looks like macOS DataGrid):
+      - Alternating row backgrounds ON
+      - Rounded selection with margin (like DataGrid rows)
+
+    HIERARCHICAL mode (looks like macOS TreeView):
+      - Alternating rows OFF
+      - Rounded row selection with margin (like TreeViewItem)
+      - Selected foreground swaps to accent-foreground
+
+    Override classes:
+      - .alternating-rows        force alternating rows ON regardless of source type
+      - .no-alternating-rows     force alternating rows OFF (overrides flat default)
+  -->
+
+  <!-- ============================================================= -->
+  <!--  FLAT: ALTERNATING ROWS                                       -->
+  <!--  Matches macOS DataGrid alternating background                -->
+  <!-- ============================================================= -->
+  <Style Selector="TreeDataGrid:flat:not(.no-alternating-rows), TreeDataGrid.alternating-rows">
+    <Style Selector="^ :is(TreeDataGridRow)">
+      <Setter Property="Background"
+              Value="{BindingToggler
+              {ReflectionBinding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
+              {DynamicResource DataGridItemBackgroundAlternating},
+              {Binding $parent[TreeDataGrid].Background}
+            }" />
+    </Style>
+  </Style>
+</Styles>

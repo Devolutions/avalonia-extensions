@@ -25,6 +25,10 @@
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
+        <DefaultItemExcludes>$(DefaultItemExcludes);Controls/TreeDataGrid.axaml;Controls/TreeDataGrid.styles.axaml</DefaultItemExcludes>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)"/>
         <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)"/>

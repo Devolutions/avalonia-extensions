@@ -79,9 +79,7 @@
           <ComboBoxItem>Item c</ComboBoxItem>
         </ComboBox>
         <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
-                  Classes="no-focus-border"
-                  BorderBrush="Transparent"
-                  BorderThickness="0">
+                  Classes="borderless">
           <ComboBoxItem>External</ComboBoxItem>
           <ComboBoxItem>Borderless</ComboBoxItem>
           <ComboBoxItem>Undocked</ComboBoxItem>
@@ -221,6 +219,11 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^.borderless /template/ Border#BorderElement, ^.borderless /template/ Border#BottomBorderElement">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
     <!-- Error State -->
     <Style Selector="^:error">
       <Style Selector="^ /template/ Border#BorderElement">
@@ -233,7 +236,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus:not(.no-focus-border), ^:focus-within:not(.no-focus-border), ^:focus-visible:not(.no-focus-border)">
+    <Style Selector="^:focus:not(.no-focus-border):not(.borderless), ^:focus-within:not(.no-focus-border):not(.borderless), ^:focus-visible:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
@@ -241,7 +244,7 @@
     </Style>
 
     <Style Selector="^:dropdownopen">
-      <Style Selector="^:not(.no-focus-border) /template/ Border#BottomBorderElement">
+      <Style Selector="^:not(.no-focus-border):not(.borderless) /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
       </Style>

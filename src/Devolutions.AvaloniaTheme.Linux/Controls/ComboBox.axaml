@@ -76,6 +76,12 @@
               <ComboBoxItem>Option 8</ComboBoxItem>
               <ComboBoxItem>Option 9</ComboBoxItem>
             </ComboBox>
+            <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
+                      Classes="borderless">
+              <ComboBoxItem>External</ComboBoxItem>
+              <ComboBoxItem>Borderless</ComboBoxItem>
+              <ComboBoxItem>Undocked</ComboBoxItem>
+            </ComboBox>
           </StackPanel>
         </Border>
       </StackPanel>
@@ -235,6 +241,10 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+    
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible, ^:focus-within">

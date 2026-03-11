@@ -148,7 +148,6 @@
       <Color x:Key="EditableComboBoxItemIconColor">#0088f2</Color>
       <SolidColorBrush x:Key="EditableComboBoxGlyphHoverBrush">#3c3c3c</SolidColorBrush>
       <SolidColorBrush x:Key="EditableComboBoxGlyphPressedBrush" Color="#363636" />
-      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#404040" />
       <BoxShadows x:Key='ComboBoxBoxShadow'>0 0 5 2 #99101010</BoxShadows>
 
       <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource ForegroundColor}" Opacity="0.13" />
@@ -264,6 +263,9 @@
   <SolidColorBrush x:Key="ComboBoxItemBackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{DynamicResource ComboBoxDropDownBorderColor}" />
   <Thickness x:Key="ComboBoxPadding">5,0</Thickness>
+  <Thickness x:Key="ComboBoxBorderThickness">1</Thickness>
+  <Thickness x:Key="ComboBoxBorderThicknessFactors">1 1 1 0</Thickness>
+  <Thickness x:Key="ComboBoxBottomBorderThicknessFactors">0 0 0 1</Thickness>
   <Thickness x:Key="ComboBoxDropDownInnerPadding">4</Thickness>
   <Thickness x:Key="ComboBoxPopupBorderMargin">0 0 0 10</Thickness>
   <Thickness x:Key="ComboBoxDropdownContentMargin">4</Thickness>

@@ -20,6 +20,7 @@
           <ComboBoxItem>Undocked</ComboBoxItem>
         </ComboBox>
 
+
         <ComboBox IsEnabled="False"
                   Width="200"
                   SelectedIndex="1"
@@ -77,6 +78,12 @@
           <ComboBoxItem>Item b</ComboBoxItem>
           <ComboBoxItem>Item c</ComboBoxItem>
         </ComboBox>
+        <ComboBox PlaceholderText="Select an option" SelectedIndex="1" IsDropDownOpen="False"
+                  Classes="borderless">
+          <ComboBoxItem>External</ComboBoxItem>
+          <ComboBoxItem>Borderless</ComboBoxItem>
+          <ComboBoxItem>Undocked</ComboBoxItem>
+        </ComboBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -88,8 +95,8 @@
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThemeThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -106,15 +113,15 @@
           <Panel>
             <Border Name="BorderElement"
                     Background="{TemplateBinding Background}"
-                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                    BorderThickness="1 1 1 0"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness, Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}, ConverterParameter={StaticResource ComboBoxBorderThicknessFactors}}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" />
             <Border Name="BottomBorderElement"
                     Background="Transparent"
                     BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                    BorderThickness="0 0 0 1"
+                    BorderThickness="{TemplateBinding BorderThickness, Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}, ConverterParameter={StaticResource ComboBoxBottomBorderThicknessFactors}}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" />
@@ -212,6 +219,11 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^.borderless /template/ Border#BorderElement, ^.borderless /template/ Border#BottomBorderElement">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
     <!-- Error State -->
     <Style Selector="^:error">
       <Style Selector="^ /template/ Border#BorderElement">
@@ -224,7 +236,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus, ^:focus-within, ^:focus-visible">
+    <Style Selector="^:focus:not(.no-focus-border):not(.borderless), ^:focus-within:not(.no-focus-border):not(.borderless), ^:focus-visible:not(.no-focus-border)">
       <Style Selector="^ /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
@@ -232,7 +244,7 @@
     </Style>
 
     <Style Selector="^:dropdownopen">
-      <Style Selector="^ /template/ Border#BottomBorderElement">
+      <Style Selector="^:not(.no-focus-border):not(.borderless) /template/ Border#BottomBorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderSelectedBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1.6" />
       </Style>

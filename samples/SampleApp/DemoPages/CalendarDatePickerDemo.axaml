@@ -29,9 +29,8 @@
         <CalendarDatePicker Name="DatePicker" HorizontalAlignment="Left" />
         <CalendarDatePicker Name="DatePicker2" HorizontalAlignment="Left" IsEnabled="False" />
         <CalendarDatePicker Name="DatePicker3" HorizontalAlignment="Left" SelectedDateFormat="Long" />
-        <StackPanel Orientation="Horizontal">
-            <Label>Today</Label>
-            <CheckBox IsChecked="{Binding IsToday}" />
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="Today" Command="{Binding SetToTodayCommand}" />
             <CalendarDatePicker Name="DatePicker4" HorizontalAlignment="Left" SelectedDate="{Binding SelectedDate}"/>
         </StackPanel>
       </StackPanel>

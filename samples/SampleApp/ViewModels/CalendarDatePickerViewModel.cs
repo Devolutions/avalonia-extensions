@@ -3,20 +3,16 @@
 using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 public partial class CalendarDatePickerViewModel : ObservableObject
 {
     [ObservableProperty]
-    private bool isToday;
+    private DateTime selectedDate = new DateTime(2026, 3, 6);
 
-    [ObservableProperty]
-    private DateTime selectedDate = DateTime.Now;
-
-    partial void OnIsTodayChanged(bool value)
+    [RelayCommand]
+    private void SetToToday()
     {
-        if (value)
-        {
-            this.SelectedDate = DateTime.Today;
-        }
+        this.SelectedDate = DateTime.Today;
     }
 }

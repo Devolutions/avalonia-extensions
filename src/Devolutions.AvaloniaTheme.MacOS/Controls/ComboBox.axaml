@@ -15,7 +15,7 @@
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel>
-        <StackPanel Margin="20" Height="200" Width="180" Spacing="5">
+        <StackPanel Margin="20" Width="180" Spacing="5">
           <ComboBox SelectedIndex="2" MaxDropDownHeight="100">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
@@ -43,10 +43,15 @@
             <ComboBoxItem>Option 8</ComboBoxItem>
             <ComboBoxItem>Option 9</ComboBoxItem>
           </ComboBox>
+          <ComboBox SelectedIndex="0" Classes="borderless" Margin="0 20 0 0">
+            <ComboBoxItem>Borderless</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+          </ComboBox>
         </StackPanel>
 
         <Border Background="{DynamicResource LayoutBackgroundLowBrush}">
-          <StackPanel Margin="20" Height="200" Width="180" Spacing="5">
+          <StackPanel Margin="20" Width="180" Spacing="5">
             <ComboBox SelectedIndex="2" MaxDropDownHeight="100">
               <ComboBoxItem>Option 1</ComboBoxItem>
               <ComboBoxItem>Option 2</ComboBoxItem>
@@ -82,6 +87,7 @@
                 </system:Exception>
               </DataValidationErrors.Error>
             </ComboBox>
+
           </StackPanel>
         </Border>
       </StackPanel>
@@ -297,6 +303,12 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^.borderless /template/ Border#BorderElement">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+    </Style>
 
     <Style Selector="^:pressed /template/ Border#BorderElement">
       <Setter Property="Background" Value="{DynamicResource ComboBoxPressedBackgroundBrush}" />

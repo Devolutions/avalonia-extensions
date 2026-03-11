@@ -242,7 +242,6 @@
       </ControlTemplate>
     </Setter>
     
-    <Style Selector="^.borderless /template/ Border#BorderElement, ^.borderless /template/ Border#BottomBorderElement">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>

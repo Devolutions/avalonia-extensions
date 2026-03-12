@@ -5,7 +5,7 @@
   <ControlTheme x:Key="{x:Type EnumPicker}" TargetType="EnumPicker">
     <Setter Property="Template">
       <ControlTemplate>
-        <ComboBox ItemsSource="{TemplateBinding Items}" SelectedItem="{TemplateBinding SelectedItem}">
+        <ComboBox ItemsSource="{TemplateBinding Items}" SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="EnumPickerItem">
               <TextBlock Text="{Binding Text}" />

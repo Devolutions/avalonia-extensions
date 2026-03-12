@@ -13,6 +13,9 @@ public enum DemoPriority
 
 public partial class EnumPickerViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private DemoPriority? selectedValue;
+
     public Func<DemoPriority, string> TextProvider { get; } = priority => priority switch
     {
         DemoPriority.Low => "Low ↓",

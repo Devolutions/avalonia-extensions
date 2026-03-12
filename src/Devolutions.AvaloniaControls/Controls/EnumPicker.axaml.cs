@@ -165,9 +165,9 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.UpdateValues();
     }
 
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
-        base.OnAttachedToVisualTree(e);
+        base.OnAttachedToLogicalTree(e);
 
         this.changedSubscriptions?.Dispose();
         this.changedSubscriptions = new CompositeDisposable();
@@ -177,6 +177,13 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.changedSubscriptions.Add(TextProviderProperty.Changed.Subscribe(this.OnTextProviderPropertyChanged));
         this.changedSubscriptions.Add(SortAlphabeticallyProperty.Changed.Subscribe(this.OnSortAlphabeticallyPropertyChanged));
         this.changedSubscriptions.Add(TextOverridesProperty.Changed.Subscribe(this.OnTextOverridesPropertyChanged));
+        this.changedSubscriptions.Add(SelectedItemProperty.Changed.Subscribe(args =>
+        {
+            if (args.Sender == this)
+            {
+                this.SetValue(SelectedValueProperty, (T?)args.NewValue.Value?.EnumValue);
+            }
+        }));
 
         this.UpdateValues();
         this.SelectedValue = this.cachedSelectedValue;

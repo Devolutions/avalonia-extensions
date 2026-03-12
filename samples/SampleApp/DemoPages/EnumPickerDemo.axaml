@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.EnumPickerDemo"
+             x:DataType="vm:EnumPickerViewModel">
+
+  <StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <EnumPicker x:TypeArguments="vm:DemoPriority" />
+    </StackPanel>
+    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto">
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
+          <Bold>EnumPicker</Bold>
+        </TextBlock>
+
+        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 10 10">
+          - Default:
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="1" x:TypeArguments="vm:DemoPriority"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0 0 10 10">
+          - Sorted alphabetically:
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="2" x:TypeArguments="vm:DemoPriority"
+                    SortAlphabetically="True"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="0 0 10 10">
+          - ExcludedValues (no Blocker):
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="vm:DemoPriority"
+                    ExcludedValues="{Binding ExcludedValues}"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="0 0 10 10">
+          - IncludedValues (Low/Normal/High):
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="4" x:TypeArguments="vm:DemoPriority"
+                    IncludedValues="{Binding IncludedValues}"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="0 0 10 10">
+          - TextOverrides:
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="5" x:TypeArguments="vm:DemoPriority"
+                    TextOverrides="{Binding TextOverrides}"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Margin="0 0 10 10">
+          - TextProvider:
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="6" x:TypeArguments="vm:DemoPriority"
+                    TextProvider="{Binding TextProvider}"
+                    Margin="0 0 0 10" />
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

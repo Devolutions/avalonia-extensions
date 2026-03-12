@@ -145,8 +145,16 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private void UpdateValues()
     {
         T? selectedValue = this.SelectedValue;
-        this.Items = this.allEnumValues.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) })
-            .ToList();
+
+        IEnumerable<T>? values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
+        IEnumerable<EnumPickerItem>? items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
+
+        if (this.SortAlphabetically)
+        {
+            items = items.OrderBy(val => val.Text, StringComparer.InvariantCultureIgnoreCase);
+        }
+        
+        this.Items = items.ToList();
         this.SelectedValue = selectedValue;
     }
 

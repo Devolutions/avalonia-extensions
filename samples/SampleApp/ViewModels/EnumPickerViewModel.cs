@@ -10,6 +10,16 @@ public enum DemoStatus
     Archived,
 }
 
+// Declared alphabetically (as is common in codebases), but displayed in workflow order via CustomSort
+public enum DemoTaskStatus
+{
+    Blocked,
+    Cancelled,
+    Done,
+    InProgress,
+    Todo,
+}
+
 public enum DemoPriority
 {
     Low,
@@ -51,6 +61,9 @@ public partial class EnumPickerViewModel : ObservableObject
     [ObservableProperty]
     private DemoPriority? selectedInlineOverrides;
 
+    [ObservableProperty]
+    private DemoTaskStatus? selectedCustomSort;
+
     public Func<object, string> TextProvider { get; } = priority => priority switch
     {
         DemoPriority.Low => "Low ↓",
@@ -65,6 +78,22 @@ public partial class EnumPickerViewModel : ObservableObject
     {
         { DemoPriority.High, "High (overridden)" },
         { DemoPriority.Critical, "CRITICAL" }
+    };
+
+    // Enum is alphabetical in code, but displayed in workflow order
+    public Comparison<DemoTaskStatus> CustomSort { get; } = (a, b) =>
+    {
+        static int WorkflowIndex(DemoTaskStatus s) => s switch
+        {
+            DemoTaskStatus.Todo       => 0,
+            DemoTaskStatus.InProgress => 1,
+            DemoTaskStatus.Blocked    => 2,
+            DemoTaskStatus.Done       => 3,
+            DemoTaskStatus.Cancelled  => 4,
+            _                         => int.MaxValue,
+        };
+
+        return WorkflowIndex(a).CompareTo(WorkflowIndex(b));
     };
 
     public IReadOnlyCollection<DemoPriority> ExcludedValues { get; } = [DemoPriority.Blocker];

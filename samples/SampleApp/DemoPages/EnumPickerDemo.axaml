@@ -18,7 +18,7 @@
       <EnumPicker x:TypeArguments="vm:DemoPriority" />
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
           <Bold>EnumPicker</Bold>
         </TextBlock>
@@ -35,7 +35,7 @@
           - Sorted alphabetically:
         </TextBlock>
         <EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="vm:DemoPriority"
-                    SortAlphabetically="True"
+                    AlphabeticalOrder="Ascending"
                     SelectedValue="{Binding SelectedSorted}" />
         <TextBlock Grid.Column="1" Grid.Row="4" Margin="0 2 0 10"
                    Text="{Binding SelectedSorted, StringFormat='Selection: {0}'}" />
@@ -128,6 +128,15 @@
         </EnumPicker>
         <TextBlock Grid.Column="1" Grid.Row="20" Margin="0 2 0 10"
                    Text="{Binding SelectedInlineOverrides, StringFormat='Selection: {0}'}" />
+
+        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Center" Margin="0 0 10 5">
+          - CustomSort (DemoTaskStatus,<LineBreak/>alphabetical enum, workflow order):
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="21" x:TypeArguments="vm:DemoTaskStatus"
+                    CustomSort="{Binding CustomSort}"
+                    SelectedValue="{Binding SelectedCustomSort}" />
+        <TextBlock Grid.Column="1" Grid.Row="22" Margin="0 2 0 10"
+                   Text="{Binding SelectedCustomSort, StringFormat='Selection: {0}'}" />
       </Grid>
     </Border>
   </StackPanel>

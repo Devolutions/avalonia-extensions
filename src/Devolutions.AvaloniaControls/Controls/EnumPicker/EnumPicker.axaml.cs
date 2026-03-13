@@ -6,6 +6,13 @@ using Avalonia.Data;
 
 public abstract class EnumPicker : TemplatedControl
 {
+    public enum SortOrder
+    {
+        None,
+        Ascending,
+        Descending,
+    }
+
     public static readonly StyledProperty<EnumPickerItem?> SelectedItemProperty = AvaloniaProperty.Register<EnumPicker, EnumPickerItem?>(
         nameof(SelectedItem),
         defaultBindingMode: BindingMode.TwoWay);
@@ -45,6 +52,15 @@ public abstract class EnumPicker : TemplatedControl
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
+    
+    // ReSharper disable once StaticMemberInGenericType
+    public static readonly StyledProperty<SortOrder> AlphabeticalOrderProperty = AvaloniaProperty.Register<EnumPicker, SortOrder>(
+        nameof(AlphabeticalOrder),
+        defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly StyledProperty<Comparison<T>?> CustomSortProperty = AvaloniaProperty.Register<EnumPicker, Comparison<T>?>(
+        nameof(CustomSort),
+        defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<IReadOnlyCollection<T>?> ExcludedValuesProperty =
         AvaloniaProperty.Register<EnumPicker, IReadOnlyCollection<T>?>(
@@ -60,17 +76,31 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         nameof(SelectedValue),
         defaultBindingMode: BindingMode.TwoWay);
 
-    // ReSharper disable once StaticMemberInGenericType
-    public static readonly StyledProperty<bool> SortAlphabeticallyProperty = AvaloniaProperty.Register<EnumPicker, bool>(
-        nameof(SortAlphabetically),
-        defaultBindingMode: BindingMode.TwoWay);
-
     public static readonly StyledProperty<IReadOnlyDictionary<T, string>?> TextOverridesProperty =
         AvaloniaProperty.Register<EnumPicker, IReadOnlyDictionary<T, string>?>(
             nameof(TextOverrides),
             defaultBindingMode: BindingMode.TwoWay);
 
     protected override Type StyleKeyOverride => typeof(EnumPicker);
+    
+    /// <summary>
+    ///  Gets or sets alphabetical sorting of values by their texts (see <see cref="TextOverrides"/> and <see cref="EnumPicker.TextProvider"/>).
+    ///  Applied as a secondary sort after <see cref="CustomSort"/> when both are set.
+    /// </summary>
+    public SortOrder AlphabeticalOrder
+    {
+        get => this.GetValue(AlphabeticalOrderProperty);
+        set => this.SetValue(AlphabeticalOrderProperty, value);
+    }
+
+    /// <summary>
+    ///  Gets or sets a custom sort comparison for values. Applied as the primary sort, with <see cref="AlphabeticalOrder"/> acting as a tiebreaker when both are set.
+    /// </summary>
+    public Comparison<T>? CustomSort
+    {
+        get => this.GetValue(CustomSortProperty);
+        set => this.SetValue(CustomSortProperty, value);
+    }
 
     /// <summary>
     /// Gets or sets the values that should not be listed, an excluded value overrides the same value being in <see cref="IncludedValues"/>
@@ -101,15 +131,6 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(value)) ?? this.Items.FirstOrDefault();
             this.SetValue(SelectedValueProperty, (T?)this.SelectedItem?.EnumValue);
         }
-    }
-    
-    /// <summary>
-    ///  Gets or sets whether values get sorted alphabetically by their texts (see <see cref="TextOverrides"/> and <see cref="EnumPicker.TextProvider"/>)
-    /// </summary>
-    public bool SortAlphabetically
-    {
-        get => this.GetValue(SortAlphabeticallyProperty);
-        set => this.SetValue(SortAlphabeticallyProperty, value);
     }
 
     /// <summary>
@@ -143,11 +164,35 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
         IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
 
-        if (this.SortAlphabetically)
+        IOrderedEnumerable<EnumPickerItem>? orderedItems = null;
+
+        if (this.CustomSort is { } customSort)
         {
-            items = items.OrderBy(val => val.Text, StringComparer.InvariantCultureIgnoreCase);
+            // ReSharper disable once PossibleMultipleEnumeration
+            orderedItems = items.OrderBy(val => (T)val.EnumValue, Comparer<T>.Create(customSort));
+        }
+
+        if (this.AlphabeticalOrder == SortOrder.Ascending)
+        {
+            orderedItems = orderedItems is null
+                // ReSharper disable once PossibleMultipleEnumeration
+                ? items.OrderBy(val => val.Text, StringComparer.InvariantCultureIgnoreCase)
+                : orderedItems.ThenBy(val => val.Text, StringComparer.InvariantCultureIgnoreCase);
+        }
+        else if (this.AlphabeticalOrder == SortOrder.Descending)
+        {
+            orderedItems = orderedItems is null
+                // ReSharper disable once PossibleMultipleEnumeration
+                ? items.OrderByDescending(val => val.Text, StringComparer.InvariantCultureIgnoreCase)
+                : orderedItems.ThenByDescending(val => val.Text, StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        if (orderedItems is not null)
+        {
+            items = orderedItems;
         }
         
+        // ReSharper disable once PossibleMultipleEnumeration
         this.Items = items.ToList();
         this.SelectedValue = selectedValue;
     }
@@ -166,7 +211,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         if (change.Property == IncludedValuesProperty ||
             change.Property == ExcludedValuesProperty ||
             change.Property == TextProviderProperty   ||
-            change.Property == SortAlphabeticallyProperty ||
+            change.Property == AlphabeticalOrderProperty ||
+            change.Property == CustomSortProperty ||
             change.Property == TextOverridesProperty)
         {
             this.UpdateValues();

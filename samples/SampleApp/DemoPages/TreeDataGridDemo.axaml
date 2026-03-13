@@ -27,7 +27,8 @@
       <TextBlock Text="Flat mode" Classes="section-title" />
       <TreeDataGrid Source="{Binding RowSelectionSource}"
                     CanUserResizeColumns="True"
-                    CanUserSortColumns="True" />
+                    CanUserSortColumns="True"
+                    MaxHeight="300" />
       
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
       <TreeDataGrid Source="{Binding TreeRowSelectionSource}" />
@@ -37,7 +38,9 @@
       <TextBlock Text="Cell Selection" Classes="section-title" FontSize="18" />
       
       <TextBlock Text="Flat mode" Classes="section-title" />
-      <TreeDataGrid Classes="no-grid-lines no-alternating-rows" Source="{Binding CellSelectionSource}" />
+      <TreeDataGrid Classes="no-grid-lines no-alternating-rows" 
+                    Source="{Binding CellSelectionSource}"
+                    MaxHeight="300" />
       
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
       <TreeDataGrid Classes="grid-lines alternating-rows" Source="{Binding TreeCellSelectionSource}" />

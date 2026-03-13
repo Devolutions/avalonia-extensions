@@ -126,11 +126,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     public T? SelectedValue
     {
         get => this.GetValue(SelectedValueProperty);
-        set
-        {
-            this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(value)) ?? this.Items.FirstOrDefault();
-            this.SetValue(SelectedValueProperty, (T?)this.SelectedItem?.EnumValue);
-        }
+        set => this.SetValue(SelectedValueProperty, value);
     }
 
     /// <summary>
@@ -194,7 +190,9 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         
         // ReSharper disable once PossibleMultipleEnumeration
         this.Items = items.ToList();
-        this.SelectedValue = selectedValue;
+
+        // Directly sync SelectedItem since SetValue won't fire OnPropertyChanged if the value is unchanged
+        this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(selectedValue)) ?? this.Items.FirstOrDefault();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -220,6 +218,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         else if (change.Property == SelectedItemProperty)
         {
             this.SetValue(SelectedValueProperty, (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue);
+        }
+        else if (change.Property == SelectedValueProperty)
+        {
+            T? newValue = change.GetNewValue<T?>();
+            this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(newValue));
         }
     }
 }

@@ -152,9 +152,17 @@
                     IncludedValues="{Binding DynamicIncludedValues}"
                     ExcludedValues="{Binding DynamicExcludedValues}"
                     CustomSort="{Binding DynamicCustomSort}" />
-        <TextBlock Margin="0 2 0 10" Text="{Binding DynamicSelected, StringFormat='Selection: {0}'}" />
+        <TextBlock Margin="0 2 0 0" Text="{Binding DynamicSelected, StringFormat='Selection: {0}'}" />
 
-        <TextBlock FontWeight="SemiBold">AlphabeticalOrder:</TextBlock>
+        <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">Set SelectedValue externally:</TextBlock>
+        <WrapPanel>
+          <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToLowCommand}">Low</Button>
+          <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToHighCommand}">High</Button>
+          <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToCriticalCommand}">Critical</Button>
+          <Button Command="{Binding ClearDynamicSelectedCommand}">Clear</Button>
+        </WrapPanel>
+
+        <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">AlphabeticalOrder:</TextBlock>
         <ComboBox ItemsSource="{Binding SortOrderValues}" SelectedItem="{Binding DynamicSortOrder}" />
 
         <CheckBox Margin="0 5 0 0" IsChecked="{Binding DynamicUseTextProvider}">TextProvider (arrows)</CheckBox>

@@ -1,6 +1,7 @@
 namespace SampleApp.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Devolutions.AvaloniaControls.Controls;
 
@@ -106,6 +107,11 @@ public partial class EnumPickerViewModel : ObservableObject
 
     [ObservableProperty]
     private DemoPriority? dynamicSelected;
+
+    [RelayCommand] private void SetDynamicSelectedToLow()      => DynamicSelected = DemoPriority.Low;
+    [RelayCommand] private void SetDynamicSelectedToHigh()     => DynamicSelected = DemoPriority.High;
+    [RelayCommand] private void SetDynamicSelectedToCritical() => DynamicSelected = DemoPriority.Critical;
+    [RelayCommand] private void ClearDynamicSelected()         => DynamicSelected = null;
 
     [ObservableProperty]
     private EnumPicker.SortOrder dynamicSortOrder;

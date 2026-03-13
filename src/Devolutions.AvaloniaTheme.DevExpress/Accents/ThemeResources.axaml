@@ -315,7 +315,8 @@
   <x:Double x:Key="OpacityHidden">0</x:Double>
 
   <x:Double x:Key="ScrollBarSize">17.4</x:Double>
-  <x:Double x:Key="ScrollBarThumbMinLength">7</x:Double>
+  <x:Double x:Key="ScrollBarThumbMinLength">17</x:Double>
+  <x:Double x:Key="ScrollBarShortThumbMinLength">7</x:Double>
   <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="Transparent" />
   <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{DynamicResource ScrollBarThumbColor}" />
   <CornerRadius x:Key="ScrollBarThumbCornerRadius">2</CornerRadius>

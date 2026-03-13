@@ -45,6 +45,14 @@
         <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
       </Transitions>
     </Setter>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarPageButton" TargetType="RepeatButton">
@@ -57,6 +65,14 @@
         <Border Background="{TemplateBinding Background}" />
       </ControlTemplate>
     </Setter>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarLineButton" TargetType="RepeatButton">
@@ -73,6 +89,14 @@
         <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
       </Transitions>
     </Setter>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
@@ -158,6 +182,10 @@
         </ControlTemplate>
       </Setter>
     </Style>
+
+    <!-- <Style Selector="^:veryshort /template/ Thumb"> -->
+    <!--   <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" /> -->
+    <!-- </Style> -->
 
     <Style Selector="^:horizontal">
       <Setter Property="Template">
@@ -340,7 +368,7 @@
       <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
     </Style>
 
-    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:short">
+    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:veryshort">
       <Style Selector="^ /template/ Thumb">
         <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ScrollBarThumbExpandedCornerRadius}" />
@@ -348,6 +376,14 @@
       <Style Selector="^ /template/ RepeatButton">
         <Setter Property="Opacity" Value="1" />
       </Style>
+    </Style>
+
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
     </Style>
 
   </ControlTheme>

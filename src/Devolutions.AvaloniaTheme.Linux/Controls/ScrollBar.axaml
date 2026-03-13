@@ -46,6 +46,14 @@
     <Style Selector="^:disabled  /template/ Border">
       <Setter Property="Background" Value="{DynamicResource ScrollBarThumbFillDisabled}" />
     </Style>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarPageButton" TargetType="RepeatButton">
@@ -58,6 +66,14 @@
         <Border Background="{TemplateBinding Background}" />
       </ControlTemplate>
     </Setter>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarLineButton" TargetType="RepeatButton">
@@ -103,6 +119,14 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ScrollBarButtonBorderBrushDisabled}" />
       </Style>
     </Style>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
@@ -279,7 +303,7 @@
       </Setter>
     </Style>
 
-    <Style Selector="^[IsExpanded=true], ^:short">
+    <Style Selector="^[IsExpanded=true], ^:veryshort">
       <Style Selector="^ /template/ Grid#Root">
         <Setter Property="Background" Value="{DynamicResource ScrollBarBackgroundPointerOver}" />
       </Style>
@@ -296,6 +320,14 @@
         <Setter Property="Opacity" Value="1" />
       </Style>
     </Style>
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
 </ResourceDictionary>

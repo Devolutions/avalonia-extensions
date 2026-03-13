@@ -1,11 +1,13 @@
 namespace Devolutions.AvaloniaControls.Behaviors;
 
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
+using Avalonia.VisualTree;
 
 public static class ScrollBarShortBehavior
 {
@@ -32,9 +34,35 @@ public static class ScrollBarShortBehavior
             double relevantDimension = scrollBar.Orientation == Orientation.Vertical ? bounds.Height : bounds.Width;
             if (relevantDimension is 0.0) return;
 
-            bool isShort = relevantDimension < scrollBar.GetValue(ShortScrollBarMaxSizeProperty);
+            double maxSize = scrollBar.GetValue(ShortScrollBarMaxSizeProperty);
+            bool isVeryShort = relevantDimension < maxSize;
+            bool isShort = relevantDimension < (maxSize * 2) && !isVeryShort;
 
-            ((IPseudoClasses)scrollBar.Classes).Set(":short", isShort);
+            var classes = (IPseudoClasses)scrollBar.Classes;
+            bool changed = classes.Contains(":veryshort") != isVeryShort || classes.Contains(":short") != isShort;
+            classes.Set(":veryshort", isVeryShort);
+            classes.Set(":short", isShort);
+            
+            if (changed)
+            {
+                // Invalidate arrange so that Track recalculates the thumb size
+                // using the newly applied template values for MinHeight/MinWidth.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() => 
+                {
+                    scrollBar.InvalidateMeasure();
+                    scrollBar.InvalidateArrange();
+                    scrollBar.UpdateLayout();
+                    
+                    // Force a Track layout update explicitly if we can find it
+                    var track = scrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
+                    if (track != null)
+                    {
+                        track.InvalidateMeasure();
+                        track.InvalidateArrange();
+                        track.UpdateLayout();
+                    }
+                });
+            }
           });
 
           Subscriptions.Add(scrollBar, subscription);
@@ -46,7 +74,9 @@ public static class ScrollBarShortBehavior
             subscription.Dispose();
             Subscriptions.Remove(scrollBar);
           }
-          ((IPseudoClasses)scrollBar.Classes).Set(":short", false);
+          var classes = (IPseudoClasses)scrollBar.Classes;
+          classes.Set(":short", false);
+          classes.Set(":veryshort", false);
         }
       }
     });

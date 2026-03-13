@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
+             x:Class="SampleApp.DemoPages.ScrollBarDemo" x:CompileBindings="False">
+  <Grid ColumnDefinitions="220,220" ColumnSpacing="20" RowDefinitions="auto,auto" Margin="20" HorizontalAlignment="Left">
+    <!-- Top Left: Normal scroll with long content -->
+    <StackPanel Grid.Column="0" Grid.Row="0" Margin="10" HorizontalAlignment="Left" Width="220">
+      <TextBlock FontWeight="Bold" Margin="0,0,0,10">Default Thumb (proportional)</TextBlock>
+      <Border Height="150" BorderBrush="#cccccc" BorderThickness="1" CornerRadius="4">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding ShortOptions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="5" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+
+    </StackPanel>
+
+    <!-- Top Right: Normal scroll with short content -->
+    <StackPanel Grid.Column="1" Grid.Row="0" Margin="10" HorizontalAlignment="Left" Width="220">
+      <TextBlock FontWeight="Bold" Margin="0,0,0,10">Minimum Thumb length </TextBlock>
+      <Border Height="150" BorderBrush="#cccccc" BorderThickness="1" CornerRadius="4">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding LongOptions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="5" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+
+    <!-- Bottom Left: Short ScrollBar -->
+    <StackPanel IsVisible="{ext:ThemeIsOneOf 'DevExpress, Linux'}" Grid.Column="0" Grid.Row="1" Margin="10" HorizontalAlignment="Left" Width="220">
+      <TextBlock FontWeight="Bold" Margin="0,0,0,10" TextWrapping="Wrap">Reduced minimum Thumb length in short scroll views</TextBlock>
+      <Border Height="55" BorderBrush="#cccccc" BorderThickness="1" CornerRadius="4">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding MediumOptions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="5" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+
+    <!-- Bottom Right: Very Short ScrollBar -->
+    <StackPanel IsVisible="{ext:ThemeIsOneOf 'DevExpress, Linux'}" Grid.Column="1" Grid.Row="1" Margin="10" HorizontalAlignment="Left" Width="220">
+      <TextBlock FontWeight="Bold" Margin="0,0,0,10" TextWrapping="Wrap">Auto-hide disabled in scroll views too small to accommodate a thumb</TextBlock>
+      <Border Height="43" BorderBrush="#cccccc" BorderThickness="1" CornerRadius="4">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding MediumOptions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="5" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+  </Grid>
+</UserControl>

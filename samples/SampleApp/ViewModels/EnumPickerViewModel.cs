@@ -2,6 +2,14 @@ namespace SampleApp.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+public enum DemoStatus
+{
+    Active,
+    Inactive,
+    Pending,
+    Archived,
+}
+
 public enum DemoPriority
 {
     Low,

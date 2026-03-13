@@ -13,7 +13,7 @@
       <EnumPicker x:TypeArguments="vm:DemoPriority" />
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="220 200 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="220 200 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
           <Bold>EnumPicker</Bold>
         </TextBlock>
@@ -60,6 +60,12 @@
         </TextBlock>
         <EnumPicker Grid.Column="1" Grid.Row="6" x:TypeArguments="vm:DemoPriority"
                     TextProvider="{Binding TextProvider}"
+                    Margin="0 0 0 10" />
+
+        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Margin="0 0 10 10">
+          - Different enum type:
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="7" x:TypeArguments="vm:DemoStatus"
                     Margin="0 0 0 10" />
       </Grid>
     </Border>

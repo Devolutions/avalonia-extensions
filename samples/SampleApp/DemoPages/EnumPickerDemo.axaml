@@ -17,7 +17,8 @@
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
       <EnumPicker x:TypeArguments="vm:DemoPriority" />
     </StackPanel>
-    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+    <Border Margin="20 20 10 20" Padding="20" VerticalAlignment="Top" Background="{DynamicResource LayoutBackgroundLowBrush}">
       <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
           <Bold>EnumPicker</Bold>
@@ -139,5 +140,47 @@
                    Text="{Binding SelectedCustomSort, StringFormat='Selection: {0}'}" />
       </Grid>
     </Border>
+    <Border Margin="0 20 20 20" Padding="20" VerticalAlignment="Top" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <StackPanel Spacing="5" Width="260">
+        <TextBlock Margin="0 0 0 15"><Bold>Dynamic Properties</Bold></TextBlock>
+
+        <EnumPicker x:TypeArguments="vm:DemoPriority"
+                    SelectedValue="{Binding DynamicSelected}"
+                    AlphabeticalOrder="{Binding DynamicSortOrder}"
+                    TextProvider="{Binding DynamicTextProvider}"
+                    TextOverrides="{Binding DynamicTextOverrides}"
+                    IncludedValues="{Binding DynamicIncludedValues}"
+                    ExcludedValues="{Binding DynamicExcludedValues}"
+                    CustomSort="{Binding DynamicCustomSort}" />
+        <TextBlock Margin="0 2 0 10" Text="{Binding DynamicSelected, StringFormat='Selection: {0}'}" />
+
+        <TextBlock FontWeight="SemiBold">AlphabeticalOrder:</TextBlock>
+        <ComboBox ItemsSource="{Binding SortOrderValues}" SelectedItem="{Binding DynamicSortOrder}" />
+
+        <CheckBox Margin="0 5 0 0" IsChecked="{Binding DynamicUseTextProvider}">TextProvider (arrows)</CheckBox>
+        <CheckBox IsChecked="{Binding DynamicUseTextOverrides}">TextOverrides (High/Critical)</CheckBox>
+        <CheckBox IsChecked="{Binding DynamicUseCustomSort}">CustomSort (reverse order)</CheckBox>
+
+        <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">IncludedValues:</TextBlock>
+        <CheckBox IsChecked="{Binding DynamicEnableIncludeFilter}">Enable filter</CheckBox>
+        <WrapPanel IsEnabled="{Binding DynamicEnableIncludeFilter}">
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicIncludeLow}">Low</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicIncludeNormal}">Normal</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicIncludeHigh}">High</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicIncludeCritical}">Critical</CheckBox>
+          <CheckBox IsChecked="{Binding DynamicIncludeBlocker}">Blocker</CheckBox>
+        </WrapPanel>
+
+        <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">ExcludedValues:</TextBlock>
+        <WrapPanel>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicExcludeLow}">Low</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicExcludeNormal}">Normal</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicExcludeHigh}">High</CheckBox>
+          <CheckBox Margin="0 0 6 0" IsChecked="{Binding DynamicExcludeCritical}">Critical</CheckBox>
+          <CheckBox IsChecked="{Binding DynamicExcludeBlocker}">Blocker</CheckBox>
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+    </StackPanel>
   </StackPanel>
 </UserControl>

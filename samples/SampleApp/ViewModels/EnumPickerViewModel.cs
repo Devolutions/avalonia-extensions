@@ -2,6 +2,8 @@ namespace SampleApp.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Devolutions.AvaloniaControls.Controls;
+
 public enum DemoStatus
 {
     Active,
@@ -99,4 +101,107 @@ public partial class EnumPickerViewModel : ObservableObject
     public IReadOnlyCollection<DemoPriority> ExcludedValues { get; } = [DemoPriority.Blocker];
 
     public IReadOnlyCollection<DemoPriority> IncludedValues { get; } = [DemoPriority.Low, DemoPriority.Normal, DemoPriority.High];
+
+    // === Dynamic Demo ===
+
+    [ObservableProperty]
+    private DemoPriority? dynamicSelected;
+
+    [ObservableProperty]
+    private EnumPicker.SortOrder dynamicSortOrder;
+
+    public IReadOnlyCollection<EnumPicker.SortOrder> SortOrderValues { get; } = Enum.GetValues<EnumPicker.SortOrder>();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicTextProvider))]
+    private bool dynamicUseTextProvider;
+
+    public Func<object, string>? DynamicTextProvider => DynamicUseTextProvider ? TextProvider : null;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicTextOverrides))]
+    private bool dynamicUseTextOverrides;
+
+    public IReadOnlyDictionary<DemoPriority, string>? DynamicTextOverrides => DynamicUseTextOverrides ? TextOverrides : null;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicCustomSort))]
+    private bool dynamicUseCustomSort;
+
+    private static readonly Comparison<DemoPriority> PriorityReverseSort = (a, b) => b.CompareTo(a);
+
+    public Comparison<DemoPriority>? DynamicCustomSort => DynamicUseCustomSort ? PriorityReverseSort : null;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicEnableIncludeFilter;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicIncludeLow = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicIncludeNormal = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicIncludeHigh = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicIncludeCritical = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
+    private bool dynamicIncludeBlocker = true;
+
+    public IReadOnlyCollection<DemoPriority>? DynamicIncludedValues
+    {
+        get
+        {
+            if (!DynamicEnableIncludeFilter) return null;
+            var values = new List<DemoPriority>();
+            if (DynamicIncludeLow)      values.Add(DemoPriority.Low);
+            if (DynamicIncludeNormal)   values.Add(DemoPriority.Normal);
+            if (DynamicIncludeHigh)     values.Add(DemoPriority.High);
+            if (DynamicIncludeCritical) values.Add(DemoPriority.Critical);
+            if (DynamicIncludeBlocker)  values.Add(DemoPriority.Blocker);
+            return values;
+        }
+    }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicExcludedValues))]
+    private bool dynamicExcludeLow;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicExcludedValues))]
+    private bool dynamicExcludeNormal;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicExcludedValues))]
+    private bool dynamicExcludeHigh;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicExcludedValues))]
+    private bool dynamicExcludeCritical;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DynamicExcludedValues))]
+    private bool dynamicExcludeBlocker;
+
+    public IReadOnlyCollection<DemoPriority>? DynamicExcludedValues
+    {
+        get
+        {
+            var values = new List<DemoPriority>();
+            if (DynamicExcludeLow)      values.Add(DemoPriority.Low);
+            if (DynamicExcludeNormal)   values.Add(DemoPriority.Normal);
+            if (DynamicExcludeHigh)     values.Add(DemoPriority.High);
+            if (DynamicExcludeCritical) values.Add(DemoPriority.Critical);
+            if (DynamicExcludeBlocker)  values.Add(DemoPriority.Blocker);
+            return values.Count > 0 ? values : null;
+        }
+    }
 }

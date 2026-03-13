@@ -30,13 +30,12 @@
   <!--  Matches macOS DataGrid alternating background                -->
   <!-- ============================================================= -->
   <Style Selector="TreeDataGrid:flat:not(.no-alternating-rows), TreeDataGrid.alternating-rows">
+    <Setter Property="TreeDataGridAlternatingRowBehavior.Enable" Value="True" />
     <Style Selector="^ :is(TreeDataGridRow)">
-      <Setter Property="Background"
-              Value="{BindingToggler
-              {ReflectionBinding RowIndex, RelativeSource={RelativeSource Self}, Converter={x:Static DevoConverters.IsOddConverter}},
-              {DynamicResource DataGridItemBackgroundAlternating},
-              {Binding $parent[TreeDataGrid].Background}
-            }" />
+      <Setter Property="Background" Value="{Binding $parent[TreeDataGrid].Background}" />
+    </Style>
+    <Style Selector="^ :is(TreeDataGridRow):odd-row">
+      <Setter Property="Background" Value="{DynamicResource DataGridItemBackgroundAlternating}" />
     </Style>
   </Style>
 </Styles>

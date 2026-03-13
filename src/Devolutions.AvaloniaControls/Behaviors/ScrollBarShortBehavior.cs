@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Behaviors;
 
 using System;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -29,36 +30,21 @@ public static class ScrollBarShortBehavior
         {
           if (Subscriptions.TryGetValue(scrollBar, out _)) return;
 
-          var subscription = scrollBar.GetObservable(Visual.BoundsProperty).Subscribe(bounds =>
+          var boundsSubscription = scrollBar.GetObservable(Visual.BoundsProperty).Subscribe(bounds =>
           {
-            double relevantDimension = scrollBar.Orientation == Orientation.Vertical ? bounds.Height : bounds.Width;
-            if (relevantDimension is 0.0) return;
-
-            double maxSize = scrollBar.GetValue(ShortScrollBarMaxSizeProperty);
-            bool isVeryShort = relevantDimension < maxSize;
-            bool isShort = relevantDimension < (maxSize * 2) && !isVeryShort;
-
-            var classes = (IPseudoClasses)scrollBar.Classes;
-            bool changed = classes.Contains(":veryshort") != isVeryShort || classes.Contains(":short") != isShort;
-            classes.Set(":veryshort", isVeryShort);
-            classes.Set(":short", isShort);
-            
-            if (changed)
-            {
-                // ScrollBar template styles dynamically alter the Track's Thumb MinHeight/MinWidth on pseudo-class change.
-                // Avalonia often won't propagate this layout invalidation into the Track automatically without scrolling.
-                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-                {
-                    var track = scrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
-                    if (track != null)
-                    {
-                        track.InvalidateMeasure();
-                        track.InvalidateArrange();
-                    }
-                });
-            }
+            ApplyShortClasses(scrollBar, bounds);
           });
 
+          // Subscribe to TemplateApplied to handle the initial-load case where BoundsProperty
+          // fires before the visual template is built. Once the template is applied, the Track
+          // exists in the visual tree and we can invalidate it to pick up the correct
+          // pseudo-class styles (MinHeight/MinWidth) right away, without waiting for a scroll event.
+          EventHandler<TemplateAppliedEventArgs> templateHandler = (_, _) => InvalidateTrack(scrollBar);
+          scrollBar.TemplateApplied += templateHandler;
+
+          var subscription = new CompositeDisposable(
+            boundsSubscription,
+            Disposable.Create(() => scrollBar.TemplateApplied -= templateHandler));
           Subscriptions.Add(scrollBar, subscription);
         }
         else
@@ -74,6 +60,36 @@ public static class ScrollBarShortBehavior
         }
       }
     });
+  }
+
+  private static void ApplyShortClasses(ScrollBar scrollBar, Rect bounds)
+  {
+    double relevantDimension = scrollBar.Orientation == Orientation.Vertical ? bounds.Height : bounds.Width;
+    if (relevantDimension is 0.0) return;
+
+    double maxSize = scrollBar.GetValue(ShortScrollBarMaxSizeProperty);
+    bool isVeryShort = relevantDimension < maxSize;
+    bool isShort = relevantDimension < (maxSize * 2) && !isVeryShort;
+
+    var classes = (IPseudoClasses)scrollBar.Classes;
+    bool changed = classes.Contains(":veryshort") != isVeryShort || classes.Contains(":short") != isShort;
+    classes.Set(":veryshort", isVeryShort);
+    classes.Set(":short", isShort);
+
+    // ScrollBar template styles alter the Track's Thumb MinHeight/MinWidth on pseudo-class
+    // change. Explicitly invalidate the Track so it re-measures with the updated style values,
+    // since Avalonia does not always propagate pseudo-class-driven style changes into template
+    // children automatically.
+    if (changed)
+    {
+      InvalidateTrack(scrollBar);
+    }
+  }
+
+  private static void InvalidateTrack(ScrollBar scrollBar)
+  {
+    var track = scrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
+    track?.InvalidateMeasure();
   }
 
   public static void SetEnabled(ScrollBar element, bool value) => element.SetValue(EnabledProperty, value);

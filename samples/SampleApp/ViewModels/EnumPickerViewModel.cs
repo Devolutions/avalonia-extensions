@@ -48,6 +48,9 @@ public partial class EnumPickerViewModel : ObservableObject
     [ObservableProperty]
     private DemoPriority? selectedInlineIncluded;
 
+    [ObservableProperty]
+    private DemoPriority? selectedInlineOverrides;
+
     public Func<object, string> TextProvider { get; } = priority => priority switch
     {
         DemoPriority.Low => "Low ↓",

@@ -45,21 +45,15 @@ public static class ScrollBarShortBehavior
             
             if (changed)
             {
-                // Invalidate arrange so that Track recalculates the thumb size
-                // using the newly applied template values for MinHeight/MinWidth.
-                Avalonia.Threading.Dispatcher.UIThread.Post(() => 
+                // ScrollBar template styles dynamically alter the Track's Thumb MinHeight/MinWidth on pseudo-class change.
+                // Avalonia often won't propagate this layout invalidation into the Track automatically without scrolling.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
-                    scrollBar.InvalidateMeasure();
-                    scrollBar.InvalidateArrange();
-                    scrollBar.UpdateLayout();
-                    
-                    // Force a Track layout update explicitly if we can find it
                     var track = scrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
                     if (track != null)
                     {
                         track.InvalidateMeasure();
                         track.InvalidateArrange();
-                        track.UpdateLayout();
                     }
                 });
             }

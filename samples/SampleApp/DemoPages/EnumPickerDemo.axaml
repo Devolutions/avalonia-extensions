@@ -13,60 +13,71 @@
       <EnumPicker x:TypeArguments="vm:DemoPriority" />
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="220 200 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
           <Bold>EnumPicker</Bold>
         </TextBlock>
 
-        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0 0 10 5">
           - Default:
         </TextBlock>
         <EnumPicker Grid.Column="1" Grid.Row="1" x:TypeArguments="vm:DemoPriority"
-                    SelectedValue="{Binding SelectedValue}"
-                    Margin="0 0 0 10" />
-        <TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Margin="10 0 0 10"
-                   Text="{Binding SelectedValue, StringFormat='→ {0}'}" />
+                    SelectedValue="{Binding SelectedDefault}" />
+        <TextBlock Grid.Column="1" Grid.Row="2" Margin="0 2 0 10"
+                   Text="{Binding SelectedDefault, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="0 0 10 5">
           - Sorted alphabetically:
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="2" x:TypeArguments="vm:DemoPriority"
+        <EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="vm:DemoPriority"
                     SortAlphabetically="True"
-                    Margin="0 0 0 10" />
+                    SelectedValue="{Binding SelectedSorted}" />
+        <TextBlock Grid.Column="1" Grid.Row="4" Margin="0 2 0 10"
+                   Text="{Binding SelectedSorted, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="0 0 10 5">
           - ExcludedValues (no Blocker):
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="vm:DemoPriority"
+        <EnumPicker Grid.Column="1" Grid.Row="5" x:TypeArguments="vm:DemoPriority"
                     ExcludedValues="{Binding ExcludedValues}"
-                    Margin="0 0 0 10" />
+                    SelectedValue="{Binding SelectedExcluded}" />
+        <TextBlock Grid.Column="1" Grid.Row="6" Margin="0 2 0 10"
+                   Text="{Binding SelectedExcluded, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Margin="0 0 10 5">
           - IncludedValues (Low/Normal/High):
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="4" x:TypeArguments="vm:DemoPriority"
+        <EnumPicker Grid.Column="1" Grid.Row="7" x:TypeArguments="vm:DemoPriority"
                     IncludedValues="{Binding IncludedValues}"
-                    Margin="0 0 0 10" />
+                    SelectedValue="{Binding SelectedIncluded}" />
+        <TextBlock Grid.Column="1" Grid.Row="8" Margin="0 2 0 10"
+                   Text="{Binding SelectedIncluded, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Center" Margin="0 0 10 5">
           - TextOverrides:
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="5" x:TypeArguments="vm:DemoPriority"
+        <EnumPicker Grid.Column="1" Grid.Row="9" x:TypeArguments="vm:DemoPriority"
                     TextOverrides="{Binding TextOverrides}"
-                    Margin="0 0 0 10" />
+                    SelectedValue="{Binding SelectedWithOverrides}" />
+        <TextBlock Grid.Column="1" Grid.Row="10" Margin="0 2 0 10"
+                   Text="{Binding SelectedWithOverrides, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="11" VerticalAlignment="Center" Margin="0 0 10 5">
           - TextProvider:
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="6" x:TypeArguments="vm:DemoPriority"
+        <EnumPicker Grid.Column="1" Grid.Row="11" x:TypeArguments="vm:DemoPriority"
                     TextProvider="{Binding TextProvider}"
-                    Margin="0 0 0 10" />
+                    SelectedValue="{Binding SelectedWithProvider}" />
+        <TextBlock Grid.Column="1" Grid.Row="12" Margin="0 2 0 10"
+                   Text="{Binding SelectedWithProvider, StringFormat='Selection: {0}'}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Margin="0 0 10 10">
+        <TextBlock Grid.Column="0" Grid.Row="13" VerticalAlignment="Center" Margin="0 0 10 5">
           - Different enum type:
         </TextBlock>
-        <EnumPicker Grid.Column="1" Grid.Row="7" x:TypeArguments="vm:DemoStatus"
-                    Margin="0 0 0 10" />
+        <EnumPicker Grid.Column="1" Grid.Row="13" x:TypeArguments="vm:DemoStatus"
+                    SelectedValue="{Binding SelectedStatus}" />
+        <TextBlock Grid.Column="1" Grid.Row="14" Margin="0 2 0 10"
+                   Text="{Binding SelectedStatus, StringFormat='Selection: {0}'}" />
       </Grid>
     </Border>
   </StackPanel>

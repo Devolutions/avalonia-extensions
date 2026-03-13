@@ -16,6 +16,10 @@ public abstract class EnumPicker : TemplatedControl
             defaultBindingMode: BindingMode.OneWay,
             defaultValue: []);
 
+    public static readonly StyledProperty<Func<object, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<object, string>?>(
+        nameof(TextProvider),
+        defaultBindingMode: BindingMode.TwoWay);
+
     internal IReadOnlyCollection<EnumPickerItem> Items
     {
         get => this.GetValue(ItemsProperty);
@@ -26,6 +30,15 @@ public abstract class EnumPicker : TemplatedControl
     {
         get => this.GetValue(SelectedItemProperty);
         set => this.SetValue(SelectedItemProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the function that provides text for enum values/>
+    /// </summary>
+    public Func<object, string>? TextProvider
+    {
+        get => this.GetValue(TextProviderProperty);
+        set => this.SetValue(TextProviderProperty, value);
     }
 }
 
@@ -56,10 +69,6 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         AvaloniaProperty.Register<EnumPicker, IReadOnlyDictionary<T, string>?>(
             nameof(TextOverrides),
             defaultBindingMode: BindingMode.TwoWay);
-
-    public static readonly StyledProperty<Func<T, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<T, string>?>(
-        nameof(TextProvider),
-        defaultBindingMode: BindingMode.TwoWay);
 
     protected override Type StyleKeyOverride => typeof(EnumPicker);
 
@@ -95,7 +104,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     }
     
     /// <summary>
-    ///  Gets or sets whether values get sorted alphabetically by their texts (see <see cref="TextOverrides"/> and <see cref="TextProvider"/>)
+    ///  Gets or sets whether values get sorted alphabetically by their texts (see <see cref="TextOverrides"/> and <see cref="EnumPicker.TextProvider"/>)
     /// </summary>
     public bool SortAlphabetically
     {
@@ -104,21 +113,12 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     }
 
     /// <summary>
-    ///  Gets or sets a dictionary that matches enum value to their text, values in this dictionary override <see cref="TextProvider"/>
+    ///  Gets or sets a dictionary that matches enum value to their text, values in this dictionary override <see cref="EnumPicker.TextProvider"/>
     /// </summary>
     public IReadOnlyDictionary<T, string>? TextOverrides
     {
         get => this.GetValue(TextOverridesProperty);
         set => this.SetValue(TextOverridesProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the function that provides text for enum values, overriden on values in <see cref="TextOverrides"/>
-    /// </summary>
-    public Func<T, string>? TextProvider
-    {
-        get => this.GetValue(TextProviderProperty);
-        set => this.SetValue(TextProviderProperty, value);
     }
 
     private string GetEnumText(T value)
@@ -140,8 +140,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     {
         T? selectedValue = this.SelectedValue;
 
-        IEnumerable<T>? values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
-        IEnumerable<EnumPickerItem>? items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
+        IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
+        IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
 
         if (this.SortAlphabetically)
         {

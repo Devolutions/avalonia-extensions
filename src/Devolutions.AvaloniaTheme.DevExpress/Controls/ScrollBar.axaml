@@ -45,14 +45,6 @@
         <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
       </Transitions>
     </Setter>
-    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarPageButton" TargetType="RepeatButton">
@@ -65,14 +57,6 @@
         <Border Background="{TemplateBinding Background}" />
       </ControlTemplate>
     </Setter>
-    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarLineButton" TargetType="RepeatButton">
@@ -89,14 +73,6 @@
         <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
       </Transitions>
     </Setter>
-    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-    <Style Selector="^:short /template/ Thumb">
-      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
-    </Style>
-
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
@@ -378,11 +354,12 @@
       </Style>
     </Style>
 
+
     <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
-    <Style Selector="^:short /template/ Thumb">
+    <Style Selector="^:vertical:short /template/ Thumb">
       <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
     </Style>
-    <Style Selector="^:short /template/ Thumb">
+    <Style Selector="^:horizontal:short /template/ Thumb">
       <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
     </Style>
 

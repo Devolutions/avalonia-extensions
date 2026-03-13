@@ -9,15 +9,15 @@ using Avalonia.Layout;
 
 public static class ScrollBarShortBehavior
 {
-    private static readonly ConditionalWeakTable<ScrollBar, IDisposable> Subscriptions = new();
+  private static readonly ConditionalWeakTable<ScrollBar, IDisposable> Subscriptions = [];
 
   public static readonly AttachedProperty<bool> EnabledProperty =
     AvaloniaProperty.RegisterAttached<ScrollBar, bool>("Enabled", typeof(ScrollBarShortBehavior));
 
-    public static readonly AttachedProperty<double> MinThumbSizeProperty =
-      AvaloniaProperty.RegisterAttached<ScrollBar, double>("MinThumbSize", typeof(ScrollBarShortBehavior), 43.0);
+  public static readonly AttachedProperty<double> ShortScrollBarMaxSizeProperty =
+    AvaloniaProperty.RegisterAttached<ScrollBar, double>("ShortScrollBarMaxSize", typeof(ScrollBarShortBehavior), 43.0);
 
-    static ScrollBarShortBehavior()
+  static ScrollBarShortBehavior()
   {
     EnabledProperty.Changed.Subscribe(args =>
     {
@@ -32,9 +32,9 @@ public static class ScrollBarShortBehavior
             double relevantDimension = scrollBar.Orientation == Orientation.Vertical ? bounds.Height : bounds.Width;
             if (relevantDimension is 0.0) return;
 
-              bool isShort = relevantDimension < scrollBar.GetValue(MinThumbSizeProperty);
+            bool isShort = relevantDimension < scrollBar.GetValue(ShortScrollBarMaxSizeProperty);
 
-              ((IPseudoClasses)scrollBar.Classes).Set(":short", isShort);
+            ((IPseudoClasses)scrollBar.Classes).Set(":short", isShort);
           });
 
           Subscriptions.Add(scrollBar, subscription);
@@ -56,7 +56,7 @@ public static class ScrollBarShortBehavior
 
   public static bool GetEnabled(ScrollBar element) => element.GetValue(EnabledProperty);
 
-    public static void SetMinThumbSize(ScrollBar element, double value) => element.SetValue(MinThumbSizeProperty, value);
+  public static void SetShortScrollBarMaxSize(ScrollBar element, double value) => element.SetValue(ShortScrollBarMaxSizeProperty, value);
 
-    public static double GetMinThumbSize(ScrollBar element) => element.GetValue(MinThumbSizeProperty);
+  public static double GetShortScrollBarMaxSize(ScrollBar element) => element.GetValue(ShortScrollBarMaxSizeProperty);
 }

@@ -83,7 +83,7 @@
     <Setter Property="HideDelay" Value="0:0:0.0" />
     <Setter Property="ScrollBarThumbDragBehavior.Enable" Value="True" />
     <Setter Property="controlsBehaviors:ScrollBarShortBehavior.Enabled" Value="True" />
-    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.MinThumbSize" Value="43" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.ShortScrollBarMaxSize" Value="43" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">

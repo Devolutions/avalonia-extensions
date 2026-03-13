@@ -112,7 +112,7 @@
     <Setter Property="Foreground" Value="{DynamicResource ScrollBarForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollBarBorderBrush}" />
     <Setter Property="controlsBehaviors:ScrollBarShortBehavior.Enabled" Value="True" />
-    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.MinThumbSize" Value="48" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.ShortScrollBarMaxSize" Value="48" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">

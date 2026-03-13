@@ -1,11 +1,8 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
-using System.Reactive.Disposables;
-
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.LogicalTree;
 
 public abstract class EnumPicker : TemplatedControl
 {
@@ -35,9 +32,6 @@ public abstract class EnumPicker : TemplatedControl
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
-    
-    private T? cachedSelectedValue = null;
-    private CompositeDisposable? changedSubscriptions = null;
 
     public static readonly StyledProperty<IReadOnlyCollection<T>?> ExcludedValuesProperty =
         AvaloniaProperty.Register<EnumPicker, IReadOnlyCollection<T>?>(
@@ -165,77 +159,21 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.UpdateValues();
     }
 
-    protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        base.OnAttachedToLogicalTree(e);
+        base.OnPropertyChanged(change);
 
-        this.changedSubscriptions?.Dispose();
-        this.changedSubscriptions = new CompositeDisposable();
-
-        this.changedSubscriptions.Add(IncludedValuesProperty.Changed.Subscribe(this.OnIncludedValuesPropertyChanged));
-        this.changedSubscriptions.Add(ExcludedValuesProperty.Changed.Subscribe(this.OnExcludedValuesPropertyChanged));
-        this.changedSubscriptions.Add(TextProviderProperty.Changed.Subscribe(this.OnTextProviderPropertyChanged));
-        this.changedSubscriptions.Add(SortAlphabeticallyProperty.Changed.Subscribe(this.OnSortAlphabeticallyPropertyChanged));
-        this.changedSubscriptions.Add(TextOverridesProperty.Changed.Subscribe(this.OnTextOverridesPropertyChanged));
-        this.changedSubscriptions.Add(SelectedItemProperty.Changed.Subscribe(args =>
-        {
-            if (args.Sender == this)
-            {
-                this.SetValue(SelectedValueProperty, (T?)args.NewValue.Value?.EnumValue);
-            }
-        }));
-
-        this.UpdateValues();
-        this.SelectedValue = this.cachedSelectedValue;
-    }
-
-    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromLogicalTree(e);
-
-        this.cachedSelectedValue = this.SelectedValue;
-
-        this.changedSubscriptions?.Dispose();
-        this.changedSubscriptions = null;
-    }
-
-    private void OnTextOverridesPropertyChanged(AvaloniaPropertyChangedEventArgs<IReadOnlyDictionary<T, string>?> args)
-    {
-        if (args.Sender == this)
+        if (change.Property == IncludedValuesProperty ||
+            change.Property == ExcludedValuesProperty ||
+            change.Property == TextProviderProperty   ||
+            change.Property == SortAlphabeticallyProperty ||
+            change.Property == TextOverridesProperty)
         {
             this.UpdateValues();
         }
-    }
-
-    private void OnSortAlphabeticallyPropertyChanged(AvaloniaPropertyChangedEventArgs<bool> args)
-    {
-        if (args.Sender == this)
+        else if (change.Property == SelectedItemProperty)
         {
-            this.UpdateValues();
-        }
-    }
-
-    private void OnTextProviderPropertyChanged(AvaloniaPropertyChangedEventArgs<Func<T, string>?> args)
-    {
-        if (args.Sender == this)
-        {
-            this.UpdateValues();
-        }
-    }
-
-    private void OnExcludedValuesPropertyChanged(AvaloniaPropertyChangedEventArgs<IReadOnlyCollection<T>?> args)
-    {
-        if (args.Sender == this)
-        {
-            this.UpdateValues();
-        }
-    }
-
-    private void OnIncludedValuesPropertyChanged(AvaloniaPropertyChangedEventArgs<IReadOnlyCollection<T>?> args)
-    {
-        if (args.Sender == this)
-        {
-            this.UpdateValues();
+            this.SetValue(SelectedValueProperty, (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue);
         }
     }
 }

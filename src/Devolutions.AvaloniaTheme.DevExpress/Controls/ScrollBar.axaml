@@ -83,7 +83,7 @@
     <Setter Property="HideDelay" Value="0:0:0.0" />
     <Setter Property="ScrollBarThumbDragBehavior.Enable" Value="True" />
     <Setter Property="controlsBehaviors:ScrollBarShortBehavior.Enabled" Value="True" />
-    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.MinThumbSize" Value="43" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.ShortScrollBarMaxSize" Value="43" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">
@@ -158,6 +158,10 @@
         </ControlTemplate>
       </Setter>
     </Style>
+
+    <!-- <Style Selector="^:veryshort /template/ Thumb"> -->
+    <!--   <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" /> -->
+    <!-- </Style> -->
 
     <Style Selector="^:horizontal">
       <Setter Property="Template">
@@ -340,7 +344,7 @@
       <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
     </Style>
 
-    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:short">
+    <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:veryshort">
       <Style Selector="^ /template/ Thumb">
         <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ScrollBarThumbExpandedCornerRadius}" />
@@ -348,6 +352,15 @@
       <Style Selector="^ /template/ RepeatButton">
         <Setter Property="Opacity" Value="1" />
       </Style>
+    </Style>
+
+
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:vertical:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:horizontal:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
     </Style>
 
   </ControlTheme>

@@ -112,7 +112,7 @@
     <Setter Property="Foreground" Value="{DynamicResource ScrollBarForeground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollBarBorderBrush}" />
     <Setter Property="controlsBehaviors:ScrollBarShortBehavior.Enabled" Value="True" />
-    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.MinThumbSize" Value="48" />
+    <Setter Property="controlsBehaviors:ScrollBarShortBehavior.ShortScrollBarMaxSize" Value="48" />
 
     <Style Selector="^:vertical">
       <Setter Property="Template">
@@ -279,7 +279,7 @@
       </Setter>
     </Style>
 
-    <Style Selector="^[IsExpanded=true], ^:short">
+    <Style Selector="^[IsExpanded=true], ^:veryshort">
       <Style Selector="^ /template/ Grid#Root">
         <Setter Property="Background" Value="{DynamicResource ScrollBarBackgroundPointerOver}" />
       </Style>
@@ -296,6 +296,15 @@
         <Setter Property="Opacity" Value="1" />
       </Style>
     </Style>
+
+    <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
+    <Style Selector="^:vertical:short /template/ Thumb">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+    <Style Selector="^:horizontal:short /template/ Thumb">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarShortThumbMinLength}" />
+    </Style>
+
   </ControlTheme>
 
 </ResourceDictionary>

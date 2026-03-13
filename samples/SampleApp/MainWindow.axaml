@@ -206,6 +206,12 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="ScrollBar" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:ScrollBarDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="ScrollViewer" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ScrollViewerDemo />

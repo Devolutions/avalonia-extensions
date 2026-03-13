@@ -8,6 +8,10 @@
              x:Class="SampleApp.DemoPages.EnumPickerDemo"
              x:DataType="vm:EnumPickerViewModel">
 
+  <UserControl.Resources>
+    <x:String x:Key="HighPriorityLabel">High !</x:String>
+  </UserControl.Resources>
+
   <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
@@ -117,7 +121,7 @@
                     SelectedValue="{Binding SelectedInlineOverrides}">
           <EnumPicker.TextOverrides>
             <EnumPickerTextOverrides x:TypeArguments="vm:DemoPriority">
-              <EnumPickerTextOverride x:TypeArguments="vm:DemoPriority" Key="High" Value="High !" />
+              <EnumPickerTextOverride x:TypeArguments="vm:DemoPriority" Key="High" Value="{StaticResource HighPriorityLabel}" />
               <EnumPickerTextOverride x:TypeArguments="vm:DemoPriority" Key="Critical" Value="CRITICAL" />
             </EnumPickerTextOverrides>
           </EnumPicker.TextOverrides>

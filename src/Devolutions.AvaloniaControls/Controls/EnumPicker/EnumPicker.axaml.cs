@@ -19,14 +19,14 @@ public abstract class EnumPicker : TemplatedControl
     public static readonly DirectProperty<EnumPicker, EnumPickerItem?> SelectedItemProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker, EnumPickerItem?>(
             nameof(SelectedItem),
-            o => o.selectedItem,
+            o => o.SelectedItem,
             (o, v) => o.SelectedItem = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker, IReadOnlyCollection<EnumPickerItem>> ItemsProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker, IReadOnlyCollection<EnumPickerItem>>(
             nameof(Items),
-            o => o.items,
+            o => o.Items,
             (o, v) => o.Items = v);
 
     public static readonly StyledProperty<Func<object, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<object, string>?>(
@@ -70,42 +70,42 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, SortOrder>(
             nameof(AlphabeticalOrder),
-            o => o.alphabeticalOrder,
+            o => o.AlphabeticalOrder,
             (o, v) => o.AlphabeticalOrder = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker<T>, Comparison<T>?> CustomSortProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, Comparison<T>?>(
             nameof(CustomSort),
-            o => o.customSort,
+            o => o.CustomSort,
             (o, v) => o.CustomSort = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> ExcludedValuesProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
             nameof(ExcludedValues),
-            o => o.excludedValues,
+            o => o.ExcludedValues,
             (o, v) => o.ExcludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> IncludedValuesProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
             nameof(IncludedValues),
-            o => o.includedValues,
+            o => o.IncludedValues,
             (o, v) => o.IncludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker<T>, T?> SelectedValueProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, T?>(
             nameof(SelectedValue),
-            o => o.selectedValue,
+            o => o.SelectedValue,
             (o, v) => o.SelectedValue = v,
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly DirectProperty<EnumPicker<T>, IReadOnlyDictionary<T, string>?> TextOverridesProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyDictionary<T, string>?>(
             nameof(TextOverrides),
-            o => o.textOverrides,
+            o => o.TextOverrides,
             (o, v) => o.TextOverrides = v,
             defaultBindingMode: BindingMode.TwoWay);
 #pragma warning restore AVP1002

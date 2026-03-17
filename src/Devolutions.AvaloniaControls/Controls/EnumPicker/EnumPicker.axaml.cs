@@ -108,7 +108,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             o => o.textOverrides,
             (o, v) => o.TextOverrides = v,
             defaultBindingMode: BindingMode.TwoWay);
-#pragma warning enable AVP1002
+#pragma warning restore AVP1002
     
     protected override Type StyleKeyOverride => typeof(EnumPicker);
 

@@ -13,15 +13,21 @@ public abstract class EnumPicker : TemplatedControl
         Descending,
     }
 
-    public static readonly StyledProperty<EnumPickerItem?> SelectedItemProperty = AvaloniaProperty.Register<EnumPicker, EnumPickerItem?>(
-        nameof(SelectedItem),
-        defaultBindingMode: BindingMode.TwoWay);
+    private EnumPickerItem? selectedItem;
+    private IReadOnlyCollection<EnumPickerItem> items = [];
 
-    public static readonly StyledProperty<IReadOnlyList<EnumPickerItem>> ItemsProperty =
-        AvaloniaProperty.Register<EnumPicker, IReadOnlyList<EnumPickerItem>>(
+    public static readonly DirectProperty<EnumPicker, EnumPickerItem?> SelectedItemProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker, EnumPickerItem?>(
+            nameof(SelectedItem),
+            o => o.selectedItem,
+            (o, v) => o.SelectedItem = v,
+            defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly DirectProperty<EnumPicker, IReadOnlyCollection<EnumPickerItem>> ItemsProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker, IReadOnlyCollection<EnumPickerItem>>(
             nameof(Items),
-            defaultBindingMode: BindingMode.OneWay,
-            defaultValue: []);
+            o => o.items,
+            (o, v) => o.Items = v);
 
     public static readonly StyledProperty<Func<object, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<object, string>?>(
         nameof(TextProvider),
@@ -29,14 +35,14 @@ public abstract class EnumPicker : TemplatedControl
 
     internal IReadOnlyCollection<EnumPickerItem> Items
     {
-        get => this.GetValue(ItemsProperty);
-        set => this.SetValue(ItemsProperty, value);
+        get => this.items;
+        set => this.SetAndRaise(ItemsProperty, ref this.items, value);
     }
 
     internal EnumPickerItem? SelectedItem
     {
-        get => this.GetValue(SelectedItemProperty);
-        set => this.SetValue(SelectedItemProperty, value);
+        get => this.selectedItem;
+        set => this.SetAndRaise(SelectedItemProperty, ref this.selectedItem, value);
     }
 
     /// <summary>
@@ -52,45 +58,68 @@ public abstract class EnumPicker : TemplatedControl
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
-    
-    // ReSharper disable once StaticMemberInGenericType
-    public static readonly StyledProperty<SortOrder> AlphabeticalOrderProperty = AvaloniaProperty.Register<EnumPicker, SortOrder>(
-        nameof(AlphabeticalOrder),
-        defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly StyledProperty<Comparison<T>?> CustomSortProperty = AvaloniaProperty.Register<EnumPicker, Comparison<T>?>(
-        nameof(CustomSort),
-        defaultBindingMode: BindingMode.TwoWay);
+    private SortOrder alphabeticalOrder;
+    private Comparison<T>? customSort;
+    private IReadOnlyCollection<T>? excludedValues;
+    private IReadOnlyCollection<T>? includedValues;
+    private T? selectedValue;
+    private IReadOnlyDictionary<T, string>? textOverrides;
 
-    public static readonly StyledProperty<IReadOnlyCollection<T>?> ExcludedValuesProperty =
-        AvaloniaProperty.Register<EnumPicker, IReadOnlyCollection<T>?>(
+#pragma warning disable AVP1002
+    public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, SortOrder>(
+            nameof(AlphabeticalOrder),
+            o => o.alphabeticalOrder,
+            (o, v) => o.AlphabeticalOrder = v,
+            defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly DirectProperty<EnumPicker<T>, Comparison<T>?> CustomSortProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, Comparison<T>?>(
+            nameof(CustomSort),
+            o => o.customSort,
+            (o, v) => o.CustomSort = v,
+            defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> ExcludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
             nameof(ExcludedValues),
+            o => o.excludedValues,
+            (o, v) => o.ExcludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly StyledProperty<IReadOnlyCollection<T>?> IncludedValuesProperty =
-        AvaloniaProperty.Register<EnumPicker, IReadOnlyCollection<T>?>(
+    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> IncludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
             nameof(IncludedValues),
+            o => o.includedValues,
+            (o, v) => o.IncludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
-    
-    public static readonly StyledProperty<T?> SelectedValueProperty = AvaloniaProperty.Register<EnumPicker, T?>(
-        nameof(SelectedValue),
-        defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly StyledProperty<IReadOnlyDictionary<T, string>?> TextOverridesProperty =
-        AvaloniaProperty.Register<EnumPicker, IReadOnlyDictionary<T, string>?>(
+    public static readonly DirectProperty<EnumPicker<T>, T?> SelectedValueProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, T?>(
+            nameof(SelectedValue),
+            o => o.selectedValue,
+            (o, v) => o.SelectedValue = v,
+            defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyDictionary<T, string>?> TextOverridesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyDictionary<T, string>?>(
             nameof(TextOverrides),
+            o => o.textOverrides,
+            (o, v) => o.TextOverrides = v,
             defaultBindingMode: BindingMode.TwoWay);
-
-    protected override Type StyleKeyOverride => typeof(EnumPicker);
+#pragma warning enable AVP1002
     
+    protected override Type StyleKeyOverride => typeof(EnumPicker);
+
     /// <summary>
     ///  Gets or sets alphabetical sorting of values by their texts (see <see cref="TextOverrides"/> and <see cref="EnumPicker.TextProvider"/>).
     ///  Applied as a secondary sort after <see cref="CustomSort"/> when both are set.
     /// </summary>
     public SortOrder AlphabeticalOrder
     {
-        get => this.GetValue(AlphabeticalOrderProperty);
-        set => this.SetValue(AlphabeticalOrderProperty, value);
+        get => this.alphabeticalOrder;
+        set => this.SetAndRaise(AlphabeticalOrderProperty, ref this.alphabeticalOrder, value);
     }
 
     /// <summary>
@@ -98,8 +127,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// </summary>
     public Comparison<T>? CustomSort
     {
-        get => this.GetValue(CustomSortProperty);
-        set => this.SetValue(CustomSortProperty, value);
+        get => this.customSort;
+        set => this.SetAndRaise(CustomSortProperty, ref this.customSort, value);
     }
 
     /// <summary>
@@ -107,8 +136,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// </summary>
     public IReadOnlyCollection<T>? ExcludedValues
     {
-        get => this.GetValue(ExcludedValuesProperty);
-        set => this.SetValue(ExcludedValuesProperty, value);
+        get => this.excludedValues;
+        set => this.SetAndRaise(ExcludedValuesProperty, ref this.excludedValues, value);
     }
 
     /// <summary>
@@ -116,8 +145,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// </summary>
     public IReadOnlyCollection<T>? IncludedValues
     {
-        get => this.GetValue(IncludedValuesProperty);
-        set => this.SetValue(IncludedValuesProperty, value);
+        get => this.includedValues;
+        set => this.SetAndRaise(IncludedValuesProperty, ref this.includedValues, value);
     }
 
     /// <summary>
@@ -125,8 +154,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// </summary>
     public T? SelectedValue
     {
-        get => this.GetValue(SelectedValueProperty);
-        set => this.SetValue(SelectedValueProperty, value);
+        get => this.selectedValue;
+        set => this.SetAndRaise(SelectedValueProperty, ref this.selectedValue, value);
     }
 
     /// <summary>
@@ -134,8 +163,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// </summary>
     public IReadOnlyDictionary<T, string>? TextOverrides
     {
-        get => this.GetValue(TextOverridesProperty);
-        set => this.SetValue(TextOverridesProperty, value);
+        get => this.textOverrides;
+        set => this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value);
     }
 
     private string GetEnumText(T value)
@@ -155,17 +184,17 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     private void UpdateValues()
     {
-        T? selectedValue = this.SelectedValue;
+        T? selection = this.SelectedValue;
 
         IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
         IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
 
         IOrderedEnumerable<EnumPickerItem>? orderedItems = null;
 
-        if (this.CustomSort is { } customSort)
+        if (this.CustomSort is { } sort)
         {
             // ReSharper disable once PossibleMultipleEnumeration
-            orderedItems = items.OrderBy(val => (T)val.EnumValue, Comparer<T>.Create(customSort));
+            orderedItems = items.OrderBy(val => (T)val.EnumValue, Comparer<T>.Create(sort));
         }
 
         if (this.AlphabeticalOrder == SortOrder.Ascending)
@@ -187,12 +216,12 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         {
             items = orderedItems;
         }
-        
+
         // ReSharper disable once PossibleMultipleEnumeration
         this.Items = items.ToList();
 
-        // Directly sync SelectedItem since SetValue won't fire OnPropertyChanged if the value is unchanged
-        this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(selectedValue)) ?? this.Items.FirstOrDefault();
+        // Directly sync SelectedItem since SetAndRaise won't fire OnPropertyChanged if the value is unchanged
+        this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(selection)) ?? this.Items.FirstOrDefault();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

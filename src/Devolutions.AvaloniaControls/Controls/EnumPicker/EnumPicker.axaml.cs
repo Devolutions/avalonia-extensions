@@ -204,7 +204,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     private Dictionary<T, string> GetTextOverridesDictionary()
     {
-        return this.TextOverrides?.ToDictionary(
+        return this.TextOverrides?.DistinctBy(textOverride => textOverride.Enum).ToDictionary(
             textOverride => textOverride.Enum,
             textOverride =>
             {

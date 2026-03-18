@@ -16,7 +16,3 @@ public class EnumPickerFormattedTextOverride<T> : EnumPickerTextOverride<T> wher
 
     public string Format { get; init; } = EnumPicker.DefaultFormat;
 }
-
-public class EnumPickerTextOverrides<T> : List<EnumPickerTextOverride<T>> where T : struct, Enum
-{
-}

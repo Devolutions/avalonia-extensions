@@ -1,6 +1,9 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
+using System.Collections.Specialized;
+
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 
@@ -75,11 +78,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     private SortOrder alphabeticalOrder;
     private Comparison<T>? customSort;
-    private IReadOnlyCollection<T>? excludedValues;
-    private IReadOnlyCollection<T>? includedValues;
+    private ICollection<T> excludedValues = new AvaloniaList<T>();
+    private ICollection<T> includedValues = new AvaloniaList<T>();
     private bool initialized;
     private T selectedValue;
-    private IReadOnlyCollection<EnumPickerTextOverride<T>>? textOverrides;
+    private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
 
 #pragma warning disable AVP1002
     public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
@@ -96,15 +99,15 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             (o, v) => o.CustomSort = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> ExcludedValuesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
+    public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> ExcludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
             nameof(ExcludedValues),
             o => o.ExcludedValues,
             (o, v) => o.ExcludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<T>?> IncludedValuesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<T>?>(
+    public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> IncludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
             nameof(IncludedValues),
             o => o.IncludedValues,
             (o, v) => o.IncludedValues = v,
@@ -117,8 +120,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             (o, v) => o.SelectedValue = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<EnumPickerTextOverride<T>>?> TextOverridesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<EnumPickerTextOverride<T>>?>(
+    public static readonly DirectProperty<EnumPicker<T>, ICollection<EnumPickerTextOverride<T>>> TextOverridesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<EnumPickerTextOverride<T>>>(
             nameof(TextOverrides),
             o => o.TextOverrides,
             (o, v) => o.TextOverrides = v,
@@ -149,19 +152,45 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// <summary>
     /// Gets or sets the values that should not be listed, an excluded value overrides the same value being in <see cref="IncludedValues"/>
     /// </summary>
-    public IReadOnlyCollection<T>? ExcludedValues
+    public ICollection<T> ExcludedValues
     {
         get => this.excludedValues;
-        set => this.SetAndRaise(ExcludedValuesProperty, ref this.excludedValues, value);
+        set
+        {
+            if (this.excludedValues is INotifyCollectionChanged beforeCollection)
+            {
+                beforeCollection.CollectionChanged -= this.UpdateValues;
+            }
+
+            this.SetAndRaise(ExcludedValuesProperty, ref this.excludedValues, value ?? new AvaloniaList<T>());
+
+            if (this.excludedValues is INotifyCollectionChanged afterCollection)
+            {
+                afterCollection.CollectionChanged += this.UpdateValues;
+            }
+        }
     }
 
     /// <summary>
     /// Gets or sets the values that should be listed, values in <see cref="ExcludedValues"/> are still excluded
     /// </summary>
-    public IReadOnlyCollection<T>? IncludedValues
+    public ICollection<T> IncludedValues
     {
         get => this.includedValues;
-        set => this.SetAndRaise(IncludedValuesProperty, ref this.includedValues, value);
+        set
+        {
+            if (this.includedValues is INotifyCollectionChanged beforeCollection)
+            {
+                beforeCollection.CollectionChanged -= this.UpdateValues;
+            }
+            
+            this.SetAndRaise(IncludedValuesProperty, ref this.includedValues, value ?? new AvaloniaList<T>());
+
+            if (this.includedValues is INotifyCollectionChanged afterCollection)
+            {
+                afterCollection.CollectionChanged += this.UpdateValues;
+            }
+        }
     }
 
     /// <summary>
@@ -181,10 +210,23 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     ///    <item><see cref="EnumPickerFormattedTextOverride{T}"/> — formats the display text using the enum value and a proxy enum value (e.g. "Default (Medium)").</item>
     ///  </list>
     /// </summary>
-    public IReadOnlyCollection<EnumPickerTextOverride<T>>? TextOverrides
+    public ICollection<EnumPickerTextOverride<T>> TextOverrides
     {
         get => this.textOverrides;
-        set => this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value);
+        set
+        {
+            if (this.textOverrides is INotifyCollectionChanged beforeCollection)
+            {
+                beforeCollection.CollectionChanged -= this.UpdateValues;
+            }
+
+            this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value ?? new AvaloniaList<EnumPickerTextOverride<T>>());
+
+            if (this.textOverrides is INotifyCollectionChanged afterCollection)
+            {
+                afterCollection.CollectionChanged += this.UpdateValues;
+            }
+        }
     }
 
     private string GetEnumText(T value, Dictionary<T, string> textOverrideDictionary)
@@ -204,7 +246,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     private Dictionary<T, string> GetTextOverridesDictionary()
     {
-        return this.TextOverrides?.DistinctBy(textOverride => textOverride.Enum).ToDictionary(
+        return this.TextOverrides.DistinctBy(textOverride => textOverride.Enum).ToDictionary(
             textOverride => textOverride.Enum,
             textOverride =>
             {
@@ -226,7 +268,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                             // Should not happen
                             return textOverride.Enum.ToString();
                 }
-            }) ?? [];
+            });
     }
     
     private void UpdateValues()
@@ -238,7 +280,13 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         
         T selection = this.SelectedValue;
 
-        IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
+        IEnumerable<T> values = this.allEnumValues;
+        if (this.IncludedValues.Count > 0)
+        {
+            values = values.Intersect(this.IncludedValues);
+        }
+        
+        values = values.Except(this.ExcludedValues);
         
         Dictionary<T, string> textOverrideDictionary = this.GetTextOverridesDictionary();
         
@@ -277,6 +325,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
         // Directly sync SelectedItem since SetAndRaise won't fire OnPropertyChanged if the value is unchanged
         this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(selection)) ?? this.Items.FirstOrDefault();
+    }
+
+    private void UpdateValues(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.UpdateValues();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

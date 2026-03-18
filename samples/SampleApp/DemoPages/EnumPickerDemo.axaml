@@ -90,10 +90,8 @@
         <EnumPicker Grid.Column="1" Grid.Row="15" x:TypeArguments="vm:DemoPriority"
                     SelectedValue="{Binding SelectedInlineExcluded}">
           <EnumPicker.ExcludedValues>
-            <EnumList x:TypeArguments="vm:DemoPriority">
-              <x:Static Member="vm:DemoPriority.Blocker" />
-              <x:Static Member="vm:DemoPriority.Critical" />
-            </EnumList>
+            <x:Static Member="vm:DemoPriority.Blocker" />
+            <x:Static Member="vm:DemoPriority.Critical" />
           </EnumPicker.ExcludedValues>
         </EnumPicker>
         <TextBlock Grid.Column="1" Grid.Row="16" Margin="0 2 0 10"
@@ -105,10 +103,8 @@
         <EnumPicker Grid.Column="1" Grid.Row="17" x:TypeArguments="vm:DemoPriority"
                     SelectedValue="{Binding SelectedInlineIncluded}">
           <EnumPicker.IncludedValues>
-            <EnumList x:TypeArguments="vm:DemoPriority">
-              <x:Static Member="vm:DemoPriority.Low" />
-              <x:Static Member="vm:DemoPriority.Normal" />
-            </EnumList>
+            <x:Static Member="vm:DemoPriority.Low" />
+            <x:Static Member="vm:DemoPriority.Normal" />
           </EnumPicker.IncludedValues>
         </EnumPicker>
         <TextBlock Grid.Column="1" Grid.Row="18" Margin="0 2 0 10"
@@ -120,10 +116,8 @@
         <EnumPicker Grid.Column="1" Grid.Row="19" x:TypeArguments="vm:DemoPriority"
                     SelectedValue="{Binding SelectedInlineOverrides}">
           <EnumPicker.TextOverrides>
-            <EnumPickerTextOverrides x:TypeArguments="vm:DemoPriority">
-              <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="High" Text="{StaticResource HighPriorityLabel}" />
-              <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="Critical" Text="CRITICAL" />
-            </EnumPickerTextOverrides>
+            <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="High" Text="{StaticResource HighPriorityLabel}" />
+            <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="Critical" Text="CRITICAL" />
           </EnumPicker.TextOverrides>
         </EnumPicker>
         <TextBlock Grid.Column="1" Grid.Row="20" Margin="0 2 0 10"
@@ -144,9 +138,7 @@
         <EnumPicker Grid.Column="1" Grid.Row="23" x:TypeArguments="vm:DemoConnectionQuality"
                     SelectedValue="{Binding SelectedProxiedOverrides}">
           <EnumPicker.TextOverrides>
-            <EnumPickerTextOverrides x:TypeArguments="vm:DemoConnectionQuality">
-              <EnumPickerFormattedTextOverride x:TypeArguments="vm:DemoConnectionQuality" Enum="Default" EnumOverride="Medium" />
-            </EnumPickerTextOverrides>
+            <EnumPickerFormattedTextOverride x:TypeArguments="vm:DemoConnectionQuality" Enum="Default" EnumOverride="Medium" />
           </EnumPicker.TextOverrides>
         </EnumPicker>
         <TextBlock Grid.Column="1" Grid.Row="24" Margin="0 2 0 10"

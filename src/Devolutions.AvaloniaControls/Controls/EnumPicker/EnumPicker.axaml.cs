@@ -13,6 +13,7 @@ public abstract class EnumPicker : TemplatedControl
         Descending,
     }
 
+    protected bool updatingItems;
     private EnumPickerItem? selectedItem;
     private IReadOnlyCollection<EnumPickerItem> items = [];
 
@@ -36,7 +37,18 @@ public abstract class EnumPicker : TemplatedControl
     internal IReadOnlyCollection<EnumPickerItem> Items
     {
         get => this.items;
-        set => this.SetAndRaise(ItemsProperty, ref this.items, value);
+        set
+        {
+            try
+            {
+                this.updatingItems = true;
+                this.SetAndRaise(ItemsProperty, ref this.items, value);
+            }
+            finally
+            {
+                this.updatingItems = false;
+            }
+        }
     }
 
     internal EnumPickerItem? SelectedItem
@@ -63,7 +75,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private Comparison<T>? customSort;
     private IReadOnlyCollection<T>? excludedValues;
     private IReadOnlyCollection<T>? includedValues;
-    private T? selectedValue;
+    private T selectedValue;
     private IReadOnlyDictionary<T, string>? textOverrides;
 
 #pragma warning disable AVP1002
@@ -95,8 +107,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             (o, v) => o.IncludedValues = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly DirectProperty<EnumPicker<T>, T?> SelectedValueProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, T?>(
+    public static readonly DirectProperty<EnumPicker<T>, T> SelectedValueProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, T>(
             nameof(SelectedValue),
             o => o.SelectedValue,
             (o, v) => o.SelectedValue = v,
@@ -152,7 +164,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// <summary>
     /// Gets or sets the value of the selected item
     /// </summary>
-    public T? SelectedValue
+    public T SelectedValue
     {
         get => this.selectedValue;
         set => this.SetAndRaise(SelectedValueProperty, ref this.selectedValue, value);
@@ -246,12 +258,20 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
         else if (change.Property == SelectedItemProperty)
         {
-            this.SetValue(SelectedValueProperty, (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue);
+            this.SelectedValue = (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue ?? default;
         }
         else if (change.Property == SelectedValueProperty)
         {
-            T? newValue = change.GetNewValue<T?>();
-            this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(newValue));
+            if (this.updatingItems)
+            {
+                this.SelectedItem = null;
+            }
+            else
+            {
+                T newValue = change.GetNewValue<T>();
+                this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(newValue)) ?? this.Items.FirstOrDefault();
+                this.SelectedValue = (T?)this.SelectedItem?.EnumValue ?? default;
+            }
         }
     }
 }

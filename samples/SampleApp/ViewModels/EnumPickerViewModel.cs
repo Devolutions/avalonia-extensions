@@ -35,37 +35,37 @@ public enum DemoPriority
 public partial class EnumPickerViewModel : ObservableObject
 {
     [ObservableProperty]
-    private DemoPriority? selectedDefault = DemoPriority.Low;
+    private DemoPriority selectedDefault = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedSorted = DemoPriority.Low;
+    private DemoPriority selectedSorted = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedExcluded = DemoPriority.Low;
+    private DemoPriority selectedExcluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedIncluded = DemoPriority.Low;
+    private DemoPriority selectedIncluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedWithOverrides = DemoPriority.Low;
+    private DemoPriority selectedWithOverrides = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedWithProvider = DemoPriority.Low;
+    private DemoPriority selectedWithProvider = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoStatus? selectedStatus = DemoStatus.Active;
+    private DemoStatus selectedStatus = DemoStatus.Active;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineExcluded = DemoPriority.Low;
+    private DemoPriority selectedInlineExcluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineIncluded = DemoPriority.Low;
+    private DemoPriority selectedInlineIncluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineOverrides = DemoPriority.Low;
+    private DemoPriority selectedInlineOverrides = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoTaskStatus? selectedCustomSort = DemoTaskStatus.Blocked;
+    private DemoTaskStatus selectedCustomSort = DemoTaskStatus.Blocked;
 
     public Func<object, string> TextProvider { get; } = priority => priority switch
     {
@@ -106,12 +106,19 @@ public partial class EnumPickerViewModel : ObservableObject
     // === Dynamic Demo ===
 
     [ObservableProperty]
-    private DemoPriority? dynamicSelected;
+    private DemoPriority dynamicSelected = DemoPriority.Low;
 
-    [RelayCommand] private void SetDynamicSelectedToLow()      => DynamicSelected = DemoPriority.Low;
-    [RelayCommand] private void SetDynamicSelectedToHigh()     => DynamicSelected = DemoPriority.High;
-    [RelayCommand] private void SetDynamicSelectedToCritical() => DynamicSelected = DemoPriority.Critical;
-    [RelayCommand] private void ClearDynamicSelected()         => DynamicSelected = null;
+    [RelayCommand]
+    private void SetDynamicSelectedToLow() => this.DynamicSelected = DemoPriority.Low;
+    
+    [RelayCommand]
+    private void SetDynamicSelectedToNormal() => this.DynamicSelected = DemoPriority.Normal;
+    
+    [RelayCommand]
+    private void SetDynamicSelectedToHigh() => this.DynamicSelected = DemoPriority.High;
+    
+    [RelayCommand]
+    private void SetDynamicSelectedToCritical() => this.DynamicSelected = DemoPriority.Critical;
 
     [ObservableProperty]
     private EnumPicker.SortOrder dynamicSortOrder;
@@ -202,11 +209,11 @@ public partial class EnumPickerViewModel : ObservableObject
         get
         {
             var values = new List<DemoPriority>();
-            if (DynamicExcludeLow)      values.Add(DemoPriority.Low);
-            if (DynamicExcludeNormal)   values.Add(DemoPriority.Normal);
-            if (DynamicExcludeHigh)     values.Add(DemoPriority.High);
-            if (DynamicExcludeCritical) values.Add(DemoPriority.Critical);
-            if (DynamicExcludeBlocker)  values.Add(DemoPriority.Blocker);
+            if (this.DynamicExcludeLow)      values.Add(DemoPriority.Low);
+            if (this.DynamicExcludeNormal)   values.Add(DemoPriority.Normal);
+            if (this.DynamicExcludeHigh)     values.Add(DemoPriority.High);
+            if (this.DynamicExcludeCritical) values.Add(DemoPriority.Critical);
+            if (this.DynamicExcludeBlocker)  values.Add(DemoPriority.Blocker);
             return values.Count > 0 ? values : null;
         }
     }

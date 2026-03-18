@@ -157,9 +157,9 @@
         <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">Set SelectedValue externally:</TextBlock>
         <WrapPanel>
           <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToLowCommand}">Low</Button>
+          <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToNormalCommand}">Normal</Button>
           <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToHighCommand}">High</Button>
           <Button Margin="0 0 4 0" Command="{Binding SetDynamicSelectedToCriticalCommand}">Critical</Button>
-          <Button Command="{Binding ClearDynamicSelectedCommand}">Clear</Button>
         </WrapPanel>
 
         <TextBlock FontWeight="SemiBold" Margin="0 8 0 0">AlphabeticalOrder:</TextBlock>

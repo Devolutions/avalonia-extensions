@@ -122,8 +122,8 @@
                     SelectedValue="{Binding SelectedInlineOverrides}">
           <EnumPicker.TextOverrides>
             <EnumPickerTextOverrides x:TypeArguments="vm:DemoPriority">
-              <EnumPickerTextOverride x:TypeArguments="vm:DemoPriority" Key="High" Value="{StaticResource HighPriorityLabel}" />
-              <EnumPickerTextOverride x:TypeArguments="vm:DemoPriority" Key="Critical" Value="CRITICAL" />
+              <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="High" Text="{StaticResource HighPriorityLabel}" />
+              <EnumPickerDirectTextOverride x:TypeArguments="vm:DemoPriority" Enum="Critical" Text="CRITICAL" />
             </EnumPickerTextOverrides>
           </EnumPicker.TextOverrides>
         </EnumPicker>

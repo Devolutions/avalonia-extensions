@@ -6,6 +6,8 @@ using Avalonia.Data;
 
 public abstract class EnumPicker : TemplatedControl
 {
+    public const string DefaultFormat = "{0} ({1})";
+    
     public enum SortOrder
     {
         None,
@@ -75,8 +77,9 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private Comparison<T>? customSort;
     private IReadOnlyCollection<T>? excludedValues;
     private IReadOnlyCollection<T>? includedValues;
+    private bool initialized;
     private T selectedValue;
-    private IReadOnlyDictionary<T, string>? textOverrides;
+    private IReadOnlyCollection<EnumPickerTextOverride<T>>? textOverrides;
 
 #pragma warning disable AVP1002
     public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
@@ -114,8 +117,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             (o, v) => o.SelectedValue = v,
             defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyDictionary<T, string>?> TextOverridesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyDictionary<T, string>?>(
+    public static readonly DirectProperty<EnumPicker<T>, IReadOnlyCollection<EnumPickerTextOverride<T>>?> TextOverridesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IReadOnlyCollection<EnumPickerTextOverride<T>>?>(
             nameof(TextOverrides),
             o => o.TextOverrides,
             (o, v) => o.TextOverrides = v,
@@ -173,17 +176,17 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// <summary>
     ///  Gets or sets a dictionary that matches enum value to their text, values in this dictionary override <see cref="EnumPicker.TextProvider"/>
     /// </summary>
-    public IReadOnlyDictionary<T, string>? TextOverrides
+    public IReadOnlyCollection<EnumPickerTextOverride<T>>? TextOverrides
     {
         get => this.textOverrides;
         set => this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value);
     }
 
-    private string GetEnumText(T value)
+    private string GetEnumText(T value, IReadOnlyDictionary<T, string> textOverrideDictionary)
     {
-        if (this.TextOverrides?.TryGetValue(value, out string? text) == true)
+        if (textOverrideDictionary.TryGetValue(value, out string? textOverride))
         {
-            return text;
+            return textOverride;
         }
 
         if (this.TextProvider?.Invoke(value) is { } providedText)
@@ -194,12 +197,47 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         return value.ToString();
     }
 
+    private IReadOnlyDictionary<T, string> GetTextOverridesDictionary()
+    {
+        return this.TextOverrides?.ToDictionary(
+            textOverride => textOverride.Enum,
+            textOverride =>
+            {
+                switch (textOverride)
+                {
+                    case EnumPickerDirectTextOverride<T> directTextOverride:
+                        return directTextOverride.Text;
+                    case EnumPickerProxiedTextOverride<T> proxiedTextOverride:
+                        try
+                        {
+                            return string.Format(proxiedTextOverride.Format, proxiedTextOverride.Enum, proxiedTextOverride.EnumProxy);
+                        }
+                        catch
+                        {
+                            // Fall back to default format if configured format is invalid
+                            return string.Format(DefaultFormat,  proxiedTextOverride.Enum, proxiedTextOverride.EnumProxy);
+                        }
+                    default:
+                            // Should not happen
+                            return textOverride.Enum.ToString();
+                }
+            }) ?? [];
+    }
+    
     private void UpdateValues()
     {
-        T? selection = this.SelectedValue;
+        if (!this.initialized)
+        {
+            return;
+        }
+        
+        T selection = this.SelectedValue;
 
         IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
-        IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue) });
+        
+        IReadOnlyDictionary<T, string> textOverrideDictionary = this.GetTextOverridesDictionary();
+        
+        IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, textOverrideDictionary) });
 
         IOrderedEnumerable<EnumPickerItem>? orderedItems = null;
 
@@ -239,6 +277,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+
+        this.UpdateValues();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.initialized = true;
 
         this.UpdateValues();
     }

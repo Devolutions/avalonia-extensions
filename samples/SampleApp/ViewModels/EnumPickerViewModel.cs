@@ -77,11 +77,11 @@ public partial class EnumPickerViewModel : ObservableObject
         _ => priority.ToString()
     };
 
-    public IReadOnlyDictionary<DemoPriority, string> TextOverrides { get; } = new Dictionary<DemoPriority, string>
-    {
-        { DemoPriority.High, "High (overridden)" },
-        { DemoPriority.Critical, "CRITICAL" }
-    };
+    public IReadOnlyCollection<EnumPickerTextOverride<DemoPriority>> TextOverrides { get; } =
+    [
+        new EnumPickerDirectTextOverride<DemoPriority> { Enum = DemoPriority.High, Text = "High (overridden)" },
+        new EnumPickerDirectTextOverride<DemoPriority> { Enum = DemoPriority.Critical, Text = "CRITICAL" }
+    ];
 
     // Enum is alphabetical in code, but displayed in workflow order
     public Comparison<DemoTaskStatus> CustomSort { get; } = (a, b) =>
@@ -135,7 +135,7 @@ public partial class EnumPickerViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(DynamicTextOverrides))]
     private bool dynamicUseTextOverrides;
 
-    public IReadOnlyDictionary<DemoPriority, string>? DynamicTextOverrides => this.DynamicUseTextOverrides ? this.TextOverrides : null;
+    public IReadOnlyCollection<EnumPickerTextOverride<DemoPriority>>? DynamicTextOverrides => this.DynamicUseTextOverrides ? this.TextOverrides : null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DynamicCustomSort))]

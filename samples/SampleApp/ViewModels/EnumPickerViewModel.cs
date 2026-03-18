@@ -32,6 +32,14 @@ public enum DemoPriority
     Blocker
 }
 
+public enum DemoConnectionQuality
+{
+    Default,
+    Low,
+    Medium,
+    High,
+}
+
 public partial class EnumPickerViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -66,6 +74,9 @@ public partial class EnumPickerViewModel : ObservableObject
 
     [ObservableProperty]
     private DemoTaskStatus selectedCustomSort = DemoTaskStatus.Blocked;
+
+    [ObservableProperty]
+    private DemoConnectionQuality selectedProxiedOverrides = DemoConnectionQuality.Default;
 
     public Func<Enum, string> TextProvider { get; } = priority => priority switch
     {

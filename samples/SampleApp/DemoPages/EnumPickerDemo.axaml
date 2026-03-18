@@ -19,7 +19,7 @@
     </StackPanel>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
     <Border Margin="20 20 10 20" Padding="20" VerticalAlignment="Top" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
           <Bold>EnumPicker</Bold>
         </TextBlock>
@@ -138,6 +138,20 @@
                     SelectedValue="{Binding SelectedCustomSort}" />
         <TextBlock Grid.Column="1" Grid.Row="22" Margin="0 2 0 10"
                    Text="{Binding SelectedCustomSort, StringFormat='Selection: {0}'}" />
+
+        <TextBlock Grid.Column="0" Grid.Row="23" VerticalAlignment="Center" Margin="0 0 10 5">
+          - FormattedTextOverride inline<LineBreak/>(Default → "Default (Medium)"):
+        </TextBlock>
+        <EnumPicker Grid.Column="1" Grid.Row="23" x:TypeArguments="vm:DemoConnectionQuality"
+                    SelectedValue="{Binding SelectedProxiedOverrides}">
+          <EnumPicker.TextOverrides>
+            <EnumPickerTextOverrides x:TypeArguments="vm:DemoConnectionQuality">
+              <EnumPickerFormattedTextOverride x:TypeArguments="vm:DemoConnectionQuality" Enum="Default" EnumOverride="Medium" />
+            </EnumPickerTextOverrides>
+          </EnumPicker.TextOverrides>
+        </EnumPicker>
+        <TextBlock Grid.Column="1" Grid.Row="24" Margin="0 2 0 10"
+                   Text="{Binding SelectedProxiedOverrides, StringFormat='Selection: {0}'}" />
       </Grid>
     </Border>
     <Border Margin="0 20 20 20" Padding="20" VerticalAlignment="Top" Background="{DynamicResource LayoutBackgroundLowBrush}">

@@ -174,7 +174,12 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     }
 
     /// <summary>
-    ///  Gets or sets a dictionary that matches enum value to their text, values in this dictionary override <see cref="EnumPicker.TextProvider"/>
+    ///  Gets or sets a collection of text overrides for specific enum values. Overrides take precedence over <see cref="EnumPicker.TextProvider"/>.
+    ///  Two override types are supported:
+    ///  <list type="bullet">
+    ///    <item><see cref="EnumPickerDirectTextOverride{T}"/> — replaces the display text with a fixed string.</item>
+    ///    <item><see cref="EnumPickerFormattedTextOverride{T}"/> — formats the display text using the enum value and a proxy enum value (e.g. "Default (Medium)").</item>
+    ///  </list>
     /// </summary>
     public IReadOnlyCollection<EnumPickerTextOverride<T>>? TextOverrides
     {

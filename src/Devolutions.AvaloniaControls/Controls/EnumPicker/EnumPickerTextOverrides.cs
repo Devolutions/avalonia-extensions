@@ -10,9 +10,9 @@ public class EnumPickerDirectTextOverride<T> : EnumPickerTextOverride<T> where T
     public required string Text { get; init; }
 }
 
-public class EnumPickerProxiedTextOverride<T> : EnumPickerTextOverride<T> where T : struct, Enum
+public class EnumPickerFormattedTextOverride<T> : EnumPickerTextOverride<T> where T : struct, Enum
 {
-    public required T EnumProxy { get; init; }
+    public required T EnumOverride { get; init; }
 
     public string Format { get; init; } = EnumPicker.DefaultFormat;
 }

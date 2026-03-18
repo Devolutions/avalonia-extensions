@@ -207,15 +207,15 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                 {
                     case EnumPickerDirectTextOverride<T> directTextOverride:
                         return directTextOverride.Text;
-                    case EnumPickerProxiedTextOverride<T> proxiedTextOverride:
+                    case EnumPickerFormattedTextOverride<T> proxiedTextOverride:
                         try
                         {
-                            return string.Format(proxiedTextOverride.Format, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumProxy, []));
+                            return string.Format(proxiedTextOverride.Format, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
                         }
                         catch
                         {
                             // Fall back to default format if configured format is invalid
-                            return string.Format(DefaultFormat,  proxiedTextOverride.Enum, proxiedTextOverride.EnumProxy);
+                            return string.Format(DefaultFormat,  proxiedTextOverride.Enum, proxiedTextOverride.EnumOverride);
                         }
                     default:
                             // Should not happen

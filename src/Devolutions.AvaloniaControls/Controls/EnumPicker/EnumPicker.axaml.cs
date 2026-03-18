@@ -262,7 +262,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                         catch
                         {
                             // Fall back to default format if configured format is invalid
-                            return string.Format(DefaultFormat,  proxiedTextOverride.Enum, proxiedTextOverride.EnumOverride);
+                            return string.Format(DefaultFormat,  this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
                         }
                     default:
                             // Should not happen

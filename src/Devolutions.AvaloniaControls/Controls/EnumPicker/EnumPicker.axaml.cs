@@ -210,7 +210,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                     case EnumPickerProxiedTextOverride<T> proxiedTextOverride:
                         try
                         {
-                            return string.Format(proxiedTextOverride.Format, proxiedTextOverride.Enum, proxiedTextOverride.EnumProxy);
+                            return string.Format(proxiedTextOverride.Format, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumProxy, []));
                         }
                         catch
                         {

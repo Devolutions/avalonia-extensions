@@ -35,37 +35,37 @@ public enum DemoPriority
 public partial class EnumPickerViewModel : ObservableObject
 {
     [ObservableProperty]
-    private DemoPriority? selectedDefault;
+    private DemoPriority? selectedDefault = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedSorted;
+    private DemoPriority? selectedSorted = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedExcluded;
+    private DemoPriority? selectedExcluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedIncluded;
+    private DemoPriority? selectedIncluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedWithOverrides;
+    private DemoPriority? selectedWithOverrides = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedWithProvider;
+    private DemoPriority? selectedWithProvider = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoStatus? selectedStatus;
+    private DemoStatus? selectedStatus = DemoStatus.Active;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineExcluded;
+    private DemoPriority? selectedInlineExcluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineIncluded;
+    private DemoPriority? selectedInlineIncluded = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoPriority? selectedInlineOverrides;
+    private DemoPriority? selectedInlineOverrides = DemoPriority.Low;
 
     [ObservableProperty]
-    private DemoTaskStatus? selectedCustomSort;
+    private DemoTaskStatus? selectedCustomSort = DemoTaskStatus.Blocked;
 
     public Func<object, string> TextProvider { get; } = priority => priority switch
     {

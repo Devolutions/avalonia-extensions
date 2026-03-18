@@ -4,6 +4,7 @@ using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Devolutions.AvaloniaControls.Controls;
+using Devolutions.AvaloniaControls.Extensions;
 
 public enum DemoStatus
 {
@@ -201,30 +202,15 @@ public partial class EnumPickerViewModel : ObservableObject
         this.DynamicIncludedValues.Clear();
         if (value)
         {
-            if (this.DynamicIncludeLow)
-            {
-                this.DynamicIncludedValues.Add(DemoPriority.Low);
-            }
-
-            if (this.DynamicIncludeNormal)
-            {
-                this.DynamicIncludedValues.Add(DemoPriority.Normal);
-            }
-
-            if (this.DynamicIncludeHigh)
-            {
-                this.DynamicIncludedValues.Add(DemoPriority.High);
-            }
-
-            if (this.DynamicIncludeCritical)
-            {
-                this.DynamicIncludedValues.Add(DemoPriority.Critical);
-            }
-
-            if (this.DynamicIncludeBlocker)
-            {
-                this.DynamicIncludedValues.Add(DemoPriority.Blocker);
-            }
+            this.DynamicIncludedValues.AddRange(
+                ((IEnumerable<DemoPriority?>)
+                [
+                    this.DynamicIncludeLow ? DemoPriority.Low : null,
+                    this.DynamicIncludeNormal ? DemoPriority.Normal : null,
+                    this.DynamicIncludeHigh ? DemoPriority.High : null,
+                    this.DynamicIncludeCritical ? DemoPriority.Critical : null,
+                    this.DynamicIncludeBlocker ? DemoPriority.Blocker : null
+                ]).SkipNulls());
         }
     }
 

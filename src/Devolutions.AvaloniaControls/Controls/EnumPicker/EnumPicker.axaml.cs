@@ -28,7 +28,7 @@ public abstract class EnumPicker : TemplatedControl
             o => o.Items,
             (o, v) => o.Items = v);
 
-    public static readonly StyledProperty<Func<object, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<object, string>?>(
+    public static readonly StyledProperty<Func<Enum, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<Enum, string>?>(
         nameof(TextProvider),
         defaultBindingMode: BindingMode.TwoWay);
 
@@ -58,9 +58,9 @@ public abstract class EnumPicker : TemplatedControl
     }
 
     /// <summary>
-    /// Gets or sets the function that provides text for enum values/>
+    /// Gets or sets the function that provides text for enum values
     /// </summary>
-    public Func<object, string>? TextProvider
+    public Func<Enum, string>? TextProvider
     {
         get => this.GetValue(TextProviderProperty);
         set => this.SetValue(TextProviderProperty, value);

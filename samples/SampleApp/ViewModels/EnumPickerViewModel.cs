@@ -67,14 +67,14 @@ public partial class EnumPickerViewModel : ObservableObject
     [ObservableProperty]
     private DemoTaskStatus selectedCustomSort = DemoTaskStatus.Blocked;
 
-    public Func<object, string> TextProvider { get; } = priority => priority switch
+    public Func<Enum, string> TextProvider { get; } = priority => priority switch
     {
         DemoPriority.Low => "Low ↓",
         DemoPriority.Normal => "Normal →",
         DemoPriority.High => "High ↑",
         DemoPriority.Critical => "Critical !!",
         DemoPriority.Blocker => "Blocker ✗",
-        _ => priority.ToString() ?? string.Empty
+        _ => priority.ToString()
     };
 
     public IReadOnlyDictionary<DemoPriority, string> TextOverrides { get; } = new Dictionary<DemoPriority, string>
@@ -129,13 +129,13 @@ public partial class EnumPickerViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(DynamicTextProvider))]
     private bool dynamicUseTextProvider;
 
-    public Func<object, string>? DynamicTextProvider => DynamicUseTextProvider ? TextProvider : null;
+    public Func<Enum, string>? DynamicTextProvider => this.DynamicUseTextProvider ? this.TextProvider : null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DynamicTextOverrides))]
     private bool dynamicUseTextOverrides;
 
-    public IReadOnlyDictionary<DemoPriority, string>? DynamicTextOverrides => DynamicUseTextOverrides ? TextOverrides : null;
+    public IReadOnlyDictionary<DemoPriority, string>? DynamicTextOverrides => this.DynamicUseTextOverrides ? this.TextOverrides : null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DynamicCustomSort))]
@@ -143,7 +143,7 @@ public partial class EnumPickerViewModel : ObservableObject
 
     private static readonly Comparison<DemoPriority> PriorityReverseSort = (a, b) => b.CompareTo(a);
 
-    public Comparison<DemoPriority>? DynamicCustomSort => DynamicUseCustomSort ? PriorityReverseSort : null;
+    public Comparison<DemoPriority>? DynamicCustomSort => this.DynamicUseCustomSort ? PriorityReverseSort : null;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DynamicIncludedValues))]
@@ -173,13 +173,13 @@ public partial class EnumPickerViewModel : ObservableObject
     {
         get
         {
-            if (!DynamicEnableIncludeFilter) return null;
+            if (!this.DynamicEnableIncludeFilter) return null;
             var values = new List<DemoPriority>();
-            if (DynamicIncludeLow)      values.Add(DemoPriority.Low);
-            if (DynamicIncludeNormal)   values.Add(DemoPriority.Normal);
-            if (DynamicIncludeHigh)     values.Add(DemoPriority.High);
-            if (DynamicIncludeCritical) values.Add(DemoPriority.Critical);
-            if (DynamicIncludeBlocker)  values.Add(DemoPriority.Blocker);
+            if (this.DynamicIncludeLow)      values.Add(DemoPriority.Low);
+            if (this.DynamicIncludeNormal)   values.Add(DemoPriority.Normal);
+            if (this.DynamicIncludeHigh)     values.Add(DemoPriority.High);
+            if (this.DynamicIncludeCritical) values.Add(DemoPriority.Critical);
+            if (this.DynamicIncludeBlocker)  values.Add(DemoPriority.Blocker);
             return values;
         }
     }

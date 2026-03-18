@@ -6,7 +6,7 @@ using Avalonia.Data;
 
 public abstract class EnumPicker : TemplatedControl
 {
-    public const string DefaultFormat = "{0} ({1})";
+    internal const string DefaultFormat = "{0} ({1})";
     
     public enum SortOrder
     {
@@ -182,7 +182,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         set => this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value);
     }
 
-    private string GetEnumText(T value, IReadOnlyDictionary<T, string> textOverrideDictionary)
+    private string GetEnumText(T value, Dictionary<T, string> textOverrideDictionary)
     {
         if (textOverrideDictionary.TryGetValue(value, out string? textOverride))
         {
@@ -197,7 +197,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         return value.ToString();
     }
 
-    private IReadOnlyDictionary<T, string> GetTextOverridesDictionary()
+    private Dictionary<T, string> GetTextOverridesDictionary()
     {
         return this.TextOverrides?.ToDictionary(
             textOverride => textOverride.Enum,
@@ -235,7 +235,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
         IEnumerable<T> values = (this.IncludedValues ?? this.allEnumValues).Except(this.ExcludedValues ?? []);
         
-        IReadOnlyDictionary<T, string> textOverrideDictionary = this.GetTextOverridesDictionary();
+        Dictionary<T, string> textOverrideDictionary = this.GetTextOverridesDictionary();
         
         IEnumerable<EnumPickerItem> items = values.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, textOverrideDictionary) });
 

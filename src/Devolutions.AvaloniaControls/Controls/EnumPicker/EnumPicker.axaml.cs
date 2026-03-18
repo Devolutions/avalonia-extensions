@@ -12,8 +12,6 @@ public abstract class EnumPicker : TemplatedControl
         Ascending,
         Descending,
     }
-
-    protected bool updatingItems;
     private EnumPickerItem? selectedItem;
     private IReadOnlyCollection<EnumPickerItem> items = [];
 
@@ -34,6 +32,8 @@ public abstract class EnumPicker : TemplatedControl
         nameof(TextProvider),
         defaultBindingMode: BindingMode.TwoWay);
 
+    protected bool UpdatingItems;
+
     internal IReadOnlyCollection<EnumPickerItem> Items
     {
         get => this.items;
@@ -41,12 +41,12 @@ public abstract class EnumPicker : TemplatedControl
         {
             try
             {
-                this.updatingItems = true;
+                this.UpdatingItems = true;
                 this.SetAndRaise(ItemsProperty, ref this.items, value);
             }
             finally
             {
-                this.updatingItems = false;
+                this.UpdatingItems = false;
             }
         }
     }
@@ -262,7 +262,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
         else if (change.Property == SelectedValueProperty)
         {
-            if (this.updatingItems)
+            if (this.UpdatingItems)
             {
                 this.SelectedItem = null;
             }

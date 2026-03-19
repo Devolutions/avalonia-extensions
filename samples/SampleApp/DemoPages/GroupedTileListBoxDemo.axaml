@@ -214,6 +214,73 @@
         </Grid>
       </StackPanel>
 
+      <!-- Scenario 4: Large Dataset (Virtualization Test) -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 4: Large Dataset (Virtualization Test)</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          500 items across 3 categories to stress-test virtualization (Alpha ×200, Beta ×200, Gamma ×100).
+        </TextBlock>
+
+        <!-- Selected item display -->
+        <Border BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Padding="8"
+                CornerRadius="4"
+                Background="{DynamicResource LayoutBackgroundLowBrush}">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding SelectedLargeItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding SelectedLargeItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding SelectedLargeItem.Category}"
+                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                         IsVisible="{Binding SelectedLargeItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Double-clicked:" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding DoubleClickedLargeItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding DoubleClickedLargeItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding DoubleClickedLargeItem.Category}"
+                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                         IsVisible="{Binding DoubleClickedLargeItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Resizable Grid -->
+        <Grid Height="400" ColumnDefinitions="2*,Auto,*">
+          <GroupedTileListBox Grid.Column="0"
+                              ItemsSource="{Binding LargeItems}"
+                              SelectedItem="{Binding SelectedLargeItem}"
+                              GroupSelector="{Binding CategoryGroupSelector}"
+                              ItemWidth="120"
+                              ItemHeight="100"
+                              DoubleTapped="LargeListBox_OnDoubleTapped">
+            <GroupedTileListBox.ItemTemplate>
+              <DataTemplate DataType="vm:FoodItem">
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Name}"
+                             FontWeight="SemiBold"
+                             TextAlignment="Center"
+                             TextWrapping="Wrap"/>
+                  <TextBlock Text="{Binding Category}"
+                             FontSize="11"
+                             TextAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </GroupedTileListBox.ItemTemplate>
+          </GroupedTileListBox>
+
+          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
+
+          <TextBlock Grid.Column="2"
+                     Text="← Drag splitter to resize"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
+        </Grid>
+      </StackPanel>
+
     </StackPanel>
   </ScrollViewer>
 

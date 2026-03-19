@@ -29,6 +29,12 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
     [ObservableProperty]
     private FoodItem? doubleClickedFlatItem;
 
+    [ObservableProperty]
+    private FoodItem? selectedLargeItem;
+
+    [ObservableProperty]
+    private FoodItem? doubleClickedLargeItem;
+
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()
     {
@@ -108,4 +114,19 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
 
     // Group order selector - empty groups first, then alphabetical
     public Func<string, int> EmptyGroupFirstSelector { get; } = group => string.IsNullOrEmpty((string)group) ? 0 : 1;
+
+    // Scenario 4: Large dataset for virtualization testing
+    public List<FoodItem> LargeItems { get; } = GenerateLargeItems();
+
+    private static List<FoodItem> GenerateLargeItems()
+    {
+        var items = new List<FoodItem>(500);
+        for (int i = 1; i <= 200; i++)
+            items.Add(new FoodItem($"Alpha Item {i:D3}", "Category Alpha"));
+        for (int i = 1; i <= 200; i++)
+            items.Add(new FoodItem($"Beta Item {i:D3}", "Category Beta"));
+        for (int i = 1; i <= 100; i++)
+            items.Add(new FoodItem($"Gamma Item {i:D3}", "Category Gamma"));
+        return items;
+    }
 }

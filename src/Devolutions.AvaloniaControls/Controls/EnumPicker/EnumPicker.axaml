@@ -1,0 +1,18 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type EnumPicker}" TargetType="EnumPicker">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ComboBox ItemsSource="{TemplateBinding Items}" SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="EnumPickerItem">
+              <TextBlock Text="{Binding Text}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

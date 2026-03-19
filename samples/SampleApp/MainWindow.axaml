@@ -80,6 +80,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="EnumPicker" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:EnumPickerDemo>
+                  <demoPages:EnumPickerDemo.DataContext>
+                    <vm:EnumPickerViewModel />
+                  </demoPages:EnumPickerDemo.DataContext>
+                </demoPages:EnumPickerDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ContextMenuDemo />

@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
+using Extensions;
 using Helpers;
 
 public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension

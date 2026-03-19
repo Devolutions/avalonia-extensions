@@ -1100,6 +1100,14 @@ public class GroupedTileListBox : TemplatedControl
         {
             // Element is not realized, calculate estimated scroll offset
             double targetY = this.CalculateScrollOffsetForItem(item);
+
+            // Scroll down
+            if (targetY > this.scrollViewer.Offset.Y)
+            {
+                // Remove the ViewPort height (minus ItemHeight and ItemSpacing) to make the selected item at the bottom the ViewPort
+                targetY -= this.scrollViewer.Viewport.Height - this.ItemHeight - this.ItemSpacing;
+            }
+            
             this.scrollViewer.Offset = new Vector(this.scrollViewer.Offset.X, targetY);
         }
     }

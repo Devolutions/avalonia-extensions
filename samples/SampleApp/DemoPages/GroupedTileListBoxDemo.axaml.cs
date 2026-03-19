@@ -34,4 +34,12 @@ public partial class GroupedTileListBoxDemo : UserControl
             vm.DoubleClickedFlatItem = vm.SelectedFlatItem;
         }
     }
+
+    private void LargeListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (this.DataContext is GroupedTileListBoxViewModel vm)
+        {
+            vm.DoubleClickedLargeItem = vm.SelectedLargeItem;
+        }
+    }
 }

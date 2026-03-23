@@ -10,7 +10,7 @@ using Avalonia.Data;
 public abstract class EnumPicker : TemplatedControl
 {
     internal const string DefaultFormat = "{0} ({1})";
-    
+
     public enum SortOrder
     {
         None,
@@ -33,9 +33,12 @@ public abstract class EnumPicker : TemplatedControl
             o => o.Items,
             (o, v) => o.Items = v);
 
+    public static readonly StyledProperty<Comparison<Enum>?> CustomSortProperty =
+        AvaloniaProperty.Register<EnumPicker, Comparison<Enum>?>(
+            nameof(CustomSort));
+
     public static readonly StyledProperty<Func<Enum, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<Enum, string>?>(
-        nameof(TextProvider),
-        defaultBindingMode: BindingMode.TwoWay);
+        nameof(TextProvider));
 
     protected bool UpdatingItems;
 
@@ -63,6 +66,15 @@ public abstract class EnumPicker : TemplatedControl
     }
 
     /// <summary>
+    ///  Gets or sets a custom sort comparison for enum values. Applied as the primary sort.
+    /// </summary>
+    public Comparison<Enum>? CustomSort
+    {
+        get => this.GetValue(CustomSortProperty);
+        set => this.SetValue(CustomSortProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the function that provides text for enum values
     /// </summary>
     public Func<Enum, string>? TextProvider
@@ -77,7 +89,6 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
 
     private SortOrder alphabeticalOrder;
-    private Comparison<T>? customSort;
     private ICollection<T> excludedValues = new AvaloniaList<T>();
     private ICollection<T> includedValues = new AvaloniaList<T>();
     private bool initialized;
@@ -89,29 +100,19 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, SortOrder>(
             nameof(AlphabeticalOrder),
             o => o.AlphabeticalOrder,
-            (o, v) => o.AlphabeticalOrder = v,
-            defaultBindingMode: BindingMode.TwoWay);
-
-    public static readonly DirectProperty<EnumPicker<T>, Comparison<T>?> CustomSortProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, Comparison<T>?>(
-            nameof(CustomSort),
-            o => o.CustomSort,
-            (o, v) => o.CustomSort = v,
-            defaultBindingMode: BindingMode.TwoWay);
+            (o, v) => o.AlphabeticalOrder = v);
 
     public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> ExcludedValuesProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
             nameof(ExcludedValues),
             o => o.ExcludedValues,
-            (o, v) => o.ExcludedValues = v,
-            defaultBindingMode: BindingMode.TwoWay);
+            (o, v) => o.ExcludedValues = v);
 
     public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> IncludedValuesProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
             nameof(IncludedValues),
             o => o.IncludedValues,
-            (o, v) => o.IncludedValues = v,
-            defaultBindingMode: BindingMode.TwoWay);
+            (o, v) => o.IncludedValues = v);
 
     public static readonly DirectProperty<EnumPicker<T>, T> SelectedValueProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, T>(
@@ -124,29 +125,19 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<EnumPickerTextOverride<T>>>(
             nameof(TextOverrides),
             o => o.TextOverrides,
-            (o, v) => o.TextOverrides = v,
-            defaultBindingMode: BindingMode.TwoWay);
+            (o, v) => o.TextOverrides = v);
 #pragma warning restore AVP1002
     
     protected override Type StyleKeyOverride => typeof(EnumPicker);
 
     /// <summary>
     ///  Gets or sets alphabetical sorting of values by their texts (see <see cref="TextOverrides"/> and <see cref="EnumPicker.TextProvider"/>).
-    ///  Applied as a secondary sort after <see cref="CustomSort"/> when both are set.
+    ///  Applied as a secondary sort after <see cref="EnumPicker.CustomSort"/> when both are set.
     /// </summary>
     public SortOrder AlphabeticalOrder
     {
         get => this.alphabeticalOrder;
         set => this.SetAndRaise(AlphabeticalOrderProperty, ref this.alphabeticalOrder, value);
-    }
-
-    /// <summary>
-    ///  Gets or sets a custom sort comparison for values. Applied as the primary sort, with <see cref="AlphabeticalOrder"/> acting as a tiebreaker when both are set.
-    /// </summary>
-    public Comparison<T>? CustomSort
-    {
-        get => this.customSort;
-        set => this.SetAndRaise(CustomSortProperty, ref this.customSort, value);
     }
 
     /// <summary>
@@ -297,7 +288,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         if (this.CustomSort is { } sort)
         {
             // ReSharper disable once PossibleMultipleEnumeration
-            orderedItems = items.OrderBy(val => (T)val.EnumValue, Comparer<T>.Create(sort));
+            orderedItems = items.OrderBy(val => (T)val.EnumValue, Comparer<T>.Create((a, b) => sort(a, b)));
         }
 
         if (this.AlphabeticalOrder == SortOrder.Ascending)

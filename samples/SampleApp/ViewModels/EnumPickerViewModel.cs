@@ -43,7 +43,7 @@ public enum DemoConnectionQuality
 
 public partial class EnumPickerViewModel : ObservableObject
 {
-    private static readonly Comparison<DemoPriority> PriorityReverseSort = (a, b) => b.CompareTo(a);
+    private static readonly Comparison<Enum> PriorityReverseSort = (a, b) => ((DemoPriority)b).CompareTo((DemoPriority)a);
 
     [ObservableProperty]
     private bool dynamicEnableIncludeFilter;
@@ -151,7 +151,7 @@ public partial class EnumPickerViewModel : ObservableObject
     ];
 
     // Enum is alphabetical in code, but displayed in workflow order
-    public Comparison<DemoTaskStatus> CustomSort { get; } = (a, b) =>
+    public Comparison<Enum>? CustomSort { get; } = (a, b) =>
     {
         static int WorkflowIndex(DemoTaskStatus s)
         {
@@ -166,7 +166,7 @@ public partial class EnumPickerViewModel : ObservableObject
             };
         }
 
-        return WorkflowIndex(a).CompareTo(WorkflowIndex(b));
+        return WorkflowIndex((DemoTaskStatus)a).CompareTo(WorkflowIndex((DemoTaskStatus)b));
     };
 
     public AvaloniaList<DemoPriority> ExcludedValues { get; } = [DemoPriority.Blocker];
@@ -179,7 +179,7 @@ public partial class EnumPickerViewModel : ObservableObject
 
     public AvaloniaList<EnumPickerTextOverride<DemoPriority>>? DynamicTextOverrides => this.DynamicUseTextOverrides ? this.TextOverrides : null;
 
-    public Comparison<DemoPriority>? DynamicCustomSort => this.DynamicUseCustomSort ? PriorityReverseSort : null;
+    public Comparison<Enum>? DynamicCustomSort => this.DynamicUseCustomSort ? PriorityReverseSort : null;
 
     public AvaloniaList<DemoPriority> DynamicIncludedValues { get; } = [];
 

@@ -43,7 +43,7 @@ public enum DemoConnectionQuality
 
 public partial class EnumPickerViewModel : ObservableObject
 {
-    private static readonly Comparison<Enum> PriorityReverseSort = (a, b) => ((DemoPriority)b).CompareTo((DemoPriority)a);
+    private static readonly Comparison<Enum> PriorityReverseSort = (a, b) => b.CompareTo(a);
 
     [ObservableProperty]
     private bool dynamicEnableIncludeFilter;

@@ -153,7 +153,7 @@ public partial class EnumPickerViewModel : ObservableObject
     // Enum is alphabetical in code, but displayed in workflow order
     public Comparison<Enum>? CustomSort { get; } = (a, b) =>
     {
-        static int WorkflowIndex(DemoTaskStatus s)
+        static int WorkflowIndex(Enum s)
         {
             return s switch
             {
@@ -166,7 +166,7 @@ public partial class EnumPickerViewModel : ObservableObject
             };
         }
 
-        return WorkflowIndex((DemoTaskStatus)a).CompareTo(WorkflowIndex((DemoTaskStatus)b));
+        return WorkflowIndex(a).CompareTo(WorkflowIndex(b));
     };
 
     public AvaloniaList<DemoPriority> ExcludedValues { get; } = [DemoPriority.Blocker];

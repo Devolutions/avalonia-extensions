@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaTheme.Linux;
 
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
@@ -14,6 +15,8 @@ public class DevolutionsLinuxYaruThemeGlobalStyles : Styles
     /// Initializes a new instance of the <see cref="DevolutionsLinuxYaruThemeGlobalStyles"/> class.
     /// </summary>
     /// <param name="sp">The parent's service provider.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Precompiled XAML is preserved via ILLink.Descriptors.xml TrimmerRootDescriptor.")]
     public DevolutionsLinuxYaruThemeGlobalStyles(IServiceProvider? sp = null)
     {
         AvaloniaXamlLoader.Load(sp, this);

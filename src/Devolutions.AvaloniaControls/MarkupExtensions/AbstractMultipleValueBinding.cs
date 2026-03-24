@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -7,7 +8,7 @@ using Avalonia.Markup.Xaml;
 using Extensions;
 using Helpers;
 
-public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
+public abstract class AbstractMultipleValueBinding<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] TIn> : MarkupExtension
 {
     private readonly WeakReference<IBinding>[]? bindings;
 

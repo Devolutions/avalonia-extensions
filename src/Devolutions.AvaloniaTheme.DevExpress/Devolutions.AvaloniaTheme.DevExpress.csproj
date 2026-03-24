@@ -4,6 +4,8 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -24,6 +26,13 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+        <EmbeddedResource Include="ILLink.Descriptors.xml">
+            <LogicalName>ILLink.Descriptors.xml</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

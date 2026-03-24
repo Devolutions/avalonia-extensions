@@ -2,5 +2,5 @@
 <!-- See: AvaloniaXamlLoader.Load(sp, uri) uses GetType("CompiledAvaloniaXaml.!XamlLoader") -->
 <linker>
     <assembly fullname="Devolutions.AvaloniaControls" preserve="all" />
-    <assembly fullname="Devolutions.AvaloniaTheme.Linux" preserve="all" />
+    <assembly fullname="Devolutions.AvaloniaTheme.MacOS" preserve="all" />
 </linker>

@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaControls.Behaviors;
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Avalonia;
@@ -127,6 +128,8 @@ public static class ComboBoxValidationBehavior
     /// <summary>
     /// Extracts the binding path from an Avalonia property using reflection.
     /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2075",
+        Justification = "Accesses Avalonia internals (GetValueStore, GetExpression, Description) via reflection. These types are preserved via assembly-level ILLink descriptor (preserve=\"all\") and by Avalonia's own trimming guarantees for core types.")]
     private static string? GetBindingPath(AvaloniaObject target, AvaloniaProperty property)
     {
         try

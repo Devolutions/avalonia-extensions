@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaTheme.DevExpress.Internal;
 
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
@@ -7,6 +8,8 @@ using AvaloniaControls.Helpers;
 
 internal class DevExpressThemeWithGlobalStyles : Styles
 {
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
+        Justification = "Precompiled XAML is preserved via ILLink.Descriptors.xml TrimmerRootDescriptor.")]
     public DevExpressThemeWithGlobalStyles(IServiceProvider? sp = null)
     {
         AvaloniaXamlLoader.Load(sp, this);

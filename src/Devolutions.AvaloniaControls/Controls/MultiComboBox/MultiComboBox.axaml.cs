@@ -4,6 +4,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Avalonia;
@@ -523,6 +524,8 @@ public partial class MultiComboBox : SelectingItemsControl
         this.SubscribeToDataContextValidation();
     }
     
+    [UnconditionalSuppressMessage("Trimming", "IL2075",
+        Justification = "DataContext types are preserved via assembly-level ILLink descriptor (preserve=\"all\"). GetProperties() iterates public properties to find the one matching SelectedItems by reference equality.")]
     private void SubscribeToDataContextValidation()
     {
         // Unsubscribe from previous DataContext
@@ -745,6 +748,8 @@ public partial class MultiComboBox : SelectingItemsControl
         this.TriggerCollectionValidation();
     }
     
+    [UnconditionalSuppressMessage("Trimming", "IL2075",
+        Justification = "DataContext types are preserved via assembly-level ILLink descriptor (preserve=\"all\"). Accesses known property by name and searches for ValidateProperty method in the type hierarchy.")]
     private void TriggerCollectionValidation()
     {
         // If we already know the bound property name from subscription, use it directly

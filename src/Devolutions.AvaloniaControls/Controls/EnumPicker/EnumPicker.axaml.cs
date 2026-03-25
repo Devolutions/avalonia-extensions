@@ -95,6 +95,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private T selectedValue;
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
 
+    public EnumPicker()
+    {
+        this.Items = this.allEnumValues.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, []) }).ToList();
+    }
+
 #pragma warning disable AVP1002
     public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
         AvaloniaProperty.RegisterDirect<EnumPicker<T>, SortOrder>(

@@ -25,6 +25,13 @@
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+        <EmbeddedResource Include="ILLink.Descriptors.xml">
+            <LogicalName>ILLink.Descriptors.xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
         <DefaultItemExcludes>$(DefaultItemExcludes);Controls/TreeDataGrid.axaml;Controls/TreeDataGrid.styles.axaml</DefaultItemExcludes>
     </PropertyGroup>
@@ -39,7 +46,7 @@
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.3.23,)"/>
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.3.24.2,)"/>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>

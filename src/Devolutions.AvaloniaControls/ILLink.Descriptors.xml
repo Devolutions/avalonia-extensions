@@ -1,0 +1,5 @@
+<!-- ILLink trimmer descriptor: preserve precompiled XAML types that Avalonia resolves via reflection -->
+<!-- See: AvaloniaXamlLoader.Load(sp, uri) uses GetType("CompiledAvaloniaXaml.!XamlLoader") -->
+<linker>
+  <assembly fullname="Devolutions.AvaloniaControls" preserve="all" />
+</linker>

@@ -48,7 +48,7 @@ public class BindingTogglerExtension : MarkupExtension
         if (resolvedTrueBinding is null && this.WhenTrueBinding is not null)
         {
             resolvedTrueBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBinding(this.WhenTrueBinding, targetType)
+                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenTrueBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenTrueBinding);
             this.resolvedWhenTrueBinding.SetTarget(resolvedTrueBinding);
         }
@@ -57,7 +57,7 @@ public class BindingTogglerExtension : MarkupExtension
         if (resolvedFalseBinding is null && this.WhenFalseBinding is not null)
         {
             resolvedFalseBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBinding(this.WhenFalseBinding, targetType)
+                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenFalseBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenFalseBinding);
             this.resolvedWhenFalseBinding.SetTarget(resolvedFalseBinding);
         }

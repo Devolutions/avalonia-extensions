@@ -4,6 +4,8 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -27,6 +29,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+        <EmbeddedResource Include="ILLink.Descriptors.xml">
+            <LogicalName>ILLink.Descriptors.xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)"/>
         <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)"/>
@@ -39,7 +48,7 @@
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.3.23,)"/>
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.3.24.2,)"/>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>

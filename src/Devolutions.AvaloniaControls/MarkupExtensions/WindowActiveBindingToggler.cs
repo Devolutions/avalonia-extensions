@@ -33,7 +33,7 @@ public class WindowActiveBindingTogglerExtension : MarkupExtension
         if (resolvedActiveBinding is null && this.WhenActiveBinding is not null)
         {
             resolvedActiveBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBinding(this.WhenActiveBinding, targetType)
+                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenActiveBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenActiveBinding);
             this.weakResolvedActiveBinding.SetTarget(resolvedActiveBinding);
         }
@@ -42,7 +42,7 @@ public class WindowActiveBindingTogglerExtension : MarkupExtension
         if (resolvedInactiveBinding is null && this.WhenInactiveBinding is not null)
         {
             resolvedInactiveBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBinding(this.WhenInactiveBinding, targetType)
+                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenInactiveBinding, targetType)
                 : MarkupExtensionHelpers.GetBinding<object?>(this.WhenInactiveBinding);
             this.weakResolvedInactiveBinding.SetTarget(resolvedInactiveBinding);
         }

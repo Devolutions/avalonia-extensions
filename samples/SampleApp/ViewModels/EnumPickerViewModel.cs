@@ -102,7 +102,7 @@ public partial class EnumPickerViewModel : ObservableObject
     private DemoTaskStatus selectedCustomSort = DemoTaskStatus.Blocked;
 
     [ObservableProperty]
-    private DemoPriority selectedDefault = DemoPriority.Low;
+    private DemoPriority selectedDefault = DemoPriority.Critical;
 
     [ObservableProperty]
     private DemoPriority selectedExcluded = DemoPriority.Low;

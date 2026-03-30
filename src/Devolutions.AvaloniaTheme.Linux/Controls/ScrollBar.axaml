@@ -297,6 +297,15 @@
       </Style>
     </Style>
 
+    <Style Selector="^:veryshort">
+      <Style Selector="^ /template/ Rectangle#TrackRect">
+        <Setter Property="Transitions" Value="{x:Null}" />
+      </Style>
+      <Style Selector="^ /template/ RepeatButton">
+        <Setter Property="Transitions" Value="{x:Null}" />
+      </Style>
+    </Style>
+
     <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
     <Style Selector="^:vertical:short /template/ Thumb">
       <Setter Property="MinHeight" Value="{DynamicResource ScrollBarShortThumbMinLength}" />

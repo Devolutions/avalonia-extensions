@@ -354,6 +354,9 @@
       </Style>
     </Style>
 
+    <Style Selector="^:veryshort /template/ RepeatButton">
+      <Setter Property="Transitions" Value="{x:Null}" />
+    </Style>
 
     <!-- SHORT SCROLLBAR MINIMUM THUMB LENGTH FIXES -->
     <Style Selector="^:vertical:short /template/ Thumb">

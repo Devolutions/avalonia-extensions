@@ -12,12 +12,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <PublishAot>true</PublishAot>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <!-- Prevent automatic attachment of regular free dev tools to avoid duplicate mapping of F12 key -->
-        <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
-    </PropertyGroup>
-
+    
     <!-- Only enable Accelerate if a license key is present or explicitly enabled. 
          (To enable manually, use: `dotnet run /p:EnableAccelerate=true`, will still throw an error though if no valid licence key is found -->
     <PropertyGroup>
@@ -50,8 +45,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!--Add both, Classic and Accelerate Dev Tools-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
         <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>

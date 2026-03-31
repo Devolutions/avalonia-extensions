@@ -28,7 +28,6 @@ public class App : Application
 
     private readonly Styles themeStylesContainer = new();
     private Styles? devExpressStyles;
-    private bool devToolsAttached;
     private Styles? fluentStyles;
     private Styles? linuxYaruStyles;
     private Styles? simpleStyles;
@@ -381,18 +380,6 @@ public class App : Application
         }
     }
 
-    public void AttachDevToolsOnce()
-    {
-        if (this.devToolsAttached)
-        {
-            return;
-        }
-
-#if DEBUG
-        this.AttachDeveloperTools();
-#endif
-        this.devToolsAttached = true;
-    }
 }
 
 public abstract class Theme

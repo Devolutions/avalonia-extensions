@@ -134,6 +134,20 @@ public partial class EnumPickerViewModel : ObservableObject
     [ObservableProperty]
     private DemoPriority selectedWithProvider = DemoPriority.Low;
 
+    // === Bound TextOverride Demo ===
+
+    [ObservableProperty]
+    private string highOverrideText = "High (live)";
+
+    [ObservableProperty]
+    private DemoConnectionQuality defaultQuality = DemoConnectionQuality.Medium;
+
+    [ObservableProperty]
+    private DemoPriority selectedBoundDirect = DemoPriority.High;
+
+    [ObservableProperty]
+    private DemoConnectionQuality selectedBoundFormatted = DemoConnectionQuality.Default;
+
     public Func<Enum, string> TextProvider { get; } = priority => priority switch
     {
         DemoPriority.Low => "Low ↓",

@@ -93,11 +93,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private ICollection<T> includedValues = new AvaloniaList<T>();
     private bool initialized;
     private T selectedValue;
-    private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
+    private ICollection<EnumPickerTextOverride<T>> textOverrides;
 
     public EnumPicker()
     {
         this.Items = this.allEnumValues.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, []) }).ToList();
+        
+        this.textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
+        this.DidChangeTextOverrides();
     }
 
 #pragma warning disable AVP1002
@@ -211,17 +214,35 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         get => this.textOverrides;
         set
         {
-            if (this.textOverrides is INotifyCollectionChanged beforeCollection)
-            {
-                beforeCollection.CollectionChanged -= this.UpdateValues;
-            }
-
+            this.WillChangeTextOverrides();
             this.SetAndRaise(TextOverridesProperty, ref this.textOverrides, value ?? new AvaloniaList<EnumPickerTextOverride<T>>());
+            this.DidChangeTextOverrides();
+        }
+    }
 
-            if (this.textOverrides is INotifyCollectionChanged afterCollection)
-            {
-                afterCollection.CollectionChanged += this.UpdateValues;
-            }
+    private void WillChangeTextOverrides()
+    {
+        if (this.textOverrides is INotifyCollectionChanged beforeCollection)
+        {
+            beforeCollection.CollectionChanged -= this.OnTextOverridesCollectionChanged;
+        }
+
+        foreach (EnumPickerTextOverride<T> item in this.textOverrides)
+        {
+            this.UnsubscribeOverrideItem(item);
+        }
+    }
+
+    private void DidChangeTextOverrides()
+    {
+        if (this.textOverrides is INotifyCollectionChanged afterCollection)
+        {
+            afterCollection.CollectionChanged += this.OnTextOverridesCollectionChanged;
+        }
+
+        foreach (EnumPickerTextOverride<T> item in this.textOverrides)
+        {
+            this.SubscribeOverrideItem(item);
         }
     }
 
@@ -323,10 +344,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.SelectedItem = this.Items.FirstOrDefault(val => val.EnumValue.Equals(selection)) ?? this.Items.FirstOrDefault();
     }
 
-    private void UpdateValues(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        this.UpdateValues();
-    }
+    private void UpdateValues(object? sender, NotifyCollectionChangedEventArgs e) => this.UpdateValues();
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -374,6 +392,33 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             }
         }
     }
+
+    private void OnTextOverridePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => this.UpdateValues();
+
+    private void OnTextOverridesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (EnumPickerTextOverride<T> item in e.OldItems.OfType<EnumPickerTextOverride<T>>())
+            {
+                this.UnsubscribeOverrideItem(item);
+            }
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (EnumPickerTextOverride<T> item in e.NewItems.OfType<EnumPickerTextOverride<T>>())
+            {
+                this.SubscribeOverrideItem(item);
+            }
+        }
+
+        this.UpdateValues();
+    }
+
+    private void SubscribeOverrideItem(EnumPickerTextOverride<T> item) => item.PropertyChanged += this.OnTextOverridePropertyChanged;
+
+    private void UnsubscribeOverrideItem(EnumPickerTextOverride<T> item) => item.PropertyChanged -= this.OnTextOverridePropertyChanged;
 }
 
 public class EnumPickerItem

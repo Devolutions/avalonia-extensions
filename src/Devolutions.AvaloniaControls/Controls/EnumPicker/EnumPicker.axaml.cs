@@ -93,13 +93,12 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private ICollection<T> includedValues = new AvaloniaList<T>();
     private bool initialized;
     private T selectedValue;
-    private ICollection<EnumPickerTextOverride<T>> textOverrides;
-
+    private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
+    
     public EnumPicker()
     {
         this.Items = this.allEnumValues.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, []) }).ToList();
-        
-        this.textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
+
         this.DidChangeTextOverrides();
     }
 

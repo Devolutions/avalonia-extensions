@@ -7,12 +7,19 @@
 
     <PropertyGroup>
         <DemoFramework>net10.0</DemoFramework>
-        <LibFrameworks>net10.0;net9.0</LibFrameworks>
+        <LibFrameworks>net10.0</LibFrameworks>
         
-        <AvaloniaVersion>11.3.12</AvaloniaVersion>
-        <MinimumAvaloniaVersion>[11.3.7,)</MinimumAvaloniaVersion>
+        <AvaloniaVersion>12.0.0-rc2</AvaloniaVersion>
+        <MinimumAvaloniaVersion>[12.0.0-rc2,)</MinimumAvaloniaVersion>
         
-        <AvaloniaTreeDataGridVersion>11.3.1</AvaloniaTreeDataGridVersion>
-        <MinimumAvaloniaTreeDataGridVersion>[11.2.3,)</MinimumAvaloniaTreeDataGridVersion>
+        <MinimumXamlBehaviorsVersion>[12.0.0-rc1,)</MinimumXamlBehaviorsVersion>
+        
+        <AvaloniaTreeDataGridVersion>12.0.0-beta1</AvaloniaTreeDataGridVersion>
+        <MinimumAvaloniaTreeDataGridVersion>[12.0.0-beta1,)</MinimumAvaloniaTreeDataGridVersion>
+        
+        <SvgVersion>12.0.0-rc1</SvgVersion>
+        <MinimumSvgVersion>[12.0.0-rc1,)</MinimumSvgVersion>
+        
+        <MinimumUrsaVersion>[2.0.0-preview3,)</MinimumUrsaVersion>
     </PropertyGroup>
 </Project>

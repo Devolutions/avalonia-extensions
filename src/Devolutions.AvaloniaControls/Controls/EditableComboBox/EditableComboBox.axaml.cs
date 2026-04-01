@@ -18,12 +18,12 @@ using Extensions;
 
 [TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
-[PseudoClasses(PC_DropdownOpen, PC_Pressed)]
+[PseudoClasses(PC_DROPDOWN_OPEN, PC_PRESSED)]
 public partial class EditableComboBox : ItemsControl, IInputElement
 {
-    public const string PC_DropdownOpen = ":dropdownopen";
+    public const string PC_DROPDOWN_OPEN = ":dropdownopen";
 
-    public const string PC_Pressed = ":pressed";
+    public const string PC_PRESSED = ":pressed";
 
     public static readonly StyledProperty<TimeSpan> CaretBlinkIntervalProperty =
         AvaloniaProperty.Register<EditableComboBox, TimeSpan>(nameof(CaretBlinkInterval), TimeSpan.FromMilliseconds(500));
@@ -128,7 +128,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         };
 
         this.innerTextBox.TextChanged += this.OnTextChanged;
-        this.GetObservable(WatermarkProperty).Subscribe(watermark => this.innerTextBox.Watermark = watermark);
+        this.GetObservable(WatermarkProperty).Subscribe(watermark => this.innerTextBox.PlaceholderText = watermark);
 
         this.innerComboBox = new InnerComboBox(this, this.innerTextBox)
         {
@@ -342,7 +342,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     {
         this.Value = source.Value;
         this.innerTextBox.SelectAll();
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.Watermark;
         return true;
     }
 
@@ -355,16 +355,16 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         return false;
     }
 
-    protected override void OnGotFocus(GotFocusEventArgs e)
+    protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         if (e.Handled) return;
-
+        
         if (e.Source is InnerTextBox) this.innerTextBox.Focus();
     }
 
     protected override void OnInitialized()
     {
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.Watermark;
 
         this.FillItems();
     }
@@ -426,7 +426,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
                     this.innerTextBox.SelectAll();
                 }
 
-                this.innerTextBox.Watermark = this.Watermark;
+                this.innerTextBox.PlaceholderText = this.Watermark;
                 this.IsDropDownOpen = false;
 
                 if (e.Key == Key.Enter)
@@ -479,7 +479,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         }
         else
         {
-            this.PseudoClasses.Set(PC_Pressed, true);
+            this.PseudoClasses.Set(PC_PRESSED, true);
         }
     }
 
@@ -492,7 +492,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
                 this.innerComboBox._popup.Close();
                 e.Handled = true;
             }
-            else if (this.PseudoClasses.Contains(PC_Pressed))
+            else if (this.PseudoClasses.Contains(PC_PRESSED))
             {
                 bool newIsOpen = !this.IsDropDownOpen;
                 this.IsDropDownOpen = newIsOpen;
@@ -500,7 +500,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             }
         }
 
-        this.PseudoClasses.Set(PC_Pressed, false);
+        this.PseudoClasses.Set(PC_PRESSED, false);
         base.OnPointerReleased(e);
     }
 
@@ -596,7 +596,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private void OnCloseMenu()
     {
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.Watermark;
     }
 
     private void OnInnerDropDownOpenChanged(bool value)
@@ -632,17 +632,17 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     {
         if (this.innerComboBox.SelectedIndex >= 0)
         {
-            this.innerTextBox.Watermark = this.GetSelectedItemValue();
+            this.innerTextBox.PlaceholderText = this.GetSelectedItemValue();
         }
         else
         {
-            this.innerTextBox.Watermark = this.Watermark;
+            this.innerTextBox.PlaceholderText = this.Watermark;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate && this.innerComboBox.SelectedIndex >= 0)
         {
             this.Value = this.GetSelectedItemValue();
-            this.innerTextBox.Watermark = this.Watermark;
+            this.innerTextBox.PlaceholderText = this.Watermark;
         }
     }
 
@@ -656,7 +656,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         if (string.IsNullOrEmpty(this.Value))
         {
             this.innerComboBox.SelectedIndex = -1;
-            this.innerTextBox.Watermark = this.Watermark;
+            this.innerTextBox.PlaceholderText = this.Watermark;
             return;
         }
 
@@ -671,6 +671,6 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         }
 
         this.innerComboBox.SelectedIndex = -1;
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.Watermark;
     }
 }

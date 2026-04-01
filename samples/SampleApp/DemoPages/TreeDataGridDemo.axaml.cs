@@ -1,10 +1,11 @@
 using System;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Templates;
 using SampleApp.ViewModels;
 
 namespace SampleApp.DemoPages;
+
+using Avalonia.Data;
 
 public partial class TreeDataGridDemo : UserControl
 {
@@ -37,11 +38,13 @@ public partial class TreeDataGridDemo : UserControl
       }
   }
 
-  private HierarchicalExpanderColumn<NetworkNode> CreateNameExpanderColumn(IDataTemplate template)
+  private TreeDataGridHierarchicalExpanderColumn CreateNameExpanderColumn(IDataTemplate template)
   {
-      return new HierarchicalExpanderColumn<NetworkNode>(
-          new TemplateColumn<NetworkNode>("Name", template),
-          node => node.Children
-      );
+      return new TreeDataGridHierarchicalExpanderColumn()
+      {
+          Header = "Name",
+          Inner = new TreeDataGridTemplateColumn("Name", template),
+          ChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children),
+      };
   }
 }

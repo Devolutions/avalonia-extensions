@@ -5,9 +5,9 @@ using Avalonia.Data;
 
 public static class ObservableHelpers
 {
-    public static IBinding EmptyBinding() => SingleValueObservable<object?>.Null.ToBinding();
+    public static BindingBase EmptyBinding() => SingleValueObservable<object?>.Null.ToBinding();
 
-    public static IBinding ValueBinding(object? value) => new SingleValueObservable<object?>(value).ToBinding();
+    public static BindingBase ValueBinding(object? value) => new SingleValueObservable<object?>(value).ToBinding();
 
     /// <summary>
     /// A minimal IObservable that emits a single value immediately on subscribe.

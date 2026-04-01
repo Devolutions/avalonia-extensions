@@ -42,7 +42,7 @@
           CornerRadius="{DynamicResource TextBoxDefaultCornerRadius}">
           <Panel HorizontalAlignment="Stretch">
             <TextBlock
-              Name="{x:Static u:TagInput.PART_Watermark}"
+              Name="{x:Static u:TagInput.PART_Placeholder}"
               Opacity="0.5"
               IsVisible="False"
               VerticalAlignment="Center"

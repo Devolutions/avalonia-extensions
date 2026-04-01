@@ -100,7 +100,7 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
         if (!e.Handled && !double.IsNaN(this.pointerDownPoint.X) && e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
         {
             PointerPoint point = e.GetCurrentPoint(this);
-            IPlatformSettings? settings = TopLevel.GetTopLevel(e.Source as Visual)?.PlatformSettings;
+            IPlatformSettings? settings = TopLevel.GetTopLevel(e.Source as Visual)?.GetPlatformSettings();
             Size tapSize = settings?.GetTapSize(point.Pointer.Type) ?? new Size(4, 4);
             Rect tapRect = new Rect(this.pointerDownPoint, new Size()).Inflate(new Thickness(tapSize.Width, tapSize.Height));
 

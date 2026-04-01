@@ -57,7 +57,7 @@
               <Panel>
                 <!-- Watermark -->
                 <TextBlock
-                  Name="{x:Static u:TagInput.PART_Watermark}"
+                  Name="{x:Static u:TagInput.PART_Placeholder}"
                   Text="{TemplateBinding Watermark}"
                   Margin="{DynamicResource TextInputTextPadding}"
                   Foreground="{DynamicResource TextControlPlaceholderForeground}"

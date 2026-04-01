@@ -11,8 +11,8 @@ using Avalonia.Markup.Xaml.MarkupExtensions.CompiledBindings;
 /// </summary>
 /// <remarks>
 /// Extends <see cref="CompiledBindingExtension"/> directly so that the XAML compiler sees the
-/// return type as <c>IBinding</c> (via <c>BindingBase</c>), avoiding the "Unable to convert
-/// Object to IBinding" error that occurs when a <c>MarkupExtension</c> returns <c>object</c>.
+/// return type as <c>BindingBase</c> (via <c>BindingBase</c>), avoiding the "Unable to convert
+/// Object to BindingBase" error that occurs when a <c>MarkupExtension</c> returns <c>object</c>.
 /// All <c>BindingBase</c> properties (Converter, Mode, etc.) are inherited and work as expected.
 /// <para>
 /// The property name is resolved by the XAML compiler against the enclosing <c>ControlTheme.TargetType</c>

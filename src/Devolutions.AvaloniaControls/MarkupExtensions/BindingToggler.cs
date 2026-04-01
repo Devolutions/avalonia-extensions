@@ -9,21 +9,21 @@ using Helpers;
 
 public class BindingTogglerExtension : MarkupExtension
 {
-    private readonly WeakReference<IBinding?> resolvedWhenFalseBinding = new(null);
-    private readonly WeakReference<IBinding?> resolvedWhenTrueBinding = new(null);
+    private readonly WeakReference<BindingBase?> resolvedWhenFalseBinding = new(null);
+    private readonly WeakReference<BindingBase?> resolvedWhenTrueBinding = new(null);
 
-    private readonly WeakReference<IBinding> weakConditionBinding;
+    private readonly WeakReference<BindingBase> weakConditionBinding;
 
-    public BindingTogglerExtension(IBinding conditionBinding, object? whenTrueBinding, object? whenFalseBinding)
+    public BindingTogglerExtension(BindingBase conditionBinding, object? whenTrueBinding, object? whenFalseBinding)
     {
         this.ConditionBinding = conditionBinding;
-        this.weakConditionBinding = new WeakReference<IBinding>(conditionBinding);
+        this.weakConditionBinding = new WeakReference<BindingBase>(conditionBinding);
         this.WhenTrueBinding = whenTrueBinding;
         this.WhenFalseBinding = whenFalseBinding;
     }
 
     [ConstructorArgument("conditionBinding")]
-    public IBinding? ConditionBinding { get; private set; }
+    public BindingBase? ConditionBinding { get; private set; }
 
     [ConstructorArgument("whenTrueBinding")]
     public object? WhenTrueBinding { get; private set; }
@@ -44,7 +44,7 @@ public class BindingTogglerExtension : MarkupExtension
             targetType = avaloniaProperty.PropertyType;
         }
 
-        this.resolvedWhenTrueBinding.TryGetTarget(out IBinding? resolvedTrueBinding);
+        this.resolvedWhenTrueBinding.TryGetTarget(out BindingBase? resolvedTrueBinding);
         if (resolvedTrueBinding is null && this.WhenTrueBinding is not null)
         {
             resolvedTrueBinding = targetType is not null
@@ -53,7 +53,7 @@ public class BindingTogglerExtension : MarkupExtension
             this.resolvedWhenTrueBinding.SetTarget(resolvedTrueBinding);
         }
 
-        this.resolvedWhenFalseBinding.TryGetTarget(out IBinding? resolvedFalseBinding);
+        this.resolvedWhenFalseBinding.TryGetTarget(out BindingBase? resolvedFalseBinding);
         if (resolvedFalseBinding is null && this.WhenFalseBinding is not null)
         {
             resolvedFalseBinding = targetType is not null
@@ -62,7 +62,7 @@ public class BindingTogglerExtension : MarkupExtension
             this.resolvedWhenFalseBinding.SetTarget(resolvedFalseBinding);
         }
 
-        if (!this.weakConditionBinding.TryGetTarget(out IBinding? condition)) return AvaloniaProperty.UnsetValue;
+        if (!this.weakConditionBinding.TryGetTarget(out BindingBase? condition)) return AvaloniaProperty.UnsetValue;
 
         var multiBinding = new MultiBinding
         {

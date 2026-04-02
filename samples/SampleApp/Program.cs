@@ -17,5 +17,6 @@ internal class Program
     => AppBuilder.Configure<App>()
       .UsePlatformDetect()
       .WithInterFont()
+      .WithDeveloperTools()
       .LogToTrace();
 }

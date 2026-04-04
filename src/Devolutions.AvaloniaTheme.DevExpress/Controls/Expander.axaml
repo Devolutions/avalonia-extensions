@@ -14,6 +14,10 @@
   <Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Orientation="Vertical" Spacing="4" Width="250" Height="600">
+        <Expander Classes="borderless" Header="Borderless">
+          <TextBlock>Expanded content</TextBlock>
+        </Expander>
+
         <Expander Header="Expand Down (default)">
           <TextBlock>Expanded content</TextBlock>
         </Expander>
@@ -80,8 +84,27 @@
   <Thickness x:Key="ExpanderContentDownBorderThickness">1,0,1,1</Thickness>
 
   <ControlTheme x:Key="ExpanderToggleButtonTheme" TargetType="ToggleButton">
-    <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderBrush}" />
+    <!-- <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundBrush}" /> -->
+    <Setter Property="Background">
+      <Setter.Value>
+        <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                      ConverterParameter="borderless">
+          <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+          <Binding Source="{StaticResource TransparentBrush}" />
+          <Binding Source="{StaticResource ExpanderHeaderBackgroundBrush}" />
+        </MultiBinding>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="BorderBrush">
+      <Setter.Value>
+        <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                      ConverterParameter="borderless">
+          <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+          <Binding Source="{StaticResource TransparentBrush}" />
+          <Binding Source="{StaticResource ExpanderHeaderBorderBrush}" />
+        </MultiBinding>
+      </Setter.Value>
+    </Setter>
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderHeaderBorderThickness}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderHeaderPadding}" />
@@ -149,10 +172,29 @@
     <!-- PointerOver -->
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#ToggleButtonBackground">
-        <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPointerOverBrush}" />
+        <Setter Property="Background">
+          <Setter.Value>
+            <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                          ConverterParameter="borderless">
+              <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+              <Binding Source="{StaticResource TransparentBrush}" />
+              <Binding Source="{StaticResource ExpanderHeaderBackgroundPointerOverBrush}" />
+            </MultiBinding>
+          </Setter.Value>
+        </Setter>
       </Style>
+
       <Style Selector="^ /template/ Border#BottomBorder">
-        <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderPointerOverBrush}" />
+        <Setter Property="BorderBrush">
+          <Setter.Value>
+            <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                          ConverterParameter="borderless">
+              <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+              <Binding Source="{StaticResource TransparentBrush}" />
+              <Binding Source="{StaticResource ExpanderHeaderBorderPointerOverBrush}" />
+            </MultiBinding>
+          </Setter.Value>
+        </Setter>
       </Style>
     </Style>
 
@@ -240,6 +282,11 @@
         </DockPanel>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^.borderless">
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
 
     <Style Selector="^ /template/ ToggleButton#ExpanderHeader:pressed">
       <Setter Property="RenderTransform" Value="{x:Null}" />

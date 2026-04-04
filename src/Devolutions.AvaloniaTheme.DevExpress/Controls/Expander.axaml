@@ -74,6 +74,7 @@
   <Thickness x:Key="ExpanderHeaderBorderThickness">1</Thickness>
   <Thickness x:Key="ExpanderChevronBorderThickness">0</Thickness>
   <Thickness x:Key="ExpanderChevronMargin">23,0,19,0</Thickness>
+  <Thickness x:Key="BorderlessExpanderChevronMargin">0,0,10,0</Thickness>
   <x:Double x:Key="ExpanderChevronWidth">10</x:Double>
 
   <!-- Content -->
@@ -121,17 +122,18 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}">
             <Grid x:Name="ToggleButtonGrid"
-                  ColumnDefinitions="*,Auto">
+                  ColumnDefinitions="Auto, *, Auto"
+                  Margin="{TemplateBinding Padding}">
               <ContentPresenter x:Name="PART_ContentPresenter"
+                                Grid.Column="1"
                                 Content="{TemplateBinding Content}"
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                Foreground="{TemplateBinding Foreground}"
-                                Margin="{TemplateBinding Padding}" />
-              <Border Grid.Column="1"
+                                Foreground="{TemplateBinding Foreground}" />
+              <Border Grid.Column="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 0, 2}"
                       Width="{DynamicResource ExpanderChevronWidth}"
-                      Margin="{DynamicResource ExpanderChevronMargin}">
+                      Margin="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, {DynamicResource BorderlessExpanderChevronMargin}, {DynamicResource ExpanderChevronMargin}}">
                 <Path x:Name="ExpandCollapseChevron"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"

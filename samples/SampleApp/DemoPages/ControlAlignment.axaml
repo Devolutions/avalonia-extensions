@@ -9,7 +9,7 @@
   <ScrollViewer>
     <StackPanel Margin="10">
       <TextBlock Classes="h1" Text="Grids" />
-      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+      <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
             ColumnSpacing="10"
             Margin="10 0">
         <TextBlock Grid.Column="0">TextBlock</TextBlock>
@@ -51,13 +51,22 @@
                        Watermark="mm" />
         <CalendarDatePicker Grid.Column="11" />
         <Button Grid.Column="12" Content="Button" />
-        <CheckBox Grid.Column="13" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Column="14" Content="RadioButton" IsChecked="True" />
+        <SplitButton Grid.Column="13" Content="SplitButton">
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="A" />
+              <MenuItem Header="B" />
+              <MenuItem Header="C" />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <CheckBox Grid.Column="14" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Column="15" Content="RadioButton" IsChecked="True" />
         <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
-        <TextBlock Grid.Column="15" Text="🙂" FontSize="45" />
+        <TextBlock Grid.Column="16" Text="🙂" FontSize="45" />
       </Grid>
 
-      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *"
+      <Grid RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *"
             RowSpacing="5"
             Width="150"
             HorizontalAlignment="Left"
@@ -96,8 +105,17 @@
                        Watermark="mm" />
         <CalendarDatePicker Grid.Row="12" />
         <Button Grid.Row="13" Content="Button" />
-        <CheckBox Grid.Row="14" Content="Checkbox" IsChecked="True" />
-        <RadioButton Grid.Row="15" Content="RadioButton" IsChecked="True" />
+        <SplitButton Grid.Row="14" Content="SplitButton">
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="A" />
+              <MenuItem Header="B" />
+              <MenuItem Header="C" />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <CheckBox Grid.Row="15" Content="Checkbox" IsChecked="True" />
+        <RadioButton Grid.Row="16" Content="RadioButton" IsChecked="True" />
       </Grid>
 
       <TextBlock Classes="h1" Text="StackPanels" Margin="0 20 0 0 " />
@@ -141,6 +159,15 @@
                          Watermark="mm" />
           <CalendarDatePicker />
           <Button Content="Button" />
+          <SplitButton Content="SplitButton">
+            <SplitButton.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="A" />
+                <MenuItem Header="B" />
+                <MenuItem Header="C" />
+              </MenuFlyout>
+            </SplitButton.Flyout>
+          </SplitButton>
           <CheckBox Content="Checkbox" IsChecked="True" />
           <RadioButton Content="RadioButton" IsChecked="True" />
           <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
@@ -189,6 +216,15 @@
                          Watermark="mm" />
           <CalendarDatePicker Height="33" />
           <Button Height="33" Content="Button" />
+          <SplitButton Height="33" Content="SplitButton">
+            <SplitButton.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="A" />
+                <MenuItem Header="B" />
+                <MenuItem Header="C" />
+              </MenuFlyout>
+            </SplitButton.Flyout>
+          </SplitButton>
           <CheckBox Height="33" Content="Checkbox" IsChecked="True" />
           <RadioButton Height="33" Content="RadioButton" IsChecked="True" />
           <!-- Force larger container height to test if controls are affected (they shouldn't be) -->
@@ -231,6 +267,15 @@
           <CalendarDatePicker />
           <TextBox Classes="revealPasswordButton" />
           <Button Content="Button" />
+          <SplitButton Content="SplitButton">
+            <SplitButton.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="A" />
+                <MenuItem Header="B" />
+                <MenuItem Header="C" />
+              </MenuFlyout>
+            </SplitButton.Flyout>
+          </SplitButton>
           <CheckBox Content="Checkbox" IsChecked="True" />
           <RadioButton Content="RadioButton" IsChecked="True" />
         </StackPanel>

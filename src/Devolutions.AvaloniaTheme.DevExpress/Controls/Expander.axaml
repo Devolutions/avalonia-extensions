@@ -14,9 +14,17 @@
   <Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Orientation="Vertical" Spacing="4" Width="250" Height="600">
-        <Expander Classes="borderless" Header="Borderless">
+        <Expander Classes="borderless">
+          <Expander.Header>
+            <TextBlock Foreground="Gray">
+              <Bold>Borderless</Bold>
+            </TextBlock>
+          </Expander.Header>
           <TextBlock>Expanded content</TextBlock>
         </Expander>
+        <Border BorderBrush="#e1e1e1"
+                BorderThickness="0 0 0 1 "
+                Margin="0 0 0 10" />
 
         <Expander Header="Expand Down (default)">
           <TextBlock>Expanded content</TextBlock>
@@ -71,6 +79,7 @@
 
   <!-- Header -->
   <Thickness x:Key="ExpanderHeaderPadding">16,0,0,0</Thickness>
+  <Thickness x:Key="BorderlessExpanderHeaderPadding">3 0 0 0</Thickness>
   <Thickness x:Key="ExpanderHeaderBorderThickness">1</Thickness>
   <Thickness x:Key="ExpanderChevronBorderThickness">0</Thickness>
   <Thickness x:Key="ExpanderChevronMargin">23,0,19,0</Thickness>
@@ -123,7 +132,7 @@
                   BorderThickness="{TemplateBinding BorderThickness}">
             <Grid x:Name="ToggleButtonGrid"
                   ColumnDefinitions="Auto, *, Auto"
-                  Margin="{TemplateBinding Padding}">
+                  Margin="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, {DynamicResource BorderlessExpanderHeaderPadding}, {TemplateBinding Padding}}">
               <ContentPresenter x:Name="PART_ContentPresenter"
                                 Grid.Column="1"
                                 Content="{TemplateBinding Content}"
@@ -164,11 +173,13 @@
     </Style>
 
     <Style Selector="^[Tag=expanded] /template/ Path#ExpandCollapseChevron">
-      <Setter Property="RenderTransform" Value="rotate(180deg)" />
+      <Setter Property="RenderTransform"
+              Value="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 'rotate(0deg)', 'rotate(180deg)'}" />
     </Style>
 
     <Style Selector="^[Tag=collapsed] /template/ Path#ExpandCollapseChevron">
-      <Setter Property="RenderTransform" Value="rotate(0deg)" />
+      <Setter Property="RenderTransform"
+              Value="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 'rotate(-90deg)', 'rotate(0deg)'}" />
     </Style>
 
     <!-- PointerOver -->

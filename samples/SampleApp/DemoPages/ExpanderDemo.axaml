@@ -148,20 +148,14 @@
     </Border>
     <Expander Classes="borderless">
       <Expander.Header>
-        <Grid ColumnDefinitions="20, *, 50">
-          <!-- <Svg Path="/Assets/Computer.svg" Height="16" Width="16" Margin="  0 0 7 0" Css=".st0 {fill : #3E6CB0; }" /> -->
-          <!-- ^ Issue: If you use <Svg> it doesn't honour the parent's opacity -->
-          <PathIcon Width="16"
-                    Margin="  0 0 7 0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource SystemAccentColorDark1}"
-                    Data="{StaticResource ComputerPath}" />
-          <TextBlock Grid.Column="1" Text="Borderless" />
-          <TextBlock Grid.Column="2" Text="✅" HorizontalAlignment="Right" />
-        </Grid>
+        <TextBlock Foreground="Gray">
+          <Bold>Borderless</Bold>
+        </TextBlock>
       </Expander.Header>
       <TextBlock>Passed all tests</TextBlock>
     </Expander>
+    <Border BorderBrush="#e1e1e1"
+            BorderThickness="0 0 0 1 "
+            Margin="0 0 0 10" />
   </StackPanel>
 </UserControl>

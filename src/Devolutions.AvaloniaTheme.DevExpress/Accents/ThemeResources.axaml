@@ -133,7 +133,6 @@
       <Color x:Key='ExpanderBodyBackgroundColor'>#2c2c2c</Color>
       <Color x:Key='ExpanderHeaderBorderColor'>#1e1e1e</Color>
       <Color x:Key='ExpanderHeaderBorderPointerOverColor'>#1e1e1e</Color>
-      <!-- <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="#1e1e1e" /> -->
 
       <Color x:Key='ScrollBarThumbColor'>#808080</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>

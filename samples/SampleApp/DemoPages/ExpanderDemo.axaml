@@ -85,6 +85,21 @@
         </StackPanel>
       </Expander>
 
+      <TextBlock Margin="0 20 0 10">
+        Borderless Expander with class <TextBlock Classes="code">.borderless</TextBlock>.
+      </TextBlock>
+      <Expander Classes="borderless">
+        <Expander.Header>
+          <TextBlock Foreground="Gray">
+            <Bold>Borderless</Bold>
+          </TextBlock>
+        </Expander.Header>
+        <TextBlock>Expanded content</TextBlock>
+      </Expander>
+      <Border BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+              BorderThickness="0 0 0 1"
+              Margin="0 0 0 10" />
+
       <Expander Header="Rounded" CornerRadius="19" Margin="0 40 0 0 ">
         <StackPanel>
           <TextBlock>Expanded content</TextBlock>
@@ -146,16 +161,5 @@
         </Expander>
       </StackPanel>
     </Border>
-    <Expander Classes="borderless">
-      <Expander.Header>
-        <TextBlock Foreground="Gray">
-          <Bold>Borderless</Bold>
-        </TextBlock>
-      </Expander.Header>
-      <TextBlock>Passed all tests</TextBlock>
-    </Expander>
-    <Border BorderBrush="#e1e1e1"
-            BorderThickness="0 0 0 1 "
-            Margin="0 0 0 10" />
   </StackPanel>
 </UserControl>

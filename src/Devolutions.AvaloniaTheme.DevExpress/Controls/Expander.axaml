@@ -13,7 +13,7 @@
 
   <Design.PreviewWith>
     <Border Padding="20">
-      <StackPanel Orientation="Vertical" Spacing="4" Width="250" Height="600">
+      <StackPanel Spacing="4" Width="250" Height="600">
         <Expander Classes="borderless">
           <Expander.Header>
             <TextBlock Foreground="Gray">
@@ -22,8 +22,8 @@
           </Expander.Header>
           <TextBlock>Expanded content</TextBlock>
         </Expander>
-        <Border BorderBrush="#e1e1e1"
-                BorderThickness="0 0 0 1 "
+        <Border BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+                BorderThickness="0 0 0 1"
                 Margin="0 0 0 10" />
 
         <Expander Header="Expand Down (default)">

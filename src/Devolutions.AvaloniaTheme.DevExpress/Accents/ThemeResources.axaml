@@ -38,8 +38,8 @@
       <Color x:Key='ExpanderHeaderBackgroundColor'>#fbfbfb</Color>
       <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#f6f6f6</Color>
       <Color x:Key='ExpanderBodyBackgroundColor'>#fbfbfb</Color>
-      <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
-      <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
+      <Color x:Key='ExpanderHeaderBorderColor'>#1a000000</Color>
+      <Color x:Key='ExpanderHeaderBorderPointerOverColor'>#33000000</Color>
 
       <Color x:Key='ScrollBarThumbColor'>#9f9f9f</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#dddddd</SolidColorBrush>
@@ -131,8 +131,8 @@
       <Color x:Key='ExpanderHeaderBackgroundColor'>#2e2e2e</Color>
       <Color x:Key='ExpanderHeaderBackgroundPointerOverColor'>#343434</Color>
       <Color x:Key='ExpanderBodyBackgroundColor'>#2c2c2c</Color>
-      <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="#1e1e1e" />
-      <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="#1e1e1e" />
+      <Color x:Key='ExpanderHeaderBorderColor'>#1e1e1e</Color>
+      <Color x:Key='ExpanderHeaderBorderPointerOverColor'>#1e1e1e</Color>
 
       <Color x:Key='ScrollBarThumbColor'>#808080</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>
@@ -257,6 +257,8 @@
   <SolidColorBrush x:Key="ExpanderHeaderBackgroundBrush" Color="{DynamicResource ExpanderHeaderBackgroundColor}" />
   <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOverBrush" Color="{DynamicResource ExpanderHeaderBackgroundPointerOverColor}" />
   <SolidColorBrush x:Key="ExpanderBodyBackgroundBrush" Color="{DynamicResource ExpanderBodyBackgroundColor}" />
+  <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{DynamicResource ExpanderHeaderBorderColor}" />
+  <SolidColorBrush x:Key="ExpanderHeaderBorderPointerOverBrush" Color="{DynamicResource ExpanderHeaderBorderPointerOverColor}" />
 
   <x:Double x:Key="TextBasedInputMinHeight">22</x:Double>
 

@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="750"
              x:Class="SampleApp.DemoPages.ExpanderDemo">
 
   <UserControl.Resources>
@@ -84,6 +84,21 @@
           <CheckBox IsThreeState="True" IsChecked="{x:Null}">Partially checked</CheckBox>
         </StackPanel>
       </Expander>
+
+      <TextBlock Margin="0 20 0 10">
+        Borderless Expander with class <TextBlock Classes="code">.borderless</TextBlock>.
+      </TextBlock>
+      <Expander Classes="borderless">
+        <Expander.Header>
+          <TextBlock Foreground="Gray">
+            <Bold>Borderless</Bold>
+          </TextBlock>
+        </Expander.Header>
+        <TextBlock>Expanded content</TextBlock>
+      </Expander>
+      <Border BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+              BorderThickness="0 0 0 1"
+              Margin="0 0 0 10" />
 
       <Expander Header="Rounded" CornerRadius="19" Margin="0 40 0 0 ">
         <StackPanel>

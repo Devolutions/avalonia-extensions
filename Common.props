@@ -9,8 +9,8 @@
         <DemoFramework>net10.0</DemoFramework>
         <LibFrameworks>net10.0</LibFrameworks>
         
-        <AvaloniaVersion>12.0.0-rc2</AvaloniaVersion>
-        <MinimumAvaloniaVersion>[12.0.0-rc2,)</MinimumAvaloniaVersion>
+        <AvaloniaVersion>12.0.0</AvaloniaVersion>
+        <MinimumAvaloniaVersion>[12.0.0,)</MinimumAvaloniaVersion>
         
         <MinimumXamlBehaviorsVersion>[12.0.0-rc1,)</MinimumXamlBehaviorsVersion>
         
@@ -21,5 +21,7 @@
         <MinimumSvgVersion>[12.0.0-rc1,)</MinimumSvgVersion>
         
         <MinimumUrsaVersion>[2.0.0-preview3,)</MinimumUrsaVersion>
+        
+        <MinimumItemsRepeaterVersion>12.0.0-rc2</MinimumItemsRepeaterVersion>
     </PropertyGroup>
 </Project>

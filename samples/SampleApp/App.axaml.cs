@@ -9,7 +9,6 @@ using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
@@ -23,10 +22,10 @@ public class App : Application
     // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
     internal const string MacClassicThemeName = "MacClassic";
     internal const string LiquidGlassThemeName = "LiquidGlass";
-    private static readonly object themeLock = new();
+    private static readonly Lock ThemeLock = new();
     private static bool isSettingTheme;
 
-    private readonly Styles themeStylesContainer = new();
+    private readonly Styles themeStylesContainer = [];
     private Styles? devExpressStyles;
     private bool devToolsAttached;
     private Styles? fluentStyles;
@@ -188,7 +187,7 @@ public class App : Application
 
     public static void SetTheme(Theme theme)
     {
-        lock (themeLock)
+        lock (ThemeLock)
         {
             // Prevent recursive calls during window initialization
             if (isSettingTheme) return;
@@ -287,7 +286,7 @@ public class App : Application
         }
         finally
         {
-            lock (themeLock)
+            lock (ThemeLock)
             {
                 isSettingTheme = false;
             }

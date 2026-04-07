@@ -13,11 +13,6 @@
         <PublishAot>true</PublishAot>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <!-- Prevent automatic attachment of regular free dev tools to avoid duplicate mapping of F12 key -->
-        <AvaloniaNameGeneratorAttachDevTools>false</AvaloniaNameGeneratorAttachDevTools>
-    </PropertyGroup>
-
     <!-- Only enable Accelerate if a license key is present or explicitly enabled. 
          (To enable manually, use: `dotnet run /p:EnableAccelerate=true`, will still throw an error though if no valid licence key is found -->
     <PropertyGroup>

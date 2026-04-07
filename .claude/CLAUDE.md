@@ -89,10 +89,7 @@ The SampleApp provides:
 - Visual demos of all styled controls
 - Theme switching via /worksetup command (see .claude/commands/worksetup.md)
 - Inspection:
-  - if `USE_AVALONIA_ACCELERATE_TOOLS=true` env var is set:
-    - F12 opens Avalonia Accelerate Dev Tools
-    - F10 opens classic Avalonia Dev Tools
-  - otherwise F12 opens classic Avalonia Dev Tools
+  - F12 opens Avalonia Accelerate Dev Tools
 
 **Note on Theme Detection:**
 The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.

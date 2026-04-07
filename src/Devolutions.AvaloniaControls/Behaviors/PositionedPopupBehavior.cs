@@ -99,7 +99,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         this.UpdatePseudoClasses();
 
-        if (this.AssociatedObject.Child?.GetVisualRoot() is PopupRoot popupRoot)
+        if (this.AssociatedObject.Child?.GetPresentationSource()?.RootVisual is PopupRoot popupRoot)
         {
             popupRoot.PositionChanged += this.OnPositionChanged;
         }
@@ -111,7 +111,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
         this.RemovePseudoClass(":dropdown-overflow-left");
         this.RemovePseudoClass(":dropdown-overflow-right");
 
-        if (this.AssociatedObject?.Child?.GetVisualRoot() is PopupRoot popupRoot)
+        if (this.AssociatedObject?.Child?.GetPresentationSource()?.RootVisual is PopupRoot popupRoot)
         {
             popupRoot.PositionChanged -= this.OnPositionChanged;
         }

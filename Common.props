@@ -14,8 +14,8 @@
         
         <MinimumXamlBehaviorsVersion>[12.0.0-rc1,)</MinimumXamlBehaviorsVersion>
         
-        <AvaloniaTreeDataGridVersion>12.0.0-beta1</AvaloniaTreeDataGridVersion>
-        <MinimumAvaloniaTreeDataGridVersion>[12.0.0-beta1,)</MinimumAvaloniaTreeDataGridVersion>
+        <AvaloniaTreeDataGridVersion>12.0.0-beta2</AvaloniaTreeDataGridVersion>
+        <MinimumAvaloniaTreeDataGridVersion>[12.0.0-beta2,)</MinimumAvaloniaTreeDataGridVersion>
         
         <SvgVersion>12.0.0-rc1</SvgVersion>
         <MinimumSvgVersion>[12.0.0-rc1,)</MinimumSvgVersion>

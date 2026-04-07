@@ -43,7 +43,10 @@ public partial class TreeDataGridDemo : UserControl
       return new TreeDataGridHierarchicalExpanderColumn()
       {
           Header = "Name",
-          Inner = new TreeDataGridTemplateColumn("Name", template),
+          Inner = new TreeDataGridTemplateColumn()
+          {
+              CellTemplate = template,
+          },
           ChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children),
       };
   }

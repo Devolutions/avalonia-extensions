@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.TreeDataGridDemo"
              x:DataType="vm:TreeDataGridViewModel">
-
+  
   <UserControl.Resources>
     <DataTemplate x:Key="NameColumnTemplate" DataType="vm:NetworkNode">
       <StackPanel Orientation="Horizontal" Spacing="8">
@@ -15,33 +15,33 @@
       </StackPanel>
     </DataTemplate>
   </UserControl.Resources>
-
+  
   <Design.DataContext>
     <vm:TreeDataGridViewModel />
   </Design.DataContext>
-
+  
   <StackPanel Orientation="Horizontal" Spacing="50">
     <StackPanel Orientation="Vertical" Spacing="20">
       <TextBlock Text="Row Selection" Classes="section-title" FontSize="18" />
-      
+  
       <TextBlock Text="Flat mode" Classes="section-title" />
       <TreeDataGrid Source="{Binding RowSelectionSource}"
                     CanUserResizeColumns="True"
                     CanUserSortColumns="True"
                     MaxHeight="300" />
-      
+  
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
       <TreeDataGrid Source="{Binding TreeRowSelectionSource}" />
     </StackPanel>
-    
+  
     <StackPanel Orientation="Vertical" Spacing="20">
       <TextBlock Text="Cell Selection" Classes="section-title" FontSize="18" />
-      
+  
       <TextBlock Text="Flat mode" Classes="section-title" />
-      <TreeDataGrid Classes="no-grid-lines no-alternating-rows" 
+      <TreeDataGrid Classes="no-grid-lines no-alternating-rows"
                     Source="{Binding CellSelectionSource}"
                     MaxHeight="300" />
-      
+  
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
       <TreeDataGrid Classes="grid-lines alternating-rows" Source="{Binding TreeCellSelectionSource}" />
     </StackPanel>

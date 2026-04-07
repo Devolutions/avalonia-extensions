@@ -64,6 +64,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:CheckBoxListBoxDemo>
+                  <demoPages:CheckBoxListBoxDemo.DataContext>
+                    <vm:CheckBoxListBoxViewModel />
+                  </demoPages:CheckBoxListBoxDemo.DataContext>
+                </demoPages:CheckBoxListBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="ColorPicker" ApplicableTo="DevExpress" />
                 </TabItem.Header>
                 <demoPages:ColorPickerDemo />
@@ -80,25 +90,9 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="EnumPicker" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
-                </TabItem.Header>
-                <demoPages:EnumPickerDemo>
-                  <demoPages:EnumPickerDemo.DataContext>
-                    <vm:EnumPickerViewModel />
-                  </demoPages:EnumPickerDemo.DataContext>
-                </demoPages:EnumPickerDemo>
-              </TabItem>
-              <TabItem>
-                <TabItem.Header>
                   <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ContextMenuDemo />
-              </TabItem>
-              <TabItem>
-                <TabItem.Header>
-                  <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="MacClassic, DevExpress" />
-                </TabItem.Header>
-                <demoPages:DropDownButtonDemo />
               </TabItem>
               <TabItem>
                 <TabItem.Header>
@@ -122,6 +116,12 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="DropDownButton" ApplicableTo="MacClassic, DevExpress" />
+                </TabItem.Header>
+                <demoPages:DropDownButtonDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="EditableComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
                 </TabItem.Header>
                 <demoPages:EditableComboBoxDemo>
@@ -132,35 +132,19 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress" />
+                  <controls:SampleItemHeader Title="EnumPicker" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
                 </TabItem.Header>
-                <demoPages:TagInputDemo />
+                <demoPages:EnumPickerDemo>
+                  <demoPages:EnumPickerDemo.DataContext>
+                    <vm:EnumPickerViewModel />
+                  </demoPages:EnumPickerDemo.DataContext>
+                </demoPages:EnumPickerDemo>
               </TabItem>
               <TabItem>
                 <TabItem.Header>
                   <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ExpanderDemo />
-              </TabItem>
-              <TabItem>
-                <TabItem.Header>
-                  <controls:SampleItemHeader Title="CheckBoxListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
-                </TabItem.Header>
-                <demoPages:CheckBoxListBoxDemo>
-                  <demoPages:CheckBoxListBoxDemo.DataContext>
-                    <vm:CheckBoxListBoxViewModel />
-                  </demoPages:CheckBoxListBoxDemo.DataContext>
-                </demoPages:CheckBoxListBoxDemo>
-              </TabItem>
-              <TabItem>
-                <TabItem.Header>
-                  <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
-                </TabItem.Header>
-                <demoPages:MultiComboBoxDemo>
-                  <demoPages:MultiComboBoxDemo.DataContext>
-                    <vm:MultiComboBoxViewModel />
-                  </demoPages:MultiComboBoxDemo.DataContext>
-                </demoPages:MultiComboBoxDemo>
               </TabItem>
               <TabItem>
                 <TabItem.Header>
@@ -204,6 +188,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="MultiComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:MultiComboBoxDemo>
+                  <demoPages:MultiComboBoxDemo.DataContext>
+                    <vm:MultiComboBoxViewModel />
+                  </demoPages:MultiComboBoxDemo.DataContext>
+                </demoPages:MultiComboBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="NumericUpDown" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:NumericUpDownDemo />
@@ -237,6 +231,12 @@
                   <controls:SampleItemHeader Title="TabControl / TabPane / NavBar" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:TabControlDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress" />
+                </TabItem.Header>
+                <demoPages:TagInputDemo />
               </TabItem>
               <TabItem>
                 <TabItem.Header>

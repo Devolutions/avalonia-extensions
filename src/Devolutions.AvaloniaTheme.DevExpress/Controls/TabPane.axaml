@@ -33,6 +33,7 @@
   <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{DynamicResource ForegroundColor}" />
 
   <ControlTheme x:Key="TabPane_TabItem" TargetType="TabItem">
+    <Setter Property="TabItemMinWidthBehavior.Enable" Value="True" />
     <Setter Property="FontSize" Value="{DynamicResource TabItemHeaderFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource TabItemHeaderThemeFontWeight}" />
     <Setter Property="Background" Value="Transparent" />
@@ -49,16 +50,6 @@
                 Padding="{TemplateBinding Padding}"
                 Background="{Binding $parent[TabItem].Background}">
           <Panel>
-            <TextBlock
-                      Name="ReserveWidthForSelectedTabText"
-                      FontFamily="{TemplateBinding FontFamily}"
-                      FontSize="{TemplateBinding FontSize}"
-                      FontWeight="Bold"
-                      Foreground="Transparent"
-                      Background="Transparent"
-                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                      Text="{TemplateBinding Header}" />
             <ContentPresenter Name="PART_ContentPresenter"
                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                               Content="{TemplateBinding Header}"

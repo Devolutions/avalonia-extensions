@@ -88,4 +88,5 @@
   </ControlTheme>
 
   <StaticResource x:Key="{x:Type TabPane}" ResourceKey="TabPaneTheme" />
+  <StaticResource x:Key="TabPane_TabItem" ResourceKey="{x:Type TabItem}" />
 </ResourceDictionary>

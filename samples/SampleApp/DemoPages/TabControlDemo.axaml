@@ -68,25 +68,37 @@
           </TabControl>
         </Border>
         <Border Width="500" Classes="alternativeBackground" Padding="20">
-          <StackPanel Spacing="15">
-            <TabControl TabStripPlacement="Top" Background="{DynamicResource AlternativeBackgroundTabControlTabStripBrush}">
-              <TabItem Header="General">
-                <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
-              </TabItem>
-              <TabItem Header="Settings">
-                <TextBlock Text="Content 2" VerticalAlignment="Top" />
-              </TabItem>
-              <TabItem Header="Advanced">
-                <TextBlock Text="Content 3" VerticalAlignment="Top" />
-              </TabItem>
-              <TabItem Header="Disabled Tab" IsEnabled="False" />
-            </TabControl>
-            <TextBlock TextWrapping="Wrap"
-                       IsVisible="{ext:ThemeIsOneOf 'LiquidGlass'}">
-              Native Liquid Glass tabs adjust their colour to the effective background colour without being truly transparent.
-              Avalonia does not support this. When placing a TabControl on a different background than the standard window colour, you can adjust the
-              TabStrip colour by setting the TabControl's Background property. This will not affect any of the other themes.
-            </TextBlock>
+          <StackPanel>
+            <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
+            <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
+            <Border Width="500" Padding="0" HorizontalAlignment="Left">
+              <TabControl ItemsSource="{Binding TabItems}"
+                          SelectedIndex="{Binding SelectedIndex}"
+                          TabStripPlacement="Top">
+                <TabControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:TabItemModel">
+                    <TextBlock Text="{Binding Header}" />
+                  </DataTemplate>
+                </TabControl.ItemTemplate>
+
+                <TabControl.ContentTemplate>
+                  <DataTemplate x:DataType="vm:TabItemModel">
+                    <StackPanel Margin="10">
+                      <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
+                      <TextBlock Margin="0 10 0 0" FontStyle="Italic">
+                        This content is bound from the ViewModel
+                      </TextBlock>
+                    </StackPanel>
+                  </DataTemplate>
+                </TabControl.ContentTemplate>
+
+                <TabControl.ItemContainerTheme>
+                  <ControlTheme x:DataType="vm:TabItemModel" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                  </ControlTheme>
+                </TabControl.ItemContainerTheme>
+              </TabControl>
+            </Border>
           </StackPanel>
         </Border>
       </StackPanel>
@@ -123,51 +135,40 @@
           </TabPane>
         </Border>
         <Border Width="500" Classes="alternativeBackground" Padding="20">
-          <TabPane TabStripPlacement="Top">
-            <TabItem Header="General">
-              <TextBlock Text="Horizontal TabPane" />
-            </TabItem>
-            <TabItem Header="Settings">
-              <TextBlock Text="Content 2" />
-            </TabItem>
-            <TabItem Header="Advanced">
-              <TextBlock Text="Content 3" />
-            </TabItem>
-            <TabItem Header="Disabled Tab" IsEnabled="False" />
-          </TabPane>
+          <StackPanel>
+            <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabPane with ItemsSource" />
+            <TextBlock TextWrapping="Wrap">Demonstrating TabPane bound to a collection in the ViewModel using ItemsSource.</TextBlock>
+            <Border Width="500" Padding="0" HorizontalAlignment="Left">
+              <TabPane ItemsSource="{Binding TabItems}"
+                       SelectedIndex="{Binding SelectedIndex}"
+                       TabStripPlacement="Top">
+                <TabPane.ItemTemplate>
+                  <DataTemplate x:DataType="vm:TabItemModel">
+                    <TextBlock Text="{Binding Header}" />
+                  </DataTemplate>
+                </TabPane.ItemTemplate>
+
+                <TabPane.ContentTemplate>
+                  <DataTemplate x:DataType="vm:TabItemModel">
+                    <StackPanel Margin="10">
+                      <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
+                      <TextBlock Margin="0 10 0 0" FontStyle="Italic">
+                        This content is bound from the ViewModel
+                      </TextBlock>
+                    </StackPanel>
+                  </DataTemplate>
+                </TabPane.ContentTemplate>
+
+                <TabPane.ItemContainerTheme>
+                  <ControlTheme x:DataType="vm:TabItemModel" TargetType="TabItem" BasedOn="{StaticResource TabPane_TabItem}">
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                  </ControlTheme>
+                </TabPane.ItemContainerTheme>
+              </TabPane>
+            </Border>
+          </StackPanel>
         </Border>
       </StackPanel>
     </StackPanel>
-
-    <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
-    <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
-    <Border Width="500" Padding="0" HorizontalAlignment="Left">
-      <TabControl ItemsSource="{Binding TabItems}"
-                  SelectedIndex="{Binding SelectedIndex}"
-                  TabStripPlacement="Top">
-        <TabControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:TabItemModel">
-            <TextBlock Text="{Binding Header}" />
-          </DataTemplate>
-        </TabControl.ItemTemplate>
-
-        <TabControl.ContentTemplate>
-          <DataTemplate x:DataType="vm:TabItemModel">
-            <StackPanel Margin="10">
-              <TextBlock Text="{Binding Content}" TextWrapping="Wrap" />
-              <TextBlock Margin="0 10 0 0" FontStyle="Italic">
-                This content is bound from the ViewModel
-              </TextBlock>
-            </StackPanel>
-          </DataTemplate>
-        </TabControl.ContentTemplate>
-
-        <TabControl.ItemContainerTheme>
-          <ControlTheme x:DataType="vm:TabItemModel" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
-            <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
-          </ControlTheme>
-        </TabControl.ItemContainerTheme>
-      </TabControl>
-    </Border>
   </StackPanel>
 </UserControl>

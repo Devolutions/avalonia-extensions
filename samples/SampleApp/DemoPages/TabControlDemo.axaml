@@ -51,7 +51,7 @@
       </StackPanel>
 
       <StackPanel Spacing="20" Margin="5">
-        <Border Width="500" Padding="20 0">
+        <Border Width="700" Padding="20 0">
           <TabControl TabStripPlacement="Top">
             <TabItem Header="General">
               <TextBlock Text="Horizontal tab view" VerticalAlignment="Top" />
@@ -67,11 +67,11 @@
             </TabItem>
           </TabControl>
         </Border>
-        <Border Width="500" Classes="alternativeBackground" Padding="20">
+        <Border Width="700" Classes="alternativeBackground" Padding="20">
           <StackPanel>
             <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
             <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
-            <Border Width="500" Padding="0" HorizontalAlignment="Left">
+            <Border Padding="0" HorizontalAlignment="Left">
               <TabControl ItemsSource="{Binding TabItems}"
                           SelectedIndex="{Binding SelectedIndex}"
                           TabStripPlacement="Top">
@@ -120,7 +120,7 @@
       </Border>
 
       <StackPanel>
-        <Border Width="500" Padding="20">
+        <Border Width="700" Padding="20">
           <TabPane TabStripPlacement="Top">
             <TabItem Header="General">
               <TextBlock Text="Horizontal TabPane" />
@@ -134,11 +134,11 @@
             <TabItem Header="Disabled Tab" IsEnabled="False" />
           </TabPane>
         </Border>
-        <Border Width="500" Classes="alternativeBackground" Padding="20">
+        <Border Width="700" Classes="alternativeBackground" Padding="20">
           <StackPanel>
             <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabPane with ItemsSource" />
             <TextBlock TextWrapping="Wrap">Demonstrating TabPane bound to a collection in the ViewModel using ItemsSource.</TextBlock>
-            <Border Width="500" Padding="0" HorizontalAlignment="Left">
+            <Border Padding="0" HorizontalAlignment="Left">
               <TabPane ItemsSource="{Binding TabItems}"
                        SelectedIndex="{Binding SelectedIndex}"
                        TabStripPlacement="Top">

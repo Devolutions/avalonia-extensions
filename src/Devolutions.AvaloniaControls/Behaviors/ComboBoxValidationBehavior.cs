@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.Behaviors;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -14,56 +15,121 @@ using Avalonia.Data;
 ///
 /// This is a work-around until this is implemented: https://github.com/AvaloniaUI/Avalonia/issues/20462
 /// </summary>
-public class ComboBoxValidationBehavior : BaseBehavior<ComboBoxValidationBehavior, ComboBox>
+public static class ComboBoxValidationBehavior
 {
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxValidationBehavior));
 
+    private static readonly ConditionalWeakTable<ComboBox, ValidationState> States = [];
+
     static ComboBoxValidationBehavior()
     {
-        RegisterBehaviorProperty(EnableProperty);
+        EnableProperty.Changed.Subscribe(args =>
+        {
+            if (args.Sender is ComboBox comboBox)
+            {
+                var enable = args.NewValue.GetValueOrDefault<bool>();
+                if (enable)
+                {
+                    EnableValidation(comboBox);
+                }
+                else
+                {
+                    DisableValidation(comboBox);
+                }
+            }
+        });
     }
-    
-    private INotifyDataErrorInfo? currentDataErrorInfo;
-    private EventHandler<DataErrorsChangedEventArgs>? errorsChangedHandler;
-    
 
-    protected override void OnLoaded()
+    public static void SetEnable(ComboBox element, bool value) => element.SetValue(EnableProperty, value);
+
+    public static bool GetEnable(ComboBox element) => element.GetValue(EnableProperty);
+
+    private static void EnableValidation(ComboBox comboBox)
     {
-        SetupValidation();
-    }
-    
-    protected override void OnDataContextChanged()
-    {
-        this.UnsubscribeFromDataContext();
-        SetupValidation();
+        var state = new ValidationState(comboBox);
+        States.AddOrUpdate(comboBox, state);
+
+        // Subscribe to DataContext changes to handle dynamic DataContext
+        comboBox.DataContextChanged += OnDataContextChanged;
+
+        // Subscribe to when the control is fully loaded to get binding info
+        if (comboBox.IsLoaded)
+        {
+            SetupValidation(comboBox, state);
+        }
+        else
+        {
+            comboBox.Loaded += OnLoaded;
+        }
+
+        // Cleanup when control is unloaded
+        comboBox.DetachedFromVisualTree += OnDetachedFromVisualTree;
     }
 
-    private void SetupValidation()
+    private static void DisableValidation(ComboBox comboBox)
+    {
+        if (States.TryGetValue(comboBox, out var state))
+        {
+            state.Dispose();
+            States.Remove(comboBox);
+        }
+
+        comboBox.DataContextChanged -= OnDataContextChanged;
+        comboBox.Loaded -= OnLoaded;
+        comboBox.DetachedFromVisualTree -= OnDetachedFromVisualTree;
+    }
+
+    private static void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is ComboBox comboBox && States.TryGetValue(comboBox, out var state))
+        {
+            comboBox.Loaded -= OnLoaded;
+            SetupValidation(comboBox, state);
+        }
+    }
+
+    private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is ComboBox comboBox)
+        {
+            DisableValidation(comboBox);
+        }
+    }
+
+    private static void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        if (sender is ComboBox comboBox && States.TryGetValue(comboBox, out var state))
+        {
+            // Re-setup validation with the new DataContext
+            state.UnsubscribeFromDataContext();
+            SetupValidation(comboBox, state);
+        }
+    }
+
+    private static void SetupValidation(ComboBox comboBox, ValidationState state)
     {
         // Get the binding path for ComboBox.TextProperty
-        var bindingPath = GetBindingPath(this.Target, ComboBox.TextProperty);
+        var bindingPath = GetBindingPath(comboBox, ComboBox.TextProperty);
         if (string.IsNullOrEmpty(bindingPath))
         {
             return; // No binding on Text property
         }
 
-        this.BindingPath = bindingPath;
+        state.BindingPath = bindingPath;
 
         // Subscribe to INotifyDataErrorInfo on DataContext
-        if (this.Target.DataContext is INotifyDataErrorInfo ndei)
+        if (comboBox.DataContext is INotifyDataErrorInfo ndei)
         {
-            this.SubscribeToDataContext(ndei);
+            state.SubscribeToDataContext(ndei, comboBox);
         }
     }
 
     /// <summary>
     /// Extracts the binding path from an Avalonia property using reflection.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming",
-        "IL2075",
-        Justification =
-            "Accesses Avalonia internals (GetValueStore, GetExpression, Description) via reflection. These types are preserved via assembly-level ILLink descriptor (preserve=\"all\") and by Avalonia's own trimming guarantees for core types.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2075",
+        Justification = "Accesses Avalonia internals (GetValueStore, GetExpression, Description) via reflection. These types are preserved via assembly-level ILLink descriptor (preserve=\"all\") and by Avalonia's own trimming guarantees for core types.")]
     private static string? GetBindingPath(AvaloniaObject target, AvaloniaProperty property)
     {
         try
@@ -112,67 +178,79 @@ public class ComboBoxValidationBehavior : BaseBehavior<ComboBoxValidationBehavio
         }
     }
 
-    public string? BindingPath { get; set; }
-
-    public void SubscribeToDataContext(INotifyDataErrorInfo ndei)
+    private sealed class ValidationState : IDisposable
     {
-        this.UnsubscribeFromDataContext();
+        private readonly ComboBox comboBox;
+        private INotifyDataErrorInfo? currentDataErrorInfo;
+        private EventHandler<DataErrorsChangedEventArgs>? errorsChangedHandler;
 
-        this.currentDataErrorInfo = ndei;
-        this.errorsChangedHandler = (_, args) => this.OnErrorsChanged(args, this.Target);
-        ndei.ErrorsChanged += this.errorsChangedHandler;
-
-        // Check for existing errors immediately
-        this.UpdateValidationErrors(this.Target);
-    }
-
-    public void UnsubscribeFromDataContext()
-    {
-        if (this.currentDataErrorInfo != null && this.errorsChangedHandler != null)
+        public ValidationState(ComboBox comboBox)
         {
-            this.currentDataErrorInfo.ErrorsChanged -= this.errorsChangedHandler;
+            this.comboBox = comboBox;
         }
 
-        this.currentDataErrorInfo = null;
-        this.errorsChangedHandler = null;
-    }
+        public string? BindingPath { get; set; }
 
-    private void OnErrorsChanged(DataErrorsChangedEventArgs args, ComboBox comboBox)
-    {
-        // Only update if the changed property matches our binding path
-        if (string.IsNullOrEmpty(args.PropertyName) || args.PropertyName == this.BindingPath)
+        public void SubscribeToDataContext(INotifyDataErrorInfo ndei, ComboBox comboBox)
         {
+            this.UnsubscribeFromDataContext();
+
+            this.currentDataErrorInfo = ndei;
+            this.errorsChangedHandler = (_, args) => this.OnErrorsChanged(args, comboBox);
+            ndei.ErrorsChanged += this.errorsChangedHandler;
+
+            // Check for existing errors immediately
             this.UpdateValidationErrors(comboBox);
         }
-    }
 
-    private void UpdateValidationErrors(ComboBox comboBox)
-    {
-        if (this.currentDataErrorInfo == null || string.IsNullOrEmpty(this.BindingPath))
+        public void UnsubscribeFromDataContext()
         {
-            return;
+            if (this.currentDataErrorInfo != null && this.errorsChangedHandler != null)
+            {
+                this.currentDataErrorInfo.ErrorsChanged -= this.errorsChangedHandler;
+            }
+
+            this.currentDataErrorInfo = null;
+            this.errorsChangedHandler = null;
         }
 
-        var errors = this.currentDataErrorInfo.GetErrors(this.BindingPath);
-        var errorList = errors.Cast<object>().ToList();
-
-        if (errorList.Count > 0)
+        private void OnErrorsChanged(DataErrorsChangedEventArgs args, ComboBox comboBox)
         {
-            // Set the first error (most common pattern)
-            var firstError = errorList[0];
-            var exception = firstError as Exception ?? new DataValidationException(firstError?.ToString() ?? "Validation error");
-
-            DataValidationErrors.SetError(comboBox, exception);
+            // Only update if the changed property matches our binding path
+            if (string.IsNullOrEmpty(args.PropertyName) || args.PropertyName == this.BindingPath)
+            {
+                this.UpdateValidationErrors(comboBox);
+            }
         }
-        else
+
+        private void UpdateValidationErrors(ComboBox comboBox)
         {
-            DataValidationErrors.SetError(comboBox, null);
-        }
-    }
+            if (this.currentDataErrorInfo == null || string.IsNullOrEmpty(this.BindingPath))
+            {
+                return;
+            }
 
-    public override void Dispose()
-    {
-        this.UnsubscribeFromDataContext();
-        DataValidationErrors.SetError(this.Target, null);
+            var errors = this.currentDataErrorInfo.GetErrors(this.BindingPath);
+            var errorList = errors.Cast<object>().ToList();
+
+            if (errorList.Count > 0)
+            {
+                // Set the first error (most common pattern)
+                var firstError = errorList[0];
+                var exception = firstError as Exception ?? new DataValidationException(firstError?.ToString() ?? "Validation error");
+
+                DataValidationErrors.SetError(comboBox, exception);
+            }
+            else
+            {
+                DataValidationErrors.SetError(comboBox, null);
+            }
+        }
+
+        public void Dispose()
+        {
+            this.UnsubscribeFromDataContext();
+            DataValidationErrors.SetError(this.comboBox, null);
+        }
     }
 }

@@ -39,4 +39,5 @@
   </ResourceDictionary.MergedDictionaries>
 
   <StaticResource x:Key="{x:Type TabPane}" ResourceKey="{x:Type TabControl}" />
+  <StaticResource x:Key="TabPane_TabItem" ResourceKey="{x:Type TabItem}" />
 </ResourceDictionary>

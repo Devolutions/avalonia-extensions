@@ -1,8 +1,33 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid">
+  xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid"
+  xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
 
+  <Design.PreviewWith>
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+      <Border Background="#111" Padding="20">
+        <DataGrid CanUserSortColumns="True" Width="300" Height="200">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="A" x:DataType="Color" Binding="{Binding A}" />
+            <DataGridTextColumn Header="R" x:DataType="Color" Binding="{Binding R}" />
+            <DataGridTextColumn Header="G" x:DataType="Color" Binding="{Binding G}" />
+            <DataGridTextColumn Header="B" x:DataType="Color" Binding="{Binding B}" />
+          </DataGrid.Columns>
+
+          <DataGrid.ItemsSource>
+            <generic:List x:TypeArguments="Color">
+              <Color>Red</Color>
+              <Color>SteelBlue</Color>
+              <Color>Gold</Color>
+              <Color>Transparent</Color>
+            </generic:List>
+          </DataGrid.ItemsSource>
+        </DataGrid>
+      </Border>
+    </ThemeVariantScope>
+  </Design.PreviewWith>
+  
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="DataGridRowInvalidBrush" Color="{DynamicResource SystemErrorTextColor}" />
@@ -32,7 +57,7 @@
 
   <!-- CellTextBlock -->
   <ControlTheme x:Key="DataGridCellTextBlockTheme" TargetType="TextBlock">
-    <Setter Property="Margin" Value="12,0,12,0" />
+    <Setter Property="Margin" Value="6,0,6,0" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </ControlTheme>
 
@@ -89,7 +114,8 @@
                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                               Content="{TemplateBinding Content}"
                               ContentTemplate="{TemplateBinding ContentTemplate}"
-                              Foreground="{TemplateBinding Foreground}" />
+                              Foreground="{TemplateBinding Foreground}"
+                              TextTrimming="CharacterEllipsis" />
 
             <Rectangle Grid.Column="0" Name="InvalidVisualElement"
                        IsVisible="False"
@@ -129,11 +155,11 @@
   <!-- ColumnHeader -->
   <ControlTheme x:Key="{x:Type DataGridColumnHeader}" TargetType="DataGridColumnHeader">
     <Setter Property="Foreground" Value="{Binding $parent[DataGrid].Foreground}" />
-    <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
-    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="Padding" Value="6,0,6,0" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="HeaderBorder"
@@ -143,31 +169,33 @@
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid Name="PART_ColumnHeaderRoot" ColumnDefinitions="*,Auto">
 
-            <Panel Margin="{TemplateBinding Padding}"
-                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" MinWidth="{DynamicResource DataGridSortIconMinWidth}" />
-                </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0"
+                       Margin="{TemplateBinding Padding}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
 
-                <ContentPresenter Name="PART_ContentPresenter"
-                                  Content="{TemplateBinding Content}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+              <Path Name="SortIcon"
+                    DockPanel.Dock="Right"
+                    IsVisible="False"
+                    Height="7"
+                    Margin="3 0 -3 0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Fill="{TemplateBinding Foreground}"
+                    Stretch="Uniform"
+                    Data="{StaticResource DataGridSortIconPath}" />
+              
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}">
+                <ContentPresenter.DataTemplates>
+                  <DataTemplate DataType="x:String">
+                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
+                  </DataTemplate>
+                </ContentPresenter.DataTemplates>
+              </ContentPresenter>
 
-                <Path Name="SortIcon"
-                      IsVisible="False"
-                      Grid.Column="1"
-                      Height="7"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Fill="{TemplateBinding Foreground}"
-                      Stretch="Uniform"
-                      Data="{StaticResource DataGridSortIconPath}" />
-
-              </Grid>
-            </Panel>
+            </DockPanel>
 
             <Rectangle Name="VerticalSeparator"
                        Grid.Column="1"
@@ -240,6 +268,7 @@
   <!-- RowHeader -->
   <ControlTheme x:Key="{x:Type DataGridRowHeader}" TargetType="DataGridRowHeader">
     <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
     <Setter Property="AreSeparatorsVisible" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>

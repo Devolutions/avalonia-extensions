@@ -566,11 +566,15 @@
     <Setter Property="BorderBrush" Value="{DynamicResource ScrollControlBorder}" />
     <Setter Property="RowBackground" Value="{DynamicResource DataGridRowBackgroundBrush}" />
     <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CanUserResizeColumns" Value="True" />
+    <Setter Property="CanUserReorderColumns" Value="True" />
+    
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
         <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}" Width="2" />
       </Template>
     </Setter>
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="DataGridBorder"

@@ -9,6 +9,7 @@ using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -19,7 +20,7 @@ using Extensions;
 [TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
 [PseudoClasses(PC_DropdownOpen, PC_Pressed)]
-public partial class EditableComboBox : ItemsControl, IInputElement
+public partial class EditableComboBox : SelectingItemsControl, IInputElement
 {
     public const string PC_DropdownOpen = ":dropdownopen";
 
@@ -92,15 +93,22 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     public static readonly StyledProperty<EditableComboBoxMode> ModeProperty =
         AvaloniaProperty.Register<EditableComboBox, EditableComboBoxMode>(nameof(Mode));
 
+    public static readonly StyledProperty<bool> AllowCustomValueProperty =
+        AvaloniaProperty.Register<EditableComboBox, bool>(nameof(AllowCustomValue), true);
+
     private readonly CompositeDisposable compositeDisposable = new();
 
     private readonly AvaloniaList<object?> filteredItems = new();
+
+    private bool syncingSelectedItemFromInnerCombo;
 
     private readonly InnerComboBox innerComboBox;
 
     private readonly InnerTextBox innerTextBox;
 
-    private EditableComboBoxItem[] realizedItems = [];
+    private static readonly object NullSourceKey = new();
+
+    private Dictionary<object, EditableComboBoxItem> realizedItems = new();
 
     static EditableComboBox()
     {
@@ -157,6 +165,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
+        this.innerTextBox.LostFocus += this.OnInnerTextBoxLostFocus;
 
         this.Template = new FuncControlTemplate((_, namescope) =>
         {
@@ -253,6 +262,12 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         set => this.SetValue(ModeProperty, value);
     }
 
+    public bool AllowCustomValue
+    {
+        get => this.GetValue(AllowCustomValueProperty);
+        set => this.SetValue(AllowCustomValueProperty, value);
+    }
+
     public IBrush? SelectionBrush
     {
         get => this.GetValue(SelectionBrushProperty);
@@ -287,6 +302,19 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     {
         get => this.GetValue(WatermarkProperty);
         set => this.SetValue(WatermarkProperty, value);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == SelectedItemProperty && !this.syncingSelectedItemFromInnerCombo)
+        {
+            object? newSelectedItem = change.NewValue;
+            this.Value = this.realizedItems.TryGetValue(GetSourceKey(newSelectedItem), out EditableComboBoxItem? found)
+                ? found.Value
+                : null;
+        }
     }
 
     protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
@@ -512,17 +540,19 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     {
         if (!this.IsInitialized) return;
 
-        this.realizedItems = new EditableComboBoxItem[this.ItemsView.Count];
+        this.realizedItems = new Dictionary<object, EditableComboBoxItem>(this.ItemsView.Count);
         for (int i = 0; i < this.ItemsView.Count; ++i)
         {
             object? item = this.ItemsView[i];
 
-            this.realizedItems[i] = item as EditableComboBoxItem
-                                    ?? new EditableComboBoxItem
-                                    {
-                                        Value = item?.ToString() ?? string.Empty,
-                                        DataContext = item,
-                                    };
+            EditableComboBoxItem realized = item as EditableComboBoxItem
+                                           ?? new EditableComboBoxItem
+                                           {
+                                               Value = item?.ToString() ?? string.Empty,
+                                               DataContext = item,
+                                           };
+            realized.OriginalSourceItem = item;
+            this.realizedItems[GetSourceKey(item)] = realized;
         }
 
         this.RefreshContainers();
@@ -536,12 +566,12 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             this.filteredItems.Clear();
 
             // FIXME: Clone is currently required to fix an issue where the InnerComboBox would not re-attach the items
-            //        to it's visual tree when an item that was already added to it is removed and then the same instance is
+            //        to its visual tree when an item that was already added to it is removed and then the same instance is
             //        re-added (which is what we do when filtering).
             //
             //        It would be great if we could find a better way to do this without additional memory allocation.
             //        - sbergerondrouin 2025-05-09
-            this.filteredItems.AddRange(this.realizedItems.Select(static i => i.Clone()));
+            this.filteredItems.AddRange(this.realizedItems.Values.Select(static i => i.Clone()));
         }
     }
 
@@ -554,7 +584,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
         // See above comment in `FillItems` about cloning
         this.filteredItems.AddRange(
-            this.realizedItems.Select(item =>
+            this.realizedItems.Values.Select(item =>
                 string.IsNullOrEmpty(trimmedSearch) || item.Value.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase)
                     ? item.Clone()
                     : null).SkipNulls());
@@ -562,6 +592,8 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private string? GetSelectedItemValue() =>
         (this.innerComboBox.SelectedItem as EditableComboBoxItem)?.Value ?? this.innerComboBox.SelectedItem?.ToString();
+
+    private static object GetSourceKey(object? item) => item ?? NullSourceKey;
 
     private void HighlightNextItem()
     {
@@ -596,6 +628,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private void OnCloseMenu()
     {
+        this.RevertToSelectedItemIfNeeded();
         this.innerTextBox.Watermark = this.Watermark;
     }
 
@@ -610,6 +643,14 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         else
         {
             this.OnCloseMenu();
+        }
+    }
+
+    private void OnInnerTextBoxLostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (!this.IsDropDownOpen)
+        {
+            this.RevertToSelectedItemIfNeeded();
         }
     }
 
@@ -630,13 +671,24 @@ public partial class EditableComboBox : ItemsControl, IInputElement
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (this.innerComboBox.SelectedIndex >= 0)
+        this.syncingSelectedItemFromInnerCombo = true;
+        try
         {
-            this.innerTextBox.Watermark = this.GetSelectedItemValue();
+            if (this.innerComboBox.SelectedIndex >= 0)
+            {
+                var selectedClone = this.innerComboBox.SelectedItem as EditableComboBoxItem;
+                this.SelectedItem = selectedClone?.OriginalSourceItem;
+                this.innerTextBox.Watermark = this.GetSelectedItemValue();
+            }
+            else
+            {
+                this.SelectedItem = null;
+                this.innerTextBox.Watermark = this.Watermark;
+            }
         }
-        else
+        finally
         {
-            this.innerTextBox.Watermark = this.Watermark;
+            this.syncingSelectedItemFromInnerCombo = false;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate && this.innerComboBox.SelectedIndex >= 0)
@@ -649,6 +701,18 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         this.SelectItemFromText();
+    }
+
+    private void RevertToSelectedItemIfNeeded()
+    {
+        if (this.AllowCustomValue) return;
+
+        if (this.innerComboBox.SelectedIndex < 0)
+        {
+            this.Value = this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out EditableComboBoxItem? revertTo)
+                ? revertTo.Value
+                : null;
+        }
     }
 
     private void SelectItemFromText()

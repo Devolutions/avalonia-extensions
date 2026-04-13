@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -173,6 +173,43 @@
           Watermark="Required error"
           Value="{Binding RequiredTextValue}"
           Margin="10 0 20 20" />
+
+        <TextBlock Grid.Column="0" Grid.Row="11" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Filter + AllowCustomValue=False:<LineBreak />(reverts if nothing selected)
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="11"
+          VerticalAlignment="Top"
+          Mode="Filter"
+          AllowCustomValue="False"
+          Watermark="Type to filter..."
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+        </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Top" Margin="0 5 10 15">
+          - SelectedItem binding:
+        </TextBlock>
+        <StackPanel Grid.Column="1" Grid.Row="12" Margin="10 0 20 20">
+          <EditableComboBox
+            ItemsSource="{Binding Countries}"
+            SelectedItem="{Binding SelectedCountry}"
+            Mode="Filter"
+            AllowCustomValue="False"
+            Watermark="Choose a country..." />
+          <TextBlock Margin="0 4 0 0">
+            <TextBlock.Text>
+              <MultiBinding StringFormat="Selected: {0} ({1})">
+                <Binding Path="SelectedCountry.Name" />
+                <Binding Path="SelectedCountry.Code" />
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </StackPanel>
       </Grid>
     </Border>
   </StackPanel>

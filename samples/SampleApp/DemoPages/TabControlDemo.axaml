@@ -70,7 +70,7 @@
         <Border Width="700" Classes="alternativeBackground" Padding="20">
           <StackPanel>
             <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />
-            <TextBlock TextWrapping="Wrap">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0 0 0 20">Demonstrating TabControl bound to a collection in the ViewModel using ItemsSource.</TextBlock>
             <Border Padding="0" HorizontalAlignment="Left">
               <TabControl ItemsSource="{Binding TabItems}"
                           SelectedIndex="{Binding SelectedIndex}"
@@ -137,7 +137,7 @@
         <Border Width="700" Classes="alternativeBackground" Padding="20">
           <StackPanel>
             <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabPane with ItemsSource" />
-            <TextBlock TextWrapping="Wrap">Demonstrating TabPane bound to a collection in the ViewModel using ItemsSource.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0 0 0 20">Demonstrating TabPane bound to a collection in the ViewModel using ItemsSource.</TextBlock>
             <Border Padding="0" HorizontalAlignment="Left">
               <TabPane ItemsSource="{Binding TabItems}"
                        SelectedIndex="{Binding SelectedIndex}"

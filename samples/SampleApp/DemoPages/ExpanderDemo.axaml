@@ -96,7 +96,7 @@
         </Expander.Header>
         <TextBlock>Expanded content</TextBlock>
       </Expander>
-      <Border BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+      <Border BorderBrush="{DynamicResource ControlBorderBrushTransparent}"
               BorderThickness="0 0 0 1"
               Margin="0 0 0 10" />
 

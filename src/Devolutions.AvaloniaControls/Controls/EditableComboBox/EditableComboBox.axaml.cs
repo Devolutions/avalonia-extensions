@@ -368,6 +368,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     internal bool UpdateValueFromItemPointerEvent(EditableComboBoxItem source, PointerEventArgs e)
     {
+        this.SelectedItem = source.OriginalSourceItem;
         this.Value = source.Value;
         this.innerTextBox.SelectAll();
         this.innerTextBox.Watermark = this.Watermark;
@@ -450,7 +451,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             {
                 if (this.innerComboBox.SelectedIndex >= 0)
                 {
-                    this.Value = this.GetSelectedItemValue();
+                    this.UpdateSelection();
                     this.innerTextBox.SelectAll();
                 }
 
@@ -671,6 +672,17 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        this.innerTextBox.Watermark = this.innerComboBox.SelectedIndex >= 0 ? this.GetSelectedItemValue() : this.Watermark;
+
+        if (this.Mode == EditableComboBoxMode.Immediate && this.innerComboBox.SelectedIndex >= 0)
+        {
+            this.UpdateSelection();
+            this.innerTextBox.Watermark = this.Watermark;
+        }
+    }
+
+    public void UpdateSelection()
+    {
         this.syncingSelectedItemFromInnerCombo = true;
         try
         {
@@ -678,12 +690,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             {
                 var selectedClone = this.innerComboBox.SelectedItem as EditableComboBoxItem;
                 this.SelectedItem = selectedClone?.OriginalSourceItem;
-                this.innerTextBox.Watermark = this.GetSelectedItemValue();
             }
             else
             {
                 this.SelectedItem = null;
-                this.innerTextBox.Watermark = this.Watermark;
             }
         }
         finally
@@ -691,11 +701,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             this.syncingSelectedItemFromInnerCombo = false;
         }
 
-        if (this.Mode == EditableComboBoxMode.Immediate && this.innerComboBox.SelectedIndex >= 0)
-        {
-            this.Value = this.GetSelectedItemValue();
-            this.innerTextBox.Watermark = this.Watermark;
-        }
+        this.Value = this.GetSelectedItemValue();
     }
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)

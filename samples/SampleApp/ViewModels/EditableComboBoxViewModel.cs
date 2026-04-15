@@ -30,7 +30,7 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     ];
 
     // Dynamic ItemsSource toggle demo
-    public static readonly IReadOnlyList<Country> CountrySetA =
+    private static readonly IReadOnlyList<Country> CountrySetA =
     [
         new("Canada", "CA"),
         new("France", "FR"),      // common
@@ -38,7 +38,7 @@ public partial class EditableComboBoxViewModel : ObservableValidator
         new("United States", "US"),
     ];
 
-    public static readonly IReadOnlyList<Country> CountrySetB =
+    private static readonly IReadOnlyList<Country> CountrySetB =
     [
         new("Australia", "AU"),
         new("France", "FR"),      // common

@@ -370,7 +370,16 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     internal bool UpdateValueFromItemPointerEvent(EditableComboBoxItem source, PointerEventArgs e)
     {
-        this.SelectedItem = source.OriginalSourceItem;
+        this.syncingSelectedItemFromInnerCombo = true;
+        try
+        {
+            this.SelectedItem = source.OriginalSourceItem;
+        }
+        finally
+        {
+            this.syncingSelectedItemFromInnerCombo = false;
+        }
+
         this.Value = source.Value;
         this.innerTextBox.SelectAll();
         this.innerTextBox.Watermark = this.Watermark;
@@ -683,29 +692,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
     }
 
-    public void UpdateSelection()
-    {
-        this.syncingSelectedItemFromInnerCombo = true;
-        try
-        {
-            if (this.innerComboBox.SelectedIndex >= 0)
-            {
-                var selectedClone = this.innerComboBox.SelectedItem as EditableComboBoxItem;
-                this.SelectedItem = selectedClone?.OriginalSourceItem;
-            }
-            else
-            {
-                this.SelectedItem = null;
-            }
-        }
-        finally
-        {
-            this.syncingSelectedItemFromInnerCombo = false;
-        }
-
-        this.Value = this.GetSelectedItemValue();
-    }
-
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         this.SelectItemFromText();
@@ -744,5 +730,28 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         this.innerComboBox.SelectedIndex = -1;
         this.innerTextBox.Watermark = this.Watermark;
+    }
+
+    private void UpdateSelection()
+    {
+        this.syncingSelectedItemFromInnerCombo = true;
+        try
+        {
+            if (this.innerComboBox.SelectedIndex >= 0)
+            {
+                var selectedClone = this.innerComboBox.SelectedItem as EditableComboBoxItem;
+                this.SelectedItem = selectedClone?.OriginalSourceItem;
+            }
+            else
+            {
+                this.SelectedItem = null;
+            }
+        }
+        finally
+        {
+            this.syncingSelectedItemFromInnerCombo = false;
+        }
+
+        this.Value = this.GetSelectedItemValue();
     }
 }

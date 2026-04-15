@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -194,22 +194,40 @@
         <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Top" Margin="0 5 10 15">
           - SelectedItem binding:
         </TextBlock>
-        <StackPanel Grid.Column="1" Grid.Row="12" Margin="10 0 20 20">
-          <EditableComboBox
-            ItemsSource="{Binding Countries}"
-            SelectedItem="{Binding SelectedCountry}"
-            Mode="Filter"
-            AllowCustomValue="False"
-            Watermark="Choose a country..." />
-          <TextBlock Margin="0 4 0 0">
-            <TextBlock.Text>
-              <MultiBinding StringFormat="Selected: {0} ({1})">
-                <Binding Path="SelectedCountry.Name" />
-                <Binding Path="SelectedCountry.Code" />
-              </MultiBinding>
-            </TextBlock.Text>
-          </TextBlock>
-        </StackPanel>
+        <EditableComboBox Grid.Column="1" Grid.Row="12"
+                          ItemsSource="{Binding Countries}"
+                          SelectedItem="{Binding SelectedCountry}"
+                          Mode="Filter"
+                          AllowCustomValue="False"
+                          Watermark="Choose a country..." 
+                          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="13" Margin="10 0 20 20">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0} ({1})">
+              <Binding Path="SelectedCountry.Name" />
+              <Binding Path="SelectedCountry.Code" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="14" VerticalAlignment="Top" Margin="0 5 10 0">
+          - Dynamic ItemsSource:<LineBreak />(some common, some not)
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="14"
+          ItemsSource="{Binding DynamicCountries}"
+          SelectedItem="{Binding DynamicSelectedCountry}"
+          Mode="Filter"
+          AllowCustomValue="False"
+          Watermark="Choose a country..."
+          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="15" Margin="10 0 20 0">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0} ({1})">
+              <Binding Path="DynamicSelectedCountry.Name" />
+              <Binding Path="DynamicSelectedCountry.Code" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <Button Grid.Column="1" Grid.Row="16" Command="{Binding ToggleCountrySetCommand}" Content="{Binding DynamicSetLabel, StringFormat='Switch to {0}'}" />
       </Grid>
     </Border>
   </StackPanel>

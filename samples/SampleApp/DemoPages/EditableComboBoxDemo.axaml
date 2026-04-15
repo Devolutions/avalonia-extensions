@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -176,6 +176,88 @@
           Watermark="Required error"
           Value="{Binding RequiredTextValue}"
           Margin="10 0 20 20" />
+
+        <TextBlock Grid.Column="0" Grid.Row="11" VerticalAlignment="Top" Margin="0 5 10 15">
+          - Filter + AllowCustomValue=False:<LineBreak />(reverts if nothing selected)
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="11"
+          VerticalAlignment="Top"
+          Mode="Filter"
+          AllowCustomValue="False"
+          Watermark="Type to filter..."
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+        </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Top" Margin="0 5 10 15">
+          - SelectedItem binding:
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="12"
+                          ItemsSource="{Binding Countries}"
+                          SelectedItem="{Binding SelectedCountry}"
+                          Mode="Filter"
+                          AllowCustomValue="False"
+                          Watermark="Choose a country..." 
+                          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="13" Margin="10 0 20 20">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0} ({1})">
+              <Binding Path="SelectedCountry.Name" />
+              <Binding Path="SelectedCountry.Code" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="14" VerticalAlignment="Top" Margin="0 5 10 0">
+          - Dynamic ItemsSource:<LineBreak />(some common, some not)
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="14"
+          ItemsSource="{Binding DynamicCountries}"
+          SelectedItem="{Binding DynamicSelectedCountry}"
+          Mode="Filter"
+          AllowCustomValue="False"
+          Watermark="Choose a country..."
+          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="15" Margin="10 0 20 0">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0} ({1})">
+              <Binding Path="DynamicSelectedCountry.Name" />
+              <Binding Path="DynamicSelectedCountry.Code" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <Button Grid.Column="1" Grid.Row="16" 
+                Command="{Binding ToggleCountrySetCommand}"
+                Content="{Binding DynamicSetLabel, StringFormat='Switch to {0}'}"
+                Margin="10 0 20 20" />
+
+        <TextBlock Grid.Column="0" Grid.Row="17" VerticalAlignment="Top" Margin="0 5 10 0">
+          - Programmatic SelectedItem:
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="17"
+          ItemsSource="{Binding Countries}"
+          SelectedItem="{Binding ProgrammaticSelectedCountry}"
+          Mode="Filter"
+          AllowCustomValue="False"
+          Watermark="Choose a country..."
+          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="18" Margin="10 4 20 4">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0} ({1})">
+              <Binding Path="ProgrammaticSelectedCountry.Name" />
+              <Binding Path="ProgrammaticSelectedCountry.Code" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <StackPanel Grid.Column="1" Grid.Row="19" Orientation="Horizontal" Spacing="4" Margin="10 0 20 20">
+          <Button Command="{Binding SelectFirstCountryCommand}" Content="Select first" />
+          <Button Command="{Binding SelectLastCountryCommand}" Content="Select last" />
+          <Button Command="{Binding ClearCountryCommand}" Content="Clear" />
+        </StackPanel>
       </Grid>
     </Border>
   </StackPanel>

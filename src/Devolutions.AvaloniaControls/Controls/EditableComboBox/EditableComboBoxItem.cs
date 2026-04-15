@@ -31,6 +31,7 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
     {
         this.Value = toClone.Value;
         this.Classes.AddRange(toClone.Classes);
+        this.OriginalSourceItem = toClone.OriginalSourceItem;
 
         this.OnInitialized();
     }
@@ -54,10 +55,13 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
         set => this.SetValue(ValueProperty, value);
     }
 
+    internal object? OriginalSourceItem { get; set; }
+
     public EditableComboBoxItem Clone() =>
         new(this)
         {
             Value = this.Value,
+            OriginalSourceItem = this.OriginalSourceItem,
         };
 
     public override string ToString() =>

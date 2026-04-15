@@ -71,8 +71,8 @@ internal static class TabItemPositionBehavior
     private sealed class TabItemPositionState : IDisposable
     {
         private readonly TabControl tabControl;
-        private readonly CompositeDisposable compositeDisposable = new();
-        private readonly CompositeDisposable visibilitySubscriptions = new();
+        private CompositeDisposable? compositeDisposable;
+        private CompositeDisposable? visibilitySubscriptions;
         private bool disposed;
 
         public TabItemPositionState(TabControl tabControl)
@@ -118,6 +118,8 @@ internal static class TabItemPositionBehavior
             var selectedIndexSubscription = this.tabControl
                 .GetObservable(SelectingItemsControl.SelectedIndexProperty)
                 .Subscribe(_ => this.UpdateAllTabItemPositions());
+            this.compositeDisposable?.Dispose();
+            this.compositeDisposable = new CompositeDisposable();
             this.compositeDisposable.Add(selectedIndexSubscription);
 
             if (this.tabControl.Items is INotifyCollectionChanged notifyCollection)
@@ -132,7 +134,8 @@ internal static class TabItemPositionBehavior
         {
             if (this.disposed) return;
 
-            this.visibilitySubscriptions.Dispose();
+            this.visibilitySubscriptions?.Dispose();
+            this.visibilitySubscriptions = new CompositeDisposable();
 
             foreach (var item in this.tabControl.GetRealizedContainers().OfType<TabItem>())
             {
@@ -209,14 +212,16 @@ internal static class TabItemPositionBehavior
 
         private void CleanupSubscriptions()
         {
-            this.compositeDisposable.Dispose();
+            this.compositeDisposable?.Dispose();
+            this.compositeDisposable = null;
 
             if (this.tabControl.Items is INotifyCollectionChanged notifyCollection)
             {
                 notifyCollection.CollectionChanged -= this.OnItemsCollectionChanged;
             }
 
-            this.visibilitySubscriptions.Dispose();
+            this.visibilitySubscriptions?.Dispose();
+            this.visibilitySubscriptions = null;
         }
 
         public void Dispose()

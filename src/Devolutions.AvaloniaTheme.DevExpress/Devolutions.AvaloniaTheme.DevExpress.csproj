@@ -47,8 +47,8 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.3.24.2,)"/>
+        <!-- Version is centralized in Common.props (MinimumAvaloniaControlsVersion) -->
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="$(MinimumAvaloniaControlsVersion)"/>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>

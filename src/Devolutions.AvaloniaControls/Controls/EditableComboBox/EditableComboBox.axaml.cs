@@ -92,7 +92,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     public static readonly StyledProperty<EditableComboBoxMode> ModeProperty =
         AvaloniaProperty.Register<EditableComboBox, EditableComboBoxMode>(nameof(Mode));
 
-    private readonly CompositeDisposable compositeDisposable = new();
+    private CompositeDisposable? compositeDisposable;
 
     private readonly AvaloniaList<object?> filteredItems = new();
 
@@ -303,6 +303,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        this.compositeDisposable = new CompositeDisposable();
         this.Items.CollectionChanged += this.Items_CollectionChanged;
         this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
         this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
@@ -331,7 +332,8 @@ public partial class EditableComboBox : ItemsControl, IInputElement
         base.OnDetachedFromVisualTree(e);
 
         // This currently won't properly support runtime-change of the Template, but we accept this for now
-        this.compositeDisposable.Dispose();
+        this.compositeDisposable?.Dispose();
+        this.compositeDisposable = null;
         this.Items.CollectionChanged -= this.Items_CollectionChanged;
     }
 

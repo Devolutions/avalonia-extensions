@@ -17,7 +17,7 @@ public partial class EditableComboBox
     [TemplatePart("PART_TextBoxPresenter", typeof(ContentPresenter), IsRequired = true)]
     [TemplatePart("PART_Popup", typeof(Popup), IsRequired = true)]
     [TemplatePart("PART_InnerLeftContent", typeof(ItemsControl), IsRequired = true)]
-    [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl))]
+    [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl), IsRequired = false)]
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
     public class InnerComboBox : ComboBox, INavigableContainer

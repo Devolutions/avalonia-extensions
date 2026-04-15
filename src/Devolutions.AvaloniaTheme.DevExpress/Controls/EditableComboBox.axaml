@@ -275,6 +275,8 @@
             Value="{Binding MinHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="InnerLeftContent"
             Value="{Binding InnerLeftContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="InnerLeftOfDropDownArrowContent"
+            Value="{Binding InnerLeftOfDropDownArrowContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="InnerRightContent"
             Value="{Binding InnerRightContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
@@ -286,11 +288,11 @@
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto" HorizontalAlignment="Stretch">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch">
           <Border
             Name="BorderElement"
             Grid.Column="0"
-            Grid.ColumnSpan="4"
+            Grid.ColumnSpan="5"
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
             BorderThickness="{TemplateBinding BorderThickness}"
@@ -300,7 +302,7 @@
           <Border
             Name="BottomBorderElement"
             Grid.Column="0"
-            Grid.ColumnSpan="4"
+            Grid.ColumnSpan="5"
             Background="Transparent"
             Margin="1 0"
             BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
@@ -328,9 +330,9 @@
 
           <ItemsControl
             Grid.Column="2"
-            Name="PART_InnerRightContent"
+            Name="PART_InnerLeftOfDropDownArrowContent"
             Margin="4 0 0 0"
-            ItemsSource="{TemplateBinding InnerRightContent}">
+            ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />
@@ -366,6 +368,21 @@
               Foreground="{TemplateBinding Foreground}"
               Data="{StaticResource ChevronPath}" />
           </Panel>
+
+          <ItemsControl
+            Grid.Column="4"
+            Name="PART_InnerRightContent"
+            Margin="{TemplateBinding Padding,
+              Converter={x:Static DevoConverters.ThicknessExtractor},
+              ConverterParameter={x:Static ThicknessSubset.Right}
+            }"
+            ItemsSource="{TemplateBinding InnerRightContent}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
 
           <Popup
             Name="PART_Popup"

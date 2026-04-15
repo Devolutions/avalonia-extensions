@@ -17,6 +17,7 @@ public partial class EditableComboBox
     [TemplatePart("PART_TextBoxPresenter", typeof(ContentPresenter), IsRequired = true)]
     [TemplatePart("PART_Popup", typeof(Popup), IsRequired = true)]
     [TemplatePart("PART_InnerLeftContent", typeof(ItemsControl), IsRequired = true)]
+    [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl))]
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
     public class InnerComboBox : ComboBox, INavigableContainer
@@ -30,6 +31,12 @@ public partial class EditableComboBox
                 nameof(InnerLeftContent),
                 static o => o.InnerLeftContent,
                 static (o, v) => o.InnerLeftContent = v);
+
+        public static readonly DirectProperty<InnerComboBox, IEnumerable> InnerLeftOfDropDownArrowContentProperty =
+            AvaloniaProperty.RegisterDirect<InnerComboBox, IEnumerable>(
+                nameof(InnerLeftOfDropDownArrowContent),
+                static o => o.InnerLeftOfDropDownArrowContent,
+                static (o, v) => o.InnerLeftOfDropDownArrowContent = v);
 
         public static readonly DirectProperty<InnerComboBox, IEnumerable> InnerRightContentProperty =
             AvaloniaProperty.RegisterDirect<InnerComboBox, IEnumerable>(
@@ -48,6 +55,8 @@ public partial class EditableComboBox
         private ItemsControl? innerLeftContentControl;
 
         private ItemsControl? innerRightContentControl;
+
+        private ItemsControl? innerLeftOfDropDownArrowContentControl;
 
         private ContentPresenter? textboxContentPresenter;
 
@@ -68,6 +77,8 @@ public partial class EditableComboBox
         }
 
         public IEnumerable InnerLeftContent { get; set; } = new AvaloniaList<Control>();
+
+        public IEnumerable InnerLeftOfDropDownArrowContent { get; set; } = new AvaloniaList<Control>();
 
         public IEnumerable InnerRightContent { get; set; } = new AvaloniaList<Control>();
 
@@ -129,6 +140,7 @@ public partial class EditableComboBox
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             this.innerLeftContentControl = e.NameScope.Get<ItemsControl>("PART_InnerLeftContent");
+            this.innerLeftOfDropDownArrowContentControl = e.NameScope.Find<ItemsControl>("PART_InnerLeftOfDropDownArrowContent");
             this.innerRightContentControl = e.NameScope.Get<ItemsControl>("PART_InnerRightContent");
 
             this.textboxContentPresenter = e.NameScope.Get<ContentPresenter>("PART_TextBoxPresenter");
@@ -254,6 +266,21 @@ public partial class EditableComboBox
                 }
             }
 
+            if (this.innerLeftOfDropDownArrowContentControl != null)
+            {
+                foreach (object? item in this.innerLeftOfDropDownArrowContentControl.Items)
+                {
+                    if (!foundCurrent)
+                    {
+                        foundCurrent = Equals(from, item);
+                        continue;
+                    }
+
+                    Control? itemControl = item != null ? this.innerLeftOfDropDownArrowContentControl.ContainerFromItem(item) : null;
+                    if (itemControl?.Focusable == true && itemControl.IsEnabled) return itemControl;
+                }
+            }
+
             if (this.innerRightContentControl != null)
             {
                 foreach (object? item in this.innerRightContentControl.Items)
@@ -289,6 +316,21 @@ public partial class EditableComboBox
                     }
 
                     Control? itemControl = item != null ? this.innerRightContentControl.ContainerFromItem(item) : null;
+                    if (itemControl?.Focusable == true && itemControl.IsEnabled) return itemControl;
+                }
+            }
+
+            if (this.innerLeftOfDropDownArrowContentControl != null)
+            {
+                foreach (object? item in this.innerLeftOfDropDownArrowContentControl.Items.Reverse())
+                {
+                    if (!foundCurrent)
+                    {
+                        foundCurrent = Equals(from, item);
+                        continue;
+                    }
+
+                    Control? itemControl = item != null ? this.innerLeftOfDropDownArrowContentControl.ContainerFromItem(item) : null;
                     if (itemControl?.Focusable == true && itemControl.IsEnabled) return itemControl;
                 }
             }

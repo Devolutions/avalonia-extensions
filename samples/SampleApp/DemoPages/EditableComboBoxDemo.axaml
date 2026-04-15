@@ -147,7 +147,7 @@
         </EditableComboBox>
 
         <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Inner left and right content
+          - Inner left, right, and<LineBreak />left-of-dropdown-arrow content
         </TextBlock>
         <EditableComboBox
           Grid.Column="1" Grid.Row="9"
@@ -159,8 +159,11 @@
           <EditableComboBox.InnerLeftContent>
             <Border Width="12" Height="12" Background="Green" />
           </EditableComboBox.InnerLeftContent>
+          <EditableComboBox.InnerLeftOfDropDownArrowContent>
+            <Border Width="12" Height="12" Background="Orange" />
+          </EditableComboBox.InnerLeftOfDropDownArrowContent>
           <EditableComboBox.InnerRightContent>
-            <Border Width="12" Height="12" Background="Blue" />
+            <Border Width="12" Height="12" Background="Red" />
           </EditableComboBox.InnerRightContent>
         </EditableComboBox>
 

@@ -159,6 +159,8 @@
             Value="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="InnerLeftContent"
             Value="{Binding InnerLeftContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
+    <Setter Property="InnerLeftOfDropDownArrowContent"
+            Value="{Binding InnerLeftOfDropDownArrowContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="InnerRightContent"
             Value="{Binding InnerRightContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
@@ -200,7 +202,7 @@
                 MinHeight="{TemplateBinding MinHeight}"
                 ZIndex="1" />
 
-              <Grid ColumnDefinitions="Auto,*,Auto,18" HorizontalAlignment="Stretch" ClipToBounds="False">
+              <Grid ColumnDefinitions="Auto,*,Auto,18,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
                 <ItemsControl
                   Grid.Column="0"
                   Name="PART_InnerLeftContent"
@@ -218,8 +220,8 @@
 
                 <ItemsControl
                   Grid.Column="2"
-                  Name="PART_InnerRightContent"
-                  ItemsSource="{TemplateBinding InnerRightContent}">
+                  Name="PART_InnerLeftOfDropDownArrowContent"
+                  ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <StackPanel Orientation="Horizontal" Margin="2" Spacing="2" />
@@ -253,6 +255,17 @@
                     </PathIcon.RenderTransform>
                   </PathIcon>
                 </Border>
+
+                <ItemsControl
+                  Grid.Column="4"
+                  Name="PART_InnerRightContent"
+                  ItemsSource="{TemplateBinding InnerRightContent}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Margin="2 2 4 2" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
 
                 <Popup
                   Name="PART_Popup"

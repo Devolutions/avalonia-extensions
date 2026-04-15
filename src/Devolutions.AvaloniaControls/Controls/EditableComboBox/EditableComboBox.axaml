@@ -256,10 +256,10 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="PART_Root">
-          <Grid ColumnDefinitions="Auto,*,Auto,32" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,32,Auto" HorizontalAlignment="Stretch">
             <Border x:Name="Background"
                     Grid.Column="0"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="5"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
@@ -267,7 +267,7 @@
                     MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
             <Border x:Name="HighlightBackground"
                     Grid.Column="0"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="5"
                     Background="Transparent"
                     BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushFocused}"
                     CornerRadius="{TemplateBinding CornerRadius}"
@@ -290,13 +290,13 @@
 
             <ItemsControl
               Grid.Column="2"
-              Name="PART_InnerRightContent"
+              Name="PART_InnerLeftOfDropDownArrowContent"
               Margin="8 0 0 0"
-              ItemsSource="{TemplateBinding InnerRightContent}"
-              IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+              ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}"
+              IsVisible="{TemplateBinding InnerLeftOfDropDownArrowContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal"
+                  <StackPanel Name="PART_InnerLeftOfDropDownArrowContentPanel" Orientation="Horizontal"
                               Margin="0 2 3 2" />
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
@@ -323,6 +323,20 @@
               VerticalAlignment="Center"
               Foreground="{TemplateBinding Foreground}"
               Data="{StaticResource DropDownGlyphPath}" />
+
+            <ItemsControl
+              Grid.Column="4"
+              Name="PART_InnerRightContent"
+              Margin="0 0 8 0"
+              ItemsSource="{TemplateBinding InnerRightContent}"
+              IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Name="PART_InnerRightContentPanel" Orientation="Horizontal"
+                              Margin="0 2 2 2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
             <!-- ReSharper disable once Xaml.MissingGridIndex -->
             <Popup

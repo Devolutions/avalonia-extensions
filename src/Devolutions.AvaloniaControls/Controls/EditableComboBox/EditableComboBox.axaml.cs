@@ -77,6 +77,12 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             static o => o.InnerLeftContent,
             static (o, v) => o.InnerLeftContent = v);
 
+    public static readonly DirectProperty<EditableComboBox, IEnumerable> InnerLeftOfDropDownArrowContentProperty =
+        AvaloniaProperty.RegisterDirect<EditableComboBox, IEnumerable>(
+            nameof(InnerLeftOfDropDownArrowContent),
+            static o => o.InnerLeftOfDropDownArrowContent,
+            static (o, v) => o.InnerLeftOfDropDownArrowContent = v);
+
     public static readonly DirectProperty<EditableComboBox, IEnumerable> InnerRightContentProperty =
         AvaloniaProperty.RegisterDirect<EditableComboBox, IEnumerable>(
             nameof(InnerRightContent),
@@ -148,6 +154,7 @@ public partial class EditableComboBox : ItemsControl, IInputElement
             [!MinHeightProperty] = this[!MinHeightProperty],
             [!IsEnabledProperty] = this[!IsEnabledProperty],
             [!InnerComboBox.InnerLeftContentProperty] = this[!InnerLeftContentProperty],
+            [!InnerComboBox.InnerLeftOfDropDownArrowContentProperty] = this[!InnerLeftOfDropDownArrowContentProperty],
             [!InnerComboBox.InnerRightContentProperty] = this[!InnerRightContentProperty],
 
             [!!ComboBox.IsDropDownOpenProperty] = this[!!IsDropDownOpenProperty],
@@ -214,6 +221,8 @@ public partial class EditableComboBox : ItemsControl, IInputElement
     }
 
     public IEnumerable InnerLeftContent { get; set; } = new AvaloniaList<Control>();
+
+    public IEnumerable InnerLeftOfDropDownArrowContent { get; set; } = new AvaloniaList<Control>();
 
     public IEnumerable InnerRightContent { get; set; } = new AvaloniaList<Control>();
 

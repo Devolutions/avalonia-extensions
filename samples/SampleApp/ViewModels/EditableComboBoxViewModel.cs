@@ -14,6 +14,11 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     [ObservableProperty]
     private Country? selectedCountry;
 
+    public EditableComboBoxViewModel()
+    {
+        this.ValidateAllProperties();
+    }
+
     public IReadOnlyList<Country> Countries { get; } =
     [
         new("Canada", "CA"),
@@ -25,7 +30,7 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     ];
 
     // Dynamic ItemsSource toggle demo
-    private static readonly IReadOnlyList<Country> CountrySetA =
+    public static readonly IReadOnlyList<Country> CountrySetA =
     [
         new("Canada", "CA"),
         new("France", "FR"),      // common
@@ -33,7 +38,7 @@ public partial class EditableComboBoxViewModel : ObservableValidator
         new("United States", "US"),
     ];
 
-    private static readonly IReadOnlyList<Country> CountrySetB =
+    public static readonly IReadOnlyList<Country> CountrySetB =
     [
         new("Australia", "AU"),
         new("France", "FR"),      // common
@@ -58,10 +63,18 @@ public partial class EditableComboBoxViewModel : ObservableValidator
         this.DynamicSetLabel = isSetA ? "Set B" : "Set A";
     }
 
-    public EditableComboBoxViewModel()
-    {
-        this.ValidateAllProperties();
-    }
+    // Programmatic SelectedItem demo
+    [ObservableProperty]
+    private Country? programmaticSelectedCountry;
+
+    [RelayCommand]
+    private void SelectFirstCountry() => this.ProgrammaticSelectedCountry = this.Countries[0];
+
+    [RelayCommand]
+    private void SelectLastCountry() => this.ProgrammaticSelectedCountry = this.Countries[^1];
+
+    [RelayCommand]
+    private void ClearCountry() => this.ProgrammaticSelectedCountry = null;
 }
 
 public record Country(string Name, string Code)

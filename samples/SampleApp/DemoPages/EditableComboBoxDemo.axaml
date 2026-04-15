@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -258,6 +258,31 @@
           <Button Command="{Binding SelectLastCountryCommand}" Content="Select last" />
           <Button Command="{Binding ClearCountryCommand}" Content="Clear" />
         </StackPanel>
+        
+        <TextBlock Grid.Column="0" Grid.Row="20" VerticalAlignment="Top" Margin="0 5 10 15">
+          - ItemTemplate:
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="20"
+                          ItemsSource="{Binding Countries}"
+                          SelectedItem="{Binding SelectedCountry}"
+                          Mode="Filter"
+                          AllowCustomValue="False"
+                          Watermark="Choose a country..." 
+                          Margin="10 0 20 0">
+          <EditableComboBox.ItemTemplate>
+            <DataTemplate>
+              <DockPanel>
+                <Border DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18" Padding="2">
+                  <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Code}" Foreground="White" FontWeight="Bold" FontSize="8" />
+                </Border>
+                <EditableComboBoxHighlightTextBlock
+                  Content="{Binding Name}"
+                  VerticalAlignment="Center"
+                  Margin="6 0 0 0" />
+              </DockPanel>
+            </DataTemplate>
+          </EditableComboBox.ItemTemplate>
+        </EditableComboBox>
       </Grid>
     </Border>
   </StackPanel>

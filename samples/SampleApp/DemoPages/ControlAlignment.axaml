@@ -13,7 +13,7 @@
             ColumnSpacing="10"
             Margin="10 0">
         <TextBlock Grid.Column="0">TextBlock</TextBlock>
-        <TextBox Grid.Column="1" Watermark="TextBox" />
+        <TextBox Grid.Column="1" PlaceholderText="TextBox" />
         <TextBox Grid.Column="2"
                  Height="22" MinHeight="22" MaxHeight="22"
                  IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
@@ -36,19 +36,19 @@
           <EditableComboBoxItem Value="EditableComboBox" />
           <EditableComboBoxItem Value="Option 3" />
         </EditableComboBox>
-        <MultiComboBox Grid.Column="6" Watermark="MultiSelect...">
+        <MultiComboBox Grid.Column="6" PlaceholderText="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem>Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+        <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
         <ColorPicker Grid.Column="8" />
-        <AutoCompleteBox Grid.Column="9" x:Name="Animals" FilterMode="Contains" Watermark="AutoComplete" />
+        <AutoCompleteBox Grid.Column="9" x:Name="Animals" FilterMode="Contains" PlaceholderText="AutoComplete" />
         <NumericUpDown Grid.Column="10" Value="0"
                        Increment="1"
-                       Watermark="mm" />
+                       PlaceholderText="mm" />
         <CalendarDatePicker Grid.Column="11" />
         <Button Grid.Column="12" Content="Button" />
         <CheckBox Grid.Column="13" Content="Checkbox" IsChecked="True" />
@@ -63,7 +63,7 @@
             HorizontalAlignment="Left"
             Margin="10 5">
         <TextBlock Grid.Row="2">TextBlock</TextBlock>
-        <TextBox Grid.Row="3" Watermark="TextBox" />
+        <TextBox Grid.Row="3" PlaceholderText="TextBox" />
         <ComboBox Grid.Row="4" SelectedIndex="2">
           <ComboBoxItem>Option 1</ComboBoxItem>
           <ComboBoxItem>Option 2</ComboBoxItem>
@@ -81,19 +81,19 @@
           <EditableComboBoxItem Value="EditableComboBox" />
           <EditableComboBoxItem Value="Option 3" />
         </EditableComboBox>
-        <MultiComboBox Grid.Row="7" Watermark="MultiSelect...">
+        <MultiComboBox Grid.Row="7" PlaceholderText="MultiSelect...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem>Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Row="8" Watermark="TagInput" />
+        <TagInput Grid.Row="8" PlaceholderText="TagInput" />
         <ColorPicker Grid.Row="9" />
-        <AutoCompleteBox Grid.Row="10" x:Name="Animals2" FilterMode="Contains" Watermark="AutoComplete" />
+        <AutoCompleteBox Grid.Row="10" x:Name="Animals2" FilterMode="Contains" PlaceholderText="AutoComplete" />
         <NumericUpDown Grid.Row="11" Value="0"
                        Increment="1"
-                       Watermark="mm" />
+                       PlaceholderText="mm" />
         <CalendarDatePicker Grid.Row="12" />
         <Button Grid.Row="13" Content="Button" />
         <CheckBox Grid.Row="14" Content="Checkbox" IsChecked="True" />
@@ -104,7 +104,7 @@
       <StackPanel Orientation="Vertical" Spacing="20" VerticalAlignment="Top">
         <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
           <TextBlock>TextBlock</TextBlock>
-          <TextBox Watermark="TextBox" />
+          <TextBox PlaceholderText="TextBox" />
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
                    IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
@@ -126,19 +126,19 @@
             <EditableComboBoxItem Value="EditableComboBox" />
             <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
-          <MultiComboBox Watermark="MultiSelect...">
+          <MultiComboBox PlaceholderText="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
             <MultiComboBoxItem>Item 2</MultiComboBoxItem>
             <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput x:Name="HorizontalStackPanelTagInput" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <TagInput x:Name="HorizontalStackPanelTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
           <ColorPicker />
-          <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" Watermark="AutoComplete" />
+          <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
-                         Watermark="mm" />
+                         PlaceholderText="mm" />
           <CalendarDatePicker />
           <Button Content="Button" />
           <CheckBox Content="Checkbox" IsChecked="True" />
@@ -152,7 +152,7 @@
 
         <StackPanel Orientation="Horizontal" Margin="10 0" Spacing="10" VerticalAlignment="Top">
           <TextBlock Height="33">TextBlock</TextBlock>
-          <TextBox Height="33" Watermark="TextBox" />
+          <TextBox Height="33" PlaceholderText="TextBox" />
           <TextBox Height="22" MinHeight="22" MaxHeight="22"
                    IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             thin
@@ -174,19 +174,19 @@
             <EditableComboBoxItem Value="EditableComboBox" />
             <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
-          <MultiComboBox Height="33" Watermark="MultiSelect...">
+          <MultiComboBox Height="33" PlaceholderText="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
             <MultiComboBoxItem>Item 2</MultiComboBoxItem>
             <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" Watermark="TagInput" Width="150" VerticalAlignment="Center" />
+          <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
           <ColorPicker Height="33" />
-          <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" Watermark="AutoComplete" />
+          <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Height="33" Value="0"
                          Increment="1"
-                         Watermark="mm" />
+                         PlaceholderText="mm" />
           <CalendarDatePicker Height="33" />
           <Button Height="33" Content="Button" />
           <CheckBox Height="33" Content="Checkbox" IsChecked="True" />
@@ -196,7 +196,7 @@
         </StackPanel>
         <StackPanel Orientation="Vertical" Width="150" Margin="10 5" Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Left">
           <TextBlock>TextBlock</TextBlock>
-          <TextBox Watermark="TextBox" />
+          <TextBox PlaceholderText="TextBox" />
           <ComboBox SelectedIndex="2">
             <ComboBoxItem>Option 1</ComboBoxItem>
             <ComboBoxItem>Option 2</ComboBoxItem>
@@ -214,20 +214,20 @@
             <EditableComboBoxItem Value="EditableComboBox" />
             <EditableComboBoxItem Value="Option 3" />
           </EditableComboBox>
-          <MultiComboBox Watermark="MultiSelect...">
+          <MultiComboBox PlaceholderText="MultiSelect...">
             <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
             <MultiComboBoxItem>Item 2</MultiComboBoxItem>
             <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput Watermark="TagInput" />
+          <TagInput PlaceholderText="TagInput" />
           <ColorPicker HorizontalAlignment="Stretch" Width="NaN" />
           <ColorPicker />
-          <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" Watermark="AutoComplete" />
+          <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
-                         Watermark="mm" />
+                         PlaceholderText="mm" />
           <CalendarDatePicker />
           <TextBox Classes="revealPasswordButton" />
           <Button Content="Button" />

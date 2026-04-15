@@ -27,12 +27,12 @@
       <TabItem Header="Tab 1">
         <StackPanel Orientation="Horizontal" Spacing="20">
           <StackPanel>
-            <TextBox Watermark="Name" />
-            <TextBox Watermark="YourDomain"
+            <TextBox PlaceholderText="Name" />
+            <TextBox PlaceholderText="YourDomain"
                      InnerLeftContent="http://"
                      InnerRightContent=".com" />
             <TextBox Classes="clearButton">With 'Clear' button</TextBox>
-            <TextBox Watermark="Disabled" IsEnabled="False" />
+            <TextBox PlaceholderText="Disabled" IsEnabled="False" />
             <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
             <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
           </StackPanel>

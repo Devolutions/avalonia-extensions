@@ -15,7 +15,7 @@
   <Border Margin="10" Padding="10">
     <StackPanel Orientation="Horizontal" Spacing="30">
       <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
-        <MultiComboBox Watermark="select..." ShowFilter="True">
+        <MultiComboBox PlaceholderText="select..." ShowFilter="True">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
@@ -32,7 +32,7 @@
         <TextBlock Margin="10 0 0 0">
           <Italic> - Left/Right arrows when focused to scroll</Italic>
         </TextBlock>
-        <MultiComboBox Watermark="select...">
+        <MultiComboBox PlaceholderText="select...">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
@@ -43,7 +43,7 @@
         <Separator Margin="-10 10" />
 
         <TextBlock>OverflowMode = Wrap</TextBlock>
-        <MultiComboBox Watermark="select..." OverflowMode="Wrap" SelectAllText="Select All">
+        <MultiComboBox PlaceholderText="select..." OverflowMode="Wrap" SelectAllText="Select All">
           <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
           <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
@@ -68,7 +68,7 @@
         <TextBlock>"Select All" feature</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="With select all"
+          PlaceholderText="With select all"
           SelectAllText="Select All"
           ItemsSource="{Binding Items}"
           SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
@@ -78,7 +78,7 @@
         <TextBlock>LOT of values</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="LOT of values"
+          PlaceholderText="LOT of values"
           SelectAllText="Select All"
           AllSelectedText="All"
           FilterText="Find an option..."
@@ -89,7 +89,7 @@
         <TextBlock>Disabled</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="disabled"
+          PlaceholderText="disabled"
           IsEnabled="False"
           ItemsSource="{Binding Items}"
           SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
@@ -99,7 +99,7 @@
         <TextBlock>Custom Item Template</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="Custom Item Template"
+          PlaceholderText="Custom Item Template"
           ItemsSource="{Binding Items}"
           SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
           <MultiComboBox.ItemTemplate>
@@ -125,7 +125,7 @@
         <TextBlock>Enum Values</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="Enum Values"
+          PlaceholderText="Enum Values"
           ItemsSource="{Binding EnumValues}"
           SelectedItems="{Binding SelectedEnumValues, Mode=TwoWay}" />
         <StackPanel Orientation="Horizontal">
@@ -138,7 +138,7 @@
         <TextBlock>Left and Right Inner Content</TextBlock>
         <MultiComboBox
           HorizontalAlignment="Left"
-          Watermark="Inner Content">
+          PlaceholderText="Inner Content">
           <MultiComboBox.InnerLeftContent>
             <Border Width="12" Height="12" Background="Green" />
           </MultiComboBox.InnerLeftContent>
@@ -152,7 +152,7 @@
           HorizontalAlignment="Left"
           SelectedItems="{Binding RequiredValues}"
           ItemsSource="{Binding Items}"
-          Watermark="Required" />
+          PlaceholderText="Required" />
       </StackPanel>
     </StackPanel>
   </Border>

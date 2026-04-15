@@ -8,16 +8,16 @@
     <design:ThemePreviewer>
       <StackPanel Height="400" Width="400" Margin="20" Spacing="15">
         <TextBlock>Basic TagInput:</TextBlock>
-        <TagInput Watermark="Enter tags..." />
+        <TagInput PlaceholderText="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+        <TagInput x:Name="PrePopulated" PlaceholderText="Add more tags..." />
 
         <TextBlock>Disabled:</TextBlock>
-        <TagInput IsEnabled="False" Watermark="Disabled..." />
+        <TagInput IsEnabled="False" PlaceholderText="Disabled..." />
 
         <TextBlock>Wrapper type:</TextBlock>
-        <TagInput Watermark="Using wrapper..." />
+        <TagInput PlaceholderText="Using wrapper..." />
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -64,7 +64,7 @@
                   <!-- Watermark -->
                   <TextBlock
                     Name="{x:Static u:TagInput.PART_Placeholder}"
-                    Text="{TemplateBinding Watermark}"
+                    Text="{TemplateBinding PlaceholderText}"
                     Foreground="{DynamicResource ForegroundLowBrush}"
                     FontSize="{StaticResource ControlFontSize}"
                     IsVisible="False"

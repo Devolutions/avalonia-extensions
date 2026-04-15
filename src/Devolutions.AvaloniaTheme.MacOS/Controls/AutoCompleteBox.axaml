@@ -28,7 +28,7 @@
         <Panel Name="PART_LayoutRoot">
           <TextBox Name="PART_TextBox"
                    Height="{TemplateBinding Height}"
-                   Watermark="{TemplateBinding Watermark}"
+                   PlaceholderText="{TemplateBinding PlaceholderText}"
                    Width="{TemplateBinding Width}"
                    Foreground="{TemplateBinding Foreground}"
                    Background="{TemplateBinding Background}"

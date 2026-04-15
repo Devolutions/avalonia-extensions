@@ -6,7 +6,7 @@
   <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <NumericUpDown Increment="1" Watermark="Days">
+      <NumericUpDown Increment="1" PlaceholderText="Days">
         <NumericUpDown.Styles>
           <Style Selector="TextBox">
             <Setter Property="CaretBrush" Value="Transparent" />
@@ -27,7 +27,7 @@
                        VerticalAlignment="Center"
                        Margin="5 5 0 5"
                        Increment="1"
-                       Watermark="Days" />
+                       PlaceholderText="Days" />
         <NumericUpDown Grid.Row="1" Grid.Column="1"
                        VerticalAlignment="Center"
                        Margin="5 5 0 5"

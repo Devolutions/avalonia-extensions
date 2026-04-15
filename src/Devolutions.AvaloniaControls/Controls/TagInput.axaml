@@ -7,8 +7,8 @@
 
   <Design.PreviewWith>
     <StackPanel Height="300" Width="400" Margin="20">
-      <u:TagInput Watermark="Enter tags..." />
-      <TagInput Watermark="Wrapper test..." />
+      <u:TagInput PlaceholderText="Enter tags..." />
+      <TagInput PlaceholderText="Wrapper test..." />
     </StackPanel>
   </Design.PreviewWith>
 
@@ -46,7 +46,7 @@
               Opacity="0.5"
               IsVisible="False"
               VerticalAlignment="Center"
-              Text="{TemplateBinding Watermark}" />
+              Text="{TemplateBinding PlaceholderText}" />
             <ItemsControl
               Name="PART_ItemsControl"
               HorizontalAlignment="Stretch"

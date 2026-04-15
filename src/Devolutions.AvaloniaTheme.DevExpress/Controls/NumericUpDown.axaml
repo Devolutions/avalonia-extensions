@@ -10,14 +10,14 @@
         <NumericUpDown Minimum="0"
                        Maximum="10"
                        Increment="0.5"
-                       Watermark="Days" />
+                       PlaceholderText="Days" />
         <NumericUpDown Minimum="0"
                        Maximum="10"
                        Increment="0.5"
                        VerticalContentAlignment="Center"
                        HorizontalContentAlignment="Center"
                        ButtonSpinnerLocation="Left"
-                       Watermark="Mins" />
+                       PlaceholderText="Mins" />
         <NumericUpDown ButtonSpinnerLocation="Left">
           <NumericUpDown.InnerLeftContent>
             <TextBlock Text="m"
@@ -80,7 +80,7 @@
                            ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
               <TextBox Name="PART_TextBox"
                        Classes="borderless no-focus-border"
-                       Watermark="{TemplateBinding Watermark}"
+                       PlaceholderText="{TemplateBinding PlaceholderText}"
                        IsReadOnly="{TemplateBinding IsReadOnly}"
                        Text="{TemplateBinding Text}"
                        TextAlignment="{TemplateBinding TextAlignment}"

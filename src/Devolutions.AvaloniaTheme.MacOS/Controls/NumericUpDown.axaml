@@ -10,12 +10,12 @@
                        Maximum="10"
                        Increment="0.5"
                        Value="10"
-                       Watermark="Enter text" />
-        <TextBox Watermark="Enter Text" />
+                       PlaceholderText="Enter text" />
+        <TextBox PlaceholderText="Enter Text" />
         <NumericUpDown Minimum="0"
                        Maximum="10"
                        Increment="0.5"
-                       Watermark="Enter text" />
+                       PlaceholderText="Enter text" />
         <NumericUpDown Minimum="0"
                        Maximum="10"
                        Value="5"
@@ -32,7 +32,7 @@
                        VerticalContentAlignment="Center"
                        HorizontalContentAlignment="Center"
                        ButtonSpinnerLocation="Left"
-                       Watermark="Enter text" />
+                       PlaceholderText="Enter text" />
         <NumericUpDown ButtonSpinnerLocation="Right">
           <NumericUpDown.InnerLeftContent>
             <Button Content="X" />
@@ -80,7 +80,7 @@
             <TextBox Name="PART_TextBox"
                      Height="{TemplateBinding Height}"
                      ClipToBounds="False"
-                     Watermark="{TemplateBinding Watermark}"
+                     PlaceholderText="{TemplateBinding PlaceholderText}"
                      IsReadOnly="{TemplateBinding IsReadOnly}"
                      IsEnabled="{TemplateBinding IsEnabled}"
                      VerticalAlignment="Center"

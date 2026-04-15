@@ -14,7 +14,7 @@
         <CalendarDatePicker SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
         <CalendarDatePicker SelectedDateFormat="Long" SelectedDate="{Binding Source={x:Static sys:DateTime.Today}}" />
         <TextBox Classes="revealPasswordButton" PasswordChar="*" Text="tests" />
-        <TextBox Watermark="&lt;yyyy-MM-dd&gt;" />
+        <TextBox PlaceholderText="&lt;yyyy-MM-dd&gt;" />
         <CalendarDatePicker IsEnabled="False" />
         <TextBlock Text="HorizontalAlignment: Left" Classes="section-title" />
         <CalendarDatePicker HorizontalAlignment="Left" />
@@ -61,8 +61,8 @@
             <Panel ClipToBounds="False">
               <TextBox Name="PART_TextBox"
                        Height="{TemplateBinding Height}"
-                       Watermark="{TemplateBinding Watermark}"
-                       UseFloatingWatermark="{TemplateBinding UseFloatingWatermark}"
+                       PlaceholderText="{TemplateBinding PlaceholderText}"
+                       UseFloatingPlaceholder="{TemplateBinding UseFloatingPlaceholder}"
                        Width="{TemplateBinding Width}"
                        Foreground="{TemplateBinding Foreground}"
                        Background="{TemplateBinding Background}"

@@ -14,8 +14,8 @@
         
         <MinimumXamlBehaviorsVersion>[12.0.0-rc1,)</MinimumXamlBehaviorsVersion>
         
-        <AvaloniaTreeDataGridVersion>12.0.0-beta2</AvaloniaTreeDataGridVersion>
-        <MinimumAvaloniaTreeDataGridVersion>[12.0.0-beta2,)</MinimumAvaloniaTreeDataGridVersion>
+        <AvaloniaTreeDataGridVersion>12.0.0-beta3</AvaloniaTreeDataGridVersion>
+        <MinimumAvaloniaTreeDataGridVersion>[12.0.0-beta3,)</MinimumAvaloniaTreeDataGridVersion>
         
         <SvgVersion>12.0.0-rc1</SvgVersion>
         <MinimumSvgVersion>[12.0.0-rc1,)</MinimumSvgVersion>
@@ -23,5 +23,8 @@
         <MinimumUrsaVersion>[2.0.0-preview3,)</MinimumUrsaVersion>
         
         <MinimumItemsRepeaterVersion>12.0.0-rc2</MinimumItemsRepeaterVersion>
+
+        <!-- UPDATE after publishing AvaloniaControls prerelease (before building theme packages) -->
+        <MinimumAvaloniaControlsVersion>[2026.3.24.2,)</MinimumAvaloniaControlsVersion>
     </PropertyGroup>
 </Project>

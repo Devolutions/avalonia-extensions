@@ -23,6 +23,10 @@ on:
         description: 'release version'
         default: "latest"
         required: true
+      prerelease-suffix:
+        description: 'Prerelease suffix (e.g., avalonia12.1). Leave empty for stable release.'
+        default: ""
+        required: false
       publish-mode:
         description: 'Publishing Mode'
         type: choice
@@ -59,15 +63,20 @@ jobs:
           $SkipPublish = ($PublishMode -eq 'Skip Publishing')
           $DryRun = ($PublishMode -eq 'Dry Run (Master only)')
 
-          $PackageEnv = if ($IsMasterBranch -And -Not $SkipPublish -And -Not $IsScheduledJob) {
+          $IsPrerelease = -Not [string]::IsNullOrEmpty('${{ inputs.prerelease-suffix }}')
+
+          $PackageEnv = if ((-Not $SkipPublish) -And (-Not $IsScheduledJob) -And ($IsMasterBranch -Or $IsPrerelease)) {
             "publish-prod"
           } else {
             "publish-test"
           }
-            
-          if ($IsScheduledJob -Or (-Not $IsMasterBranch)) {
-            $SkipPublish = $true # force skipping publish (jobs running in 'publish-test' cannot test the publishing step)
+
+          if ($IsScheduledJob) {
+            $SkipPublish = $true # force skipping publish for scheduled jobs
             $DryRun = $false # just to avoid confusing 'Notice' messages
+          } elseif (-Not $IsMasterBranch -And -Not $IsPrerelease) {
+            $SkipPublish = $true # force skipping publish (jobs running in 'publish-test' cannot test the publishing step)
+            $DryRun = $false
           }
 
           $PackageVersion = '${{ inputs.version }}'
@@ -77,6 +86,14 @@ jobs:
 
           if ($PackageVersion -NotMatch '^\d+\.\d+\.\d+\.\d+$') {
             throw "invalid version format: $PackageVersion, expected: 1.2.3.4"
+          }
+
+          $PrereleaseSuffix = '${{ inputs.prerelease-suffix }}'
+          if (-Not [string]::IsNullOrEmpty($PrereleaseSuffix)) {
+            if ($PrereleaseSuffix -NotMatch '^[a-zA-Z0-9][a-zA-Z0-9.\-]*$') {
+              throw "invalid prerelease suffix: $PrereleaseSuffix, must be alphanumeric (dots/hyphens allowed)"
+            }
+            $PackageVersion = "$PackageVersion-$PrereleaseSuffix"
           }
 
           $Packages = @()

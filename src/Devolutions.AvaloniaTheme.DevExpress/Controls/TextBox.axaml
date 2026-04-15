@@ -7,12 +7,12 @@
     <design:ThemePreviewer>
       <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
         <TextBlock>Name:</TextBlock>
-        <TextBox Watermark="Enter your name">Normal</TextBox>
-        <TextBox Watermark="Enter your name">Administrator</TextBox>
+        <TextBox PlaceholderText="Enter your name">Normal</TextBox>
+        <TextBox PlaceholderText="Enter your name">Administrator</TextBox>
         <TextBlock>Password:</TextBlock>
-        <TextBox PasswordChar="*" Watermark="Enter your password" />
+        <TextBox PasswordChar="*" PlaceholderText="Enter your password" />
         <TextBlock>Notes:</TextBlock>
-        <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Hello" VerticalContentAlignment="Top" />
+        <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="Hello" VerticalContentAlignment="Top" />
         <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap">
           Note: explicitly styling TextBlock causes massive problems, because there are so many dynamically created TextBlocks in controls' ContentPresenters (i.e. they only get created if the content provided is a simple string, and therefore they are not a part of the logical tree and do not receive the local template styling anymore if there is a general TextBlock rule, and cannot easily overwritten then - except with hard-coded styles rather than template bindings ...
         </TextBox>
@@ -24,21 +24,21 @@
           devolutions
         </TextBox>
         <TextBox Classes="clearButton">With 'Clear' button</TextBox>
-        <TextBox Watermark="Enter your name" IsEnabled="False" />
-        <TextBox Watermark="Enter your name" IsEnabled="False">Disabled Filled</TextBox>
+        <TextBox PlaceholderText="Enter your name" IsEnabled="False" />
+        <TextBox PlaceholderText="Enter your name" IsEnabled="False">Disabled Filled</TextBox>
         <TextBox PasswordChar="•" Classes="revealPasswordButton">Reveal Password</TextBox>
         <TextBox PasswordChar="•" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
         <TextBlock>Custom Height:</TextBlock>
         <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
-          <TextBox Grid.Column="0" Watermark="Type here" Height="35" VerticalContentAlignment="Center" />
+          <TextBox Grid.Column="0" PlaceholderText="Type here" Height="35" VerticalContentAlignment="Center" />
           <Button Grid.Column="1" Content="..." HorizontalContentAlignment="Center" Height="35" Width="35"
                   Margin="5 0 0 0 " />
         </Grid>
         <TextBox Height="22" MinHeight="22" MaxHeight="22">thin</TextBox>
-        <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
-        <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
-        <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
-        <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
+        <TextBox PlaceholderText="Enter your name" Classes="no-focus-border">no focus</TextBox>
+        <TextBox PlaceholderText="Enter your name" Classes="borderless">borderless</TextBox>
+        <TextBox PlaceholderText="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+        <TextBox PlaceholderText="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
@@ -195,7 +195,7 @@
                              Margin="0 -1 0 0"
                              LineHeight="{TemplateBinding LineHeight}"
                              FontSize="{DynamicResource ControlFontSize}"
-                             Text="{TemplateBinding Watermark}"
+                             Text="{TemplateBinding PlaceholderText}"
                              TextAlignment="{TemplateBinding TextAlignment}"
                              TextWrapping="{TemplateBinding TextWrapping}"
                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

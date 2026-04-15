@@ -104,8 +104,8 @@ public partial class MultiComboBox : SelectingItemsControl
         AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(
             nameof(SelectedItemTemplate));
 
-    public static readonly StyledProperty<string?> WatermarkProperty =
-        TextBox.WatermarkProperty.AddOwner<MultiComboBox>();
+    public static readonly StyledProperty<string?> PlaceholderTextProperty =
+        TextBox.PlaceholderTextProperty.AddOwner<MultiComboBox>();
 
     public static readonly StyledProperty<object?> PopupInnerTopContentProperty =
         AvaloniaProperty.Register<MultiComboBox, object?>(
@@ -296,10 +296,10 @@ public partial class MultiComboBox : SelectingItemsControl
         set => this.SetValue(SelectedItemTemplateProperty, value);
     }
 
-    public string? Watermark
+    public string? PlaceholderText
     {
-        get => this.GetValue(WatermarkProperty);
-        set => this.SetValue(WatermarkProperty, value);
+        get => this.GetValue(PlaceholderTextProperty);
+        set => this.SetValue(PlaceholderTextProperty, value);
     }
 
     public object? InnerLeftContent

@@ -45,7 +45,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type CalendarDatePicker}" TargetType="CalendarDatePicker">
-    <Setter Property="Watermark" Value="yyyy-MM-dd" />
+    <Setter Property="PlaceholderText" Value="yyyy-MM-dd" />
     <Setter Property="IsTodayHighlighted" Value="True" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
@@ -68,8 +68,8 @@
                        Also: centering the button via setting a top margin gives inconsistent results on different monitors -->
             <Panel>
               <TextBox Name="PART_TextBox"
-                       Watermark="{TemplateBinding Watermark}"
-                       UseFloatingWatermark="{TemplateBinding UseFloatingWatermark}"
+                       PlaceholderText="{TemplateBinding PlaceholderText}"
+                       UseFloatingPlaceholder="{TemplateBinding UseFloatingPlaceholder}"
                        Width="{TemplateBinding Width}"
                        Foreground="{TemplateBinding Foreground}"
                        BorderThickness="{TemplateBinding BorderThickness}"

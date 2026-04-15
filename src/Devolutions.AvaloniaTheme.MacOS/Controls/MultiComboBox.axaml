@@ -8,7 +8,7 @@
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
       <StackPanel>
-        <MultiComboBox Watermark="fill" Margin="10">
+        <MultiComboBox PlaceholderText="fill" Margin="10">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
           <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
           <MultiComboBoxItem Content="Option 3" IsEnabled="False" IsSelected="True" />
@@ -16,7 +16,7 @@
           <MultiComboBoxItem Content="Option 5" />
         </MultiComboBox>
 
-        <MultiComboBox Width="300" Watermark="fill" Margin="10">
+        <MultiComboBox Width="300" PlaceholderText="fill" Margin="10">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
           <MultiComboBoxItem Content="Option 2" IsSelected="True" />
           <MultiComboBoxItem Content="Option 3" IsSelected="True" />
@@ -24,7 +24,7 @@
           <MultiComboBoxItem Content="Option 5" IsSelected="True" />
         </MultiComboBox>
 
-        <MultiComboBox Width="300" Watermark="fill" Margin="10" OverflowMode="Wrap">
+        <MultiComboBox Width="300" PlaceholderText="fill" Margin="10" OverflowMode="Wrap">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
           <MultiComboBoxItem Content="Option 2" IsSelected="True" />
           <MultiComboBoxItem Content="Option 3" IsSelected="True" />
@@ -32,29 +32,29 @@
           <MultiComboBoxItem Content="Option 5" IsSelected="True" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="fill" Margin="10">
+        <MultiComboBox PlaceholderText="fill" Margin="10">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
           <MultiComboBoxItem Content="Option 3" />
           <MultiComboBoxItem Content="Option 4" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="fill" Margin="10" IsEnabled="False">
+        <MultiComboBox PlaceholderText="fill" Margin="10" IsEnabled="False">
           <MultiComboBoxItem Content="Option 1" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="With Select All" Margin="10" SelectAllText="Select All">
+        <MultiComboBox PlaceholderText="With Select All" Margin="10" SelectAllText="Select All">
           <MultiComboBoxItem Content="Option 1" />
           <MultiComboBoxItem Content="Option 2" />
           <MultiComboBoxItem Content="Option 3" />
           <MultiComboBoxItem Content="Option 4" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="disabled" Margin="10" IsEnabled="False">
+        <MultiComboBox PlaceholderText="disabled" Margin="10" IsEnabled="False">
           <MultiComboBoxItem Content="Option 1" IsSelected="True" />
         </MultiComboBox>
 
-        <MultiComboBox Watermark="Error" Margin="10">
+        <MultiComboBox PlaceholderText="Error" Margin="10">
           <DataValidationErrors.Error>
             <system:Exception>
               <x:Arguments>
@@ -109,7 +109,7 @@
                   MaxHeight="12"
                   FontSize="{TemplateBinding FontSize}"
                   Margin="{TemplateBinding Padding}"
-                  Text="{TemplateBinding Watermark}"
+                  Text="{TemplateBinding PlaceholderText}"
                   IsVisible="False" />
 
                 <ToggleButton
@@ -238,7 +238,7 @@
                     DockPanel.Dock="Top"
                     Classes="no-focus-border"
                     Background="Transparent"
-                    Watermark="{TemplateBinding FilterText}"
+                    PlaceholderText="{TemplateBinding FilterText}"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     KeyboardNavigation.IsTabStop="False"

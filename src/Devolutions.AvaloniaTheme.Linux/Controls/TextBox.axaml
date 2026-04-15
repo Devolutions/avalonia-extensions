@@ -25,7 +25,7 @@
           <TextBox Classes="clearButton">Clear</TextBox>
           <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
           <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
-          <TextBox Watermark="Error">
+          <TextBox PlaceholderText="Error">
             <DataValidationErrors.Error>
               <system:Exception>
                 <x:Arguments>
@@ -34,13 +34,13 @@
               </system:Exception>
             </DataValidationErrors.Error>
           </TextBox>
-          <TextBox Watermark="Watermark" />
-          <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True" />
-          <TextBox Watermark="Floating Watermark" UseFloatingWatermark="True">Content</TextBox>
-          <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
+          <TextBox PlaceholderText="Watermark" />
+          <TextBox PlaceholderText="Floating Watermark" UseFloatingPlaceholder="True" />
+          <TextBox PlaceholderText="Floating Watermark" UseFloatingPlaceholder="True">Content</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="no-focus-border">no focus</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless">borderless</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
 
         </StackPanel>
       </Border>
@@ -158,7 +158,7 @@
                   <TextBlock Name="PART_FloatingWatermark"
                              Foreground="{DynamicResource SystemAccentColor}"
                              IsVisible="False"
-                             Text="{TemplateBinding Watermark}"
+                             Text="{TemplateBinding PlaceholderText}"
                              DockPanel.Dock="Top" />
                   <ScrollViewer Name="PART_ScrollViewer"
                                 HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
@@ -169,7 +169,7 @@
                     <Panel>
                       <TextBlock Name="PART_Watermark"
                                  Opacity="0.5"
-                                 Text="{TemplateBinding Watermark}"
+                                 Text="{TemplateBinding PlaceholderText}"
                                  TextAlignment="{TemplateBinding TextAlignment}"
                                  TextWrapping="{TemplateBinding TextWrapping}"
                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -257,7 +257,7 @@
       <Setter Property="Cursor" Value="IBeam" />
     </Style>
 
-    <Style Selector="^[UseFloatingWatermark=true]:not(:empty) /template/ TextBlock#PART_FloatingWatermark">
+    <Style Selector="^[UseFloatingPlaceholder=true]:not(:empty) /template/ TextBlock#PART_FloatingWatermark">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 

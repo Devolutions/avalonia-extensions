@@ -263,8 +263,8 @@
           - ItemTemplate:
         </TextBlock>
         <EditableComboBox Grid.Column="1" Grid.Row="20"
-                          ItemsSource="{Binding Countries}"
-                          SelectedItem="{Binding SelectedCountry}"
+                          ItemsSource="{Binding Countries2}"
+                          SelectedItem="{Binding SelectedCountry2}"
                           Mode="Filter"
                           AllowCustomValue="False"
                           Watermark="Choose a country..." 

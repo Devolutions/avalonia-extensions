@@ -13,6 +13,9 @@ public partial class EditableComboBoxViewModel : ObservableValidator
 
     [ObservableProperty]
     private Country? selectedCountry;
+    
+    [ObservableProperty]
+    private Country? selectedCountry2;
 
     public EditableComboBoxViewModel()
     {
@@ -27,6 +30,16 @@ public partial class EditableComboBoxViewModel : ObservableValidator
         new("Japan", "JP"),
         new("United Kingdom", "GB"),
         new("United States", "US"),
+    ];
+
+    public IReadOnlyList<Country> Countries2 { get; } =
+    [
+        new("Canada", "CA", false),
+        new("France", "FR", false),
+        new("Germany", "DE", false),
+        new("Japan", "JP", false),
+        new("United Kingdom", "GB", false),
+        new("United States", "US", false),
     ];
 
     // Dynamic ItemsSource toggle demo
@@ -77,7 +90,7 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     private void ClearCountry() => this.ProgrammaticSelectedCountry = null;
 }
 
-public record Country(string Name, string Code)
+public record Country(string Name, string Code, bool OverrideToString = true)
 {
-    public override string ToString() => this.Name;
+    public override string? ToString() => this.OverrideToString ? this.Name : base.ToString();
 }

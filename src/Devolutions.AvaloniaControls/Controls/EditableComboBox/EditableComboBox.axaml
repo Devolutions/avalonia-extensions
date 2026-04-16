@@ -206,7 +206,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="PART_Root">
-          <Grid ColumnDefinitions="Auto,*,Auto,32,Auto" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch">
             <Border x:Name="Background"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
@@ -247,7 +247,7 @@
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Name="PART_InnerLeftOfDropDownArrowContentPanel" Orientation="Horizontal"
-                              Margin="0 2 3 2" />
+                              Margin="0 2 10 2" />
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>

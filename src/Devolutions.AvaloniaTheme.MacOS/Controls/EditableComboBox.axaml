@@ -207,11 +207,12 @@
                 MinHeight="{TemplateBinding MinHeight}"
                 ZIndex="1" />
 
-              <Grid ColumnDefinitions="Auto,*,Auto,18,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
                 <ItemsControl
                   Grid.Column="0"
                   Name="PART_InnerLeftContent"
-                  ItemsSource="{TemplateBinding InnerLeftContent}">
+                  ItemsSource="{TemplateBinding InnerLeftContent}"
+                  IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <StackPanel Orientation="Horizontal" Margin="4 2 0 2" Spacing="2" />
@@ -226,7 +227,8 @@
                 <ItemsControl
                   Grid.Column="2"
                   Name="PART_InnerLeftOfDropDownArrowContent"
-                  ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}">
+                  ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}"
+                  IsVisible="{TemplateBinding InnerLeftOfDropDownArrowContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <StackPanel Orientation="Horizontal" Margin="2" Spacing="2" />
@@ -264,10 +266,11 @@
                 <ItemsControl
                   Grid.Column="4"
                   Name="PART_InnerRightContent"
-                  ItemsSource="{TemplateBinding InnerRightContent}">
+                  ItemsSource="{TemplateBinding InnerRightContent}"
+                  IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <StackPanel Orientation="Horizontal" Margin="2 2 4 2" Spacing="2" />
+                      <StackPanel Orientation="Horizontal" Margin="0 2 4 2" Spacing="2" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                 </ItemsControl>

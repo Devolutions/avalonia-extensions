@@ -93,7 +93,15 @@
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="ContentTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock />
+        <SearchHighlightTextBlock
+          Foreground="{BindingToggler
+                        {Binding $parent[EditableComboBoxItem].IsPointerOver},
+                        {DynamicResource ControlForegroundAccentHighBrush},
+                        {DynamicResource ForegroundHighBrush}}"
+          HighlightForeground="{BindingToggler
+                                {Binding $parent[EditableComboBoxItem].IsPointerOver},
+                                {DynamicResource ControlForegroundAccentHighBrush},
+                                {DynamicResource ForegroundHighBrush}}" />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">
@@ -132,29 +140,17 @@
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
       </Style>
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
-      </Style>
     </Style>
 
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
       </Style>
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
-      </Style>
     </Style>
 
     <Style Selector="^[IsSelected=True]">
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
-      </Style>
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
       </Style>
     </Style>
 
@@ -165,9 +161,8 @@
       <Style Selector="^[IsCommittedSelected=True] /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter SearchHighlightTextBlock">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
-        <Setter Property="HighlightForeground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>
   </ControlTheme>

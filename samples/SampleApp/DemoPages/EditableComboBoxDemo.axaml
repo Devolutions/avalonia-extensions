@@ -270,7 +270,7 @@
                           Watermark="Choose a country..." 
                           Margin="10 0 20 0">
           <EditableComboBox.ItemTemplate>
-            <DataTemplate>
+            <EditableComboBoxDataTemplate x:DataType="viewModels:Country" SelectedItemValue="{Binding Name}">
               <DockPanel>
                 <Border DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18" Padding="2">
                   <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Code}" Foreground="White" FontWeight="Bold" FontSize="8" />
@@ -280,7 +280,7 @@
                   VerticalAlignment="Center"
                   Margin="6 0 0 0" />
               </DockPanel>
-            </DataTemplate>
+            </EditableComboBoxDataTemplate>
           </EditableComboBox.ItemTemplate>
           <EditableComboBox.InnerLeftContent>
             <Border IsVisible="{Binding SelectedCountry, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">

@@ -112,6 +112,11 @@
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <SearchHighlightTextBlock />
+      </DataTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background"
@@ -128,10 +133,10 @@
               Background="Transparent"
               Padding="{TemplateBinding Padding}"
               CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
-            <SearchHighlightTextBlock
-              Name="PART_Text"
-              Content="{TemplateBinding Value}"
-              Search="{TemplateBinding FilterHighlightText}"
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              Content="{TemplateBinding DataContext}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
               VerticalAlignment="Center" />
           </StackPanel>
         </Border>
@@ -174,7 +179,7 @@
     </Style>
 
     <!--  Disabled state  -->
-    <Style Selector="^:disabled /template/ SearchHighlightTextBlock#PART_Text">
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter SearchHighlightTextBlock">
       <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
     </Style>
   </ControlTheme>
@@ -318,7 +323,8 @@
               Converter={x:Static DevoConverters.ThicknessExtractor},
               ConverterParameter={x:Static ThicknessSubset.Left}
             }"
-            ItemsSource="{TemplateBinding InnerLeftContent}">
+            ItemsSource="{TemplateBinding InnerLeftContent}"
+            IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" Margin="2 2 0 2" />
@@ -332,10 +338,11 @@
             Grid.Column="2"
             Name="PART_InnerLeftOfDropDownArrowContent"
             Margin="4 0 0 0"
-            ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}">
+            ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}"
+            IsVisible="{TemplateBinding InnerLeftOfDropDownArrowContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />
+                <StackPanel Orientation="Horizontal" Margin="0 2 0 2" />
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
           </ItemsControl>
@@ -376,7 +383,8 @@
               Converter={x:Static DevoConverters.ThicknessExtractor},
               ConverterParameter={x:Static ThicknessSubset.Right}
             }"
-            ItemsSource="{TemplateBinding InnerRightContent}">
+            ItemsSource="{TemplateBinding InnerRightContent}"
+            IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0 2 2 2" />

@@ -90,6 +90,11 @@
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <SearchHighlightTextBlock />
+      </DataTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
@@ -103,10 +108,10 @@
                   Fill="Transparent"
                   FlowDirection="LeftToRight"
                   Stretch="Fill" />
-            <SearchHighlightTextBlock
-              Name="PART_Text"
-              Content="{TemplateBinding Value}"
-              Search="{TemplateBinding FilterHighlightText}"
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              Content="{TemplateBinding DataContext}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
               VerticalAlignment="Center" />
           </StackPanel>
         </Border>
@@ -132,7 +137,7 @@
       <Style Selector="^[IsSelected=True] /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter SearchHighlightTextBlock">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
         <Setter Property="HighlightForeground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
@@ -202,11 +207,12 @@
                 MinHeight="{TemplateBinding MinHeight}"
                 ZIndex="1" />
 
-              <Grid ColumnDefinitions="Auto,*,Auto,18,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch" ClipToBounds="False">
                 <ItemsControl
                   Grid.Column="0"
                   Name="PART_InnerLeftContent"
-                  ItemsSource="{TemplateBinding InnerLeftContent}">
+                  ItemsSource="{TemplateBinding InnerLeftContent}"
+                  IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <StackPanel Orientation="Horizontal" Margin="4 2 0 2" Spacing="2" />
@@ -221,7 +227,8 @@
                 <ItemsControl
                   Grid.Column="2"
                   Name="PART_InnerLeftOfDropDownArrowContent"
-                  ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}">
+                  ItemsSource="{TemplateBinding InnerLeftOfDropDownArrowContent}"
+                  IsVisible="{TemplateBinding InnerLeftOfDropDownArrowContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <StackPanel Orientation="Horizontal" Margin="2" Spacing="2" />
@@ -259,10 +266,11 @@
                 <ItemsControl
                   Grid.Column="4"
                   Name="PART_InnerRightContent"
-                  ItemsSource="{TemplateBinding InnerRightContent}">
+                  ItemsSource="{TemplateBinding InnerRightContent}"
+                  IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <StackPanel Orientation="Horizontal" Margin="2 2 4 2" Spacing="2" />
+                      <StackPanel Orientation="Horizontal" Margin="0 2 4 2" Spacing="2" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                 </ItemsControl>

@@ -4,9 +4,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using System;
+using System.Reactive.Disposables;
+using Avalonia.VisualTree;
 
 public class SearchHighlightTextBlock : ContentControl
 {
+  private CompositeDisposable? bindings;
+
   public static readonly DirectProperty<SearchHighlightTextBlock, string> LeftTextProperty =
     AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string>(nameof(LeftText), static o => o.leftText);
 
@@ -62,6 +66,35 @@ public class SearchHighlightTextBlock : ContentControl
   {
     get => this.GetValue(HighlightForegroundProperty);
     set => this.SetValue(HighlightForegroundProperty, value);
+  }
+
+  protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+  {
+    base.OnAttachedToVisualTree(e);
+        
+    this.bindings?.Dispose();
+    this.bindings = new CompositeDisposable();
+        
+    EditableComboBoxItem? item = this.FindAncestorOfType<EditableComboBoxItem>();
+    if (item != null)
+    {
+      this.bindings.Add(item
+        .GetObservable(EditableComboBoxItem.FilterHighlightTextProperty)
+        .Subscribe(text => this.Search = text));
+      if (!this.IsSet(ContentControl.ContentProperty))
+      {
+        this.bindings.Add(item
+          .GetObservable(EditableComboBoxItem.ValueProperty)
+          .Subscribe(value => this.Content = value));
+      }
+    }
+  }
+
+  protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+  {
+    base.OnDetachedFromVisualTree(e);
+    this.bindings?.Dispose();
+    this.bindings = null;
   }
 
   private void ProcessHighlight()

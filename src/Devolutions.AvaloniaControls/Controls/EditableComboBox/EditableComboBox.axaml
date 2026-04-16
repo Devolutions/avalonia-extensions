@@ -80,55 +80,22 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemThemePadding}" />
     <Setter Property="Height" Value="{DynamicResource EditableComboBoxItemsHeight}" />
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <SearchHighlightTextBlock />
+      </DataTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
-          <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Stretch">
-            <SearchHighlightTextBlock
-              Name="PART_Text"
-              Content="{TemplateBinding Value}"
-              Search="{TemplateBinding FilterHighlightText}"
-              VerticalAlignment="Center" />
-            <TextBlock
-              Name="PART_SearchHighlightText"
-              Text="{TemplateBinding Value}"
-              Foreground="{DynamicResource SearchHighlightForeground}"
-              Background="{DynamicResource SearchHighlightBackground}"
-              VerticalAlignment="Center" />
-            <TextBlock
-              Name="PART_SecondarySearchHighlightText"
-              Text="{TemplateBinding Value}"
-              Foreground="{DynamicResource SecondarySearchHighlightForeground}"
-              Background="{DynamicResource SecondarySearchHighlightBackground}"
-              VerticalAlignment="Center" />
-          </StackPanel>
+          <ContentPresenter
+            Name="PART_ContentPresenter"
+            Content="{TemplateBinding DataContext}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
+            VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
     </Setter>
-
-    <!-- Search highlight -->
-    <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-      <Setter Property="IsVisible" Value="True" />
-    </Style>
-    <Style Selector="^ /template/ TextBlock#PART_SearchHighlightText, ^ /template/ TextBlock#PART_SecondarySearchHighlightText">
-      <Setter Property="IsVisible" Value="False" />
-    </Style>
-    <Style Selector="^.search-highlight">
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-        <Setter Property="IsVisible" Value="False" />
-      </Style>
-      <Style Selector="^ /template/ TextBlock#PART_SearchHighlightText">
-        <Setter Property="IsVisible" Value="True" />
-      </Style>
-    </Style>
-    <Style Selector="^.secondary-search-highlight">
-      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
-        <Setter Property="IsVisible" Value="False" />
-      </Style>
-      <Style Selector="^ /template/ TextBlock#PART_SecondarySearchHighlightText">
-        <Setter Property="IsVisible" Value="True" />
-      </Style>
-    </Style>
 
     <Style Selector="^ /template/ Border#PART_Background">
       <Setter Property="Background" Value="Transparent" />
@@ -136,31 +103,14 @@
 
     <Style Selector="^:pointerover /template/ Border#PART_Background">
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
-      <Style Selector="^ TextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundPointerOver}" />
-      </Style>
     </Style>
 
     <Style Selector="^[IsSelected=True] /template/ Border#PART_Background">
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
-      <Style Selector="^ TextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundPointerOver}" />
-      </Style>
     </Style>
 
     <Style Selector="^:disabled /template/ Border#PART_Background">
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundDisabled}" />
-      <Style Selector="^ TextBlock#PART_Text">
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
-      </Style>
-    </Style>
-
-
-    <Style Selector="^:pressed /template/ TextBlock">
-      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPressed}" />
-      <Style Selector="^ TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundPressed}" />
-      </Style>
     </Style>
   </ControlTheme>
 
@@ -256,7 +206,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel Name="PART_Root">
-          <Grid ColumnDefinitions="Auto,*,Auto,32,Auto" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch">
             <Border x:Name="Background"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
@@ -297,7 +247,7 @@
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Name="PART_InnerLeftOfDropDownArrowContentPanel" Orientation="Horizontal"
-                              Margin="0 2 3 2" />
+                              Margin="0 2 10 2" />
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>

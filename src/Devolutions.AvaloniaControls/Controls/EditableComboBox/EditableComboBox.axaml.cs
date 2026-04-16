@@ -344,6 +344,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.Items.CollectionChanged += this.Items_CollectionChanged;
         this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
         this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
+        this.compositeDisposable.Add(this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.FillItems()));
         this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
 
         // Design-time support: Check if DataValidationErrors.Error is set in the previewer
@@ -561,6 +562,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         if (!this.IsInitialized) return;
 
+        BindingEvaluator? evaluator = this.ItemTemplate is EditableComboBoxDataTemplate { SelectedItemValue: { } binding }
+            ? new BindingEvaluator(binding)
+            : null;
+
         this.realizedItems = new Dictionary<object, EditableComboBoxItem>(this.ItemsView.Count);
         for (int i = 0; i < this.ItemsView.Count; ++i)
         {
@@ -569,9 +574,14 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             EditableComboBoxItem realized = item as EditableComboBoxItem
                                            ?? new EditableComboBoxItem
                                            {
-                                               Value = item?.ToString() ?? string.Empty,
+                                               Value = this.GetItemStringValue(item, evaluator),
                                                DataContext = item,
                                            };
+            if (realized != item && this.ItemTemplate != null)
+            {
+                realized.ContentTemplate = this.ItemTemplate;
+            }
+
             realized.OriginalSourceItem = item;
             this.realizedItems[GetSourceKey(item)] = realized;
         }
@@ -762,5 +772,41 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
 
         this.Value = this.GetSelectedItemValue();
+    }
+
+    private string GetItemStringValue(object? item, BindingEvaluator? evaluator)
+    {
+        if (this.ItemTemplate is EditableComboBoxDataTemplate template)
+        {
+            if (evaluator != null)
+            {
+                return evaluator.Evaluate(item) ?? string.Empty;
+            }
+        }
+
+        return item?.ToString() ?? string.Empty;
+    }
+
+    private sealed class BindingEvaluator : StyledElement
+    {
+        private static readonly StyledProperty<string?> ResultProperty =
+            AvaloniaProperty.Register<BindingEvaluator, string?>(nameof(Result));
+
+        public string? Result
+        {
+            get => this.GetValue(ResultProperty);
+            set => this.SetValue(ResultProperty, value);
+        }
+
+        public BindingEvaluator(IBinding binding)
+        {
+            this.Bind(ResultProperty, binding);
+        }
+
+        public string? Evaluate(object? item)
+        {
+            this.DataContext = item;
+            return this.Result;
+        }
     }
 }

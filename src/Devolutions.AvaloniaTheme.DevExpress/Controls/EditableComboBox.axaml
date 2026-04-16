@@ -114,7 +114,7 @@
 
     <Setter Property="ContentTemplate">
       <DataTemplate>
-        <EditableComboBoxHighlightTextBlock />
+        <SearchHighlightTextBlock />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">

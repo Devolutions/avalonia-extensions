@@ -86,6 +86,7 @@
   <x:Double x:Key="EditableComboBoxItemsHeight">22</x:Double>
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="IsHitTestVisible" Value="True" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -121,12 +122,39 @@
       <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     </Style>
 
-    <Style Selector="^[IsSelected=True]">
+    <Style Selector="^[IsCommittedSelected=True]">
       <Style Selector="^ /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
       </Style>
+    </Style>
+
+    <Style Selector="^[IsCommittedSelected=True]:focus-visible">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+      </Style>
+      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:focus-visible">
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+      </Style>
+      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^[IsSelected=True]">
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+      </Style>
+      <Style Selector="^ /template/ SearchHighlightTextBlock#PART_Text">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+        <Setter Property="HighlightForeground" Value="{DynamicResource ForegroundHighBrush}" />
       </Style>
     </Style>
 
@@ -134,7 +162,7 @@
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
-      <Style Selector="^[IsSelected=True] /template/ Path#CheckMark">
+      <Style Selector="^[IsCommittedSelected=True] /template/ Path#CheckMark">
         <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter SearchHighlightTextBlock">

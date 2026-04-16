@@ -323,6 +323,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             this.Value = this.realizedItems.TryGetValue(GetSourceKey(newSelectedItem), out EditableComboBoxItem? found)
                 ? found.Value
                 : null;
+
+            this.SyncCommittedSelectionState();
         }
     }
 
@@ -384,6 +386,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         try
         {
             this.SelectedItem = source.OriginalSourceItem;
+            this.SyncCommittedSelectionState();
         }
         finally
         {
@@ -586,6 +589,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             this.realizedItems[GetSourceKey(item)] = realized;
         }
 
+        this.SyncCommittedSelectionState();
+
         this.RefreshContainers();
 
         if (filter && this.Mode == EditableComboBoxMode.Filter)
@@ -765,6 +770,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             {
                 this.SelectedItem = null;
             }
+
+            this.SyncCommittedSelectionState();
         }
         finally
         {
@@ -807,6 +814,21 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         {
             this.DataContext = item;
             return this.Result;
+        }
+    }
+
+    private void SyncCommittedSelectionState()
+    {
+        object selectedKey = GetSourceKey(this.SelectedItem);
+
+        foreach (EditableComboBoxItem realizedItem in this.realizedItems.Values)
+        {
+            realizedItem.IsCommittedSelected = Equals(GetSourceKey(realizedItem.OriginalSourceItem), selectedKey);
+        }
+
+        foreach (EditableComboBoxItem filteredItem in this.filteredItems.OfType<EditableComboBoxItem>())
+        {
+            filteredItem.IsCommittedSelected = Equals(GetSourceKey(filteredItem.OriginalSourceItem), selectedKey);
         }
     }
 }

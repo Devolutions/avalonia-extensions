@@ -112,6 +112,11 @@
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <EditableComboBoxHighlightTextBlock />
+      </DataTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background"
@@ -128,10 +133,10 @@
               Background="Transparent"
               Padding="{TemplateBinding Padding}"
               CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
-            <SearchHighlightTextBlock
-              Name="PART_Text"
-              Content="{TemplateBinding Value}"
-              Search="{TemplateBinding FilterHighlightText}"
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              Content="{TemplateBinding DataContext}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
               VerticalAlignment="Center" />
           </StackPanel>
         </Border>
@@ -174,7 +179,7 @@
     </Style>
 
     <!--  Disabled state  -->
-    <Style Selector="^:disabled /template/ SearchHighlightTextBlock#PART_Text">
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter SearchHighlightTextBlock">
       <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
     </Style>
   </ControlTheme>

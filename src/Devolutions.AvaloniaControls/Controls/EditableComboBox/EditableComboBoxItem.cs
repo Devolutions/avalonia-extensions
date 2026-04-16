@@ -5,6 +5,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Metadata;
@@ -15,6 +16,9 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
 {
     public static readonly StyledProperty<string?> FilterHighlightTextProperty =
         AvaloniaProperty.Register<EditableComboBoxItem, string?>(nameof(FilterHighlightText));
+
+    public static readonly StyledProperty<IDataTemplate?> ContentTemplateProperty =
+        AvaloniaProperty.Register<EditableComboBoxItem, IDataTemplate?>(nameof(ContentTemplate));
 
     public static readonly StyledProperty<bool> IsSelectedProperty = SelectingItemsControl.IsSelectedProperty.AddOwner<EditableComboBoxItem>();
 
@@ -34,6 +38,12 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
         this.OriginalSourceItem = toClone.OriginalSourceItem;
 
         this.OnInitialized();
+    }
+
+    public IDataTemplate? ContentTemplate
+    {
+        get => this.GetValue(ContentTemplateProperty);
+        set => this.SetValue(ContentTemplateProperty, value);
     }
 
     public string? FilterHighlightText
@@ -57,12 +67,22 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
 
     internal object? OriginalSourceItem { get; set; }
 
-    public EditableComboBoxItem Clone() =>
-        new(this)
+    public EditableComboBoxItem Clone()
+    {
+        var clone = new EditableComboBoxItem(this)
         {
             Value = this.Value,
             OriginalSourceItem = this.OriginalSourceItem,
+            DataContext = this.DataContext,
         };
+
+        if (this.IsSet(ContentTemplateProperty))
+        {
+            clone.ContentTemplate = this.ContentTemplate;
+        }
+
+        return clone;
+    }
 
     public override string ToString() =>
         this.Value;

@@ -275,14 +275,18 @@
                 <Border DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18" Padding="2">
                   <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Code}" Foreground="White" FontWeight="Bold" FontSize="8" />
                 </Border>
-                <!-- TODO fix this -->
-                <!-- <EditableComboBoxHighlightTextBlock -->
-                <!--   Content="{Binding Name}" -->
-                <!--   VerticalAlignment="Center" -->
-                <!--   Margin="6 0 0 0" /> -->
+                <EditableComboBoxHighlightTextBlock
+                  Content="{Binding Name}"
+                  VerticalAlignment="Center"
+                  Margin="6 0 0 0" />
               </DockPanel>
             </DataTemplate>
           </EditableComboBox.ItemTemplate>
+          <EditableComboBox.InnerLeftContent>
+            <Border IsVisible="{Binding SelectedCountry, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">
+              <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedCountry.Code, FallbackValue={x:Null}}" Foreground="White" FontWeight="Bold" FontSize="8" />
+            </Border>
+          </EditableComboBox.InnerLeftContent>
         </EditableComboBox>
       </Grid>
     </Border>

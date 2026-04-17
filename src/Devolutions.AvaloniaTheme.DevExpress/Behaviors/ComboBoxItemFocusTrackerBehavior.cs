@@ -60,7 +60,27 @@ internal static class ComboBoxItemFocusTrackerBehavior
 
         var state = new ItemState();
 
-        void ScheduleUpdate() => Dispatcher.UIThread.Post(() => UpdateOwningItemsPresenter(item, state), DispatcherPriority.Background);
+        void ScheduleUpdate()
+        {
+            if (state.IsUpdatePending)
+            {
+                return;
+            }
+
+            state.IsUpdatePending = true;
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                try
+                {
+                    UpdateOwningItemsPresenter(item, state);
+                }
+                finally
+                {
+                    state.IsUpdatePending = false;
+                }
+            }, DispatcherPriority.Background);
+        }
 
         EventHandler<GotFocusEventArgs> gotFocusHandler = (_, _) => ScheduleUpdate();
         EventHandler<RoutedEventArgs> lostFocusHandler = (_, _) => ScheduleUpdate();
@@ -179,6 +199,8 @@ internal static class ComboBoxItemFocusTrackerBehavior
     private sealed class ItemState
     {
         public CompositeDisposable Disposables { get; } = new();
+
+        public bool IsUpdatePending { get; set; }
 
         public ItemsPresenter? Presenter { get; set; }
 

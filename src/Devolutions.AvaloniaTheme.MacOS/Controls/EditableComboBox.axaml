@@ -136,12 +136,6 @@
       </Style>
     </Style>
 
-    <Style Selector="^[IsCommittedSelected=True]:focus-visible">
-      <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
-      </Style>
-    </Style>
-
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />

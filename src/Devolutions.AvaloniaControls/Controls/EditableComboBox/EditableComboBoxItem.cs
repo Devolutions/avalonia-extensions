@@ -22,6 +22,9 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
 
     public static readonly StyledProperty<bool> IsSelectedProperty = SelectingItemsControl.IsSelectedProperty.AddOwner<EditableComboBoxItem>();
 
+    public static readonly StyledProperty<bool> IsCommittedSelectedProperty =
+        AvaloniaProperty.Register<EditableComboBoxItem, bool>(nameof(IsCommittedSelected));
+
     public static readonly StyledProperty<string> ValueProperty =
         AvaloniaProperty.Register<EditableComboBoxItem, string>(nameof(Value), defaultBindingMode: BindingMode.OneTime);
 
@@ -58,6 +61,12 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
         set => this.SetValue(IsSelectedProperty, value);
     }
 
+    public bool IsCommittedSelected
+    {
+        get => this.GetValue(IsCommittedSelectedProperty);
+        set => this.SetValue(IsCommittedSelectedProperty, value);
+    }
+
     [Content]
     public required string Value
     {
@@ -74,6 +83,7 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
             Value = this.Value,
             OriginalSourceItem = this.OriginalSourceItem,
             DataContext = this.DataContext,
+            IsCommittedSelected = this.IsCommittedSelected,
         };
 
         if (this.IsSet(ContentTemplateProperty))

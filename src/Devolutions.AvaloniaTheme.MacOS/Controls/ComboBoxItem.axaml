@@ -23,6 +23,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -63,6 +64,16 @@
     <Style Selector="^:selected /template/ Path#CheckMark">
       <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
     </Style>
+
+    <Style Selector="^:focus-visible">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+      </Style>
+    </Style>
+
     <Style Selector="^:pointerover">
       <Style Selector="^ /template/ Border#RootPanel">
         <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />

@@ -62,18 +62,36 @@ internal static class ComboBoxItemFocusTrackerBehavior
 
         void ScheduleUpdate()
         {
-            if (state.IsUpdatePending)
+            if (state.IsDisposed)
             {
                 return;
             }
 
+            if (state.IsUpdatePending)
+            {
+                state.IsUpdateDirty = true;
+                return;
+            }
+
             state.IsUpdatePending = true;
+            state.IsUpdateDirty = false;
 
             Dispatcher.UIThread.Post(() =>
             {
                 try
                 {
-                    UpdateOwningItemsPresenter(item, state);
+                    do
+                    {
+                        state.IsUpdateDirty = false;
+
+                        if (state.IsDisposed)
+                        {
+                            break;
+                        }
+
+                        UpdateOwningItemsPresenter(item, state);
+                    }
+                    while (state.IsUpdateDirty);
                 }
                 finally
                 {
@@ -124,6 +142,7 @@ internal static class ComboBoxItemFocusTrackerBehavior
         }
 
         itemStates.Remove(item);
+        state.IsDisposed = true;
         state.Disposables.Dispose();
 
         ApplyItemSnapshot(state, presenter: null, isPointerOver: false, isFocusVisible: false);
@@ -201,6 +220,10 @@ internal static class ComboBoxItemFocusTrackerBehavior
         public CompositeDisposable Disposables { get; } = new();
 
         public bool IsUpdatePending { get; set; }
+
+        public bool IsUpdateDirty { get; set; }
+
+        public bool IsDisposed { get; set; }
 
         public ItemsPresenter? Presenter { get; set; }
 

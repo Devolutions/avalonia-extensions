@@ -589,8 +589,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             this.realizedItems[GetSourceKey(item)] = realized;
         }
 
-        this.SyncCommittedSelectionState();
-
         this.RefreshContainers();
 
         if (filter && this.Mode == EditableComboBoxMode.Filter)
@@ -609,6 +607,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             //        - sbergerondrouin 2025-05-09
             this.filteredItems.AddRange(this.realizedItems.Values.Select(static i => i.Clone()));
         }
+
+        this.SyncCommittedSelectionState();
     }
 
     private void FilterItems()

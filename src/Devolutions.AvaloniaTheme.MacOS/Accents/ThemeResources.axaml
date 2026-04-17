@@ -31,7 +31,7 @@
 
       <Color x:Key="TabControlBackgroundColor">#f2f2f2</Color>
       <Color x:Key="PopupBackgroundColor">#e7e7e7</Color>
-      <Color x:Key="TextBoxBackgroundColor">#ffffff</Color>
+      <Color x:Key="InputBackgroundColor">#ffffff</Color>
       <Color x:Key="TextBoxClearButtonBackgroundColor">#808080</Color>
       <Color x:Key="ButtonSpinnerButtonPressedColor">#e9e9e9</Color>
       <Color x:Key="TagInputTagBackgroundColor">#f0f0f0</Color>
@@ -258,7 +258,7 @@
 
       <Color x:Key="TabControlBackgroundColor">#282828</Color>
       <Color x:Key="PopupBackgroundColor">#262626</Color>
-      <Color x:Key="TextBoxBackgroundColor">#2c2c2c</Color>
+      <Color x:Key="InputBackgroundColor">#2c2c2c</Color>
       <Color x:Key="TextBoxClearButtonBackgroundColor">#7F7F7F</Color>
       <Color x:Key="ButtonSpinnerButtonPressedColor">#808080</Color>
       <Color x:Key="TagInputTagBackgroundColor">#4c4c4c</Color>
@@ -517,6 +517,9 @@
 
   <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
   <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundHighBrush" />
+  
+  <SolidColorBrush x:Key="InputBackground" Color="{DynamicResource InputBackgroundColor}" />
+  <SolidColorBrush x:Key="TextControlBackground" Color="{DynamicResource InputBackgroundColor}" />
 
   <!-- <SolidColorBrush x:Key="ForegroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.5" /> -->
   <SolidColorBrush x:Key="ForegroundMidLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.34" />
@@ -660,8 +663,8 @@
   <SolidColorBrush x:Key="TextBoxClearButtonBackgroundBrush"
                    Color="{DynamicResource TextBoxClearButtonBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxSelectionHighlightBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.3" />
-  <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
-  <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
+  <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource InputBackgroundColor}" />
+  <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxBackgroundDisabledHighBrush"
                    Color="{DynamicResource BackgroundColor}" Opacity="0.5" />
   <SolidColorBrush x:Key="TagInputTagBackgroundBrush" Color="{DynamicResource TagInputTagBackgroundColor}" />

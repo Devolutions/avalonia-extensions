@@ -30,7 +30,8 @@
       <Color x:Key='DataGridForegroundColor'>#000</Color>
       <Color x:Key='DataGridSelectedRowColor'>#cde8ff</Color>
 
-      <Color x:Key='TextBoxBackgroundColor'>#fff</Color>
+      <Color x:Key='InputBackgroundColor'>#fff</Color>
+      
       <Color x:Key='TextBoxBorderBottomColor'>#9f9f9f</Color>
 
       <Color x:Key='ComboBoxDropDownBorderColor'>#c3c3c3</Color>
@@ -123,7 +124,8 @@
       <Color x:Key='DataGridForegroundColor'>#f5f5f5</Color>
       <Color x:Key='DataGridSelectedRowColor'>#3c3c3c</Color>
 
-      <Color x:Key='TextBoxBackgroundColor'>#202020</Color>
+      <Color x:Key='InputBackgroundColor'>#202020</Color>
+      
       <Color x:Key='TextBoxBorderBottomColor'>#666666</Color>
 
       <Color x:Key='ComboBoxDropDownBorderColor'>#414141</Color>
@@ -209,6 +211,9 @@
   <SolidColorBrush x:Key="Foreground" Color="{DynamicResource ForegroundColor}" />
   <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource BackgroundColor}" />
   <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}" />
+  
+  <SolidColorBrush x:Key="InputBackground" Color="{DynamicResource InputBackgroundColor}" />
+  <SolidColorBrush x:Key="TextControlBackground" Color="{DynamicResource InputBackgroundColor}" />
 
   <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{DynamicResource ForegroundColor}" Opacity="0.5" />
 
@@ -248,7 +253,7 @@
 
   <SolidColorBrush x:Key="TabItemPointerOverBrushTransparent" Color="{DynamicResource ForegroundColor}" Opacity="0.02" />
 
-  <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource TextBoxBackgroundColor}" />
+  <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{DynamicResource ControlBorderLowColorSolid}" />
   <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource TextBoxBorderBottomColor}" />
   <SolidColorBrush x:Key="TextBoxDisabledBorderSelectedBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />

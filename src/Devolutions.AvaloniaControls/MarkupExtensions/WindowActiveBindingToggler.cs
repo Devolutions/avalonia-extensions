@@ -2,60 +2,61 @@ namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 using Avalonia.Styling;
 using Helpers;
 
 public class WindowActiveBindingTogglerExtension : MarkupExtension
 {
-    private readonly WeakReference<IBinding?> weakResolvedActiveBinding = new(null);
+  private readonly WeakReference<BindingBase?> weakResolvedActiveBinding = new(null);
 
-    private readonly WeakReference<IBinding?> weakResolvedInactiveBinding = new(null);
+  private readonly WeakReference<BindingBase?> weakResolvedInactiveBinding = new(null);
 
-    public WindowActiveBindingTogglerExtension(object whenActiveBinding, object whenInactiveBinding)
+  public WindowActiveBindingTogglerExtension(object whenActiveBinding, object whenInactiveBinding)
+  {
+    this.WhenActiveBinding = whenActiveBinding;
+    this.WhenInactiveBinding = whenInactiveBinding;
+  }
+
+  [ConstructorArgument("whenActiveBinding")]
+  public object? WhenActiveBinding { get; private set; }
+
+  [ConstructorArgument("whenInactiveBinding")]
+  public object? WhenInactiveBinding { get; private set; }
+
+  public override object ProvideValue(IServiceProvider serviceProvider)
+  {
+    var provideTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
+    var setter = provideTarget?.TargetObject as Setter;
+    Type? targetType = setter?.Property?.PropertyType;
+
+    this.weakResolvedActiveBinding.TryGetTarget(out BindingBase? resolvedActiveBinding);
+    if (resolvedActiveBinding is null && this.WhenActiveBinding is not null)
     {
-        this.WhenActiveBinding = whenActiveBinding;
-        this.WhenInactiveBinding = whenInactiveBinding;
+      resolvedActiveBinding = targetType is not null
+        ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenActiveBinding, targetType)
+        : MarkupExtensionHelpers.GetBinding<object?>(this.WhenActiveBinding);
+      this.weakResolvedActiveBinding.SetTarget(resolvedActiveBinding);
     }
 
-    [ConstructorArgument("whenActiveBinding")]
-    public object? WhenActiveBinding { get; private set; }
-
-    [ConstructorArgument("whenInactiveBinding")]
-    public object? WhenInactiveBinding { get; private set; }
-
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    this.weakResolvedInactiveBinding.TryGetTarget(out BindingBase? resolvedInactiveBinding);
+    if (resolvedInactiveBinding is null && this.WhenInactiveBinding is not null)
     {
-        IProvideValueTarget? provideTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
-        Setter? setter = provideTarget?.TargetObject as Setter;
-        Type? targetType = setter?.Property?.PropertyType;
-
-        this.weakResolvedActiveBinding.TryGetTarget(out IBinding? resolvedActiveBinding);
-        if (resolvedActiveBinding is null && this.WhenActiveBinding is not null)
-        {
-            resolvedActiveBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenActiveBinding, targetType)
-                : MarkupExtensionHelpers.GetBinding<object?>(this.WhenActiveBinding);
-            this.weakResolvedActiveBinding.SetTarget(resolvedActiveBinding);
-        }
-
-        this.weakResolvedInactiveBinding.TryGetTarget(out IBinding? resolvedInactiveBinding);
-        if (resolvedInactiveBinding is null && this.WhenInactiveBinding is not null)
-        {
-            resolvedInactiveBinding = targetType is not null
-                ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenInactiveBinding, targetType)
-                : MarkupExtensionHelpers.GetBinding<object?>(this.WhenInactiveBinding);
-            this.weakResolvedInactiveBinding.SetTarget(resolvedInactiveBinding);
-        }
-
-        var ret = new BindingTogglerExtension(
-            WindowIsActiveBindingExtension.CreateIsActiveBinding(),
-            resolvedActiveBinding,
-            resolvedInactiveBinding
-        ).ProvideValue(serviceProvider);
-
-        this.WhenActiveBinding = null;
-        this.WhenInactiveBinding = null;
-
-        return ret;
+      resolvedInactiveBinding = targetType is not null
+        ? MarkupExtensionHelpers.GetBindingForPropertyType(this.WhenInactiveBinding, targetType)
+        : MarkupExtensionHelpers.GetBinding<object?>(this.WhenInactiveBinding);
+      this.weakResolvedInactiveBinding.SetTarget(resolvedInactiveBinding);
     }
+
+    object ret = new BindingTogglerExtension(
+      WindowIsActiveBindingExtension.CreateIsActiveBinding(),
+      resolvedActiveBinding,
+      resolvedInactiveBinding
+    ).ProvideValue(serviceProvider);
+
+    this.WhenActiveBinding = null;
+    this.WhenInactiveBinding = null;
+
+    return ret;
+  }
 }

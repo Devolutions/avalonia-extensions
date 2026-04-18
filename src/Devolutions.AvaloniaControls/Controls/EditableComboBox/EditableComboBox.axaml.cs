@@ -405,7 +405,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return false;
     }
 
-    protected override void OnGotFocus(GotFocusEventArgs e)
+    protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         if (e.Handled) return;
 

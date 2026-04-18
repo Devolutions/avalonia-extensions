@@ -15,13 +15,13 @@ public static class MarkupExtensionHelpers
 
     // Dynamic approach is slightly faster than using reflection, see: https://stackoverflow.com/a/78582306
     // However, we support both for AoT compatibility (auto-detected at runtime)
-    public static IBinding? GetBinding<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] TIn>(object? v)
+    public static BindingBase? GetBinding<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] TIn>(object? v)
     {
         switch (v)
         {
             case null:
                 return null;
-            case IBinding binding:
+            case BindingBase binding:
                 return binding;
             case ClrPropertyInfo clrProperty:
                 // Support for Avalonia compiled bindings — wrap the property info as a static value
@@ -56,12 +56,12 @@ public static class MarkupExtensionHelpers
     [UnconditionalSuppressMessage("Trimming", "IL2072",
         Justification = "AvaloniaProperty.PropertyType returns Type without DynamicallyAccessedMembers. " +
                         "Types are preserved via assembly-level ILLink descriptor (preserve=\"all\").")]
-    public static IBinding? GetBindingForPropertyType(object? v, Type type)
+    public static BindingBase? GetBindingForPropertyType(object? v, Type type)
     {
         return GetBinding(v, type);
     }
 
-    public static IBinding? GetBinding(object? v, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] Type type)
+    public static BindingBase? GetBinding(object? v, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] Type type)
     {
         // Unwrap Nullable<T> to get the underlying type for IParsable check
         Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -69,7 +69,7 @@ public static class MarkupExtensionHelpers
         {
             case null:
                 return null;
-            case IBinding binding:
+            case BindingBase binding:
                 return binding;
             case ClrPropertyInfo clrProperty:
                 // Support for Avalonia compiled bindings — wrap the property info as a static value
@@ -106,7 +106,7 @@ public static class MarkupExtensionHelpers
         Justification = "TypeDescriptor.GetConverter is used as a last-resort fallback. Types are preserved via assembly-level ILLink descriptor.")]
     [UnconditionalSuppressMessage("Trimming", "IL2072",
         Justification = "TypeDescriptor.GetConverter is used as a last-resort fallback. Types are preserved via assembly-level ILLink descriptor.")]
-    private static IBinding? ConvertViaTypeDescriptor<TIn>(object v)
+    private static BindingBase? ConvertViaTypeDescriptor<TIn>(object v)
     {
         return TypeDescriptor.GetConverter(v.GetType()).ConvertTo(v, typeof(TIn)) is TIn t2
             ? ObservableHelpers.ValueBinding(t2)
@@ -120,7 +120,7 @@ public static class MarkupExtensionHelpers
         Justification = "TypeDescriptor.GetConverter is used as a last-resort fallback. Types are preserved via assembly-level ILLink descriptor.")]
     [UnconditionalSuppressMessage("Trimming", "IL2067",
         Justification = "TypeDescriptor.GetConverter is used as a last-resort fallback. Types are preserved via assembly-level ILLink descriptor.")]
-    private static IBinding? ConvertViaTypeDescriptor(object v, Type underlyingType)
+    private static BindingBase? ConvertViaTypeDescriptor(object v, Type underlyingType)
     {
         object? t = TypeDescriptor.GetConverter(underlyingType).ConvertFrom(null, CultureInfo.InvariantCulture, v);
         return t is not null

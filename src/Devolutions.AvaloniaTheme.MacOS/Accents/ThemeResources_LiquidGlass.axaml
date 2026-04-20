@@ -140,7 +140,7 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <Color x:Key="TextBoxBackgroundColor">#ffffff</Color>
+      <Color x:Key="InputBackgroundColor">#ffffff</Color>
 
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT07" Color="#ececec" />
@@ -154,7 +154,8 @@
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" x:DataType="SolidColorBrush" Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
+      <SolidColorBrush x:Key="FocusBorderBrush" x:DataType="SolidColorBrush"
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeFocusColorConverter}}" Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
@@ -218,7 +219,7 @@
     <!-- MARK: Dark Mode -->
 
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="TextBoxBackgroundColor">#20212e</Color>
+      <Color x:Key="InputBackgroundColor">#20212e</Color>
       <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="#1e1e1e" />
 
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
@@ -233,7 +234,8 @@
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
-      <SolidColorBrush x:Key="FocusBorderBrush" Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}" Opacity="0.49" />
+      <SolidColorBrush x:Key="FocusBorderBrush" Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeFocusColorConverter}}"
+                       Opacity="0.49" />
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 

@@ -184,7 +184,8 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type EditableComboBox+InnerTextBox}" TargetType="EditableComboBox+InnerTextBox">
+  <ControlTheme x:Key="{x:Type EditableComboBox+InnerTextBox}" TargetType="EditableComboBox+InnerTextBox"
+                BasedOn="{StaticResource  {x:Type EditableComboBox+InnerTextBox}}">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />

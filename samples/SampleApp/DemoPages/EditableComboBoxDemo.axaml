@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -153,19 +153,21 @@
           Grid.Column="1" Grid.Row="9"
           VerticalAlignment="Top"
           Mode="Filter"
-          Margin="10 0 20 20">
+          Margin="10 0 10 20">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
 
           <EditableComboBox.InnerLeftContent>
-            <Border Width="12" Height="12" Background="Green" />
+            <Button Command="{Binding GreenCommand}"><Border Width="8" Height="8" Background="Green" /></Button>
           </EditableComboBox.InnerLeftContent>
           <EditableComboBox.InnerLeftOfDropDownArrowContent>
-            <Border Width="12" Height="12" Background="Orange" />
+            <Button Command="{Binding OrangeCommand}"><Border Width="8" Height="8" Background="Orange" /></Button>
           </EditableComboBox.InnerLeftOfDropDownArrowContent>
           <EditableComboBox.InnerRightContent>
-            <Border Width="12" Height="12" Background="Red" />
+            <Button Command="{Binding RedCommand}"><Border Width="8" Height="8" Background="Red" /></Button>
           </EditableComboBox.InnerRightContent>
         </EditableComboBox>
+        
+        <Border Grid.Column="2" Grid.Row="9" Width="12" Height="12" Margin="0 0 20 20" Background="{Binding SelectedBrush}" />
 
         <TextBlock Grid.Column="0" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 15">
           - Required error:<LineBreak />

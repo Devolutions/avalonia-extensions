@@ -1,6 +1,7 @@
 namespace SampleApp.ViewModels;
 
 using System.ComponentModel.DataAnnotations;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -88,6 +89,27 @@ public partial class EditableComboBoxViewModel : ObservableValidator
 
     [RelayCommand]
     private void ClearCountry() => this.ProgrammaticSelectedCountry = null;
+
+    [ObservableProperty]
+    private IBrush selectedBrush = Brushes.Transparent;
+    
+    [RelayCommand]
+    private void Green()
+    {
+        this.SelectedBrush = Brushes.Green;
+    }
+
+    [RelayCommand]
+    private void Orange()
+    {
+        this.SelectedBrush = Brushes.Orange;
+    }
+
+    [RelayCommand]
+    private void Red()
+    {
+        this.SelectedBrush = Brushes.Red;
+    }
 }
 
 public record Country(string Name, string Code, bool OverrideToString = true)

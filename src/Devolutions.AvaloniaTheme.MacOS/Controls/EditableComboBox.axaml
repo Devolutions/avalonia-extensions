@@ -197,6 +197,7 @@
 
               <Border
                 Name="BorderHighlightElement"
+                IsHitTestVisible="False"
                 Background="Transparent"
                 BorderBrush="{DynamicResource ControlBorderRaisedBrush}"
                 BorderThickness="{TemplateBinding BorderThickness, 

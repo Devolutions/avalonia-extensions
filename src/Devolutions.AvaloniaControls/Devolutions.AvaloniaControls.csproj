@@ -4,6 +4,7 @@
     
     <PropertyGroup>
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
+        <LangVersion>14</LangVersion>
         <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
         <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
         <IsTrimmable>true</IsTrimmable>

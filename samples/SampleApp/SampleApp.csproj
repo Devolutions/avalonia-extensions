@@ -55,7 +55,7 @@
     <ItemGroup>
         <PackageReference Include="Svg.Controls.Avalonia" Version="$(SvgVersion)" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-<!--        <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.2.3" />-->
+        <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="26.1.0-rc.2" />
     </ItemGroup>
 
 <!--    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">-->
@@ -89,10 +89,10 @@
         <TrimmerRootAssembly Include="Avalonia.Controls.DataGrid" />
 
         <!-- ActiPro assemblies -->
-        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Bars" />-->
-        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Shared" />-->
-        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Core" />-->
-        <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />-->
+        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Bars" />
+        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Shared" />
+        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Core" />
+        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />
 
         <!-- Devolutions Avalonia assemblies -->
         <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />

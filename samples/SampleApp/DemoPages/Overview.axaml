@@ -77,26 +77,6 @@
               <Button Margin="5" VerticalAlignment="Center" Content="Cancel" />
               <Button Margin="5" VerticalAlignment="Center" Classes="accent" IsEnabled="False">Submit</Button>
             </StackPanel>
-
-            <StackPanel Width="200" HorizontalAlignment="Left" Spacing="5">
-              <SplitButton Content="Splitted" Classes="accent">
-                <SplitButton.Flyout>
-                  <MenuFlyout>
-                    <MenuItem Header="A" />
-                    <MenuItem Header="B" />
-                    <MenuItem Header="C" />
-                  </MenuFlyout>
-                </SplitButton.Flyout>
-              </SplitButton>
-
-              <SplitButton Content="SplitButton">
-                <SplitButton.Flyout>
-                  <Flyout>Hello</Flyout>
-                </SplitButton.Flyout>
-              </SplitButton>
-
-              <SplitButton IsEnabled="False">Disabled</SplitButton>
-            </StackPanel>
           </StackPanel>
 
         </StackPanel>

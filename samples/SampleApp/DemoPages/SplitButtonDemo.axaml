@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.SplitButtonDemo">
+  <StackPanel Spacing="20" Margin="20">
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0 0 0 20">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <SplitButton Content="Focus Test">
+        <SplitButton.Flyout>
+          <MenuFlyout>
+            <MenuItem Header="A" />
+            <MenuItem Header="B" />
+          </MenuFlyout>
+        </SplitButton.Flyout>
+      </SplitButton>
+    </StackPanel>
+
+    <TextBlock Classes="h1">SplitButton</TextBlock>
+
+    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto Auto" RowSpacing="10" ColumnSpacing="20" HorizontalAlignment="Left">
+
+      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default with Flyout</TextBlock>
+      <SplitButton Grid.Row="0" Grid.Column="1" Content="Configure">
+        <SplitButton.Flyout>
+          <Flyout>
+            <TextBlock Width="170" TextWrapping="Wrap">This is a flyout and could contain anything ...</TextBlock>
+          </Flyout>
+        </SplitButton.Flyout>
+      </SplitButton>
+
+      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Accent with MenuFlyout</TextBlock>
+      <SplitButton Grid.Row="1" Grid.Column="1" Content="Allow" Classes="accent">
+        <SplitButton.Flyout>
+          <MenuFlyout
+            Placement="BottomEdgeAlignedLeft">
+            <MenuItem Header="Always allow this command" />
+            <MenuItem Header="Allow all in this session" />
+            <Separator />
+            <MenuItem Header="Explain this command to me">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/More.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </MenuFlyout>
+        </SplitButton.Flyout>
+      </SplitButton>
+      <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">(MenuFlyout <TextBlock Classes="code">Placement="BottomEdgeAlignedLeft"</TextBlock>) </TextBlock>
+
+
+      <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+      <SplitButton Grid.Row="2" Grid.Column="1" IsEnabled="False">Disabled</SplitButton>
+    </Grid>
+  </StackPanel>
+</UserControl>

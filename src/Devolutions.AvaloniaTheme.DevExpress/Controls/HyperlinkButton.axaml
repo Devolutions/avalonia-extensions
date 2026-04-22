@@ -10,6 +10,19 @@
     </Border>
   </Design.PreviewWith>
   <Thickness x:Key="HyperlinkButtonBorderThemeThickness">1</Thickness>
+  <!--
+    Custom underline decoration: avoids the fuzzy 2px font-recommended underline that
+    sits flush against the text. Stroke is left null so it falls back to the text
+    Foreground (see Avalonia TextDecoration.Draw: `Stroke ?? defaultBrush`), which
+    means it automatically follows pointerover / visited / pressed foreground states.
+  -->
+  <TextDecorationCollection x:Key="HyperlinkButtonTextDecorations">
+    <TextDecoration Location="Underline"
+                    StrokeThickness="1"
+                    StrokeThicknessUnit="Pixel"
+                    StrokeOffset="0.5"
+                    StrokeOffsetUnit="Pixel" />
+  </TextDecorationCollection>
   <ControlTheme x:Key="{x:Type HyperlinkButton}" TargetType="HyperlinkButton">
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -23,7 +36,7 @@
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="RenderTransform" Value="none" />
-    <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+    <Setter Property="TextBlock.TextDecorations" Value="{StaticResource HyperlinkButtonTextDecorations}" />
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter x:Name="PART_ContentPresenter"

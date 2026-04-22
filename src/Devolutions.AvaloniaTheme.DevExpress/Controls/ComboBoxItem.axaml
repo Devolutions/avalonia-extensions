@@ -1,6 +1,7 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
   <!-- 
@@ -25,6 +26,8 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="behaviors:ComboBoxItemFocusTrackerBehavior.Enable" Value="True" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
@@ -70,7 +73,7 @@
         <Setter
           Property="Background"
           Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
+                  {Binding (behaviors:ComboBoxItemFocusTrackerBehavior.HasTransientComboBoxItemHighlight), RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
                   {DynamicResource ComboBoxItemBackgroundBrush},
                   {DynamicResource ControlBackgroundSelectedBrush}
                }" />
@@ -82,7 +85,7 @@
         <Setter
           Property="Background"
           Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
+                  {Binding (behaviors:ComboBoxItemFocusTrackerBehavior.HasTransientComboBoxItemHighlight), RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
                   {DynamicResource TransparentBrush},
                   {DynamicResource ControlBorderSelectedBrush}
                }" />
@@ -90,7 +93,7 @@
     </Style>
 
     <!--  PointerOver state  -->
-    <Style Selector="^:pointerover">
+    <Style Selector="^:pointerover, ^:focus-visible">
       <Style Selector="^ /template/ Border#LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">

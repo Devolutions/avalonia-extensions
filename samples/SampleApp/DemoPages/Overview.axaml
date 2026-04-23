@@ -27,7 +27,6 @@
       <TabItem Header="Tab 1">
         <StackPanel Orientation="Horizontal" Spacing="20">
           <StackPanel>
-            <HyperlinkButton Content="https://google.ca" />
             <TextBox Watermark="Name" />
             <TextBox Watermark="YourDomain"
                      InnerLeftContent="http://"

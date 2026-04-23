@@ -380,13 +380,14 @@
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Padding="{TemplateBinding Indent, Converter={x:Static conv:IndentConverter.Instance}}">
           <DockPanel>
-              <ToggleButton DockPanel.Dock="Left" 
-                            Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
+  <Border DockPanel.Dock="Left" Width="22">
+              <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
                             Focusable="False"
                             Width="22"
                             IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
                             IsVisible="{TemplateBinding ShowExpander}"
                             Margin="0 0 -6 0" />
+            </Border>
             <Decorator Name="PART_Content" />
           </DockPanel>
         </Border>

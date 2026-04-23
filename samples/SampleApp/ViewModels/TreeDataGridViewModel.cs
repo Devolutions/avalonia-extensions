@@ -79,7 +79,8 @@ public class TreeDataGridViewModel : ObservableObject
                         new NetworkNode("DESKTOP-A", "Computer", "10.0.0.5", "Offline", "2 days ago"),
                         new NetworkNode("DESKTOP-B", "Computer", "10.0.0.6", "Online", "Just now"),
                     }
-                }
+                },
+                new NetworkNode("OddOneOut", "Unknown", "192.168.1.150", "Online", "Just now")
             }
         },
 

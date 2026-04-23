@@ -1,12 +1,12 @@
 ---
-description: "/worksetup [theme] [tabTitle?] [scale?] [projectPlan?] - Switch theme, navigate to tab, set scale, and optionally load project plan"
+description: "/worksetup [theme] [tabTitle?] [scale?] [projectPlan?] - Switch theme, navigate to tab (including runtime-only tabs), set scale, and optionally load project plan"
 ---
 
 You are being asked to switch the active theme, navigate to a specific tab in the SampleApp, and optionally set the UI scale.
 
 The user will provide one to four arguments:
 1. **theme**: One of 'MacOS', 'MacOSClassic' (or 'Classic'), 'MacOSLiquidGlass' (or 'LiquidGlass'), 'DevExpress', 'Linux', or 'Default'
-2. **tabTitle**: (optional) The title of a TabItem (e.g., 'Button', 'TextBox', 'DataGrid', 'Control Alignment'),
+2. **tabTitle**: (optional) The title of a TabItem (e.g., 'Button', 'TextBox', 'DataGrid', 'Control Alignment', 'TreeDataGrid'), including tabs inserted dynamically at runtime
    Default: 'Overview'
 3. **scale**: (optional) UI scale percentage (e.g., '100%', '150%', '200%', '300%', '400%')
    Default: 'Default' (system default)
@@ -89,8 +89,8 @@ Target state for MacOS Classic (forced):
 
 Use the Edit tool to make these changes. Be careful to preserve exact formatting and indentation.
 
-### Step 4: Find matching TabItem in MainWindow.axaml
-File: `samples/SampleApp/MainWindow.axaml`
+### Step 4: Find matching tab target (static or runtime)
+Files: `samples/SampleApp/MainWindow.axaml`, `samples/SampleApp/MainWindow.axaml.cs`
 
 Search for TabItems with matching titles:
 - Look for `<controls:SampleItemHeader Title="..." />` elements
@@ -100,7 +100,14 @@ Search for TabItems with matching titles:
 
 If multiple matches found, prefer exact match first, then shortest match.
 
-### Step 5: Update TabItem IsSelected attributes
+Runtime-only matching rules:
+- Detect dynamic tab placeholders from comments in `MainWindow.axaml` like: `<!-- TabItem "..." inserted here through code-behind ... -->`.
+- For each detected dynamic tab, resolve its insertion method in `MainWindow.axaml.cs` (prefer `Add{TabName}Tab()`; fallback to best name match containing the tab name).
+- If the requested tab matches a dynamic tab target, use the runtime selection path (Step 5B) instead of static XAML selection.
+- Do not fail just because the tab is not statically present in `MainWindow.axaml` when a runtime path exists.
+- Example: `TreeDataGrid` may be inserted at runtime by `AddTreeDataGridTab()` and shown as `TreeDataGrid (Accelerate)`.
+
+### Step 5A: Update static TabItem IsSelected attributes
 In MainWindow.axaml:
 - Remove ALL existing `IsSelected="True"` attributes from all TabItems
 - Add `IsSelected="True"` ONLY to the matched TabItem
@@ -116,6 +123,17 @@ Example change for Button tab:
   <demoPages:ButtonDemo />
 </TabItem>
 ```
+
+Skip Step 5A when Step 4 selected a runtime-only tab target.
+
+### Step 5B: Update runtime tab selection in code-behind
+File: `samples/SampleApp/MainWindow.axaml.cs`
+
+For runtime-only tab selection, update the resolved dynamic tab insertion method (for example, `AddTreeDataGridTab()`):
+- Ensure the inserted tab is selected at runtime by setting:
+  - `tabItem.IsSelected = true;`
+  - `tabControl.SelectedItem = tabItem;`
+- Do not add `IsSelected="True"` changes in `MainWindow.axaml` for this case.
 
 ### Step 6: Update UI Scale (if provided)
 File: `samples/SampleApp/ViewModels/MainWindowViewModel.cs`
@@ -160,7 +178,7 @@ Use the Edit tool to make this change. Be careful to preserve exact formatting a
 
 ### Step 7: Error handling
 - If theme invalid: Report valid options
-- If no matching tab: List all available tab titles from MainWindow.axaml
+- If no matching tab (including dynamic tab targets): List all available static tab titles from MainWindow.axaml and all dynamic tab titles inferred from insertion comments (include examples such as `TreeDataGrid` / `TreeDataGrid (Accelerate)` when present)
 - If multiple ambiguous matches: Ask user to be more specific
 - If scale invalid: Report valid options (100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%, or Default)
 
@@ -168,6 +186,7 @@ Use the Edit tool to make this change. Be careful to preserve exact formatting a
 After successful changes, inform the user:
 - Which theme was activated
 - Which tab was selected
+- Whether tab selection was applied in `MainWindow.axaml` (static) or `MainWindow.axaml.cs` (runtime)
 - Which scale was set (if provided)
 - Remind them they can run: `dotnet run --project samples/SampleApp/SampleApp.csproj`
 

@@ -94,6 +94,13 @@ The SampleApp provides:
     - F10 opens classic Avalonia Dev Tools
   - otherwise F12 opens classic Avalonia Dev Tools
 
+### Runtime Tab Convention (SampleApp)
+- Some tabs are inserted at runtime and are not statically present in `samples/SampleApp/MainWindow.axaml`.
+- Dynamic insertion points are marked by comments like `<!-- TabItem "..." inserted here through code-behind ... -->`.
+- Runtime tabs should be added from appropriately named methods in `samples/SampleApp/MainWindow.axaml.cs` using the `Add...Tab()` pattern (for example, `AddTreeDataGridTab()`).
+- `/worksetup` may temporarily force runtime tab selection in those methods for local development.
+- Those temporary runtime-selection lines are local-only setup state and should not be committed by default (follow `.claude/commands/commit.md`).
+
 **Note on Theme Detection:**
 The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
 

@@ -15,11 +15,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public class NetworkNode
 {
-    public string Name { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty; // "Folder", "Computer", "User"
-    public string IPAddress { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
-    public string LastSeen { get; set; } = string.Empty;
+  public string Name { get; set; } = string.Empty;
+  public string Type { get; set; } = string.Empty; // "Folder", "Computer", "User"
+  public bool IsExpanded { get; set; }
+  public string IPAddress { get; set; } = string.Empty;
+  public string Status { get; set; } = string.Empty;
+  public string LastSeen { get; set; } = string.Empty;
 
     public string IconPath => Type switch
     {
@@ -31,14 +32,15 @@ public class NetworkNode
 
     public ObservableCollection<NetworkNode> Children { get; } = new();
 
-    public NetworkNode(string name, string type, string ip = "", string status = "", string lastSeen = "")
-    {
-        this.Name = name;
-        this.Type = type;
-        this.IPAddress = ip;
-        this.Status = status;
-        this.LastSeen = lastSeen;
-    }
+  public NetworkNode(string name, string type, string ip = "", string status = "", string lastSeen = "")
+  {
+    this.Name = name;
+    this.Type = type;
+    this.IsExpanded = type == "Folder" && name != "Workstations";
+    this.IPAddress = ip;
+    this.Status = status;
+    this.LastSeen = lastSeen;
+  }
 }
 
 public class TreeDataGridViewModel : ObservableObject
@@ -79,7 +81,8 @@ public class TreeDataGridViewModel : ObservableObject
                         new NetworkNode("DESKTOP-A", "Computer", "10.0.0.5", "Offline", "2 days ago"),
                         new NetworkNode("DESKTOP-B", "Computer", "10.0.0.6", "Online", "Just now"),
                     }
-                }
+                },
+                new NetworkNode("OddOneOut", "Unknown", "192.168.1.150", "Online", "Just now")
             }
         },
 

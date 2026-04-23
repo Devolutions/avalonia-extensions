@@ -41,7 +41,9 @@ public partial class TreeDataGridDemo : UserControl
   {
       return new HierarchicalExpanderColumn<NetworkNode>(
           new TemplateColumn<NetworkNode>("Name", template),
-          node => node.Children
+          node => node.Children,
+          hasChildrenSelector: node => node.Children.Count > 0,
+          isExpandedSelector: node => node.IsExpanded
       );
   }
 }

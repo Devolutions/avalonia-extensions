@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml"/>
         <EmbeddedResource Include="ILLink.Descriptors.xml">
             <LogicalName>ILLink.Descriptors.xml</LogicalName>
         </EmbeddedResource>
@@ -46,7 +46,7 @@
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
         <!-- MAKE SURE TO BUMP THIS *if* A NEW CONTROL/CONVERTER/EXTENSION IS ADDED AND USED! -->
-        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.4.16,)"/>
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="[2026.4.23,)"/>
     </ItemGroup>
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj"/>

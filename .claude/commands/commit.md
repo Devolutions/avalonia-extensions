@@ -25,6 +25,7 @@ The `/worksetup` command modifies these files for local development only:
 - `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
 - `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
 - `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (SelectedScale initialization)
+- `samples/SampleApp/MainWindow.axaml.cs` (temporary runtime tab selection in dynamic tab insertion methods like `Add...Tab()`)
 
 **Master branch defaults** (never change these):
 - Theme: All themes commented out (automatically selects platform-appropriate theme)
@@ -37,12 +38,17 @@ The `/worksetup` command modifies these files for local development only:
   ```
 - Tab: `IsSelected="True"` on Overview tab only
 - Scale: `this.SelectedScale = this.AvailableScales[0];` (System Default)
+- Runtime dynamic tabs: no temporary forced selection lines in `Add...Tab()` insertion methods unless intentionally committing feature behavior
 
 **Pre-commit workflow**:
 1. Check if App.axaml, MainWindow.axaml, or MainWindowViewModel.cs have changes
+   - Also check `MainWindow.axaml.cs` for temporary `/worksetup` runtime tab-selection lines in dynamic insertion methods (for example, `AddTreeDataGridTab()`)
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
    - First, run `/worksetup Default Overview` to restore defaults (all themes commented, Overview tab, Default scale)
+   - For runtime-only dynamic tab worksetup, remove temporary selection lines in the relevant `Add...Tab()` method:
+     - `tabItem.IsSelected = true;`
+     - `tabControl.SelectedItem = tabItem;`
    - Create a commit with those restorations if needed: `[SampleApp] Restore default theme, tab, and scale`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
@@ -58,6 +64,7 @@ M samples/SampleApp/ViewModels/MainWindowViewModel.cs
 ```
 
 Check the actual diff. If changes are only theme toggles, IsSelected attributes, or SelectedScale array index, SKIP these files from the commit.
+If `MainWindow.axaml.cs` changes are only temporary runtime tab-selection lines used by `/worksetup` in dynamic insertion methods, SKIP those too.
 </worksetup_exclusion>
 
 <input_processing>

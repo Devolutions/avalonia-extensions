@@ -43,6 +43,10 @@
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="$(AvaloniaTreeDataGridVersion)" Condition="'$(EnableAccelerate)' == 'true'" />
         <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+        <!--  AMP: This overrides Tmds.DBus.Protocol 0.21.2 coming from Avalonia.Desktop 11,
+            which has a known high severity vulnerability (warning NU1903)
+            CAN BE REMOVED WHEN WE MOVE TO AVALONIA 12  -->
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
 
         <PackageReference Include="Avalonia.Themes.Simple" Version="$(AvaloniaVersion)" />

@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -290,6 +290,15 @@
             </Border>
           </EditableComboBox.InnerLeftContent>
         </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Top" Margin="0 5 10 15">
+          - 1000 items (memory leak test):
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="21"
+                          ItemsSource="{Binding LargeItemsList}"
+                          MaxDropDownHeight="200"
+                          VerticalAlignment="Top"
+                          Margin="10 0 20 0" />
       </Grid>
     </Border>
   </StackPanel>

@@ -107,7 +107,11 @@ public partial class EditableComboBox
         protected override void ClearContainerForItemOverride(Control element)
         {
             base.ClearContainerForItemOverride(element);
-            if (element is EditableComboBoxItem editableComboBoxItem) editableComboBoxItem.Value = string.Empty;
+            if (element is EditableComboBoxItem editableComboBoxItem)
+            {
+                editableComboBoxItem.Value = string.Empty;
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.FilterHighlightTextProperty);
+            }
         }
 
         protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)

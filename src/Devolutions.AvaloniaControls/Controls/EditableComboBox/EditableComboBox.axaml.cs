@@ -692,7 +692,16 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void OnOpenMenu()
     {
-        this.FillItems();
+        if (this.Mode == EditableComboBoxMode.Filter)
+        {
+            // Reset to show all items on open. New clones are still required due to the
+            // Avalonia visual tree re-attach constraint (see FIXME in FillItems), but we
+            // no longer rebuild realizedItems unnecessarily.
+            this.filteredItems.Clear();
+            this.filteredItems.AddRange(this.realizedItems.Values.Select(static i => i.Clone()));
+            this.SyncCommittedSelectionState();
+        }
+
         if (this.ClearOnOpen)
         {
             this.innerComboBox.SelectedIndex = -1;

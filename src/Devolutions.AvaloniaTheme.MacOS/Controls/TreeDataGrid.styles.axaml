@@ -38,4 +38,11 @@
       <Setter Property="Background" Value="{DynamicResource DataGridItemBackgroundAlternating}" />
     </Style>
   </Style>
+
+  <!-- In cell-selection mode, first hierarchical/template column text can be rendered
+       through expander cell content where TextBlock styles override inheritance. Force
+       selected accent foreground for text descendants in selected expander cells. -->
+  <Style Selector="TreeDataGridExpanderCell:selected TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource DataGridForegroundSelectedBrush}" />
+  </Style>
 </Styles>

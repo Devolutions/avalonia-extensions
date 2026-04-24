@@ -293,8 +293,11 @@
     <Setter Property="Foreground"
             Value="{DynamicResourceToggler
                     {AndBinding
-                        {WindowIsActiveBinding},
-                        {Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=TreeDataGridRow}}
+              {WindowIsActiveBinding},
+              {OrBinding
+                          {SelfBinding IsSelected},
+                {Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=TreeDataGridRow}}
+              }
                     },
                     DataGridForegroundSelectedBrush,
                     ForegroundHighBrush
@@ -321,6 +324,7 @@
                     CornerRadius="5" />
             <Border Padding="{TemplateBinding Padding}">
               <TextBlock Text="{TemplateBinding Value}"
+                         Foreground="{TemplateBinding Foreground}"
                          TextTrimming="{TemplateBinding TextTrimming}"
                          TextWrapping="{TemplateBinding TextWrapping}"
                          TextAlignment="{TemplateBinding TextAlignment}"
@@ -347,6 +351,18 @@
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground"
+        Value="{DynamicResourceToggler
+            {AndBinding
+              {WindowIsActiveBinding},
+              {OrBinding
+                          {SelfBinding IsSelected},
+                {Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=TreeDataGridRow}}
+              }
+            },
+            DataGridForegroundSelectedBrush,
+            ForegroundHighBrush
+          }" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -368,6 +384,7 @@
                               Margin="-9 0 0 0"
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               Content="{TemplateBinding Content}"
+                              TextElement.Foreground="{TemplateBinding Foreground}"
                               Padding="{TemplateBinding Padding}" />
           </Panel>
         </Border>
@@ -462,6 +479,18 @@
 
   <ControlTheme x:Key="{x:Type TreeDataGridExpanderCell}" TargetType="TreeDataGridExpanderCell">
     <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground"
+            Value="{DynamicResourceToggler
+                    {AndBinding
+                        {WindowIsActiveBinding},
+                        {OrBinding
+                          {SelfBinding IsSelected},
+                            {Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=TreeDataGridRow}}
+                        }
+                    },
+                    DataGridForegroundSelectedBrush,
+                    ForegroundMidBrush
+                }" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -476,10 +505,12 @@
                     Width="{StaticResource TreeViewItemChevronSize}">
               <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
                             Focusable="False"
+                            Foreground="{TemplateBinding Foreground}"
                             IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
                             IsVisible="{TemplateBinding ShowExpander}" />
             </Border>
-            <Decorator Name="PART_Content" />
+            <Decorator Name="PART_Content"
+                       TextElement.Foreground="{TemplateBinding Foreground}" />
           </DockPanel>
         </Border>
       </ControlTemplate>

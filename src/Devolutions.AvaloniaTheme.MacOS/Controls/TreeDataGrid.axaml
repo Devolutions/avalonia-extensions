@@ -341,9 +341,6 @@
       <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^:selected:focus /template/ Border#FocusVisual">
-      <Setter Property="BorderBrush" Value="{DynamicResource DataGridCellBorderSelectedBrush}" />
-    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridTemplateCell}" TargetType="TreeDataGridTemplateCell">
@@ -377,7 +374,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Margin="3 2"
-                    BorderBrush="{DynamicResource DataGridCellBorderSelectedBrush}"
+                  BorderBrush="Transparent"
                     BorderThickness="1"
                     CornerRadius="5" />
             <ContentPresenter Name="PART_ContentPresenter"
@@ -395,6 +392,8 @@
       <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
     </Style>
     <Style Selector="^:selected /template/ Border#FocusVisual">
+      <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
       <Setter Property="IsVisible" Value="True" />
     </Style>
   </ControlTheme>
@@ -418,7 +417,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Margin="3 2"
-                    BorderBrush="{DynamicResource DataGridCellBorderSelectedBrush}"
+                  BorderBrush="Transparent"
                     BorderThickness="1"
                     CornerRadius="5" />
             <Border Padding="{TemplateBinding Padding}">
@@ -435,6 +434,8 @@
       <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
     </Style>
     <Style Selector="^:selected /template/ Border#FocusVisual">
+      <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
       <Setter Property="IsVisible" Value="True" />
     </Style>
   </ControlTheme>
@@ -499,26 +500,39 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Padding="{TemplateBinding Indent, Converter={x:Static conv:IndentConverter.Instance}}">
-          <DockPanel>
-            <Border DockPanel.Dock="Left"
-                    Margin="{StaticResource TreeViewItemChevronMargin}"
-                    Width="{StaticResource TreeViewItemChevronSize}">
-              <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
-                            Focusable="False"
-                            Foreground="{TemplateBinding Foreground}"
-                            IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
-                            IsVisible="{TemplateBinding ShowExpander}" />
-            </Border>
-            <Decorator Name="PART_Content"
-                       TextElement.Foreground="{TemplateBinding Foreground}" />
-          </DockPanel>
+          <Grid>
+            <Border Name="FocusVisual"
+                    IsHitTestVisible="False"
+                    IsVisible="False"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Margin="3 2"
+                    BorderBrush="Transparent"
+                    BorderThickness="1"
+                    CornerRadius="5" />
+            <DockPanel>
+              <Border DockPanel.Dock="Left"
+                      Margin="{StaticResource TreeViewItemChevronMargin}"
+                      Width="{StaticResource TreeViewItemChevronSize}">
+                <ToggleButton Theme="{StaticResource TreeDataGridExpandCollapseChevron}"
+                              Focusable="False"
+                              Foreground="{TemplateBinding Foreground}"
+                              IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
+                              IsVisible="{TemplateBinding ShowExpander}" />
+              </Border>
+              <Decorator Name="PART_Content"
+                         TextElement.Foreground="{TemplateBinding Foreground}" />
+            </DockPanel>
+          </Grid>
         </Border>
       </ControlTemplate>
     </Setter>
 
     <!-- Cell selected in cell-selection mode -->
-    <Style Selector="^:selected /template/ Border#CellBorder">
+    <Style Selector="^:selected /template/ Border#FocusVisual">
       <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+      <Setter Property="IsVisible" Value="True" />
     </Style>
   </ControlTheme>
 

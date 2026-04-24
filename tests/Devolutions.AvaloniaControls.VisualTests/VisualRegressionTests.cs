@@ -257,20 +257,30 @@ public class VisualRegressionTests
             Content = content
         };
 
-        window.Show();
-        
-        // Wait for window to be ready
-        Dispatcher.UIThread.RunJobs();
-        
-        // Simulate Tab key to focus the first control
-        window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
 
-        // 4. Test Light Mode
-        CaptureAndCompare("", ThemeVariant.Light);
+            // Wait for window to be ready
+            Dispatcher.UIThread.RunJobs();
 
-        // 5. Test Dark Mode
-        CaptureAndCompare("_dark", ThemeVariant.Dark);
+            // Simulate Tab key to focus the first control
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+
+            // 4. Test Light Mode
+            CaptureAndCompare("", ThemeVariant.Light);
+
+            // 5. Test Dark Mode
+            CaptureAndCompare("_dark", ThemeVariant.Dark);
+        }
+        finally
+        {
+            // Always close and detach content to avoid leaking window state across tests.
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
         
 
         void CaptureAndCompare(string suffix, ThemeVariant variant)
@@ -316,8 +326,6 @@ public class VisualRegressionTests
             }
         }
 
-        
-        window.Close();
     }
 }
 

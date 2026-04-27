@@ -576,8 +576,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         for (int i = 0; i < this.ItemsView.Count; ++i)
         {
             object? item = this.ItemsView[i];
-            string value = item is EditableComboBoxItem ecbItem
-                ? ecbItem.Value
+            string value = item is EditableComboBoxItem comboBoxItem
+                ? comboBoxItem.Value
                 : this.GetItemStringValue(item, evaluator);
             this.realizedItems[GetSourceKey(item)] = value;
         }
@@ -589,8 +589,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         else
         {
             this.filteredItems.Clear();
-            for (int i = 0; i < this.ItemsView.Count; ++i)
-                this.filteredItems.Add(this.ItemsView[i]);
+            this.filteredItems.AddRange(this.ItemsView.Select(CloneIfInlineItem));
         }
 
         this.SyncCommittedSelectionState();
@@ -602,28 +601,64 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         string trimmedSearch = this.Value?.Trim() ?? string.Empty;
         this.filteredItems.Clear();
-
-        for (int i = 0; i < this.ItemsView.Count; ++i)
-        {
-            object? item = this.ItemsView[i];
-            string itemValue = this.GetValueForItem(item);
-            if (string.IsNullOrEmpty(trimmedSearch) || itemValue.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase))
-                this.filteredItems.Add(item);
-        }
+        this.filteredItems.AddRange(
+            this.ItemsView
+                .Where(item =>
+                {
+                    string itemValue = this.GetValueForItem(item);
+                    return string.IsNullOrEmpty(trimmedSearch) || itemValue.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase);
+                })
+                .Select(CloneIfInlineItem));
     }
 
     private string? GetSelectedItemValue()
     {
         object? selected = this.innerComboBox.SelectedItem;
-        if (selected is null) return null;
+        if (selected is null)
+        {
+            return null;
+        }
+
         return this.realizedItems.TryGetValue(GetSourceKey(selected), out string? value) ? value : selected.ToString();
     }
 
-    private static object GetSourceKey(object? item) => item ?? NullSourceKey;
+    private static object GetSourceKey(object? item)
+    {
+        // For cloned EditableComboBoxItem instances, resolve to the original source item
+        // so that dictionary lookups match realizedItems keys (which use original items).
+        if (item is EditableComboBoxItem { OriginalSourceItem: { } originalItem } && !ReferenceEquals(item, originalItem))
+        {
+            return originalItem;
+        }
+
+        return item ?? NullSourceKey;
+    }
+
+    /// <summary>
+    /// Inline XAML EditableComboBoxItem items are Visuals that cannot be re-added to a panel
+    /// after removal. Clone them so that filtering (clear + re-add) works correctly.
+    /// Non-EditableComboBoxItem source objects are passed through unchanged (they get fresh
+    /// generated containers via NeedsContainerOverride).
+    /// </summary>
+    private static object? CloneIfInlineItem(object? item)
+    {
+        if (item is not EditableComboBoxItem comboBoxItem)
+        {
+            return item;
+        }
+        
+        EditableComboBoxItem clone = comboBoxItem.Clone();
+        clone.OriginalSourceItem ??= comboBoxItem;
+        return clone;
+    }
 
     private string GetValueForItem(object? item)
     {
-        if (item is EditableComboBoxItem ecbItem) return ecbItem.Value;
+        if (item is EditableComboBoxItem comboBoxItem)
+        {
+            return comboBoxItem.Value;
+        }
+
         return this.realizedItems.TryGetValue(GetSourceKey(item), out string? value) ? value : item?.ToString() ?? string.Empty;
     }
 
@@ -688,11 +723,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void OnOpenMenu()
     {
-        // filteredItems is not reset here. In Filter mode, FilterItems() already keeps
-        // filteredItems in sync with the current Value. Resetting here would modify the
-        // collection during the popup's initial layout pass (causing VSP anchor registration
-        // errors), and is unnecessary since the filtered state is correct.
-
         if (this.ClearOnOpen)
         {
             this.innerComboBox.SelectedIndex = -1;
@@ -812,9 +842,9 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         // in InnerComboBox.PrepareContainerForItemOverride when scrolled into view.
         for (int i = 0; i < this.filteredItems.Count; i++)
         {
-            if (this.innerComboBox.ContainerFromIndex(i) is EditableComboBoxItem ecbItem)
+            if (this.innerComboBox.ContainerFromIndex(i) is EditableComboBoxItem comboBoxItem)
             {
-                ecbItem.IsCommittedSelected = Equals(GetSourceKey(ecbItem.OriginalSourceItem), selectedKey);
+                comboBoxItem.IsCommittedSelected = Equals(GetSourceKey(comboBoxItem.OriginalSourceItem), selectedKey);
             }
         }
     }

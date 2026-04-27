@@ -723,6 +723,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void OnOpenMenu()
     {
+        this.FillItems();
         if (this.ClearOnOpen)
         {
             this.innerComboBox.SelectedIndex = -1;

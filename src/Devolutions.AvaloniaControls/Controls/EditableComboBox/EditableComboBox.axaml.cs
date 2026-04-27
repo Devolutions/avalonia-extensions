@@ -773,12 +773,9 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private string GetItemStringValue(object? item, BindingEvaluator? evaluator)
     {
-        if (this.ItemTemplate is EditableComboBoxDataTemplate template)
+        if (this.ItemTemplate is EditableComboBoxDataTemplate && evaluator != null)
         {
-            if (evaluator != null)
-            {
-                return evaluator.Evaluate(item) ?? string.Empty;
-            }
+            return evaluator.Evaluate(item) ?? string.Empty;
         }
 
         return item?.ToString() ?? string.Empty;

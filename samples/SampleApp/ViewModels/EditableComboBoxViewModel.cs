@@ -20,6 +20,8 @@ public partial class EditableComboBoxViewModel : ObservableValidator
 
     public EditableComboBoxViewModel()
     {
+        this.SelectedCountry = this.Countries[0];
+        
         this.ValidateAllProperties();
     }
 

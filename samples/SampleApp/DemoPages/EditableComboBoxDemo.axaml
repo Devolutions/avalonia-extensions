@@ -296,6 +296,7 @@
         </TextBlock>
         <EditableComboBox Grid.Column="1" Grid.Row="21"
                           ItemsSource="{Binding LargeItemsList}"
+                          Mode="Filter"
                           MaxDropDownHeight="200"
                           VerticalAlignment="Top"
                           Margin="10 0 20 0" />

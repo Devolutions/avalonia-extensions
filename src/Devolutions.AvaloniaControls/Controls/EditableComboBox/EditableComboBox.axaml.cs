@@ -420,6 +420,16 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.innerTextBox.Watermark = this.Watermark;
 
         this.FillItems();
+
+        // Sync Value from SelectedItem if it was bound before items were realized.
+        // OnPropertyChanged fires during XAML binding initialization (before OnInitialized),
+        // at which point realizedItems is still empty, causing it to set Value = null.
+        // FillItems() above has now populated realizedItems, so we can resolve it here.
+        if (this.Value == null && this.SelectedItem != null &&
+            this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out EditableComboBoxItem? preselected))
+        {
+            this.Value = preselected.Value;
+        }
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

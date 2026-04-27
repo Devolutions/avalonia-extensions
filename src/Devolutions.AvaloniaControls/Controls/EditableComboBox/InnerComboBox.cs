@@ -230,12 +230,23 @@ public partial class EditableComboBox
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
             base.PrepareContainerForItemOverride(container, item, index);
-            if (container != item)
+            if (container is EditableComboBoxItem editableComboBoxItem)
             {
-                if (container is EditableComboBoxItem editableComboBoxItem)
-                    // FIXME: Verify if we shouldn't maybe bind instead ?
+                if (container != item)
                 {
-                    editableComboBoxItem.Value = (item as EditableComboBoxItem)?.Value ?? item?.ToString() ?? string.Empty;
+                    // Normal case: item is raw source data; populate the generated container.
+                    editableComboBoxItem.OriginalSourceItem = item;
+                    editableComboBoxItem.Value = this.parent.GetValueForItem(item);
+                    editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+                    if (this.parent.ItemTemplate != null)
+                        editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
+                }
+                else
+                {
+                    // container == item: EditableComboBoxItem used directly as source (inline XAML items).
+                    if (editableComboBoxItem.OriginalSourceItem == null)
+                        editableComboBoxItem.OriginalSourceItem = item;
+                    editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
                 }
             }
         }

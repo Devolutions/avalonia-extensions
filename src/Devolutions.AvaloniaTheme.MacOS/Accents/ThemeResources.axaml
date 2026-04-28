@@ -517,7 +517,7 @@
 
   <SolidColorBrush x:Key="ForegroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.85" />
   <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundHighBrush" />
-  
+
   <SolidColorBrush x:Key="InputBackground" Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key="TextControlBackground" Color="{DynamicResource InputBackgroundColor}" />
 
@@ -654,6 +654,7 @@
   <x:Int32 x:Key="PopupTrimHeight">30</x:Int32> <!-- includes Margin, Padding, Shadow -->
   <x:Int32 x:Key="PopupSideMarginWidth">12</x:Int32> <!-- must match PopupMargin l/r values -->
   <Thickness x:Key="PopupMargin">12 1 12 29</Thickness> <!-- to accommodate shadow -->
+  <x:Double x:Key="PopupMarginCompensationOffset">-10</x:Double> <!-- to correct positioning -->
   <Thickness x:Key="PopupPadding">3 5</Thickness>
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />

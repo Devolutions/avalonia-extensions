@@ -114,7 +114,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private static readonly object NullSourceKey = new();
 
-    private Dictionary<object, EditableComboBoxItem> realizedItems = new();
+    private Dictionary<object, string> realizedItems = new();
 
     static EditableComboBox()
     {
@@ -320,9 +320,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (change.Property == SelectedItemProperty && !this.syncingSelectedItemFromInnerCombo)
         {
             object? newSelectedItem = change.NewValue;
-            this.Value = this.realizedItems.TryGetValue(GetSourceKey(newSelectedItem), out EditableComboBoxItem? found)
-                ? found.Value
-                : null;
+            this.Value = this.realizedItems.GetValueOrDefault(GetSourceKey(newSelectedItem));
 
             this.SyncCommittedSelectionState();
         }
@@ -426,9 +424,9 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         // at which point realizedItems is still empty, causing it to set Value = null.
         // FillItems() above has now populated realizedItems, so we can resolve it here.
         if (this.Value == null && this.SelectedItem != null &&
-            this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out EditableComboBoxItem? preselected))
+            this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out string? itemValue))
         {
-            this.Value = preselected.Value;
+            this.Value = itemValue;
         }
     }
 
@@ -579,27 +577,18 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             ? new BindingEvaluator(binding)
             : null;
 
-        this.realizedItems = new Dictionary<object, EditableComboBoxItem>(this.ItemsView.Count);
+        // Build a lightweight value-string lookup. Raw source objects go directly into filteredItems
+        // so that InnerComboBox.NeedsContainerOverride returns true for them, enabling VSP virtualization.
+        // Containers are created on-demand by PrepareContainerForItemOverride instead of all upfront.
+        this.realizedItems = new Dictionary<object, string>(this.ItemsView.Count);
         for (int i = 0; i < this.ItemsView.Count; ++i)
         {
             object? item = this.ItemsView[i];
-
-            EditableComboBoxItem realized = item as EditableComboBoxItem
-                                           ?? new EditableComboBoxItem
-                                           {
-                                               Value = this.GetItemStringValue(item, evaluator),
-                                               DataContext = item,
-                                           };
-            if (realized != item && this.ItemTemplate != null)
-            {
-                realized.ContentTemplate = this.ItemTemplate;
-            }
-
-            realized.OriginalSourceItem = item;
-            this.realizedItems[GetSourceKey(item)] = realized;
+            string value = item is EditableComboBoxItem comboBoxItem
+                ? comboBoxItem.Value
+                : evaluator?.Evaluate(item) ?? item?.ToString() ?? string.Empty;
+            this.realizedItems[GetSourceKey(item)] = value;
         }
-
-        this.RefreshContainers();
 
         if (filter && this.Mode == EditableComboBoxMode.Filter)
         {
@@ -608,14 +597,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         else
         {
             this.filteredItems.Clear();
-
-            // FIXME: Clone is currently required to fix an issue where the InnerComboBox would not re-attach the items
-            //        to its visual tree when an item that was already added to it is removed and then the same instance is
-            //        re-added (which is what we do when filtering).
-            //
-            //        It would be great if we could find a better way to do this without additional memory allocation.
-            //        - sbergerondrouin 2025-05-09
-            this.filteredItems.AddRange(this.realizedItems.Values.Select(static i => i.Clone()));
+            this.filteredItems.AddRange(this.ItemsView.Select(CloneIfInlineItem));
         }
 
         this.SyncCommittedSelectionState();
@@ -627,19 +609,66 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         string trimmedSearch = this.Value?.Trim() ?? string.Empty;
         this.filteredItems.Clear();
-
-        // See above comment in `FillItems` about cloning
         this.filteredItems.AddRange(
-            this.realizedItems.Values.Select(item =>
-                string.IsNullOrEmpty(trimmedSearch) || item.Value.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase)
-                    ? item.Clone()
-                    : null).SkipNulls());
+            this.ItemsView
+                .Where(item =>
+                {
+                    string itemValue = this.GetValueForItem(item);
+                    return string.IsNullOrEmpty(trimmedSearch) || itemValue.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase);
+                })
+                .Select(CloneIfInlineItem));
     }
 
-    private string? GetSelectedItemValue() =>
-        (this.innerComboBox.SelectedItem as EditableComboBoxItem)?.Value ?? this.innerComboBox.SelectedItem?.ToString();
+    private string? GetSelectedItemValue()
+    {
+        object? selected = this.innerComboBox.SelectedItem;
+        if (selected is null)
+        {
+            return null;
+        }
 
-    private static object GetSourceKey(object? item) => item ?? NullSourceKey;
+        return this.realizedItems.TryGetValue(GetSourceKey(selected), out string? value) ? value : selected.ToString();
+    }
+
+    private static object GetSourceKey(object? item)
+    {
+        // For cloned EditableComboBoxItem instances, resolve to the original source item
+        // so that dictionary lookups match realizedItems keys (which use original items).
+        if (item is EditableComboBoxItem { OriginalSourceItem: { } originalItem } && !ReferenceEquals(item, originalItem))
+        {
+            return originalItem;
+        }
+
+        return item ?? NullSourceKey;
+    }
+
+    /// <summary>
+    /// Inline XAML EditableComboBoxItem items are Visuals that cannot be re-added to a panel
+    /// after removal. Clone them so that filtering (clear + re-add) works correctly.
+    /// Non-EditableComboBoxItem source objects are passed through unchanged (they get fresh
+    /// generated containers via NeedsContainerOverride).
+    /// </summary>
+    private static object? CloneIfInlineItem(object? item)
+    {
+        if (item is not EditableComboBoxItem comboBoxItem)
+        {
+            return item;
+        }
+        
+        EditableComboBoxItem clone = comboBoxItem.Clone();
+        clone.OriginalSourceItem ??= comboBoxItem;
+        return clone;
+    }
+
+    private string GetValueForItem(object? item)
+    {
+        if (item is EditableComboBoxItem comboBoxItem)
+        {
+            return comboBoxItem.Value;
+        }
+
+        return this.realizedItems.TryGetValue(GetSourceKey(item), out string? value) ? value : item?.ToString() ?? string.Empty;
+    }
 
     private void HighlightNextItem()
     {
@@ -737,8 +766,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         if (this.innerComboBox.SelectedIndex < 0)
         {
-            this.Value = this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out EditableComboBoxItem? revertTo)
-                ? revertTo.Value
+            this.Value = this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out string? revertToValue)
+                ? revertToValue
                 : null;
         }
     }
@@ -754,8 +783,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         foreach (object? item in this.innerComboBox.ItemsView)
         {
-            EditableComboBoxItem? editableComboBoxItem = item as EditableComboBoxItem;
-            if (editableComboBoxItem?.Value == this.Value || (editableComboBoxItem is null && item?.ToString() == this.Value))
+            if (this.GetValueForItem(item) == this.Value)
             {
                 this.innerComboBox.SelectedItem = item;
                 return;
@@ -771,16 +799,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.syncingSelectedItemFromInnerCombo = true;
         try
         {
-            if (this.innerComboBox.SelectedIndex >= 0)
-            {
-                var selectedClone = this.innerComboBox.SelectedItem as EditableComboBoxItem;
-                this.SelectedItem = selectedClone?.OriginalSourceItem;
-            }
-            else
-            {
-                this.SelectedItem = null;
-            }
-
+            object? innerSelected = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
+            this.SelectedItem = innerSelected is EditableComboBoxItem comboBoxItem ? comboBoxItem.OriginalSourceItem : innerSelected;
             this.SyncCommittedSelectionState();
         }
         finally
@@ -791,18 +811,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.Value = this.GetSelectedItemValue();
     }
 
-    private string GetItemStringValue(object? item, BindingEvaluator? evaluator)
-    {
-        if (this.ItemTemplate is EditableComboBoxDataTemplate template)
-        {
-            if (evaluator != null)
-            {
-                return evaluator.Evaluate(item) ?? string.Empty;
-            }
-        }
-
-        return item?.ToString() ?? string.Empty;
-    }
 
     private sealed class BindingEvaluator : StyledElement
     {
@@ -831,14 +839,14 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         object selectedKey = GetSourceKey(this.SelectedItem);
 
-        foreach (EditableComboBoxItem realizedItem in this.realizedItems.Values)
+        // Only update currently-realized containers. Non-visible ones are set correctly
+        // in InnerComboBox.PrepareContainerForItemOverride when scrolled into view.
+        for (int i = 0; i < this.filteredItems.Count; i++)
         {
-            realizedItem.IsCommittedSelected = Equals(GetSourceKey(realizedItem.OriginalSourceItem), selectedKey);
-        }
-
-        foreach (EditableComboBoxItem filteredItem in this.filteredItems.OfType<EditableComboBoxItem>())
-        {
-            filteredItem.IsCommittedSelected = Equals(GetSourceKey(filteredItem.OriginalSourceItem), selectedKey);
+            if (this.innerComboBox.ContainerFromIndex(i) is EditableComboBoxItem comboBoxItem)
+            {
+                comboBoxItem.IsCommittedSelected = Equals(GetSourceKey(comboBoxItem.OriginalSourceItem), selectedKey);
+            }
         }
     }
 }

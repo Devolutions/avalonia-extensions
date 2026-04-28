@@ -11,6 +11,12 @@ public class SearchHighlightTextBlock : ContentControl
 {
   private CompositeDisposable? bindings;
 
+  // Tracks whether Content was set by our ValueProperty subscription (not by explicit XAML assignment).
+  // Required to correctly handle VSP container recycling: when the container is detached from the
+  // visual tree, we must clear Content so that IsSet(ContentProperty) resets to false, allowing
+  // OnAttachedToVisualTree to re-establish the subscription with the recycled container's new Value.
+  private bool contentManagedBySubscription;
+
   public static readonly DirectProperty<SearchHighlightTextBlock, string> LeftTextProperty =
     AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string>(nameof(LeftText), static o => o.leftText);
 
@@ -81,8 +87,9 @@ public class SearchHighlightTextBlock : ContentControl
       this.bindings.Add(item
         .GetObservable(EditableComboBoxItem.FilterHighlightTextProperty)
         .Subscribe(text => this.Search = text));
-      if (!this.IsSet(ContentControl.ContentProperty))
+      if (!this.IsSet(ContentControl.ContentProperty) || this.contentManagedBySubscription)
       {
+        this.contentManagedBySubscription = true;
         this.bindings.Add(item
           .GetObservable(EditableComboBoxItem.ValueProperty)
           .Subscribe(value => this.Content = value));
@@ -95,6 +102,12 @@ public class SearchHighlightTextBlock : ContentControl
     base.OnDetachedFromVisualTree(e);
     this.bindings?.Dispose();
     this.bindings = null;
+    if (this.contentManagedBySubscription)
+    {
+      // Clear Content so that IsSet(ContentProperty) resets to false on next OnAttachedToVisualTree.
+      // This ensures recycled VSP containers re-subscribe to the new container's ValueProperty.
+      this.ClearValue(ContentProperty);
+    }
   }
 
   private void ProcessHighlight()

@@ -1,6 +1,7 @@
 namespace SampleApp.ViewModels;
 
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,8 +19,15 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     [ObservableProperty]
     private Country? selectedCountry2;
 
+    [ObservableProperty]
+    private string? selectedLargeItem;
+
+    public IReadOnlyList<string> LargeItemsList { get; } =
+        Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList();
+
     public EditableComboBoxViewModel()
     {
+        this.SelectedLargeItem = this.LargeItemsList[0];
         this.SelectedCountry = this.Countries[0];
         this.selectedCountry2 = this.Countries2[^1];
         

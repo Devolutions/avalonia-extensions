@@ -107,7 +107,12 @@ public partial class EditableComboBox
         protected override void ClearContainerForItemOverride(Control element)
         {
             base.ClearContainerForItemOverride(element);
-            if (element is EditableComboBoxItem editableComboBoxItem) editableComboBoxItem.Value = string.Empty;
+            if (element is EditableComboBoxItem editableComboBoxItem)
+            {
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.ValueProperty);
+                editableComboBoxItem.OriginalSourceItem = null;
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.FilterHighlightTextProperty);
+            }
         }
 
         protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
@@ -131,7 +136,8 @@ public partial class EditableComboBox
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
             new EditableComboBoxItem
             {
-                Value = item?.ToString() ?? string.Empty,
+                // No reason to set it here, this will be set in PrepareContainerForItemOverride
+                Value = string.Empty,
             };
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
@@ -226,13 +232,29 @@ public partial class EditableComboBox
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
             base.PrepareContainerForItemOverride(container, item, index);
+
+            if (container is not EditableComboBoxItem editableComboBoxItem)
+            {
+                return;
+            }
+
+            editableComboBoxItem.Value = this.parent.GetValueForItem(item);
             if (container != item)
             {
-                if (container is EditableComboBoxItem editableComboBoxItem)
-                    // FIXME: Verify if we shouldn't maybe bind instead ?
+                // Normal case: item is raw source data; populate the generated container.
+                editableComboBoxItem.OriginalSourceItem = item;
+                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+                if (this.parent.ItemTemplate != null)
                 {
-                    editableComboBoxItem.Value = (item as EditableComboBoxItem)?.Value ?? item?.ToString() ?? string.Empty;
+                    editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
                 }
+            }
+            else
+            {
+                // We should consider supporting virtualization even with EditableComboBoxItem as items
+                // The entire containerization should be handled here (that is, in InnerComboBox) and cloning
+                // should be removed from EditableComboBox altogether
+                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
             }
         }
 

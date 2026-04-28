@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -115,6 +115,11 @@
           VerticalAlignment="Top"
           Mode="Filter"
           Margin="10 0 20 20">
+          <EditableComboBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+          </EditableComboBox.ItemsPanel>
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
           <EditableComboBoxItem>Option 2</EditableComboBoxItem>
           <EditableComboBoxItem>Option 3</EditableComboBoxItem>
@@ -144,6 +149,77 @@
           <EditableComboBoxItem>Option 27</EditableComboBoxItem>
           <EditableComboBoxItem>Option 28</EditableComboBoxItem>
           <EditableComboBoxItem>Option 29</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 31</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 32</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 33</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 34</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 35</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 36</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 37</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 38</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 39</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 40</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 41</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 42</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 43</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 44</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 45</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 46</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 47</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 48</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 49</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 50</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 51</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 52</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 53</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 54</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 55</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 56</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 57</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 58</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 59</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 60</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 61</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 62</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 63</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 64</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 65</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 66</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 67</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 68</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 69</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 70</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 71</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 72</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 73</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 74</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 75</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 76</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 77</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 78</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 79</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 80</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 81</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 82</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 83</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 84</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 85</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 86</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 87</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 88</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 89</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 90</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 91</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 92</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 93</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 94</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 95</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 96</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 97</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 98</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 99</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 100</EditableComboBoxItem>
+          <EditableComboBoxItem>Option 101</EditableComboBoxItem>
         </EditableComboBox>
 
         <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
@@ -290,6 +366,20 @@
             </Border>
           </EditableComboBox.InnerLeftContent>
         </EditableComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Top" Margin="0 5 10 0">
+          - 1000 items (memory leak test):
+        </TextBlock>
+        <EditableComboBox Grid.Column="1" Grid.Row="21"
+                          SelectedItem="{Binding SelectedLargeItem}"
+                          ItemsSource="{Binding LargeItemsList}"
+                          AllowCustomValue="False"
+                          Mode="Filter"
+                          MaxDropDownHeight="200"
+                          VerticalAlignment="Top"
+                          Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="22" Margin="10 4 20 15"
+                   Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
       </Grid>
     </Border>
   </StackPanel>

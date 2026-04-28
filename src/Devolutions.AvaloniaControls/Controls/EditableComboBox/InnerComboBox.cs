@@ -232,25 +232,28 @@ public partial class EditableComboBox
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
             base.PrepareContainerForItemOverride(container, item, index);
-            if (container is EditableComboBoxItem editableComboBoxItem)
+
+            if (container is not EditableComboBoxItem editableComboBoxItem)
             {
-                editableComboBoxItem.Value = this.parent.GetValueForItem(item);
-                if (container != item)
+                return;
+            }
+
+            editableComboBoxItem.Value = this.parent.GetValueForItem(item);
+            if (container != item)
+            {
+                // Normal case: item is raw source data; populate the generated container.
+                editableComboBoxItem.OriginalSourceItem = item;
+                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+                if (this.parent.ItemTemplate != null)
                 {
-                    // Normal case: item is raw source data; populate the generated container.
-                    editableComboBoxItem.OriginalSourceItem = item;
-                    editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
-                    if (this.parent.ItemTemplate != null)
-                    {
-                        editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
-                    }
+                    editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
                 }
-                else
-                {
-                    // container == item: EditableComboBoxItem used directly as source (inline XAML items).
-                    editableComboBoxItem.OriginalSourceItem ??= item;
-                    editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
-                }
+            }
+            else
+            {
+                // container == item: EditableComboBoxItem used directly as source (inline XAML items).
+                editableComboBoxItem.OriginalSourceItem ??= item;
+                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
             }
         }
 

@@ -297,6 +297,7 @@
         <EditableComboBox Grid.Column="1" Grid.Row="21"
                           SelectedItem="{Binding SelectedLargeItem}"
                           ItemsSource="{Binding LargeItemsList}"
+                          AllowCustomValue="False"
                           Mode="Filter"
                           MaxDropDownHeight="200"
                           VerticalAlignment="Top"

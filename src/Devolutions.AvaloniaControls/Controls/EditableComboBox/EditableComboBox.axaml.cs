@@ -426,9 +426,9 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         // at which point realizedItems is still empty, causing it to set Value = null.
         // FillItems() above has now populated realizedItems, so we can resolve it here.
         if (this.Value == null && this.SelectedItem != null &&
-            this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out EditableComboBoxItem? preselected))
+            this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out string? itemValue))
         {
-            this.Value = preselected.Value;
+            this.Value = itemValue;
         }
     }
 

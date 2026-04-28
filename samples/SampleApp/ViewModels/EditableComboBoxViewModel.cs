@@ -28,7 +28,9 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     public EditableComboBoxViewModel()
     {
         this.SelectedLargeItem = this.LargeItemsList[0];
-
+        this.SelectedCountry = this.Countries[0];
+        this.selectedCountry2 = this.Countries2[^1];
+        
         this.ValidateAllProperties();
     }
 

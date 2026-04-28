@@ -3,6 +3,7 @@
 
     <PropertyGroup>
         <TargetFramework>$(DemoFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
 
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
@@ -27,6 +28,11 @@
 
     <ItemGroup>
         <Using Include="Xunit" />
+    </ItemGroup>
+
+    <!-- Register the license key for Avalonia Accelerate when present -->
+    <ItemGroup>
+        <AvaloniaUILicenseKey Include="$(AVALONIA_LICENSE_KEY)" Condition="'$(AVALONIA_LICENSE_KEY)' != ''" />
     </ItemGroup>
 
     <ItemGroup>

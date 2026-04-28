@@ -277,7 +277,7 @@ public partial class MainWindow : Window
     SampleItemHeader header = new()
     {
       Title = "TreeDataGrid (Accelerate)",
-      ApplicableTo = "Fluent, DevExpress, Linux",
+      ApplicableTo = "Fluent, MacClassic, DevExpress, Linux",
     };
     tabItem.Header = header;
 

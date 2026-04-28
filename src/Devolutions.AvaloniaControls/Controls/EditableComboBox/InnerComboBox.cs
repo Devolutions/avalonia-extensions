@@ -109,7 +109,8 @@ public partial class EditableComboBox
             base.ClearContainerForItemOverride(element);
             if (element is EditableComboBoxItem editableComboBoxItem)
             {
-                editableComboBoxItem.Value = string.Empty;
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.ValueProperty);
+                editableComboBoxItem.OriginalSourceItem = null;
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.FilterHighlightTextProperty);
             }
         }

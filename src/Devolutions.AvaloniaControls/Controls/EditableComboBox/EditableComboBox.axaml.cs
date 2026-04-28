@@ -320,9 +320,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (change.Property == SelectedItemProperty && !this.syncingSelectedItemFromInnerCombo)
         {
             object? newSelectedItem = change.NewValue;
-            this.Value = this.realizedItems.TryGetValue(GetSourceKey(newSelectedItem), out string? itemValue)
-                ? itemValue
-                : null;
+            this.Value = this.realizedItems.GetValueOrDefault(GetSourceKey(newSelectedItem));
 
             this.SyncCommittedSelectionState();
         }

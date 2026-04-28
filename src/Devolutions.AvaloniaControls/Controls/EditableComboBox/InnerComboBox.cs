@@ -251,8 +251,9 @@ public partial class EditableComboBox
             }
             else
             {
-                // container == item: EditableComboBoxItem used directly as source (inline XAML items).
-                editableComboBoxItem.OriginalSourceItem ??= item;
+                // We should consider supporting virtualization even with EditableComboBoxItem as items
+                // The entire containerization should be handled here (that is, in InnerComboBox) and cloning
+                // should be removed from EditableComboBox altogether
                 editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
             }
         }

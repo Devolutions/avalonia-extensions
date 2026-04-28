@@ -588,7 +588,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             object? item = this.ItemsView[i];
             string value = item is EditableComboBoxItem comboBoxItem
                 ? comboBoxItem.Value
-                : this.GetItemStringValue(item, evaluator);
+                : evaluator?.Evaluate(item) ?? item?.ToString() ?? string.Empty;
             this.realizedItems[GetSourceKey(item)] = value;
         }
 
@@ -813,15 +813,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.Value = this.GetSelectedItemValue();
     }
 
-    private string GetItemStringValue(object? item, BindingEvaluator? evaluator)
-    {
-        if (this.ItemTemplate is EditableComboBoxDataTemplate && evaluator != null)
-        {
-            return evaluator.Evaluate(item) ?? string.Empty;
-        }
-
-        return item?.ToString() ?? string.Empty;
-    }
 
     private sealed class BindingEvaluator : StyledElement
     {

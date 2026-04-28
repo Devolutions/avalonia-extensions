@@ -802,7 +802,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         try
         {
             object? innerSelected = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
-            this.SelectedItem = innerSelected is EditableComboBoxItem ecb ? ecb.OriginalSourceItem : innerSelected;
+            this.SelectedItem = innerSelected is EditableComboBoxItem comboBoxItem ? comboBoxItem.OriginalSourceItem : innerSelected;
             this.SyncCommittedSelectionState();
         }
         finally

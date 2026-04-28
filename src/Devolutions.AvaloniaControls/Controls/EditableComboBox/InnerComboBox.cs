@@ -239,13 +239,14 @@ public partial class EditableComboBox
                     editableComboBoxItem.Value = this.parent.GetValueForItem(item);
                     editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
                     if (this.parent.ItemTemplate != null)
+                    {
                         editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
+                    }
                 }
                 else
                 {
                     // container == item: EditableComboBoxItem used directly as source (inline XAML items).
-                    if (editableComboBoxItem.OriginalSourceItem == null)
-                        editableComboBoxItem.OriginalSourceItem = item;
+                    editableComboBoxItem.OriginalSourceItem ??= item;
                     editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
                 }
             }

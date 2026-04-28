@@ -136,7 +136,8 @@ public partial class EditableComboBox
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
             new EditableComboBoxItem
             {
-                Value = item?.ToString() ?? string.Empty,
+                // No reason to set it here, this will be set in PrepareContainerForItemOverride
+                Value = string.Empty,
             };
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
@@ -233,11 +234,11 @@ public partial class EditableComboBox
             base.PrepareContainerForItemOverride(container, item, index);
             if (container is EditableComboBoxItem editableComboBoxItem)
             {
+                editableComboBoxItem.Value = this.parent.GetValueForItem(item);
                 if (container != item)
                 {
                     // Normal case: item is raw source data; populate the generated container.
                     editableComboBoxItem.OriginalSourceItem = item;
-                    editableComboBoxItem.Value = this.parent.GetValueForItem(item);
                     editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
                     if (this.parent.ItemTemplate != null)
                     {

@@ -1,0 +1,221 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:internal="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Internal"
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Spacing="20">
+        <SplitButton Content="Accent" Classes="accent">
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="A" />
+              <MenuItem Header="B" />
+              <MenuItem Header="C" />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+
+        <SplitButton Content="SplitButton">
+          <SplitButton.Flyout>
+            <Flyout>Hello</Flyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+
+        <SplitButton IsEnabled="False">Disabled</SplitButton>
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <x:Double x:Key="SplitButtonPrimaryButtonSize">28</x:Double>
+  <x:Double x:Key="SplitButtonSecondaryButtonSize">22</x:Double>
+  <x:Double x:Key="SplitButtonSeparatorWidth">0.5</x:Double>
+
+  <ControlTheme x:Key="MacOsSplitButtonPartTheme" TargetType="Button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="Transparent"
+                BorderBrush="Transparent"
+                BorderThickness="0">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontWeight="{TemplateBinding FontWeight}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type SplitButton}" TargetType="SplitButton">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonCornerRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ButtonMinHeight}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ButtonFontWeight}" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="internal:SplitButtonFlyoutPresenterThemeBehavior.MenuFlyoutHorizontalOffset"
+            Value="{DynamicResource MenuFlyoutHorizontalCompensation}" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <Border Name="BackgroundElement"
+                  MinHeight="{DynamicResource ButtonMinHeight}"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  BoxShadow="{DynamicResource ButtonBorderBoxShadow}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+              x:Name="PART_PrimaryButton"
+              Grid.Column="0"
+              Classes="PrimaryButton"
+              Theme="{StaticResource MacOsSplitButtonPartTheme}"
+              MinWidth="{DynamicResource SplitButtonPrimaryButtonSize}"
+              Foreground="{TemplateBinding Foreground}"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
+              Command="{TemplateBinding Command}"
+              CommandParameter="{TemplateBinding CommandParameter}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+              Padding="{TemplateBinding Padding}"
+              Focusable="False"
+              KeyboardNavigation.IsTabStop="False" />
+
+            <Rectangle
+              x:Name="SeparatorLine"
+              Grid.Column="1"
+              HorizontalAlignment="Left"
+              Height="15"
+              VerticalAlignment="Center"
+              Width="{DynamicResource SplitButtonSeparatorWidth}"
+              Fill="{DynamicResource ForegroundHighBrush}"
+              IsHitTestVisible="False"
+              Opacity="0.5"
+              ZIndex="1" />
+
+            <Button
+              x:Name="PART_SecondaryButton"
+              Grid.Column="1"
+              Classes="SecondaryButton"
+              Theme="{StaticResource MacOsSplitButtonPartTheme}"
+              MinWidth="{DynamicResource SplitButtonSecondaryButtonSize}"
+              Foreground="{TemplateBinding Foreground}"
+              Padding="0"
+              HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Center"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Focusable="False"
+              KeyboardNavigation.IsTabStop="False">
+              <PathIcon
+                Name="DropDownGlyph"
+                UseLayoutRounding="False"
+                IsHitTestVisible="False"
+                Width="9"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                Data="{StaticResource ChevronPath}">
+                <PathIcon.RenderTransform>
+                  <ScaleTransform ScaleY="-1" />
+                </PathIcon.RenderTransform>
+              </PathIcon>
+            </Button>
+          </Grid>
+
+          <Border Name="FocusBorderElement"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  CornerRadius="7" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:focus-visible">
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^ /template/ Button#PART_PrimaryButton, ^ /template/ Button#PART_SecondaryButton">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="^:pressed, ^.splitbutton-pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonPressedBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderDisabledBrush}" />
+      <Style Selector="^ /template/ Rectangle#SeparatorLine">
+        <Setter Property="Opacity" Value="0.35" />
+      </Style>
+    </Style>
+
+    <Style Selector="^.accent">
+      <Setter Property="Background" Value="{WindowActiveResourceToggler AccentButtonBackgroundBrush, AccentButtonInactiveBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ForegroundHighBrush}" />
+      <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ButtonBorderAccentBrush, ControlBorderRaisedBrush}" />
+
+      <Style Selector="^ /template/ Rectangle#SeparatorLine">
+        <Setter Property="Fill" Value="{WindowActiveResourceToggler ControlForegroundAccentHighBrush, ForegroundHighBrush}" />
+      </Style>
+
+      <Style Selector="^:pressed, ^.splitbutton-pressed">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonPressedBackgroundBrush}" />
+      </Style>
+
+      <Style Selector="^:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonDisabledBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource AccentButtonDisabledBorderThickness}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>
+
+
+
+
+
+
+
+
+
+
+

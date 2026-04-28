@@ -228,7 +228,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="SplitButton" ApplicableTo="DevExpress, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="SplitButton" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:SplitButtonDemo />
               </TabItem>

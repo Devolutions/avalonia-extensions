@@ -42,6 +42,7 @@
       </ControlTemplate>
     </Setter>
   </ControlTheme>
+  
   <ControlTheme x:Key="HorizontalMenuFlyoutPresenter" TargetType="MenuFlyoutPresenter"
                 BasedOn="{StaticResource {x:Type MenuFlyoutPresenter}}">
     <Setter Property="MinWidth" Value="{DynamicResource HorizontalMenuFlyoutThemeMinWidth}" />

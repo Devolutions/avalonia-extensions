@@ -654,6 +654,7 @@
   <x:Int32 x:Key="PopupTrimHeight">30</x:Int32> <!-- includes Margin, Padding, Shadow -->
   <x:Int32 x:Key="PopupSideMarginWidth">12</x:Int32> <!-- must match PopupMargin l/r values -->
   <Thickness x:Key="PopupMargin">12 1 12 29</Thickness> <!-- to accommodate shadow -->
+  <x:Double x:Key="MenuFlyoutHorizontalCompensation">-10</x:Double>
   <Thickness x:Key="PopupPadding">3 5</Thickness>
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />

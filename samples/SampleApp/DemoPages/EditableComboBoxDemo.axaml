@@ -19,7 +19,7 @@
       </EditableComboBox>
     </StackPanel>
     <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -291,15 +291,18 @@
           </EditableComboBox.InnerLeftContent>
         </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Top" Margin="0 5 10 15">
+        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Top" Margin="0 5 10 0">
           - 1000 items (memory leak test):
         </TextBlock>
         <EditableComboBox Grid.Column="1" Grid.Row="21"
+                          SelectedItem="{Binding SelectedLargeItem}"
                           ItemsSource="{Binding LargeItemsList}"
                           Mode="Filter"
                           MaxDropDownHeight="200"
                           VerticalAlignment="Top"
                           Margin="10 0 20 0" />
+        <TextBlock Grid.Column="1" Grid.Row="22" Margin="10 4 20 15"
+                   Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
       </Grid>
     </Border>
   </StackPanel>

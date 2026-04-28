@@ -19,11 +19,16 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     [ObservableProperty]
     private Country? selectedCountry2;
 
+    [ObservableProperty]
+    private string? selectedLargeItem;
+
     public IReadOnlyList<string> LargeItemsList { get; } =
         Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList();
 
     public EditableComboBoxViewModel()
     {
+        this.SelectedLargeItem = this.LargeItemsList[0];
+
         this.ValidateAllProperties();
     }
 

@@ -71,7 +71,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource ButtonFontWeight}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="internal:SplitButtonFlyoutPresenterThemeBehavior.MenuFlyoutHorizontalOffset"
-            Value="{DynamicResource MenuFlyoutHorizontalCompensation}" />
+            Value="{DynamicResource PopupMarginCompensationOffset}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -208,14 +208,3 @@
     </Style>
   </ControlTheme>
 </ResourceDictionary>
-
-
-
-
-
-
-
-
-
-
-

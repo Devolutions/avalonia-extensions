@@ -58,7 +58,7 @@
     <Setter Property="BorderThickness" Value="{DynamicResource SplitButtonBorderThemeThickness}" />
     <Setter Property="MinHeight" Value="{DynamicResource SplitButtonMinHeight}" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
     <Setter Property="Focusable" Value="True" />

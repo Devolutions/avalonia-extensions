@@ -28,8 +28,8 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -51,9 +51,7 @@
             Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             Foreground="{TemplateBinding Foreground}"
-            Margin="{TemplateBinding Padding}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            Padding="{TemplateBinding Padding}"
             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
             FontSize="{TemplateBinding FontSize}"

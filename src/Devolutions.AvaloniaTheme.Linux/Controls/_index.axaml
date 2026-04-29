@@ -31,6 +31,7 @@
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="Separator.axaml" />
+    <MergeResourceInclude Source="SplitButton.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TagInput.axaml" />

@@ -30,11 +30,13 @@
       <addons:DataGridFluentTheme />
       <addons:TreeDataGridFluentTheme />
       <addons:ColorPickerFluentTheme />
+      <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
       <local:SampleAppStyles />
     </Styles>
     <Styles x:Key="SimpleStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <SimpleTheme />
+      <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
       <local:SampleAppStyles />
     </Styles>
     <actipro:ComparisonConverter x:Key="EqualToComparisonConverter" Operator="EqualTo" />

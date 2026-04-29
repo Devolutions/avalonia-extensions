@@ -27,7 +27,6 @@
   <x:Double x:Key="SplitButtonPrimaryButtonSize">26</x:Double>
   <x:Double x:Key="SplitButtonSecondaryButtonSize">22</x:Double>
   <x:Double x:Key="SplitButtonSeparatorWidth">1</x:Double>
-  <x:Double x:Key="SplitButtonMinHeight">26</x:Double>
 
   <ControlTheme x:Key="LinuxSplitButtonPartTheme" TargetType="Button">
     <Setter Property="MinHeight" Value="{DynamicResource InputDefaultHeight}" />
@@ -40,7 +39,6 @@
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Tag" Value="" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -59,11 +57,6 @@
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             FontSize="{TemplateBinding FontSize}"
                             FontWeight="{TemplateBinding FontWeight}" />
-          <Border Name="FocusBorderElement"
-                  IsVisible="False"
-                  BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>
       </ControlTemplate>
     </Setter>
@@ -72,31 +65,8 @@
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHoverColor}" />
     </Style>
 
-    <Style Selector="^:focus-visible /template/ Border#FocusBorderElement">
-      <Setter Property="IsVisible" Value="True" />
-    </Style>
-    <Style Selector="^:focus /template/ Border#FocusBorderElement">
-      <Setter Property="IsVisible" Value="True" />
-    </Style>
-    <Style Selector="^[Tag=noFocus] /template/ Border#FocusBorderElement">
-      <Setter Property="IsVisible" Value="False" />
-    </Style>
-
-    <Style Selector="^:pressed">
-      <Style Selector="^ /template/ Border#BackgroundElement">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
-      </Style>
-      <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="IsVisible" Value="True" />
-      </Style>
-    </Style>
-
-    <Style Selector="^:disabled">
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
-      <Style Selector="^ /template/ Border#BackgroundElement">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
-      </Style>
+    <Style Selector="^:pressed /template/ Border#BackgroundElement">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
     </Style>
 
     <Style Selector="^.accent">
@@ -115,13 +85,6 @@
         </Style>
       </Style>
 
-      <Style Selector="^:disabled">
-        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
-        <Style Selector="^ /template/ Border#BackgroundElement">
-          <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
-          <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
-        </Style>
-      </Style>
     </Style>
   </ControlTheme>
 

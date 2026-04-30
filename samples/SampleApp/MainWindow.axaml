@@ -222,6 +222,12 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="SearchHighlightTextBlock" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:SearchHighlightTextBlockDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="Separator" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:SeparatorDemo />

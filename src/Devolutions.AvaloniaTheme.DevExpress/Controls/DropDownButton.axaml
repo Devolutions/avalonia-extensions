@@ -43,7 +43,7 @@
               CornerRadius="{TemplateBinding CornerRadius}" />
 
             <Grid Name="InnerGrid" ColumnDefinitions="*,Auto">
-              <ContentPresenter x:Name="PART_ContentPresenter"
+              <ContentPresenter Name="PART_ContentPresenter"
                                 Grid.Column="0"
                                 Content="{TemplateBinding Content}"
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -55,7 +55,7 @@
                                 FontSize="{TemplateBinding FontSize}"
                                 FontWeight="{TemplateBinding FontWeight}" />
 
-              <PathIcon x:Name="DropDownGlyph"
+              <PathIcon Name="DropDownGlyph"
                         Grid.Column="1"
                         UseLayoutRounding="False"
                         IsHitTestVisible="False"
@@ -65,7 +65,7 @@
                         Data="{StaticResource DropDownGlyphPath}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                        Foreground="{TemplateBinding Foreground}" />
             </Grid>
           </Panel>
         </ControlTemplate>

@@ -2,7 +2,7 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:system="clr-namespace:System;assembly=System.Runtime">
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <StackPanel>
@@ -62,11 +62,11 @@
 
       <MultiComboBox Width="300" Watermark="Error" Margin="10" OverflowMode="Wrap">
         <DataValidationErrors.Error>
-          <system:Exception>
+          <sys:Exception>
             <x:Arguments>
               <x:String>Error</x:String>
             </x:Arguments>
-          </system:Exception>
+          </sys:Exception>
         </DataValidationErrors.Error>
       </MultiComboBox>
     </StackPanel>
@@ -86,7 +86,10 @@
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock Content="{Binding}" Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+        <SearchHighlightTextBlock 
+          x:DataType="sys:Object"
+          Content="{Binding}" 
+          Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
       </DataTemplate>
     </Setter>
 

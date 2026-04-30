@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
@@ -45,6 +46,7 @@
     <Setter Property="ItemTemplate">
       <DataTemplate>
         <ClosableTag
+          x:DataType="sys:Object"
           Content="{Binding}"
           Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
       </DataTemplate>

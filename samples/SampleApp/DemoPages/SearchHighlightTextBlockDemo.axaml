@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             x:Class="SampleApp.DemoPages.SearchHighlightTextBlockDemo"
+             x:Name="Root">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      <TextBlock Classes="h1">SearchHighlightTextBlock Demo</TextBlock>
+
+      <TextBlock TextWrapping="Wrap" MaxWidth="900" HorizontalAlignment="Left">
+        Highlights the first occurrence of <Run FontWeight="Bold">Search</Run> inside <Run FontWeight="Bold">Content</Run>.
+        Match is case-insensitive. Type in the search box below to update every example at once.
+      </TextBlock>
+
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <TextBlock Text="Search:" VerticalAlignment="Center" />
+        <TextBox x:Name="SearchBox"
+                 Text="lazy"
+                 Width="250"
+                 Watermark="Type to highlight matches" />
+        <Button Content="Clear" Click="OnClearSearchClicked" />
+      </StackPanel>
+
+      <Border Background="{DynamicResource LayoutBackgroundLowBrush}"
+              BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="20">
+        <StackPanel Spacing="16">
+
+          <TextBlock Classes="h2">Basic usage</TextBlock>
+          <SearchHighlightTextBlock
+            Content="The quick brown fox jumps over the lazy dog"
+            Search="{Binding #SearchBox.Text}" />
+
+          <TextBlock Classes="h2">No match (search not found)</TextBlock>
+          <SearchHighlightTextBlock
+            Content="Nothing to highlight here"
+            Search="{Binding #SearchBox.Text}" />
+
+          <TextBlock Classes="h2">Empty search (no highlight)</TextBlock>
+          <SearchHighlightTextBlock
+            Content="When Search is empty, the whole text renders as plain content"
+            Search="" />
+
+          <TextBlock Classes="h2">Custom highlight colors</TextBlock>
+          <SearchHighlightTextBlock
+            Content="The quick brown fox jumps over the lazy dog"
+            Search="{Binding #SearchBox.Text}"
+            HighlightBackground="#993399FF"
+            HighlightForeground="White" />
+
+          <SearchHighlightTextBlock
+            Content="The quick brown fox jumps over the lazy dog"
+            Search="{Binding #SearchBox.Text}"
+            HighlightBackground="LimeGreen"
+            HighlightForeground="Black" />
+
+          <TextBlock Classes="h2">Constrained width (text trimming)</TextBlock>
+          <Border Width="240"
+                  BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+                  BorderThickness="1"
+                  Padding="4">
+            <SearchHighlightTextBlock
+              Content="The quick brown fox jumps over the lazy dog and keeps running far past the edge"
+              Search="{Binding #SearchBox.Text}" />
+          </Border>
+
+          <TextBlock Classes="h2">Inside a button</TextBlock>
+          <Button>
+            <SearchHighlightTextBlock
+              Content="Click the lazy button"
+              Search="{Binding #SearchBox.Text}" />
+          </Button>
+
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

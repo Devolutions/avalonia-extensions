@@ -3,7 +3,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
-  xmlns:system="clr-namespace:System;assembly=System.Runtime">
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20">
@@ -56,11 +56,11 @@
 
         <MultiComboBox Watermark="Error" Margin="10">
           <DataValidationErrors.Error>
-            <system:Exception>
+            <sys:Exception>
               <x:Arguments>
                 <x:String>Error</x:String>
               </x:Arguments>
-            </system:Exception>
+            </sys:Exception>
           </DataValidationErrors.Error>
         </MultiComboBox>
       </StackPanel>
@@ -83,7 +83,10 @@
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock Content="{Binding}" Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+        <SearchHighlightTextBlock
+          x:DataType="sys:Object"
+          Content="{Binding}" 
+          Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
       </DataTemplate>
     </Setter>
 

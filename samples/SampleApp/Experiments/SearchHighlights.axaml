@@ -23,12 +23,12 @@
           <ComboBoxItem Content="Item3" />
         </ComboBox>
 
-        <EditableComboBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Classes="search-highlight" Watermark="highlight" HorizontalAlignment="Stretch">
+        <EditableComboBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Classes="search-highlight" PlaceholderText="highlight" HorizontalAlignment="Stretch">
           <EditableComboBoxItem Value="Item1" Classes="search-highlight" />
           <EditableComboBoxItem Value="Item2" Classes="secondary-search-highlight" />
         </EditableComboBox>
 
-        <EditableComboBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Classes="secondary-search-highlight" Watermark="secondary highlight" HorizontalAlignment="Stretch">
+        <EditableComboBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Classes="secondary-search-highlight" PlaceholderText="secondary highlight" HorizontalAlignment="Stretch">
           <EditableComboBoxItem Value="Item1" />
           <EditableComboBoxItem Value="Item2" />
         </EditableComboBox>

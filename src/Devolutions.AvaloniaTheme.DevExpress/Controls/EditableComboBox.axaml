@@ -20,7 +20,7 @@
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="test2">
+          PlaceholderText="test2">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -29,7 +29,7 @@
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="test">
+          PlaceholderText="test">
           <EditableComboBox.InnerLeftContent>
             <Label Content="A" />
           </EditableComboBox.InnerLeftContent>
@@ -45,7 +45,7 @@
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="Error">
+          PlaceholderText="Error">
           <DataValidationErrors.Error>
             <system:Exception>
               <x:Arguments>
@@ -55,7 +55,7 @@
           </DataValidationErrors.Error>
         </EditableComboBox>
 
-        <EditableComboBox Watermark="GPT">
+        <EditableComboBox PlaceholderText="GPT">
           <EditableComboBoxItem Value="gpt-5" />
           <EditableComboBoxItem Value="gpt-5-chat-latest" />
           <EditableComboBoxItem Value="gpt-5-mini" />
@@ -67,7 +67,7 @@
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
           Classes="search-highlight"
-          Watermark="search highlight">
+          PlaceholderText="search highlight">
           <EditableComboBoxItem Value="test1" Classes="search-highlight" />
           <EditableComboBoxItem Value="test2" Classes="secondary-search-highlight" />
           <EditableComboBoxItem Value="test3" />
@@ -77,7 +77,7 @@
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
           Classes="secondary-search-highlight"
-          Watermark="secondary search highlight">
+          PlaceholderText="secondary search highlight">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -215,7 +215,7 @@
                 <TextBlock
                   Name="PART_Watermark"
                   Opacity="0.5"
-                  Text="{TemplateBinding Watermark}"
+                  Text="{TemplateBinding PlaceholderText}"
                   TextAlignment="{TemplateBinding TextAlignment}"
                   TextWrapping="{TemplateBinding TextWrapping}"
                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

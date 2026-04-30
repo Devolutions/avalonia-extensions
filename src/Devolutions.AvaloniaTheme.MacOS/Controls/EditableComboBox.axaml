@@ -19,7 +19,7 @@
           Width="200"
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="test">
+          PlaceholderText="test">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -28,7 +28,7 @@
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="test">
+          PlaceholderText="test">
           <EditableComboBoxItem Value="test1" />
           <EditableComboBoxItem Value="test2" />
           <EditableComboBoxItem Value="test3" />
@@ -47,7 +47,7 @@
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
           IsEnabled="False"
-          Watermark="test">
+          PlaceholderText="test">
           <EditableComboBoxItem Value="test" />
         </EditableComboBox>
 
@@ -65,7 +65,7 @@
         <EditableComboBox
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Watermark="Error">
+          PlaceholderText="Error">
           <DataValidationErrors.Error>
             <system:Exception>
               <x:Arguments>

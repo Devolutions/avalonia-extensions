@@ -36,7 +36,7 @@
         <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
           - watermark:
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="2" Watermark="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
+        <EditableComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
           <EditableComboBoxItem>Option 2</EditableComboBoxItem>
           <EditableComboBoxItem>Option 3</EditableComboBoxItem>
@@ -170,7 +170,7 @@
         <EditableComboBox
           Grid.Column="1" Grid.Row="10"
           VerticalAlignment="Top"
-          Watermark="Required error"
+          PlaceholderText="Required error"
           Value="{Binding RequiredTextValue}"
           Margin="10 0 20 20" />
       </Grid>

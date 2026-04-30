@@ -746,7 +746,7 @@ public partial class MultiComboBox : SelectingItemsControl
             return false;
         }
 
-        return source.FindAncestorOfType<Button>() is null;
+        return source.FindAncestorOfType<Button>(includeSelf: true) is null;
     }
 
     private void OnSelectedItemsChanged(AvaloniaPropertyChangedEventArgs<IList?> args)

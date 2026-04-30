@@ -7,7 +7,7 @@
     <Panel Width="400" Height="400">
       <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
         <EditableComboBox
-          Watermark="test">
+          PlaceholderText="test">
           <EditableComboBoxItem Value="test" />
           <EditableComboBoxItem Value="search highlight" Classes="search-highlight" />
           <EditableComboBoxItem Value="secondary search highlight" Classes="secondary-search-highlight" />
@@ -203,7 +203,7 @@
               <TextBlock
                 Name="PART_Watermark"
                 Opacity="0.5"
-                Text="{TemplateBinding Watermark}"
+                Text="{TemplateBinding PlaceholderText}"
                 TextAlignment="{TemplateBinding TextAlignment}"
                 TextWrapping="{TemplateBinding TextWrapping}"
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

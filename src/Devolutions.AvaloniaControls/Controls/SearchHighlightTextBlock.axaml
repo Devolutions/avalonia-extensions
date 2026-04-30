@@ -12,14 +12,7 @@
     <Setter Property="HighlightForeground" Value="{DynamicResource TextControlButtonForeground}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <StackPanel Orientation="Horizontal">
-          <TextBlock Text="{TemplateBinding LeftText}" />
-          <TextBlock
-            Text="{TemplateBinding HighlightedText}"
-            Background="{TemplateBinding HighlightBackground}"
-            Foreground="{TemplateBinding HighlightForeground}" />
-          <TextBlock Text="{TemplateBinding RightText}" />
-        </StackPanel>
+        <TextBlock Name="PART_TextBlock" TextTrimming="CharacterEllipsis" />
       </ControlTemplate>
     </Setter>
   </ControlTheme>

@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
@@ -38,6 +39,7 @@
       <DataTemplate>
         <ClosableTag
           Padding="2,4,4,4"
+          x:DataType="sys:Object"
           Content="{Binding}"
           Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
       </DataTemplate>

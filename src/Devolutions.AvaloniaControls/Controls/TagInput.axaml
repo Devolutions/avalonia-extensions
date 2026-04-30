@@ -3,7 +3,8 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa">
+  xmlns:u="https://irihi.tech/ursa"
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <StackPanel Height="300" Width="400" Margin="20">
@@ -24,7 +25,8 @@
     <Setter Property="Padding" Value="8,4" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <u:ClosableTag
+        <u:ClosableTag 
+          x:DataType="sys:Object"
           Content="{Binding}"
           Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
       </DataTemplate>

@@ -2,6 +2,8 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using System;
 using System.Reactive.Disposables;
@@ -9,6 +11,8 @@ using Avalonia.VisualTree;
 
 public class SearchHighlightTextBlock : ContentControl
 {
+  private const string PART_TextBlock = "PART_TextBlock";
+
   private CompositeDisposable? bindings;
 
   // Tracks whether Content was set by our ValueProperty subscription (not by explicit XAML assignment).
@@ -17,14 +21,7 @@ public class SearchHighlightTextBlock : ContentControl
   // OnAttachedToVisualTree to re-establish the subscription with the recycled container's new Value.
   private bool contentManagedBySubscription;
 
-  public static readonly DirectProperty<SearchHighlightTextBlock, string> LeftTextProperty =
-    AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string>(nameof(LeftText), static o => o.leftText);
-
-  public static readonly DirectProperty<SearchHighlightTextBlock, string> HighlightedTextProperty =
-    AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string>(nameof(HighlightedText), static o => o.highlightedText);
-
-  public static readonly DirectProperty<SearchHighlightTextBlock, string> RightTextProperty =
-    AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string>(nameof(RightText), static o => o.rightText);
+  private TextBlock? textBlock;
 
   public static readonly DirectProperty<SearchHighlightTextBlock, string?> SearchProperty =
     AvaloniaProperty.RegisterDirect<SearchHighlightTextBlock, string?>(nameof(Search), static o => o.Search, static (o, v) => o.Search = v);
@@ -35,31 +32,18 @@ public class SearchHighlightTextBlock : ContentControl
   public static readonly StyledProperty<IBrush?> HighlightForegroundProperty =
     AvaloniaProperty.Register<SearchHighlightTextBlock, IBrush?>(nameof(HighlightForeground));
 
-  private string highlightedText = string.Empty;
-
-  private string leftText = string.Empty;
-
-  private string rightText = string.Empty;
-
-  private string? search;
-
   public SearchHighlightTextBlock()
   {
-    this.GetObservable(ContentProperty).Subscribe(_ => this.ProcessHighlight());
-    this.GetObservable(SearchProperty).Subscribe(_ => this.ProcessHighlight());
-    this.ProcessHighlight();
+    this.GetObservable(ContentProperty).Subscribe(_ => this.UpdateInlines());
+    this.GetObservable(SearchProperty).Subscribe(_ => this.UpdateInlines());
+    this.GetObservable(HighlightBackgroundProperty).Subscribe(_ => this.UpdateInlines());
+    this.GetObservable(HighlightForegroundProperty).Subscribe(_ => this.UpdateInlines());
   }
-
-  public string LeftText => this.leftText;
-
-  public string HighlightedText => this.highlightedText;
-
-  public string RightText => this.rightText;
 
   public string? Search
   {
-    get => this.search;
-    set => this.SetAndRaise(SearchProperty, ref this.search, value);
+      get;
+      set => this.SetAndRaise(SearchProperty, ref field, value);
   }
 
   public IBrush? HighlightBackground
@@ -74,23 +58,29 @@ public class SearchHighlightTextBlock : ContentControl
     set => this.SetValue(HighlightForegroundProperty, value);
   }
 
+  protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+  {
+    base.OnApplyTemplate(e);
+    this.textBlock = e.NameScope.Find<TextBlock>(PART_TextBlock);
+    this.UpdateInlines();
+  }
+
   protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
   {
     base.OnAttachedToVisualTree(e);
-        
+
     this.bindings?.Dispose();
     this.bindings = new CompositeDisposable();
-        
-    EditableComboBoxItem? item = this.FindAncestorOfType<EditableComboBoxItem>();
-    if (item != null)
+
+    if (this.FindAncestorOfType<EditableComboBoxItem>() is {} editableComboBoxItem)
     {
-      this.bindings.Add(item
+      this.bindings.Add(editableComboBoxItem
         .GetObservable(EditableComboBoxItem.FilterHighlightTextProperty)
         .Subscribe(text => this.Search = text));
       if (!this.IsSet(ContentControl.ContentProperty) || this.contentManagedBySubscription)
       {
         this.contentManagedBySubscription = true;
-        this.bindings.Add(item
+        this.bindings.Add(editableComboBoxItem
           .GetObservable(EditableComboBoxItem.ValueProperty)
           .Subscribe(value => this.Content = value));
       }
@@ -110,31 +100,50 @@ public class SearchHighlightTextBlock : ContentControl
     }
   }
 
-  private void ProcessHighlight()
+  private void UpdateInlines()
   {
-    string currentSearch = this.Search ?? string.Empty;
+    if (this.textBlock == null)
+    {
+      return;
+    }
+
     string content = this.Content?.ToString() ?? string.Empty;
+    string currentSearch = this.Search ?? string.Empty;
 
-    var oldLeftText = this.leftText;
-    var oldHighlightedText = this.highlightedText;
-    var oldRightText = this.rightText;
+    InlineCollection inlines = this.textBlock.Inlines ??= new InlineCollection();
+    inlines.Clear();
 
-    int highlightIndex = content.IndexOf(currentSearch, StringComparison.OrdinalIgnoreCase);
-    if (highlightIndex >= 0)
+    if (content.Length == 0)
     {
-      this.leftText = content[..highlightIndex];
-      this.highlightedText = content.Substring(highlightIndex, currentSearch.Length);
-      this.rightText = content[(highlightIndex + currentSearch.Length)..];
-    }
-    else
-    {
-      this.leftText = content;
-      this.highlightedText = string.Empty;
-      this.rightText = string.Empty;
+      return;
     }
 
-    this.RaisePropertyChanged(LeftTextProperty, oldLeftText, this.leftText);
-    this.RaisePropertyChanged(HighlightedTextProperty, oldHighlightedText, this.highlightedText);
-    this.RaisePropertyChanged(RightTextProperty, oldRightText, this.rightText);
+    int highlightIndex = currentSearch.Length > 0
+      ? content.IndexOf(currentSearch, StringComparison.OrdinalIgnoreCase)
+      : -1;
+
+    if (highlightIndex < 0)
+    {
+      inlines.Add(new Run(content));
+      return;
+    }
+
+    if (highlightIndex > 0)
+    {
+      inlines.Add(new Run(content[..highlightIndex]));
+    }
+
+    Run highlighted = new Run(content.Substring(highlightIndex, currentSearch.Length))
+    {
+      Background = this.HighlightBackground,
+      Foreground = this.HighlightForeground,
+    };
+    inlines.Add(highlighted);
+
+    int rightStart = highlightIndex + currentSearch.Length;
+    if (rightStart < content.Length)
+    {
+      inlines.Add(new Run(content[rightStart..]));
+    }
   }
 }

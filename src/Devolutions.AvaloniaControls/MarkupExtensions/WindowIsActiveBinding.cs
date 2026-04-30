@@ -29,7 +29,7 @@ public class WindowIsActiveBindingExtension : MarkupExtension
         Justification = "Reflection bindings are required here: the TemplatedParent-sourced ancestor walk " +
                          "(Source = new Binding { RelativeSource = TemplatedParent }) has no CompiledBindingExtension equivalent. " +
                          "All target types (Window, INativeWindowAvaloniaHost) are preserved via ILLink descriptors.")]
-    public static IBinding CreateIsActiveBinding() =>
+    public static BindingBase CreateIsActiveBinding() =>
         new MultiBinding
         {
             Converter = DevoMultiConverters.FirstNonNullValueMultiConverter,

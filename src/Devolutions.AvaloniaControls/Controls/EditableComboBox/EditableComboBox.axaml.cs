@@ -56,6 +56,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     public static readonly StyledProperty<int> SelectionStartProperty = AvaloniaProperty.Register<EditableComboBox, int>(nameof(SelectionStart));
 
+    public static readonly StyledProperty<string?> PlaceholderTextProperty =
+        TextBox.PlaceholderTextProperty.AddOwner<EditableComboBox>();
+
+    [Obsolete("Use PlaceholderTextProperty instead.")]
     public static readonly StyledProperty<string?> WatermarkProperty = AvaloniaProperty.Register<EditableComboBox, string?>(nameof(Watermark));
 
     public static readonly StyledProperty<string?> ValueProperty = AvaloniaProperty.Register<EditableComboBox, string?>(
@@ -148,7 +152,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         };
 
         this.innerTextBox.TextChanged += this.OnTextChanged;
-        this.GetObservable(WatermarkProperty).Subscribe(watermark => this.innerTextBox.Watermark = watermark);
+        this.GetObservable(PlaceholderTextProperty).Subscribe(value => this.innerTextBox.PlaceholderText = value);
+#pragma warning disable CS0618 // Watermark is kept for back-compat; forward to PlaceholderText
+        this.GetObservable(WatermarkProperty).Subscribe(value => this.PlaceholderText = value);
+#pragma warning restore CS0618
 
         this.innerComboBox = new InnerComboBox(this, this.innerTextBox)
         {
@@ -313,10 +320,19 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         set => this.SetValue(ValueProperty, value);
     }
 
+    public string? PlaceholderText
+    {
+        get => this.GetValue(PlaceholderTextProperty);
+        set => this.SetValue(PlaceholderTextProperty, value);
+    }
+
+    [Obsolete("Use PlaceholderText instead.")]
     public string? Watermark
     {
+#pragma warning disable CS0618
         get => this.GetValue(WatermarkProperty);
         set => this.SetValue(WatermarkProperty, value);
+#pragma warning restore CS0618
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -407,7 +423,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         this.Value = source.Value;
         this.innerTextBox.SelectAll();
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.PlaceholderText;
         return true;
     }
 
@@ -419,7 +435,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return false;
     }
 
-    protected override void OnGotFocus(GotFocusEventArgs e)
+    protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         if (e.Handled) return;
 
@@ -428,7 +444,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     protected override void OnInitialized()
     {
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.PlaceholderText;
 
         this.FillItems();
 
@@ -500,7 +516,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                     this.innerTextBox.SelectAll();
                 }
 
-                this.innerTextBox.Watermark = this.Watermark;
+                this.innerTextBox.PlaceholderText = this.PlaceholderText;
                 this.IsDropDownOpen = false;
 
                 if (e.Key == Key.Enter)
@@ -581,7 +597,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private static string? CoerceText(AvaloniaObject sender, string? value) =>
         ((EditableComboBox)sender).CoerceText(value);
 
-    private void UpdateBindingEvaluators(IBinding binding)
+    private void UpdateBindingEvaluators(BindingBase binding)
     {
         if (this.selectedValueEvaluatorDirty)
         {
@@ -716,7 +732,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private void OnCloseMenu()
     {
         this.RevertToSelectedItemIfNeeded();
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.PlaceholderText;
     }
 
     private void OnInnerDropDownOpenChanged(bool value)
@@ -758,12 +774,12 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        this.innerTextBox.Watermark = this.innerComboBox.SelectedIndex >= 0 ? this.GetSelectedItemValue() : this.Watermark;
+        this.innerTextBox.PlaceholderText = this.innerComboBox.SelectedIndex >= 0 ? this.GetSelectedItemValue() : this.PlaceholderText;
 
         if (this.Mode == EditableComboBoxMode.Immediate && this.innerComboBox.SelectedIndex >= 0)
         {
             this.UpdateSelection();
-            this.innerTextBox.Watermark = this.Watermark;
+            this.innerTextBox.PlaceholderText = this.PlaceholderText;
         }
     }
 
@@ -787,7 +803,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (string.IsNullOrEmpty(this.Value))
         {
             this.innerComboBox.SelectedIndex = -1;
-            this.innerTextBox.Watermark = this.Watermark;
+            this.innerTextBox.PlaceholderText = this.PlaceholderText;
             return;
         }
 
@@ -801,7 +817,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
 
         this.innerComboBox.SelectedIndex = -1;
-        this.innerTextBox.Watermark = this.Watermark;
+        this.innerTextBox.PlaceholderText = this.PlaceholderText;
     }
 
     private void UpdateSelection()

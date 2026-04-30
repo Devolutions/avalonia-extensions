@@ -8,14 +8,14 @@
 
 
   <StackPanel>
-    <TextBlock>ActiPro HyperlinkTextBlock:</TextBlock>
-    <actipro:HyperlinkTextBlock Click="OnHyperlinkTextBlockClicked"
-                                Text="This is an ActiPro HyperlinkTextBlock" />
-    <Border Padding="10 10 0 0 ">
-      <actipro:ShadowChrome Margin="0,0,40,40" Width="100" Height="60" Elevation="8" ShadowColor="Black" ShadowOpacity="0.7" HorizontalAlignment="Left">
-        <Rectangle Fill="DarkSeaGreen" Stroke="White" StrokeThickness="4" />
-      </actipro:ShadowChrome>
-    </Border>
+    <!-- <TextBlock>ActiPro HyperlinkTextBlock:</TextBlock> -->
+    <!-- <actipro:HyperlinkTextBlock Click="OnHyperlinkTextBlockClicked" -->
+    <!--                             Text="This is an ActiPro HyperlinkTextBlock" /> -->
+    <!-- <Border Padding="10 10 0 0 "> -->
+    <!--   <actipro:ShadowChrome Margin="0,0,40,40" Width="100" Height="60" Elevation="8" ShadowColor="Black" ShadowOpacity="0.7" HorizontalAlignment="Left"> -->
+    <!--     <Rectangle Fill="DarkSeaGreen" Stroke="White" StrokeThickness="4" /> -->
+    <!--   </actipro:ShadowChrome> -->
+    <!-- </Border> -->
   </StackPanel>
 
 </UserControl>

@@ -19,6 +19,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
+using Avalonia.VisualTree;
 using static Extensions.AvaloniaExtensions;
 using AvaloniaPropertyExtension = Irihi.Avalonia.Shared.Helpers.AvaloniaPropertyExtension;
 using ObservableExtension = Irihi.Avalonia.Shared.Helpers.ObservableExtension;
@@ -152,7 +153,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
     private ContentPresenter? itemsListPresenter;
 
-    private Border? rootBorder;
+    private Popup? popup;
 
     private MultiComboBoxSelectAllItem? selectAllItem;
 
@@ -607,6 +608,7 @@ public partial class MultiComboBox : SelectingItemsControl
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
         this.filterTextbox = e.NameScope.Find<TextBox>("PART_FilterTextBox");
+        this.popup = e.NameScope.Find<Popup>("PART_Popup");
 
         if (this.filterTextbox is { } partFilterTextBox)
         {
@@ -616,9 +618,6 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.selectAllItem?.UpdateSelection();
 
-        RoutedEventExtension.RemoveHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
-        this.rootBorder = e.NameScope.Find<Border>(PART_BackgroundBorder);
-        RoutedEventExtension.AddHandler(PointerPressedEvent, this.OnBackgroundPointerPressed, this.rootBorder);
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count == 0);
 
         if (this.selectAllItem is { } sai)
@@ -714,9 +713,42 @@ public partial class MultiComboBox : SelectingItemsControl
         }
     }
 
-    private void OnBackgroundPointerPressed(object? sender, PointerPressedEventArgs e)
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
+        base.OnPointerPressed(e);
+
+        if (e.Handled || !this.ShouldToggleDropDown(e))
+        {
+            return;
+        }
+
         this.SetCurrentValue(IsDropDownOpenProperty, !this.IsDropDownOpen);
+        e.Handled = true;
+    }
+
+    private bool ShouldToggleDropDown(PointerPressedEventArgs e)
+    {
+        if (!this.IsEffectivelyEnabled)
+        {
+            return false;
+        }
+
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            return false;
+        }
+
+        if (e.Source is not Visual source)
+        {
+            return false;
+        }
+
+        if (this.popup?.IsInsidePopup(source) == true)
+        {
+            return false;
+        }
+
+        return source.FindAncestorOfType<Button>() is null;
     }
 
     private void OnSelectedItemsChanged(AvaloniaPropertyChangedEventArgs<IList?> args)

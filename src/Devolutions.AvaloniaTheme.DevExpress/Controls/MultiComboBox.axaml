@@ -224,7 +224,8 @@
               HorizontalOffset="-6"
               VerticalOffset="0"
               IsLightDismissEnabled="True"
-              OverlayDismissEventPassThrough="True"
+              OverlayDismissEventPassThrough="False"
+              OverlayInputPassThroughElement="{Binding #PART_Root}"
               InheritsTransform="True">
               <Interaction.Behaviors>
                 <PositionedPopupBehavior

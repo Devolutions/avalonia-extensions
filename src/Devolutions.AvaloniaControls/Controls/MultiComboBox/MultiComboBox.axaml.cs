@@ -35,6 +35,7 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_SelectAllItem", typeof(MultiComboBoxSelectAllItem), IsRequired = false)]
 [TemplatePart("PART_FilterTextBox", typeof(TextBox), IsRequired = false)]
 [TemplatePart("PART_NoResultsText", typeof(TextBlock), IsRequired = false)]
+[TemplatePart("PART_Popup", typeof(Popup), IsRequired = true)]
 [TemplatePart("PART_ItemsListPresenter", typeof(ContentPresenter), IsRequired = true)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
@@ -152,8 +153,6 @@ public partial class MultiComboBox : SelectingItemsControl
     private TextBox? filterTextbox;
 
     private ContentPresenter? itemsListPresenter;
-
-    private Popup? popup;
 
     private MultiComboBoxSelectAllItem? selectAllItem;
 
@@ -608,7 +607,6 @@ public partial class MultiComboBox : SelectingItemsControl
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
         this.filterTextbox = e.NameScope.Find<TextBox>("PART_FilterTextBox");
-        this.popup = e.NameScope.Find<Popup>("PART_Popup");
 
         if (this.filterTextbox is { } partFilterTextBox)
         {
@@ -743,7 +741,7 @@ public partial class MultiComboBox : SelectingItemsControl
             return false;
         }
 
-        if (this.popup?.IsInsidePopup(source) == true)
+        if (source.GetVisualRoot() is PopupRoot)
         {
             return false;
         }

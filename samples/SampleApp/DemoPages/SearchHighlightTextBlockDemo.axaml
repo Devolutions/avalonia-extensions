@@ -31,22 +31,22 @@
               Padding="20">
         <StackPanel Spacing="16">
 
-          <TextBlock Classes="h2">Basic usage</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">Basic usage</TextBlock>
           <SearchHighlightTextBlock
             Content="The quick brown fox jumps over the lazy dog"
             Search="{Binding #SearchBox.Text}" />
 
-          <TextBlock Classes="h2">No match (search not found)</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">No match (search not found)</TextBlock>
           <SearchHighlightTextBlock
             Content="Nothing to highlight here"
             Search="{Binding #SearchBox.Text}" />
 
-          <TextBlock Classes="h2">Empty search (no highlight)</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">Empty search (no highlight)</TextBlock>
           <SearchHighlightTextBlock
             Content="When Search is empty, the whole text renders as plain content"
             Search="" />
 
-          <TextBlock Classes="h2">Custom highlight colors</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">Custom highlight colors</TextBlock>
           <SearchHighlightTextBlock
             Content="The quick brown fox jumps over the lazy dog"
             Search="{Binding #SearchBox.Text}"
@@ -59,7 +59,7 @@
             HighlightBackground="LimeGreen"
             HighlightForeground="Black" />
 
-          <TextBlock Classes="h2">Constrained width (text trimming)</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">Constrained width (text trimming)</TextBlock>
           <Border Width="240"
                   BorderBrush="{DynamicResource LayoutBorderMidBrush}"
                   BorderThickness="1"
@@ -69,7 +69,7 @@
               Search="{Binding #SearchBox.Text}" />
           </Border>
 
-          <TextBlock Classes="h2">Inside a button</TextBlock>
+          <TextBlock Classes="section-title" Margin="0 15 0 0">Inside a button</TextBlock>
           <Button>
             <SearchHighlightTextBlock
               Content="Click the lazy button"

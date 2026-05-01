@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design1="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
+
+  <Design.PreviewWith>
+    <design1:ThemePreviewer>
+      <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
+        <TextBlock Classes="section-title">Some text</TextBlock>
+        <TextBlock>Some text</TextBlock>
+      </StackPanel>
+    </design1:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type TextBlock}" TargetType="TextBlock">
+    <Style Selector="^.section-title">
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

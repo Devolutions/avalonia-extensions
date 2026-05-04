@@ -8,6 +8,9 @@ using Avalonia.Threading;
 
 public partial class LiquidGlassTextBoxTokenDemo : UserControl
 {
+  private const string TextBoxBackgroundBrushKey = "TextBoxBackgroundBrush";
+  private const string WallpaperDominantBrushKey = "LG.Wallpaper.DominantBrush";
+
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
     property.Name is "RequestedThemeVariant" or "ActualThemeVariant";
 
@@ -32,7 +35,9 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
       };
     }
 
-    this.RefreshTokenColorInfo();
+    // Defer the initial read to Background priority so it runs after WallpaperTintApplier's
+    // own deferred HookAndApply (same priority, registered first) has written the resources.
+    Dispatcher.UIThread.Post(this.RefreshTokenColorInfo, DispatcherPriority.Background);
   }
 
   private void RefreshTokenColorInfo()
@@ -47,7 +52,7 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
 
     if (this.FindControl<TextBlock>("WallpaperColorInfoTextBlock") is { } wallpaperReadout)
     {
-      if (Application.Current?.Resources[LiquidGlassTokenKeys.WallpaperDominantBrush] is ISolidColorBrush wallpaperBrush)
+      if (Application.Current?.Resources[WallpaperDominantBrushKey] is ISolidColorBrush wallpaperBrush)
       {
         Color wallpaperColor = wallpaperBrush.Color;
         string wallpaperHex = $"#{wallpaperColor.A:X2}{wallpaperColor.R:X2}{wallpaperColor.G:X2}{wallpaperColor.B:X2}";
@@ -56,7 +61,7 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
           wallpaperHexTextBox.Text = wallpaperHex;
         }
 
-        wallpaperReadout.Text = $"{LiquidGlassTokenKeys.WallpaperDominantBrush}  (A={wallpaperColor.A}, R={wallpaperColor.R}, G={wallpaperColor.G}, B={wallpaperColor.B})";
+        wallpaperReadout.Text = $"{WallpaperDominantBrushKey}  (A={wallpaperColor.A}, R={wallpaperColor.R}, G={wallpaperColor.G}, B={wallpaperColor.B})";
       }
       else
       {
@@ -65,11 +70,11 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
           wallpaperHexTextBox.Text = "Not available";
         }
 
-        wallpaperReadout.Text = $"{LiquidGlassTokenKeys.WallpaperDominantBrush} is not available in Application resources.";
+        wallpaperReadout.Text = $"{WallpaperDominantBrushKey} is not available in Application resources.";
       }
     }
 
-    if (Application.Current?.Resources[LiquidGlassTokenKeys.TextBoxBackgroundBrush] is ISolidColorBrush brush)
+    if (Application.Current?.Resources[TextBoxBackgroundBrushKey] is ISolidColorBrush brush)
     {
       Color color = brush.Color;
       string tokenHex = $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
@@ -78,7 +83,7 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
         tokenHexTextBox.Text = tokenHex;
       }
 
-      readout.Text = $"{LiquidGlassTokenKeys.TextBoxBackgroundBrush}  (A={color.A}, R={color.R}, G={color.G}, B={color.B})";
+      readout.Text = $"{TextBoxBackgroundBrushKey}  (A={color.A}, R={color.R}, G={color.G}, B={color.B})";
       return;
     }
 
@@ -87,7 +92,7 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
       tokenHexTextBox.Text = "Not available";
     }
 
-    readout.Text = $"{LiquidGlassTokenKeys.TextBoxBackgroundBrush} is not available in Application resources.";
+    readout.Text = $"{TextBoxBackgroundBrushKey} is not available in Application resources.";
   }
 
   private async void CopyWallpaperColorHex(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

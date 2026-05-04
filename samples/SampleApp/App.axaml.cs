@@ -206,6 +206,7 @@ public class App : Application
             CurrentTheme = theme;
 
             bool reopenWindow = previousTheme != null && previousTheme.Name != theme.Name;
+            bool shouldApplyWallpaperTint = false;
 
             Styles? styles;
 
@@ -214,6 +215,7 @@ public class App : Application
             {
                 // Set override FIRST so IsLiquidGlassSupported() returns the correct value
                 MacOSVersionDetector.SetTestOverride(macOsTheme.OsVersionOverride);
+                shouldApplyWallpaperTint = MacOSVersionDetector.IsLiquidGlassSupported();
 
                 // Create fresh styles with the new override active
                 // This is necessary because theme resources are loaded at initialization time
@@ -230,6 +232,11 @@ public class App : Application
                     SimpleTheme => app.simpleStyles,
                     _ => null,
                 };
+            }
+
+            if (!shouldApplyWallpaperTint)
+            {
+                ClearWallpaperTintOverrides(app);
             }
 
             // Update cached effective theme name
@@ -294,12 +301,16 @@ public class App : Application
         }
     }
 
+    private static void ClearWallpaperTintOverrides(Application app)
+    {
+        DevolutionsMacOsTheme.ClearWallpaperTintResources(app);
+    }
+
     private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, Window? oldWindow, int selectedTabIndex)
     {
         object? dataContext = oldWindow?.DataContext;
 
         MainWindow newWindow = new() { DataContext = dataContext };
-        AttachTokenRefreshOnThemeVariantChange(newWindow);
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize
@@ -314,24 +325,6 @@ public class App : Application
         EnableThemeChangesWhenReady(newWindow);
 
         oldWindow?.Close();
-    }
-
-    private static void AttachTokenRefreshOnThemeVariantChange(Window window)
-    {
-        if (Current is not App app)
-        {
-            return;
-        }
-
-        window.PropertyChanged += (_, e) =>
-        {
-            if (e.Property?.Name is "RequestedThemeVariant" or "ActualThemeVariant")
-            {
-                Dispatcher.UIThread.Post(
-                    () => LiquidGlassPaletteApplier.ApplyTextBoxBackgroundFromSystem(app),
-                    DispatcherPriority.Background);
-            }
-        };
     }
 
     private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
@@ -371,12 +364,10 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         this.FixCommunityToolkitMvvmDataValidation();
-        LiquidGlassPaletteApplier.HookAndApply(this);
 
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             MainWindow mainWindow = new() { DataContext = new MainWindowViewModel() };
-            AttachTokenRefreshOnThemeVariantChange(mainWindow);
 
             // Suppress theme changes during initial window setup
             mainWindow.SuppressThemeChangeEvents(true);

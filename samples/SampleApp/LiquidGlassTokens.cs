@@ -10,6 +10,7 @@ using Avalonia.Threading;
 public static class LiquidGlassTokenKeys
 {
   public const string TextBoxBackgroundBrush = "LG.TextBox.BackgroundBrush";
+  public const string WallpaperDominantBrush = "LG.Wallpaper.DominantBrush";
 }
 
 public static class LiquidGlassPaletteApplier
@@ -37,10 +38,14 @@ public static class LiquidGlassPaletteApplier
         : null;
 
     Color color;
+    Color? wallpaperDominantColor = null;
     if (OperatingSystem.IsMacOS())
     {
-      if (!AppKitSemanticColors.TryGetWallpaperTintedColor(preferDark, out color) &&
-          !AppKitSemanticColors.TryGetControlBackgroundColor(preferDark, out color))
+      if (AppKitSemanticColors.TryGetWallpaperTintedColor(preferDark, out Color wallpaperColor, out color))
+      {
+        wallpaperDominantColor = wallpaperColor;
+      }
+      else if (!AppKitSemanticColors.TryGetControlBackgroundColor(preferDark, out color))
       {
         color = preferDark == true ? Color.Parse("#FF1E1E1E") : Color.Parse("#FFE8E8E8");
       }
@@ -51,6 +56,14 @@ public static class LiquidGlassPaletteApplier
     }
 
     app.Resources[LiquidGlassTokenKeys.TextBoxBackgroundBrush] = new SolidColorBrush(color);
+    if (wallpaperDominantColor is { } resolvedWallpaperDominantColor)
+    {
+      app.Resources[LiquidGlassTokenKeys.WallpaperDominantBrush] = new SolidColorBrush(resolvedWallpaperDominantColor);
+    }
+    else
+    {
+      app.Resources.Remove(LiquidGlassTokenKeys.WallpaperDominantBrush);
+    }
   }
 
   public static void HookAndApply(Application app)
@@ -139,8 +152,9 @@ internal static class AppKitSemanticColors
     { X = x; Y = y; Width = width; Height = height; }
   }
 
-  public static bool TryGetWallpaperTintedColor(bool? preferDark, out Color color)
+  public static bool TryGetWallpaperTintedColor(bool? preferDark, out Color wallpaperColor, out Color color)
   {
+    wallpaperColor = default;
     color = default;
     try
     {
@@ -198,6 +212,7 @@ internal static class AppKitSemanticColors
             double avgG = avgA > 0 ? totalG / (double)count / 255.0 / avgA : 0;
             double avgB = avgA > 0 ? totalB / (double)count / 255.0 / avgA : 0;
 
+            wallpaperColor = Color.FromArgb(255, ToByte(avgR), ToByte(avgG), ToByte(avgB));
             color = ComputeTintedBackgroundColor(avgR, avgG, avgB, preferDark);
             return true;
           }
@@ -216,14 +231,19 @@ internal static class AppKitSemanticColors
   private static Color ComputeTintedBackgroundColor(double wallR, double wallG, double wallB, bool? preferDark)
   {
     bool isDark = preferDark ?? false;
-    double baseL = isDark ? 0.118 : 0.922;
 
-    // Extract hue and saturation from the wallpaper's average color
-    RgbToHsl(wallR, wallG, wallB, out double h, out double s, out _);
+    RgbToHsl(wallR, wallG, wallB, out double h, out double s, out double wallL);
 
-    // Apply a subtle tint: only when the wallpaper has enough saturation
-    // Cap tinted saturation at ~12% to stay close to macOS Desktop Tinting behaviour
-    double tintS = s > 0.05 ? Math.Min(s * 0.5, 0.12) : 0.0;
+    // Lightness: fixed base plus a small bleed-through from the wallpaper lightness.
+    // Calibrated from native macOS dark-mode TextBox samples: kL ≈ 0.08.
+    // Light mode uses the symmetric inverse (brighter wallpaper → slightly brighter control).
+    double baseL = isDark
+      ? 0.118 + wallL * 0.08
+      : 0.922 - wallL * 0.08;
+
+    // Saturation: wallpaper contribution is reduced to ~20%, capped at 9.4%.
+    // Calibrated from native samples: kS ≈ 0.20, cap ≈ 0.094.
+    double tintS = s > 0.05 ? Math.Min(s * 0.20, 0.094) : 0.0;
 
     HslToRgb(h, tintS, baseL, out double r, out double g, out double b);
     return Color.FromArgb(255, ToByte(r), ToByte(g), ToByte(b));

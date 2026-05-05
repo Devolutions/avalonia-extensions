@@ -154,6 +154,138 @@
           ItemsSource="{Binding Items}"
           Watermark="Required" />
       </StackPanel>
+
+      <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
+        <TextBlock>100 Inline Items (virtualization test)</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          Watermark="100 inline items"
+          SelectAllText="Select All"
+          ShowFilter="True">
+          <MultiComboBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+          </MultiComboBox.ItemsPanel>
+          <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 2</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 3</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 4</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 5</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 6</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 7</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 8</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 9</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 10</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 11</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 12</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 13</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 14</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 15</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 16</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 17</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 18</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 19</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 20</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 21</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 22</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 23</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 24</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 25</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 26</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 27</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 28</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 29</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 30</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 31</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 32</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 33</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 34</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 35</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 36</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 37</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 38</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 39</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 40</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 41</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 42</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 43</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 44</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 45</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 46</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 47</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 48</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 49</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 50</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 51</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 52</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 53</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 54</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 55</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 56</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 57</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 58</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 59</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 60</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 61</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 62</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 63</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 64</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 65</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 66</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 67</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 68</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 69</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 70</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 71</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 72</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 73</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 74</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 75</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 76</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 77</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 78</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 79</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 80</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 81</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 82</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 83</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 84</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 85</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 86</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 87</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 88</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 89</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 90</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 91</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 92</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 93</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 94</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 95</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 96</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 97</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 98</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 99</MultiComboBoxItem>
+          <MultiComboBoxItem>Inline 100</MultiComboBoxItem>
+        </MultiComboBox>
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>1000 Bound Items (virtualization test)</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          Watermark="1000 bound items"
+          SelectAllText="Select All"
+          ShowFilter="True"
+          ItemsSource="{Binding LotOfItems}">
+          <MultiComboBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+          </MultiComboBox.ItemsPanel>
+        </MultiComboBox>
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

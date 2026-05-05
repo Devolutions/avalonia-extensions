@@ -645,34 +645,11 @@ public partial class MultiComboBox : SelectingItemsControl
         // Re-populate filtered items based on current filter
         this.FilteredItems.Clear();
 
-        // IEnumerable source = this.ItemsSource ?? this.Items;
         foreach (object? item in this.ItemsView)
         {
             if (!hasFilterText || this.ItemMatchesFilter(item, filterText))
             {
-                // If we have concrete `MultiComboBoxItem` instances, they are owned by us 
-                // ("us" being `MultiComboBox` because we are a `ItemsControl`).
-                //
-                // ItemsControl must own their containers.
-                // We don't realize unrealized container, so the inner `InnerMultiComboBoxList` can realize
-                // and own them without problem.
-                //
-                // However, if we own concrete instances, we must send clones to the InnerMultiComboBoxList,
-                // so we clone and bind them.
-                if (item is MultiComboBoxItem containerItem)
-                {
-                    this.FilteredItems.Add(new MultiComboBoxItem
-                    {
-                        [!ContentControl.ContentProperty] = containerItem[!ContentControl.ContentProperty],
-                        [!ContentControl.ContentTemplateProperty] = containerItem[!ContentControl.ContentTemplateProperty],
-                        [!IsEnabledProperty] = containerItem[!IsEnabledProperty],
-                        IsSelected = containerItem.IsSelected,
-                    });
-                }
-                else
-                {
-                    this.FilteredItems.Add(item);
-                }
+                this.FilteredItems.Add(item);
             }
         }
     }

@@ -30,10 +30,11 @@ using Avalonia.Threading;
 ///   </para>
 ///   <para>
 ///     Solid-colour wallpapers are resolved via a sampled colour palette and NSColor class
-///     selectors.  Video wallpapers are sampled via AVFoundation.  Image and system desktop
-///     picture wallpapers are sampled via ImageIO.  When the wallpaper configuration cannot
-///     be resolved (e.g. newly-applied animated wallpapers with no stored colour blob),
-///     sampling returns <c>false</c> and callers fall back to the static theme resource.
+///     selectors.  Aerial/video wallpapers cached locally are sampled via AVFoundation.  Image
+///     and system desktop picture wallpapers are sampled via ImageIO.  When the wallpaper
+///     configuration cannot be resolved (e.g. newly-applied animated wallpapers with no stored
+///     colour blob), sampling returns <c>false</c> and callers fall back to the static theme
+///     resource.
 ///   </para>
 /// </remarks>
 internal static class WallpaperTintApplier
@@ -334,36 +335,11 @@ internal static class WallpaperTintApplier
         }
       }
 
-      // Route known video extensions to AVFoundation.
-      string? ext = GetUrlFileExtension(wallpaperUrl);
-      if (ext is "mov" or "mp4" or "m4v" or "avi" or "m2v")
-      {
-        return TryGetColorFromVideoViaAVFoundation(wallpaperUrl, out color);
-      }
-
       return TryGetColorFromImageViaImageIo(wallpaperUrl, out color);
     }
     catch
     {
       return false;
-    }
-  }
-
-  /// <summary>Returns the lowercase file extension of a file:// NSURL, or null on failure.</summary>
-  private static string? GetUrlFileExtension(IntPtr url)
-  {
-    try
-    {
-      IntPtr nsPath = objc_msgSend_ptr(url, sel_registerName("path"));
-      if (nsPath == IntPtr.Zero) return null;
-      IntPtr extObj = objc_msgSend_ptr(nsPath, sel_registerName("pathExtension"));
-      if (extObj == IntPtr.Zero) return null;
-      IntPtr utf8 = objc_msgSend_ptr(extObj, sel_registerName("UTF8String"));
-      return utf8 != IntPtr.Zero ? Marshal.PtrToStringUTF8(utf8)?.ToLowerInvariant() : null;
-    }
-    catch
-    {
-      return null;
     }
   }
 
@@ -650,8 +626,8 @@ internal static class WallpaperTintApplier
         return false;
       }
 
-      string extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
-      if (extension is "mov" or "mp4" or "m4v" or "avi" or "m2v")
+      // Aerial cache videos are .mov; route them to AVFoundation, everything else to ImageIO.
+      if (Path.GetExtension(filePath).Equals(".mov", StringComparison.OrdinalIgnoreCase))
       {
         return TryGetColorFromVideoViaAVFoundation(url, out color);
       }

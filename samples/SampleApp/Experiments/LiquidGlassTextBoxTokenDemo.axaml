@@ -45,5 +45,17 @@
               Click="CopyTokenColorHex" />
     </StackPanel>
 
+    <TextBlock FontWeight="SemiBold" Text="Sampling diagnostics" />
+    <TextBox x:Name="DiagnosticLogTextBox"
+             Width="640"
+             MaxHeight="220"
+             IsReadOnly="True"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             FontFamily="Courier New,Courier,monospace"
+             FontSize="11"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             Text="(not yet sampled)" />
+
   </StackPanel>
 </UserControl>

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -56,6 +57,12 @@ internal static class WallpaperTintApplier
   [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
   private static extern uint objc_msgSend_uint(IntPtr receiver, IntPtr selector);
 
+  // Used for class-method existence check via +[NSColor respondsToSelector:].
+  // BOOL is signed char on macOS; UnmanagedType.I1 reads the low byte correctly on ARM64/x86-64.
+  [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+  [return: MarshalAs(UnmanagedType.I1)]
+  private static extern bool objc_msgSend_bool_ptr(IntPtr receiver, IntPtr selector, IntPtr arg1);
+
   // CoreFoundation
   [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")]
   private static extern void CFRelease(IntPtr cf);
@@ -91,7 +98,8 @@ internal static class WallpaperTintApplier
   private static extern void CGColorSpaceRelease(IntPtr colorSpace);
 
   [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
-  private static extern IntPtr CGBitmapContextCreate(IntPtr data, nuint width, nuint height, nuint bitsPerComponent, nuint bytesPerRow, IntPtr space, uint bitmapInfo);
+  private static extern IntPtr CGBitmapContextCreate(IntPtr data, nuint width, nuint height, nuint bitsPerComponent, nuint bytesPerRow,
+    IntPtr space, uint bitmapInfo);
 
   [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
   private static extern void CGContextDrawImage(IntPtr context, CGRect rect, IntPtr image);
@@ -119,7 +127,10 @@ internal static class WallpaperTintApplier
 
     public CGRect(double x, double y, double w, double h)
     {
-      X = x; Y = y; Width = w; Height = h;
+      this.X = x;
+      this.Y = y;
+      this.Width = w;
+      this.Height = h;
     }
   }
 
@@ -137,10 +148,10 @@ internal static class WallpaperTintApplier
   [StructLayout(LayoutKind.Sequential)]
   private struct CMTime
   {
-    public long  Value;     // int64_t
-    public int   Timescale; // int32_t
-    public uint  Flags;     // uint32_t (kCMTimeFlags_Valid = 1)
-    public long  Epoch;     // int64_t
+    public long Value; // int64_t
+    public int Timescale; // int32_t
+    public uint Flags; // uint32_t (kCMTimeFlags_Valid = 1)
+    public long Epoch; // int64_t
   }
 
   [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
@@ -151,26 +162,66 @@ internal static class WallpaperTintApplier
 
   private static readonly string WallpaperStorePath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-    "Library", "Application Support", "com.apple.wallpaper", "Store", "Index.plist");
+    "Library",
+    "Application Support",
+    "com.apple.wallpaper",
+    "Store",
+    "Index.plist");
 
   private static readonly string SpacesPlistPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-    "Library", "Preferences", "com.apple.spaces.plist");
+    "Library",
+    "Preferences",
+    "com.apple.spaces.plist");
 
   private static readonly string AerialsPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-    "Library", "Application Support", "com.apple.wallpaper", "aerials");
+    "Library",
+    "Application Support",
+    "com.apple.wallpaper",
+    "aerials");
+
+  private readonly record struct WallpaperConfigurationCandidate(
+    string ConfigurationPath,
+    DateTime LastUse,
+    DateTime LastSet,
+    int Rank);
+
+  private static readonly Dictionary<string, Color> NamedWallpaperColors = new(StringComparer.OrdinalIgnoreCase)
+  {
+     ["blueViolet"] = Color.FromArgb(255, 104, 103, 170),
+     ["cyan"] = Color.FromArgb(255, 81, 172, 204),
+     ["dustyRose"] = Color.FromArgb(255, 209, 116, 123),
+     ["electricBlue"] = Color.FromArgb(255, 69, 83, 206),
+     ["gold2"] = Color.FromArgb(255, 247, 220, 204),
+     ["gold"] = Color.FromArgb(255, 240, 223, 203),
+     ["ocher"] = Color.FromArgb(255, 205, 168, 99),
+     ["plum"] = Color.FromArgb(255, 190, 84, 145),
+     ["redOrange"] = Color.FromArgb(255, 216, 77, 51),
+     ["roseGold"] = Color.FromArgb(255, 240, 212, 207),
+     ["silver"] = Color.FromArgb(255, 227, 228, 229),
+     ["softPink"] = Color.FromArgb(255, 247, 222, 229),
+     ["spaceGrayPro"] = Color.FromArgb(255, 122, 123, 128),
+     ["spaceGray"] = Color.FromArgb(255, 190, 191, 196),
+     ["stone"] = Color.FromArgb(255, 84, 85, 84),
+     ["teal"] = Color.FromArgb(255, 52, 119, 115),
+     ["turquoiseGreen"] = Color.FromArgb(255, 128, 194, 164),
+     ["yellow"] = Color.FromArgb(255, 243, 187, 68)
+  };
 
   private static bool hooked;
   private static bool enabled;
-  private static Application? callbackApp;  // retained for the wallpaper-change callback
+  private static Application? callbackApp; // retained for the wallpaper-change callback
 
   // ─── Diagnostics ─────────────────────────────────────────────────────────
 
   internal static string LastDiagnosticLog { get; private set; } = "";
-  private static System.Text.StringBuilder? _diagBuilder;
-  private static void LogBegin() => _diagBuilder = new System.Text.StringBuilder();
+  private static StringBuilder? _diagBuilder;
+
+  private static void LogBegin() => _diagBuilder = new StringBuilder();
+
   private static void Log(string line) => _diagBuilder?.AppendLine(line);
+
   private static void LogEnd() => LastDiagnosticLog = _diagBuilder?.ToString() ?? "";
 
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
@@ -219,15 +270,21 @@ internal static class WallpaperTintApplier
           unsafe
           {
             // kCFNotificationSuspensionBehaviorDeliverImmediately = 4
-            CFNotificationCenterAddObserver(center, IntPtr.Zero, &WallpaperChangedCallback,
-              nameStr, IntPtr.Zero, 4);
+            CFNotificationCenterAddObserver(center,
+              IntPtr.Zero,
+              &WallpaperChangedCallback,
+              nameStr,
+              IntPtr.Zero,
+              4);
           }
 
           CFRelease(nameStr);
         }
       }
     }
-    catch { /* notification registration is best-effort */ }
+    catch
+    { /* notification registration is best-effort */
+    }
   }
 
   /// <summary>
@@ -251,11 +308,13 @@ internal static class WallpaperTintApplier
   }
 
   /// <summary>Unmanaged callback for <c>com.apple.desktop.backgroundChanged</c> distributed notification.</summary>
-  [System.Runtime.InteropServices.UnmanagedCallersOnly]
+  [UnmanagedCallersOnly]
   private static void WallpaperChangedCallback(IntPtr center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr info)
   {
     if (callbackApp is { } app && enabled)
+    {
       Dispatcher.UIThread.Post(() => Apply(app), DispatcherPriority.Background);
+    }
   }
 
   /// <summary>
@@ -321,7 +380,8 @@ internal static class WallpaperTintApplier
 
       // NSURL is toll-free bridged to CFURL — pass directly to CGImageSourceCreateWithURL
       IntPtr wallpaperUrl = objc_msgSend_ptr_ptr(sharedWorkspace,
-        sel_registerName("desktopImageURLForScreen:"), mainScreen);
+        sel_registerName("desktopImageURLForScreen:"),
+        mainScreen);
 
       string? urlPath = wallpaperUrl != IntPtr.Zero
         ? GetNsStringUtf8(objc_msgSend_ptr(wallpaperUrl, sel_registerName("path")))
@@ -333,7 +393,9 @@ internal static class WallpaperTintApplier
       {
         Log("Path: placeholder/nil URL → WallpaperStore");
         if (TryGetColorFromWallpaperStore(sharedWorkspace, mainScreen, out color))
+        {
           return true;
+        }
 
         if (wallpaperUrl == IntPtr.Zero)
         {
@@ -373,7 +435,10 @@ internal static class WallpaperTintApplier
       IntPtr utf8 = objc_msgSend_ptr(extObj, sel_registerName("UTF8String"));
       return utf8 != IntPtr.Zero ? Marshal.PtrToStringUTF8(utf8)?.ToLowerInvariant() : null;
     }
-    catch { return null; }
+    catch
+    {
+      return null;
+    }
   }
 
   /// <summary>Reads the UTF-8 string value of an NSString, or returns null.</summary>
@@ -385,47 +450,199 @@ internal static class WallpaperTintApplier
       IntPtr utf8 = objc_msgSend_ptr(nsString, sel_registerName("UTF8String"));
       return utf8 != IntPtr.Zero ? Marshal.PtrToStringUTF8(utf8) : null;
     }
-    catch { return null; }
+    catch
+    {
+      return null;
+    }
   }
 
   private static bool TryGetColorFromWallpaperStore(IntPtr workspace, IntPtr screen, out Color color)
   {
     color = default;
 
-    if (!File.Exists(WallpaperStorePath) || !File.Exists(SpacesPlistPath))
+    if (!File.Exists(WallpaperStorePath))
     {
-      Log("WallpaperStore: required plist not found");
+      Log("WallpaperStore: Index.plist not found");
       return false;
     }
 
-    if (!TryGetActiveMainSpaceUuid(out string activeSpaceUuid))
-      return false;
     if (!TryGetDisplayUuid(screen, out string displayUuid))
+    {
       return false;
+    }
 
-    Log($"WallpaperStore active space: {activeSpaceUuid}");
     Log($"WallpaperStore display: {displayUuid}");
 
-    string[] configurationPaths =
-    [
-      $"Spaces.{activeSpaceUuid}.Displays.{displayUuid}.Desktop.Content.Choices.0.Configuration",
-      $"Spaces.{activeSpaceUuid}.Default.Desktop.Content.Choices.0.Configuration",
-      $"Displays.{displayUuid}.Desktop.Content.Choices.0.Configuration",
-      "SystemDefault.Desktop.Content.Choices.0.Configuration"
-    ];
-
-    foreach (string configurationPath in configurationPaths)
+    if (!TryGetWallpaperConfigurationCandidates(displayUuid, out WallpaperConfigurationCandidate[] candidates))
     {
-      if (!TryExtractEmbeddedPlistAsXml(configurationPath, out XDocument configDoc))
-        continue;
+      candidates =
+      [
+        new WallpaperConfigurationCandidate($"Displays.{displayUuid}.Desktop.Content.Choices.0.Configuration",
+          DateTime.MinValue,
+          DateTime.MinValue,
+          2),
+        new WallpaperConfigurationCandidate("SystemDefault.Desktop.Content.Choices.0.Configuration", DateTime.MinValue, DateTime.MinValue, 3)
+      ];
+    }
 
-      Log($"WallpaperStore config path: {configurationPath}");
+    foreach (WallpaperConfigurationCandidate candidate in candidates)
+    {
+      if (!TryExtractEmbeddedPlistAsXml(candidate.ConfigurationPath, out XDocument configDoc))
+      {
+        continue;
+      }
+
+      Log($"WallpaperStore config path: {candidate.ConfigurationPath}");
+      if (candidate.LastUse != DateTime.MinValue || candidate.LastSet != DateTime.MinValue)
+      {
+        Log($"WallpaperStore timestamps: lastUse={candidate.LastUse:O} lastSet={candidate.LastSet:O}");
+      }
+
       if (TryGetColorFromWallpaperConfiguration(configDoc, workspace, screen, out color))
+      {
         return true;
+      }
     }
 
     Log("WallpaperStore: no usable configuration matched");
     return false;
+  }
+
+  private static bool TryGetWallpaperConfigurationCandidates(string displayUuid, out WallpaperConfigurationCandidate[] candidates)
+  {
+    candidates = [];
+
+    if (!TryRunProcess(
+          "/usr/bin/plutil",
+          ["-convert", "xml1", "-o", "-", WallpaperStorePath],
+          out string wallpaperStoreXml,
+          trimOutput: false))
+    {
+      return false;
+    }
+
+    XDocument wallpaperStoreDoc;
+    try
+    {
+      wallpaperStoreDoc = XDocument.Parse(wallpaperStoreXml);
+    }
+    catch (Exception ex)
+    {
+      Log($"WallpaperStore XML parse failed: {ex.Message}");
+      return false;
+    }
+
+    XElement? rootDict = wallpaperStoreDoc.Root?.Element("dict");
+    if (rootDict is null)
+    {
+      Log("WallpaperStore: Index.plist XML missing root dict");
+      return false;
+    }
+
+    List<WallpaperConfigurationCandidate> results = [];
+    HashSet<string> seenPaths = new(StringComparer.Ordinal);
+
+    XElement? spacesDict = GetPlistValue(rootDict, "Spaces");
+    if (spacesDict is not null)
+    {
+      foreach ((string spaceKey, XElement spaceValue) in EnumeratePlistDictionary(spacesDict))
+      {
+        if (string.IsNullOrEmpty(spaceKey) || spaceValue.Name != "dict")
+        {
+          continue;
+        }
+
+        XElement? displayOwners = GetPlistValue(spaceValue, "Displays");
+        XElement? displayOwner = GetPlistValue(displayOwners, displayUuid);
+        AddWallpaperConfigurationCandidate(results,
+          seenPaths,
+          displayOwner,
+          $"Spaces.{spaceKey}.Displays.{displayUuid}.Desktop.Content.Choices.0.Configuration",
+          0);
+
+        XElement? defaultOwner = GetPlistValue(spaceValue, "Default");
+        AddWallpaperConfigurationCandidate(results,
+          seenPaths,
+          defaultOwner,
+          $"Spaces.{spaceKey}.Default.Desktop.Content.Choices.0.Configuration",
+          1);
+      }
+    }
+
+    XElement? displaysDict = GetPlistValue(rootDict, "Displays");
+    XElement? rootDisplayOwner = GetPlistValue(displaysDict, displayUuid);
+    AddWallpaperConfigurationCandidate(results,
+      seenPaths,
+      rootDisplayOwner,
+      $"Displays.{displayUuid}.Desktop.Content.Choices.0.Configuration",
+      2);
+
+    XElement? systemDefaultOwner = GetPlistValue(rootDict, "SystemDefault");
+    AddWallpaperConfigurationCandidate(results,
+      seenPaths,
+      systemDefaultOwner,
+      "SystemDefault.Desktop.Content.Choices.0.Configuration",
+      3);
+
+    candidates = results
+      .OrderByDescending(candidate => candidate.LastUse)
+      .ThenByDescending(candidate => candidate.LastSet)
+      .ThenBy(candidate => candidate.Rank)
+      .ToArray();
+
+    foreach (WallpaperConfigurationCandidate candidate in candidates)
+    {
+      Log($"WallpaperStore candidate: {candidate.ConfigurationPath} lastUse={candidate.LastUse:O} lastSet={candidate.LastSet:O}");
+    }
+
+    return candidates.Length > 0;
+  }
+
+  private static void AddWallpaperConfigurationCandidate(
+    List<WallpaperConfigurationCandidate> results,
+    HashSet<string> seenPaths,
+    XElement? owner,
+    string configurationPath,
+    int rank)
+  {
+    XElement? desktop = GetPlistValue(owner, "Desktop");
+    if (desktop is null || !seenPaths.Add(configurationPath))
+    {
+      return;
+    }
+
+    results.Add(new WallpaperConfigurationCandidate(
+      configurationPath,
+      GetPlistDateTime(desktop, "LastUse"),
+      GetPlistDateTime(desktop, "LastSet"),
+      rank));
+  }
+
+  private static IEnumerable<(string Key, XElement Value)> EnumeratePlistDictionary(XElement? dict)
+  {
+    if (dict is null)
+    {
+      yield break;
+    }
+
+    XElement[] children = dict.Elements().ToArray();
+    for (var i = 0; i < children.Length - 1; i++)
+    {
+      XElement key = children[i];
+      if (key.Name != "key")
+      {
+        continue;
+      }
+
+      yield return (key.Value, children[i + 1]);
+      i++;
+    }
+  }
+
+  private static DateTime GetPlistDateTime(XElement? dict, string keyName)
+  {
+    string? value = GetPlistValue(dict, keyName)?.Value;
+    return DateTime.TryParse(value, out DateTime parsed) ? parsed : DateTime.MinValue;
   }
 
   private static bool TryGetColorFromWallpaperConfiguration(XDocument configDoc, IntPtr workspace, IntPtr screen, out Color color)
@@ -443,7 +660,9 @@ internal static class WallpaperTintApplier
     string? assetId = GetPlistString(dict, "assetID");
     Log($"WallpaperStore config type: {type ?? "(none)"}");
     if (!string.IsNullOrEmpty(assetId))
+    {
       Log($"WallpaperStore aerial asset: {assetId}");
+    }
 
     if (!string.IsNullOrEmpty(assetId))
     {
@@ -470,15 +689,28 @@ internal static class WallpaperTintApplier
       XElement? systemColorDict = GetPlistValue(dict, "systemColor");
       string? systemColorName = systemColorDict?.Elements("key").FirstOrDefault()?.Value;
       Log($"WallpaperStore system color: {systemColorName ?? "(unknown)"}");
+
+      if (!string.IsNullOrEmpty(systemColorName) &&
+          TryGetColorFromNamedWallpaperColor(systemColorName, out color))
+      {
+        return true;
+      }
+
+      Log("WallpaperStore system color: named lookup failed, trying desktop options");
       return TryGetColorFromDesktopOptions(workspace, screen, out color);
     }
 
     string? relativeUrl = GetPlistString(GetPlistValue(dict, "url"), "relative");
     if (string.IsNullOrEmpty(relativeUrl))
+    {
       return false;
+    }
 
     string filePath;
-    try { filePath = Uri.UnescapeDataString(new Uri(relativeUrl).LocalPath); }
+    try
+    {
+      filePath = Uri.UnescapeDataString(new Uri(relativeUrl).LocalPath);
+    }
     catch (Exception ex)
     {
       Log($"WallpaperStore URL parse failed: {ex.Message}");
@@ -509,7 +741,9 @@ internal static class WallpaperTintApplier
     try
     {
       if (!TryCreateFileUrl(filePath, out url))
+      {
         return false;
+      }
 
       string extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
       Log($"WallpaperStore extension: {extension}");
@@ -525,7 +759,9 @@ internal static class WallpaperTintApplier
     finally
     {
       if (url != IntPtr.Zero)
+      {
         CFRelease(url);
+      }
     }
   }
 
@@ -551,8 +787,14 @@ internal static class WallpaperTintApplier
         Log($"ImageIO cgImage[0]: 0x{cgImage:X}");
         if (cgImage != IntPtr.Zero)
         {
-          try { return TryAverageCGImageColor(cgImage, out color); }
-          finally { CFRelease(cgImage); }
+          try
+          {
+            return TryAverageCGImageColor(cgImage, out color);
+          }
+          finally
+          {
+            CFRelease(cgImage);
+          }
         }
       }
       else
@@ -572,7 +814,10 @@ internal static class WallpaperTintApplier
               successCount++;
             }
           }
-          finally { CFRelease(cgFrame); }
+          finally
+          {
+            CFRelease(cgFrame);
+          }
         }
 
         Log($"ImageIO dynamic: {successCount}/{frameCount} frames sampled");
@@ -586,7 +831,10 @@ internal static class WallpaperTintApplier
         }
       }
     }
-    finally { CFRelease(imageSource); }
+    finally
+    {
+      CFRelease(imageSource);
+    }
 
     Log("ImageIO failed — no further fallback");
     return false;
@@ -607,7 +855,9 @@ internal static class WallpaperTintApplier
     finally
     {
       if (cfPath != IntPtr.Zero)
+      {
         CFRelease(cfPath);
+      }
     }
   }
 
@@ -656,9 +906,14 @@ internal static class WallpaperTintApplier
     finally
     {
       if (uuidStringRef != IntPtr.Zero)
+      {
         CFRelease(uuidStringRef);
+      }
+
       if (uuidRef != IntPtr.Zero)
+      {
         CFRelease(uuidRef);
+      }
     }
   }
 
@@ -670,10 +925,21 @@ internal static class WallpaperTintApplier
           ["-extract", keyPath, "raw", "-o", "-", WallpaperStorePath],
           out string base64,
           trimOutput: true))
+    {
       return false;
+    }
+
+    if (string.IsNullOrWhiteSpace(base64))
+    {
+      Log($"WallpaperStore config empty: {keyPath}");
+      return false;
+    }
 
     byte[] bytes;
-    try { bytes = Convert.FromBase64String(base64); }
+    try
+    {
+      bytes = Convert.FromBase64String(base64);
+    }
     catch (Exception ex)
     {
       Log($"WallpaperStore base64 decode failed: {ex.Message}");
@@ -685,8 +951,10 @@ internal static class WallpaperTintApplier
           ["-convert", "xml1", "-o", "-", "-"],
           out string xml,
           bytes,
-          trimOutput: false))
+          false))
+    {
       return false;
+    }
 
     try
     {
@@ -713,7 +981,9 @@ internal static class WallpaperTintApplier
       process.StartInfo.RedirectStandardError = true;
       process.StartInfo.RedirectStandardInput = stdinBytes is not null;
       foreach (string argument in arguments)
+      {
         process.StartInfo.ArgumentList.Add(argument);
+      }
 
       process.Start();
       if (stdinBytes is not null)
@@ -766,10 +1036,8 @@ internal static class WallpaperTintApplier
     return key?.ElementsAfterSelf().FirstOrDefault();
   }
 
-  private static string? GetPlistString(XElement? dict, string keyName)
-  {
-    return GetPlistValue(dict, keyName)?.Value;
-  }
+  private static string? GetPlistString(XElement? dict, string keyName) =>
+    GetPlistValue(dict, keyName)?.Value;
 
   /// <summary>Scales <paramref name="cgImage"/> to 10×10 and returns the average colour.</summary>
   private static bool TryAverageCGImageColor(IntPtr cgImage, out Color color)
@@ -791,7 +1059,7 @@ internal static class WallpaperTintApplier
 
       long totalR = 0, totalG = 0, totalB = 0, totalA = 0;
       const int count = size * size;
-      for (int i = 0; i < count; i++)
+      for (var i = 0; i < count; i++)
       {
         int offset = i * 4;
         totalR += Marshal.ReadByte(data, offset);
@@ -808,7 +1076,124 @@ internal static class WallpaperTintApplier
       color = Color.FromArgb(255, ToByte(avgR), ToByte(avgG), ToByte(avgB));
       return true;
     }
-    finally { CGContextRelease(ctx); }
+    finally
+    {
+      CGContextRelease(ctx);
+    }
+  }
+
+  private static bool TryGetColorFromNamedWallpaperColor(string systemColorName, out Color color)
+  {
+    color = default;
+
+    if (NamedWallpaperColors.TryGetValue(systemColorName, out color))
+    {
+      Log($"WallpaperStore system color: using sampled palette for '{systemColorName}'");
+      return true;
+    }
+
+    string selector = BuildNsColorSelector(systemColorName);
+    if (TryGetColorFromNsColorSelector(selector, out color))
+    {
+      return true;
+    }
+
+    Log($"WallpaperStore system color: no selector or fallback for '{systemColorName}'");
+    return false;
+  }
+
+  private static string BuildNsColorSelector(string systemColorName)
+  {
+    ReadOnlySpan<char> span = systemColorName.AsSpan().Trim();
+    if (span.IsEmpty)
+    {
+      return "Color";
+    }
+
+    StringBuilder builder = new(span.Length + 5);
+    var upperNext = false;
+    var wroteAny = false;
+
+    foreach (char ch in span)
+    {
+      if (char.IsLetterOrDigit(ch))
+      {
+        builder.Append(!wroteAny
+          ? char.ToLowerInvariant(ch)
+          : upperNext
+            ? char.ToUpperInvariant(ch)
+            : ch);
+        wroteAny = true;
+        upperNext = false;
+      }
+      else if (wroteAny)
+      {
+        upperNext = true;
+      }
+    }
+
+    builder.Append("Color");
+    return builder.ToString();
+  }
+
+  /// <summary>
+  ///   Calls <c>+[NSColor &lt;selector&gt;]</c> only if the class responds to that selector and
+  ///   converts the result to a plain sRGB <see cref="Color"/>.
+  /// </summary>
+  private static bool TryGetColorFromNsColorSelector(string selector, out Color color)
+  {
+    color = default;
+    try
+    {
+      IntPtr nsColorClass = objc_getClass("NSColor");
+      if (nsColorClass == IntPtr.Zero)
+      {
+        Log($"NSColor selector: NSColor class not found");
+        return false;
+      }
+
+      IntPtr sel = sel_registerName(selector);
+      // Check before calling — unrecognized selectors raise NSInvalidArgumentException.
+      bool responds = objc_msgSend_bool_ptr(nsColorClass, sel_registerName("respondsToSelector:"), sel);
+      Log($"NSColor selector: [{selector}] responds={responds}");
+      if (!responds)
+      {
+        return false;
+      }
+
+      IntPtr nsColor = objc_msgSend_ptr(nsColorClass, sel);
+      Log($"NSColor selector: [{selector}] → 0x{nsColor:X}");
+      if (nsColor == IntPtr.Zero) return false;
+
+      // Convert to device RGB so component selectors work reliably.
+      IntPtr nsColorSpaceClass = objc_getClass("NSColorSpace");
+      if (nsColorSpaceClass == IntPtr.Zero) return false;
+      IntPtr deviceRGB = objc_msgSend_ptr(nsColorSpaceClass, sel_registerName("deviceRGBColorSpace"));
+      if (deviceRGB == IntPtr.Zero) return false;
+
+      IntPtr rgbColor = objc_msgSend_ptr_ptr(nsColor, sel_registerName("colorUsingColorSpace:"), deviceRGB);
+      Log($"NSColor selector: rgbColor 0x{rgbColor:X}");
+      if (rgbColor == IntPtr.Zero) return false;
+
+      double r = objc_msgSend_double(rgbColor, sel_registerName("redComponent"));
+      double g = objc_msgSend_double(rgbColor, sel_registerName("greenComponent"));
+      double b = objc_msgSend_double(rgbColor, sel_registerName("blueComponent"));
+      Log($"NSColor selector: raw RGB r={r:F4} g={g:F4} b={b:F4}");
+
+      if (r is < 0 or > 1 || g is < 0 or > 1 || b is < 0 or > 1)
+      {
+        Log("NSColor selector: range check failed");
+        return false;
+      }
+
+      color = Color.FromArgb(255, ToByte(r), ToByte(g), ToByte(b));
+      return true;
+    }
+    catch (Exception ex)
+    {
+      Log($"NSColor selector exception: {ex.Message}");
+      return false;
+    }
   }
 
   /// <summary>
@@ -824,7 +1209,8 @@ internal static class WallpaperTintApplier
     try
     {
       IntPtr optionsDict = objc_msgSend_ptr_ptr(workspace,
-        sel_registerName("desktopImageOptionsForScreen:"), screen);
+        sel_registerName("desktopImageOptionsForScreen:"),
+        screen);
       Log($"DesktopOptions dict: 0x{optionsDict:X}");
       if (optionsDict == IntPtr.Zero) return false;
 
@@ -843,7 +1229,8 @@ internal static class WallpaperTintApplier
       if (key == IntPtr.Zero) return false;
 
       IntPtr fillColor = objc_msgSend_ptr_ptr(optionsDict,
-        sel_registerName("objectForKey:"), key);
+        sel_registerName("objectForKey:"),
+        key);
       Log($"DesktopOptions fillColor: 0x{fillColor:X}");
       if (fillColor == IntPtr.Zero) return false;
 
@@ -855,7 +1242,8 @@ internal static class WallpaperTintApplier
       if (deviceRGB == IntPtr.Zero) return false;
 
       IntPtr rgbColor = objc_msgSend_ptr_ptr(fillColor,
-        sel_registerName("colorUsingColorSpace:"), deviceRGB);
+        sel_registerName("colorUsingColorSpace:"),
+        deviceRGB);
       Log($"DesktopOptions rgbColor: 0x{rgbColor:X}");
       if (rgbColor == IntPtr.Zero) return false;
 
@@ -874,7 +1262,11 @@ internal static class WallpaperTintApplier
       color = Color.FromArgb(255, ToByte(r), ToByte(g), ToByte(b));
       return true;
     }
-    catch (Exception ex) { Log($"DesktopOptions exception: {ex.Message}"); return false; }
+    catch (Exception ex)
+    {
+      Log($"DesktopOptions exception: {ex.Message}");
+      return false;
+    }
   }
 
   /// <summary>
@@ -896,7 +1288,8 @@ internal static class WallpaperTintApplier
 
       // [AVURLAsset assetWithURL:wallpaperUrl]
       IntPtr asset = objc_msgSend_ptr_ptr(avUrlAssetClass,
-        sel_registerName("assetWithURL:"), wallpaperUrl);
+        sel_registerName("assetWithURL:"),
+        wallpaperUrl);
       Log($"AV: asset 0x{asset:X}");
       if (asset == IntPtr.Zero) return false;
 
@@ -906,23 +1299,36 @@ internal static class WallpaperTintApplier
 
       // [AVAssetImageGenerator assetImageGeneratorWithAsset:asset]
       IntPtr generator = objc_msgSend_ptr_ptr(generatorClass,
-        sel_registerName("assetImageGeneratorWithAsset:"), asset);
+        sel_registerName("assetImageGeneratorWithAsset:"),
+        asset);
       Log($"AV: generator instance 0x{generator:X}");
       if (generator == IntPtr.Zero) return false;
 
       // Extract the frame at time 0 synchronously.
       // kCMTimeFlags_Valid = 1; Epoch = 0 (normal timeline)
-      CMTime zeroTime = new CMTime { Value = 0, Timescale = 1, Flags = 1, Epoch = 0 };
+      var zeroTime = new CMTime { Value = 0, Timescale = 1, Flags = 1, Epoch = 0 };
       IntPtr cgImage = objc_msgSend_cgimage_at_cmtime(generator,
         sel_registerName("copyCGImageAtTime:actualTime:error:"),
-        zeroTime, IntPtr.Zero, IntPtr.Zero);
+        zeroTime,
+        IntPtr.Zero,
+        IntPtr.Zero);
       Log($"AV: cgImage at t=0: 0x{cgImage:X}");
       if (cgImage == IntPtr.Zero) return false;
 
-      try { return TryAverageCGImageColor(cgImage, out color); }
-      finally { CFRelease(cgImage); }
+      try
+      {
+        return TryAverageCGImageColor(cgImage, out color);
+      }
+      finally
+      {
+        CFRelease(cgImage);
+      }
     }
-    catch (Exception ex) { Log($"AV exception: {ex.Message}"); return false; }
+    catch (Exception ex)
+    {
+      Log($"AV exception: {ex.Message}");
+      return false;
+    }
   }
 
   // ─── Tint formula ────────────────────────────────────────────────────────────
@@ -955,17 +1361,36 @@ internal static class WallpaperTintApplier
     double min = Math.Min(r, Math.Min(g, b));
     l = (max + min) / 2.0;
     double d = max - min;
-    if (d < 1e-10) { h = 0; s = 0; return; }
+    if (d < 1e-10)
+    {
+      h = 0;
+      s = 0;
+      return;
+    }
 
     s = l > 0.5 ? d / (2.0 - max - min) : d / (max + min);
-    if (max == r)      h = ((g - b) / d + (g < b ? 6.0 : 0.0)) / 6.0;
-    else if (max == g) h = ((b - r) / d + 2.0) / 6.0;
-    else               h = ((r - g) / d + 4.0) / 6.0;
+    if (max == r)
+    {
+      h = ((g - b) / d + (g < b ? 6.0 : 0.0)) / 6.0;
+    }
+    else if (max == g)
+    {
+      h = ((b - r) / d + 2.0) / 6.0;
+    }
+    else
+    {
+      h = ((r - g) / d + 4.0) / 6.0;
+    }
   }
 
   private static void HslToRgb(double h, double s, double l, out double r, out double g, out double b)
   {
-    if (s < 1e-10) { r = g = b = l; return; }
+    if (s < 1e-10)
+    {
+      r = g = b = l;
+      return;
+    }
+
     double q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
     double p = 2.0 * l - q;
     r = HueToRgb(p, q, h + 1.0 / 3.0);
@@ -978,13 +1403,11 @@ internal static class WallpaperTintApplier
     if (t < 0) t += 1.0;
     if (t > 1) t -= 1.0;
     if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;
-    if (t < 0.5)        return q;
+    if (t < 0.5) return q;
     if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
     return p;
   }
 
-  private static byte ToByte(double value)
-  {
-    return (byte)Math.Round(Math.Clamp(value, 0.0, 1.0) * 255.0);
-  }
+  private static byte ToByte(double value) =>
+    (byte)Math.Round(Math.Clamp(value, 0.0, 1.0) * 255.0);
 }

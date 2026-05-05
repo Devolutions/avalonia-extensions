@@ -1,6 +1,5 @@
 namespace SampleApp.Experiments;
 
-using Devolutions.AvaloniaTheme.MacOS;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -85,8 +84,6 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
       }
 
       readout.Text = $"{TextBoxBackgroundBrushKey}  (A={color.A}, R={color.R}, G={color.G}, B={color.B})";
-      if (this.FindControl<TextBox>("DiagnosticLogTextBox") is { } diagBox1)
-        diagBox1.Text = DevolutionsMacOsTheme.WallpaperSamplingDiagnostics;
       return;
     }
 
@@ -96,8 +93,6 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
     }
 
     readout.Text = $"{TextBoxBackgroundBrushKey} is not available in Application resources.";
-    if (this.FindControl<TextBox>("DiagnosticLogTextBox") is { } diagBox2)
-      diagBox2.Text = DevolutionsMacOsTheme.WallpaperSamplingDiagnostics;
   }
 
   private async void CopyWallpaperColorHex(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

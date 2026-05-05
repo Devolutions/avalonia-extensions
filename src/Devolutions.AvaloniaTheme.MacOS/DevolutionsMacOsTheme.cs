@@ -52,9 +52,4 @@ public class DevolutionsMacOsTheme : Styles, ISupportInitialize
     public static void ClearWallpaperTintResources(Application app) =>
         WallpaperTintApplier.Clear(app);
 
-    /// <summary>
-    ///   Log produced during the most recent wallpaper sampling attempt.
-    ///   Intended for diagnostic display in dev/test tooling only.
-    /// </summary>
-    public static string WallpaperSamplingDiagnostics => WallpaperTintApplier.LastDiagnosticLog;
 }

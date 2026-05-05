@@ -489,6 +489,15 @@ internal static class WallpaperTintApplier
     {
       if (!TryExtractEmbeddedPlistAsXml(candidate.ConfigurationPath, out XDocument configDoc))
       {
+        // If a well-timestamped candidate has no configuration blob (e.g. Tahoe Day / newly-applied
+        // animated wallpapers whose config hasn't been written yet), stop the waterfall rather than
+        // falling through to a stale systemColor entry from a different space.
+        if (candidate.LastUse > DateTime.MinValue)
+        {
+          Log($"WallpaperStore: active candidate has no config blob — stopping to avoid stale colour ({candidate.ConfigurationPath})");
+          break;
+        }
+
         continue;
       }
 

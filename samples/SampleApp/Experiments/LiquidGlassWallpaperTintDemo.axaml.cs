@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 
-public partial class LiquidGlassTextBoxTokenDemo : UserControl
+public partial class LiquidGlassWallpaperTintDemo : UserControl
 {
   private const string TextBoxBackgroundBrushKey = "TextBoxBackgroundBrush";
   private const string WallpaperDominantBrushKey = "LG.Wallpaper.DominantBrush";
@@ -14,7 +14,7 @@ public partial class LiquidGlassTextBoxTokenDemo : UserControl
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
     property.Name is "RequestedThemeVariant" or "ActualThemeVariant";
 
-  public LiquidGlassTextBoxTokenDemo()
+  public LiquidGlassWallpaperTintDemo()
   {
     this.InitializeComponent();
     if (Application.Current?.PlatformSettings is { } platformSettings)

@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+             x:Class="SampleApp.Experiments.LiquidGlassWallpaperTintDemo">
+
+  <StackPanel Margin="24" Spacing="14" MaxWidth="700" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <TextBlock FontWeight="SemiBold" FontSize="17" Text="LiquidGlass wallpaper tint" />
+    <TextBlock TextWrapping="Wrap" Opacity="0.85"
+               Text="WallpaperTintApplier samples the desktop wallpaper and writes a derived tint into Application resources. The swatches and readouts below show the live values of TextBoxBackgroundBrush and LG.Wallpaper.DominantBrush." />
+
+
+    <TextBlock FontWeight="SemiBold" Text="Sampled wallpaper colour (dominant colour)" />
+    <StackPanel Orientation="Horizontal" Spacing="30">
+      <Border Width="360" Height="120" CornerRadius="8"
+              BorderThickness="1" BorderBrush="Gray"
+              Background="{DynamicResource LG.Wallpaper.DominantBrush}" />
+      <StackPanel Spacing="30">
+        <TextBlock x:Name="WallpaperColorInfoTextBlock" TextWrapping="Wrap"
+                   Text="Wallpaper colour not resolved yet." />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBox x:Name="WallpaperColorHexTextBox"
+                   Width="240"
+                   IsReadOnly="True"
+                   Text="Wallpaper hex not resolved yet." />
+          <Button Content="Copy"
+                  Click="CopyWallpaperColorHex" />
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+
+
+    <TextBlock FontWeight="SemiBold" Text="Derived TextBox background colour" />
+    <StackPanel Orientation="Horizontal" Spacing="30">
+
+      <Border Width="360" Height="90" CornerRadius="8"
+              BorderThickness="1" BorderBrush="Gray"
+              Background="{DynamicResource TextBoxBackgroundBrush}" />
+
+      <StackPanel Spacing="30">
+        <TextBlock x:Name="TokenColorInfoTextBlock" TextWrapping="Wrap" Text="Token not resolved yet." />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBox x:Name="TokenColorHexTextBox"
+                   Width="240"
+                   IsReadOnly="True"
+                   Text="Token hex not resolved yet." />
+          <Button Content="Copy"
+                  Click="CopyTokenColorHex" />
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

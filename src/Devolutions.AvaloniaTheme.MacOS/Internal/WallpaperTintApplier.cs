@@ -29,9 +29,11 @@ using Avalonia.Threading;
 ///     backgrounds in light mode regardless of wallpaper.
 ///   </para>
 ///   <para>
-///     The applier uses CoreGraphics via P/Invoke to sample the wallpaper image.
-///     When sampling fails (plain colour desktop, dynamic/video wallpaper, etc.) the method
-///     returns <c>false</c> and callers fall back to the static theme resource.
+///     Solid-colour wallpapers are resolved via a sampled colour palette and NSColor class
+///     selectors.  Video wallpapers are sampled via AVFoundation.  Image and system desktop
+///     picture wallpapers are sampled via ImageIO.  When the wallpaper configuration cannot
+///     be resolved (e.g. newly-applied animated wallpapers with no stored colour blob),
+///     sampling returns <c>false</c> and callers fall back to the static theme resource.
 ///   </para>
 /// </remarks>
 internal static class WallpaperTintApplier
@@ -167,12 +169,6 @@ internal static class WallpaperTintApplier
     "com.apple.wallpaper",
     "Store",
     "Index.plist");
-
-  private static readonly string SpacesPlistPath = Path.Combine(
-    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-    "Library",
-    "Preferences",
-    "com.apple.spaces.plist");
 
   private static readonly string AerialsPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -319,8 +315,8 @@ internal static class WallpaperTintApplier
 
   /// <summary>
   ///   Computes the wallpaper-tinted TextBox background colour and writes it to
-  ///   <c>Application.Resources</c>.  Falls back silently when wallpaper sampling is
-  ///   unavailable (plain colour, dynamic, or video wallpapers).
+  ///   <c>Application.Resources</c>.  Falls back to the static theme resource when the
+  ///   wallpaper configuration cannot be resolved.
   /// </summary>
   public static void Apply(Application app)
   {
@@ -404,7 +400,7 @@ internal static class WallpaperTintApplier
         }
       }
 
-      // 2. Route known video extensions to AVFoundation.
+      // Route known video extensions to AVFoundation.
       string? ext = GetUrlFileExtension(wallpaperUrl);
       Log($"Extension: {ext ?? "(none)"}");
       if (ext is "mov" or "mp4" or "m4v" or "avi" or "m2v")
@@ -868,16 +864,6 @@ internal static class WallpaperTintApplier
         CFRelease(cfPath);
       }
     }
-  }
-
-  private static bool TryGetActiveMainSpaceUuid(out string uuid)
-  {
-    uuid = string.Empty;
-    return TryRunProcess(
-      "/usr/libexec/PlistBuddy",
-      ["-c", "Print SpacesDisplayConfiguration:Management\\ Data:Monitors:0:Current\\ Space:uuid", SpacesPlistPath],
-      out uuid,
-      trimOutput: true);
   }
 
   private static bool TryGetDisplayUuid(IntPtr screen, out string displayUuid)

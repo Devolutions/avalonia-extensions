@@ -52,13 +52,13 @@ public partial class MultiComboBox
                 return;
             }
 
-            // For inline MultiComboBoxItem data, unwrap Content/DataContext.
-            // base sets container.Content = item (the MultiComboBoxItem object) — override to the inner Content.
-            // DataContext must match SelectedItems entries (which contain Content values, not MultiComboBoxItem objects).
+            // For inline MultiComboBoxItem data, unwrap Content for display but keep DataContext
+            // pointing to the MultiComboBoxItem itself — matching what goes into SelectedItems
+            // (consistent with how ComboBox returns ComboBoxItem for inline items).
             if (item is MultiComboBoxItem sourceItem)
             {
                 multiComboBoxItem.Content = sourceItem.Content;
-                multiComboBoxItem.DataContext = sourceItem.Content;
+                multiComboBoxItem.DataContext = sourceItem;
                 multiComboBoxItem.ContentTemplate ??= sourceItem.ContentTemplate ?? this.ItemTemplate;
                 multiComboBoxItem.IsEnabled = sourceItem.IsEnabled;
             }

@@ -85,7 +85,7 @@
       <DataTemplate>
         <SearchHighlightTextBlock
           x:DataType="sys:Object"
-          Content="{Binding}" 
+          Content="{Binding}"
           Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
       </DataTemplate>
     </Setter>
@@ -177,9 +177,9 @@
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">
                   <u:MultiComboBoxSelectedItemList
+                    Name="PART_SelectedItemsList"
                     VerticalAlignment="Center"
                     ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
-                    ItemsSource="{TemplateBinding SelectedItems}"
                     RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                     ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
                 </SmallScrollViewer>

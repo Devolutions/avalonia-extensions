@@ -82,7 +82,13 @@
           SelectAllText="Select All"
           AllSelectedText="All"
           FilterText="Find an option..."
-          ItemsSource="{Binding LotOfItems}" />
+          ItemsSource="{Binding LotOfItems}">
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Text}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
 
         <Separator Margin="-10 10" />
 
@@ -161,7 +167,8 @@
           HorizontalAlignment="Left"
           Watermark="100 inline items"
           SelectAllText="Select All"
-          ShowFilter="True">
+          ShowFilter="True"
+          SelectedItems="{Binding InlineSelectedItems}">
           <MultiComboBox.ItemsPanel>
             <ItemsPanelTemplate>
               <VirtualizingStackPanel />
@@ -269,6 +276,7 @@
           <MultiComboBoxItem>Inline 99</MultiComboBoxItem>
           <MultiComboBoxItem>Inline 100</MultiComboBoxItem>
         </MultiComboBox>
+        <TextBlock Text="{Binding InlineSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding InlineSelectedItemsText}" />
 
         <Separator Margin="-10 10" />
 
@@ -278,13 +286,20 @@
           Watermark="1000 bound items"
           SelectAllText="Select All"
           ShowFilter="True"
-          ItemsSource="{Binding LotOfItems}">
+          ItemsSource="{Binding LotOfItems}"
+          SelectedItems="{Binding LotOfItemsSelectedItems}">
           <MultiComboBox.ItemsPanel>
             <ItemsPanelTemplate>
               <VirtualizingStackPanel />
             </ItemsPanelTemplate>
           </MultiComboBox.ItemsPanel>
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Text}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
         </MultiComboBox>
+        <TextBlock Text="{Binding LotOfItemsSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding LotOfItemsSelectedItemsText}" />
       </StackPanel>
     </StackPanel>
   </Border>

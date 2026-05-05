@@ -140,8 +140,13 @@ public partial class EditableComboBox
                 Value = string.Empty,
             };
 
-        protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
-            this.NeedsContainer<EditableComboBoxItem>(item, out recycleKey);
+        protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
+        {
+            // Always generate containers, even for inline EditableComboBoxItem data.
+            // This enables VSP virtualization for all item types.
+            recycleKey = DefaultRecycleKey;
+            return true;
+        }
 
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
@@ -239,22 +244,11 @@ public partial class EditableComboBox
             }
 
             editableComboBoxItem.Value = this.parent.GetValueForItem(item);
-            if (container != item)
+            editableComboBoxItem.OriginalSourceItem = item;
+            editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+            if (this.parent.ItemTemplate != null)
             {
-                // Normal case: item is raw source data; populate the generated container.
-                editableComboBoxItem.OriginalSourceItem = item;
-                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
-                if (this.parent.ItemTemplate != null)
-                {
-                    editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
-                }
-            }
-            else
-            {
-                // We should consider supporting virtualization even with EditableComboBoxItem as items
-                // The entire containerization should be handled here (that is, in InnerComboBox) and cloning
-                // should be removed from EditableComboBox altogether
-                editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(editableComboBoxItem.OriginalSourceItem), GetSourceKey(this.parent.SelectedItem));
+                editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
             }
         }
 

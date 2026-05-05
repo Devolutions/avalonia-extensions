@@ -34,15 +34,6 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
 
     public EditableComboBoxItem() { }
 
-    public EditableComboBoxItem(EditableComboBoxItem toClone)
-    {
-        this.Value = toClone.Value;
-        this.Classes.AddRange(toClone.Classes);
-        this.OriginalSourceItem = toClone.OriginalSourceItem;
-
-        this.OnInitialized();
-    }
-
     public IDataTemplate? ContentTemplate
     {
         get => this.GetValue(ContentTemplateProperty);
@@ -75,24 +66,6 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
     }
 
     internal object? OriginalSourceItem { get; set; }
-
-    public EditableComboBoxItem Clone()
-    {
-        var clone = new EditableComboBoxItem(this)
-        {
-            Value = this.Value,
-            OriginalSourceItem = this.OriginalSourceItem,
-            DataContext = this.DataContext,
-            IsCommittedSelected = this.IsCommittedSelected,
-        };
-
-        if (this.IsSet(ContentTemplateProperty))
-        {
-            clone.ContentTemplate = this.ContentTemplate;
-        }
-
-        return clone;
-    }
 
     public override string ToString() =>
         this.Value;

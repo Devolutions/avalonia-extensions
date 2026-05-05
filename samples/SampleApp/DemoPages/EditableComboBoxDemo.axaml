@@ -361,8 +361,8 @@
             </EditableComboBoxDataTemplate>
           </EditableComboBox.ItemTemplate>
           <EditableComboBox.InnerLeftContent>
-            <Border IsVisible="{Binding SelectedCountry, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">
-              <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedCountry.Code, FallbackValue={x:Null}}" Foreground="White" FontWeight="Bold" FontSize="8" />
+            <Border IsVisible="{Binding SelectedCountry2, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">
+              <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedCountry2.Code, FallbackValue={x:Null}}" Foreground="White" FontWeight="Bold" FontSize="8" />
             </Border>
           </EditableComboBox.InnerLeftContent>
         </EditableComboBox>

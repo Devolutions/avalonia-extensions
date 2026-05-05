@@ -597,7 +597,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         else
         {
             this.filteredItems.Clear();
-            this.filteredItems.AddRange(this.ItemsView.Select(CloneIfInlineItem));
+            this.filteredItems.AddRange(this.ItemsView);
         }
 
         this.SyncCommittedSelectionState();
@@ -615,8 +615,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                 {
                     string itemValue = this.GetValueForItem(item);
                     return string.IsNullOrEmpty(trimmedSearch) || itemValue.Contains(trimmedSearch, StringComparison.OrdinalIgnoreCase);
-                })
-                .Select(CloneIfInlineItem));
+                }));
     }
 
     private string? GetSelectedItemValue()
@@ -630,35 +629,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return this.realizedItems.TryGetValue(GetSourceKey(selected), out string? value) ? value : selected.ToString();
     }
 
-    private static object GetSourceKey(object? item)
-    {
-        // For cloned EditableComboBoxItem instances, resolve to the original source item
-        // so that dictionary lookups match realizedItems keys (which use original items).
-        if (item is EditableComboBoxItem { OriginalSourceItem: { } originalItem } && !ReferenceEquals(item, originalItem))
-        {
-            return originalItem;
-        }
-
-        return item ?? NullSourceKey;
-    }
-
-    /// <summary>
-    /// Inline XAML EditableComboBoxItem items are Visuals that cannot be re-added to a panel
-    /// after removal. Clone them so that filtering (clear + re-add) works correctly.
-    /// Non-EditableComboBoxItem source objects are passed through unchanged (they get fresh
-    /// generated containers via NeedsContainerOverride).
-    /// </summary>
-    private static object? CloneIfInlineItem(object? item)
-    {
-        if (item is not EditableComboBoxItem comboBoxItem)
-        {
-            return item;
-        }
-        
-        EditableComboBoxItem clone = comboBoxItem.Clone();
-        clone.OriginalSourceItem ??= comboBoxItem;
-        return clone;
-    }
+    private static object GetSourceKey(object? item) => item ?? NullSourceKey;
 
     private string GetValueForItem(object? item)
     {
@@ -799,8 +770,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.syncingSelectedItemFromInnerCombo = true;
         try
         {
-            object? innerSelected = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
-            this.SelectedItem = innerSelected is EditableComboBoxItem comboBoxItem ? comboBoxItem.OriginalSourceItem : innerSelected;
+            this.SelectedItem = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
             this.SyncCommittedSelectionState();
         }
         finally

@@ -70,9 +70,6 @@ internal static class WallpaperTintApplier
   private static extern void CFRelease(IntPtr cf);
 
   [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")]
-  private static extern IntPtr CFNotificationCenterGetDistributedCenter();
-
-  [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")]
   private static extern IntPtr CFStringCreateWithCString(
     IntPtr alloc, [MarshalAs(UnmanagedType.LPUTF8Str)] string cStr, uint encoding);
 
@@ -81,12 +78,6 @@ internal static class WallpaperTintApplier
 
   [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")]
   private static extern IntPtr CFURLCreateWithFileSystemPath(IntPtr allocator, IntPtr filePath, int pathStyle, bool isDirectory);
-
-  [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")]
-  private static extern unsafe void CFNotificationCenterAddObserver(
-    IntPtr center, IntPtr observer,
-    delegate* unmanaged<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void> callBack,
-    IntPtr name, IntPtr obj, int suspensionBehavior);
 
   // Display identity
   [DllImport("/System/Library/Frameworks/ColorSync.framework/ColorSync")]
@@ -207,7 +198,6 @@ internal static class WallpaperTintApplier
 
   private static bool hooked;
   private static bool enabled;
-  private static Application? callbackApp; // retained for the wallpaper-change callback
 
   // ─── Diagnostics ─────────────────────────────────────────────────────────
 
@@ -225,8 +215,8 @@ internal static class WallpaperTintApplier
 
   /// <summary>
   ///   Applies the wallpaper tint immediately and wires up event hooks so the colour
-  ///   updates whenever the OS dark/light mode changes or the application theme variant
-  ///   changes. Safe to call multiple times; hooks are installed only once.
+  ///   updates whenever the OS dark/light mode or application theme variant changes.
+  ///   Safe to call multiple times; hooks are installed only once.
   /// </summary>
   public static void HookAndApply(Application app)
   {
@@ -250,37 +240,6 @@ internal static class WallpaperTintApplier
         Dispatcher.UIThread.Post(() => Apply(app), DispatcherPriority.Background);
       }
     };
-
-    // Subscribe to the distributed wallpaper-change notification so sampling runs
-    // whenever the user changes the desktop background while the app is running.
-    callbackApp = app;
-    try
-    {
-      IntPtr center = CFNotificationCenterGetDistributedCenter();
-      if (center != IntPtr.Zero)
-      {
-        // kCFStringEncodingUTF8 = 0x08000100
-        IntPtr nameStr = CFStringCreateWithCString(IntPtr.Zero, "com.apple.desktop.backgroundChanged", 0x08000100);
-        if (nameStr != IntPtr.Zero)
-        {
-          unsafe
-          {
-            // kCFNotificationSuspensionBehaviorDeliverImmediately = 4
-            CFNotificationCenterAddObserver(center,
-              IntPtr.Zero,
-              &WallpaperChangedCallback,
-              nameStr,
-              IntPtr.Zero,
-              4);
-          }
-
-          CFRelease(nameStr);
-        }
-      }
-    }
-    catch
-    { /* notification registration is best-effort */
-    }
   }
 
   /// <summary>
@@ -301,16 +260,6 @@ internal static class WallpaperTintApplier
   {
     app.Resources.Remove("TextBoxBackgroundBrush");
     app.Resources.Remove(WallpaperDominantBrushKey);
-  }
-
-  /// <summary>Unmanaged callback for <c>com.apple.desktop.backgroundChanged</c> distributed notification.</summary>
-  [UnmanagedCallersOnly]
-  private static void WallpaperChangedCallback(IntPtr center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr info)
-  {
-    if (callbackApp is { } app && enabled)
-    {
-      Dispatcher.UIThread.Post(() => Apply(app), DispatcherPriority.Background);
-    }
   }
 
   /// <summary>

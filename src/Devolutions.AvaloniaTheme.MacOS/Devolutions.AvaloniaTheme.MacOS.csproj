@@ -4,7 +4,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <PropertyGroup>

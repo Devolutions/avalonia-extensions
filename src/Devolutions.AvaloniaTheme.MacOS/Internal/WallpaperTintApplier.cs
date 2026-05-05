@@ -272,10 +272,12 @@ internal static class WallpaperTintApplier
     bool isDark = effectiveVariant == ThemeVariant.Dark;
 
     // Light mode: native macOS always uses plain white — no wallpaper tint.
+    // Remove any stale dark-mode tint override so the static theme resource (white via InputBackgroundColor) takes effect.
+    // WallpaperDominantBrushKey is intentionally left in place: it is harmless in light mode and lets
+    // diagnostic consumers still read the last sampled wallpaper colour.
     if (!isDark)
     {
-      app.Resources["TextBoxBackgroundBrush"] = new SolidColorBrush(Colors.White);
-      app.Resources.Remove(WallpaperDominantBrushKey);
+      app.Resources.Remove("TextBoxBackgroundBrush");
       return;
     }
 

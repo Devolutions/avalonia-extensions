@@ -171,6 +171,12 @@ internal static class WallpaperTintApplier
     "com.apple.wallpaper",
     "aerials");
 
+  private static readonly Lazy<IntPtr> AppKitFrameworkHandle = new(() => TryLoadNativeFramework(
+    "/System/Library/Frameworks/AppKit.framework/AppKit"));
+
+  private static readonly Lazy<IntPtr> AvFoundationFrameworkHandle = new(() => TryLoadNativeFramework(
+    "/System/Library/Frameworks/AVFoundation.framework/AVFoundation"));
+
   private readonly record struct WallpaperConfigurationCandidate(
     string ConfigurationPath,
     DateTime LastUse,
@@ -287,10 +293,7 @@ internal static class WallpaperTintApplier
       }
 
       snapshot = null;
-      return;
     }
-
-    app.Resources.Remove(key);
   }
 
   /// <summary>
@@ -927,6 +930,18 @@ internal static class WallpaperTintApplier
     }
   }
 
+  private static IntPtr TryLoadNativeFramework(string path)
+  {
+    try
+    {
+      return NativeLibrary.TryLoad(path, out IntPtr handle) ? handle : IntPtr.Zero;
+    }
+    catch
+    {
+      return IntPtr.Zero;
+    }
+  }
+
   private static bool TryGetMadeDesktopThumbnailPath(string madeDesktopPath, out string? thumbnailPath)
   {
     thumbnailPath = null;
@@ -1109,9 +1124,12 @@ internal static class WallpaperTintApplier
         screen);
       if (optionsDict == IntPtr.Zero) return false;
 
+      IntPtr appKitHandle = AppKitFrameworkHandle.Value;
+      if (appKitHandle == IntPtr.Zero) return false;
+
       // Dereference the actual NSString constant from the AppKit symbol table.
       if (!NativeLibrary.TryGetExport(
-            NativeLibrary.Load("/System/Library/Frameworks/AppKit.framework/AppKit"),
+        appKitHandle,
             "NSWorkspaceDesktopImageFillColorKey",
             out IntPtr symPtr))
       {
@@ -1168,7 +1186,10 @@ internal static class WallpaperTintApplier
     color = default;
     try
     {
-      NativeLibrary.TryLoad("/System/Library/Frameworks/AVFoundation.framework/AVFoundation", out _);
+      if (AvFoundationFrameworkHandle.Value == IntPtr.Zero)
+      {
+        return false;
+      }
 
       IntPtr avUrlAssetClass = objc_getClass("AVURLAsset");
       if (avUrlAssetClass == IntPtr.Zero) return false;

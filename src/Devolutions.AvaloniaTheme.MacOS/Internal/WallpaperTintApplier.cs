@@ -698,6 +698,7 @@ internal static class WallpaperTintApplier
     try
     {
       nuint frameCount = CGImageSourceGetCount(imageSource);
+      const int maxFramesToSample = 8;
 
       if (frameCount <= 1)
       {
@@ -717,9 +718,14 @@ internal static class WallpaperTintApplier
       else
       {
         int totalR = 0, totalG = 0, totalB = 0, successCount = 0;
-        for (nuint i = 0; i < frameCount; i++)
+        int sampleCount = frameCount > maxFramesToSample ? maxFramesToSample : (int)frameCount;
+        for (var sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
         {
-          IntPtr cgFrame = CGImageSourceCreateImageAtIndex(imageSource, i, IntPtr.Zero);
+          nuint frameIndex = sampleCount == (int)frameCount
+            ? (nuint)sampleIndex
+            : (nuint)((ulong)sampleIndex * (ulong)(frameCount - 1) / (ulong)(sampleCount - 1));
+
+          IntPtr cgFrame = CGImageSourceCreateImageAtIndex(imageSource, frameIndex, IntPtr.Zero);
           if (cgFrame == IntPtr.Zero) continue;
           try
           {

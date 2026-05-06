@@ -304,6 +304,9 @@
                   <TabItem Header="Animated Icon">
                     <experiments:AnimatedIcon />
                   </TabItem>
+                  <TabItem Header="LG Wallpaper Tint">
+                    <experiments:LiquidGlassWallpaperTintDemo />
+                  </TabItem>
                 </TabControl>
               </TabItem>
             </TabControl>

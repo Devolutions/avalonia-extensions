@@ -22,6 +22,15 @@ internal class MacOsThemeWithGlobalStyles : Styles
       Uri liquidGlassUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml");
       ResourceInclude liquidGlassInclude = new(liquidGlassUri) { Source = liquidGlassUri };
       this.Resources.MergedDictionaries.Add(liquidGlassInclude);
+
+      // Apply wallpaper-tinted TextBox background for LiquidGlass.
+      // Deferred so that Application.Current is fully initialised before the hook runs.
+      if (Avalonia.Application.Current is { } app)
+      {
+        Avalonia.Threading.Dispatcher.UIThread.Post(
+          () => WallpaperTintApplier.HookAndApply(app),
+          Avalonia.Threading.DispatcherPriority.Background);
+      }
     }
 
 #if ENABLE_ACCELERATE

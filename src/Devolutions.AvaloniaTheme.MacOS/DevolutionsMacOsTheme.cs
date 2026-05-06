@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaTheme.MacOS;
 
 using System.ComponentModel;
+using Avalonia;
 using Avalonia.Styling;
 using Internal;
 
@@ -41,4 +42,14 @@ public class DevolutionsMacOsTheme : Styles, ISupportInitialize
             ? new MacOsThemeWithGlobalStyles(this.sp)
             : new MacOsTheme(this.sp));
     }
+
+    /// <summary>
+    ///   Removes the runtime wallpaper-tint resource overrides and disables the tint hook.
+    ///   Call this when switching away from the MacOS LiquidGlass theme so that other themes
+    ///   are not affected by leftover app-level resource overrides.
+    ///   The hook re-enables automatically next time LiquidGlass is loaded.
+    /// </summary>
+    public static void ClearWallpaperTintResources(Application app) =>
+        WallpaperTintApplier.Clear(app);
+
 }

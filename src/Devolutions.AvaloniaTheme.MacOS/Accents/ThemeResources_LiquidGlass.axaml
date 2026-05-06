@@ -290,6 +290,9 @@
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
+      <!-- TextBoxBackgroundBrush is overridden at runtime by WallpaperTintApplier with a tint derived from the dominant colour of the current wallpaper.  
+           See Internal/WallpaperTintApplier.cs → Apply().  (On non-MacOS devices or during Visual Regression testing, this mechanism is disabled and
+           falls back to the regular TextBoxBackgroundBrush from ThemeResources.axaml) -->
       <StaticResource x:Key="TextBoxBorderBrush" ResourceKey="Transparent" />
       <BoxShadows x:Key="TextBoxBoxShadow">0 0 0 1 #0AFFFFFF</BoxShadows>
 

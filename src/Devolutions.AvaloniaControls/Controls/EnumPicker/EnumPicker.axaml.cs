@@ -87,6 +87,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
 
     private bool initialized;
+    private bool isInitialValueSet;
     private bool isTemplateSet;
     private bool textOverridesDirty = true;
     private Dictionary<T, string> cachedTextOverrides = [];
@@ -196,7 +197,19 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     public T SelectedValue
     {
         get;
-        set => this.SetAndRaise(SelectedValueProperty, ref field, value);
+        set
+        {
+            if (this.isInitialValueSet)
+            {
+                this.SetAndRaise(SelectedValueProperty, ref field, value);
+            }
+            else
+            {
+                // We do not want to raise before having fully initialized the control, otherwise we might
+                // update the bound property and raise OnChange events not actually driven by the user.
+                field = value;
+            }
+        }
     }
 
     /// <summary>
@@ -301,7 +314,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     //       can be relevant since this can be a pretty hot path in some applications.
     private void UpdateValues()
     {
-        if (!this.initialized || !isTemplateSet)
+        if (!this.initialized || !this.isTemplateSet)
         {
             return;
         }
@@ -373,6 +386,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
         // Directly sync SelectedItem since SetAndRaise won't fire OnPropertyChanged if the value is unchanged
         this.SelectedItem = selectedItem ?? (list.Count > 0 ? list[0] : null);
+
+        this.isInitialValueSet = true;
     }
 
     private void UpdateValues(object? sender, NotifyCollectionChangedEventArgs e) => this.UpdateValues();

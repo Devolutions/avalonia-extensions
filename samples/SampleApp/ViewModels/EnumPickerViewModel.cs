@@ -1,5 +1,6 @@
 namespace SampleApp.ViewModels;
 
+using System.Diagnostics;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -277,6 +278,11 @@ public partial class EnumPickerViewModel : ObservableObject
     partial void OnDynamicExcludeCriticalChanged(bool value) => SyncListValue(this.DynamicExcludedValues, DemoPriority.Critical, value);
 
     partial void OnDynamicExcludeBlockerChanged(bool value) => SyncListValue(this.DynamicExcludedValues, DemoPriority.Blocker, value);
+
+    partial void OnSelectedDefaultChanged(DemoPriority value)
+    {
+        Debug.WriteLine($"{nameof(this.SelectedDefault)} changed: {value}");
+    }
 
     private static void SyncListValue(AvaloniaList<DemoPriority> list, DemoPriority value, bool add)
     {

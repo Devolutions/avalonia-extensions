@@ -4,12 +4,17 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Platform;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 public partial class LiquidGlassWallpaperTintDemo : UserControl
 {
   private const string TextBoxBackgroundBrushKey = "TextBoxBackgroundBrush";
   private const string WallpaperDominantBrushKey = "LG.Wallpaper.DominantBrush";
+
+  private Application? subscribedApp;
+  private IPlatformSettings? subscribedPlatformSettings;
 
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
     property.Name is "RequestedThemeVariant" or "ActualThemeVariant";
@@ -17,27 +22,56 @@ public partial class LiquidGlassWallpaperTintDemo : UserControl
   public LiquidGlassWallpaperTintDemo()
   {
     this.InitializeComponent();
+  }
+
+  protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+  {
+    base.OnAttachedToVisualTree(e);
+
     if (Application.Current?.PlatformSettings is { } platformSettings)
     {
-      platformSettings.ColorValuesChanged += (_, _) => this.RefreshTokenColorInfo();
+      this.subscribedPlatformSettings = platformSettings;
+      platformSettings.ColorValuesChanged += this.OnPlatformColorValuesChanged;
     }
 
     if (Application.Current is { } app)
     {
-      app.PropertyChanged += (_, e) =>
-      {
-        if (IsThemeVariantProperty(e.Property))
-        {
-          // Defer to Background priority so the token applier's deferred update (same priority,
-          // registered earlier) runs first, and we read the already-updated resource value.
-          Dispatcher.UIThread.Post(this.RefreshTokenColorInfo, DispatcherPriority.Background);
-        }
-      };
+      this.subscribedApp = app;
+      app.PropertyChanged += this.OnApplicationPropertyChanged;
     }
 
     // Defer the initial read to Background priority so it runs after WallpaperTintApplier's
     // own deferred HookAndApply (same priority, registered first) has written the resources.
     Dispatcher.UIThread.Post(this.RefreshTokenColorInfo, DispatcherPriority.Background);
+  }
+
+  protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+  {
+    base.OnDetachedFromVisualTree(e);
+
+    if (this.subscribedPlatformSettings is not null)
+    {
+      this.subscribedPlatformSettings.ColorValuesChanged -= this.OnPlatformColorValuesChanged;
+      this.subscribedPlatformSettings = null;
+    }
+
+    if (this.subscribedApp is not null)
+    {
+      this.subscribedApp.PropertyChanged -= this.OnApplicationPropertyChanged;
+      this.subscribedApp = null;
+    }
+  }
+
+  private void OnPlatformColorValuesChanged(object? sender, PlatformColorValues e) => this.RefreshTokenColorInfo();
+
+  private void OnApplicationPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+  {
+    if (IsThemeVariantProperty(e.Property))
+    {
+      // Defer to Background priority so the token applier's deferred update (same priority,
+      // registered earlier) runs first, and we read the already-updated resource value.
+      Dispatcher.UIThread.Post(this.RefreshTokenColorInfo, DispatcherPriority.Background);
+    }
   }
 
   private void RefreshTokenColorInfo()

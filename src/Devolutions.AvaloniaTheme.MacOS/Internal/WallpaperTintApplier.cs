@@ -372,6 +372,10 @@ internal static class WallpaperTintApplier
         {
           return TryGetColorFromDesktopOptions(sharedWorkspace, mainScreen, out color);
         }
+
+        // The placeholder file is not the user's actual wallpaper, so sampling it would
+        // produce a deterministic but incorrect tint. Fall back to the static theme resource.
+        return false;
       }
 
       return TryGetColorFromImageViaImageIo(wallpaperUrl, out color);

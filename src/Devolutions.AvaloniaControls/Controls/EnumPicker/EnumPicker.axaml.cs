@@ -87,7 +87,9 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
 
     private bool initialized;
+    private bool isFullyInitialized;
     private bool isTemplateSet;
+    private bool isTemplateFullySet;
     private bool textOverridesDirty = true;
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
@@ -196,7 +198,19 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     public T SelectedValue
     {
         get;
-        set => this.SetAndRaise(SelectedValueProperty, ref field, value);
+        set
+        {
+            if (this.isFullyInitialized && this.isTemplateFullySet)
+            {
+                this.SetAndRaise(SelectedValueProperty, ref field, value);
+            }
+            else
+            {
+                // We do not want to raise before having fully initialized the control, otherwise we might
+                // update the bound property and raise OnChange events not actually driven by the user.
+                field = value;
+            }
+        }
     }
 
     /// <summary>
@@ -301,7 +315,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     //       can be relevant since this can be a pretty hot path in some applications.
     private void UpdateValues()
     {
-        if (!this.initialized || !isTemplateSet)
+        if (!this.initialized || !this.isTemplateSet)
         {
             return;
         }
@@ -382,6 +396,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         base.OnApplyTemplate(e);
         this.isTemplateSet = true;
         this.UpdateValues();
+        this.isTemplateFullySet = true;
     }
 
     protected override void OnInitialized()
@@ -389,6 +404,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         base.OnInitialized();
         this.initialized = true;
         this.UpdateValues();
+        this.isFullyInitialized = true;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

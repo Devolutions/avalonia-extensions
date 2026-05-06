@@ -344,7 +344,6 @@ public partial class MultiComboBox : SelectingItemsControl
 
     public IDataTemplate? EffectiveSelectedItemTemplate => this.SelectedItemTemplate ?? this.ItemTemplate;
 
-    /// <summary>
     public bool? IsAllSelected
     {
         get
@@ -443,26 +442,16 @@ public partial class MultiComboBox : SelectingItemsControl
 
         foreach (object? item in this.Items)
         {
-            this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
-        }
-
-        foreach (object? item in this.Items)
-        {
             this.SelectedItems.Add(item);
-            this.GetMultiComboBoxItemContainer(item)?.Select();
-        }
-
-        foreach (object? item in this.Items)
-        {
-            this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
         }
 
         this.selectAllItem?.EndUpdate();
 
+        this.SyncDisplaySelectedItems();
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
         this.selectAllItem?.UpdateSelection();
 
-        // Containers are now managed by innerItemsList
+        // Update realized containers — unrealized ones will be synced in PrepareContainerForItemOverride.
         Controls? containers = this.innerList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
@@ -760,7 +749,11 @@ public partial class MultiComboBox : SelectingItemsControl
     
     private void DoOnSelectedItemsCollectionChanged()
     {
-        this.SyncDisplaySelectedItems();
+        if (!this.updateInternal)
+        {
+            this.SyncDisplaySelectedItems();
+        }
+
         this.ApplyCurrentSelectionState();
 
         // Trigger validation automatically when collection mutates

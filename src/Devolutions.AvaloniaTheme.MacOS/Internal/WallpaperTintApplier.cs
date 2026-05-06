@@ -175,6 +175,8 @@ internal static class WallpaperTintApplier
     DateTime LastSet,
     int Rank);
 
+  private readonly record struct ResourceOverrideSnapshot(bool HadValue, object? Value);
+
   private static readonly Dictionary<string, Color> NamedWallpaperColors = new(StringComparer.OrdinalIgnoreCase)
   {
      ["blueViolet"] = Color.FromArgb(255, 104, 103, 170),
@@ -199,6 +201,8 @@ internal static class WallpaperTintApplier
 
   private static bool hooked;
   private static bool enabled;
+  private static ResourceOverrideSnapshot? textBoxBackgroundBrushSnapshot;
+  private static ResourceOverrideSnapshot? wallpaperDominantBrushSnapshot;
 
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
     property.Name is "RequestedThemeVariant" or "ActualThemeVariant";
@@ -242,14 +246,43 @@ internal static class WallpaperTintApplier
     if (app is null) throw new ArgumentNullException(nameof(app));
 
     enabled = false;
-    ClearResourceOverrides(app);
+    RestoreResourceOverrides(app);
   }
 
-  /// <summary>Removes the two runtime resource overrides without touching the <c>enabled</c> flag.</summary>
-  private static void ClearResourceOverrides(Application app)
+  /// <summary>Restores the two runtime resource overrides without touching the <c>enabled</c> flag.</summary>
+  private static void RestoreResourceOverrides(Application app)
   {
-    app.Resources.Remove("TextBoxBackgroundBrush");
-    app.Resources.Remove(WallpaperDominantBrushKey);
+    RestoreResourceOverride(app, "TextBoxBackgroundBrush", ref textBoxBackgroundBrushSnapshot);
+    RestoreResourceOverride(app, WallpaperDominantBrushKey, ref wallpaperDominantBrushSnapshot);
+  }
+
+  private static void SetResourceOverride(Application app, string key, object value, ref ResourceOverrideSnapshot? snapshot)
+  {
+    snapshot ??= app.Resources.TryGetValue(key, out object? existingValue)
+      ? new ResourceOverrideSnapshot(true, existingValue)
+      : new ResourceOverrideSnapshot(false, null);
+
+    app.Resources[key] = value;
+  }
+
+  private static void RestoreResourceOverride(Application app, string key, ref ResourceOverrideSnapshot? snapshot)
+  {
+    if (snapshot is { } captured)
+    {
+      if (captured.HadValue)
+      {
+        app.Resources[key] = captured.Value;
+      }
+      else
+      {
+        app.Resources.Remove(key);
+      }
+
+      snapshot = null;
+      return;
+    }
+
+    app.Resources.Remove(key);
   }
 
   /// <summary>
@@ -271,25 +304,29 @@ internal static class WallpaperTintApplier
 
     bool isDark = effectiveVariant == ThemeVariant.Dark;
 
-    // Light mode: native macOS always uses plain white — no wallpaper tint.
-    // Remove any stale dark-mode tint override so the static theme resource (white via InputBackgroundColor) takes effect.
-    // WallpaperDominantBrushKey is intentionally left in place: it is harmless in light mode and lets
-    // diagnostic consumers still read the last sampled wallpaper colour.
+    // Light mode: native macOS does not apply the wallpaper tint. Restore the app-level
+    // resource state that existed before LiquidGlass overrode these keys.
     if (!isDark)
     {
-      app.Resources.Remove("TextBoxBackgroundBrush");
+      RestoreResourceOverrides(app);
       return;
     }
 
     if (TryGetWallpaperAverageColor(out Color wallpaperColor))
     {
-      app.Resources[WallpaperDominantBrushKey] = new SolidColorBrush(wallpaperColor);
+      SetResourceOverride(app,
+        WallpaperDominantBrushKey,
+        new SolidColorBrush(wallpaperColor),
+        ref wallpaperDominantBrushSnapshot);
       Color tinted = ComputeTintedDarkBackground(wallpaperColor);
-      app.Resources["TextBoxBackgroundBrush"] = new SolidColorBrush(tinted);
+      SetResourceOverride(app,
+        "TextBoxBackgroundBrush",
+        new SolidColorBrush(tinted),
+        ref textBoxBackgroundBrushSnapshot);
     }
     else
     {
-      ClearResourceOverrides(app);
+      RestoreResourceOverrides(app);
     }
   }
 

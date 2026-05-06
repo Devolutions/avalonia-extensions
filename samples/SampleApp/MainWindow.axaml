@@ -258,6 +258,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="TimePicker" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                </TabItem.Header>
+                <demoPages:TimePickerDemo>
+                  <demoPages:TimePickerDemo.DataContext>
+                    <vm:TimePickerViewModel />
+                  </demoPages:TimePickerDemo.DataContext>
+                </demoPages:TimePickerDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="Toggle Switch" ApplicableTo="MacClassic, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ToggleSwitchDemo />

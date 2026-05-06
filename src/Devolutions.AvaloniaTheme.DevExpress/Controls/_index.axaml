@@ -55,6 +55,7 @@
     <MergeResourceInclude Source="TagInput.axaml" />
     <MergeResourceInclude Source="TextBox.axaml" />
     <MergeResourceInclude Source="TextBlock.axaml" />
+    <MergeResourceInclude Source="TimePicker.axaml" />
     <MergeResourceInclude Source="TreeView.axaml" />
     <!-- TreeDataGrid.axaml conditionally loaded in DevolutionsDevExpressTheme.cs if licensed Accelerate controls are enabled  -->
     <MergeResourceInclude Source="TreeViewItem.axaml" />

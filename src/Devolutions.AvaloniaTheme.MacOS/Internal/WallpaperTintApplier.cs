@@ -42,6 +42,8 @@ internal static class WallpaperTintApplier
   // ─── Public token key surfaced for diagnostic consumers ─────────────────────
   /// <summary>Resource key where the raw dominant wallpaper colour is stored.</summary>
   internal const string WallpaperDominantBrushKey = "LG.Wallpaper.DominantBrush";
+  // Test and headless hosts can set this to force the normal static-resource fallback path.
+  private const string SkipWallpaperSamplingEnvVar = "DEVOLUTIONS_SKIP_WALLPAPER_TINT_SAMPLING";
 
   // ─── P/Invoke ────────────────────────────────────────────────────────────────
 
@@ -207,6 +209,12 @@ internal static class WallpaperTintApplier
   private static bool IsThemeVariantProperty(AvaloniaProperty property) =>
     property.Name is "RequestedThemeVariant" or "ActualThemeVariant";
 
+  // Visual regression tests run the SampleApp in Avalonia.Headless, often on non-macOS hosts.
+  // In that environment we want deterministic TextBox resources, not best-effort native sampling.
+  private static bool ShouldSkipWallpaperSampling() =>
+    !OperatingSystem.IsMacOS() ||
+    string.Equals(Environment.GetEnvironmentVariable(SkipWallpaperSamplingEnvVar), "true", StringComparison.OrdinalIgnoreCase);
+
   /// <summary>
   ///   Applies the wallpaper tint immediately and wires up event hooks so the colour
   ///   updates whenever the OS dark/light mode or application theme variant changes.
@@ -335,6 +343,12 @@ internal static class WallpaperTintApplier
   private static bool TryGetWallpaperAverageColor(out Color color)
   {
     color = default;
+
+    if (ShouldSkipWallpaperSampling())
+    {
+      return false;
+    }
+
     try
     {
       IntPtr nsWorkspaceClass = objc_getClass("NSWorkspace");

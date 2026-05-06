@@ -16,12 +16,20 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 
 public class TestAppBuilder
 {
-    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
-        .UseSkia()
-        .UseHeadless(new AvaloniaHeadlessPlatformOptions
-        {
-            UseHeadlessDrawing = false
-        });
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        // LiquidGlass normally resolves TextBoxBackgroundBrush from the current wallpaper.
+        // For headless visual tests we want the same deterministic fallback resources on every
+        // OS, so baselines do not depend on macOS-specific wallpaper APIs being available.
+        Environment.SetEnvironmentVariable("DEVOLUTIONS_SKIP_WALLPAPER_TINT_SAMPLING", "true");
+
+        return AppBuilder.Configure<App>()
+            .UseSkia()
+            .UseHeadless(new AvaloniaHeadlessPlatformOptions
+            {
+                UseHeadlessDrawing = false
+            });
+    }
 }
 
 public class SimpleVisualTest

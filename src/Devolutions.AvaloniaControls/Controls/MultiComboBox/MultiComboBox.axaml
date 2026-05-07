@@ -86,10 +86,9 @@
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock 
+        <SearchHighlightTextBlock
           x:DataType="sys:Object"
-          Content="{Binding}" 
-          Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+          Content="{Binding}" />
       </DataTemplate>
     </Setter>
 
@@ -169,9 +168,9 @@
                 HorizontalWheelBehavior.Enable="True"
                 Margin="1">
                 <u:MultiComboBoxSelectedItemList
+                  Name="PART_SelectedItemsList"
                   VerticalAlignment="Center"
                   ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
-                  ItemsSource="{TemplateBinding SelectedItems}"
                   RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Remove}"
                   ItemsPanel="{TemplateBinding EffectiveSelectedItemsPanel}" />
 

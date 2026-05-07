@@ -23,27 +23,49 @@ public partial class MultiComboBox
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            recycleKey = item;
-            return item is not MultiComboBoxItem;
+            recycleKey = DefaultRecycleKey;
+            return true;
+        }
+
+        protected override void ClearContainerForItemOverride(Control element)
+        {
+            base.ClearContainerForItemOverride(element);
+            if (element is MultiComboBoxItem multiComboBoxItem)
+            {
+                multiComboBoxItem.DataContext = null;
+                multiComboBoxItem.ClearValue(ContentControl.ContentProperty);
+                multiComboBoxItem.ClearValue(ContentControl.ContentTemplateProperty);
+                multiComboBoxItem.ClearValue(IsEnabledProperty);
+                multiComboBoxItem.BeginUpdate();
+                multiComboBoxItem.ClearValue(MultiComboBoxItem.IsSelectedProperty);
+                multiComboBoxItem.EndUpdate();
+            }
         }
 
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
-            if (item is MultiComboBoxItem containerItem)
-            {
-                container.DataContext = containerItem.Content;
-                containerItem.ContentTemplate ??= this.ItemTemplate;
-            }
-
             base.PrepareContainerForItemOverride(container, item, index);
 
-            // Sync selection state from parent
-            if (container is MultiComboBoxItem multiComboBoxItem)
+            if (container is not MultiComboBoxItem multiComboBoxItem)
             {
-                // Check if this item is selected in parent
-                bool isSelected = this.parent.SelectedItems?.Contains(multiComboBoxItem.DataContext ?? item) ?? false;
-                multiComboBoxItem.IsSelected = isSelected;
+                return;
             }
+
+            // For inline MultiComboBoxItem data, unwrap Content for display but keep DataContext
+            // pointing to the MultiComboBoxItem itself — matching what goes into SelectedItems
+            // (consistent with how ComboBox returns ComboBoxItem for inline items).
+            if (item is MultiComboBoxItem sourceItem)
+            {
+                multiComboBoxItem.DataContext = sourceItem;
+                multiComboBoxItem[!ContentControl.ContentProperty] = sourceItem[!ContentControl.ContentProperty];
+                multiComboBoxItem.ContentTemplate = sourceItem.ContentTemplate ?? this.ItemTemplate;
+                multiComboBoxItem[!IsEnabledProperty] = sourceItem[!IsEnabledProperty];
+            }
+
+            bool isSelected = this.parent.SelectedItems?.Contains(multiComboBoxItem.DataContext ?? item) ?? false;
+            multiComboBoxItem.BeginUpdate();
+            multiComboBoxItem.IsSelected = isSelected;
+            multiComboBoxItem.EndUpdate();
         }
     }
 }

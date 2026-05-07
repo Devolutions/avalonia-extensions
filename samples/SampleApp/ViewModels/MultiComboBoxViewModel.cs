@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Devolutions.AvaloniaControls.Controls;
 
 public enum MultiComboBoxDemoEnum
 {
@@ -14,6 +15,15 @@ public enum MultiComboBoxDemoEnum
 
 public partial class MultiComboBoxViewModel : ObservableValidator
 {
+    public class Item
+    {
+        public required int Value { get; init; }
+        
+        public string Text => $"Option {this.Value}";
+
+        public override string ToString() => $"<{nameof(Item)} ({this.Text})>";
+    }
+    
     [ObservableProperty]
     private MultiComboBoxDemoEnum[] enumValues = Enum.GetValues<MultiComboBoxDemoEnum>();
 
@@ -21,26 +31,17 @@ public partial class MultiComboBoxViewModel : ObservableValidator
     private string[] items = ["item 1", "item 2", "item 3"];
 
     [ObservableProperty]
-    private ObservableCollection<string> lotOfItems = [];
-
-    [ObservableProperty]
     [Required]
     [MinLength(1)]
     [NotifyDataErrorInfo]
     private AvaloniaList<string> requiredValues = [];
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelectedEnumValuesText))]
-    private AvaloniaList<MultiComboBoxDemoEnum> selectedEnumValues = [MultiComboBoxDemoEnum.EnumA];
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelectedText))]
-    private AvaloniaList<string> selectedItems = ["item 2"];
-
     public MultiComboBoxViewModel()
     {
         this.SelectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.SelectedText));
         this.SelectedEnumValues.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.SelectedEnumValuesText));
+        this.LotOfItemsSelectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.LotOfItemsSelectedItemsText));
+        this.InlineSelectedItems.CollectionChanged += (_, _) => this.OnPropertyChanged(nameof(this.InlineSelectedItemsText));
 
         // Trigger validation when collection changes
         this.RequiredValues.CollectionChanged += (_, _) =>
@@ -50,11 +51,25 @@ public partial class MultiComboBoxViewModel : ObservableValidator
 
         for (var i = 1; i <= 1000; ++i)
         {
-            this.lotOfItems.Add("Option " + i);
+            this.LotOfItems.Add(new Item { Value = i });
         }
 
         this.ValidateAllProperties();
     }
+
+    public AvaloniaList<MultiComboBoxItem> InlineSelectedItems { get; } = [];
+    
+    public string InlineSelectedItemsText => this.InlineSelectedItems.Count > 0 ? string.Join(", ", this.InlineSelectedItems) : "None";
+    
+    public AvaloniaList<Item> LotOfItems { get; } = [];
+    
+    public AvaloniaList<Item> LotOfItemsSelectedItems { get; } = [];
+    
+    public string LotOfItemsSelectedItemsText => this.LotOfItemsSelectedItems.Count > 0 ? string.Join(", ", this.LotOfItemsSelectedItems) : "None";
+
+    public AvaloniaList<MultiComboBoxDemoEnum> SelectedEnumValues { get; } = [MultiComboBoxDemoEnum.EnumA];
+
+    public AvaloniaList<string> SelectedItems { get; } = ["item 2"];
 
     public string SelectedText => this.SelectedItems.Count > 0 ? string.Join(", ", this.SelectedItems) : "None";
 

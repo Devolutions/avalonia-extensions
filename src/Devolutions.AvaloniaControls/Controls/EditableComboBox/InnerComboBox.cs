@@ -142,8 +142,6 @@ public partial class EditableComboBox
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            // Always generate containers, even for inline EditableComboBoxItem data.
-            // This enables VSP virtualization for all item types.
             recycleKey = DefaultRecycleKey;
             return true;
         }

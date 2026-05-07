@@ -37,6 +37,7 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_NoResultsText", typeof(TextBlock), IsRequired = false)]
 [TemplatePart("PART_Popup", typeof(Popup), IsRequired = true)]
 [TemplatePart("PART_ItemsListPresenter", typeof(ContentPresenter), IsRequired = true)]
+[TemplatePart("PART_SelectedItemsList", typeof(ItemsControl), IsRequired = true)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
 public partial class MultiComboBox : SelectingItemsControl
@@ -150,11 +151,15 @@ public partial class MultiComboBox : SelectingItemsControl
 
     private readonly InnerMultiComboBoxList innerList;
 
+    private readonly AvaloniaList<object?> displaySelectedItems = [];
+
     private TextBox? filterTextbox;
 
     private ContentPresenter? itemsListPresenter;
 
     private MultiComboBoxSelectAllItem? selectAllItem;
+
+    private ItemsControl? selectedItemsList;
 
     private ScrollViewer? selectionScrollViewer;
 
@@ -398,24 +403,17 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (item is null) return null;
         // Containers are now managed by innerItemsList, not the parent
-        return item as MultiComboBoxItem ?? this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
+        return this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
     public void Remove(object? o)
     {
-        if (o is StyledElement s)
+        if (o is not Control chip || this.selectedItemsList is null) return;
+
+        int index = this.selectedItemsList.IndexFromContainer(chip);
+        if (index >= 0 && index < (this.SelectedItems?.Count ?? 0))
         {
-            object? data = s.DataContext;
-            this.SelectedItems?.Remove(data);
-            object? item = this.Items.FirstOrDefault(a => ReferenceEquals(a, data));
-            if (item is not null)
-            {
-                Control? container = this.ContainerFromItem(item);
-                if (container is MultiComboBoxItem t)
-                {
-                    t.IsSelected = false;
-                }
-            }
+            this.SelectedItems?.RemoveAt(index);
         }
     }
 
@@ -435,15 +433,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         foreach (object? item in this.Items)
         {
-            if (this.GetMultiComboBoxItemContainer(item) is MultiComboBoxItem multiComboBoxItem)
-            {
-                this.SelectedItems.Add(multiComboBoxItem.DataContext);
-                multiComboBoxItem.Select();
-            }
-            else
-            {
-                this.SelectedItems.Add(item);
-            }
+            this.SelectedItems.Add(item);
         }
 
         foreach (object? item in this.Items)
@@ -453,10 +443,11 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.selectAllItem?.EndUpdate();
 
+        this.SyncDisplaySelectedItems();
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
         this.selectAllItem?.UpdateSelection();
 
-        // Containers are now managed by innerItemsList
+        // Update realized containers — unrealized ones will be synced in PrepareContainerForItemOverride.
         Controls? containers = this.innerList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
@@ -598,11 +589,12 @@ public partial class MultiComboBox : SelectingItemsControl
         base.OnApplyTemplate(e);
 
         // Store reference to ContentPresenter and set inner control
-        this.itemsListPresenter = e.NameScope.Find<ContentPresenter>("PART_ItemsListPresenter");
-        if (this.itemsListPresenter is not null)
-        {
-            this.itemsListPresenter.Content = this.innerList;
-        }
+        this.itemsListPresenter = e.NameScope.Get<ContentPresenter>("PART_ItemsListPresenter");
+        this.itemsListPresenter.Content = this.innerList;
+
+
+        this.selectedItemsList = e.NameScope.Get<ItemsControl>("PART_SelectedItemsList");
+        this.selectedItemsList.ItemsSource = this.displaySelectedItems;
 
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
@@ -644,37 +636,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         // Re-populate filtered items based on current filter
         this.FilteredItems.Clear();
-
-        // IEnumerable source = this.ItemsSource ?? this.Items;
-        foreach (object? item in this.ItemsView)
-        {
-            if (!hasFilterText || this.ItemMatchesFilter(item, filterText))
-            {
-                // If we have concrete `MultiComboBoxItem` instances, they are owned by us 
-                // ("us" being `MultiComboBox` because we are a `ItemsControl`).
-                //
-                // ItemsControl must own their containers.
-                // We don't realize unrealized container, so the inner `InnerMultiComboBoxList` can realize
-                // and own them without problem.
-                //
-                // However, if we own concrete instances, we must send clones to the InnerMultiComboBoxList,
-                // so we clone and bind them.
-                if (item is MultiComboBoxItem containerItem)
-                {
-                    this.FilteredItems.Add(new MultiComboBoxItem
-                    {
-                        [!ContentControl.ContentProperty] = containerItem[!ContentControl.ContentProperty],
-                        [!ContentControl.ContentTemplateProperty] = containerItem[!ContentControl.ContentTemplateProperty],
-                        [!IsEnabledProperty] = containerItem[!IsEnabledProperty],
-                        IsSelected = containerItem.IsSelected,
-                    });
-                }
-                else
-                {
-                    this.FilteredItems.Add(item);
-                }
-            }
-        }
+        this.FilteredItems.AddRange(hasFilterText ? this.ItemsView.Where(item =>  this.ItemMatchesFilter(item, filterText)) :  this.ItemsView);
     }
 
     private bool ItemMatchesFilter(object? item, string? filterText)
@@ -702,10 +664,9 @@ public partial class MultiComboBox : SelectingItemsControl
                     isCleared = true;
                 }
 
-                multiComboBoxItem.DataContext = multiComboBoxItem.Content;
                 if (multiComboBoxItem.IsSelected)
                 {
-                    this.SelectedItems?.Add(multiComboBoxItem.DataContext);
+                    this.SelectedItems?.Add(multiComboBoxItem);
                 }
             }
         }
@@ -760,7 +721,9 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             @new.CollectionChanged += this.OnSelectedItemsCollectionChanged;
         }
-        
+
+        this.SyncDisplaySelectedItems();
+
         // Re-subscribe to validation when SelectedItems changes
         // This ensures we track the correct property in the DataContext
         this.SubscribeToDataContextValidation();
@@ -771,8 +734,13 @@ public partial class MultiComboBox : SelectingItemsControl
     
     private void DoOnSelectedItemsCollectionChanged()
     {
+        if (!this.updateInternal)
+        {
+            this.SyncDisplaySelectedItems();
+        }
+
         this.ApplyCurrentSelectionState();
-        
+
         // Trigger validation automatically when collection mutates
         // This works with any INotifyDataErrorInfo implementation
         this.TriggerCollectionValidation();
@@ -824,7 +792,8 @@ public partial class MultiComboBox : SelectingItemsControl
         if (this.updateInternal) return;
         this.PseudoClasses.Set(PC_Empty, this.SelectedItems?.Count is null or 0);
 
-        // Containers are now managed by innerItemsList
+        // Update only realized containers — inline data items in ItemsView are not displayed
+        // and their DataContext may not match SelectedItems (it inherits from the parent control).
         Controls? containers = this.innerList.Presenter?.Panel?.Children;
         if (containers is not null)
         {
@@ -837,16 +806,17 @@ public partial class MultiComboBox : SelectingItemsControl
             }
         }
 
-        foreach (object? item in this.ItemsView)
-        {
-            if (item is MultiComboBoxItem i)
-            {
-                i.UpdateSelection();
-            }
-        }
-
         this.selectAllItem?.UpdateSelection();
         this.RaiseDirectPropertyChanged(IsAllSelectedProperty);
+    }
+
+    private void SyncDisplaySelectedItems()
+    {
+        this.displaySelectedItems.Clear();
+        if (this.SelectedItems is null) return;
+
+        this.displaySelectedItems.AddRange(this.SelectedItems.OfType<object?>()
+            .Select(item => item is MultiComboBoxItem comboBoxItem ? comboBoxItem.Content : item));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

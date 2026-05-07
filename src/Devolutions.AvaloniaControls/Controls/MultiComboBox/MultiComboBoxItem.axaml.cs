@@ -43,6 +43,8 @@ public class MultiComboBoxItem : ContentControl
         set => this.SetValue(FilterValueProperty, value);
     }
 
+    public override string ToString() => $"{nameof(MultiComboBoxItem)} ({this.Content})";
+
     internal void Select()
     {
         this.SetValue(IsSelectedProperty, true);

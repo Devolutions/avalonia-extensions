@@ -23,8 +23,6 @@ public partial class MultiComboBox
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            // Always generate containers, even for inline MultiComboBoxItem data.
-            // This enables VSP virtualization for all item types.
             recycleKey = DefaultRecycleKey;
             return true;
         }

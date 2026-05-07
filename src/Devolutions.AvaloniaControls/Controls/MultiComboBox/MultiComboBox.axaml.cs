@@ -37,6 +37,7 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_NoResultsText", typeof(TextBlock), IsRequired = false)]
 [TemplatePart("PART_Popup", typeof(Popup), IsRequired = true)]
 [TemplatePart("PART_ItemsListPresenter", typeof(ContentPresenter), IsRequired = true)]
+[TemplatePart("PART_SelectedItemsList", typeof(ItemsControl), IsRequired = true)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
 public partial class MultiComboBox : SelectingItemsControl
@@ -588,17 +589,12 @@ public partial class MultiComboBox : SelectingItemsControl
         base.OnApplyTemplate(e);
 
         // Store reference to ContentPresenter and set inner control
-        this.itemsListPresenter = e.NameScope.Find<ContentPresenter>("PART_ItemsListPresenter");
-        if (this.itemsListPresenter is not null)
-        {
-            this.itemsListPresenter.Content = this.innerList;
-        }
+        this.itemsListPresenter = e.NameScope.Get<ContentPresenter>("PART_ItemsListPresenter");
+        this.itemsListPresenter.Content = this.innerList;
 
-        this.selectedItemsList = e.NameScope.Find<ItemsControl>("PART_SelectedItemsList");
-        if (this.selectedItemsList is not null)
-        {
-            this.selectedItemsList.ItemsSource = this.displaySelectedItems;
-        }
+
+        this.selectedItemsList = e.NameScope.Get<ItemsControl>("PART_SelectedItemsList");
+        this.selectedItemsList.ItemsSource = this.displaySelectedItems;
 
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
@@ -819,10 +815,8 @@ public partial class MultiComboBox : SelectingItemsControl
         this.displaySelectedItems.Clear();
         if (this.SelectedItems is null) return;
 
-        foreach (object? item in this.SelectedItems)
-        {
-            this.displaySelectedItems.Add(item is MultiComboBoxItem comboBoxItem ? comboBoxItem.Content : item);
-        }
+        this.displaySelectedItems.AddRange(this.SelectedItems.OfType<object?>()
+            .Select(item => item is MultiComboBoxItem comboBoxItem ? comboBoxItem.Content : item));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -640,14 +640,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         // Re-populate filtered items based on current filter
         this.FilteredItems.Clear();
-
-        foreach (object? item in this.ItemsView)
-        {
-            if (!hasFilterText || this.ItemMatchesFilter(item, filterText))
-            {
-                this.FilteredItems.Add(item);
-            }
-        }
+        this.FilteredItems.AddRange(hasFilterText ? this.ItemsView.Where(item =>  this.ItemMatchesFilter(item, filterText)) :  this.ItemsView);
     }
 
     private bool ItemMatchesFilter(object? item, string? filterText)

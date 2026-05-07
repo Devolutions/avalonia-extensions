@@ -429,7 +429,7 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
         }
-        
+
         foreach (object? item in this.Items)
         {
             this.SelectedItems.Add(item);
@@ -828,7 +828,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         foreach (object? item in this.SelectedItems)
         {
-            this.displaySelectedItems.Add(item is MultiComboBoxItem mcbi ? mcbi.Content : item);
+            this.displaySelectedItems.Add(item is MultiComboBoxItem comboBoxItem ? comboBoxItem.Content : item);
         }
     }
 

@@ -85,6 +85,13 @@ public class SearchHighlightTextBlock : ContentControl
           .Subscribe(value => this.Content = value));
       }
     }
+
+    if (this.FindAncestorOfType<MultiComboBoxItem>() is { } multiComboBoxItem)
+    {
+        this.bindings.Add(multiComboBoxItem
+            .GetObservable(MultiComboBoxItem.FilterValueProperty)
+            .Subscribe(value => this.Search = value));
+    }
   }
 
   protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

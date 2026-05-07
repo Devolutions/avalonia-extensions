@@ -85,7 +85,7 @@
           ItemsSource="{Binding LotOfItems}">
           <MultiComboBox.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding Text}" />
+              <SearchHighlightTextBlock Content="{Binding Text}" />
             </DataTemplate>
           </MultiComboBox.ItemTemplate>
         </MultiComboBox>
@@ -295,7 +295,7 @@
           </MultiComboBox.ItemsPanel>
           <MultiComboBox.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding Text}" />
+              <SearchHighlightTextBlock Content="{Binding Text}" />
             </DataTemplate>
           </MultiComboBox.ItemTemplate>
         </MultiComboBox>

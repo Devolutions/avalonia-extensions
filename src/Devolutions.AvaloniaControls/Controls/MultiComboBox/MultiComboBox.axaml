@@ -88,8 +88,7 @@
       <DataTemplate>
         <SearchHighlightTextBlock
           x:DataType="sys:Object"
-          Content="{Binding}"
-          Search="{Binding $parent[MultiComboBoxItem].FilterValue}" />
+          Content="{Binding}" />
       </DataTemplate>
     </Setter>
 

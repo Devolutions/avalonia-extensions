@@ -158,6 +158,8 @@ public partial class MultiComboBox : SelectingItemsControl
 
     private MultiComboBoxSelectAllItem? selectAllItem;
 
+    private ItemsControl? selectedItemsList;
+
     private ScrollViewer? selectionScrollViewer;
 
     private bool updateInternal;
@@ -405,29 +407,12 @@ public partial class MultiComboBox : SelectingItemsControl
 
     public void Remove(object? o)
     {
-        if (o is not StyledElement s) return;
+        if (o is not Control chip || this.selectedItemsList is null) return;
 
-        object? displayData = s.DataContext;
-
-        // displayData comes from DisplaySelectedItems (unwrapped Content for inline items).
-        // Find the corresponding entry in SelectedItems.
-        object? itemToRemove = null;
-        if (this.SelectedItems is not null)
+        int index = this.selectedItemsList.IndexFromContainer(chip);
+        if (index >= 0 && index < (this.SelectedItems?.Count ?? 0))
         {
-            foreach (object? si in this.SelectedItems)
-            {
-                object? displayValue = si is MultiComboBoxItem mcbi ? mcbi.Content : si;
-                if (Equals(displayValue, displayData))
-                {
-                    itemToRemove = si;
-                    break;
-                }
-            }
-        }
-
-        if (itemToRemove is not null)
-        {
-            this.SelectedItems?.Remove(itemToRemove);
+            this.SelectedItems?.RemoveAt(index);
         }
     }
 
@@ -609,9 +594,10 @@ public partial class MultiComboBox : SelectingItemsControl
             this.itemsListPresenter.Content = this.innerList;
         }
 
-        if (e.NameScope.Find<ItemsControl>("PART_SelectedItemsList") is { } selectedItemsList)
+        this.selectedItemsList = e.NameScope.Find<ItemsControl>("PART_SelectedItemsList");
+        if (this.selectedItemsList is not null)
         {
-            selectedItemsList.ItemsSource = this.displaySelectedItems;
+            this.selectedItemsList.ItemsSource = this.displaySelectedItems;
         }
 
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");

@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
+             xmlns:viewModels="clr-namespace:SampleApp.ViewModels"
+             x:Class="SampleApp.DemoPages.TimePickerUpDownDemo"
+             x:DataType="viewModels:TimePickerUpDownViewModel">
+
+  <Grid Margin="20"
+        ColumnDefinitions="Auto, Auto, Auto"
+        RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+        ColumnSpacing="20"
+        RowSpacing="12">
+
+    <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default:</TextBlock>
+    <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">12-hour clock:</TextBlock>
+    <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">24-hour clock:</TextBlock>
+    <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Minute increment (15):</TextBlock>
+    <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Disabled:</TextBlock>
+    <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Error:</TextBlock>
+    <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">With seconds:</TextBlock>
+    <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">24-hour + seconds:</TextBlock>
+
+    <controls:TimePickerUpDown Grid.Row="0"
+                               Grid.Column="1"
+                               SelectedTime="{Binding DefaultSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="1"
+                               Grid.Column="1"
+                               ClockIdentifier="12HourClock"
+                               SelectedTime="{Binding TwelveHourSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="2"
+                               Grid.Column="1"
+                               ClockIdentifier="24HourClock"
+                               SelectedTime="{Binding TwentyFourHourSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="3"
+                               Grid.Column="1"
+                               MinuteIncrement="15"
+                               SelectedTime="{Binding MinuteIncrementSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="4"
+                               Grid.Column="1"
+                               IsEnabled="False"
+                               SelectedTime="{Binding DisabledSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="5"
+                               Grid.Column="1"
+                               SelectedTime="{Binding ErrorSelectedTime}">
+      <DataValidationErrors.Error>
+        <system:Exception>
+          <x:Arguments>
+            <x:String>Error</x:String>
+          </x:Arguments>
+        </system:Exception>
+      </DataValidationErrors.Error>
+    </controls:TimePickerUpDown>
+    <controls:TimePickerUpDown Grid.Row="6"
+                               Grid.Column="1"
+                               UseSeconds="True"
+                               SelectedTime="{Binding SecondsSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="7"
+                               Grid.Column="1"
+                               ClockIdentifier="24HourClock"
+                               UseSeconds="True"
+                               SelectedTime="{Binding TwentyFourHourSecondsSelectedTime}" />
+
+    <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
+               Text="{Binding DefaultSelectedTimeDisplay}" />
+    <TextBlock Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"
+               Text="{Binding SecondsSelectedTimeDisplay}" />
+    <TextBlock Grid.Row="7" Grid.Column="2" VerticalAlignment="Center"
+               Text="{Binding TwentyFourHourSecondsSelectedTimeDisplay}" />
+
+  </Grid>
+
+</UserControl>

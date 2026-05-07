@@ -48,6 +48,7 @@
     <MergeResourceInclude Source="ScrollViewer.axaml" />
     <MergeResourceInclude Source="Separator.axaml" />
     <!-- SeparatorStyles.axaml loaded in GlobalStyles.axaml -->
+    <MergeResourceInclude Source="TimePickerUpDown.axaml" />
     <MergeResourceInclude Source="SplitButton.axaml" />
     <MergeResourceInclude Source="TabControl.axaml" />
     <MergeResourceInclude Source="TabItem.axaml" />

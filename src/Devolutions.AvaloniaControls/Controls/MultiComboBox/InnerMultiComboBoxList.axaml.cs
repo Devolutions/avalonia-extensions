@@ -61,7 +61,7 @@ public partial class MultiComboBox
                 multiComboBoxItem.DataContext = sourceItem;
                 multiComboBoxItem.Content = sourceItem.Content;
                 multiComboBoxItem.ContentTemplate ??= sourceItem.ContentTemplate ?? this.ItemTemplate;
-                multiComboBoxItem.IsEnabled = sourceItem.IsEnabled;
+                multiComboBoxItem[!IsEnabledProperty] = sourceItem[!IsEnabledProperty];
             }
 
             bool isSelected = this.parent.SelectedItems?.Contains(multiComboBoxItem.DataContext ?? item) ?? false;

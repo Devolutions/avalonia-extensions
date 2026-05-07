@@ -59,8 +59,8 @@ public partial class MultiComboBox
             if (item is MultiComboBoxItem sourceItem)
             {
                 multiComboBoxItem.DataContext = sourceItem;
-                multiComboBoxItem.Content = sourceItem.Content;
-                multiComboBoxItem.ContentTemplate ??= sourceItem.ContentTemplate ?? this.ItemTemplate;
+                multiComboBoxItem[!ContentControl.ContentProperty] = sourceItem[!ContentControl.ContentProperty];
+                multiComboBoxItem[!ContentControl.ContentTemplateProperty] = sourceItem[!ContentControl.ContentTemplateProperty];
                 multiComboBoxItem[!IsEnabledProperty] = sourceItem[!IsEnabledProperty];
             }
 

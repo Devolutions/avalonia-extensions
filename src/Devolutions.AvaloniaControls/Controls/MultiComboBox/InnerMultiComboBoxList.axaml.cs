@@ -35,11 +35,12 @@ public partial class MultiComboBox
             if (element is MultiComboBoxItem multiComboBoxItem)
             {
                 multiComboBoxItem.DataContext = null;
+                multiComboBoxItem.ClearValue(ContentControl.ContentProperty);
+                multiComboBoxItem.ClearValue(ContentControl.ContentTemplateProperty);
+                multiComboBoxItem.ClearValue(IsEnabledProperty);
                 multiComboBoxItem.BeginUpdate();
                 multiComboBoxItem.ClearValue(MultiComboBoxItem.IsSelectedProperty);
                 multiComboBoxItem.EndUpdate();
-                multiComboBoxItem.ClearValue(ContentControl.ContentTemplateProperty);
-                multiComboBoxItem.ClearValue(IsEnabledProperty);
             }
         }
 

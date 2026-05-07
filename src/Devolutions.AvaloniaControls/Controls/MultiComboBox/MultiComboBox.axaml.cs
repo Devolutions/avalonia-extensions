@@ -400,7 +400,7 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (item is null) return null;
         // Containers are now managed by innerItemsList, not the parent
-        return item as MultiComboBoxItem ?? this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
+        return this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
     public void Remove(object? o)
@@ -442,7 +442,17 @@ public partial class MultiComboBox : SelectingItemsControl
 
         foreach (object? item in this.Items)
         {
+            this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
+        }
+        
+        foreach (object? item in this.Items)
+        {
             this.SelectedItems.Add(item);
+        }
+
+        foreach (object? item in this.Items)
+        {
+            this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
         }
 
         this.selectAllItem?.EndUpdate();

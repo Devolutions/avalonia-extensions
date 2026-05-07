@@ -34,7 +34,7 @@ public partial class MultiComboBox
             base.ClearContainerForItemOverride(element);
             if (element is MultiComboBoxItem multiComboBoxItem)
             {
-                // Suppress OnSelectionChanged — container lifecycle must never mutate SelectedItems.
+                multiComboBoxItem.DataContext = null;
                 multiComboBoxItem.BeginUpdate();
                 multiComboBoxItem.ClearValue(MultiComboBoxItem.IsSelectedProperty);
                 multiComboBoxItem.EndUpdate();
@@ -57,15 +57,14 @@ public partial class MultiComboBox
             // (consistent with how ComboBox returns ComboBoxItem for inline items).
             if (item is MultiComboBoxItem sourceItem)
             {
-                multiComboBoxItem.Content = sourceItem.Content;
                 multiComboBoxItem.DataContext = sourceItem;
+                multiComboBoxItem.Content = sourceItem.Content;
                 multiComboBoxItem.ContentTemplate ??= sourceItem.ContentTemplate ?? this.ItemTemplate;
                 multiComboBoxItem.IsEnabled = sourceItem.IsEnabled;
             }
 
-            // Suppress OnSelectionChanged — this is a programmatic sync, not user interaction.
-            multiComboBoxItem.BeginUpdate();
             bool isSelected = this.parent.SelectedItems?.Contains(multiComboBoxItem.DataContext ?? item) ?? false;
+            multiComboBoxItem.BeginUpdate();
             multiComboBoxItem.IsSelected = isSelected;
             multiComboBoxItem.EndUpdate();
         }

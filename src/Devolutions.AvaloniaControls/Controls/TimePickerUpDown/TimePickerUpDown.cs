@@ -197,7 +197,7 @@ public class TimePickerUpDown : TemplatedControl
   {
     if (value < 1 || value > 59)
     {
-            throw new ArgumentOutOfRangeException(nameof(value), "1 >= increment <= 59");
+      throw new ArgumentOutOfRangeException(nameof(value), "increment must be between 1 and 59");
     }
 
     return value;

@@ -53,6 +53,7 @@
 
   <Thickness x:Key="DataGridCellPadding">6 0</Thickness>
 
+  <SolidColorBrush x:Key="DataGridHeaderBackground" Color="{DynamicResource SystemRegionColor}" />
   <StaticResource x:Key="DataGridRowBackgroundBrush" ResourceKey="SystemControlTransparentBrush" />
   <StaticResource x:Key="DataGridCurrencyVisualPrimaryBrush" ResourceKey="SystemControlTransparentBrush" />
   <StaticResource x:Key="DataGridFillerColumnGridLinesBrush" ResourceKey="SystemControlTransparentBrush" />
@@ -544,7 +545,8 @@
                                   Theme="{StaticResource DataGridTopLeftColumnHeader}" />
             <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
                                             Grid.Column="1"
-                                            Grid.Row="0" Grid.ColumnSpan="2" />
+                                            Grid.Row="0" Grid.ColumnSpan="2"
+                                            Background="{StaticResource DataGridHeaderBackground}" />
             <Rectangle Name="PART_ColumnHeadersAndRowsSeparator"
                        Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0"
                        VerticalAlignment="Bottom"

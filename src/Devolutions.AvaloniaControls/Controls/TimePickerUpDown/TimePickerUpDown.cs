@@ -54,6 +54,7 @@ public class TimePickerUpDown : TemplatedControl
     private bool _isUpdatingText;
     private TextBox? _minuteTextBox;
     private TextBox? _periodTextBox;
+    private TimeSegment? _returnToPreviousSegmentOnBackspace;
     private TextBox? _secondTextBox;
     private Control? _secondSeparator;
     private Spinner? _spinner;
@@ -347,6 +348,18 @@ public class TimePickerUpDown : TemplatedControl
         };
     }
 
+    private string GetDefaultSegmentText(TimeSegment segment)
+    {
+        return segment switch
+        {
+            TimeSegment.Hour => Is24HourClock() ? "00" : "01",
+            TimeSegment.Minute => "00",
+            TimeSegment.Second => "00",
+            TimeSegment.Period => GetAmDesignator(),
+            _ => string.Empty,
+        };
+    }
+
     private bool IsCurrentSegmentValueValid(TimeSegment segment)
     {
         TextBox? textBox = GetTextBox(segment);
@@ -404,7 +417,7 @@ public class TimePickerUpDown : TemplatedControl
         return true;
     }
 
-    private bool MoveFocusToAdjacentSegment(TimeSegment currentSegment, bool forward, bool selectAll = true)
+    private bool MoveFocusToAdjacentSegment(TimeSegment currentSegment, bool forward, bool selectAll = true, bool returnToPreviousOnBackspace = false)
     {
         TimeSegment[] orderedSegments =
         [
@@ -436,6 +449,7 @@ public class TimePickerUpDown : TemplatedControl
             }
 
             _activeSegment = nextSegment;
+            _returnToPreviousSegmentOnBackspace = returnToPreviousOnBackspace ? nextSegment : null;
             nextTextBox.Focus(NavigationMethod.Tab);
             if (selectAll)
             {
@@ -454,6 +468,20 @@ public class TimePickerUpDown : TemplatedControl
         return false;
     }
 
+    private void SelectSegment(TimeSegment segment, NavigationMethod navigationMethod = NavigationMethod.Tab)
+    {
+        TextBox? textBox = GetTextBox(segment);
+        if (textBox is null || !textBox.IsVisible || !textBox.IsEnabled)
+        {
+            return;
+        }
+
+        _activeSegment = segment;
+        _returnToPreviousSegmentOnBackspace = null;
+        textBox.Focus(navigationMethod);
+        textBox.SelectAll();
+    }
+
     private static bool IsSegmentFullySelected(TextBox textBox)
     {
         int textLength = textBox.Text?.Length ?? 0;
@@ -462,14 +490,9 @@ public class TimePickerUpDown : TemplatedControl
         return textLength > 0 && selectionStart == 0 && selectionEnd == textLength;
     }
 
-    private static bool ShouldMoveBackwardOnBackspace(TextBox textBox)
+    private static bool IsCaretAtSegmentStart(TextBox textBox)
     {
         if (string.IsNullOrEmpty(textBox.Text))
-        {
-            return true;
-        }
-
-        if (IsSegmentFullySelected(textBox))
         {
             return true;
         }
@@ -479,11 +502,38 @@ public class TimePickerUpDown : TemplatedControl
         return selectionStart == 0 && selectionEnd == 0;
     }
 
+    private void ResetCurrentSegment()
+    {
+        TextBox? textBox = GetTextBox(_activeSegment);
+        if (textBox is null)
+        {
+            return;
+        }
+
+        _isUpdatingText = true;
+        try
+        {
+            textBox.Text = GetDefaultSegmentText(_activeSegment);
+        }
+        finally
+        {
+            _isUpdatingText = false;
+        }
+
+        CommitSegments();
+        SelectSegment(_activeSegment);
+    }
+
     private void OnSegmentGotFocus(object? sender, GotFocusEventArgs e)
     {
         if (sender is TextBox textBox)
         {
             _activeSegment = GetSegment(textBox);
+            if (_returnToPreviousSegmentOnBackspace != _activeSegment)
+            {
+                _returnToPreviousSegmentOnBackspace = null;
+            }
+
             textBox.SelectAll();
         }
     }
@@ -507,23 +557,37 @@ public class TimePickerUpDown : TemplatedControl
                 SpinActiveSegment(SpinDirection.Decrease);
                 e.Handled = true;
                 break;
+            case Key.Delete:
+                ResetCurrentSegment();
+                e.Handled = true;
+                break;
             case Key.Back:
-                if (ShouldMoveBackwardOnBackspace(textBox))
+                if (_returnToPreviousSegmentOnBackspace == _activeSegment && IsSegmentFullySelected(textBox))
                 {
+                    _returnToPreviousSegmentOnBackspace = null;
                     e.Handled = MoveFocusToAdjacentSegment(_activeSegment, forward: false, selectAll: false);
+                }
+                else if (IsCaretAtSegmentStart(textBox))
+                {
+                    _returnToPreviousSegmentOnBackspace = null;
+                    e.Handled = MoveFocusToAdjacentSegment(_activeSegment, forward: false, selectAll: false);
+                }
+                else if (IsSegmentFullySelected(textBox))
+                {
+                    _returnToPreviousSegmentOnBackspace = null;
+                    ResetCurrentSegment();
+                    e.Handled = true;
                 }
                 break;
             case Key.Left:
-                if (textBox.SelectionStart == 0 && textBox.SelectionEnd == 0)
-                {
-                    e.Handled = MoveFocusToAdjacentSegment(_activeSegment, forward: false);
-                }
+                _returnToPreviousSegmentOnBackspace = null;
+                MoveFocusToAdjacentSegment(_activeSegment, forward: false);
+                e.Handled = true;
                 break;
             case Key.Right:
-                if (textBox.SelectionStart == textBox.Text?.Length && textBox.SelectionEnd == textBox.Text?.Length)
-                {
-                    e.Handled = MoveFocusToAdjacentSegment(_activeSegment, forward: true);
-                }
+                _returnToPreviousSegmentOnBackspace = null;
+                MoveFocusToAdjacentSegment(_activeSegment, forward: true);
+                e.Handled = true;
                 break;
             case Key.Enter:
                 CommitSegments();
@@ -557,10 +621,11 @@ public class TimePickerUpDown : TemplatedControl
                 UpdateSegmentTexts();
                 textBox.Focus(NavigationMethod.Tab);
                 textBox.SelectAll();
+                _returnToPreviousSegmentOnBackspace = null;
                 return;
             }
 
-            MoveFocusToAdjacentSegment(segment, forward: true);
+            MoveFocusToAdjacentSegment(segment, forward: true, returnToPreviousOnBackspace: true);
         }
     }
 
@@ -577,6 +642,7 @@ public class TimePickerUpDown : TemplatedControl
         }
 
         _activeSegment = GetSegment(textBox);
+        _returnToPreviousSegmentOnBackspace = null;
         textBox.Focus(NavigationMethod.Pointer);
         textBox.SelectAll();
         e.Handled = true;
@@ -614,7 +680,7 @@ public class TimePickerUpDown : TemplatedControl
             }
 
             e.Handled = true;
-            MoveFocusToAdjacentSegment(segment, forward: true);
+            MoveFocusToAdjacentSegment(segment, forward: true, returnToPreviousOnBackspace: true);
         }
     }
 
@@ -678,6 +744,7 @@ public class TimePickerUpDown : TemplatedControl
         }
 
         SetSelectedTimeValue(GetEffectiveTime().Add(TimeSpan.FromSeconds(amount)));
+        SelectSegment(_activeSegment, NavigationMethod.Unspecified);
     }
 
     private bool TryBuildTimeFromSegments(out TimeSpan? time)

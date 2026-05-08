@@ -425,6 +425,13 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
         else if (change.Property == SelectedItemProperty)
         {
+            if (!((ILogical)this).IsAttachedToLogicalTree)
+            {
+                // Transient null fired by InvalidateStyles during logical-tree detach.
+                // Don't propagate — it would write default(T) back to the bound VM.
+                return;
+            }
+
             this.SelectedValue = (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue ?? default;
         }
         else if (change.Property == SelectedValueProperty)

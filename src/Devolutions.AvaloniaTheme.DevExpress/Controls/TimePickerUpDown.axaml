@@ -83,6 +83,7 @@
                           Spacing="0"
                           VerticalAlignment="Center">
                 <TextBox Name="PART_HourTextBox"
+                         AutomationProperties.Name="Hours"
                          Theme="{StaticResource DevExpressTimePickerUpDownTextBoxTheme}"
                          Classes="segment-box borderless no-focus-border"
                          Foreground="{TemplateBinding Foreground}"
@@ -93,9 +94,11 @@
                            Foreground="{TemplateBinding Foreground}"
                            Text=":" />
                 <TextBox Name="PART_MinuteTextBox"
+                         AutomationProperties.Name="Minutes"
                          Theme="{StaticResource DevExpressTimePickerUpDownTextBoxTheme}"
                          Classes="segment-box borderless no-focus-border"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="2"
                          Watermark="mm" />
@@ -104,16 +107,20 @@
                            Foreground="{TemplateBinding Foreground}"
                            Text=":" />
                 <TextBox Name="PART_SecondTextBox"
+                         AutomationProperties.Name="Seconds"
                          Theme="{StaticResource DevExpressTimePickerUpDownTextBoxTheme}"
                          Classes="segment-box borderless no-focus-border"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="2"
                          Watermark="ss" />
                 <TextBox Name="PART_PeriodTextBox"
+                         AutomationProperties.Name="AM or PM"
                          Theme="{StaticResource DevExpressTimePickerUpDownTextBoxTheme}"
                          Classes="segment-box period-box borderless no-focus-border"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="8"
                          Watermark="AM" />
@@ -155,6 +162,14 @@
 
     <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton">
       <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_IncreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Increase time" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_DecreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Decrease time" />
     </Style>
 
     <Style Selector="^:disabled">

@@ -43,6 +43,7 @@
                            CornerRadius="{TemplateBinding CornerRadius}"
                            ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}"
                            HorizontalContentAlignment="Left"
+                           IsTabStop="False"
                            ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
                            AllowSpin="{TemplateBinding AllowSpin}">
               <StackPanel Margin="6,0,15,0"
@@ -51,6 +52,7 @@
                           Spacing="0"
                           VerticalAlignment="Center">
                 <TextBox Name="PART_HourTextBox"
+                         AutomationProperties.Name="Hours"
                          Theme="{StaticResource TimePickerUpDownInnerTextBoxTheme}"
                          Classes="segment-box borderless"
                          Foreground="{TemplateBinding Foreground}"
@@ -61,9 +63,11 @@
                            Foreground="{TemplateBinding Foreground}"
                            Text=":" />
                 <TextBox Name="PART_MinuteTextBox"
+                         AutomationProperties.Name="Minutes"
                          Theme="{StaticResource TimePickerUpDownInnerTextBoxTheme}"
                          Classes="segment-box borderless"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="2"
                          Watermark="mm" />
@@ -72,16 +76,20 @@
                            Foreground="{TemplateBinding Foreground}"
                            Text=":" />
                 <TextBox Name="PART_SecondTextBox"
+                         AutomationProperties.Name="Seconds"
                          Theme="{StaticResource TimePickerUpDownInnerTextBoxTheme}"
                          Classes="segment-box borderless"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="2"
                          Watermark="ss" />
                 <TextBox Name="PART_PeriodTextBox"
+                         AutomationProperties.Name="AM or PM"
                          Theme="{StaticResource TimePickerUpDownInnerTextBoxTheme}"
                          Classes="segment-box period-box borderless"
                          Foreground="{TemplateBinding Foreground}"
+                         IsTabStop="False"
                          IsReadOnly="{TemplateBinding IsReadOnly}"
                          MaxLength="8"
                          Watermark="AM" />
@@ -100,6 +108,14 @@
     <Style Selector="^ /template/ TextBox.period-box">
       <Setter Property="MinWidth" Value="34" />
       <Setter Property="Width" Value="34" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_IncreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Increase time" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_DecreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Decrease time" />
     </Style>
   </ControlTheme>
 

@@ -22,7 +22,6 @@
       <SolidColorBrush x:Key="TreeDataGridHeaderForegroundPointerOverBrush" Color="{DynamicResource SystemBaseHighColor}" />
       <SolidColorBrush x:Key="TreeDataGridHeaderForegroundPressedBrush" Color="{DynamicResource SystemBaseHighColor}" />
       <StaticResource x:Key="TreeDataGridHeaderForegroundBrush" ResourceKey="ForegroundHighBrush" />
-
       
       <SolidColorBrush x:Key="TreeDataGridSelectedRowBackgroundBrush" Color="#cde8ff" />
       <SolidColorBrush x:Key="TreeDataGridAlternatingRowBackground" Color="#f2f6fb" />

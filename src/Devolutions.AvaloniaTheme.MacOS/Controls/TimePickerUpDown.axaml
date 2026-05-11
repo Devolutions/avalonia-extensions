@@ -1,0 +1,271 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Margin="20" Spacing="20" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+          <controls:TimePickerUpDown ClockIdentifier="12HourClock"
+                                     SelectedTime="20:00:00"
+                                     UseSeconds="True" />
+          <NumericUpDown Minimum="0"
+                         Maximum="10"
+                         Increment="0.5"
+                         Value="10"
+                         Watermark="Enter text" />
+        </StackPanel>
+        <controls:TimePickerUpDown ClockIdentifier="24HourClock"
+                                   SelectedTime="00:00:00"
+                                   UseSeconds="True" />
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="MacOSTimePickerUpDownInnerTextBoxTheme"
+                TargetType="TextBox"
+                BasedOn="{StaticResource {x:Type TextBox}}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Cursor" Value="IBeam" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
+    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="TextAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="TextBox">
+        <ScrollViewer AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                      HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                      IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                      VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+          <Panel>
+            <TextBlock Name="PART_Watermark"
+                       Foreground="{DynamicResource ForegroundLowBrush}"
+                       LineHeight="{TemplateBinding LineHeight}"
+                       FontSize="{StaticResource ControlFontSize}"
+                       Text="{TemplateBinding Watermark}"
+                       TextAlignment="{TemplateBinding TextAlignment}"
+                       TextWrapping="{TemplateBinding TextWrapping}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="Center">
+              <TextBlock.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                  <Binding ElementName="PART_TextPresenter" Path="PreeditText"
+                           Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text"
+                           Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                </MultiBinding>
+              </TextBlock.IsVisible>
+            </TextBlock>
+            <TextPresenter Name="PART_TextPresenter"
+                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                           CaretIndex="{TemplateBinding CaretIndex}"
+                           SelectionStart="{TemplateBinding SelectionStart}"
+                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                           TextAlignment="{TemplateBinding TextAlignment}"
+                           TextWrapping="{TemplateBinding TextWrapping}"
+                           LineHeight="{TemplateBinding LineHeight}"
+                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                           RevealPassword="{TemplateBinding RevealPassword}"
+                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                           CaretBrush="{TemplateBinding CaretBrush}"
+                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Panel>
+        </ScrollViewer>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type controls:TimePickerUpDown}"
+                TargetType="controls:TimePickerUpDown"
+                BasedOn="{StaticResource {x:Type controls:TimePickerUpDown}}">
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource TextBoxBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource TextBoxCornerRadius}" />
+    <Setter Property="MinHeight" Value="{DynamicResource TextBoxMinDimensions}" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="controls:TimePickerUpDown">
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <DataValidationErrors ClipToBounds="False">
+            <ButtonSpinner Name="PART_Spinner"
+                           ClipToBounds="False"
+                           Background="{TemplateBinding Background}"
+                           BorderBrush="{TemplateBinding BorderBrush}"
+                           BorderThickness="{TemplateBinding BorderThickness}"
+                           CornerRadius="{TemplateBinding CornerRadius}"
+                           IsTabStop="False"
+                           Padding="0"
+                           MinWidth="0"
+                           HorizontalContentAlignment="Stretch"
+                           VerticalContentAlignment="Stretch"
+                           AllowSpin="{TemplateBinding AllowSpin}"
+                           ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
+                           ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
+              <Grid Name="PART_InputChrome"
+                    ClipToBounds="False"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                <Border Name="PART_BorderElement">
+                  <StackPanel Margin="0 2 0 0 "
+                              HorizontalAlignment="Left"
+                              Orientation="Horizontal"
+                              Spacing="0"
+                              VerticalAlignment="Center">
+                    <TextBox Name="PART_HourTextBox"
+                             AutomationProperties.Name="Hours"
+                             HorizontalContentAlignment="Center"
+                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                             Classes="segment-box borderless no-focus-border"
+                             Foreground="{TemplateBinding Foreground}"
+                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                             MaxLength="2"
+                             Watermark="hh" />
+                    <TextBlock Classes="segment-separator"
+                               VerticalAlignment="Center"
+                               Foreground="{TemplateBinding Foreground}"
+                               Text=":" />
+                    <TextBox Name="PART_MinuteTextBox"
+                             AutomationProperties.Name="Minutes"
+                             HorizontalContentAlignment="Center"
+                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                             Classes="segment-box borderless no-focus-border"
+                             Foreground="{TemplateBinding Foreground}"
+                             IsTabStop="False"
+                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                             MaxLength="2"
+                             Watermark="mm" />
+                    <TextBlock Name="PART_SecondSeparator"
+                               Classes="segment-separator"
+                               VerticalAlignment="Center"
+                               Foreground="{TemplateBinding Foreground}"
+                               Text=":" />
+                    <TextBox Name="PART_SecondTextBox"
+                             AutomationProperties.Name="Seconds"
+                             HorizontalContentAlignment="Center"
+                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                             Classes="segment-box borderless no-focus-border"
+                             Foreground="{TemplateBinding Foreground}"
+                             IsTabStop="False"
+                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                             MaxLength="2"
+                             Watermark="ss" />
+                    <TextBox Name="PART_PeriodTextBox"
+                             AutomationProperties.Name="AM or PM"
+                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                             Classes="segment-box period-box borderless no-focus-border"
+                             Foreground="{TemplateBinding Foreground}"
+                             IsTabStop="False"
+                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                             MaxLength="8"
+                             Watermark="AM" />
+                  </StackPanel>
+                </Border>
+                <Border Name="BottomBorder"
+                        BorderThickness="0 0 0 0.6"
+                        BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Margin="0.6 0"
+                        IsHitTestVisible="False" />
+                <Border Name="BottomBorderShadow"
+                        BorderThickness="0 0 0 0.6"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{DynamicResource TextBoxBorderShadows}"
+                        Margin="0.6 0 0.6 -0.6"
+                        IsHitTestVisible="False" />
+                <Border Name="FocusBorderElement"
+                        Margin="{StaticResource FocusBorderMargin}"
+                        BorderThickness="{StaticResource FocusBorderThickness}"
+                        CornerRadius="{DynamicResource TextBoxFocusCornerRadius}"
+                        IsHitTestVisible="False" />
+              </Grid>
+            </ButtonSpinner>
+          </DataValidationErrors>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^ /template/ Border#PART_BorderElement">
+      <Setter Property="BoxShadow" Value="{DynamicResource TextBoxBoxShadow}" />
+      <Setter Property="Background" Value="{TemplateBinding Background}" />
+      <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+      <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
+      <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
+      <Setter Property="MinHeight" Value="{DynamicResource TextBoxMinDimensions}" />
+      <Setter Property="Padding" Value="{DynamicResource TextBoxPadding}" />
+    </Style>
+
+    <Style Selector="^[ButtonSpinnerLocation=Right] /template/ Grid#PART_InputChrome">
+      <Setter Property="Margin" Value="1.5 1.5 2 1.5" />
+    </Style>
+
+    <Style Selector="^[ButtonSpinnerLocation=Left] /template/ Grid#PART_InputChrome">
+      <Setter Property="Margin" Value="2 1.5 1.5 1.5" />
+    </Style>
+
+    <Style Selector="^ /template/ Border#BottomBorder">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderIsVisible}" />
+    </Style>
+
+    <Style Selector="^ /template/ Border#BottomBorderShadow">
+      <Setter Property="IsVisible" Value="{DynamicResource TextBoxBottomBorderShadowIsVisible}" />
+    </Style>
+
+    <Style Selector="^ /template/ TextBox.segment-box">
+      <Setter Property="MinWidth" Value="18" />
+      <Setter Property="Width" Value="18" />
+    </Style>
+
+    <Style Selector="^ /template/ TextBlock.segment-separator">
+      <Setter Property="Margin" Value="1 0 0 2" />
+    </Style>
+
+    <Style Selector="^ /template/ TextBox.period-box">
+      <Setter Property="Margin" Value="2 0 0 0" />
+      <Setter Property="MinWidth" Value="20" />
+      <Setter Property="Width" Value="20" />
+    </Style>
+
+    <Style Selector="^:focus-within">
+      <Style Selector="^ /template/ Border#FocusBorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#BottomBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+    </Style>
+
+    <Style Selector="^:error /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_IncreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Increase time" />
+    </Style>
+
+    <Style Selector="^ /template/ ButtonSpinner#PART_Spinner RepeatButton#PART_DecreaseButton">
+      <Setter Property="AutomationProperties.Name" Value="Decrease time" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

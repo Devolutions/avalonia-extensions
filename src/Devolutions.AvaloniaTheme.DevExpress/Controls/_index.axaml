@@ -25,6 +25,7 @@
     <MergeResourceInclude Source="ColorView.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
+    <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />
     <MergeResourceInclude Source="DropDownButton.axaml" />
     <MergeResourceInclude Source="DataValidationErrors.axaml" />
@@ -35,14 +36,14 @@
     <MergeResourceInclude Source="GroupedTileListBoxGroupHeader.axaml" />
     <MergeResourceInclude Source="GroupedTileListBoxItem.axaml" />
     <MergeResourceInclude Source="HyperlinkButton.axaml" />
+    <MergeResourceInclude Source="Label.axaml" />
+    <MergeResourceInclude Source="ListBox.axaml" />
+    <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="MultiComboBox.axaml" />
     <MergeResourceInclude Source="MultiComboBoxItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
-    <MergeResourceInclude Source="Label.axaml" />
-    <MergeResourceInclude Source="ListBox.axaml" />
-    <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="RadioButton.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="ScrollViewer.axaml" />
@@ -55,10 +56,10 @@
     <MergeResourceInclude Source="TagInput.axaml" />
     <MergeResourceInclude Source="TextBox.axaml" />
     <MergeResourceInclude Source="TextBlock.axaml" />
+    <MergeResourceInclude Source="TimePickerUpDown.axaml" />
     <MergeResourceInclude Source="TreeView.axaml" />
     <!-- TreeDataGrid.axaml conditionally loaded in DevolutionsDevExpressTheme.cs if licensed Accelerate controls are enabled  -->
     <MergeResourceInclude Source="TreeViewItem.axaml" />
-    <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="Window.axaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -279,6 +279,7 @@
   <BoxShadows x:Key="ComboBoxDropDownShadow"> 0 3 7 0 #30000000</BoxShadows>
   <Thickness x:Key="ComboBoxItemPadding">10 0</Thickness>
   <Thickness x:Key="ComboBoxItemBorderPadding">0 0 6 0</Thickness>
+  <Thickness x:Key="ListBoxItemPadding">6 2</Thickness>
   <Thickness x:Key="MultiColumnListBoxBorderPadding">6</Thickness>
   <Thickness x:Key="ComboBoxItemBorderMargin">0</Thickness>
   <Thickness x:Key="MultiColumnListBoxItemBorderMargin">5 1</Thickness>

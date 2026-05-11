@@ -27,25 +27,20 @@
     <Setter Property="FontWeight" Value="Regular" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
-    <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="MinHeight" Value="{DynamicResource ListBoxItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResourceToggler
+      {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
+      MultiColumnListBoxBorderPadding,
+      ListBoxItemPadding}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel
-          Margin="{BindingToggler
-                                      {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
-                                      {DynamicResource MultiColumnListBoxItemBorderMargin},
-                                      {DynamicResource ComboBoxItemBorderMargin}}">
+        <Panel>
           <Border
             Name="LayoutRoot"
             Background="Transparent"
             MinHeight="{TemplateBinding MinHeight}"
-            CornerRadius="{TemplateBinding CornerRadius}"
-            Padding="{BindingToggler
-                        {Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsMultiColumnListBox}},
-                        {DynamicResource MultiColumnListBoxBorderPadding},
-                        {DynamicResource ComboBoxItemBorderPadding}}">
+            CornerRadius="{TemplateBinding CornerRadius}">
             
             <DockPanel HorizontalAlignment="Stretch">
               <Border
@@ -53,10 +48,8 @@
                 DockPanel.Dock="Left"
                 IsVisible="{Binding $parent[ListBox], Converter={x:Static converters:DevExpressConverters.IsNotMultiColumnListBox}}"
                 Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
-                Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
                 VerticalAlignment="Stretch"
                 Background="Transparent"
-                Padding="{TemplateBinding Padding}"
                 CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
     
               <ContentPresenter
@@ -66,6 +59,7 @@
                 Foreground="{TemplateBinding Foreground}"
                 ContentTemplate="{TemplateBinding ContentTemplate}"
                 Content="{TemplateBinding Content}"
+                Padding="{TemplateBinding Padding}"
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
             </DockPanel>

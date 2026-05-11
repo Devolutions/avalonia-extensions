@@ -78,7 +78,7 @@ dotnet build src/Devolutions.AvaloniaControls
 ```bash
 # IMPORTANT: For proper theme detection, build first then run from bin directory
 # This ensures the app can detect the configured theme from App.axaml
-dotnet build samples/SampleApp/SampleApp.csproj && cd samples/SampleApp/bin/Debug/net9.0 && dotnet SampleApp.dll
+dotnet build samples/SampleApp/SampleApp.csproj && cd samples/SampleApp/bin/Debug/net10.0 && dotnet SampleApp.dll
 
 # Alternative: Use dotnet run (faster, but theme detection won't work)
 # This runs from repo root, causing app to fall back to OS-default theme
@@ -102,7 +102,7 @@ The SampleApp provides:
 - Those temporary runtime-selection lines are local-only setup state and should not be committed by default (follow `.claude/commands/commit.md`).
 
 **Note on Theme Detection:**
-The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net9.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
+The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net10.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
 
 ### Testing
 There are no automated tests in this repository. Testing is done manually via the SampleApp.
@@ -145,7 +145,7 @@ The `Devolutions.AvaloniaControls` package contains:
 - All themes support both light and dark modes
 
 ## Target Framework
-All projects target `.NET 9.0` and use Avalonia `11.3.x` packages.
+All projects target `.NET 10.0` and use Avalonia `11.3.x` packages.
 
 ## CI/CD
 The repository uses GitHub Actions for building and publishing NuGet packages. The workflow:

@@ -268,7 +268,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="TimePickerUpDown" ApplicableTo="DevExpress" />
+                  <controls:SampleItemHeader Title="TimePickerUpDown" ApplicableTo="DevExpress, MacClassic" />
                 </TabItem.Header>
                 <demoPages:TimePickerUpDownDemo>
                   <demoPages:TimePickerUpDownDemo.DataContext>

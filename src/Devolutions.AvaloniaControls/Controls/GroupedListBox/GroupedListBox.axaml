@@ -1,0 +1,66 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTheme x:Key="{x:Type GroupedListBox}" TargetType="GroupedListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    ClipToBounds="True">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl Name="PART_ItemsHost">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="GroupedListBoxGroupItem" x:CompileBindings="False">
+                                    <!--
+                                        Each GroupedListBoxGroupItem renders either as a labeled Expander
+                                        (when HasHeader is true) or as a bare inner ListBox (ungrouped fallback).
+                                        Selection coordination: each inner ListBox's SelectedItem is two-way bound
+                                        to the owning GroupedListBox.SelectedItem. Groups are disjoint, so ListBoxes
+                                        whose ItemsSource doesn't contain the new value will clear their selection
+                                        automatically, giving us cross-group single selection for free.
+                                    -->
+                                    <Panel>
+                                        <Expander IsVisible="{Binding HasHeader}"
+                                                  IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                                                  HorizontalAlignment="Stretch"
+                                                  HorizontalContentAlignment="Stretch">
+                                            <Expander.Header>
+                                                <TextBlock Text="{Binding Key}" FontWeight="SemiBold" />
+                                            </Expander.Header>
+                                            <ListBox
+                                                ItemsSource="{Binding Items}"
+                                                ItemTemplate="{Binding ItemTemplate}"
+                                                SelectedItem="{Binding $parent[GroupedListBox].SelectedItem, Mode=TwoWay}"
+                                                Background="Transparent"
+                                                BorderThickness="0" />
+                                        </Expander>
+                                        <ListBox
+                                            IsVisible="{Binding !HasHeader}"
+                                            ItemsSource="{Binding Items}"
+                                            ItemTemplate="{Binding ItemTemplate}"
+                                            SelectedItem="{Binding $parent[GroupedListBox].SelectedItem, Mode=TwoWay}"
+                                            Background="Transparent"
+                                            BorderThickness="0" />
+                                    </Panel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>

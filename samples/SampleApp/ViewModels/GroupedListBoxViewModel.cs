@@ -1,15 +1,18 @@
 namespace SampleApp.ViewModels;
 
-using System;
 using System.Collections.Generic;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 
-// Data model for the demo
-public record FoodItem(string Name, string Category);
-
-public partial class GroupedTileListBoxViewModel : ObservableObject
+/// <summary>
+/// View model for the <see cref="SampleApp.DemoPages.GroupedListBoxDemo"/> page.
+/// Mirrors <see cref="GroupedTileListBoxViewModel"/> but is intentionally separate so the two
+/// demos can evolve independently and so we exercise the new binding-based grouping API
+/// (<c>GroupBinding</c> / <c>GroupOrderBinding</c>) end-to-end.
+/// </summary>
+public partial class GroupedListBoxViewModel : ObservableObject
 {
-    // Selected items for each scenario
+    // Selected items per scenario.
     [ObservableProperty]
     private FoodItem? selectedGroupedItem;
 
@@ -19,7 +22,10 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
     [ObservableProperty]
     private FoodItem? selectedFlatItem;
 
-    // Double-clicked items for each scenario
+    [ObservableProperty]
+    private FoodItem? selectedLargeItem;
+
+    // Double-clicked items per scenario.
     [ObservableProperty]
     private FoodItem? doubleClickedGroupedItem;
 
@@ -30,15 +36,11 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
     private FoodItem? doubleClickedFlatItem;
 
     [ObservableProperty]
-    private FoodItem? selectedLargeItem;
-
-    [ObservableProperty]
     private FoodItem? doubleClickedLargeItem;
 
-    // Scenario 1: Named groups
+    /// <summary>Scenario 1: items partitioned into named groups.</summary>
     public List<FoodItem> GroupedItems { get; } = new()
     {
-        // Fruits
         new FoodItem("Apple", "Fruits"),
         new FoodItem("Banana", "Fruits"),
         new FoodItem("Orange", "Fruits"),
@@ -46,7 +48,6 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         new FoodItem("Grapes", "Fruits"),
         new FoodItem("Mango", "Fruits"),
 
-        // Vegetables
         new FoodItem("Carrot", "Vegetables"),
         new FoodItem("Broccoli", "Vegetables"),
         new FoodItem("Lettuce", "Vegetables"),
@@ -54,7 +55,6 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         new FoodItem("Cucumber", "Vegetables"),
         new FoodItem("Pepper", "Vegetables"),
 
-        // Meats
         new FoodItem("Chicken", "Meats"),
         new FoodItem("Beef", "Meats"),
         new FoodItem("Pork", "Meats"),
@@ -62,21 +62,18 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         new FoodItem("Lamb", "Meats"),
     };
 
-    // Scenario 2: Empty group first
+    /// <summary>Scenario 2: items where the empty-string group should sort first.</summary>
     public List<FoodItem> EmptyGroupItems { get; } = new()
     {
-        // Empty group (Uncategorized)
         new FoodItem("Water", ""),
         new FoodItem("Salt", ""),
         new FoodItem("Sugar", ""),
 
-        // Beverages
         new FoodItem("Coffee", "Beverages"),
         new FoodItem("Tea", "Beverages"),
         new FoodItem("Juice", "Beverages"),
         new FoodItem("Soda", "Beverages"),
 
-        // Snacks
         new FoodItem("Chips", "Snacks"),
         new FoodItem("Cookies", "Snacks"),
         new FoodItem("Crackers", "Snacks"),
@@ -84,7 +81,7 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         new FoodItem("Pretzels", "Snacks"),
     };
 
-    // Scenario 3: Flat list (no grouping)
+    /// <summary>Scenario 3: ungrouped flat list.</summary>
     public List<FoodItem> FlatItems { get; } = new()
     {
         new FoodItem("Pizza", "Fast Food"),
@@ -101,10 +98,11 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         new FoodItem("Cheese", "Dairy"),
     };
 
-    // Group selector function - extracts Category from FoodItem
-    public Func<object, string> CategoryGroupSelector { get; } = item => ((FoodItem)item).Category;
-    
-    public Func<string, int> CategoryGroupOrderSelector { get; } = group => group switch
+    /// <summary>Scenario 4: large dataset (500 items, 3 categories).</summary>
+    public List<FoodItem> LargeItems { get; } = GenerateLargeItems();
+
+    /// <summary>Sort selector: "Meats &gt; Fruits &gt; Vegetables" used in Scenario 1.</summary>
+    public System.Func<string, int> CategoryGroupOrderSelector { get; } = group => group switch
     {
         "Meats" => 0,
         "Fruits" => 1,
@@ -112,21 +110,27 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         _ => 999,
     };
 
-    // Group order selector - empty groups first, then alphabetical
-    public Func<string, int> EmptyGroupFirstSelector { get; } = group => string.IsNullOrEmpty((string)group) ? 0 : 1;
-
-    // Scenario 4: Large dataset for virtualization testing
-    public List<FoodItem> LargeItems { get; } = GenerateLargeItems();
+    /// <summary>Sort selector: empty groups first, then alphabetical, used in Scenario 2.</summary>
+    public System.Func<string, int> EmptyGroupFirstSelector { get; } = group => string.IsNullOrEmpty(group) ? 0 : 1;
 
     private static List<FoodItem> GenerateLargeItems()
     {
-        var items = new List<FoodItem>(500);
+        List<FoodItem> items = new(500);
         for (int i = 1; i <= 200; i++)
+        {
             items.Add(new FoodItem($"Alpha Item {i:D3}", "Category Alpha"));
+        }
+
         for (int i = 1; i <= 200; i++)
+        {
             items.Add(new FoodItem($"Beta Item {i:D3}", "Category Beta"));
+        }
+
         for (int i = 1; i <= 100; i++)
+        {
             items.Add(new FoodItem($"Gamma Item {i:D3}", "Category Gamma"));
+        }
+
         return items;
     }
 }

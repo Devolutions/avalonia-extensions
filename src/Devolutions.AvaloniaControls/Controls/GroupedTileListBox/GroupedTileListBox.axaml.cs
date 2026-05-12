@@ -10,6 +10,8 @@ using Avalonia.Layout;
 using System.Collections;
 using System.Collections.Specialized;
 using Avalonia.Controls.Metadata;
+using Avalonia.Metadata;
+using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
 /// A virtualized tile-based list box that supports grouping, selection, and keyboard navigation.
@@ -54,14 +56,22 @@ public class GroupedTileListBox : TemplatedControl
 
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, string>?>(
-            nameof(GroupSelector));
-    
+            "GroupSelector");
+
+    public static readonly StyledProperty<IBinding?> GroupBindingProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, IBinding?>(
+            nameof(GroupBinding));
+
     public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
         AvaloniaProperty.Register<GroupedTileListBox, bool>(nameof(GroupOrderAlphabetical));
 
     public static readonly StyledProperty<Func<string, int>?> GroupOrderSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<string, int>?>(
-            nameof(GroupOrderSelector));
+            "GroupOrderSelector");
+
+    public static readonly StyledProperty<IBinding?> GroupOrderBindingProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, IBinding?>(
+            nameof(GroupOrderBinding));
 
     private double? cachedHeaderHeight = null;
     
@@ -83,6 +93,11 @@ public class GroupedTileListBox : TemplatedControl
     
     private bool useGrouping = false;
 
+    private BindingEvaluator? groupEvaluator;
+    private IBinding? groupEvaluatorBinding;
+    private BindingEvaluator? groupOrderEvaluator;
+    private IBinding? groupOrderEvaluatorBinding;
+
     static GroupedTileListBox()
     {
         ItemsSourceProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnItemsSourceChanged(e));
@@ -99,7 +114,11 @@ public class GroupedTileListBox : TemplatedControl
 
         GroupSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
 
+        GroupBindingProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
+
         GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
+
+        GroupOrderBindingProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnGroupingPropertyChanged(e));
     }
 
     /// <summary>
@@ -167,8 +186,10 @@ public class GroupedTileListBox : TemplatedControl
 
     /// <summary>
     /// Gets or sets the function used to determine the group for each item.
-    /// Can be bound from a ViewModel for compile-time safety and MVVM support.
     /// </summary>
+    // TODO: Once [AssignBinding] and [InheritDataTypeFromItems] are properly supported by
+    //       JetBrains Rider, we can uncomment the obsoletion below
+    // [Obsolete("Use GroupBinding instead for XAML-friendly, type-checked group selection.")]
     public Func<object, string>? GroupSelector
     {
         get => this.GetValue(GroupSelectorProperty);
@@ -176,23 +197,50 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
-    /// Gets or sets whether groups are sorted alphabetically by key. Applied as a secondary sort after <see cref="GroupOrderSelector"/>, if set.
+    /// Gets or sets the binding used to extract the group key from each item.
+    /// When set, this takes precedence over <see cref="GroupSelector"/>.
+    /// The binding's data type is inferred from <see cref="ItemsSource"/> for compile-time safety.
+    /// </summary>
+    [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public IBinding? GroupBinding
+    {
+        get => this.GetValue(GroupBindingProperty);
+        set => this.SetValue(GroupBindingProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether groups are sorted alphabetically by key. Applied as a secondary sort after the resolved group-order selector, if set.
     /// </summary>
     public bool GroupOrderAlphabetical
     {
         get => this.GetValue(GroupOrderAlphabeticalProperty);
         set => this.SetValue(GroupOrderAlphabeticalProperty, value);
     }
-    
+
     /// <summary>
     /// Gets or sets the function used to determine the sort order for each group.
     /// Lower numbers appear first. If null, groups are sorted alphabetically by key.
-    /// Can be bound from a ViewModel for compile-time safety and MVVM support.
     /// </summary>
+    // TODO: Once [AssignBinding] and [InheritDataTypeFromItems] are properly supported by
+    //       JetBrains Rider, we can uncomment the obsoletion below
+    // [Obsolete("Use GroupOrderBinding instead for XAML-friendly group ordering.")]
     public Func<string, int>? GroupOrderSelector
     {
         get => this.GetValue(GroupOrderSelectorProperty);
         set => this.SetValue(GroupOrderSelectorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the binding used to extract a sort order value (int) for each group key.
+    /// When set, this takes precedence over <see cref="GroupOrderSelector"/>.
+    /// The binding is evaluated against the group key (string) as DataContext.
+    /// </summary>
+    [AssignBinding]
+    public IBinding? GroupOrderBinding
+    {
+        get => this.GetValue(GroupOrderBindingProperty);
+        set => this.SetValue(GroupOrderBindingProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -302,11 +350,11 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
-    /// Returns groups sorted by <see cref="GroupOrderSelector"/> first (if set), then alphabetically by key (if <see cref="GroupOrderAlphabetical"/> is enabled).
+    /// Returns groups sorted by the resolved group-order selector first (if set), then alphabetically by key (if <see cref="GroupOrderAlphabetical"/> is enabled).
     /// </summary>
     private IEnumerable<IGrouping<string, T>> GetOrderedGroups<T>(IEnumerable<IGrouping<string, T>> groups)
     {
-        if (this.GroupOrderSelector is { } selector)
+        if (this.ResolveGroupOrderSelector() is { } selector)
             return this.GroupOrderAlphabetical
                 ? groups.OrderBy(g => selector(g.Key)).ThenBy(g => g.Key)
                 : groups.OrderBy(g => selector(g.Key));
@@ -334,7 +382,8 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         // Determine if grouping is enabled
-        this.useGrouping = this.GroupSelector is not null;
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        this.useGrouping = groupSelector is not null;
 
         // Unhook old ItemsRepeater if it exists
         if (this.itemsRepeater is not null)
@@ -356,10 +405,10 @@ public class GroupedTileListBox : TemplatedControl
                 [!MinHeightProperty] = this[!ItemHeightProperty]
             };
 
-            if (this.ItemsSource is not null && this.GroupSelector is not null && this.scrollViewer is not null)
+            if (this.ItemsSource is not null && groupSelector is not null && this.scrollViewer is not null)
             {
                 // Group the items and apply ordering
-                IEnumerable<IGrouping<string, object>> groups = this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector);
+                IEnumerable<IGrouping<string, object>> groups = this.ItemsSource.Cast<object>().GroupBy(groupSelector);
                 IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(groups);
 
                 foreach (IGrouping<string, object> group in orderedGroups)
@@ -798,13 +847,14 @@ public class GroupedTileListBox : TemplatedControl
 
         int itemsPerRow = this.CalculateItemsPerRow();
 
-        if (!this.useGrouping || this.GroupSelector is null)
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        if (!this.useGrouping || groupSelector is null)
         {
             return currentIndex < itemsPerRow;
         }
 
         // Find the first group
-        IGrouping<object, IndexedItem>? firstGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).FirstOrDefault();
+        IGrouping<object, IndexedItem>? firstGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), groupSelector).FirstOrDefault();
         if (firstGroup is null)
         {
             return false;
@@ -833,14 +883,15 @@ public class GroupedTileListBox : TemplatedControl
 
         int itemsPerRow = this.CalculateItemsPerRow();
 
-        if (!this.useGrouping || this.GroupSelector is null)
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        if (!this.useGrouping || groupSelector is null)
         {
             int lastRowStart = CalculateLastRowStart(itemCount, itemsPerRow);
             return currentIndex >= lastRowStart;
         }
 
         // Find the last group
-        IGrouping<object, IndexedItem>? lastGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).LastOrDefault();
+        IGrouping<object, IndexedItem>? lastGroup = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), groupSelector).LastOrDefault();
         if (lastGroup == null)
         {
             return false;
@@ -876,12 +927,13 @@ public class GroupedTileListBox : TemplatedControl
             : Math.Min(itemCount - 1, currentIndex + offset);
 
         // If no grouping, use simple calculation
-        if (!this.useGrouping || this.GroupSelector is null)
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        if (!this.useGrouping || groupSelector is null)
         {
             return fallback;
         }
 
-        List<IGrouping<object, IndexedItem>> groups = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), this.GroupSelector).ToList();
+        List<IGrouping<object, IndexedItem>> groups = this.GetGroupedIndexedItems(this.ItemsSource.Cast<object>(), groupSelector).ToList();
 
         // Find current item's group and position within group
         foreach (IGrouping<object, IndexedItem> group in groups)
@@ -1002,10 +1054,10 @@ public class GroupedTileListBox : TemplatedControl
         this.visualToSourceMap = new List<object>(estimatedCount);
         this.sourceToVisualMap = new Dictionary<object, int>(estimatedCount);
 
-        if (this.useGrouping && this.GroupSelector is not null)
+        if (this.useGrouping && this.ResolveGroupSelector() is { } groupSelector)
         {
             // Group the items and apply ordering
-            IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(items.GroupBy(this.GroupSelector));
+            IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(items.GroupBy(groupSelector));
 
             // Add all items from ordered groups to List (this is the visual order)
             foreach (IGrouping<string, object> group in orderedGroups)
@@ -1131,14 +1183,15 @@ public class GroupedTileListBox : TemplatedControl
             return 0;
         }
 
-        if (!this.useGrouping || this.GroupSelector is null)
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        if (!this.useGrouping || groupSelector is null)
         {
             // Simple calculation for non-grouped mode
             int row = visualIndex / itemsPerRow;
             return row * (this.ItemHeight + this.ItemSpacing);
         }
 
-        IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(this.ItemsSource.Cast<object>().GroupBy(this.GroupSelector));
+        IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(this.ItemsSource.Cast<object>().GroupBy(groupSelector));
 
         double offset = 0;
         int itemsSoFar = 0;
@@ -1180,7 +1233,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Control? FindElementInGroupedLayout(int index)
     {
-        if (this.content is not StackPanel stackPanel || !this.useGrouping || this.GroupSelector is null)
+        if (this.content is not StackPanel stackPanel || !this.useGrouping || this.ResolveGroupSelector() is null)
         {
             return null;
         }
@@ -1388,6 +1441,59 @@ public class GroupedTileListBox : TemplatedControl
             .Index()
             .FirstOrDefault(x => ReferenceEquals(x.Item, item));
         return indexedItem is null ? -1 : index;
+    }
+
+    /// <summary>
+    /// Resolves the effective group selector: <see cref="GroupBinding"/> first, falling back to <see cref="GroupSelector"/>.
+    /// </summary>
+    private Func<object, string>? ResolveGroupSelector()
+    {
+        IBinding? binding = this.GetValue(GroupBindingProperty);
+        if (binding is not null)
+        {
+            if (this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding))
+            {
+                this.groupEvaluator = new BindingEvaluator(binding, this);
+                this.groupEvaluatorBinding = binding;
+            }
+
+            BindingEvaluator evaluator = this.groupEvaluator;
+            return item => evaluator.EvaluateAsString(item);
+        }
+
+        this.groupEvaluator = null;
+        this.groupEvaluatorBinding = null;
+
+#pragma warning disable CS0618
+        return this.GetValue(GroupSelectorProperty);
+#pragma warning restore CS0618
+    }
+
+    /// <summary>
+    /// Resolves the effective group-order selector: <see cref="GroupOrderBinding"/> first, falling back to <see cref="GroupOrderSelector"/>.
+    /// The binding is evaluated against the group key (string) as DataContext.
+    /// </summary>
+    private Func<string, int>? ResolveGroupOrderSelector()
+    {
+        IBinding? binding = this.GetValue(GroupOrderBindingProperty);
+        if (binding is not null)
+        {
+            if (this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding))
+            {
+                this.groupOrderEvaluator = new BindingEvaluator(binding, this);
+                this.groupOrderEvaluatorBinding = binding;
+            }
+
+            BindingEvaluator evaluator = this.groupOrderEvaluator;
+            return key => evaluator.EvaluateAs<int>(key);
+        }
+
+        this.groupOrderEvaluator = null;
+        this.groupOrderEvaluatorBinding = null;
+
+#pragma warning disable CS0618
+        return this.GetValue(GroupOrderSelectorProperty);
+#pragma warning restore CS0618
     }
 
     /// <summary>

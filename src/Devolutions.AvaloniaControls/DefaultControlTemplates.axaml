@@ -28,6 +28,7 @@
         <MergeResourceInclude Source="Controls/GroupedTileListBox/GroupedTileListBoxGroupHeader.axaml" />
 
         <MergeResourceInclude Source="Controls/GroupedListBox/GroupedListBox.axaml" />
+        <MergeResourceInclude Source="Controls/GroupedListBox/GroupedListBoxItem.axaml" />
 
         <MergeResourceInclude Source="Controls/EnumPicker/EnumPicker.axaml" />
       </ResourceDictionary.MergedDictionaries>

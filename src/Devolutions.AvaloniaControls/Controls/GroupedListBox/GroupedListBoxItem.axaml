@@ -1,0 +1,146 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        ControlTheme for the ToggleButton used as the group header inside GroupedListBoxItem.
+        The whole header is a single ToggleButton (clicking anywhere toggles expand/collapse).
+        Solid accent (blue) background, white bold text on the left, chevron region on the right
+        that visually behaves like an embedded button (background tints on pointerover/pressed)
+        but is not a separate control - the entire header is one click target.
+
+        Cross-template selectors (two /template/ hops) are forbidden in ControlThemes, so the
+        template uses a single Border (no nested ContentPresenter chrome) and all state styling
+        is expressed via single /template/ selectors against named elements in this template.
+    -->
+    <ControlTheme x:Key="GroupedListBoxGroupHeaderToggleTheme" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ToggleButton">
+                <Border Name="PART_HeaderBorder"
+                        Background="{TemplateBinding Background}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <ContentPresenter Grid.Column="0"
+                                          Margin="10 6"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                          TextElement.FontWeight="Bold"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left" />
+                        <Border Name="ChevronButton"
+                                Grid.Column="1"
+                                Background="Transparent"
+                                Width="32">
+                            <Path Name="HeaderChevron"
+                                  Width="10" Height="6"
+                                  Stretch="Uniform"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Data="M 0 0 L 5 6 L 10 0 Z"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  RenderTransformOrigin="50%,50%" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Chevron region hover/pressed: translucent white overlay over the accent background. -->
+        <Style Selector="^:pointerover /template/ Border#ChevronButton">
+            <Setter Property="Background" Value="#33FFFFFF" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#ChevronButton">
+            <Setter Property="Background" Value="#55FFFFFF" />
+        </Style>
+
+        <!-- Chevron rotation: down (0deg) when checked/expanded, right (-90deg) when collapsed. -->
+        <Style Selector="^ /template/ Path#HeaderChevron">
+            <Setter Property="RenderTransform">
+                <RotateTransform Angle="0" />
+            </Setter>
+        </Style>
+        <Style Selector="^:not(:checked) /template/ Path#HeaderChevron">
+            <Setter Property="RenderTransform">
+                <RotateTransform Angle="-90" />
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type GroupedListBoxItem}" TargetType="GroupedListBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="Padding" Value="8 4" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="3" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Vertical" Spacing="0">
+                    <ToggleButton Name="PART_GroupHeader"
+                                  Margin="0 10 0 0"
+                                  Theme="{StaticResource GroupedListBoxGroupHeaderToggleTheme}"
+                                  IsVisible="{TemplateBinding IsGroupLeader}"
+                                  IsChecked="{Binding IsGroupExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                  Foreground="{TemplateBinding GroupForeground}"
+                                  Content="{TemplateBinding GroupHeaderText}" />
+
+                    <Border Name="PART_Border"
+                            IsVisible="{TemplateBinding IsGroupExpanded}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <ContentPresenter Name="PART_LeftPresenter"
+                                              Grid.Column="0"
+                                              Margin="0 0 8 0"
+                                              IsVisible="{TemplateBinding InnerLeftContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding InnerLeftContent}" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Grid.Column="1"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <ContentPresenter Name="PART_RightPresenter"
+                                              Grid.Column="2"
+                                              Margin="8 0 0 0"
+                                              IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding InnerRightContent}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!--
+            Pointer-over scoped to the content border only (not the leader's header above
+            it) so hovering the group header doesn't tint the item row underneath.
+        -->
+        <Style Selector="^ /template/ Border#PART_Border:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+        </Style>
+
+        <!-- Selected state -->
+        <Style Selector="^:selected /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Border:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

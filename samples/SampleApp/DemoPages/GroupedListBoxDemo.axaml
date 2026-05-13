@@ -109,6 +109,7 @@
           <GroupedListBox Grid.Column="0"
                                    ItemsSource="{Binding EmptyGroupItems}"
                                    SelectedItem="{Binding SelectedEmptyGroupItem}"
+                                   GroupForeground="#1a5bb4"
                                    GroupBinding="{Binding Category}"
                                    GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
                                    DoubleTapped="EmptyGroupListBox_OnDoubleTapped">

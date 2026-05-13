@@ -37,6 +37,7 @@
     <MergeResourceInclude Source="TagInput.axaml" />
     <MergeResourceInclude Source="TextBlock.axaml" />
     <MergeResourceInclude Source="TextBox.axaml" />
+    <MergeResourceInclude Source="TimePickerUpDown.axaml" />
     <MergeResourceInclude Source="Window.axaml" />
   </ResourceDictionary.MergedDictionaries>
 

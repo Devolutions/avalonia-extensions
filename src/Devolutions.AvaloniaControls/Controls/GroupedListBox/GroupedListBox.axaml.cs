@@ -1,7 +1,6 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Metadata;
@@ -26,6 +24,12 @@ using Devolutions.AvaloniaControls.Helpers;
 /// <see cref="GroupedListBoxItem"/> instances appear under the <see cref="GroupedListBox"/>
 /// in the logical tree, which matches the convention used by built-in controls such as
 /// <c>ListBox</c> and <c>TabControl</c>.
+/// </para>
+/// <para>
+/// Grouping is mandatory: callers MUST set either <see cref="GroupBinding"/> (preferred,
+/// XAML-friendly) or the legacy <see cref="GroupSelector"/> code-only delegate. Realizing a
+/// container without a configured grouping throws <see cref="InvalidOperationException"/>; if you
+/// need an ungrouped flat list, use a regular <see cref="ListBox"/> instead.
 /// </para>
 /// <para>
 /// By default the user's item order is preserved verbatim (transparent passthrough of both
@@ -59,13 +63,22 @@ public class GroupedListBox : ListBox
     public static readonly StyledProperty<IBrush?> GroupForegroundProperty =
         AvaloniaProperty.Register<GroupedListBox, IBrush?>(nameof(GroupForeground));
 
-    /// <summary>Per-group expansion state, keyed by group key. Persisted across container recycling.</summary>
+    /// <summary>
+    /// Display name to use for the empty/null group key. When <c>null</c> (the default), items in
+    /// the empty group render as a bare list with no header (the leader container suppresses its
+    /// header chrome and the items always show). When set to any non-null string, the empty group
+    /// renders a normal collapsible header with that text.
+    /// </summary>
+    public static readonly StyledProperty<string?> EmptyGroupNameProperty =
+        AvaloniaProperty.Register<GroupedListBox, string?>(nameof(EmptyGroupName));
+
+    // Per-group expansion state, keyed by group key. Persisted across container recycling.
     private readonly Dictionary<string, bool> expandedByKey = new(StringComparer.Ordinal);
 
-    /// <summary>Cached per-item group-key map for the current items collection.</summary>
+    // Cached per-item group-key map for the current items collection.
     private readonly Dictionary<int, string> groupKeyByIndex = [];
 
-    /// <summary>Index of the leader container per group key (lowest item index for that key).</summary>
+    // Index of the leader container per group key (lowest item index for that key).
     private readonly Dictionary<string, int> leaderIndexByKey = new(StringComparer.Ordinal);
 
     private BindingEvaluator? groupEvaluator;
@@ -83,6 +96,7 @@ public class GroupedListBox : ListBox
         GroupOrderAlphabeticalProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.OnOrderingChanged());
         GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.OnOrderingChanged());
         GroupOrderBindingProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.OnOrderingChanged());
+        EmptyGroupNameProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.RefreshAllContainers());
     }
 
     public GroupedListBox()
@@ -136,6 +150,12 @@ public class GroupedListBox : ListBox
     {
         get => this.GetValue(GroupForegroundProperty);
         set => this.SetValue(GroupForegroundProperty, value);
+    }
+
+    public string? EmptyGroupName
+    {
+        get => this.GetValue(EmptyGroupNameProperty);
+        set => this.SetValue(EmptyGroupNameProperty, value);
     }
 
     protected override Type StyleKeyOverride => typeof(GroupedListBox);
@@ -243,11 +263,11 @@ public class GroupedListBox : ListBox
         foreach (object? item in this.Items)
         {
             if (item is null) { i++; continue; }
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             string key = selector(item) ?? string.Empty;
             this.groupKeyByIndex[i] = key;
-            if (!this.leaderIndexByKey.ContainsKey(key))
+            if (this.leaderIndexByKey.TryAdd(key, i))
             {
-                this.leaderIndexByKey[key] = i;
                 if (!this.expandedByKey.ContainsKey(key))
                     this.expandedByKey[key] = this.GroupsExpandedByDefault;
             }
@@ -268,28 +288,45 @@ public class GroupedListBox : ListBox
     {
         if (!this.groupKeyByIndex.TryGetValue(index, out string? key))
         {
-            // No grouping configured.
-            container.IsGroupLeader = false;
-            container.GroupKey = null;
-            container.GroupHeaderText = null;
-            container.SetGroupExpandedSilently(true);
-            container.GroupForeground = this.GroupForeground;
-            container.SetGroupExpansionCallback(null);
-            container.IsVisible = true;
-            return;
+            // Grouping is mandatory: a GroupSelector or GroupBinding must be supplied.
+            // (RecomputeGroupMaps leaves the map empty when no selector is configured.)
+#pragma warning disable CS0618
+            throw new InvalidOperationException(
+                $"{nameof(GroupedListBox)} requires either {nameof(GroupBinding)} or {nameof(GroupSelector)} to be set. " +
+                "Grouping is not optional - use a regular ListBox for an ungrouped list.");
+#pragma warning restore CS0618
         }
 
         bool isLeader = this.leaderIndexByKey.TryGetValue(key, out int leaderIdx) && leaderIdx == index;
-        bool isExpanded = this.expandedByKey.TryGetValue(key, out bool exp) ? exp : this.GroupsExpandedByDefault;
+
+        // Empty/null group key with no EmptyGroupName configured = headerless group: items render
+        // as a bare list. Suppress the leader's header chrome (IsGroupLeader=false) and pin the
+        // expansion state to true so the items always show. Non-leader items in the empty group
+        // remain visible for the same reason.
+        string? emptyName = this.EmptyGroupName;
+        bool isEmptyHeaderless = key.Length == 0 && emptyName is null;
+
+        bool isExpanded = isEmptyHeaderless || (this.expandedByKey.TryGetValue(key, out bool exp) 
+            ? exp 
+            : this.GroupsExpandedByDefault);
 
         container.GroupKey = key;
-        container.GroupHeaderText = key;
-        container.IsGroupLeader = isLeader;
+        container.GroupHeaderText = key.Length == 0 ? emptyName : key;
+        container.IsGroupLeader = isLeader && !isEmptyHeaderless;
         container.SetGroupExpandedSilently(isExpanded);
         container.GroupForeground = this.GroupForeground;
-        container.SetGroupExpansionCallback(isLeader ? this.OnGroupExpansionToggled : null);
+        container.SetGroupExpansionCallback(
+            isLeader && !isEmptyHeaderless ? this.OnGroupExpansionToggled : null);
         // Leader stays visible (its header lets the user re-expand). Non-leaders disappear when collapsed.
-        container.IsVisible = isLeader || isExpanded;
+        // Headerless empty group: every container is always visible.
+        container.IsVisible = isEmptyHeaderless || isLeader || isExpanded;
+
+        // The Items are offset 10px negatively to the top, and each groups have a top margin of 10px.
+        // In such case where the first group is a empty group instead of a collapsible header, we need
+        // to add back this 10px.
+        container.Margin = isEmptyHeaderless && index == 0
+            ? new Thickness(0, 10, 0, 0)
+            : default;
     }
 
     private void PropagateGroupExpansion(string key, bool isExpanded)
@@ -314,9 +351,13 @@ public class GroupedListBox : ListBox
         int idx = 0;
         foreach (object? it in this.Items)
         {
-            if (it is null) { idx++; continue; }
-            snapshot.Add((it, selector(it) ?? string.Empty, idx));
-            idx++;
+            if (it is not null)
+            {
+                // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                snapshot.Add((it, selector(it) ?? string.Empty, idx));
+            }
+
+            ++idx;
         }
 
         // Compute desired group order.
@@ -324,11 +365,14 @@ public class GroupedListBox : ListBox
         IOrderedEnumerable<IGrouping<string, (object item, string key, int originalIndex)>> grouped =
             orderFn is { } fn
                 ? snapshot.GroupBy(t => t.key).OrderBy(g => fn(g.Key))
-                : snapshot.GroupBy(t => t.key).OrderBy(g => g.Key, StringComparer.Ordinal);
+                : snapshot.GroupBy(t => t.key).OrderBy(static g => g.Key, StringComparer.Ordinal);
 
         if (this.GroupOrderAlphabetical && orderFn is not null)
         {
-            grouped = snapshot.GroupBy(t => t.key).OrderBy(g => orderFn(g.Key)).ThenBy(g => g.Key, StringComparer.Ordinal);
+            grouped = snapshot
+                .GroupBy(static t => t.key)
+                .OrderBy(g => orderFn(g.Key))
+                .ThenBy(static g => g.Key, StringComparer.Ordinal);
         }
         else if (this.GroupOrderAlphabetical)
         {
@@ -340,7 +384,9 @@ public class GroupedListBox : ListBox
         {
             // Within a group, preserve original order.
             foreach ((object item, _, _) in g.OrderBy(t => t.originalIndex))
+            {
                 sorted.Add(item);
+            }
         }
 
         // Detect no-op.
@@ -366,7 +412,10 @@ public class GroupedListBox : ListBox
             else
             {
                 this.Items.Clear();
-                foreach (object o in sorted) this.Items.Add(o);
+                foreach (object o in sorted)
+                {
+                    this.Items.Add(o);
+                }
             }
         }
         finally
@@ -386,7 +435,7 @@ public class GroupedListBox : ListBox
                 this.groupEvaluatorBinding = binding;
             }
             BindingEvaluator e = this.groupEvaluator;
-            return item => e.EvaluateAsString(item);
+            return e.EvaluateAsString;
         }
 
         this.groupEvaluator = null;

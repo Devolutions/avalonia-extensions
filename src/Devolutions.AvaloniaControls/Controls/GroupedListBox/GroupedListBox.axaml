@@ -21,14 +21,14 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         ClipToBounds="True">
-                    <SmallScrollViewer Name="PART_ScrollViewer"
+                    <ScrollViewer Name="PART_ScrollViewer"
                                   Padding="{TemplateBinding Padding}"
                                   HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Visible">
                         <ItemsPresenter Name="PART_ItemsPresenter"
                                         Margin="0 -10 0 0"
                                         ItemsPanel="{TemplateBinding ItemsPanel}" />
-                    </SmallScrollViewer>
+                    </ScrollViewer>
                 </Border>
             </ControlTemplate>
         </Setter>

@@ -28,14 +28,6 @@ public partial class GroupedListBoxDemo : UserControl
         }
     }
 
-    private void FlatListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        if (this.DataContext is GroupedListBoxViewModel vm)
-        {
-            vm.DoubleClickedFlatItem = vm.SelectedFlatItem;
-        }
-    }
-
     private void LargeListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         if (this.DataContext is GroupedListBoxViewModel vm)

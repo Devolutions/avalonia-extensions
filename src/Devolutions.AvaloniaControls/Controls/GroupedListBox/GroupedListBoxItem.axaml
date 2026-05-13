@@ -39,7 +39,9 @@
                         <Border Name="ChevronButton"
                                 Grid.Column="1"
                                 Background="Transparent"
-                                Width="32">
+                                CornerRadius="4"
+                                Margin="4"
+                                Width="24">
                             <Path Name="HeaderChevron"
                                   Width="10" Height="6"
                                   Stretch="Uniform"

@@ -20,9 +20,6 @@ public partial class GroupedListBoxViewModel : ObservableObject
     private FoodItem? selectedEmptyGroupItem;
 
     [ObservableProperty]
-    private FoodItem? selectedFlatItem;
-
-    [ObservableProperty]
     private FoodItem? selectedLargeItem;
 
     // Double-clicked items per scenario.
@@ -31,9 +28,6 @@ public partial class GroupedListBoxViewModel : ObservableObject
 
     [ObservableProperty]
     private FoodItem? doubleClickedEmptyGroupItem;
-
-    [ObservableProperty]
-    private FoodItem? doubleClickedFlatItem;
 
     [ObservableProperty]
     private FoodItem? doubleClickedLargeItem;
@@ -81,24 +75,7 @@ public partial class GroupedListBoxViewModel : ObservableObject
         new FoodItem("Pretzels", "Snacks"),
     };
 
-    /// <summary>Scenario 3: ungrouped flat list.</summary>
-    public List<FoodItem> FlatItems { get; } = new()
-    {
-        new FoodItem("Pizza", "Fast Food"),
-        new FoodItem("Burger", "Fast Food"),
-        new FoodItem("Pasta", "Italian"),
-        new FoodItem("Sushi", "Japanese"),
-        new FoodItem("Tacos", "Mexican"),
-        new FoodItem("Salad", "Healthy"),
-        new FoodItem("Soup", "Comfort"),
-        new FoodItem("Sandwich", "Quick"),
-        new FoodItem("Steak", "Premium"),
-        new FoodItem("Rice", "Staple"),
-        new FoodItem("Bread", "Bakery"),
-        new FoodItem("Cheese", "Dairy"),
-    };
-
-    /// <summary>Scenario 4: large dataset (500 items, 3 categories).</summary>
+    /// <summary>Scenario 3: large dataset (500 items, 3 categories).</summary>
     public List<FoodItem> LargeItems { get; } = GenerateLargeItems();
 
     /// <summary>Sort selector: "Meats &gt; Fruits &gt; Vegetables" used in Scenario 1.</summary>

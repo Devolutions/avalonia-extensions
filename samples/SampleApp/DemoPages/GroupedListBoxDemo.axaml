@@ -109,7 +109,7 @@
           <GroupedListBox Grid.Column="0"
                                    ItemsSource="{Binding EmptyGroupItems}"
                                    SelectedItem="{Binding SelectedEmptyGroupItem}"
-                                   GroupForeground="#1a5bb4"
+                                   GroupForeground="#266fd2"
                                    GroupBinding="{Binding Category}"
                                    GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
                                    DoubleTapped="EmptyGroupListBox_OnDoubleTapped">
@@ -136,69 +136,9 @@
         </Grid>
       </StackPanel>
 
-      <!-- Scenario 3: Flat List (No Grouping) -->
+      <!-- Scenario 3: Large Dataset -->
       <StackPanel Spacing="10">
-        <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Flat List (No Grouping)</TextBlock>
-        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          Items displayed in a flat list without any grouping (no GroupBinding).
-        </TextBlock>
-
-        <Border BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
-                Padding="8"
-                CornerRadius="4"
-                Background="{DynamicResource LayoutBackgroundLowBrush}">
-          <StackPanel Spacing="4">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="Selected:" FontWeight="SemiBold"/>
-              <TextBlock Text="{Binding SelectedFlatItem.Name, FallbackValue='(none)'}" />
-              <TextBlock Text="-" IsVisible="{Binding SelectedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-              <TextBlock Text="{Binding SelectedFlatItem.Category}"
-                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                         IsVisible="{Binding SelectedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="Double-clicked:" FontWeight="SemiBold"/>
-              <TextBlock Text="{Binding DoubleClickedFlatItem.Name, FallbackValue='(none)'}" />
-              <TextBlock Text="-" IsVisible="{Binding DoubleClickedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-              <TextBlock Text="{Binding DoubleClickedFlatItem.Category}"
-                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                         IsVisible="{Binding DoubleClickedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-            </StackPanel>
-          </StackPanel>
-        </Border>
-
-        <Grid Height="400" ColumnDefinitions="2*,Auto,*">
-          <GroupedListBox Grid.Column="0"
-                                   ItemsSource="{Binding FlatItems}"
-                                   SelectedItem="{Binding SelectedFlatItem}"
-                                   DoubleTapped="FlatListBox_OnDoubleTapped">
-            <GroupedListBox.ItemTemplate>
-              <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="4">
-                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                  <TextBlock Text="{Binding Category}"
-                             FontSize="11"
-                             VerticalAlignment="Center"
-                             Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
-                </StackPanel>
-              </DataTemplate>
-            </GroupedListBox.ItemTemplate>
-          </GroupedListBox>
-
-          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
-
-          <TextBlock Grid.Column="2"
-                     Text="← Drag splitter to resize"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Center"
-                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
-        </Grid>
-      </StackPanel>
-
-      <!-- Scenario 4: Large Dataset -->
-      <StackPanel Spacing="10">
-        <TextBlock FontWeight="Bold" FontSize="16">Scenario 4: Large Dataset</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Large Dataset</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
           500 items across 3 categories (Alpha ×200, Beta ×200, Gamma ×100). Tests behavior with many items per group.
         </TextBlock>

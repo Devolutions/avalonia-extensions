@@ -126,6 +126,7 @@
     <Setter Property="CaretBrush" Value="{WindowActiveResourceToggler TextControlForeground, TransparentBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorder}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextControlSelectionForegroundBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
@@ -266,15 +267,23 @@
         <Template>
           <ToggleButton Theme="{StaticResource FluentTextBoxToggleButton}"
                         IsChecked="{Binding $parent[TextBox].RevealPassword, Mode=TwoWay}"
-                        Padding="0"
+                        Padding="8 4"
                         CornerRadius="4"
                         ClipToBounds="True">
             <Panel>
               <PathIcon Data="{StaticResource PasswordBoxRevealButtonData}"
                         Height="8" Width="12"
+                        Foreground="{BindingToggler
+                                      {Binding $parent[ToggleButton].IsChecked},
+                                      {DynamicResource TextControlButtonForegroundPressed},
+                                      {DynamicResource TextControlButtonForeground}}"
                         IsVisible="{Binding !$parent[ToggleButton].IsChecked}" />
               <PathIcon Data="{StaticResource PasswordBoxHideButtonData}"
                         Height="12" Width="12"
+                        Foreground="{BindingToggler
+                                      {Binding $parent[ToggleButton].IsChecked},
+                                      {DynamicResource TextControlButtonForegroundPressed},
+                                      {DynamicResource TextControlButtonForeground}}"
                         IsVisible="{Binding $parent[ToggleButton].IsChecked}" />
             </Panel>
           </ToggleButton>

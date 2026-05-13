@@ -21,6 +21,11 @@
             ClockIdentifier="24HourClock"
             SelectedTime="00:00:00"
             UseSeconds="True" />
+          <controls:TimePickerUpDown
+            ButtonSpinnerLocation="Left"
+            ClockIdentifier="24HourClock"
+            SelectedTime="00:00:00"
+            UseSeconds="True" />
         </StackPanel>
       </Border>
     </design:ThemePreviewer>
@@ -32,13 +37,10 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
     <Setter Property="Cursor" Value="IBeam" />
-    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="Padding" Value="0" />
-    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
     <Setter Property="TextAlignment" Value="Center" />

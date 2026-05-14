@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
-  xmlns:system="clr-namespace:System;assembly=System.Runtime">
+  xmlns:system="clr-namespace:System;assembly=System.Runtime"
+  xmlns:attachedProperties="clr-namespace:Devolutions.AvaloniaControls.AttachedProperties;assembly=Devolutions.AvaloniaControls">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -197,10 +198,21 @@
               BorderBrush="{DynamicResource ComboBoxBorderBrush}"
               BoxShadow="{DynamicResource ComboBoxBoxShadow}"
               CornerRadius="{TemplateBinding CornerRadius}">
-              <Grid ColumnDefinitions="*,Auto">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                <ItemsControl
+                  Grid.Column="0"
+                  ItemsSource="{Binding (attachedProperties:ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (attachedProperties:ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}"
+                  Margin="8 2 0 2">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
                 <TextBlock
                   Name="PlaceholderTextBlock"
-                  Grid.Column="0"
+                  Grid.Column="1"
                   Margin="{TemplateBinding Padding}"
                   Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -214,7 +226,7 @@
                   </TextBlock.IsVisible>
                 </TextBlock>
                 <ContentControl
-                  Grid.Column="0"
+                  Grid.Column="1"
                   Margin="{TemplateBinding Padding}"
                   Foreground="{TemplateBinding Foreground}"
                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -223,7 +235,7 @@
                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                   IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
                 <TextBox Name="PART_EditableTextBox"
-                         Grid.Column="0"
+                         Grid.Column="1"
                          Theme="{StaticResource ComboBoxEditableTextBox}"
                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -235,9 +247,20 @@
                          MinHeight="0"
                          FocusAdorner="{x:Null}"
                          IsVisible="{TemplateBinding IsEditable}" />
+                <ItemsControl
+                  Grid.Column="2"
+                  ItemsSource="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}"
+                  Margin="2">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
                 <ToggleButton
                   Name="Toggle"
-                  Grid.Column="1"
+                  Grid.Column="3"
                   Theme="{StaticResource PopUpToggleButton}"
                   Width="16"
                   Height="16"
@@ -245,6 +268,17 @@
                   ClickMode="Press"
                   Focusable="False"
                   IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" />
+                <ItemsControl
+                  Grid.Column="4"
+                  ItemsSource="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}"
+                  Margin="0 2 4 2">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
               </Grid>
             </Border>
             <Border Name="FocusBorderElement"

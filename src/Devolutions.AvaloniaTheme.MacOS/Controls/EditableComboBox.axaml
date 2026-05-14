@@ -326,7 +326,6 @@
                       IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                       <ItemsPresenter
                         Name="PART_ItemsPresenter"
-                        Margin="{DynamicResource AutoCompleteListPadding}"
                         ItemsPanel="{TemplateBinding ItemsPanel}">
                         <ItemsPresenter.Styles>
                           <Style Selector="StackPanel">

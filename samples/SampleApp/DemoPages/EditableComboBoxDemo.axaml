@@ -375,7 +375,6 @@
                           ItemsSource="{Binding LargeItemsList}"
                           AllowCustomValue="False"
                           Mode="Filter"
-                          MaxDropDownHeight="200"
                           VerticalAlignment="Top"
                           Margin="10 0 20 0" />
         <TextBlock Grid.Column="1" Grid.Row="22" Margin="10 4 20 15"

@@ -164,7 +164,8 @@
   <ControlTheme x:Key="{x:Type EditableComboBox+InnerComboBox}"
                 TargetType="EditableComboBox+InnerComboBox">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="MaxDropDownHeight" Value="504" />
+    <Setter Property="MaxDropDownHeight"
+            Value="{Binding MaxDropDownHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Foreground"
             Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="Background"

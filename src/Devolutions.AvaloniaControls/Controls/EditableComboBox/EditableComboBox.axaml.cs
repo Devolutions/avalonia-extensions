@@ -94,7 +94,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         AvaloniaProperty.Register<EditableComboBox, double>(nameof(MaxDropDownWidth), 500);
 
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
-        AvaloniaProperty.Register<EditableComboBox, double>(nameof(MaxDropDownHeight), 200);
+        AvaloniaProperty.Register<EditableComboBox, double>(nameof(MaxDropDownHeight), 504);
 
     public static readonly StyledProperty<EditableComboBoxMode> ModeProperty =
         AvaloniaProperty.Register<EditableComboBox, EditableComboBoxMode>(nameof(Mode));

@@ -562,7 +562,6 @@
 
     <Setter Property="Padding" Value="10 0 0 0" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="MaxDropDownHeight" Value="504" />
     <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource EditableComboBoxBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />

@@ -126,6 +126,17 @@
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" />
             <DockPanel HorizontalAlignment="Stretch">
+              <ItemsControl DockPanel.Dock="Right"
+                            Margin="0 0 4 0"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
               <Border Name="DropDownGlyphBackground"
                       DockPanel.Dock="Right"
                       Background="Transparent"
@@ -144,6 +155,28 @@
                           Foreground="{TemplateBinding Foreground}"
                           Data="{StaticResource ChevronPath}" />
               </Border>
+              <ItemsControl DockPanel.Dock="Right"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}"
+                            Margin="4 2 0 2">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
+              <ItemsControl DockPanel.Dock="Left"
+                            Margin="5 2 0 2"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
 
               <TextBlock Name="PlaceholderTextBlock"
                          FontSize="{TemplateBinding FontSize}"

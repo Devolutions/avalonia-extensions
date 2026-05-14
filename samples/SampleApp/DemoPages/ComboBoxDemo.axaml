@@ -20,7 +20,7 @@
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-        <Grid ColumnDefinitions="Auto 190 190" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+        <Grid ColumnDefinitions="Auto 240 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
           <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
             <Bold>ComboBox: </Bold>
           </TextBlock>
@@ -51,6 +51,26 @@
             <ComboBoxItem>Option 3</ComboBoxItem>
 
           </ComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Inner content slots:
+            <LineBreak />
+            (attached properties)
+          </TextBlock>
+          <ComboBox Grid.Column="1" Grid.Row="4" PlaceholderText="Inner slots" VerticalAlignment="Top" Margin="10 0 20 20">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem>Option 2</ComboBoxItem>
+            <ComboBoxItem>Option 3</ComboBoxItem>
+            <ComboBoxContent.InnerLeftContent>
+              <Border Width="16" Height="16" Background="Green" CornerRadius="8" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerLeftContent>
+            <ComboBoxContent.InnerLeftOfDropDownArrowContent>
+              <Border Width="16" Height="16" Background="Orange" CornerRadius="8" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerLeftOfDropDownArrowContent>
+            <ComboBoxContent.InnerRightContent>
+              <TextBlock Text="kg" Margin="2 0" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerRightContent>
+          </ComboBox>
+
           <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
             - Scrolling options list:
             <LineBreak />

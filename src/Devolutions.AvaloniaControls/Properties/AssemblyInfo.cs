@@ -4,3 +4,4 @@ using Avalonia.Metadata;
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Devolutions.AvaloniaControls.MarkupExtensions")]
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Devolutions.AvaloniaControls.Controls")]
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Devolutions.AvaloniaControls.Behaviors")]
+[assembly: XmlnsDefinition("https://github.com/avaloniaui", "Devolutions.AvaloniaControls.AttachedProperties")]

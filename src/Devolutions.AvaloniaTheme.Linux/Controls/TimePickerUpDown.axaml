@@ -211,7 +211,7 @@
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Left] /template/ StackPanel#PART_TimeContent">
-      <Setter Property="Margin" Value="1,0,11,0" />
+      <Setter Property="Margin" Value="7,0,5,0" />
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Right] /template/ StackPanel#PART_TimeContent">
@@ -221,10 +221,6 @@
     <Style Selector="^ /template/ TextBox.segment-box">
       <Setter Property="MinWidth" Value="18" />
       <Setter Property="Width" Value="18" />
-    </Style>
-
-    <Style Selector="^ /template/ TextBlock.segment-separator">
-      <Setter Property="Margin" Value="0 0 -1 0" />
     </Style>
 
     <Style Selector="^ /template/ TextBox.period-box">

@@ -21,6 +21,11 @@
             ClockIdentifier="24HourClock"
             SelectedTime="00:00:00"
             UseSeconds="True" />
+          <controls:TimePickerUpDown
+            ButtonSpinnerLocation="Left"
+            ClockIdentifier="24HourClock"
+            SelectedTime="00:00:00"
+            UseSeconds="True" />
         </StackPanel>
       </Border>
     </design:ThemePreviewer>
@@ -32,13 +37,10 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
     <Setter Property="Cursor" Value="IBeam" />
-    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="Padding" Value="0" />
-    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
     <Setter Property="TextAlignment" Value="Center" />
@@ -209,7 +211,7 @@
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Left] /template/ StackPanel#PART_TimeContent">
-      <Setter Property="Margin" Value="1,0,11,0" />
+      <Setter Property="Margin" Value="7,0,5,0" />
     </Style>
 
     <Style Selector="^[ButtonSpinnerLocation=Right] /template/ StackPanel#PART_TimeContent">
@@ -219,10 +221,6 @@
     <Style Selector="^ /template/ TextBox.segment-box">
       <Setter Property="MinWidth" Value="18" />
       <Setter Property="Width" Value="18" />
-    </Style>
-
-    <Style Selector="^ /template/ TextBlock.segment-separator">
-      <Setter Property="Margin" Value="0 0 -1 0" />
     </Style>
 
     <Style Selector="^ /template/ TextBox.period-box">

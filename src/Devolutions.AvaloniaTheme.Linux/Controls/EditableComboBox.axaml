@@ -1,0 +1,11 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type EditableComboBox}"
+                TargetType="EditableComboBox"
+                BasedOn="{StaticResource {x:Type EditableComboBox}}">
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextControlSelectionForegroundBrush}" />
+  </ControlTheme>
+
+</ResourceDictionary>

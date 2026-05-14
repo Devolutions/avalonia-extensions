@@ -8,7 +8,7 @@
 
   <Grid Margin="20"
         ColumnDefinitions="Auto, Auto, Auto"
-        RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+        RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
         ColumnSpacing="20"
         RowSpacing="12">
 
@@ -20,6 +20,7 @@
     <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Error:</TextBlock>
     <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">With seconds:</TextBlock>
     <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">24-hour + seconds:</TextBlock>
+    <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center">SpinnerPosition Left:</TextBlock>
 
     <controls:TimePickerUpDown Grid.Row="0"
                                Grid.Column="1"
@@ -60,6 +61,12 @@
                                ClockIdentifier="24HourClock"
                                UseSeconds="True"
                                SelectedTime="{Binding TwentyFourHourSecondsSelectedTime}" />
+    <controls:TimePickerUpDown Grid.Row="8"
+                               Grid.Column="1"
+                               ButtonSpinnerLocation="Left"
+                               ClockIdentifier="24HourClock"
+                               SelectedTime="00:00:00"
+                               UseSeconds="True" />
 
     <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
                Text="{Binding DefaultSelectedTimeDisplay}" />

@@ -134,6 +134,7 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="CaretBrush" Value="{WindowActiveResourceToggler TextControlForeground, TransparentBrush}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextControlSelectionForegroundBrush}" />
     <Setter Property="Cursor" Value="IBeam" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />

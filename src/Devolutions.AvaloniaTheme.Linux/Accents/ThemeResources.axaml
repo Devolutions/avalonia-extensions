@@ -9,6 +9,7 @@
     <ResourceDictionary x:Key='Light'>
       <Color x:Key='ForegroundColor'>#050505</Color>
       <Color x:Key='BackgroundColor'>#ffffff</Color>
+      <Color x:Key='AccentForegroundColor'>#ffffff</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#fcfcfc</Color>
       <Color x:Key='BorderColor'>#d1d1d1</Color>
 
@@ -77,7 +78,7 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
-      
+
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#F1F1F1" />
 
     </ResourceDictionary>
@@ -90,6 +91,7 @@
 
       <Color x:Key='ForegroundColor'>#fcfcfc</Color>
       <Color x:Key='BackgroundColor'>#2c2c2c</Color>
+      <Color x:Key='AccentForegroundColor'>#ffffff</Color>
       <Color x:Key='ScrollControlBackgroundColor'>#272727</Color>
       <Color x:Key='BorderColor'>#181818</Color>
 
@@ -137,7 +139,7 @@
 
       <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1D1D1D" />
       <SolidColorBrush x:Key="PopupBorderBrush" Color="#484848" />
-      
+
       <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#1b1d1a" />
       <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#494a47" />
       <Thickness x:Key="MenuFlyoutItemChevronMargin">0 0 7 0</Thickness>
@@ -161,7 +163,7 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
-      
+
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#363636" />
 
     </ResourceDictionary>
@@ -185,8 +187,8 @@
   <SolidColorBrush x:Key='ForegroundHighBrush' Color="{DynamicResource ForegroundColor}" />
   <SolidColorBrush x:Key='ForegroundLowBrush' Color="{DynamicResource ForegroundColor}" Opacity="0.6" />
   <SolidColorBrush x:Key='ForegroundInactiveBrush' Color="{DynamicResource ForegroundColor}" Opacity="0.6" />
-  <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="#ffffff" />
-  <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="#ffffff" Opacity="0.6" />
+  <SolidColorBrush x:Key='AccentForegroundHighBrush' Color="{DynamicResource AccentForegroundColor}" />
+  <SolidColorBrush x:Key='AccentForegroundInactiveBrush' Color="{DynamicResource AccentForegroundColor}" Opacity="0.6" />
   <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush" Color="{DynamicResource ErrorTextColor}" />
   <SolidColorBrush x:Key="SystemControlErrorBorderBrush" Color="{DynamicResource ErrorTextColor}" />
 
@@ -202,6 +204,7 @@
   <SolidColorBrush x:Key='TextControlBorder' Color="{DynamicResource InputBorderColor}" />
   <SolidColorBrush x:Key='TextControlBackground' Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key='TextControlBackgroundFocused' Color="{DynamicResource InputBackgroundColor}" />
+  <StaticResource x:Key='TextControlSelectionForegroundBrush' ResourceKey='AccentForegroundHighBrush' />
 
   <StaticResource x:Key='CheckBoxBorderBrushUnchecked' ResourceKey='InputBorder' />
   <StaticResource x:Key='CheckBoxCheckBackgroundStrokeUnchecked' ResourceKey='InputBorder' />

@@ -246,7 +246,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress" />
+                  <controls:SampleItemHeader Title="TagInput" ApplicableTo="MacClassic, DevExpress, Linux" />
                 </TabItem.Header>
                 <demoPages:TagInputDemo />
               </TabItem>

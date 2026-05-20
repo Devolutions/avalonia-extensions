@@ -16,6 +16,15 @@
     <design:ThemePreviewer>
       <Border Padding="20">
         <StackPanel Orientation="Vertical" Spacing="4" Width="250" Height="600">
+  <Expander Classes="borderless">
+    <Expander.Header>
+      <TextBlock Foreground="Gray">
+        <Bold>Borderless</Bold>
+      </TextBlock>
+    </Expander.Header>
+    <TextBlock>Expanded content</TextBlock>
+  </Expander>
+
           <Expander Header="Expand Down (default)">
             <TextBlock>Expanded content</TextBlock>
           </Expander>
@@ -74,6 +83,14 @@
   <Thickness x:Key="ExpanderChevronBorderThickness">0</Thickness>
   <Thickness x:Key="ExpanderChevronMargin">23,0,19,0</Thickness>
   <x:Double x:Key="ExpanderChevronWidth">10</x:Double>
+  <Thickness x:Key="BorderlessExpanderHeaderPadding">3 0 0 0</Thickness>
+  <Thickness x:Key="BorderlessExpanderChevronMargin">0,0,10,0</Thickness>
+  <BoxShadows x:Key="ExpanderHeaderBoxShadow">0 1 1 1 #16000000</BoxShadows>
+  <BoxShadows x:Key="ExpanderHeaderExpandedBoxShadow">0 0 1 1 #16000000</BoxShadows>
+  <BoxShadows x:Key="NoBoxShadow">0 0 0 0 #00000000</BoxShadows>
+  <Thickness x:Key="ExpanderRootPanelMargin">1 0 1 2</Thickness>
+  <Thickness x:Key="ExpanderRootPanelExpandedMargin">1 0</Thickness>
+  <Thickness x:Key="ZeroThickness">0</Thickness>
 
   <!-- Content -->
   <Thickness x:Key="ExpanderContentPadding">16</Thickness>
@@ -83,8 +100,17 @@
   <Thickness x:Key="ExpanderContentDownBorderThickness">1,0,1,1</Thickness>
 
   <ControlTheme x:Key="ExpanderToggleButtonTheme" TargetType="ToggleButton">
-    <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderBrush}" />
+    <Setter Property="Background">
+      <Setter.Value>
+        <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                      ConverterParameter="borderless">
+          <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+          <Binding Source="{StaticResource TransparentBrush}" />
+          <Binding Source="{StaticResource ExpanderHeaderBackgroundBrush}" />
+        </MultiBinding>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResourceToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, TransparentBrush, ExpanderHeaderBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderHeaderBorderThickness}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="Padding" Value="{DynamicResource ExpanderHeaderPadding}" />
@@ -97,25 +123,26 @@
       <ControlTemplate>
         <Panel Name="RootPanel"
                ClipToBounds="False"
-               Margin=" 1 0 1 2">
+               Margin="{DynamicResourceToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, ZeroThickness, ExpanderRootPanelMargin}">
           <Border x:Name="ToggleButtonBackground"
                   CornerRadius="{TemplateBinding CornerRadius}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
-                  BoxShadow="0 1 1 1 #16000000">
+                  BoxShadow="{DynamicResourceToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, NoBoxShadow, ExpanderHeaderBoxShadow}">
             <Grid x:Name="ToggleButtonGrid"
-                  ColumnDefinitions="*,Auto">
+                  ColumnDefinitions="Auto,*,Auto">
               <ContentPresenter x:Name="PART_ContentPresenter"
+                                Grid.Column="1"
                                 Content="{TemplateBinding Content}"
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Foreground="{TemplateBinding Foreground}"
-                                Margin="{TemplateBinding Padding}" />
-              <Border Grid.Column="1"
+                                Margin="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, {DynamicResource BorderlessExpanderHeaderPadding}, {TemplateBinding Padding}}" />
+              <Border Grid.Column="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 0, 2}"
                       Width="{DynamicResource ExpanderChevronWidth}"
-                      Margin="{DynamicResource ExpanderChevronMargin}">
+                      Margin="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, {DynamicResource BorderlessExpanderChevronMargin}, {DynamicResource ExpanderChevronMargin}}">
                 <Path x:Name="ExpandCollapseChevron"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
@@ -123,9 +150,11 @@
                       RenderTransformOrigin="50%,50%"
                       Stroke="{DynamicResource ForegroundHighBrush}"
                       StrokeThickness="1">
-                  <Path.RenderTransform>
-                    <RotateTransform />
-                  </Path.RenderTransform>
+                  <Path.Transitions>
+                    <Transitions>
+                      <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.0625" />
+                    </Transitions>
+                  </Path.Transitions>
                 </Path>
               </Border>
             </Grid>
@@ -147,47 +176,61 @@
 
     <Style Selector="^[Tag=expanded]">
       <Style Selector="^ /template/ Path#ExpandCollapseChevron">
-        <Style.Animations>
-          <Animation FillMode="Both" Duration="0:0:0.0625">
-            <KeyFrame Cue="0%">
-              <Setter Property="RotateTransform.Angle" Value="0" />
-            </KeyFrame>
-            <KeyFrame Cue="100%">
-              <Setter Property="RotateTransform.Angle" Value="180" />
-            </KeyFrame>
-          </Animation>
-        </Style.Animations>
+        <Setter Property="RenderTransform"
+                Value="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 'rotate(0deg)', 'rotate(180deg)'}" />
       </Style>
       <Style Selector="^ /template/ Border#ToggleButtonBackground">
-        <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPointerOverBrush}" />
-        <Setter Property="BoxShadow" Value="0 0 1 1 #16000000" />
+        <Setter Property="Background">
+          <Setter.Value>
+            <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                          ConverterParameter="borderless">
+              <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+              <Binding Source="{StaticResource TransparentBrush}" />
+              <Binding Source="{StaticResource ExpanderHeaderBackgroundPointerOverBrush}" />
+            </MultiBinding>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="BoxShadow" Value="{DynamicResourceToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, NoBoxShadow, ExpanderHeaderExpandedBoxShadow}" />
       </Style>
       <Style Selector="^ /template/ Panel#RootPanel">
-        <Setter Property="Margin" Value="1 0" />
+        <Setter Property="Margin" Value="{DynamicResourceToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, ZeroThickness, ExpanderRootPanelExpandedMargin}" />
+      </Style>
+      <Style Selector="^ /template/ Border#BottomBorder">
+        <Setter Property="Opacity" Value="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, '0', '1'}" />
       </Style>
     </Style>
 
     <Style Selector="^[Tag=collapsed] /template/ Path#ExpandCollapseChevron">
-      <Style.Animations>
-        <Animation FillMode="Both" Duration="0:0:0.0625">
-          <KeyFrame Cue="0%">
-            <Setter Property="RotateTransform.Angle" Value="180" />
-          </KeyFrame>
-          <KeyFrame Cue="100%">
-            <Setter Property="RotateTransform.Angle" Value="0" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
+      <Setter Property="RenderTransform"
+              Value="{BindingToggler {Binding $parent[Expander].Classes, Converter={x:Static DevoConverters.HasClass}, ConverterParameter=borderless}, 'rotate(-90deg)', 'rotate(0deg)'}" />
     </Style>
 
     <!-- PointerOver -->
     <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground">
-      <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPointerOverBrush}" />
+      <Setter Property="Background">
+        <Setter.Value>
+          <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                        ConverterParameter="borderless">
+            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+            <Binding Source="{StaticResource TransparentBrush}" />
+            <Binding Source="{StaticResource ExpanderHeaderBackgroundPointerOverBrush}" />
+          </MultiBinding>
+        </Setter.Value>
+      </Setter>
     </Style>
 
     <!-- Pressed -->
     <Style Selector="^:pressed /template/ Border#ToggleButtonBackground">
-      <Setter Property="Background" Value="{DynamicResource ExpanderHeaderBackgroundPressedBrush}" />
+      <Setter Property="Background">
+        <Setter.Value>
+          <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
+                        ConverterParameter="borderless">
+            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Expander}" Path="Classes" />
+            <Binding Source="{StaticResource TransparentBrush}" />
+            <Binding Source="{StaticResource ExpanderHeaderBackgroundPressedBrush}" />
+          </MultiBinding>
+        </Setter.Value>
+      </Setter>
     </Style>
 
     <!-- Disabled -->
@@ -346,6 +389,15 @@
     </Style>
     <Style Selector="^:down /template/ Border#ExpanderContent">
       <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
+    </Style>
+
+    <Style Selector="^.borderless">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- For borderless, only show a bottom border on the content area -->
+    <Style Selector="^.borderless:down /template/ Border#ExpanderContent">
+      <Setter Property="BorderThickness" Value="0,0,0,1" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

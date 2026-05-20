@@ -16,14 +16,14 @@
     <design:ThemePreviewer>
       <Border Padding="20">
         <StackPanel Orientation="Vertical" Width="250" Height="600">
-  <Expander Classes="borderless">
-    <Expander.Header>
-      <TextBlock Foreground="Gray">
-        <Bold>Borderless</Bold>
-      </TextBlock>
-    </Expander.Header>
-    <TextBlock>Expanded content</TextBlock>
-  </Expander>
+          <Expander Classes="borderless">
+            <Expander.Header>
+              <TextBlock Foreground="Gray">
+                <Bold>Borderless</Bold>
+              </TextBlock>
+            </Expander.Header>
+            <TextBlock>Expanded content</TextBlock>
+          </Expander>
 
           <Expander Header="Expand Down (default)">
             <TextBlock>Expanded content</TextBlock>

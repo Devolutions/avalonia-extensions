@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Metadata;
 using Avalonia.Metadata;
 using Devolutions.AvaloniaControls.Helpers;
@@ -18,6 +19,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// Items are displayed in a wrapping grid with uniform tile sizes.
 /// </summary>
 [TemplatePart("PART_ScrollViewer", typeof(ScrollViewer), IsRequired = true)]
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public class GroupedTileListBox : TemplatedControl
 {
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
@@ -73,7 +75,7 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, IBinding?>(
             nameof(GroupOrderBinding));
 
-    private double? cachedHeaderHeight = null;
+    private double? cachedHeaderHeight;
     
     private int cachedItemsPerRow = -1;
     private double lastKnownWidth = -1;
@@ -91,7 +93,7 @@ public class GroupedTileListBox : TemplatedControl
     private int selectedIndex = -1;
     private object? selectedItem;
     
-    private bool useGrouping = false;
+    private bool useGrouping;
 
     private BindingEvaluator? groupEvaluator;
     private IBinding? groupEvaluatorBinding;
@@ -278,7 +280,7 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    private void OnItemsSourceChanged(AvaloniaPropertyChangedEventArgs e)
+    private void OnItemsSourceChanged(AvaloniaPropertyChangedEventArgs _)
     {
         // Unsubscribe from old collection
         if (this.collectionChangedSource is not null)
@@ -335,7 +337,7 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    private void OnLayoutPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+    private void OnLayoutPropertyChanged(AvaloniaPropertyChangedEventArgs _)
     {
         if (this.itemsRepeater?.Layout is WrapLayout layout)
         {
@@ -511,7 +513,7 @@ public class GroupedTileListBox : TemplatedControl
                     {
                         Content = item,
                         [!WidthProperty] = this[!ItemWidthProperty],
-                        [!HeightProperty] = this[!ItemHeightProperty]
+                        [!HeightProperty] = this[!ItemHeightProperty],
                     };
 
                     if (this.ItemTemplate is not null)
@@ -534,7 +536,7 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    private void OnGroupingPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+    private void OnGroupingPropertyChanged(AvaloniaPropertyChangedEventArgs _)
     {
         this.InvalidateIndexMappings();
         this.UpdateItemsRepeater();
@@ -1451,53 +1453,61 @@ public class GroupedTileListBox : TemplatedControl
         IBinding? binding = this.GetValue(GroupBindingProperty);
         if (binding is not null)
         {
-            if (this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding))
+            if ((this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding)) && this.ItemsSource?.GetType() is {} itemsType)
             {
-                this.groupEvaluator = new BindingEvaluator(binding, this);
+                if (BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
+                {
+                    this.groupEvaluator = new BindingEvaluator(this, itemType);
+                }
+                
                 this.groupEvaluatorBinding = binding;
             }
 
-            BindingEvaluator evaluator = this.groupEvaluator;
-            return item => evaluator.EvaluateAsString(item);
+            return this.groupEvaluator?.BuildFormattedGetter(binding);
         }
 
         this.groupEvaluator = null;
         this.groupEvaluatorBinding = null;
 
-#pragma warning disable CS0618
         return this.GetValue(GroupSelectorProperty);
-#pragma warning restore CS0618
     }
 
     /// <summary>
     /// Resolves the effective group-order selector: <see cref="GroupOrderBinding"/> first, falling back to <see cref="GroupOrderSelector"/>.
     /// The binding is evaluated against the group key (string) as DataContext.
     /// </summary>
-    private Func<string, int>? ResolveGroupOrderSelector()
+    private Func<string, object?>? ResolveGroupOrderSelector()
     {
         IBinding? binding = this.GetValue(GroupOrderBindingProperty);
         if (binding is not null)
         {
-            if (this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding))
+            if ((this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding)) && this.ItemsSource?.GetType() is {} itemsType)
             {
-                this.groupOrderEvaluator = new BindingEvaluator(binding, this);
+                if (BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
+                {
+                    this.groupOrderEvaluator = new BindingEvaluator(this, itemType);
+                }
+
                 this.groupOrderEvaluatorBinding = binding;
             }
 
-            BindingEvaluator evaluator = this.groupOrderEvaluator;
-            return key => evaluator.EvaluateAs<int>(key);
+            return this.groupOrderEvaluator?.BuildRawGetter(binding);
         }
 
         this.groupOrderEvaluator = null;
         this.groupOrderEvaluatorBinding = null;
 
-#pragma warning disable CS0618
-        return this.GetValue(GroupOrderSelectorProperty);
-#pragma warning restore CS0618
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        {
+            return str => orderFn(str);
+        }
+
+        return null;
     }
 
     /// <summary>
     /// Represents an item with its original index and group for navigation calculations.
     /// </summary>
+    // ReSharper disable once NotAccessedPositionalProperty.Local
     private sealed record IndexedItem(object Item, int Index, string Group);
 }

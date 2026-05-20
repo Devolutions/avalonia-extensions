@@ -3,7 +3,8 @@ namespace Devolutions.AvaloniaControls.Helpers;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
-
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -11,211 +12,193 @@ using Avalonia.Data.Converters;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 
-/// <summary>
-/// Evaluates an <see cref="IBinding"/> against arbitrary source objects that are not
-/// part of the logical tree (e.g., items in a custom virtualized list, group keys, etc.).
-/// <para>
-/// Compiled bindings authored in XAML (<c>{Binding Foo}</c> with <c>x:DataType</c>) capture
-/// their source at instantiation time relative to the surrounding XAML scope, so the
-/// naive approach of swapping <c>DataContext</c> on a hidden target does not redirect
-/// them to a different source. <see cref="BindingEvaluator"/> works around this with a
-/// three-tier resolution strategy, mirroring the approach used in
-/// <c>Devolutions.AvaloniaUI.Controls.DevoDataGrid</c>:
-/// </para>
-/// <list type="number">
-///   <item><b>Fast path</b> – simple DataContext-relative dot-path with no extras.
-///     Compiles a property-path getter against the source's runtime type. Pure expression
-///     tree; no per-call allocation.</item>
-///   <item><b>Intermediate path</b> – simple dot-path with extras (Converter, StringFormat,
-///     FallbackValue, TargetNullValue, explicit Source). Compiles the path getter once and
-///     wraps it in a closure that applies the extras.</item>
-///   <item><b>Framework-delegated fallback</b> – tree-relative bindings (<c>ElementName</c>,
-///     <c>RelativeSource</c>, <c>$parent</c>) and non-trivial compiled-binding paths are
-///     resolved by Avalonia's own pipeline through a <see cref="BindingProxyElement"/>
-///     logically parented to the supplied <c>host</c>. The binding is attached once;
-///     per-call the proxy's <c>DataContext</c> is swapped and the resolved value is read
-///     synchronously via a <see cref="DirectProperty{TOwner,TValue}"/>.</item>
-/// </list>
-/// </summary>
-public sealed class BindingEvaluator
+[RequiresUnreferencedCode("BindingEvaluator required preserved types")]
+public sealed class BindingEvaluator<TDataContext>
 {
-    private readonly IBinding binding;
-    private readonly Control host;
+    private readonly BindingEvaluator inner;
 
-    // Fast/intermediate path state: compiled getter bound to a specific root type.
-    private Type? resolverRootType;
-    private Func<object, object?>? resolver;
-
-    // Fallback path state.
-    private BindingProxyElement? proxy;
-    private bool fallbackInitialized;
-
-    public BindingEvaluator(IBinding binding, Control host)
+    public BindingEvaluator(StyledElement anchor)
     {
-        this.binding = binding ?? throw new ArgumentNullException(nameof(binding));
-        this.host = host ?? throw new ArgumentNullException(nameof(host));
+        this.inner = new BindingEvaluator(anchor, typeof(TDataContext));
     }
 
-    /// <summary>
-    /// Resolves the binding against <paramref name="source"/> and returns the raw value
-    /// (boxed when a value type).
-    /// </summary>
-    [UnconditionalSuppressMessage("AOT", "IL2026",
-        Justification = "Expression-based fast paths are guarded with reflection-friendly fallbacks; types referenced in XAML are preserved.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050",
-        Justification = "Expression.Compile is used in trim-safe contexts; falls back to proxy resolution otherwise.")]
-    public object? Evaluate(object? source)
+    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression(IBinding? binding)
     {
-        if (source is null)
+        return this.inner.BuildFormattedGetterExpression<TDataContext>(binding);
+    }
+
+    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression(IBinding binding)
+    {
+        return this.inner.BuildRawGetterExpression<TDataContext>(binding);
+    }
+}
+
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+public sealed partial class BindingEvaluator
+{
+    private static readonly MethodInfo objectToStringMethod = typeof(object).GetMethod(nameof(ToString))!;
+
+    private static readonly Dictionary<string, Type?> resolvedTypeCache = new(StringComparer.Ordinal);
+
+    private Dictionary<string, ParentPathRewrite?>? parentPathRewriteCache;
+
+    private Dictionary<Type, object?>? resolvedAncestorCache;
+
+    private readonly StyledElement anchor;
+
+    private readonly Type dataContextType;
+
+    public BindingEvaluator(StyledElement anchor, Type dataContextType)
+    {
+        this.anchor = anchor;
+        this.dataContextType = dataContextType;
+    }
+
+    public static BindingEvaluator? FromItemsControl(ItemsControl anchor)
+    {
+        if (GetTypeFromItemsSource(anchor) is { } dataContextType)
+        {
+            return new BindingEvaluator(anchor, dataContextType);
+        }
+
+        return null;
+    }
+
+    public static Type? GetTypeFromItemsSource(ItemsControl itemsControl)
+        => itemsControl.ItemsSource?.GetType() is { } itemsSourceType
+            ? GetTypeFromItemsSource(itemsSourceType)
+            : null;
+
+    public static Type? GetTypeFromItemsSource(Type itemsType)
+        => itemsType
+            .GetInterfaces()
+            .FirstOrDefault(static iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            ?.GetGenericArguments()[0];
+
+    public Func<object, string>? BuildFormattedGetter(IBinding? binding)
+    {
+        if (binding is null)
         {
             return null;
         }
 
-        // Try fast/intermediate path: compile a getter for source.GetType() lazily.
-        Type sourceType = source.GetType();
-        if (this.resolver is null || this.resolverRootType != sourceType)
+        if (this.TryGetSimpleBindingGetter(binding, out Func<object, string>? getter))
         {
-            this.resolver = TryBuildCompiledResolver(this.binding, sourceType);
-            this.resolverRootType = sourceType;
+            return getter;
         }
 
-        if (this.resolver is not null)
+        if (this.TryBuildIntermediateGetter(binding, out getter))
         {
-            try
-            {
-                return this.resolver(source);
-            }
-            catch
-            {
-                // Fall through to proxy fallback.
-            }
+            return getter;
         }
 
-        return this.EvaluateViaProxy(source);
+        return this.BuildFrameworkDelegatedGetter(binding);
     }
 
-    /// <summary>
-    /// Resolves the binding and converts the result to <typeparamref name="T"/>.
-    /// <para>
-    /// - If the raw value is already a <typeparamref name="T"/>, it is returned as-is.<br/>
-    /// - If <typeparamref name="T"/> is <see cref="string"/>, falls back to <c>ToString()</c>.<br/>
-    /// - If the raw value implements <see cref="IConvertible"/>, uses <see cref="Convert.ChangeType(object,Type,IFormatProvider)"/>.<br/>
-    /// - Otherwise returns <paramref name="defaultValue"/>.
-    /// </para>
-    /// </summary>
-    public T? EvaluateAs<T>(object? source, T? defaultValue = default)
+    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression<TDataContext>(IBinding? binding)
     {
-        object? value = this.Evaluate(source);
-
-        if (value is T typed)
-        {
-            return typed;
-        }
-
-        if (typeof(T) == typeof(string))
-        {
-            return (T?)(object?)(value?.ToString());
-        }
-
-        if (value is IConvertible convertible)
-        {
-            try
-            {
-                return (T?)Convert.ChangeType(convertible, typeof(T), CultureInfo.InvariantCulture);
-            }
-            catch
-            {
-                // Ignored — fall through to default.
-            }
-        }
-
-        return defaultValue;
-    }
-
-    /// <summary>
-    /// Convenience wrapper for the most common case: resolve and coerce to <see cref="string"/>.
-    /// Returns <see cref="string.Empty"/> when the result is null.
-    /// </summary>
-    public string EvaluateAsString(object? source) =>
-        this.Evaluate(source)?.ToString() ?? string.Empty;
-
-    // ──────────────────────────────────────────────────────────────────────
-    //  Compiled-resolver builder (fast + intermediate path)
-    // ──────────────────────────────────────────────────────────────────────
-
-    [RequiresUnreferencedCode("Expression.PropertyOrField requires preserved type members at runtime.")]
-    private static Func<object, object?>? TryBuildCompiledResolver(IBinding binding, Type sourceType)
-    {
-        if (!TryExtractSimpleBinding(binding, out SimpleBindingDescriptor descriptor))
+        if (binding is null)
         {
             return null;
         }
 
-        // If the binding has an explicit Source, the path is rooted there; otherwise on source.
-        Type rootType = descriptor.Source is not null ? descriptor.Source.GetType() : sourceType;
+        if (TryGetSimpleBindingExpression(binding, out Expression<Func<TDataContext, string>>? expression))
+        {
+            return expression;
+        }
 
-        Func<object, object?> pathGetter;
+        if (TryBuildIntermediateExpression(binding, out expression))
+        {
+            return expression;
+        }
+
+        return this.BuildFrameworkDelegatedGetterExpression<TDataContext>(binding);
+    }
+
+    public Func<object, object?> BuildRawGetter(IBinding binding)
+    {
+        if (this.TryBuildFastPathRawGetter(binding, out Func<object, object?>? getter))
+        {
+            return getter;
+        }
+
+        return this.BuildProxyRawGetter(binding);
+    }
+
+    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression<TDataContext>(IBinding binding)
+    {
+        if (TryBuildFastPathRawExpression(binding, out Expression<Func<TDataContext, object?>>? expression))
+        {
+            return expression;
+        }
+
+        return this.BuildProxyRawGetterExpression<TDataContext>(binding);
+    }
+
+    private static Expression<Func<TDataContext, string>>? BuildFastPathExpression<TDataContext>(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return null;
+        }
+
+        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
+        Expression propertyAccess = rowParameter;
+
         try
         {
-            pathGetter = BuildPropertyGetter(descriptor.Path, rootType);
+            foreach (string propertyName in path.Split('.'))
+            {
+                propertyAccess = Expression.PropertyOrField(propertyAccess, propertyName);
+            }
         }
         catch
         {
             return null;
         }
 
-        // Fast path: no extras — bare path getter.
-        if (descriptor.IsBare)
+        if (propertyAccess.Type == typeof(string))
         {
-            return descriptor.Source is { } src
-                ? _ => pathGetter(src)
-                : pathGetter;
+            Expression body = Expression.Coalesce(propertyAccess, Expression.Constant(string.Empty));
+            return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
         }
 
-        // Intermediate path: capture extras in a closure.
-        IValueConverter? converter = descriptor.Converter;
-        object? converterParameter = descriptor.ConverterParameter;
-        CultureInfo culture = descriptor.ConverterCulture ?? CultureInfo.CurrentCulture;
-        string? stringFormat = descriptor.StringFormat;
-        object? fallbackValue = descriptor.FallbackValue;
-        object? targetNullValue = descriptor.TargetNullValue;
-        object? sourceOverride = descriptor.Source;
+        Expression toStringExpr = ToStringExpression(propertyAccess);
+        Expression<Func<TDataContext, string>> innerLambda = Expression.Lambda<Func<TDataContext, string>>(toStringExpr, rowParameter);
+        Func<TDataContext, string?> compiledGetter = innerLambda.Compile();
 
-        return root =>
-        {
-            try
-            {
-                object? value = pathGetter(sourceOverride ?? root);
+        ParameterExpression outerParam = Expression.Parameter(typeof(TDataContext), "row");
+        Expression outerBody = Expression.Invoke(Expression.Constant(compiledGetter), outerParam);
 
-                if (converter is not null)
-                {
-                    value = converter.Convert(value, typeof(object), converterParameter, culture);
-                }
-
-                if (value is null && targetNullValue is not null)
-                {
-                    value = targetNullValue;
-                }
-
-                if (stringFormat is not null)
-                {
-                    return string.Format(culture, stringFormat, value);
-                }
-
-                return value;
-            }
-            catch
-            {
-                return fallbackValue;
-            }
-        };
+        return Expression.Lambda<Func<TDataContext, string>>(outerBody, outerParam);
     }
 
-    /// <summary>
-    /// Compiles a dot-separated property path into a <c>Func&lt;object, object?&gt;</c>
-    /// that walks the path from the root object and returns the leaf value (boxed when a value type).
-    /// </summary>
-    [RequiresUnreferencedCode("Expression.PropertyOrField requires preserved type members at runtime.")]
+    private static Expression<Func<TDataContext, object?>>? BuildFastPathRawExpression<TDataContext>(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return null;
+        }
+
+        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
+        Expression propertyAccess = rowParameter;
+
+        try
+        {
+            foreach (string propertyName in path.Split('.'))
+            {
+                propertyAccess = Expression.PropertyOrField(propertyAccess, propertyName);
+            }
+        }
+        catch
+        {
+            return null;
+        }
+
+        Expression body = propertyAccess.Type.IsValueType ? Expression.Convert(propertyAccess, typeof(object)) : propertyAccess;
+        return Expression.Lambda<Func<TDataContext, object?>>(body, rowParameter);
+    }
+
     private static Func<object, object?> BuildPropertyGetter(string path, Type rootType)
     {
         ParameterExpression param = Expression.Parameter(typeof(object), "root");
@@ -226,7 +209,6 @@ public sealed class BindingEvaluator
             access = Expression.PropertyOrField(access, propertyName);
         }
 
-        // Box value types to object.
         if (access.Type.IsValueType)
         {
             access = Expression.Convert(access, typeof(object));
@@ -235,64 +217,59 @@ public sealed class BindingEvaluator
         return Expression.Lambda<Func<object, object?>>(access, param).Compile();
     }
 
-    /// <summary>
-    /// Returns <see langword="true"/> if the binding is a reflection <see cref="Binding"/>
-    /// or a <see cref="CompiledBindingExtension"/> with a simple dot-path. Captures any
-    /// supported extras in <paramref name="descriptor"/>.
-    /// </summary>
-    private static bool TryExtractSimpleBinding(IBinding binding, out SimpleBindingDescriptor descriptor)
+    [GeneratedRegex(@"\(\(([A-Za-z_][\w.:]*)\)([A-Za-z_]\w*)\)")]
+    private static partial Regex CompiledCastRegex();
+
+    private static StyledElement? FindLogicalAncestorOfType(StyledElement start, Type ancestorType)
     {
-        switch (binding)
+        StyledElement? current = start;
+        while (current is not null)
         {
-            case Binding b
-                when !string.IsNullOrEmpty(b.Path)
-                    && string.IsNullOrEmpty(b.ElementName)
-                    && b.RelativeSource is null
-                    && IsSimpleDotPath(b.Path):
+            if (ancestorType.IsInstanceOfType(current))
             {
-                descriptor = new SimpleBindingDescriptor(
-                    Path: b.Path,
-                    Source: b.Source == AvaloniaProperty.UnsetValue ? null : b.Source,
-                    Converter: b.Converter,
-                    ConverterParameter: b.ConverterParameter,
-                    ConverterCulture: b.ConverterCulture,
-                    StringFormat: b.StringFormat,
-                    FallbackValue: b.FallbackValue == AvaloniaProperty.UnsetValue ? null : b.FallbackValue,
-                    TargetNullValue: b.TargetNullValue == AvaloniaProperty.UnsetValue ? null : b.TargetNullValue);
-                return true;
+                return current;
             }
 
-            case CompiledBindingExtension c:
-            {
-                string pathString = c.Path.ToString();
-                if (string.IsNullOrEmpty(pathString) || !IsSimpleDotPath(pathString))
-                {
-                    descriptor = default;
-                    return false;
-                }
-
-                descriptor = new SimpleBindingDescriptor(
-                    Path: pathString,
-                    Source: c.Source == AvaloniaProperty.UnsetValue ? null : c.Source,
-                    Converter: c.Converter,
-                    ConverterParameter: c.ConverterParameter,
-                    ConverterCulture: c.ConverterCulture,
-                    StringFormat: c.StringFormat,
-                    FallbackValue: c.FallbackValue == AvaloniaProperty.UnsetValue ? null : c.FallbackValue,
-                    TargetNullValue: c.TargetNullValue == AvaloniaProperty.UnsetValue ? null : c.TargetNullValue);
-                return true;
-            }
-
-            default:
-                descriptor = default;
-                return false;
+            current = current.Parent;
         }
+
+        return null;
     }
 
-    /// <summary>
-    /// Returns <see langword="true"/> if the string is a simple dot-separated property path
-    /// containing only letters, digits, underscores, and dots (e.g. <c>Foo.Bar.Baz</c>).
-    /// </summary>
+    private static Type? GetOrResolveType(string typeName)
+    {
+        if (resolvedTypeCache.TryGetValue(typeName, out Type? cached))
+        {
+            return cached;
+        }
+
+        Type? resolved = ResolveType(typeName);
+        resolvedTypeCache[typeName] = resolved;
+        return resolved;
+    }
+
+    private static string? GetSimplePathWithoutExtras(IBinding binding)
+    {
+        string? pathString = binding switch
+            {
+                Binding { Path: { Length: > 0 } path } b when b.Converter is null
+                    && b.StringFormat is null
+                    && b.FallbackValue == AvaloniaProperty.UnsetValue
+                    && b.TargetNullValue == AvaloniaProperty.UnsetValue
+                    && b.Source == AvaloniaProperty.UnsetValue
+                    && string.IsNullOrEmpty(b.ElementName)
+                    && b.RelativeSource is null => path,
+                CompiledBindingExtension c when c.Converter is null
+                    && c.StringFormat is null
+                    && c.FallbackValue == AvaloniaProperty.UnsetValue
+                    && c.TargetNullValue == AvaloniaProperty.UnsetValue
+                    && c.Source == AvaloniaProperty.UnsetValue => c.Path.ToString(),
+                _ => null,
+            };
+
+        return !string.IsNullOrEmpty(pathString) && IsSimpleDotPath(pathString) ? pathString : null;
+    }
+
     private static bool IsSimpleDotPath(string path)
     {
         foreach (char c in path)
@@ -306,66 +283,385 @@ public sealed class BindingEvaluator
         return true;
     }
 
-    // ──────────────────────────────────────────────────────────────────────
-    //  Framework-delegated fallback (proxy)
-    // ──────────────────────────────────────────────────────────────────────
+    [GeneratedRegex(@"^\$parent\[([A-Za-z_][\w.:]*)\]\.")]
+    private static partial Regex ParentPrefixRegex();
 
-    private object? EvaluateViaProxy(object source)
+    private static Type? ResolveType(string typeName)
     {
-        if (!this.fallbackInitialized)
+        Type? type = Type.GetType(typeName);
+        if (type is not null)
         {
-            this.proxy = new BindingProxyElement();
-            ((ISetLogicalParent)this.proxy).SetParent(this.host);
+            return type;
+        }
 
-#pragma warning disable CS0618 // Bind overload with anchor parameter is required for tree-relative bindings
-            this.proxy.Bind(BindingProxyElement.ValueProperty, this.binding, anchor: this.host);
-#pragma warning restore CS0618
+        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach (Type candidate in assembly.GetTypes())
+            {
+                if (candidate.Name == typeName || candidate.FullName == typeName)
+                {
+                    return candidate;
+                }
+            }
+        }
 
-            this.fallbackInitialized = true;
+        return null;
+    }
+
+    private static Expression ToStringExpression(Expression value)
+    {
+        if (value.Type == typeof(string))
+        {
+            return Expression.Coalesce(value, Expression.Constant(string.Empty));
+        }
+
+        if (value.Type.IsValueType)
+        {
+            return Expression.Call(value, objectToStringMethod);
+        }
+
+        Expression toString = Expression.Call(value, objectToStringMethod);
+        Expression toStringOrEmpty = Expression.Coalesce(toString, Expression.Constant(string.Empty));
+        return Expression.Condition(Expression.Equal(value, Expression.Constant(null, value.Type)), Expression.Constant(string.Empty), toStringOrEmpty);
+    }
+
+    private static bool TryBuildFastPathRawExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, object?>>? expression)
+    {
+        string? pathString = GetSimplePathWithoutExtras(binding);
+        if (string.IsNullOrEmpty(pathString))
+        {
+            expression = null;
+            return false;
+        }
+
+        expression = BuildFastPathRawExpression<TDataContext>(pathString);
+        return expression is not null;
+    }
+
+    private bool TryBuildFastPathRawGetter(IBinding binding, [NotNullWhen(true)] out Func<object, object?>? getter)
+    {
+        string? pathString = GetSimplePathWithoutExtras(binding);
+        if (string.IsNullOrEmpty(pathString))
+        {
+            getter = null;
+            return false;
         }
 
         try
         {
-            this.proxy!.DataContext = source;
-            return this.proxy.Value;
+            getter = BuildPropertyGetter(pathString, this.dataContextType);
+            return true;
         }
         catch
         {
-            return null;
+            getter = null;
+            return false;
         }
     }
 
-    private readonly record struct SimpleBindingDescriptor(
-        string Path,
-        object? Source,
-        IValueConverter? Converter,
-        object? ConverterParameter,
-        CultureInfo? ConverterCulture,
-        string? StringFormat,
-        object? FallbackValue,
-        object? TargetNullValue)
+    private static bool TryBuildIntermediateExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
     {
-        /// <summary>True when the binding has no extras (pure DataContext-relative path).</summary>
-        public bool IsBare =>
-            this.Source is null
-            && this.Converter is null
-            && this.ConverterParameter is null
-            && this.StringFormat is null
-            && this.FallbackValue is null
-            && this.TargetNullValue is null;
+        if (!TryGetIntermediateParts(binding, out string? path, out object? source, out IValueConverter? converter, out object? converterParameter,
+                out CultureInfo? converterCulture, out string? stringFormat, out object? fallbackValue, out object? targetNullValue))
+        {
+            expression = null;
+            return false;
+        }
+
+        Func<object, string> getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, typeof(TDataContext));
+        expression = WrapObjectDelegateAsExpression<TDataContext>(getter);
+        return true;
     }
 
-    /// <summary>
-    /// Minimal binding proxy: the lightest possible <see cref="StyledElement"/> subclass that
-    /// exposes a single <see cref="DirectProperty{TOwner,TValue}"/> backed by a plain field.
-    /// </summary>
-    private sealed class BindingProxyElement : StyledElement
+    private bool TryBuildIntermediateGetter(IBinding binding, [NotNullWhen(true)] out Func<object, string>? getter)
     {
-        public static readonly DirectProperty<BindingProxyElement, object?> ValueProperty =
-            AvaloniaProperty.RegisterDirect<BindingProxyElement, object?>(
-                nameof(Value),
-                static o => o.value,
-                static (o, v) => o.value = v);
+        if (!TryGetIntermediateParts(binding, out string? path, out object? source, out IValueConverter? converter, out object? converterParameter,
+                out CultureInfo? converterCulture, out string? stringFormat, out object? fallbackValue, out object? targetNullValue))
+        {
+            getter = null;
+            return false;
+        }
+
+        getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, this.dataContextType);
+        return true;
+    }
+
+    private static Func<object, string> BuildIntermediateGetter(
+        string path,
+        object? source,
+        IValueConverter? converter,
+        object? converterParameter,
+        CultureInfo? converterCulture,
+        string? stringFormat,
+        object? fallbackValue,
+        object? targetNullValue,
+        Type rowType)
+    {
+        Type rootType = source is not null ? source.GetType() : rowType;
+        Func<object, object?> propertyGetter = BuildPropertyGetter(path, rootType);
+        CultureInfo culture = converterCulture ?? CultureInfo.CurrentCulture;
+        string? fallbackString = fallbackValue?.ToString();
+        string? targetNullString = targetNullValue?.ToString();
+
+        return row =>
+            {
+                try
+                {
+                    object? value = propertyGetter(source ?? row);
+
+                    if (converter is not null)
+                    {
+                        value = converter.Convert(value, typeof(string), converterParameter, culture);
+                    }
+
+                    if (value is null && targetNullString is not null)
+                    {
+                        return targetNullString;
+                    }
+
+                    if (stringFormat is not null)
+                    {
+                        return string.Format(culture, stringFormat, value);
+                    }
+
+                    return value as string ?? value?.ToString() ?? string.Empty;
+                }
+                catch
+                {
+                    return fallbackString ?? string.Empty;
+                }
+            };
+    }
+
+    private static bool TryGetIntermediateParts(
+        IBinding binding,
+        [NotNullWhen(true)] out string? path,
+        out object? source,
+        out IValueConverter? converter,
+        out object? converterParameter,
+        out CultureInfo? converterCulture,
+        out string? stringFormat,
+        out object? fallbackValue,
+        out object? targetNullValue)
+    {
+        switch (binding)
+        {
+            case Binding { Path: { Length: > 0 } p } b when string.IsNullOrEmpty(b.ElementName) && b.RelativeSource is null && IsSimpleDotPath(p):
+                path = p;
+                source = b.Source == AvaloniaProperty.UnsetValue ? null : b.Source;
+                converter = b.Converter;
+                converterParameter = b.ConverterParameter;
+                converterCulture = b.ConverterCulture;
+                stringFormat = b.StringFormat;
+                fallbackValue = b.FallbackValue == AvaloniaProperty.UnsetValue ? null : b.FallbackValue;
+                targetNullValue = b.TargetNullValue == AvaloniaProperty.UnsetValue ? null : b.TargetNullValue;
+                return true;
+
+            case CompiledBindingExtension c:
+                string pathString = c.Path.ToString();
+                if (pathString.Length == 0 || !IsSimpleDotPath(pathString))
+                {
+                    break;
+                }
+
+                path = pathString;
+                source = c.Source == AvaloniaProperty.UnsetValue ? null : c.Source;
+                converter = c.Converter;
+                converterParameter = c.ConverterParameter;
+                converterCulture = c.ConverterCulture;
+                stringFormat = c.StringFormat;
+                fallbackValue = c.FallbackValue == AvaloniaProperty.UnsetValue ? null : c.FallbackValue;
+                targetNullValue = c.TargetNullValue == AvaloniaProperty.UnsetValue ? null : c.TargetNullValue;
+                return true;
+        }
+
+        path = null;
+        source = null;
+        converter = null;
+        converterParameter = null;
+        converterCulture = null;
+        stringFormat = null;
+        fallbackValue = null;
+        targetNullValue = null;
+        return false;
+    }
+
+    private static bool TryGetSimpleBindingExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
+    {
+        string? pathString = GetSimplePathWithoutExtras(binding);
+        if (!string.IsNullOrEmpty(pathString))
+        {
+            expression = BuildFastPathExpression<TDataContext>(pathString);
+            if (expression is not null)
+            {
+                return true;
+            }
+        }
+
+        expression = null;
+        return false;
+    }
+
+    private bool TryGetSimpleBindingGetter(IBinding binding, [NotNullWhen(true)] out Func<object, string>? getter)
+    {
+        string? pathString = GetSimplePathWithoutExtras(binding);
+        if (string.IsNullOrEmpty(pathString))
+        {
+            getter = null;
+            return false;
+        }
+
+        try
+        {
+            Func<object, object?> rawGetter = BuildPropertyGetter(pathString, this.dataContextType);
+            getter = row => rawGetter(row) is { } value ? value as string ?? value.ToString() ?? string.Empty : string.Empty;
+            return true;
+        }
+        catch
+        {
+            getter = null;
+            return false;
+        }
+    }
+
+    private static Expression<Func<TDataContext, string>> WrapObjectDelegateAsExpression<TDataContext>(Func<object, string> getter)
+    {
+        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
+        Expression body = Expression.Invoke(Expression.Constant(getter), Expression.Convert(rowParameter, typeof(object)));
+        return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
+    }
+
+    private Func<object, string> BuildFrameworkDelegatedGetter(IBinding binding)
+    {
+        binding = this.RewriteParentBindingIfNeeded(binding);
+        BindingEvaluatorProxyElement proxy = new(this.anchor, binding);
+
+        return row =>
+            {
+                try
+                {
+                    object? value = proxy.Evaluate(row);
+                    return value as string ?? value?.ToString() ?? string.Empty;
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+            };
+    }
+
+    [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
+    private Expression<Func<TDataContext, string>> BuildFrameworkDelegatedGetterExpression<TDataContext>(IBinding binding)
+    {
+        Func<object, string> getter = this.BuildFrameworkDelegatedGetter(binding);
+        return WrapObjectDelegateAsExpression<TDataContext>(getter);
+    }
+
+    [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
+    private Func<object, object?> BuildProxyRawGetter(IBinding binding)
+    {
+        binding = this.RewriteParentBindingIfNeeded(binding);
+        BindingEvaluatorProxyElement proxy = new(this.anchor, binding);
+
+        return row =>
+            {
+                try
+                {
+                    return proxy.Evaluate(row);
+                }
+                catch
+                {
+                    return null;
+                }
+            };
+    }
+
+    private Expression<Func<TDataContext, object?>> BuildProxyRawGetterExpression<TDataContext>(IBinding binding)
+    {
+        Func<object, object?> getter = this.BuildProxyRawGetter(binding);
+        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
+        Expression body = Expression.Invoke(Expression.Constant(getter), Expression.Convert(rowParameter, typeof(object)));
+        return Expression.Lambda<Func<TDataContext, object?>>(body, rowParameter);
+    }
+
+    private ParentPathRewrite? GetOrCreatePathRewrite(string rawPath)
+    {
+        this.parentPathRewriteCache ??= new(StringComparer.Ordinal);
+
+        if (this.parentPathRewriteCache.TryGetValue(rawPath, out ParentPathRewrite? cached))
+        {
+            return cached;
+        }
+
+        Match match = ParentPrefixRegex().Match(rawPath);
+        if (!match.Success)
+        {
+            this.parentPathRewriteCache[rawPath] = null;
+            return null;
+        }
+
+        string typeString = match.Groups[1].Value;
+        string remainingPath = rawPath[match.Length..];
+        remainingPath = CompiledCastRegex().Replace(remainingPath, "$2");
+
+        if (GetOrResolveType(typeString) is not Type ancestorType)
+        {
+            this.parentPathRewriteCache[rawPath] = null;
+            return null;
+        }
+
+        ParentPathRewrite rewrite = new(remainingPath, ancestorType);
+        this.parentPathRewriteCache[rawPath] = rewrite;
+        return rewrite;
+    }
+
+    private object? GetOrFindAncestor(Type ancestorType)
+    {
+        this.resolvedAncestorCache ??= [];
+
+        if (this.resolvedAncestorCache.TryGetValue(ancestorType, out object? cached))
+        {
+            return cached;
+        }
+
+        object? ancestor = FindLogicalAncestorOfType(this.anchor, ancestorType);
+        this.resolvedAncestorCache[ancestorType] = ancestor;
+        return ancestor;
+    }
+
+    private IBinding RewriteParentBindingIfNeeded(IBinding binding)
+    {
+        if (binding is not Binding { Path: { Length: > 0 } path } reflectionBinding)
+        {
+            return binding;
+        }
+
+        if (this.GetOrCreatePathRewrite(path) is not ParentPathRewrite rewrite || this.GetOrFindAncestor(rewrite.AncestorType) is not object ancestor)
+        {
+            return binding;
+        }
+
+        return new Binding(rewrite.CleanedPath)
+            {
+                Source = ancestor,
+                Converter = reflectionBinding.Converter,
+                ConverterParameter = reflectionBinding.ConverterParameter,
+                ConverterCulture = reflectionBinding.ConverterCulture,
+                StringFormat = reflectionBinding.StringFormat,
+                FallbackValue = reflectionBinding.FallbackValue,
+                TargetNullValue = reflectionBinding.TargetNullValue,
+                Mode = reflectionBinding.Mode,
+            };
+    }
+
+    private sealed record ParentPathRewrite(string CleanedPath, Type AncestorType);
+    
+    // TODO: Somehow cascade this IDisposable outward in order to properly
+    //       dispose it after usage and possibly prevent some memory leaks
+    internal sealed class BindingEvaluatorProxyElement : StyledElement, IDisposable
+    {
+        public static readonly DirectProperty<BindingEvaluatorProxyElement, object?> ValueProperty =
+            AvaloniaProperty.RegisterDirect<BindingEvaluatorProxyElement, object?>(nameof(Value), static o => o.value, static (o, v) => o.value = v);
 
         private object? value;
 
@@ -373,6 +669,30 @@ public sealed class BindingEvaluator
         {
             get => this.value;
             set => this.SetAndRaise(ValueProperty, ref this.value, value);
+        }
+
+        private readonly IDisposable valueSubscription;
+
+        public BindingEvaluatorProxyElement(ILogical anchor, IBinding binding)
+        {
+            ((ISetLogicalParent)this).SetParent(anchor);
+#pragma warning disable CS0618 // Type or member is obsolete
+            this.valueSubscription = this.Bind(ValueProperty, binding, anchor: anchor);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        public object? Evaluate(object dataContext)
+        {
+            this.DataContext = dataContext;
+            var val = this.Value;
+            this.DataContext = null;
+            return val;
+        }
+
+        public void Dispose()
+        {
+            this.valueSubscription.Dispose();
+            ((ISetLogicalParent)this).SetParent(null);
         }
     }
 }

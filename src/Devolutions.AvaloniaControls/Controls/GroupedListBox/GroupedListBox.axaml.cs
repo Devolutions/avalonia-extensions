@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Avalonia;
@@ -40,6 +41,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// </para>
 /// </summary>
 [PseudoClasses(":empty")]
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public class GroupedListBox : ListBox
 {
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
@@ -361,7 +363,7 @@ public class GroupedListBox : ListBox
         }
 
         // Compute desired group order.
-        Func<string, int>? orderFn = this.ResolveGroupOrderSelector();
+        Func<string, object?>? orderFn = this.ResolveGroupOrderSelector();
         IOrderedEnumerable<IGrouping<string, (object item, string key, int originalIndex)>> grouped =
             orderFn is { } fn
                 ? snapshot.GroupBy(t => t.key).OrderBy(g => fn(g.Key))
@@ -431,38 +433,37 @@ public class GroupedListBox : ListBox
         {
             if (this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding))
             {
-                this.groupEvaluator = new BindingEvaluator(binding, this);
+                this.groupEvaluator = BindingEvaluator.FromItemsControl(this);
                 this.groupEvaluatorBinding = binding;
             }
-            BindingEvaluator e = this.groupEvaluator;
-            return e.EvaluateAsString;
+            return this.groupEvaluator?.BuildFormattedGetter(this.groupEvaluatorBinding);
         }
 
         this.groupEvaluator = null;
         this.groupEvaluatorBinding = null;
-#pragma warning disable CS0618
         return this.GetValue(GroupSelectorProperty);
-#pragma warning restore CS0618
     }
 
-    private Func<string, int>? ResolveGroupOrderSelector()
+    private Func<string, object?>? ResolveGroupOrderSelector()
     {
         IBinding? binding = this.GetValue(GroupOrderBindingProperty);
         if (binding is not null)
         {
             if (this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding))
             {
-                this.groupOrderEvaluator = new BindingEvaluator(binding, this);
+                this.groupOrderEvaluator = BindingEvaluator.FromItemsControl(this);
                 this.groupOrderEvaluatorBinding = binding;
             }
-            BindingEvaluator e = this.groupOrderEvaluator;
-            return key => e.EvaluateAs<int>(key);
+            return this.groupOrderEvaluator?.BuildRawGetter(this.groupOrderEvaluatorBinding);
         }
 
         this.groupOrderEvaluator = null;
         this.groupOrderEvaluatorBinding = null;
-#pragma warning disable CS0618
-        return this.GetValue(GroupOrderSelectorProperty);
-#pragma warning restore CS0618
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        {
+            return str => orderFn(str);
+        }
+
+        return null;
     }
 }

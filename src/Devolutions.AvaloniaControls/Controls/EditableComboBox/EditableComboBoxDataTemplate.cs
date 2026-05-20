@@ -10,5 +10,6 @@ public class EditableComboBoxDataTemplate : DataTemplate
     /// This is usually the textual representation of the selected item.
     /// Example: ItemStringValue="{Binding Name}"
     /// </summary>
+    [AssignBinding]
     public IBinding? SelectedItemValue { get; set; }
 }

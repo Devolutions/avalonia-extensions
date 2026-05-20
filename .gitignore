@@ -20,3 +20,6 @@ global.json
 
 # macOS
 .DS_Store
+
+# C# language server cache
+*.lscache

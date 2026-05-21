@@ -6,20 +6,31 @@
 
 set -e
 
-MAIN_REPO=$(git worktree list --porcelain | awk 'NR==1{print $2}')
+# Derive main worktree from the shared .git dir — robust against spaces in paths
+# and always finds the correct main worktree regardless of listing order.
+GIT_COMMON_DIR=$(git rev-parse --git-common-dir)
+# In the main worktree git returns ".git" (relative); resolve to an absolute path.
+if [[ "$GIT_COMMON_DIR" != /* ]]; then
+  GIT_COMMON_DIR="$(pwd -P)/$GIT_COMMON_DIR"
+fi
+MAIN_REPO=$(dirname "$GIT_COMMON_DIR")
 
 if [ -z "$MAIN_REPO" ]; then
   echo "Error: could not determine main worktree path." >&2
   exit 1
 fi
 
-if [ "$MAIN_REPO" = "$(pwd)" ]; then
+# Normalise both paths (resolve symlinks, strip trailing slashes) before comparing.
+MAIN_REPO=$(cd "$MAIN_REPO" && pwd -P)
+CURRENT_WORKTREE=$(pwd -P)
+
+if [ "$MAIN_REPO" = "$CURRENT_WORKTREE" ]; then
   echo "Already in the main worktree — nothing to copy."
   exit 0
 fi
 
 echo "Main worktree: $MAIN_REPO"
-echo "Current worktree: $(pwd)"
+echo "Current worktree: $CURRENT_WORKTREE"
 echo ""
 
 copy_if_exists() {
@@ -27,7 +38,14 @@ copy_if_exists() {
   local dst="$2"
   if [ -d "$src" ]; then
     mkdir -p "$dst"
-    cp -rn "$src/." "$dst/" || true
+    # cp -n exits 1 on macOS/BSD when some destination files already existed and were
+    # skipped — that is not an error. Exit codes > 1 indicate genuine I/O failures.
+    local rc=0
+    cp -rn "$src/." "$dst/" || rc=$?
+    if [ "$rc" -gt 1 ]; then
+      echo "  ✗ Failed to copy $src → $dst" >&2
+      exit "$rc"
+    fi
     echo "✓ Copied $src → $dst"
   else
     echo "  (skipped $src — not found in main worktree)"

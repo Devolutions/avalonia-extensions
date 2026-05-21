@@ -5,7 +5,11 @@
   <ControlTheme x:Key="{x:Type EnumPicker}" TargetType="EnumPicker">
     <Setter Property="Template">
       <ControlTemplate>
-        <ComboBox ItemsSource="{TemplateBinding Items}" SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
+        <ComboBox ItemsSource="{TemplateBinding Items}"
+                  SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+                  ComboBoxContent.InnerLeftContent="{TemplateBinding InnerLeftContent}"
+                  ComboBoxContent.InnerLeftOfDropDownArrowContent="{TemplateBinding InnerLeftOfDropDownArrowContent}"
+                  ComboBoxContent.InnerRightContent="{TemplateBinding InnerRightContent}">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="EnumPickerItem">
               <TextBlock Text="{Binding Text}" />

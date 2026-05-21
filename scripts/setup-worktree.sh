@@ -20,9 +20,13 @@ if [ -z "$MAIN_REPO" ]; then
   exit 1
 fi
 
-# Normalise both paths (resolve symlinks, strip trailing slashes) before comparing.
+# Normalise the main worktree path (resolve symlinks).
 MAIN_REPO=$(cd "$MAIN_REPO" && pwd -P)
-CURRENT_WORKTREE=$(pwd -P)
+
+# Get the current worktree root via git instead of pwd — correct even when the
+# script is invoked from a subdirectory, and ensures destination paths are right.
+CURRENT_WORKTREE=$(cd "$(git rev-parse --show-toplevel)" && pwd -P)
+cd "$CURRENT_WORKTREE"
 
 if [ "$MAIN_REPO" = "$CURRENT_WORKTREE" ]; then
   echo "Already in the main worktree — nothing to copy."

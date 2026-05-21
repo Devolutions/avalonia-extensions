@@ -48,6 +48,8 @@ samples/
 │   ├── explain.md                            # /explain command
 │   ├── simplify.md                           # /simplify command
 │   └── worksetup.md                          # /worksetup command
+├── local/                                    # Personal commands & docs (gitignored, developer-specific)
+│   └── README.md                             # Describes the local/ convention
 └── docs/                                     # Claude-specific documentation
     └── processes/                            # Process documentation
         └── ide_connection.md                 # IDE integration guide
@@ -59,6 +61,7 @@ When creating or organizing files for Claude Code:
 - **Processes**: `.claude/docs/processes/` (e.g., workflow guides, troubleshooting)
 - **Planning**: `.claude/docs/planning/` (e.g., feature planning, design decisions)
 - **Commands**: `.claude/commands/` (slash commands only)
+- **Personal/local**: `.claude/local/` (developer-specific commands and docs — gitignored, check if it exists and consult its contents)
 
 **Never** create Claude-related files in the root-level `docs/` or other project directories - they belong exclusively in `.claude/`.
 
@@ -102,7 +105,9 @@ The SampleApp provides:
 - Those temporary runtime-selection lines are local-only setup state and should not be committed by default (follow `.claude/commands/commit.md`).
 
 **Note on Theme Detection:**
-The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be `bin/Debug/net10.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
+The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be 
+`bin/Debug/net10.0/`. When running from the repo root via `dotnet run`, the detection fails and the app falls back 
+to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
 
 ### Testing
 There are no automated tests in this repository. Testing is done manually via the SampleApp.

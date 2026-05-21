@@ -142,7 +142,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="Expander" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ExpanderDemo />
               </TabItem>

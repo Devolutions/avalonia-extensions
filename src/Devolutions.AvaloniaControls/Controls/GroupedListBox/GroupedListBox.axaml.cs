@@ -9,6 +9,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Metadata;
@@ -64,6 +65,9 @@ public class GroupedListBox : ListBox
 
     public static readonly StyledProperty<IBrush?> GroupForegroundProperty =
         AvaloniaProperty.Register<GroupedListBox, IBrush?>(nameof(GroupForeground));
+    
+    public static readonly StyledProperty<IDataTemplate?> IconTemplateProperty =
+        AvaloniaProperty.Register<GroupedListBox, IDataTemplate?>(nameof(IconTemplate));
 
     /// <summary>
     /// Display name to use for the empty/null group key. When <c>null</c> (the default), items in
@@ -99,6 +103,7 @@ public class GroupedListBox : ListBox
         GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.OnOrderingChanged());
         GroupOrderBindingProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.OnOrderingChanged());
         EmptyGroupNameProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.RefreshAllContainers());
+        IconTemplateProperty.Changed.AddClassHandler<GroupedListBox>((x, _) => x.RefreshAllContainers());
     }
 
     public GroupedListBox()
@@ -159,6 +164,13 @@ public class GroupedListBox : ListBox
         get => this.GetValue(EmptyGroupNameProperty);
         set => this.SetValue(EmptyGroupNameProperty, value);
     }
+    
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public IDataTemplate? IconTemplate
+    {
+        get => GetValue(IconTemplateProperty);
+        set => SetValue(IconTemplateProperty, value);
+    }
 
     protected override Type StyleKeyOverride => typeof(GroupedListBox);
 
@@ -206,6 +218,13 @@ public class GroupedListBox : ListBox
             gli.SetGroupExpandedSilently(true);
             gli.GroupForeground = null;
             gli.SetGroupExpansionCallback(null);
+            // Detach the icon ContentControl so it doesn't outlive its data item via the
+            // recycle pool with a stale Content reference.
+            if (gli.InnerLeftContent is ContentControl ic)
+            {
+                ic.Content = null;
+                gli.InnerLeftContent = null;
+            }
         }
     }
 
@@ -329,6 +348,40 @@ public class GroupedListBox : ListBox
         container.Margin = isEmptyHeaderless && index == 0
             ? new Thickness(0, 10, 0, 0)
             : default;
+
+        // Project IconTemplate into the container's left slot. We materialise the per-container
+        // ContentControl here (rather than via the theme) because:
+        //   - A Setter value would share a single Control instance across containers, which
+        //     Avalonia forbids (a Control can have only one logical parent).
+        //   - The icon needs to bind to the item itself so the template's bindings see the
+        //     item's data context, hence Content = item.
+        // Reuse an existing ContentControl in the slot when present to avoid churn during
+        // container recycling; only allocate when the template was just turned on.
+        IDataTemplate? iconTemplate = this.IconTemplate;
+        if (iconTemplate is not null)
+        {
+            object? item = index >= 0 && index < this.Items.Count ? this.Items[index] : null;
+            if (container.InnerLeftContent is ContentControl existing)
+            {
+                existing.ContentTemplate = iconTemplate;
+                existing.Content = item;
+            }
+            else
+            {
+                container.InnerLeftContent = new ContentControl
+                {
+                    ContentTemplate = iconTemplate,
+                    Content = item,
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                };
+            }
+        }
+        else if (container.InnerLeftContent is ContentControl)
+        {
+            // Template was cleared after being set; tear down the slot.
+            container.InnerLeftContent = null;
+        }
     }
 
     private void PropagateGroupExpansion(string key, bool isExpanded)

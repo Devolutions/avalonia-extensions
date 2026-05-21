@@ -112,18 +112,65 @@
                                    GroupForeground="#266fd2"
                                    GroupBinding="{Binding Category}"
                                    GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
-                                   DoubleTapped="EmptyGroupListBox_OnDoubleTapped">
-            <GroupedListBox.ItemTemplate>
+                                   DisplayMemberBinding="{Binding Name}"
+                                   DoubleTapped="EmptyGroupListBox_OnDoubleTapped" />
+
+          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
+
+          <TextBlock Grid.Column="2"
+                     Text="← Drag splitter to resize"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
+        </Grid>
+      </StackPanel>
+      
+      <!-- Scenario 3: with icons -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 1: Named Groups</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          Template contains an icon in it's inner left content
+        </TextBlock>
+
+        <Border BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Padding="8"
+                CornerRadius="4"
+                Background="{DynamicResource LayoutBackgroundLowBrush}">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding SelectedGroupedItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding SelectedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding SelectedGroupedItem.Category}"
+                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                         IsVisible="{Binding SelectedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Double-clicked:" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding DoubleClickedGroupedItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding DoubleClickedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding DoubleClickedGroupedItem.Category}"
+                         Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                         IsVisible="{Binding DoubleClickedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <Grid Height="400" ColumnDefinitions="2*,Auto,*">
+          <GroupedListBox Grid.Column="0"
+                                   ItemsSource="{Binding GroupedItems}"
+                                   SelectedItem="{Binding SelectedGroupedItem}"
+                                   GroupBinding="{Binding Category}"
+                                   GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                                   GroupOrderAlphabetical="True"
+                                   DisplayMemberBinding="{Binding Name}"
+                                   DoubleTapped="GroupedListBox_OnDoubleTapped">
+            <GroupedListBox.IconTemplate>
               <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="4">
-                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                  <TextBlock Text="{Binding Category}"
-                             FontSize="11"
-                             VerticalAlignment="Center"
-                             Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
-                </StackPanel>
+                <Svg Path="{Binding IconName, StringFormat='/Assets/{0}.svg'}" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
               </DataTemplate>
-            </GroupedListBox.ItemTemplate>
+            </GroupedListBox.IconTemplate>
           </GroupedListBox>
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
@@ -136,7 +183,7 @@
         </Grid>
       </StackPanel>
 
-      <!-- Scenario 3: Large Dataset -->
+      <!-- Scenario 4: Large Dataset -->
       <StackPanel Spacing="10">
         <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Large Dataset</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">

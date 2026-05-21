@@ -35,25 +35,25 @@ public partial class GroupedListBoxViewModel : ObservableObject
     /// <summary>Scenario 1: items partitioned into named groups.</summary>
     public List<FoodItem> GroupedItems { get; } = new()
     {
-        new FoodItem("Apple", "Fruits"),
-        new FoodItem("Banana", "Fruits"),
-        new FoodItem("Orange", "Fruits"),
-        new FoodItem("Strawberry", "Fruits"),
-        new FoodItem("Grapes", "Fruits"),
-        new FoodItem("Mango", "Fruits"),
+        new FoodItem("Apple", "Fruits", "Folder"),
+        new FoodItem("Banana", "Fruits", "Folder"),
+        new FoodItem("Orange", "Fruits", "Folder"),
+        new FoodItem("Strawberry", "Fruits", "Folder"),
+        new FoodItem("Grapes", "Fruits", "Folder"),
+        new FoodItem("Mango", "Fruits", "Folder"),
 
-        new FoodItem("Carrot", "Vegetables"),
-        new FoodItem("Broccoli", "Vegetables"),
-        new FoodItem("Lettuce", "Vegetables"),
-        new FoodItem("Tomato", "Vegetables"),
-        new FoodItem("Cucumber", "Vegetables"),
-        new FoodItem("Pepper", "Vegetables"),
+        new FoodItem("Carrot", "Vegetables", "User"),
+        new FoodItem("Broccoli", "Vegetables", "User"),
+        new FoodItem("Lettuce", "Vegetables", "User"),
+        new FoodItem("Tomato", "Vegetables", "User"),
+        new FoodItem("Cucumber", "Vegetables", "User"),
+        new FoodItem("Pepper", "Vegetables", "User"),
 
-        new FoodItem("Chicken", "Meats"),
-        new FoodItem("Beef", "Meats"),
-        new FoodItem("Pork", "Meats"),
-        new FoodItem("Fish", "Meats"),
-        new FoodItem("Lamb", "Meats"),
+        new FoodItem("Chicken", "Meats", "Computer"),
+        new FoodItem("Beef", "Meats", "Computer"),
+        new FoodItem("Pork", "Meats", "Computer"),
+        new FoodItem("Fish", "Meats", "Computer"),
+        new FoodItem("Lamb", "Meats", "Computer"),
     };
 
     /// <summary>Scenario 2: items where the empty-string group should sort first.</summary>

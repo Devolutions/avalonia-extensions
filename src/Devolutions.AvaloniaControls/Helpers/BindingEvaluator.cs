@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -47,6 +48,12 @@ public sealed partial class BindingEvaluator
     private readonly StyledElement anchor;
 
     private readonly Type dataContextType;
+    
+    [GeneratedRegex(@"\(\(([A-Za-z_][\w.:]*)\)([A-Za-z_]\w*)\)")]
+    private static partial Regex CompiledCastRegex();
+    
+    [GeneratedRegex(@"^\$parent\[([A-Za-z_][\w.:]*)\]\.")]
+    private static partial Regex ParentPrefixRegex();
 
     public BindingEvaluator(StyledElement anchor, Type dataContextType)
     {
@@ -217,9 +224,6 @@ public sealed partial class BindingEvaluator
         return Expression.Lambda<Func<object, object?>>(access, param).Compile();
     }
 
-    [GeneratedRegex(@"\(\(([A-Za-z_][\w.:]*)\)([A-Za-z_]\w*)\)")]
-    private static partial Regex CompiledCastRegex();
-
     private static StyledElement? FindLogicalAncestorOfType(StyledElement start, Type ancestorType)
     {
         StyledElement? current = start;
@@ -283,27 +287,27 @@ public sealed partial class BindingEvaluator
         return true;
     }
 
-    [GeneratedRegex(@"^\$parent\[([A-Za-z_][\w.:]*)\]\.")]
-    private static partial Regex ParentPrefixRegex();
-
     private static Type? ResolveType(string typeName)
     {
-        Type? type = Type.GetType(typeName);
-        if (type is not null)
+        try
         {
-            return type;
-        }
-
-        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            foreach (Type candidate in assembly.GetTypes())
+            Type? type = Type.GetType(typeName);
+            if (type is not null)
             {
-                if (candidate.Name == typeName || candidate.FullName == typeName)
+                return type;
+            }
+
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type candidate in assembly.GetTypes())
                 {
-                    return candidate;
+                    if (candidate.Name == typeName || candidate.FullName == typeName)
+                    {
+                        return candidate;
+                    }
                 }
             }
-        }
+        } catch (Exception) { /* miam */ }
 
         return null;
     }

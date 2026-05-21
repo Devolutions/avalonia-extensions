@@ -55,6 +55,19 @@ samples/
         └── ide_connection.md                 # IDE integration guide
 ```
 
+### Worktree setup
+This repo uses git worktrees for parallel tasks. Gitignored local config (`.claude/local/`, `.github/skills/local/`, `.vscode/`) is **not** copied automatically to new worktrees.
+
+**If you are running in a worktree** and `.claude/local/` contains only `README.md` (or `.vscode/` is missing), run:
+```bash
+bash scripts/setup-worktree.sh
+```
+On Windows, use the PowerShell equivalent:
+```powershell
+pwsh scripts/setup-worktree.ps1
+```
+This copies local config from the main worktree without overwriting anything already present.
+
 ### File Placement Rules
 When creating or organizing files for Claude Code:
 - **Documentation**: `.claude/docs/` (e.g., planning docs, architecture notes, process guides)

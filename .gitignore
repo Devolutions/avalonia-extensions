@@ -21,6 +21,9 @@ global.json
 # macOS
 .DS_Store
 
+# C# language server cache
+*.lscache
+
 # Local AI assistant config (personal commands, VM-specific skills, etc.)
 .claude/local/*
 !.claude/local/README.md

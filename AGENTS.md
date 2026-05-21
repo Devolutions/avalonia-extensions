@@ -25,6 +25,17 @@ Key AI assistant resources in `.claude/`:
 - **`docs/`** - Process documentation and planning materials
 - **`local/`** - Personal commands and docs (gitignored, developer-specific — check if it exists)
 
+Key Development Workflows:
+
+- **Building/Running:**
+  `dotnet build samples/SampleApp/SampleApp.csproj && cd samples/SampleApp/bin/Debug/net10.0 && dotnet SampleApp.dll` (
+  Required for proper theme detection)
+- **Notifications:** Use non-blocking `osascript -e $'display dialog "..."' &` (with ANSI-C quoting and `&`) for
+  critical alerts.
+- **Accelerate Controls:** Requires `.env` with `AVALONIA_LICENSE_KEY=your_key_here` at repository root.
+- **Testing:** `dotnet test` (Use `UPDATE_BASELINES=true dotnet test` on macOS/Linux to update baseline screenshots if
+  visual changes are intentional).
+
 Testing references:
 - **`README.md`** (`# Testing`) - Current `dotnet test` filters and baseline update commands
 - **`tests/Devolutions.AvaloniaControls.VisualTests/`** - Baselines and diff outputs used by visual regression tests

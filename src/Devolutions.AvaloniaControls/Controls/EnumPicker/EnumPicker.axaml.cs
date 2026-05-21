@@ -1,9 +1,11 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
+using System.Collections;
 using System.Collections.Specialized;
 
 using Avalonia;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.LogicalTree;
@@ -38,6 +40,24 @@ public abstract class EnumPicker : TemplatedControl
 
     public static readonly StyledProperty<Func<Enum, string>?> TextProviderProperty = AvaloniaProperty.Register<EnumPicker, Func<Enum, string>?>(
         nameof(TextProvider));
+
+    public static readonly DirectProperty<EnumPicker, IEnumerable> InnerLeftContentProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker, IEnumerable>(
+            nameof(InnerLeftContent),
+            static o => o.InnerLeftContent,
+            static (o, v) => o.InnerLeftContent = v);
+
+    public static readonly DirectProperty<EnumPicker, IEnumerable> InnerLeftOfDropDownArrowContentProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker, IEnumerable>(
+            nameof(InnerLeftOfDropDownArrowContent),
+            static o => o.InnerLeftOfDropDownArrowContent,
+            static (o, v) => o.InnerLeftOfDropDownArrowContent = v);
+
+    public static readonly DirectProperty<EnumPicker, IEnumerable> InnerRightContentProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker, IEnumerable>(
+            nameof(InnerRightContent),
+            static o => o.InnerRightContent,
+            static (o, v) => o.InnerRightContent = v);
 
     protected bool UpdatingItems;
 
@@ -81,6 +101,21 @@ public abstract class EnumPicker : TemplatedControl
         get => this.GetValue(TextProviderProperty);
         set => this.SetValue(TextProviderProperty, value);
     }
+
+    /// <summary>
+    /// Gets or sets the content rendered inside the picker, before the value (leftmost slot).
+    /// </summary>
+    public IEnumerable InnerLeftContent { get; set; } = new AvaloniaList<Control>();
+
+    /// <summary>
+    /// Gets or sets the content rendered inside the picker, just before the drop-down arrow.
+    /// </summary>
+    public IEnumerable InnerLeftOfDropDownArrowContent { get; set; } = new AvaloniaList<Control>();
+
+    /// <summary>
+    /// Gets or sets the content rendered inside the picker, after the drop-down arrow (rightmost slot).
+    /// </summary>
+    public IEnumerable InnerRightContent { get; set; } = new AvaloniaList<Control>();
 }
 
 public class EnumPicker<T> : EnumPicker where T : struct, Enum

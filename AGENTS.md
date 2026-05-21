@@ -25,7 +25,7 @@ Key AI assistant resources in `.claude/`:
 - **`docs/`** - Process documentation and planning materials
 - **`local/`** - Personal commands and docs (gitignored, developer-specific — check if it exists)
 
-> **Worktree setup:** If `.claude/local/` only contains `README.md` (or `.vscode/` is missing), run `bash scripts/setup-worktree.sh` to copy local config from the main worktree.
+> **Worktree setup:** If `.claude/local/` only contains `README.md` (or `.vscode/` is missing), run `bash scripts/setup-worktree.sh` to copy local config from the main worktree. On Windows, use `pwsh scripts/setup-worktree.ps1` instead.
 
 Key Development Workflows:
 

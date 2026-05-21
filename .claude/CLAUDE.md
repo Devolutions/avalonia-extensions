@@ -62,6 +62,10 @@ This repo uses git worktrees for parallel tasks. Gitignored local config (`.clau
 ```bash
 bash scripts/setup-worktree.sh
 ```
+On Windows, use the PowerShell equivalent:
+```powershell
+pwsh scripts/setup-worktree.ps1
+```
 This copies local config from the main worktree without overwriting anything already present.
 
 ### File Placement Rules

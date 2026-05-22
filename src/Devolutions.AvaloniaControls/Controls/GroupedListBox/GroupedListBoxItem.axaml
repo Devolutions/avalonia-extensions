@@ -53,27 +53,12 @@
                     VerticalAlignment="Center"
                     RenderTransformOrigin="50%,50%"
                     RenderTransform="rotate(0deg)">
-                <!-- <Path.RenderTransform> -->
-                <!--   <RotateTransform Angle="0" /> -->
-                <!-- </Path.RenderTransform> -->
-                
-                <!-- <Path.Styles> -->
-                <!--   <Style Selector="^"> -->
-                <!--   <Style.Transitions> -->
-                <!--     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.0625" /> -->
-                <!--   </Style.Transitions> -->
-                <!--   </Style> -->
-                <!-- </Path.Styles> -->
-                
                 <Path.Transitions>
                   <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.0625" />
                   </Transitions>
                 </Path.Transitions>
               </Path>
-              <!-- <Border.Transitions> -->
-              <!--   <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.0625" /> -->
-              <!-- </Border.Transitions> -->
             </Border>
           </Grid>
         </Border>
@@ -88,45 +73,9 @@
       <Setter Property="Background" Value="#55FFFFFF" />
     </Style>
 
-    <!-- Chevron rotation: down (0deg) when checked/expanded, right (-90deg) when collapsed. -->
     <Style Selector="^:checked /template/ Path#HeaderChevron">
-      <!-- <Setter Property="RenderTransform"> -->
-      <!--   <RotateTransform Angle="180" /> -->
-      <!-- </Setter> -->
       <Setter Property="RenderTransform" Value="rotate(180deg)" />
     </Style>
-    <!-- <Style Selector="^ /template/ Path#HeaderChevron"> -->
-    <!--   <Setter Property="RenderTransform"> -->
-    <!--     <RotateTransform Angle="0" /> -->
-    <!--   </Setter> -->
-    <!-- -->
-    <!--   ~1~ <Style.Animations> @1@ -->
-    <!--   ~1~   <Animation FillMode="Both" Duration="0:0:0.0625"> @1@ -->
-    <!--   ~1~     <KeyFrame Cue="0%"> @1@ -->
-    <!--   ~1~       <Setter Property="RotateTransform.Angle" Value="0" /> @1@ -->
-    <!--   ~1~     </KeyFrame> @1@ -->
-    <!--   ~1~     <KeyFrame Cue="100%"> @1@ -->
-    <!--   ~1~       <Setter Property="RotateTransform.Angle" Value="180" /> @1@ -->
-    <!--   ~1~     </KeyFrame> @1@ -->
-    <!--   ~1~   </Animation> @1@ -->
-    <!--   ~1~ </Style.Animations> @1@ -->
-    <!-- </Style> -->
-    <!-- <Style Selector="^:checked /template/ Path#HeaderChevron"> -->
-    <!--   <Setter Property="RenderTransform"> -->
-    <!--     <RotateTransform Angle="180" /> -->
-    <!--   </Setter> -->
-    <!-- -->
-    <!--   ~1~ <Style.Animations> @1@ -->
-    <!--   ~1~   <Animation FillMode="Both" Duration="0:0:0.0625"> @1@ -->
-    <!--   ~1~     <KeyFrame Cue="0%"> @1@ -->
-    <!--   ~1~       <Setter Property="RotateTransform.Angle" Value="180" /> @1@ -->
-    <!--   ~1~     </KeyFrame> @1@ -->
-    <!--   ~1~     <KeyFrame Cue="100%"> @1@ -->
-    <!--   ~1~       <Setter Property="RotateTransform.Angle" Value="0" /> @1@ -->
-    <!--   ~1~     </KeyFrame> @1@ -->
-    <!--   ~1~   </Animation> @1@ -->
-    <!--   ~1~ </Style.Animations> @1@ -->
-    <!-- </Style> -->
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type GroupedListBoxItem}" TargetType="GroupedListBoxItem">

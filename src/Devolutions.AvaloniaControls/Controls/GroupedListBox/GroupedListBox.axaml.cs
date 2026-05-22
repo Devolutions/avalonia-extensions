@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Templates;
@@ -88,10 +87,7 @@ public class GroupedListBox : ListBox
     // Index of the leader container per group key (lowest item index for that key).
     private readonly Dictionary<string, int> leaderIndexByKey = new(StringComparer.Ordinal);
 
-    private BindingEvaluator? groupEvaluator;
-    private IBinding? groupEvaluatorBinding;
-    private BindingEvaluator? groupOrderEvaluator;
-    private IBinding? groupOrderEvaluatorBinding;
+    private BindingEvaluator? bindingEvaluator = null;
 
     private bool reordering;
 
@@ -449,6 +445,8 @@ public class GroupedListBox : ListBox
         this.reordering = true;
         try
         {
+            // TODO: It is not quite right and could cause issues if consumers binded an ObservableCollection/AvaloniaList;
+            //       we'd need to figure out a different way if this becomes a problem.
             if (this.ItemsSource is not null)
             {
                 this.ItemsSource = sorted;
@@ -470,37 +468,23 @@ public class GroupedListBox : ListBox
 
     private Func<object, string>? ResolveGroupSelector()
     {
-        IBinding? binding = this.GetValue(GroupBindingProperty);
-        if (binding is not null)
+        if (this.GetValue(GroupBindingProperty) is IBinding binding)
         {
-            if (this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding))
-            {
-                this.groupEvaluator = BindingEvaluator.FromItemsControl(this);
-                this.groupEvaluatorBinding = binding;
-            }
-            return this.groupEvaluator?.BuildFormattedGetter(this.groupEvaluatorBinding);
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
         }
 
-        this.groupEvaluator = null;
-        this.groupEvaluatorBinding = null;
         return this.GetValue(GroupSelectorProperty);
     }
 
     private Func<string, object?>? ResolveGroupOrderSelector()
     {
-        IBinding? binding = this.GetValue(GroupOrderBindingProperty);
-        if (binding is not null)
+        if (this.GetValue(GroupOrderBindingProperty) is IBinding binding)
         {
-            if (this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding))
-            {
-                this.groupOrderEvaluator = BindingEvaluator.FromItemsControl(this);
-                this.groupOrderEvaluatorBinding = binding;
-            }
-            return this.groupOrderEvaluator?.BuildFormattedGetter(this.groupOrderEvaluatorBinding);
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
         }
 
-        this.groupOrderEvaluator = null;
-        this.groupOrderEvaluatorBinding = null;
         if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
         {
             return str => orderFn(str);

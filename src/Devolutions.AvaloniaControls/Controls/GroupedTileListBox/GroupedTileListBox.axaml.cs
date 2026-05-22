@@ -95,10 +95,7 @@ public class GroupedTileListBox : TemplatedControl
     
     private bool useGrouping;
 
-    private BindingEvaluator? groupEvaluator;
-    private IBinding? groupEvaluatorBinding;
-    private BindingEvaluator? groupOrderEvaluator;
-    private IBinding? groupOrderEvaluatorBinding;
+    private BindingEvaluator? bindingEvaluator = null;
 
     static GroupedTileListBox()
     {
@@ -357,9 +354,11 @@ public class GroupedTileListBox : TemplatedControl
     private IEnumerable<IGrouping<string, T>> GetOrderedGroups<T>(IEnumerable<IGrouping<string, T>> groups)
     {
         if (this.ResolveGroupOrderSelector() is { } selector)
+        {
             return this.GroupOrderAlphabetical
                 ? groups.OrderBy(g => selector(g.Key)).ThenBy(g => g.Key)
                 : groups.OrderBy(g => selector(g.Key));
+        }
 
         return this.GroupOrderAlphabetical ? groups.OrderBy(g => g.Key) : groups;
     }
@@ -1453,21 +1452,9 @@ public class GroupedTileListBox : TemplatedControl
         IBinding? binding = this.GetValue(GroupBindingProperty);
         if (binding is not null)
         {
-            if ((this.groupEvaluator is null || !ReferenceEquals(this.groupEvaluatorBinding, binding)) && this.ItemsSource?.GetType() is {} itemsType)
-            {
-                if (BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
-                {
-                    this.groupEvaluator = new BindingEvaluator(this, itemType);
-                }
-                
-                this.groupEvaluatorBinding = binding;
-            }
-
-            return this.groupEvaluator?.BuildFormattedGetter(binding);
+            this.EnsureInitBindingEvaluator();
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
         }
-
-        this.groupEvaluator = null;
-        this.groupEvaluatorBinding = null;
 
         return this.GetValue(GroupSelectorProperty);
     }
@@ -1481,21 +1468,9 @@ public class GroupedTileListBox : TemplatedControl
         IBinding? binding = this.GetValue(GroupOrderBindingProperty);
         if (binding is not null)
         {
-            if ((this.groupOrderEvaluator is null || !ReferenceEquals(this.groupOrderEvaluatorBinding, binding)) && this.ItemsSource?.GetType() is {} itemsType)
-            {
-                if (BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
-                {
-                    this.groupOrderEvaluator = new BindingEvaluator(this, itemType);
-                }
-
-                this.groupOrderEvaluatorBinding = binding;
-            }
-
-            return this.groupOrderEvaluator?.BuildRawGetter(binding);
+            this.EnsureInitBindingEvaluator();
+            return this.bindingEvaluator?.BuildRawGetter(binding);
         }
-
-        this.groupOrderEvaluator = null;
-        this.groupOrderEvaluatorBinding = null;
 
         if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
         {
@@ -1503,6 +1478,18 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         return null;
+    }
+    
+    private void EnsureInitBindingEvaluator()
+    {
+        if (this.bindingEvaluator is null)
+        {
+            if (this.ItemsSource?.GetType() is { } itemsType
+                && BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
+            {
+                this.bindingEvaluator = new BindingEvaluator(this, itemType);
+            }
+        }
     }
 
     /// <summary>

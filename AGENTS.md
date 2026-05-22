@@ -1,5 +1,25 @@
 # AI Assistant Guidelines
 
+## ⚠️ REQUIRED: Session Pre-flight Check
+
+**Before starting any task**, run this check:
+
+```bash
+ls .claude/local/
+```
+
+If the output contains **only `README.md`** (no other files), or if `.vscode/` is missing, you **must** run the worktree setup script before doing anything else:
+
+```bash
+bash scripts/setup-worktree.sh
+```
+
+On Windows: `pwsh scripts/setup-worktree.ps1`
+
+This copies gitignored local config (personal commands, `.vscode/` settings) from the main worktree. Skipping it means you'll be missing developer-specific tooling and commands for this session.
+
+---
+
 > **Note:** This file has been superseded by more comprehensive documentation in the `.claude/` directory.
 
 For detailed instructions on working with this repository as an AI assistant, please see:
@@ -24,8 +44,6 @@ Key AI assistant resources in `.claude/`:
 - **`commands/worksetup.md`** - Theme/tab/scale setup workflow for `samples/SampleApp/`
 - **`docs/`** - Process documentation and planning materials
 - **`local/`** - Personal commands and docs (gitignored, developer-specific — check if it exists)
-
-> **Worktree setup:** If `.claude/local/` only contains `README.md` (or `.vscode/` is missing), run `bash scripts/setup-worktree.sh` to copy local config from the main worktree. On Windows, use `pwsh scripts/setup-worktree.ps1` instead.
 
 Key Development Workflows:
 

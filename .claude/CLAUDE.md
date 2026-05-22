@@ -2,6 +2,26 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ REQUIRED: Session Pre-flight Check
+
+**Before starting any task**, run this check:
+
+```bash
+ls .claude/local/
+```
+
+If the output contains **only `README.md`** (no other files), or if `.vscode/` is missing, you **must** run the worktree setup script before doing anything else:
+
+```bash
+bash scripts/setup-worktree.sh
+```
+
+On Windows: `pwsh scripts/setup-worktree.ps1`
+
+This copies gitignored local config (personal commands, `.vscode/` settings) from the main worktree. Skipping it means you'll be missing developer-specific tooling and commands for this session.
+
+---
+
 # Repository Information
 
 ## Overview
@@ -55,18 +75,6 @@ samples/
         └── ide_connection.md                 # IDE integration guide
 ```
 
-### Worktree setup
-This repo uses git worktrees for parallel tasks. Gitignored local config (`.claude/local/`, `.github/skills/local/`, `.vscode/`) is **not** copied automatically to new worktrees.
-
-**If you are running in a worktree** and `.claude/local/` contains only `README.md` (or `.vscode/` is missing), run:
-```bash
-bash scripts/setup-worktree.sh
-```
-On Windows, use the PowerShell equivalent:
-```powershell
-pwsh scripts/setup-worktree.ps1
-```
-This copies local config from the main worktree without overwriting anything already present.
 
 ### File Placement Rules
 When creating or organizing files for Claude Code:

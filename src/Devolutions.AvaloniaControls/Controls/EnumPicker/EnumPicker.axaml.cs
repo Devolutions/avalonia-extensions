@@ -509,6 +509,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     // Devirtualized enum equality. Enums in C# can use any integral underlying type
     // (byte/sbyte/short/ushort/int/uint/long/ulong), so we dispatch on size which the
     // JIT folds to a constant for a given T, eliminating the branches entirely.
+    //
+    // The Unsafe.SizeOf<T>() calls are JIT intrinsics that resolve to a constant per
+    // generic instantiation. Combined with AggressiveInlining, the dead branches are
+    // dropped at codegen time — at runtime, EnumPicker<MyIntEnum>.EnumEquals reduces
+    // to a single 32-bit compare with no size check, no jump table, no branches.
+    // Do NOT "optimize" this further by caching the size in a static field or routing
+    // through a delegate: both add an indirection the JIT cannot fold away, making
+    // them strictly slower than the current shape.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool EnumEquals(T a, T b)
     {

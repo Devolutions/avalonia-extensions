@@ -168,8 +168,8 @@ public class GroupedListBox : ListBox
     [InheritDataTypeFromItems(nameof(ItemsSource))]
     public IDataTemplate? IconTemplate
     {
-        get => GetValue(IconTemplateProperty);
-        set => SetValue(IconTemplateProperty, value);
+        get => this.GetValue(IconTemplateProperty);
+        set => this.SetValue(IconTemplateProperty, value);
     }
 
     protected override Type StyleKeyOverride => typeof(GroupedListBox);
@@ -308,7 +308,7 @@ public class GroupedListBox : ListBox
             // (RecomputeGroupMaps leaves the map empty when no selector is configured.)
 #pragma warning disable CS0618
             throw new InvalidOperationException(
-                $"{nameof(GroupedListBox)} requires either {nameof(GroupBinding)} or {nameof(GroupSelector)} to be set. " +
+                $"{nameof(GroupedListBox)} requires either {nameof(this.GroupBinding)} or {nameof(this.GroupSelector)} to be set. " +
                 "Grouping is not optional - use a regular ListBox for an ungrouped list.");
 #pragma warning restore CS0618
         }
@@ -416,7 +416,7 @@ public class GroupedListBox : ListBox
         grouped = (orderFn, this.GroupOrderAlphabetical) switch
         {
             ({ } fn, true) => grouped
-                .OrderBy(g => orderFn(g.Key))
+                .OrderBy(g => fn(g.Key))
                 .ThenBy(static g => g.Key, StringComparer.Ordinal),
             ({ } fn, false) => grouped.OrderBy(g => fn(g.Key)),
             (null, true) => grouped.OrderBy(g => g.Key, StringComparer.Ordinal),

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 // Data model for the demo
-public record FoodItem(string Name, string Category);
+public record FoodItem(string Name, string Category, string? IconName = null);
 
 public partial class GroupedTileListBoxViewModel : ObservableObject
 {

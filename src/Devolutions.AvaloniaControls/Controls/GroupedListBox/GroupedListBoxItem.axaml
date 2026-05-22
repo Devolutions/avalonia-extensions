@@ -87,6 +87,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="CornerRadius" Value="3" />
+
         <Setter Property="Template">
             <ControlTemplate>
                 <StackPanel Orientation="Vertical" Spacing="0">

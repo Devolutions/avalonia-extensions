@@ -55,6 +55,7 @@
                               ItemHeight="100"
                               DoubleTapped="GroupedListBox_OnDoubleTapped"
                               CornerRadius="10">
+              
             <GroupedTileListBox.ItemTemplate>
               <DataTemplate DataType="vm:FoodItem">
                 <StackPanel Spacing="4" VerticalAlignment="Center">

@@ -9,6 +9,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="GroupForeground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Vertical" />

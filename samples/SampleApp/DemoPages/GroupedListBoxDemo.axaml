@@ -113,6 +113,7 @@
                                    GroupBinding="{Binding Category}"
                                    GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
                                    DisplayMemberBinding="{Binding Name}"
+                                   EmptyGroupName="NO GROUP"
                                    DoubleTapped="EmptyGroupListBox_OnDoubleTapped" />
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>

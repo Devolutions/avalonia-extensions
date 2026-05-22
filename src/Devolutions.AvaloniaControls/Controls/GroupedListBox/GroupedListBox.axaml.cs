@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Templates;
@@ -109,7 +110,7 @@ public class GroupedListBox : ListBox
     public GroupedListBox()
     {
         // Subscribe to the realized Items collection (used when items are declared inline in XAML).
-        ((INotifyCollectionChanged)this.Items).CollectionChanged += this.OnItemsCollectionChanged;
+        this.Items.CollectionChanged += this.OnItemsCollectionChanged;
     }
 
     [Obsolete("Use GroupBinding instead for XAML-friendly, type-checked group selection.")]
@@ -133,7 +134,6 @@ public class GroupedListBox : ListBox
         set => this.SetValue(GroupOrderAlphabeticalProperty, value);
     }
 
-    [Obsolete("Use GroupOrderBinding instead for XAML-friendly group ordering.")]
     public Func<string, int>? GroupOrderSelector
     {
         get => this.GetValue(GroupOrderSelectorProperty);
@@ -192,15 +192,6 @@ public class GroupedListBox : ListBox
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
         base.PrepareContainerForItemOverride(container, item, index);
-        if (container is GroupedListBoxItem gli)
-        {
-            this.ApplyGroupingTo(gli, index);
-        }
-    }
-
-    protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
-    {
-        base.ContainerForItemPreparedOverride(container, item, index);
         if (container is GroupedListBoxItem gli)
         {
             this.ApplyGroupingTo(gli, index);
@@ -280,34 +271,38 @@ public class GroupedListBox : ListBox
         Func<object, string>? selector = this.ResolveGroupSelector();
         if (selector is null) return;
 
-        int i = 0;
-        foreach (object? item in this.Items)
+        for (int i = 0; i < this.Items.Count; ++i)
         {
-            if (item is null) { i++; continue; }
+            object? item = this.Items[i];
+            if (item is null) continue;
+            
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             string key = selector(item) ?? string.Empty;
             this.groupKeyByIndex[i] = key;
             if (this.leaderIndexByKey.TryAdd(key, i))
             {
                 if (!this.expandedByKey.ContainsKey(key))
+                {
                     this.expandedByKey[key] = this.GroupsExpandedByDefault;
+                }
             }
-            i++;
         }
     }
 
     private void RefreshAllContainers()
     {
-        for (int i = 0; i < this.ItemCount; i++)
+        for (int i = 0; i < this.ItemCount; ++i)
         {
             if (this.ContainerFromIndex(i) is GroupedListBoxItem gli)
+            {
                 this.ApplyGroupingTo(gli, i);
+            }
         }
     }
 
     private void ApplyGroupingTo(GroupedListBoxItem container, int index)
     {
-        if (!this.groupKeyByIndex.TryGetValue(index, out string? key))
+        if (!this.groupKeyByIndex.TryGetValue(index, out string? groupName))
         {
             // Grouping is mandatory: a GroupSelector or GroupBinding must be supplied.
             // (RecomputeGroupMaps leaves the map empty when no selector is configured.)
@@ -318,26 +313,25 @@ public class GroupedListBox : ListBox
 #pragma warning restore CS0618
         }
 
-        bool isLeader = this.leaderIndexByKey.TryGetValue(key, out int leaderIdx) && leaderIdx == index;
+        bool isLeader = this.leaderIndexByKey.TryGetValue(groupName, out int leaderIdx) && leaderIdx == index;
 
         // Empty/null group key with no EmptyGroupName configured = headerless group: items render
         // as a bare list. Suppress the leader's header chrome (IsGroupLeader=false) and pin the
         // expansion state to true so the items always show. Non-leader items in the empty group
         // remain visible for the same reason.
         string? emptyName = this.EmptyGroupName;
-        bool isEmptyHeaderless = key.Length == 0 && emptyName is null;
+        bool isEmptyHeaderless = groupName.Length == 0 && string.IsNullOrEmpty(emptyName);
 
-        bool isExpanded = isEmptyHeaderless || (this.expandedByKey.TryGetValue(key, out bool exp) 
+        bool isExpanded = isEmptyHeaderless || (this.expandedByKey.TryGetValue(groupName, out bool exp) 
             ? exp 
             : this.GroupsExpandedByDefault);
 
-        container.GroupKey = key;
-        container.GroupHeaderText = key.Length == 0 ? emptyName : key;
+        container.GroupKey = groupName;
+        container.GroupHeaderText = groupName.Length == 0 ? emptyName : groupName;
         container.IsGroupLeader = isLeader && !isEmptyHeaderless;
         container.SetGroupExpandedSilently(isExpanded);
         container.GroupForeground = this.GroupForeground;
-        container.SetGroupExpansionCallback(
-            isLeader && !isEmptyHeaderless ? this.OnGroupExpansionToggled : null);
+        container.SetGroupExpansionCallback(isLeader && !isEmptyHeaderless ? this.OnGroupExpansionToggled : null);
         // Leader stays visible (its header lets the user re-expand). Non-leaders disappear when collapsed.
         // Headerless empty group: every container is always visible.
         container.IsVisible = isEmptyHeaderless || isLeader || isExpanded;
@@ -370,6 +364,7 @@ public class GroupedListBox : ListBox
             {
                 container.InnerLeftContent = new ContentControl
                 {
+                    Name = "GoupedListBox_IconLeftContent",
                     ContentTemplate = iconTemplate,
                     Content = item,
                     VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -377,7 +372,7 @@ public class GroupedListBox : ListBox
                 };
             }
         }
-        else if (container.InnerLeftContent is ContentControl)
+        else if (container.InnerLeftContent is ContentControl { Name: "GoupedListBox_IconLeftContent" })
         {
             // Template was cleared after being set; tear down the slot.
             container.InnerLeftContent = null;
@@ -386,7 +381,7 @@ public class GroupedListBox : ListBox
 
     private void PropagateGroupExpansion(string key, bool isExpanded)
     {
-        for (int i = 0; i < this.ItemCount; i++)
+        for (int i = 0; i < this.ItemCount; ++i)
         {
             if (this.ContainerFromIndex(i) is GroupedListBoxItem gli && gli.GroupKey == key)
             {
@@ -402,40 +397,34 @@ public class GroupedListBox : ListBox
         if (selector is null) return;
 
         // Snapshot current items as a list with their group keys.
-        List<(object item, string key, int originalIndex)> snapshot = [];
-        int idx = 0;
-        foreach (object? it in this.Items)
+        List<(object item, string groupName, int originalIndex)> snapshot = new(this.Items.Count);
+        for (int idx = 0; idx < this.Items.Count; ++idx)
         {
+            object? it = this.Items[idx];
             if (it is not null)
             {
                 // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
                 snapshot.Add((it, selector(it) ?? string.Empty, idx));
             }
-
-            ++idx;
         }
 
         // Compute desired group order.
         Func<string, object?>? orderFn = this.ResolveGroupOrderSelector();
-        IOrderedEnumerable<IGrouping<string, (object item, string key, int originalIndex)>> grouped =
-            orderFn is { } fn
-                ? snapshot.GroupBy(t => t.key).OrderBy(g => fn(g.Key))
-                : snapshot.GroupBy(t => t.key).OrderBy(static g => g.Key, StringComparer.Ordinal);
+        IEnumerable<IGrouping<string, (object item, string groupName, int originalIndex)>> grouped =
+            snapshot.GroupBy(t => t.groupName);
 
-        if (this.GroupOrderAlphabetical && orderFn is not null)
+        grouped = (orderFn, this.GroupOrderAlphabetical) switch
         {
-            grouped = snapshot
-                .GroupBy(static t => t.key)
+            ({ } fn, true) => grouped
                 .OrderBy(g => orderFn(g.Key))
-                .ThenBy(static g => g.Key, StringComparer.Ordinal);
-        }
-        else if (this.GroupOrderAlphabetical)
-        {
-            grouped = snapshot.GroupBy(t => t.key).OrderBy(g => g.Key, StringComparer.Ordinal);
-        }
+                .ThenBy(static g => g.Key, StringComparer.Ordinal),
+            ({ } fn, false) => grouped.OrderBy(g => fn(g.Key)),
+            (null, true) => grouped.OrderBy(g => g.Key, StringComparer.Ordinal),
+            (null, false) => grouped,
+        };
 
-        List<object> sorted = [];
-        foreach (IGrouping<string, (object item, string key, int originalIndex)> g in grouped)
+        List<object> sorted = new(this.Items.Count);
+        foreach (IGrouping<string, (object item, string groupName, int originalIndex)> g in grouped)
         {
             // Within a group, preserve original order.
             foreach ((object item, _, _) in g.OrderBy(t => t.originalIndex))
@@ -448,7 +437,7 @@ public class GroupedListBox : ListBox
         bool changed = sorted.Count != snapshot.Count;
         if (!changed)
         {
-            for (int i = 0; i < sorted.Count; i++)
+            for (int i = 0; i < sorted.Count; ++i)
             {
                 if (!ReferenceEquals(sorted[i], snapshot[i].item)) { changed = true; break; }
             }
@@ -507,7 +496,7 @@ public class GroupedListBox : ListBox
                 this.groupOrderEvaluator = BindingEvaluator.FromItemsControl(this);
                 this.groupOrderEvaluatorBinding = binding;
             }
-            return this.groupOrderEvaluator?.BuildRawGetter(this.groupOrderEvaluatorBinding);
+            return this.groupOrderEvaluator?.BuildFormattedGetter(this.groupOrderEvaluatorBinding);
         }
 
         this.groupOrderEvaluator = null;

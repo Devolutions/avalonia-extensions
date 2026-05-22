@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 // Data model for the demo
-public record FoodItem(string Name, string Category, string? IconName = null);
+public record FoodItem(string Name, string Category);
 
 public partial class GroupedTileListBoxViewModel : ObservableObject
 {
@@ -39,9 +39,9 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
     public List<FoodItem> GroupedItems { get; } = new()
     {
         // Fruits
-        new FoodItem("Apple", "Fruits", "Details"),
+        new FoodItem("Apple", "Fruits"),
         new FoodItem("Banana", "Fruits"),
-        new FoodItem("Orange", "Fruits", "More"),
+        new FoodItem("Orange", "Fruits"),
         new FoodItem("Strawberry", "Fruits"),
         new FoodItem("Grapes", "Fruits"),
         new FoodItem("Mango", "Fruits"),

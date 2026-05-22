@@ -54,14 +54,14 @@
   <conv:PlatformKeyGestureConverter x:Key="KeyGestureConverter" />
   <x:Double x:Key="SubMenuPopupHorizontalOffset">5</x:Double>
   <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
-  <Thickness x:Key="MenuInputGestureTextMargin">24,0,0,0</Thickness>
+  <Thickness x:Key="MenuInputGestureTextMargin">15,0,0,0</Thickness>
   <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForeground}" />
     <Setter Property="Padding" Value="4 2" />
-    <Setter Property="Margin" Value="4 2" />
+    <Setter Property="Margin" Value="1 1 2 2" />
     <Setter Property="CornerRadius" Value="4" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <!-- Block inheritance of LineHeight from parent controls -->
@@ -116,6 +116,7 @@
                          Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}" />
               <PathIcon Name="PART_ChevronPath"
                         Grid.Column="4"
+                        Margin="9 0 0 0"
                         UseLayoutRounding="False"
                         IsHitTestVisible="False"
                         Width="9"

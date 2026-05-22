@@ -6,106 +6,398 @@
              x:Class="SampleApp.DemoPages.ContextMenuDemo">
 
   <StackPanel Margin="20">
-    <!-- <Border Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"> -->
-    <Border Background="{DynamicResource LayoutBackgroundLowBrush}"
-            Height="400"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}" BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}">
-      <Border.ContextMenu>
-        <ContextMenu>
-          <MenuItem Header="Standard _Menu Item">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/User.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Header="Disabled" IsEnabled="False">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/DisableUser.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Header="Copy">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/CopyName.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Header="Paste">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/CopyPassword.svg" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <Separator />
-          <MenuItem Header="Menu with _Submenu">
-            <MenuItem.Icon>
-              <Svg Path="/Assets/Folder.svg" />
-            </MenuItem.Icon>
-            <MenuItem Header="Submenu _1">
-              <MenuItem.Icon>
-                <Svg Path="/Assets/Add.svg" />
-              </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Submenu _2">
-              <MenuItem.Icon>
-                <Svg Path="/Assets/Properties.svg" />
-              </MenuItem.Icon>
-            </MenuItem>
-            <Separator />
-            <MenuItem Header="Submenu _3">
-              <MenuItem.Icon>
-                <Svg Path="/Assets/User.svg" />
-              </MenuItem.Icon>
-            </MenuItem>
-          </MenuItem>
-        </ContextMenu>
-      </Border.ContextMenu>
-      <TextBlock Margin="10" VerticalAlignment="Top">Right-click anywhere in this space</TextBlock>
-    </Border>
-    <TextBlock Classes="section-title"
-               Margin="0 20">
+    <TextBlock Classes="section-title" Margin="0 0 0 12">
       Open Menu example for Visual Regression testing
     </TextBlock>
-    <ContextMenu HorizontalAlignment="Left">
-      <MenuItem Header="Standard _Menu Item">
-        <MenuItem.Icon>
-          <Svg Path="/Assets/User.svg" />
-        </MenuItem.Icon>
-      </MenuItem>
-      <MenuItem Header="Disabled" IsEnabled="False">
-        <MenuItem.Icon>
-          <Svg Path="/Assets/DisableUser.svg" />
-        </MenuItem.Icon>
-      </MenuItem>
-      <MenuItem Header="Copy">
-        <MenuItem.Icon>
-          <Svg Path="/Assets/CopyName.svg" />
-        </MenuItem.Icon>
-      </MenuItem>
-      <MenuItem Header="Paste">
-        <MenuItem.Icon>
-          <Svg Path="/Assets/CopyPassword.svg" />
-        </MenuItem.Icon>
-      </MenuItem>
-      <Separator />
-      <MenuItem Header="Menu with _Submenu">
-        <MenuItem.Icon>
-          <Svg Path="/Assets/Folder.svg" />
-        </MenuItem.Icon>
-        <MenuItem Header="Submenu _1">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/Add.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Submenu _2">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/Properties.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <Separator />
-        <MenuItem Header="Submenu _3">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="50" VerticalAlignment="Top">
+
+      <!-- Left column: standalone open ContextMenu -->
+      <ContextMenu Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <MenuItem Header="Open session">
           <MenuItem.Icon>
             <Svg Path="/Assets/User.svg" />
           </MenuItem.Icon>
         </MenuItem>
-      </MenuItem>
-    </ContextMenu>
+        <Separator />
+        <MenuItem Header="Open with parameters">
+          <MenuItem Header="Option 1" />
+          <MenuItem Header="Option 2" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="View password">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Padlock.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Copy username and password">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/CopyUserNamePassword.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Copy username" InputGesture="Ctrl+B">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/CopyUserName.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Copy password" InputGesture="Ctrl+Shift+B">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/CopyPassword.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Copy to YubiKey">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/PrivateKey.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Type clipboard">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Computer.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Add entry..." InputGesture="Insert">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Add.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Duplicate..." InputGesture="Ctrl+D">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/CopyName.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Add">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <MenuItem Header="Edit">
+          <MenuItem Header="Edit entry..." InputGesture="Ctrl+E">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Properties.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Edit (special actions)...">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/More.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Local-specific settings..." InputGesture="Ctrl+Alt+E">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Padlock.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Create shortcut">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/AddThin.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator />
+          <MenuItem Header="Edit sort priority...">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Details.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Tags...">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Add.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Parent">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Folder.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Asset...">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyName.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Rename" InputGesture="F2">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/CopyUserName.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Status">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/PasswordAnalyser.svg" />
+            </MenuItem.Icon>
+            <MenuItem Header="Item 1" />
+          </MenuItem>
+          <MenuItem Header="Local color coding">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Computer.svg" />
+            </MenuItem.Icon>
+            <MenuItem Header="Item 1" />
+          </MenuItem>
+        </MenuItem>
+        <MenuItem Header="Quick actions">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/More.svg" />
+          </MenuItem.Icon>
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Move...">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Folder.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Delete..." InputGesture="Ctrl+Delete">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/DisableUser.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Favorite">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/PasswordAnalyser.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Playlist">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Details.svg" />
+          </MenuItem.Icon>
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Clipboard">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Auto-typing">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Computer.svg" />
+          </MenuItem.Icon>
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <MenuItem Header="Macros/Scripts/Tools">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <MenuItem Header="View">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Import...">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <MenuItem Header="Export...">
+          <MenuItem Header="Item 1" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Expand all" InputGesture="Ctrl+Add">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/AddThin.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Collapse all" InputGesture="Ctrl+Subtract">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/HorizontalLine.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Properties...">
+          <MenuItem.Icon>
+            <Svg Path="/Assets/Properties.svg" />
+          </MenuItem.Icon>
+        </MenuItem>
+      </ContextMenu>
+
+      <!-- Right column: border area with right-click context menu -->
+      <Border Grid.Column="1"
+              Background="{DynamicResource LayoutBackgroundLowBrush}"
+              BorderBrush="{DynamicResource LayoutBorderMidBrush}" BorderThickness="{DynamicResource BorderThickness}"
+              CornerRadius="{DynamicResource LayoutCornerRadius}">
+        <Border.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Open session">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/User.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open with parameters">
+              <MenuItem Header="Option 1" />
+              <MenuItem Header="Option 2" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="View password">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Padlock.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy username and password">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/CopyUserNamePassword.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy username" InputGesture="Ctrl+B">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/CopyUserName.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy password" InputGesture="Ctrl+Shift+B">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/CopyPassword.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Copy to YubiKey">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/PrivateKey.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Type clipboard">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Computer.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Add entry..." InputGesture="Insert">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Add.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Duplicate..." InputGesture="Ctrl+D">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/CopyName.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Add">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <MenuItem Header="Edit">
+              <MenuItem Header="Edit entry..." InputGesture="Ctrl+E">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Properties.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Edit (special actions)...">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/More.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Local-specific settings..." InputGesture="Ctrl+Alt+E">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Padlock.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Create shortcut">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/AddThin.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="Edit sort priority...">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Details.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Tags...">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Add.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Parent">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Folder.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Asset...">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/CopyName.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Rename" InputGesture="F2">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/CopyUserName.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="Status">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/PasswordAnalyser.svg" />
+                </MenuItem.Icon>
+                <MenuItem Header="Item 1" />
+              </MenuItem>
+              <MenuItem Header="Local color coding">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/Computer.svg" />
+                </MenuItem.Icon>
+                <MenuItem Header="Item 1" />
+              </MenuItem>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Quick actions">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/More.svg" />
+              </MenuItem.Icon>
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Move...">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Folder.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Delete..." InputGesture="Ctrl+Delete">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/DisableUser.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Favorite">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/PasswordAnalyser.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Playlist">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Details.svg" />
+              </MenuItem.Icon>
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Clipboard">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <MenuItem Header="Auto-typing">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Computer.svg" />
+              </MenuItem.Icon>
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <MenuItem Header="Macros/Scripts/Tools">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <MenuItem Header="View">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Import...">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <MenuItem Header="Export...">
+              <MenuItem Header="Item 1" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Expand all" InputGesture="Ctrl+Add">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/AddThin.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Collapse all" InputGesture="Ctrl+Subtract">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/HorizontalLine.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Properties...">
+              <MenuItem.Icon>
+                <Svg Path="/Assets/Properties.svg" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </ContextMenu>
+        </Border.ContextMenu>
+        <TextBlock Margin="10" VerticalAlignment="Top">Right-click anywhere in this space</TextBlock>
+      </Border>
+
+    </Grid>
   </StackPanel>
 </UserControl>

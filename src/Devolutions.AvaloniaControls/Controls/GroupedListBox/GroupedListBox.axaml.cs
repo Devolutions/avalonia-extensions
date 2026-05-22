@@ -137,6 +137,7 @@ public class GroupedListBox : ListBox
     }
 
     [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
     public IBinding? GroupOrderBinding
     {
         get => this.GetValue(GroupOrderBindingProperty);
@@ -468,7 +469,7 @@ public class GroupedListBox : ListBox
 
     private Func<object, string>? ResolveGroupSelector()
     {
-        if (this.GetValue(GroupBindingProperty) is IBinding binding)
+        if (this.GetValue(GroupBindingProperty) is {} binding)
         {
             this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
             return this.bindingEvaluator?.BuildFormattedGetter(binding);
@@ -479,13 +480,13 @@ public class GroupedListBox : ListBox
 
     private Func<string, object?>? ResolveGroupOrderSelector()
     {
-        if (this.GetValue(GroupOrderBindingProperty) is IBinding binding)
+        if (this.GetValue(GroupOrderBindingProperty) is {} binding)
         {
             this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
             return this.bindingEvaluator?.BuildFormattedGetter(binding);
         }
 
-        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        if (this.GetValue(GroupOrderSelectorProperty) is {} orderFn)
         {
             return str => orderFn(str);
         }

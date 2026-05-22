@@ -236,6 +236,7 @@ public class GroupedTileListBox : TemplatedControl
     /// The binding is evaluated against the group key (string) as DataContext.
     /// </summary>
     [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
     public IBinding? GroupOrderBinding
     {
         get => this.GetValue(GroupOrderBindingProperty);
@@ -1449,8 +1450,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Func<object, string>? ResolveGroupSelector()
     {
-        IBinding? binding = this.GetValue(GroupBindingProperty);
-        if (binding is not null)
+        if (this.GetValue(GroupBindingProperty) is {} binding)
         {
             this.EnsureInitBindingEvaluator();
             return this.bindingEvaluator?.BuildFormattedGetter(binding);
@@ -1465,14 +1465,13 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private Func<string, object?>? ResolveGroupOrderSelector()
     {
-        IBinding? binding = this.GetValue(GroupOrderBindingProperty);
-        if (binding is not null)
+        if (this.GetValue(GroupOrderBindingProperty) is {} binding)
         {
             this.EnsureInitBindingEvaluator();
-            return this.bindingEvaluator?.BuildRawGetter(binding);
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
         }
 
-        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        if (this.GetValue(GroupOrderSelectorProperty) is {} orderFn)
         {
             return str => orderFn(str);
         }
@@ -1484,8 +1483,8 @@ public class GroupedTileListBox : TemplatedControl
     {
         if (this.bindingEvaluator is null)
         {
-            if (this.ItemsSource?.GetType() is { } itemsType
-                && BindingEvaluator.GetTypeFromItemsSource(itemsType) is { } itemType)
+            if (this.ItemsSource?.GetType() is {} itemsType
+                && BindingEvaluator.GetTypeFromItemsSource(itemsType) is {} itemType)
             {
                 this.bindingEvaluator = new BindingEvaluator(this, itemType);
             }

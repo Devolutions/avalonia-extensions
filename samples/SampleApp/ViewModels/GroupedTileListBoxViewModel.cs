@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 // Data model for the demo
-public record FoodItem(string Name, string Category);
+public record FoodItem(string Name, string Category, string? IconName = null);
 
 public partial class GroupedTileListBoxViewModel : ObservableObject
 {
@@ -109,7 +109,7 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
         "Meats" => 0,
         "Fruits" => 1,
         "Vegetables" => 2,
-        _ => 999
+        _ => 999,
     };
 
     // Group order selector - empty groups first, then alphabetical

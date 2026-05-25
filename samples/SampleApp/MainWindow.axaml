@@ -154,6 +154,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="GroupedListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:GroupedListBoxDemo>
+                  <demoPages:GroupedListBoxDemo.DataContext>
+                    <vm:GroupedListBoxViewModel />
+                  </demoPages:GroupedListBoxDemo.DataContext>
+                </demoPages:GroupedListBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="GroupedTileListBox" ApplicableTo="MacClassic, DevExpress, Linux" />
                 </TabItem.Header>
                 <demoPages:GroupedTileListBoxDemo>

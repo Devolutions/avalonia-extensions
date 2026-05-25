@@ -4,6 +4,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Collections;
@@ -16,10 +17,12 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using Extensions;
+using Helpers;
 
 [TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
 [PseudoClasses(PC_DropdownOpen, PC_Pressed)]
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public partial class EditableComboBox : SelectingItemsControl, IInputElement
 {
     public const string PC_DropdownOpen = ":dropdownopen";
@@ -115,6 +118,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private static readonly object NullSourceKey = new();
 
     private Dictionary<object, string> realizedItems = new();
+
+    private BindingEvaluator? bindingEvaluator = null;
+    private Func<object, string>? selectedValueEvaluator = null;
+    private bool selectedValueEvaluatorDirty = true;
 
     static EditableComboBox()
     {
@@ -324,6 +331,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
             this.SyncCommittedSelectionState();
         }
+        else if (change.Property == ItemTemplateProperty)
+        {
+            this.selectedValueEvaluatorDirty = true;
+        }
     }
 
     protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
@@ -344,7 +355,11 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.Items.CollectionChanged += this.Items_CollectionChanged;
         this.compositeDisposable.Add(this.innerComboBox.GetObservable(ComboBox.IsDropDownOpenProperty).Subscribe(this.OnInnerDropDownOpenChanged));
         this.compositeDisposable.Add(this.GetObservable(ItemsSourceProperty).Subscribe(_ => this.FillItems()));
-        this.compositeDisposable.Add(this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.FillItems()));
+        this.compositeDisposable.Add(this.GetObservable(ItemTemplateProperty).Subscribe(_ =>
+        {
+            this.selectedValueEvaluatorDirty = true;
+            this.FillItems();
+        }));
         this.compositeDisposable.Add(this.GetObservable(ValueProperty).Subscribe(_ => this.FilterItems()));
 
         // Design-time support: Check if DataValidationErrors.Error is set in the previewer
@@ -568,14 +583,22 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private static string? CoerceText(AvaloniaObject sender, string? value) =>
         ((EditableComboBox)sender).CoerceText(value);
 
+    private void UpdateBindingEvaluators()
+    {
+        if (this.selectedValueEvaluatorDirty)
+        {
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            var selectedItemBinding = (this.ItemTemplate as EditableComboBoxDataTemplate)?.SelectedItemValue;
+            this.selectedValueEvaluator = this.bindingEvaluator?.BuildFormattedGetter(selectedItemBinding);
+            
+            this.selectedValueEvaluatorDirty = false;
+        }
+    }
+
 
     private void FillItems(bool filter = false)
     {
         if (!this.IsInitialized) return;
-
-        BindingEvaluator? evaluator = this.ItemTemplate is EditableComboBoxDataTemplate { SelectedItemValue: { } binding }
-            ? new BindingEvaluator(binding)
-            : null;
 
         // Build a lightweight value-string lookup. Raw source objects go directly into filteredItems
         // so that InnerComboBox.NeedsContainerOverride returns true for them, enabling VSP virtualization.
@@ -584,9 +607,26 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         for (int i = 0; i < this.ItemsView.Count; ++i)
         {
             object? item = this.ItemsView[i];
-            string value = item is EditableComboBoxItem comboBoxItem
-                ? comboBoxItem.Value
-                : evaluator?.Evaluate(item) ?? item?.ToString() ?? string.Empty;
+
+            string value;
+            if (item is null)
+            {
+                value = string.Empty;
+            }
+            else if (item is EditableComboBoxItem comboBoxItem)
+            {
+                value = comboBoxItem.Value;
+            }
+            else if (this.selectedValueEvaluator is {} selectedValueEvaluator)
+            {
+                this.UpdateBindingEvaluators();
+                value = selectedValueEvaluator(item);
+            }
+            else
+            {
+                value = item.ToString() ?? string.Empty;
+            }
+
             this.realizedItems[GetSourceKey(item)] = value;
         }
 
@@ -737,9 +777,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         if (this.innerComboBox.SelectedIndex < 0)
         {
-            this.Value = this.realizedItems.TryGetValue(GetSourceKey(this.SelectedItem), out string? revertToValue)
-                ? revertToValue
-                : null;
+            this.Value = this.realizedItems.GetValueOrDefault(GetSourceKey(this.SelectedItem));
         }
     }
 
@@ -779,30 +817,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
 
         this.Value = this.GetSelectedItemValue();
-    }
-
-
-    private sealed class BindingEvaluator : StyledElement
-    {
-        private static readonly StyledProperty<string?> ResultProperty =
-            AvaloniaProperty.Register<BindingEvaluator, string?>(nameof(Result));
-
-        public string? Result
-        {
-            get => this.GetValue(ResultProperty);
-            set => this.SetValue(ResultProperty, value);
-        }
-
-        public BindingEvaluator(IBinding binding)
-        {
-            this.Bind(ResultProperty, binding);
-        }
-
-        public string? Evaluate(object? item)
-        {
-            this.DataContext = item;
-            return this.Result;
-        }
     }
 
     private void SyncCommittedSelectionState()

@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
-             x:Class="SampleApp.DemoPages.GroupedTileListBoxDemo"
-             x:DataType="vm:GroupedTileListBoxViewModel">
+             x:Class="SampleApp.DemoPages.GroupedListBoxDemo"
+             x:DataType="vm:GroupedListBoxViewModel">
 
   <ScrollViewer>
     <StackPanel Margin="20" Spacing="30">
@@ -14,10 +14,9 @@
       <StackPanel Spacing="10">
         <TextBlock FontWeight="Bold" FontSize="16">Scenario 1: Named Groups</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          All items are organized into named groups (Fruits, Vegetables, Meats).
+          Items are organized into collapsible groups (Meats, Fruits, Vegetables) using GroupBinding and GroupOrderSelector.
         </TextBlock>
 
-        <!-- Selected item display -->
         <Border BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
                 Padding="8"
@@ -43,33 +42,27 @@
           </StackPanel>
         </Border>
 
-        <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
-          <GroupedTileListBox Grid.Column="0"
-                              ItemsSource="{Binding GroupedItems}"
-                              SelectedItem="{Binding SelectedGroupedItem}"
-                              GroupSelector="{Binding CategoryGroupSelector}"
-                              GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
-                              GroupOrderAlphabetical="True"
-                              ItemWidth="120"
-                              ItemHeight="100"
-                              DoubleTapped="GroupedListBox_OnDoubleTapped"
-                              CornerRadius="10">
-              
-            <GroupedTileListBox.ItemTemplate>
+          <GroupedListBox Grid.Column="0"
+                                   ItemsSource="{Binding GroupedItems}"
+                                   SelectedItem="{Binding SelectedGroupedItem}"
+                                   AutoScrollToSelectedItem="False"
+                                   GroupBinding="{Binding Category}"
+                                   GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                                   GroupOrderAlphabetical="True"
+                                   DoubleTapped="GroupedListBox_OnDoubleTapped">
+            <GroupedListBox.ItemTemplate>
               <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Spacing="4" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Name}"
-                             FontWeight="SemiBold"
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="4">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                   <TextBlock Text="{Binding Category}"
                              FontSize="11"
-                             TextAlignment="Center"/>
+                             VerticalAlignment="Center"
+                             Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
                 </StackPanel>
               </DataTemplate>
-            </GroupedTileListBox.ItemTemplate>
-          </GroupedTileListBox>
+            </GroupedListBox.ItemTemplate>
+          </GroupedListBox>
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
 
@@ -85,10 +78,9 @@
       <StackPanel Spacing="10">
         <TextBlock FontWeight="Bold" FontSize="16">Scenario 2: Groups with Empty Group First</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          Items are grouped, with an empty/unnamed group appearing first (using GroupOrderSelector).
+          Items are grouped, with an empty/unnamed group appearing first (using GroupOrderSelector). The unnamed group renders as a bare list (no header).
         </TextBlock>
 
-        <!-- Selected item display -->
         <Border BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
                 Padding="8"
@@ -114,30 +106,16 @@
           </StackPanel>
         </Border>
 
-        <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
-          <GroupedTileListBox Grid.Column="0"
-                              ItemsSource="{Binding EmptyGroupItems}"
-                              SelectedItem="{Binding SelectedEmptyGroupItem}"
-                              GroupSelector="{Binding CategoryGroupSelector}"
-                              GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
-                              ItemWidth="120"
-                              ItemHeight="100"
-                              DoubleTapped="EmptyGroupListBox_OnDoubleTapped">
-            <GroupedTileListBox.DataTemplates>
-              <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Spacing="4" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Name}"
-                             FontWeight="SemiBold"
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"/>
-                  <TextBlock Text="{Binding Category}"
-                             FontSize="11"
-                             TextAlignment="Center"/>
-                </StackPanel>
-              </DataTemplate>
-            </GroupedTileListBox.DataTemplates>
-          </GroupedTileListBox>
+          <GroupedListBox Grid.Column="0"
+                                   ItemsSource="{Binding EmptyGroupItems}"
+                                   SelectedItem="{Binding SelectedEmptyGroupItem}"
+                                   GroupForeground="#266fd2"
+                                   GroupBinding="{Binding Category}"
+                                   GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                                   DisplayMemberBinding="{Binding Name}"
+                                   EmptyGroupName="NO GROUP"
+                                   DoubleTapped="EmptyGroupListBox_OnDoubleTapped" />
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
 
@@ -148,15 +126,14 @@
                      Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
         </Grid>
       </StackPanel>
-
-      <!-- Scenario 3: Flat List (No Grouping) -->
+      
+      <!-- Scenario 3: with icons -->
       <StackPanel Spacing="10">
-        <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Flat List (No Grouping)</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 1: Named Groups</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          Items displayed in a flat list without any grouping (GroupSelector is null).
+          Template contains an icon in it's inner left content
         </TextBlock>
 
-        <!-- Selected item display -->
         <Border BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
                 Padding="8"
@@ -165,45 +142,39 @@
           <StackPanel Spacing="4">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <TextBlock Text="Selected:" FontWeight="SemiBold"/>
-              <TextBlock Text="{Binding SelectedFlatItem.Name, FallbackValue='(none)'}" />
-              <TextBlock Text="-" IsVisible="{Binding SelectedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-              <TextBlock Text="{Binding SelectedFlatItem.Category}"
+              <TextBlock Text="{Binding SelectedGroupedItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding SelectedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding SelectedGroupedItem.Category}"
                          Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                         IsVisible="{Binding SelectedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                         IsVisible="{Binding SelectedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="8">
               <TextBlock Text="Double-clicked:" FontWeight="SemiBold"/>
-              <TextBlock Text="{Binding DoubleClickedFlatItem.Name, FallbackValue='(none)'}" />
-              <TextBlock Text="-" IsVisible="{Binding DoubleClickedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-              <TextBlock Text="{Binding DoubleClickedFlatItem.Category}"
+              <TextBlock Text="{Binding DoubleClickedGroupedItem.Name, FallbackValue='(none)'}" />
+              <TextBlock Text="-" IsVisible="{Binding DoubleClickedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+              <TextBlock Text="{Binding DoubleClickedGroupedItem.Category}"
                          Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                         IsVisible="{Binding DoubleClickedFlatItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                         IsVisible="{Binding DoubleClickedGroupedItem, Converter={x:Static ObjectConverters.IsNotNull}}"/>
             </StackPanel>
           </StackPanel>
         </Border>
 
-        <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
-          <GroupedTileListBox Grid.Column="0"
-                              ItemsSource="{Binding FlatItems}"
-                              SelectedItem="{Binding SelectedFlatItem}"
-                              ItemWidth="120"
-                              ItemHeight="100"
-                              DoubleTapped="FlatListBox_OnDoubleTapped">
-            <GroupedTileListBox.ItemTemplate>
+          <GroupedListBox Grid.Column="0"
+                                   ItemsSource="{Binding GroupedItems}"
+                                   SelectedItem="{Binding SelectedGroupedItem}"
+                                   AutoScrollToSelectedItem="False"
+                                   GroupBinding="{Binding Category}"
+                                   GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                                   GroupOrderAlphabetical="True"
+                                   DisplayMemberBinding="{Binding Name}"
+                                   DoubleTapped="GroupedListBox_OnDoubleTapped">
+            <GroupedListBox.IconTemplate>
               <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Spacing="4" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Name}"
-                             FontWeight="SemiBold"
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"/>
-                  <TextBlock Text="{Binding Category}"
-                             FontSize="11"
-                             TextAlignment="Center"/>
-                </StackPanel>
+                <Svg Path="{Binding IconName, StringFormat='/Assets/{0}.svg'}" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
               </DataTemplate>
-            </GroupedTileListBox.ItemTemplate>
-          </GroupedTileListBox>
+            </GroupedListBox.IconTemplate>
+          </GroupedListBox>
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
 
@@ -215,14 +186,13 @@
         </Grid>
       </StackPanel>
 
-      <!-- Scenario 4: Large Dataset (Virtualization Test) -->
+      <!-- Scenario 4: Large Dataset -->
       <StackPanel Spacing="10">
-        <TextBlock FontWeight="Bold" FontSize="16">Scenario 4: Large Dataset (Virtualization Test)</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 3: Large Dataset</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          500 items across 3 categories to stress-test virtualization (Alpha ×200, Beta ×200, Gamma ×100).
+          500 items across 3 categories (Alpha ×200, Beta ×200, Gamma ×100). Tests behavior with many items per group.
         </TextBlock>
 
-        <!-- Selected item display -->
         <Border BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
                 Padding="8"
@@ -248,29 +218,25 @@
           </StackPanel>
         </Border>
 
-        <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
-          <GroupedTileListBox Grid.Column="0"
-                              ItemsSource="{Binding LargeItems}"
-                              SelectedItem="{Binding SelectedLargeItem}"
-                              GroupSelector="{Binding CategoryGroupSelector}"
-                              ItemWidth="120"
-                              ItemHeight="100"
-                              DoubleTapped="LargeListBox_OnDoubleTapped">
-            <GroupedTileListBox.ItemTemplate>
+          <GroupedListBox Grid.Column="0"
+                                   ItemsSource="{Binding LargeItems}"
+                                   SelectedItem="{Binding SelectedLargeItem}"
+                                   GroupBinding="{Binding Category}"
+                                   GroupsExpandedByDefault="False"
+                                   DoubleTapped="LargeListBox_OnDoubleTapped">
+            <GroupedListBox.ItemTemplate>
               <DataTemplate DataType="vm:FoodItem">
-                <StackPanel Spacing="4" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Name}"
-                             FontWeight="SemiBold"
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="4">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                   <TextBlock Text="{Binding Category}"
                              FontSize="11"
-                             TextAlignment="Center"/>
+                             VerticalAlignment="Center"
+                             Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
                 </StackPanel>
               </DataTemplate>
-            </GroupedTileListBox.ItemTemplate>
-          </GroupedTileListBox>
+            </GroupedListBox.ItemTemplate>
+          </GroupedListBox>
 
           <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
 

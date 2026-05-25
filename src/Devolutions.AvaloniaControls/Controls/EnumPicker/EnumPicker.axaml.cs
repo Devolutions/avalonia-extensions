@@ -155,7 +155,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private static readonly Dictionary<T, string> EmptyOverrides = [];
 
     // Cached sort delegate to avoid per-call closure allocation. Reads cached fields.
-    private Comparison<EnumPickerItem>? cachedSortComparison;
+    private Comparison<EnumPickerItem<T>>? cachedSortComparison;
     private Comparison<Enum>? sortSnapshot;
     private SortOrder alphabeticalOrderSnapshot;
 
@@ -413,7 +413,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         int includedCount = included.Count;
         if (this.includedSetDirty && includedCount > 0)
         {
-            var includedSet = new HashSet<T>(includedCount, EqualityComparer<T>.Default);
+            var includedSet = new HashSet<T>(includedCount, EnumEqualsComparer.Instance);
             for (var i = 0; i < includedCount; ++i)
             {
                 includedSet.Add(included[i]);
@@ -425,7 +425,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         int excludedCount = excluded.Count;
         if (this.excludedSetDirty && excludedCount > 0)
         {
-            var excludedSet = new HashSet<T>(excludedCount, EqualityComparer<T>.Default);
+            var excludedSet = new HashSet<T>(excludedCount, EnumEqualsComparer.Instance);
             for (var i = 0; i < excludedCount; ++i)
             {
                 excludedSet.Add(excluded[i]);
@@ -439,7 +439,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         //
         // Profiling show a ~3x improvement in speed + reduced GC pressure, which
         // can be relevant since this can be a pretty hot path in some applications.
-        var list = new List<EnumPickerItem>(this.allEnumValues.Length);
+        var list = new List<EnumPickerItem<T>>(this.allEnumValues.Length);
         EnumPickerItem? selectedItem = null;
         for (var i = 0; i < this.allEnumValues.Length; ++i)
         {
@@ -482,13 +482,13 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.isInitialValueSet = true;
     }
 
-    private int CompareItems(EnumPickerItem a, EnumPickerItem b)
+    private int CompareItems(EnumPickerItem<T> a, EnumPickerItem<T> b)
     {
         var result = 0;
         Comparison<Enum>? sort = this.sortSnapshot;
         if (sort is not null)
         {
-            result = sort(((EnumPickerItem<T>)a).Value, ((EnumPickerItem<T>)b).Value);
+            result = sort(a.Value, b.Value);
         }
 
         if (result != 0)
@@ -510,6 +510,15 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         return 0;
     }
 
+    private class EnumEqualsComparer : IEqualityComparer<T>
+    {
+        public static readonly EnumEqualsComparer Instance = new(); 
+        
+        public bool Equals(T x, T y) => EnumEquals(x, y);
+
+        public int GetHashCode(T e) => EnumHash(e);
+    }
+    
     // Devirtualized enum equality. Enums in C# can use any integral underlying type
     // (byte/sbyte/short/ushort/int/uint/long/ulong), so we dispatch on size which the
     // JIT folds to a constant for a given T, eliminating the branches entirely.
@@ -541,6 +550,28 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             return Unsafe.As<T, ulong>(ref a) == Unsafe.As<T, ulong>(ref b);
         }
         return EqualityComparer<T>.Default.Equals(a, b);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int EnumHash(T e)
+    {
+        if (Unsafe.SizeOf<T>() == 1)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 2)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 4)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 8)
+        {
+            return Unsafe.As<T, ulong>(ref e).GetHashCode();
+        }
+        return e.GetHashCode();
     }
 
     private void UpdateIncludedValues(object? sender, NotifyCollectionChangedEventArgs e)

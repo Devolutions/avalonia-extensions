@@ -21,6 +21,7 @@
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
     <Setter Property="MinHeight" Value="26" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
@@ -39,13 +40,22 @@
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
             BorderThickness="{TemplateBinding BorderThickness}"
-            CornerRadius="{TemplateBinding CornerRadius}" />
+            CornerRadius="{TemplateBinding CornerRadius}"
+            UseLayoutRounding="True" />
+          <Border
+            Name="ButtonAccentFocusContrastElement"
+            Background="Transparent"
+            BorderBrush="{DynamicResource TransparentBrush}"
+            BorderThickness="2"
+            CornerRadius="{TemplateBinding CornerRadius}"
+            UseLayoutRounding="True" />
           <Border
             Name="ButtonActiveElement"
             Background="Transparent"
             BorderBrush="{DynamicResource TransparentBrush}"
             BorderThickness="2"
-            CornerRadius="{TemplateBinding CornerRadius}" />
+            CornerRadius="{TemplateBinding CornerRadius}"
+            UseLayoutRounding="True" />
           <ContentPresenter
             Name="PART_ContentPresenter"
             Content="{TemplateBinding Content}"
@@ -64,12 +74,11 @@
       <Setter Property="Background" Value="{DynamicResource ButtonPointerOverBrushTransparent}" />
     </Style>
     <Style Selector="^:pressed">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
       <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
         <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
       </Style>
     </Style>
-    <Style Selector="^:focus, ^:focus-visible">
+    <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#ButtonActiveElement">
         <Setter Property="BorderBrush" Value="{WindowActiveResourceToggler ControlBackgroundAccentBrush, ControlBorderRaisedBrush}" />
       </Style>
@@ -83,7 +92,25 @@
       <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
         <Setter Property="Background" Value="{DynamicResource ButtonAccentPointerOverBrushTransparent}" />
       </Style>
+
+      <Style Selector="^:pressed">
+        <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
+          <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        </Style>
+      </Style>
+
+      <Style Selector="^:focus-visible">
+        <Style Selector="^ /template/ Border#ButtonAccentFocusContrastElement">
+          <Setter Property="BorderBrush" Value="#ffffff" />
+          <Setter Property="Margin" Value="{DynamicResource ButtonAccentFocusMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#ButtonActiveElement">
+          <Setter Property="BorderBrush" Value="{DynamicResource ButtonAccentFocusBorderBrush}" />
+          <Setter Property="Margin" Value="{DynamicResource ButtonAccentFocusMargin}" />
+        </Style>
+      </Style>
     </Style>
+
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabledBrush}" />
       <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />

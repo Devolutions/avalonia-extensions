@@ -95,6 +95,9 @@
 
       <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="#EEEEEE" />
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
+
+      <SolidColorBrush x:Key="ButtonAccentFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
+      <Thickness x:Key="ButtonAccentFocusMargin">1</Thickness>
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
@@ -187,6 +190,9 @@
 
       <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="Transparent" />
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#3C3C3C" />
+
+      <SolidColorBrush x:Key="ButtonAccentFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

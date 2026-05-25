@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 
 using Avalonia;
 using Avalonia.Collections;
@@ -60,6 +61,8 @@ public abstract class EnumPicker : TemplatedControl
             static (o, v) => o.InnerRightContent = v);
 
     protected bool UpdatingItems;
+
+    public abstract Type EnumType { get; }
 
     public IReadOnlyCollection<EnumPickerItem> Items
     {
@@ -120,21 +123,41 @@ public abstract class EnumPicker : TemplatedControl
 
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
-    private readonly IReadOnlyCollection<T> allEnumValues = Enum.GetValues<T>();
+    private readonly T[] allEnumValues = Enum.GetValues<T>();
 
     private bool initialized;
     private bool isInitialValueSet;
     private bool isTemplateSet;
     private bool textOverridesDirty = true;
+    private HashSet<T>? includedSet = null;
+    private bool includedSetDirty = true;
+    private HashSet<T>? excludedSet = null;
+    private bool excludedSetDirty = true;
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
     public EnumPicker()
     {
-        this.Items = this.allEnumValues.Select(enumValue => new EnumPickerItem { EnumValue = enumValue, Text = this.GetEnumText(enumValue, []) }).ToList();
+        Func<Enum, string>? textProvider = this.TextProvider;
+        List<EnumPickerItem> items = new(this.allEnumValues.Length);
+        for (var i = 0; i < this.allEnumValues.Length; ++i)
+        {
+            T v = this.allEnumValues[i];
+            items.Add(new EnumPickerItem<T> { Value = v, EnumValue = v, Text = GetEnumText(v, EmptyOverrides, textProvider) });
+        }
+        this.Items = items;
 
         this.DidChangeTextOverrides();
     }
+
+    public override Type EnumType => typeof(T);
+
+    private static readonly Dictionary<T, string> EmptyOverrides = [];
+
+    // Cached sort delegate to avoid per-call closure allocation. Reads cached fields.
+    private Comparison<EnumPickerItem<T>>? cachedSortComparison;
+    private Comparison<Enum>? sortSnapshot;
+    private SortOrder alphabeticalOrderSnapshot;
 
 #pragma warning disable AVP1002
     public static readonly DirectProperty<EnumPicker<T>, SortOrder> AlphabeticalOrderProperty =
@@ -143,14 +166,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             o => o.AlphabeticalOrder,
             (o, v) => o.AlphabeticalOrder = v);
 
-    public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> ExcludedValuesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
+    public static readonly DirectProperty<EnumPicker<T>, IList<T>> ExcludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IList<T>>(
             nameof(ExcludedValues),
             o => o.ExcludedValues,
             (o, v) => o.ExcludedValues = v);
 
-    public static readonly DirectProperty<EnumPicker<T>, ICollection<T>> IncludedValuesProperty =
-        AvaloniaProperty.RegisterDirect<EnumPicker<T>, ICollection<T>>(
+    public static readonly DirectProperty<EnumPicker<T>, IList<T>> IncludedValuesProperty =
+        AvaloniaProperty.RegisterDirect<EnumPicker<T>, IList<T>>(
             nameof(IncludedValues),
             o => o.IncludedValues,
             (o, v) => o.IncludedValues = v);
@@ -184,22 +207,23 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// <summary>
     /// Gets or sets the values that should not be listed, an excluded value overrides the same value being in <see cref="IncludedValues"/>
     /// </summary>
-    public ICollection<T> ExcludedValues
+    public IList<T> ExcludedValues
     {
         get;
         set
         {
             if (field is INotifyCollectionChanged beforeCollection)
             {
-                beforeCollection.CollectionChanged -= this.UpdateValues;
+                beforeCollection.CollectionChanged -= this.UpdateExcludedValues;
             }
 
+            this.excludedSetDirty = true;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             this.SetAndRaise(ExcludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
             if (field is INotifyCollectionChanged afterCollection)
             {
-                afterCollection.CollectionChanged += this.UpdateValues;
+                afterCollection.CollectionChanged += this.UpdateExcludedValues;
             }
         }
     } = new AvaloniaList<T>();
@@ -207,22 +231,23 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     /// <summary>
     /// Gets or sets the values that should be listed, values in <see cref="ExcludedValues"/> are still excluded
     /// </summary>
-    public ICollection<T> IncludedValues
+    public IList<T> IncludedValues
     {
         get;
         set
         {
             if (field is INotifyCollectionChanged beforeCollection)
             {
-                beforeCollection.CollectionChanged -= this.UpdateValues;
+                beforeCollection.CollectionChanged -= this.UpdateIncludedValues;
             }
 
+            this.includedSetDirty = true;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             this.SetAndRaise(IncludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
             if (field is INotifyCollectionChanged afterCollection)
             {
-                afterCollection.CollectionChanged += this.UpdateValues;
+                afterCollection.CollectionChanged += this.UpdateIncludedValues;
             }
         }
     } = new AvaloniaList<T>();
@@ -295,13 +320,16 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     }
 
     private string GetEnumText(T value, Dictionary<T, string> textOverrideDictionary)
+        => GetEnumText(value, textOverrideDictionary, this.TextProvider);
+
+    private static string GetEnumText(T value, Dictionary<T, string> textOverrideDictionary, Func<Enum, string>? textProvider)
     {
         if (textOverrideDictionary.TryGetValue(value, out string? textOverride))
         {
             return textOverride;
         }
 
-        if (this.TextProvider?.Invoke(value) is { } providedText)
+        if (textProvider?.Invoke(value) is { } providedText)
         {
             return providedText;
         }
@@ -342,19 +370,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     }
     
     private void InvalidateTextOverrides() => this.textOverridesDirty = true;
-
-    // Note: We do a manual List allocation, population and in-place sorting
-    //       to avoid LINQ overhead.
-    //
-    //       Profiling show a ~3x improvement in speed + reduced GC pressure, which
-    //       can be relevant since this can be a pretty hot path in some applications.
+    
     private void UpdateValues()
     {
         if (!this.initialized || !this.isTemplateSet)
         {
             return;
         }
-        
+
         T selection = this.SelectedValue;
 
         if (this.textOverridesDirty)
@@ -363,59 +386,92 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             this.textOverridesDirty = false;
         }
 
-        HashSet<T>? includedSet = this.IncludedValues.Count > 0
-            ? (this.IncludedValues as HashSet<T> ?? [..this.IncludedValues])
-            : null;
-        HashSet<T>? excludedSet = this.ExcludedValues.Count > 0
-            ? (this.ExcludedValues as HashSet<T> ?? [..this.ExcludedValues])
-            : null;
+        // Hoist property reads — each goes through Avalonia's property system, non-trivial cost in a hot loop.
+        Func<Enum, string>? textProvider = this.TextProvider;
+        Comparison<Enum>? sort = this.CustomSort;
+        SortOrder alphabeticalOrder = this.AlphabeticalOrder;
+        IList<T> included = this.IncludedValues;
+        IList<T> excluded = this.ExcludedValues;
+        Dictionary<T, string> overrides = this.cachedTextOverrides;
 
-        var list = new List<EnumPickerItem>(this.allEnumValues.Count);
-        EnumPickerItem? selectedItem = null;
-        foreach (T val in this.allEnumValues)
+        // Micro-optimization;
+        // this is faster than using new HashSet(this.ExcludedValues), at least at the time of writing,
+        // since the implementation in the constructor from Enumerable will :
+        //   - do an additional type-check to check if it's a ICollection
+        //   - initialize with the collection count as capacity
+        //   - call UnionWith(<provided_enumerable>)
+        //   - trim excess
+        //
+        // we also use a manual for loop instead of `UnionWith`, since `UnionWith` (again, at the time
+        // of writing), does an additional null-check + a foreach on the enumerable, and I'm not certain
+        // that the foreach will always be am efficient iteration over lists instead of always using
+        // the enumerable's iterator.
+        //
+        // Finally we also provide the comparer, since we need the same one for the 2 collections and provide
+        // a faster one.
+        // - sbergerondrouin 2026-05-22
+        int includedCount = included.Count;
+        if (this.includedSetDirty && includedCount > 0)
         {
-            if (includedSet != null && !includedSet.Contains(val))
+            var includedSet = new HashSet<T>(includedCount, EnumEqualsComparer.Instance);
+            for (var i = 0; i < includedCount; ++i)
+            {
+                includedSet.Add(included[i]);
+            }
+            this.includedSet = includedSet;
+            this.includedSetDirty = false;
+        }
+
+        int excludedCount = excluded.Count;
+        if (this.excludedSetDirty && excludedCount > 0)
+        {
+            var excludedSet = new HashSet<T>(excludedCount, EnumEqualsComparer.Instance);
+            for (var i = 0; i < excludedCount; ++i)
+            {
+                excludedSet.Add(excluded[i]);
+            }
+            this.excludedSet = excludedSet;
+            this.excludedSetDirty = false;
+        }
+
+        // We do a manual List allocation, population and then in-place sorting
+        // to avoid LINQ overhead.
+        //
+        // Profiling show a ~3x improvement in speed + reduced GC pressure, which
+        // can be relevant since this can be a pretty hot path in some applications.
+        var list = new List<EnumPickerItem<T>>(this.allEnumValues.Length);
+        EnumPickerItem? selectedItem = null;
+        for (var i = 0; i < this.allEnumValues.Length; ++i)
+        {
+            T val = this.allEnumValues[i];
+
+            if (includedCount > 0 && !this.includedSet!.Contains(val))
             {
                 continue;
             }
 
-            if (excludedSet != null && excludedSet.Contains(val))
+            if (excludedCount > 0 && this.excludedSet!.Contains(val))
             {
                 continue;
             }
 
-            var item = new EnumPickerItem { EnumValue = val, Text = this.GetEnumText(val, this.cachedTextOverrides) };
+            var item = new EnumPickerItem<T> { Value = val, EnumValue = val, Text = GetEnumText(val, overrides, textProvider) };
             list.Add(item);
 
-            if (EqualityComparer<T>.Default.Equals(val, selection))
+            if (EnumEquals(val, selection))
             {
                 selectedItem = item;
             }
         }
 
-        Comparison<Enum>? sort = this.CustomSort;
-        SortOrder alphabeticalOrder = this.AlphabeticalOrder;
         if (sort is not null || alphabeticalOrder != SortOrder.None)
         {
-            list.Sort((a, b) =>
-            {
-                int result = 0;
-                if (sort is not null)
-                {
-                    result = sort((T)a.EnumValue, (T)b.EnumValue);
-                }
-
-                if (result == 0 && alphabeticalOrder == SortOrder.Ascending)
-                {
-                    result = string.Compare(a.Text, b.Text, StringComparison.InvariantCultureIgnoreCase);
-                }
-                else if (result == 0 && alphabeticalOrder == SortOrder.Descending)
-                {
-                    result = string.Compare(b.Text, a.Text, StringComparison.InvariantCultureIgnoreCase);
-                }
-
-                return result;
-            });
+            // Cache a single Comparison<EnumPickerItem> delegate that reads cached snapshot fields,
+            // avoiding per-call closure allocation.
+            this.sortSnapshot = sort;
+            this.alphabeticalOrderSnapshot = alphabeticalOrder;
+            this.cachedSortComparison ??= this.CompareItems;
+            list.Sort(this.cachedSortComparison);
         }
 
         this.Items = list;
@@ -426,7 +482,109 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         this.isInitialValueSet = true;
     }
 
-    private void UpdateValues(object? sender, NotifyCollectionChangedEventArgs e) => this.UpdateValues();
+    private int CompareItems(EnumPickerItem<T> a, EnumPickerItem<T> b)
+    {
+        var result = 0;
+        Comparison<Enum>? sort = this.sortSnapshot;
+        if (sort is not null)
+        {
+            result = sort(a.Value, b.Value);
+        }
+
+        if (result != 0)
+        {
+            return result;
+        }
+
+        SortOrder order = this.alphabeticalOrderSnapshot;
+        if (order == SortOrder.Ascending)
+        {
+            return string.Compare(a.Text, b.Text, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        if (order == SortOrder.Descending)
+        {
+            return string.Compare(b.Text, a.Text, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        return 0;
+    }
+
+    private class EnumEqualsComparer : IEqualityComparer<T>
+    {
+        public static readonly EnumEqualsComparer Instance = new(); 
+        
+        public bool Equals(T x, T y) => EnumEquals(x, y);
+
+        public int GetHashCode(T e) => EnumHash(e);
+    }
+    
+    // Devirtualized enum equality. Enums in C# can use any integral underlying type
+    // (byte/sbyte/short/ushort/int/uint/long/ulong), so we dispatch on size which the
+    // JIT folds to a constant for a given T, eliminating the branches entirely.
+    //
+    // The Unsafe.SizeOf<T>() calls are JIT intrinsics that resolve to a constant per
+    // generic instantiation. Combined with AggressiveInlining, the dead branches are
+    // dropped at codegen time — at runtime, EnumPicker<MyIntEnum>.EnumEquals reduces
+    // to a single 32-bit compare with no size check, no jump table, no branches.
+    // Do NOT "optimize" this further by caching the size in a static field or routing
+    // through a delegate: both add an indirection the JIT cannot fold away, making
+    // them strictly slower than the current shape.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool EnumEquals(T a, T b)
+    {
+        if (Unsafe.SizeOf<T>() == 1)
+        {
+            return Unsafe.As<T, byte>(ref a) == Unsafe.As<T, byte>(ref b);
+        }
+        if (Unsafe.SizeOf<T>() == 2)
+        {
+            return Unsafe.As<T, ushort>(ref a) == Unsafe.As<T, ushort>(ref b);
+        }
+        if (Unsafe.SizeOf<T>() == 4)
+        {
+            return Unsafe.As<T, uint>(ref a) == Unsafe.As<T, uint>(ref b);
+        }
+        if (Unsafe.SizeOf<T>() == 8)
+        {
+            return Unsafe.As<T, ulong>(ref a) == Unsafe.As<T, ulong>(ref b);
+        }
+        return EqualityComparer<T>.Default.Equals(a, b);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int EnumHash(T e)
+    {
+        if (Unsafe.SizeOf<T>() == 1)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 2)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 4)
+        {
+            return Unsafe.As<T, int>(ref e);
+        }
+        if (Unsafe.SizeOf<T>() == 8)
+        {
+            return Unsafe.As<T, ulong>(ref e).GetHashCode();
+        }
+        return e.GetHashCode();
+    }
+
+    private void UpdateIncludedValues(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.includedSetDirty = true;
+        this.UpdateValues();
+    }
+
+    private void UpdateExcludedValues(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.excludedSetDirty = true;
+        this.UpdateValues();
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -437,7 +595,6 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
         this.initialized = true;
         this.UpdateValues();
     }
@@ -523,4 +680,9 @@ public class EnumPickerItem
     public required object EnumValue { get; init; }
 
     public required string Text { get; init; }
+}
+
+internal sealed class EnumPickerItem<T> : EnumPickerItem where T : struct, Enum
+{
+    public required T Value { get; init; }
 }

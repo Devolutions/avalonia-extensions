@@ -62,6 +62,8 @@ public abstract class EnumPicker : TemplatedControl
 
     protected bool UpdatingItems;
 
+    public abstract Type EnumType { get; }
+
     public IReadOnlyCollection<EnumPickerItem> Items
     {
         get;
@@ -147,6 +149,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
         this.DidChangeTextOverrides();
     }
+
+    public override Type EnumType => typeof(T);
 
     private static readonly Dictionary<T, string> EmptyOverrides = [];
 

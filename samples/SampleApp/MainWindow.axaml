@@ -36,7 +36,7 @@
                 </TabItem.Header>
                 <demoPages:AutoCompleteBoxDemo />
               </TabItem>
-              <TabItem>
+              <TabItem IsSelected="True">
                 <TabItem.Header>
                   <controls:SampleItemHeader Title="Button" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>

@@ -21,6 +21,7 @@
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
     <Setter Property="MinHeight" Value="26" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource ControlBackgroundHighBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderRaisedBrush}" />
@@ -41,11 +42,25 @@
             BorderThickness="{TemplateBinding BorderThickness}"
             CornerRadius="{TemplateBinding CornerRadius}" />
           <Border
+            Name="ButtonAccentFocusContrastElement"
+            Background="Transparent"
+            BorderBrush="{DynamicResource TransparentBrush}"
+            BorderThickness="2"
+            CornerRadius="{TemplateBinding CornerRadius}" />
+
+          <Border
             Name="ButtonActiveElement"
             Background="Transparent"
             BorderBrush="{DynamicResource TransparentBrush}"
             BorderThickness="2"
             CornerRadius="{TemplateBinding CornerRadius}" />
+          <!-- <Border
+            Name="ButtonAccentFocusContrastElement2"
+            Margin="1"
+            Background="Transparent"
+            BorderBrush="{DynamicResource TransparentBrush}"
+            BorderThickness="2"
+            CornerRadius="2" /> -->
           <ContentPresenter
             Name="PART_ContentPresenter"
             Content="{TemplateBinding Content}"
@@ -83,7 +98,20 @@
       <Style Selector="^:pointerover /template/ Border#ButtonActiveElement">
         <Setter Property="Background" Value="{DynamicResource ButtonAccentPointerOverBrushTransparent}" />
       </Style>
+
+      <Style Selector="^:focus, ^:focus-visible">
+        <Style Selector="^ /template/ Border#ButtonAccentFocusContrastElement">
+          <Setter Property="BorderBrush" Value="{DynamicResource ForegroundHighBrush}" />
+        </Style>
+        <Style Selector="^ /template/ Border#ButtonAccentFocusContrastElement2">
+          <Setter Property="BorderBrush" Value="{DynamicResource ButtonAccentFocusContrastBorderBrush}" />
+        </Style>
+        <Style Selector="^ /template/ Border#ButtonActiveElement">
+          <Setter Property="BorderBrush" Value="{DynamicResource ButtonAccentFocusBorderBrush}" />
+        </Style>
+      </Style>
     </Style>
+
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabledBrush}" />
       <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />

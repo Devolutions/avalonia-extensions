@@ -49,7 +49,7 @@
     <!-- <DevolutionsMacOsTheme /> -->
     <!-- <local:MacOsClassicThemeStyle /> -->
     <!-- <local:MacOsLiquidGlassThemeStyle /> -->
-    <!-- <DevolutionsDevExpressTheme /> -->
+    <DevolutionsDevExpressTheme />
     <!-- <DevolutionsLinuxYaruTheme /> -->
     <!-- <local:FluentThemePlusAddOns /> -->
 

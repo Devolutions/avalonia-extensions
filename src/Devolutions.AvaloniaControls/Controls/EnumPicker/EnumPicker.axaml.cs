@@ -407,8 +407,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         // that the foreach will always be am efficient iteration over lists instead of always using
         // the enumerable's iterator.
         //
-        // Finally we also provide the comparer, since we need the same one for the 2 collections + our
-        // own comparison further down below.
+        // Finally we also provide the comparer, since we need the same one for the 2 collections and provide
+        // a faster one.
         // - sbergerondrouin 2026-05-22
         int includedCount = included.Count;
         if (this.includedSetDirty && includedCount > 0)

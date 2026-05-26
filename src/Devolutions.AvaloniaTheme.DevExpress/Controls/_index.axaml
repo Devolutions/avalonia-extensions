@@ -8,6 +8,7 @@
 -->
 
   <ResourceDictionary.MergedDictionaries>
+    <MergeResourceInclude Source="AdornerLayer.axaml" />
     <MergeResourceInclude Source="AutoCompleteBox.axaml" />
     <MergeResourceInclude Source="Button.axaml" />
     <MergeResourceInclude Source="ButtonSpinner.axaml" />

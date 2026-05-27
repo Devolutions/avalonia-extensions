@@ -4,7 +4,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -31,7 +34,9 @@ public partial class MainWindow : Window
       this.DetectSystemScale();
       this.InitializeContainerSizes();
       this.ApplyCurrentScale(); // Apply any pre-selected scale
-      this.Title = BuildWindowTitle();
+      _ = BuildWindowTitleAsync().ContinueWith(
+        t => Dispatcher.UIThread.Post(() => this.Title = t.Result),
+        TaskContinuationOptions.OnlyOnRanToCompletion);
     };
 
 #if ENABLE_ACCELERATE
@@ -253,14 +258,14 @@ public partial class MainWindow : Window
     }
   }
 
-  private static string BuildWindowTitle()
+  private static async Task<string> BuildWindowTitleAsync()
   {
     string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
-    string context = GetGitBranch() ?? GetWorktreeFolderName();
+    string context = await GetGitBranchAsync() ?? GetWorktreeFolderName();
     return $"Devolutions Theme Sampler — {context} — {launchTime}";
   }
 
-  private static string? GetGitBranch()
+  private static async Task<string?> GetGitBranchAsync()
   {
     try
     {
@@ -273,8 +278,21 @@ public partial class MainWindow : Window
         WorkingDirectory = AppContext.BaseDirectory
       };
       process.Start();
-      string branch = process.StandardOutput.ReadToEnd().Trim();
-      process.WaitForExit(2000);
+
+      using CancellationTokenSource cts = new(TimeSpan.FromSeconds(2));
+      string branch;
+      try
+      {
+        branch = await process.StandardOutput.ReadToEndAsync(cts.Token);
+        await process.WaitForExitAsync(cts.Token);
+      }
+      catch (OperationCanceledException)
+      {
+        process.Kill();
+        return null;
+      }
+
+      branch = branch.Trim();
       return string.IsNullOrEmpty(branch) || branch == "HEAD" ? null : branch;
     }
     catch
@@ -283,9 +301,22 @@ public partial class MainWindow : Window
     }
   }
 
-  private static string GetWorktreeFolderName() =>
-    Path.GetFileName(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
-    ?? "SampleApp";
+  private static string GetWorktreeFolderName()
+  {
+    string? dir = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    while (!string.IsNullOrEmpty(dir))
+    {
+      if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir, ".git")))
+      {
+        string name = Path.GetFileName(dir) ?? "";
+        return string.IsNullOrWhiteSpace(name) ? "SampleApp" : name;
+      }
+
+      dir = Path.GetDirectoryName(dir);
+    }
+
+    return "SampleApp";
+  }
 
   private IBrush GenerateTieDyeBrush() =>
     // Simple vibrant radial gradient for demo purposes

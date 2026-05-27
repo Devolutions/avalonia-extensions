@@ -2,6 +2,8 @@ namespace SampleApp;
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -29,6 +31,7 @@ public partial class MainWindow : Window
       this.DetectSystemScale();
       this.InitializeContainerSizes();
       this.ApplyCurrentScale(); // Apply any pre-selected scale
+      this.Title = BuildWindowTitle();
     };
 
 #if ENABLE_ACCELERATE
@@ -249,6 +252,40 @@ public partial class MainWindow : Window
       this.UpdatePreviewBackground();
     }
   }
+
+  private static string BuildWindowTitle()
+  {
+    string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
+    string context = GetGitBranch() ?? GetWorktreeFolderName();
+    return $"Devolutions Theme Sampler — {context} — {launchTime}";
+  }
+
+  private static string? GetGitBranch()
+  {
+    try
+    {
+      using Process process = new();
+      process.StartInfo = new ProcessStartInfo("git", "rev-parse --abbrev-ref HEAD")
+      {
+        RedirectStandardOutput = true,
+        UseShellExecute = false,
+        CreateNoWindow = true,
+        WorkingDirectory = AppContext.BaseDirectory
+      };
+      process.Start();
+      string branch = process.StandardOutput.ReadToEnd().Trim();
+      process.WaitForExit(2000);
+      return string.IsNullOrEmpty(branch) || branch == "HEAD" ? null : branch;
+    }
+    catch
+    {
+      return null;
+    }
+  }
+
+  private static string GetWorktreeFolderName() =>
+    Path.GetFileName(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+    ?? "SampleApp";
 
   private IBrush GenerateTieDyeBrush() =>
     // Simple vibrant radial gradient for demo purposes

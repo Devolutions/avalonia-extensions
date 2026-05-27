@@ -62,18 +62,19 @@ public partial class GroupedComboBoxViewModel : ObservableObject
 
     private static List<FoodItem> GenerateLargeItems()
     {
-        List<FoodItem> items = new(150);
-        for (int i = 1; i <= 60; i++)
+        List<FoodItem> items = new(1500);
+
+        for (int i = 1; i <= 600; ++i)
         {
             items.Add(new FoodItem($"Alpha Item {i:D3}", "Category Alpha"));
         }
 
-        for (int i = 1; i <= 60; i++)
+        for (int i = 1; i <= 600; ++i)
         {
             items.Add(new FoodItem($"Beta Item {i:D3}", "Category Beta"));
         }
 
-        for (int i = 1; i <= 30; i++)
+        for (int i = 1; i <= 300; ++i)
         {
             items.Add(new FoodItem($"Gamma Item {i:D3}", "Category Gamma"));
         }

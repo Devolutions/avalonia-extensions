@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -28,15 +27,20 @@ public partial class MainWindow : Window
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
     // Once the window is fully loaded, update background, detect scale, and size containers
-    this.Loaded += (s, e) =>
+    this.Loaded += async (s, e) =>
     {
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
       this.InitializeContainerSizes();
       this.ApplyCurrentScale(); // Apply any pre-selected scale
-      _ = BuildWindowTitleAsync().ContinueWith(
-        t => Dispatcher.UIThread.Post(() => this.Title = t.Result),
-        TaskContinuationOptions.OnlyOnRanToCompletion);
+      try
+      {
+        this.Title = await BuildWindowTitleAsync(this.Title);
+      }
+      catch
+      {
+        // Title stays as-is from XAML if anything goes wrong
+      }
     };
 
 #if ENABLE_ACCELERATE
@@ -258,11 +262,12 @@ public partial class MainWindow : Window
     }
   }
 
-  private static async Task<string> BuildWindowTitleAsync()
+  private static async Task<string> BuildWindowTitleAsync(string? baseTitle)
   {
     string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
     string context = await GetGitBranchAsync() ?? GetWorktreeFolderName();
-    return $"Devolutions Theme Sampler — {context} — {launchTime}";
+    string prefix = string.IsNullOrWhiteSpace(baseTitle) ? "SampleApp" : baseTitle;
+    return $"{prefix} — {context} — {launchTime}";
   }
 
   private static async Task<string?> GetGitBranchAsync()
@@ -288,7 +293,19 @@ public partial class MainWindow : Window
       }
       catch (OperationCanceledException)
       {
-        process.Kill();
+        try
+        {
+          if (!process.HasExited)
+          {
+            process.Kill(entireProcessTree: true);
+            process.WaitForExit(500);
+          }
+        }
+        catch
+        {
+          // best effort — process may already be exited or unkillable
+        }
+
         return null;
       }
 

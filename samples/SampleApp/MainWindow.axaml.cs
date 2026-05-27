@@ -3,7 +3,6 @@ namespace SampleApp;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -265,9 +264,11 @@ public partial class MainWindow : Window
   private static async Task<string> BuildWindowTitleAsync(string? baseTitle)
   {
     string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
-    string context = await GetGitBranchAsync() ?? GetWorktreeFolderName();
     string prefix = string.IsNullOrWhiteSpace(baseTitle) ? "SampleApp" : baseTitle;
-    return $"{prefix} — {context} — {launchTime}";
+    string? branch = await GetGitBranchAsync();
+    return string.IsNullOrEmpty(branch)
+      ? $"{prefix} — {launchTime}"
+      : $"{prefix} — {branch} — {launchTime}";
   }
 
   private static async Task<string?> GetGitBranchAsync()
@@ -278,11 +279,15 @@ public partial class MainWindow : Window
       process.StartInfo = new ProcessStartInfo("git", "rev-parse --abbrev-ref HEAD")
       {
         RedirectStandardOutput = true,
+        RedirectStandardError = true,
         UseShellExecute = false,
         CreateNoWindow = true,
         WorkingDirectory = AppContext.BaseDirectory
       };
       process.Start();
+
+      // Drain stderr in the background so a chatty git can't fill the pipe buffer and block.
+      Task<string> stderrTask = process.StandardError.ReadToEndAsync();
 
       using CancellationTokenSource cts = new(TimeSpan.FromSeconds(2));
       string branch;
@@ -290,6 +295,7 @@ public partial class MainWindow : Window
       {
         branch = await process.StandardOutput.ReadToEndAsync(cts.Token);
         await process.WaitForExitAsync(cts.Token);
+        await stderrTask;
       }
       catch (OperationCanceledException)
       {
@@ -309,6 +315,8 @@ public partial class MainWindow : Window
         return null;
       }
 
+      if (process.ExitCode != 0) return null;
+
       branch = branch.Trim();
       return string.IsNullOrEmpty(branch) || branch == "HEAD" ? null : branch;
     }
@@ -316,23 +324,6 @@ public partial class MainWindow : Window
     {
       return null;
     }
-  }
-
-  private static string GetWorktreeFolderName()
-  {
-    string? dir = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-    while (!string.IsNullOrEmpty(dir))
-    {
-      if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir, ".git")))
-      {
-        string name = Path.GetFileName(dir) ?? "";
-        return string.IsNullOrWhiteSpace(name) ? "SampleApp" : name;
-      }
-
-      dir = Path.GetDirectoryName(dir);
-    }
-
-    return "SampleApp";
   }
 
   private IBrush GenerateTieDyeBrush() =>

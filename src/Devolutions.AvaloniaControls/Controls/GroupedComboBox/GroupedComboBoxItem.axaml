@@ -1,0 +1,62 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  
+  <Design.PreviewWith>
+    <StackPanel Orientation="Vertical">
+      <GroupedComboBoxItem Content="test" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type GroupedComboBoxItem}" TargetType="GroupedComboBoxItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="12 0 8 0" />
+    <!-- <Setter Property="MinHeight" Value="28" /> -->
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="GroupForeground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+    <Setter Property="HeaderMargin" Value="4 6 8 4" />
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel>
+          <TextBlock Name="PART_GroupHeader"
+                     IsVisible="{TemplateBinding IsGroupLeader}"
+                     Text="{TemplateBinding GroupHeaderText}"
+                     Foreground="{TemplateBinding GroupForeground}"
+                     FontWeight="SemiBold"
+                     Margin="{TemplateBinding HeaderMargin}" />
+
+          <Border Name="PART_ItemBorder"
+                  Background="{TemplateBinding Background}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  MinHeight="{TemplateBinding MinHeight}"
+                  Padding="{TemplateBinding Padding}">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Foreground="{TemplateBinding Foreground}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Border>
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^ /template/ Border#PART_ItemBorder:pointerover, ^:focus-visible /template/ Border#PART_ItemBorder">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+    </Style>
+
+    <Style Selector="^:pressed /template/ Border#PART_ItemBorder">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+    </Style>
+
+    <Style Selector="^:selected /template/ Border#PART_ItemBorder">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

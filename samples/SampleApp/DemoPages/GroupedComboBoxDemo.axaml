@@ -1,0 +1,173 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             x:Class="SampleApp.DemoPages.GroupedComboBoxDemo"
+             x:DataType="vm:GroupedComboBoxViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="30" MaxWidth="760" HorizontalAlignment="Left">
+      <StackPanel Spacing="6">
+        <TextBlock FontWeight="Bold" FontSize="18">GroupedComboBox</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          Uses the existing ComboBox template for the control chrome and only changes popup items to show group headers.
+        </TextBlock>
+      </StackPanel>
+
+      <Border Margin="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <Grid ColumnDefinitions="Auto 280 260" RowDefinitions="Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
+          <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Named groups:</Bold>
+          </TextBlock>
+          <StackPanel Grid.Column="1" Grid.Row="0" Spacing="8">
+            <GroupedComboBox ItemsSource="{Binding GroupedItems}"
+                             SelectedItem="{Binding SelectedGroupedItem}"
+                             PlaceholderText="Choose food"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                             GroupOrderAlphabetical="True">
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Category}"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                  </StackPanel>
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SelectedGroupedItem.Name, FallbackValue='(none)'}" />
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Grid.Column="2" Grid.Row="0" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Ordered as Meats, Fruits, Vegetables. Popup should still look like the active theme's ComboBox popup.
+          </TextBlock>
+
+          <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Empty group:</Bold>
+            <LineBreak />
+            <TextBlock Classes="code">EmptyGroupName</TextBlock>
+            <LineBreak />
+            <Bold>unset</Bold>
+          </TextBlock>
+          <StackPanel Grid.Column="1" Grid.Row="1" Spacing="8">
+            <GroupedComboBox ItemsSource="{Binding EmptyGroupItems}"
+                             SelectedItem="{Binding SelectedEmptyGroupItem}"
+                             PlaceholderText="Choose item"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                             MaxDropDownHeight="220">
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SelectedEmptyGroupItem.Name, FallbackValue='(none)'}" />
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Empty category has no displayed header and occupies no empty header space. Items start at the top of the popup.
+          </TextBlock>
+
+          <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Empty group:</Bold>
+            <LineBreak />
+            <TextBlock Classes="code">EmptyGroupName</TextBlock>
+            <LineBreak />
+            <Bold>set</Bold>
+          </TextBlock>
+          <StackPanel Grid.Column="1" Grid.Row="2" Spacing="8">
+            <GroupedComboBox ItemsSource="{Binding EmptyGroupItems}"
+                             SelectedItem="{Binding SelectedEmptyGroupItemWithName}"
+                             PlaceholderText="Choose item"
+                             GroupForeground="#266fd2"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                             EmptyGroupName="NO GROUP"
+                             MaxDropDownHeight="220">
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SelectedEmptyGroupItemWithName.Name, FallbackValue='(none)'}" />
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Empty category gets a display header via EmptyGroupName and custom group foreground.
+          </TextBlock>
+
+          <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Scrolling:</Bold>
+          </TextBlock>
+          <StackPanel Grid.Column="1" Grid.Row="3" Spacing="8">
+            <GroupedComboBox ItemsSource="{Binding LargeItems}"
+                             SelectedItem="{Binding SelectedLargeItem}"
+                             PlaceholderText="Many items"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderAlphabetical="True"
+                             MaxDropDownHeight="200">
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Category}"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                  </StackPanel>
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Selected:" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SelectedLargeItem.Name, FallbackValue='(none)'}" />
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            150 items across 3 categories. Tests popup scrolling with group headers.
+          </TextBlock>
+
+          <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Inner slots:</Bold>
+          </TextBlock>
+          <GroupedComboBox Grid.Column="1" Grid.Row="4"
+                           ItemsSource="{Binding GroupedItems}"
+                           PlaceholderText="Same ComboBox chrome"
+                           GroupBinding="{Binding Category}"
+                           GroupOrderAlphabetical="True">
+            <GroupedComboBox.ItemTemplate>
+              <DataTemplate DataType="vm:FoodItem">
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </GroupedComboBox.ItemTemplate>
+            <ComboBoxContent.InnerLeftContent>
+              <Border Width="16" Height="16" Background="Green" CornerRadius="8" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerLeftContent>
+            <ComboBoxContent.InnerLeftOfDropDownArrowContent>
+              <Border Width="16" Height="16" Background="Orange" CornerRadius="8" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerLeftOfDropDownArrowContent>
+            <ComboBoxContent.InnerRightContent>
+              <TextBlock Text="kg" Margin="2 0" VerticalAlignment="Center" />
+            </ComboBoxContent.InnerRightContent>
+          </GroupedComboBox>
+          <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Attached ComboBoxContent slots still work because the control keeps the normal ComboBox template.
+          </TextBlock>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

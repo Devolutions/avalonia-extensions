@@ -261,7 +261,7 @@
               Placement="AnchorAndGravity"
               PlacementAnchor="Bottom"
               PlacementGravity="Bottom"
-              HorizontalOffset="-13">
+              HorizontalOffset="{DynamicResource ComboBoxPopupHorizontalOffset}">
               <Popup.MinWidth>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Width" />

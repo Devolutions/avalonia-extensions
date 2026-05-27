@@ -145,7 +145,7 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT07" Color="#ececec" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
+      <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.5" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
@@ -206,6 +206,7 @@
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT20" />
+      <StaticResource x:Key="PopupShadow" ResourceKey="NoShadow" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
@@ -224,7 +225,7 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT08" Color="#323341" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
+      <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.5" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
@@ -284,6 +285,7 @@
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT26" />
+      <StaticResource x:Key="PopupShadow" ResourceKey="NoShadow" />
       <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
@@ -361,10 +363,17 @@
   <Thickness x:Key="ComboBoxItemPadding">5 4</Thickness>
   <x:Int32 x:Key="ComboBoxItemHeight">24</x:Int32>
 
-  <!-- Popup -->
-  <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
-  <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
-  <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
+  <!-- Popup: zero-margin approach so any OS effect surface (NSVisualEffectView on macOS, DWM
+       Acrylic/Mica on Windows) covers only the visible popup area. The OS provides the drop
+       shadow natively via WindowManagerAddShadowHint on PopupRoot. -->
+  <Thickness x:Key="PopupMargin">0</Thickness>
+  <x:Int32 x:Key="PopupSideMarginWidth">0</x:Int32>
+  <x:Int32 x:Key="InitialFirstItemDistance">5</x:Int32> <!-- PopupMargin.top(0) + PopupPadding.top(5) -->
+  <x:Int32 x:Key="PopupTrimHeight">10</x:Int32> <!-- PopupMargin top+bottom(0) + PopupPadding top+bottom(10) -->
+  <x:Double x:Key="ComboBoxPopupHorizontalOffset">0</x:Double>
+  <x:Double x:Key="SubMenuPopupHorizontalOffset">-2</x:Double> <!-- 0 margin + 2 visual overlap -->
+  <x:Double x:Key="SubMenuPopupVerticalOffset">-7</x:Double> <!-- base value (no extra top margin to compensate) -->
+  <x:Double x:Key="MenuPopupHorizontalOffset">0</x:Double>
 
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>

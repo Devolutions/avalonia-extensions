@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Request OS-level backdrop blur behind the popup native window.
+       - On Windows 11: DWM Acrylic / Mica respects per-pixel alpha, so Avalonia's CornerRadius
+         clipping produces rounded frosted corners as expected.
+       - On macOS: NSVisualEffectView fills the entire rectangular native window (rounded corners
+         and tint are not honoured), so this approach does NOT yet give a satisfactory result on
+         macOS. See .claude/docs/popup-blur-investigation.md for details.
+
+       The popup uses PopupMargin = "0" (in LiquidGlass) so that any OS-level effect surface
+       covers only the visible popup area. macOS provides a drop shadow natively via
+       WindowManagerAddShadowHint (replacing the Avalonia BoxShadow that needed margin space). -->
+  <Style Selector="PopupRoot">
+    <Setter Property="TransparencyLevelHint" Value="AcrylicBlur, Blur, Transparent" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="WindowManagerAddShadowHint" Value="True" />
+  </Style>
+
+</Styles>

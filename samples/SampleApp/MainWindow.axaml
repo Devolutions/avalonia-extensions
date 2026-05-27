@@ -78,7 +78,7 @@
                 </TabItem.Header>
                 <demoPages:ColorPickerDemo />
               </TabItem>
-              <TabItem>
+              <TabItem IsSelected="True">
                 <TabItem.Header>
                   <controls:SampleItemHeader Title="ComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>

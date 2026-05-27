@@ -26,6 +26,9 @@ internal class MacOsTheme : Styles
       Uri liquidGlassUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml");
       ResourceInclude liquidGlassInclude = new(liquidGlassUri) { Source = liquidGlassUri };
       this.Resources.MergedDictionaries.Add(liquidGlassInclude);
+
+      Uri liquidGlassStylesUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Controls/PopupRoot_LiquidGlass.axaml");
+      this.Add(new StyleInclude(liquidGlassStylesUri) { Source = liquidGlassStylesUri });
     }
 
 #if ENABLE_ACCELERATE

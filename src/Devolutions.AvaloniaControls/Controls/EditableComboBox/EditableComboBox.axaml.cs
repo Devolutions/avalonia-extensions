@@ -583,7 +583,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private static string? CoerceText(AvaloniaObject sender, string? value) =>
         ((EditableComboBox)sender).CoerceText(value);
 
-    private void UpdateBindingEvaluators()
+    private void UpdateBindingEvaluators(IBinding binding)
     {
         if (this.selectedValueEvaluatorDirty)
         {
@@ -599,6 +599,11 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private void FillItems(bool filter = false)
     {
         if (!this.IsInitialized) return;
+
+        if ((this.ItemTemplate as EditableComboBoxDataTemplate)?.SelectedItemValue is { } binding)
+        {
+            this.UpdateBindingEvaluators(binding);
+        }
 
         // Build a lightweight value-string lookup. Raw source objects go directly into filteredItems
         // so that InnerComboBox.NeedsContainerOverride returns true for them, enabling VSP virtualization.
@@ -619,7 +624,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             }
             else if (this.selectedValueEvaluator is {} selectedValueEvaluator)
             {
-                this.UpdateBindingEvaluators();
                 value = selectedValueEvaluator(item);
             }
             else

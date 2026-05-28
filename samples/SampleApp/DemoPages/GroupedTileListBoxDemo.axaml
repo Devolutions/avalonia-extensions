@@ -248,11 +248,27 @@
           </StackPanel>
         </Border>
 
+        <!-- Auto-scroll test strip (DEVEX-411) -->
+        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <CheckBox Content="AutoScrollToSelectedItem"
+                    IsChecked="{Binding LargeAutoScrollToSelectedItem}"
+                    VerticalAlignment="Center"/>
+          <TextBlock Text="Index:" VerticalAlignment="Center"/>
+          <NumericUpDown Width="120"
+                         Minimum="0"
+                         Maximum="499"
+                         Value="{Binding LargeScrollTargetIndex}"
+                         FormatString="0"/>
+          <Button Content="Select &amp; scroll"
+                  Command="{Binding SelectLargeAtTargetCommand}"/>
+        </StackPanel>
+
         <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
           <GroupedTileListBox Grid.Column="0"
                               ItemsSource="{Binding LargeItems}"
                               SelectedItem="{Binding SelectedLargeItem}"
+                              AutoScrollToSelectedItem="{Binding LargeAutoScrollToSelectedItem}"
                               GroupSelector="{Binding CategoryGroupSelector}"
                               ItemWidth="120"
                               ItemHeight="100"

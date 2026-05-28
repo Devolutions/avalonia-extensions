@@ -588,8 +588,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (this.selectedValueEvaluatorDirty)
         {
             this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
-            var selectedItemBinding = (this.ItemTemplate as EditableComboBoxDataTemplate)?.SelectedItemValue;
-            this.selectedValueEvaluator = this.bindingEvaluator?.BuildFormattedGetter(selectedItemBinding);
+            this.selectedValueEvaluator = this.bindingEvaluator?.BuildFormattedGetter(binding);
             
             this.selectedValueEvaluatorDirty = false;
         }

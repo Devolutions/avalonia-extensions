@@ -599,6 +599,7 @@ public class GroupedTileListBox : TemplatedControl
         if (container.Content is not null)
         {
             this.SelectItem(container.Content);
+            e.Handled = true;
         }
     }
 

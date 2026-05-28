@@ -645,10 +645,11 @@ public class GroupedTileListBox : TemplatedControl
         {
             int targetIndex = this.selectedIndex;
             Dispatcher.UIThread.Post(() => this.ScrollIntoView(targetIndex), DispatcherPriority.Loaded);
-            return;
         }
-
-        this.ScrollIntoView(this.selectedIndex);
+        else
+        {
+            this.ScrollIntoView(this.selectedIndex);
+        }
     }
 
     private void UpdateRealizedContainerSelection()

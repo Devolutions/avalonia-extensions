@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Metadata;
 using Avalonia.Metadata;
+using Avalonia.Threading;
 using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
@@ -55,6 +56,11 @@ public class GroupedTileListBox : TemplatedControl
             nameof(SelectedIndex),
             -1,
             defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly StyledProperty<bool> AutoScrollToSelectedItemProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, bool>(
+            nameof(AutoScrollToSelectedItem),
+            defaultValue: true);
 
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, string>?>(
@@ -184,6 +190,18 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
+    /// Gets or sets whether the control automatically scrolls to bring the
+    /// currently selected item into view when <see cref="SelectedItem"/> or
+    /// <see cref="SelectedIndex"/> changes. Defaults to <c>true</c>, matching
+    /// Avalonia's <c>SelectingItemsControl.AutoScrollToSelectedItem</c>.
+    /// </summary>
+    public bool AutoScrollToSelectedItem
+    {
+        get => this.GetValue(AutoScrollToSelectedItemProperty);
+        set => this.SetValue(AutoScrollToSelectedItemProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the function used to determine the group for each item.
     /// </summary>
     // TODO: Once [AssignBinding] and [InheritDataTypeFromItems] are properly supported by
@@ -251,6 +269,9 @@ public class GroupedTileListBox : TemplatedControl
 
         // Always create ItemsRepeater(s) dynamically in UpdateItemsRepeater
         this.UpdateItemsRepeater();
+
+        // If selection was set before the template was applied, scroll now.
+        this.AutoScrollToSelectionIfEnabled();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -589,6 +610,9 @@ public class GroupedTileListBox : TemplatedControl
 
         // Update visual state of realized containers
         this.UpdateRealizedContainerSelection();
+
+        // Single scroll trigger for every selection change (internal or external).
+        this.AutoScrollToSelectionIfEnabled();
     }
 
     private void OnSelectedItemChanged(AvaloniaPropertyChangedEventArgs e)
@@ -608,6 +632,23 @@ public class GroupedTileListBox : TemplatedControl
         {
             this.SelectItemAtIndex(newIndex);
         }
+    }
+
+    private void AutoScrollToSelectionIfEnabled()
+    {
+        if (!this.AutoScrollToSelectedItem || this.selectedIndex < 0)
+        {
+            return;
+        }
+
+        if (this.scrollViewer is null || !this.IsArrangeValid)
+        {
+            int targetIndex = this.selectedIndex;
+            Dispatcher.UIThread.Post(() => this.ScrollIntoView(targetIndex), DispatcherPriority.Loaded);
+            return;
+        }
+
+        this.ScrollIntoView(this.selectedIndex);
     }
 
     private void UpdateRealizedContainerSelection()
@@ -786,10 +827,18 @@ public class GroupedTileListBox : TemplatedControl
             }
         }
 
-        // Scroll to show the newly selected item
         if (newIndex != currentIndex)
         {
-            this.ScrollIntoView(newIndex);
+            // OnSelectionChanged already scrolled via AutoScrollToSelectionIfEnabled
+            // when the property is on. When it's off, still scroll here because
+            // explicit user keyboard navigation should always follow the selection
+            // (matches Avalonia ListBox, where arrow keys scroll even with
+            // AutoScrollToSelectedItem=false).
+            if (!this.AutoScrollToSelectedItem)
+            {
+                this.ScrollIntoView(newIndex);
+            }
+
             e.Handled = true;
         }
     }

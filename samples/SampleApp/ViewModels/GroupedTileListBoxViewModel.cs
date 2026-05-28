@@ -3,6 +3,7 @@ namespace SampleApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 // Data model for the demo
 public record FoodItem(string Name, string Category, string? IconName = null);
@@ -34,6 +35,30 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
 
     [ObservableProperty]
     private FoodItem? doubleClickedLargeItem;
+
+    // Scenario 4 auto-scroll test: target index for the "Select & scroll" button
+    [ObservableProperty]
+    private int largeScrollTargetIndex = 350;
+
+    [ObservableProperty]
+    private bool largeAutoScrollToSelectedItem = true;
+
+    public GroupedTileListBoxViewModel()
+    {
+        // Pre-select a deep item so the "selected on open" auto-scroll path
+        this.SelectedLargeItem = this.LargeItems[this.LargeScrollTargetIndex];
+    }
+
+    [RelayCommand]
+    private void SelectLargeAtTarget()
+    {
+        if (this.LargeScrollTargetIndex >= 0 && this.LargeScrollTargetIndex < this.LargeItems.Count)
+        {
+            // Setting SelectedLargeItem from the VM exercises the external
+            // selection-change path the AutoScrollToSelectedItem fix targets.
+            this.SelectedLargeItem = this.LargeItems[this.LargeScrollTargetIndex];
+        }
+    }
 
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()

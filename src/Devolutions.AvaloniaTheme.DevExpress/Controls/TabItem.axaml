@@ -282,7 +282,7 @@
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="IsVisible" Value="False" />
       </Style>
-      <Style Selector="^:focus /template/ Border#TopBorderSelected">
+      <Style Selector="^ /template/ Border#TopBorderSelected">
         <Setter Property="IsVisible" Value="True" />
       </Style>
     </Style>
@@ -340,10 +340,10 @@
         <Style Selector="^ /template/ Border#BottomBorder">
           <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^:focus /template/ Border#TopBorderSelected">
+        <Style Selector="^ /template/ Border#TopBorderSelected">
           <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^:focus /template/ Border#TopLeftBorderSelected">
+        <Style Selector="^ /template/ Border#TopLeftBorderSelected">
           <Setter Property="IsVisible" Value="True" />
         </Style>
       </Style>

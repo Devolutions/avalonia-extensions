@@ -57,6 +57,7 @@
     <Setter Property="MinWidth" Value="102" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="CalendarDatePickerBehavior.OpenOnSelectedDate" Value="True" />
+    <Setter Property="SegmentedDateInputBehavior.IsEnabled" Value="True" />
 
     <Setter Property="Template">
       <ControlTemplate>

@@ -29,6 +29,9 @@
         <CalendarDatePicker Name="DatePicker" HorizontalAlignment="Left" />
         <CalendarDatePicker Name="DatePicker2" HorizontalAlignment="Left" IsEnabled="False" />
         <CalendarDatePicker Name="DatePicker3" HorizontalAlignment="Left" SelectedDateFormat="Long" />
+        <CalendarDatePicker Name="DatePicker5" HorizontalAlignment="Left"
+                            SelectedDateFormat="Custom" CustomDateFormatString="yyyy'/'MM'/'dd"
+                            Watermark="yyyy/MM/dd" />
         <StackPanel Orientation="Horizontal" Spacing="10">
             <Button Content="Today" Command="{Binding SetToTodayCommand}" />
             <CalendarDatePicker Name="DatePicker4" HorizontalAlignment="Left" SelectedDate="{Binding SelectedDate}"/>
@@ -40,8 +43,19 @@
         <TextBlock Classes="code">MinWidth</TextBlock> is set to comfortably accommodate short date formats &amp; the corresponding default watermark when
         <TextBlock Classes="code">HorizontalAlignment</TextBlock> is set to anything other than the default (<TextBlock Classes="code">Stretch</TextBlock>).<LineBreak />
         <LineBreak />
+        For numeric formats (<TextBlock Classes="code">Short</TextBlock> or a numeric <TextBlock Classes="code">Custom</TextBlock> pattern),
+        the text box uses <Bold>segmented input</Bold>: clicking selects the year / month / day section under the cursor,
+        ⬅️ /  ➡️ move between sections, ⬆️ /  ⬇️ increment / decrement the active section,
+        digits overwrite it, any common separator (<TextBlock Classes="code">/ - . , : space</TextBlock>) advances to the next section, and
+        <TextBlock Classes="code">Backspace</TextBlock> resets to the minimum value.<LineBreak />
+        <LineBreak />
+        <Bold>Note on Custom format strings:</Bold> in .NET, <TextBlock Classes="code">/</TextBlock> and <TextBlock Classes="code">:</TextBlock>
+        inside a date format string are replaced with the current culture's date / time separator. To force literal characters, quote them:
+        <TextBlock Classes="code">yyyy'/'MM'/'dd</TextBlock>.<LineBreak />
+        <LineBreak />
         If you set <TextBlock Classes="code">SelectedDateFormat="Long"</TextBlock> you will have to override <TextBlock Classes="code">MinWidth</TextBlock> to the longest
         expected string length, depending on supported languages. Otherwise the control's width will jump when the date is changed.
+        Long format falls back to free-text editing (no segmentation).
       </TextBlock>
       <StackPanel Grid.Row="0" Grid.Column="1"
                   Spacing="10" Margin="30 0 0 0 ">

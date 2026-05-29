@@ -94,7 +94,6 @@ public static class SegmentedDateInputBehavior
         private bool _suspendSelectionSync;
         private bool _suspendTextSync;
         private bool _segmentable;
-        private string _renderedText = string.Empty;
 
         public SegmentedState(CalendarDatePicker picker)
         {
@@ -227,8 +226,7 @@ public static class SegmentedDateInputBehavior
             // Render the segments against the current SelectedDate (or DisplayDate as fallback)
             // so we know the exact character offsets for selection-snapping.
             DateTime renderDate = _picker.SelectedDate ?? _picker.DisplayDate;
-            (string rendered, _segments) = DateFormatTokenizer.RenderSegments(parsed, renderDate);
-            _renderedText = rendered;
+            (_, _segments) = DateFormatTokenizer.RenderSegments(parsed, renderDate);
 
             // If picker has no SelectedDate, the textbox is empty (watermark shown).
             // Don't force-render; just keep segments in standby for first interaction.
@@ -758,6 +756,13 @@ public static class SegmentedDateInputBehavior
                     LiteralText = literal.ToString(),
                     TokenLength = 0,
                 });
+            }
+
+            // No editable segments → not segmentable (e.g. literal-only patterns or
+            // standard format specifiers like "D" that the caller hasn't expanded).
+            if (!segments.Any(s => s.Kind != SegmentKind.Literal))
+            {
+                return null;
             }
 
             return segments;

@@ -15,7 +15,7 @@ the field as a sequence of **segments** (year / month / day):
 - ← / → moves to the previous / next segment.
 - Digits overwrite the active segment.
 - The separator character (`-`, `/`, `.`, etc.) advances to the next segment.
-- Backspace resets the segment to its minimum value (`0000`, `01`, `01`).
+- Backspace resets the segment to its minimum value (`0001`, `01`, `01`).
 - Tab moves focus out of the control (does not navigate segments).
 
 ## Scope
@@ -23,8 +23,11 @@ the field as a sequence of **segments** (year / month / day):
 **In scope (Phase 1)**
 - Numeric date patterns only — `SelectedDateFormat="Short"` and `Custom`
   patterns made up of `y/yy/yyyy`, `M/MM`, `d/dd` plus literal separators.
-- Enabled **by default** in the DevExpress, MacOS and Linux Devolutions
-  themes by attaching a behavior on the `CalendarDatePicker` `ControlTheme`.
+- Enabled **by default** in the DevExpress and MacOS Devolutions themes by
+  attaching a behavior on the `CalendarDatePicker` `ControlTheme`. The Linux
+  (Yaru) theme is intentionally excluded because its template hides the
+  `PART_TextBox` (`IsVisible="False"`, `IsReadOnly="True"`) and shows only
+  the dropdown button — segmented typed input does not apply there.
 
 **Out of scope (deliberate, can revisit later)**
 - `Long` format and any `Custom` format containing `MMM` / `MMMM` /
@@ -78,7 +81,7 @@ theme (same pattern as `CalendarDatePickerBehavior.OpenOnSelectedDate`).
      (ignore `BlackoutDates` for now — typed input bypasses calendar), call
      `SetCurrentValue(SelectedDateProperty, newDate)`. Re-snap once the new
      text lands.
-   - `Back` → reset active segment to min value (`0000` / `01` / `01`).
+   - `Back` → reset active segment to min value (`0001` / `01` / `01`).
      Update via `SetCurrentValue` if the resulting date is valid; otherwise
      stage as a pending edit.
    - Other keys: leave to base handlers (preserves Enter / Esc behavior).
@@ -98,7 +101,8 @@ theme (same pattern as `CalendarDatePickerBehavior.OpenOnSelectedDate`).
 
 ### Theme integration
 
-`Devolutions.AvaloniaTheme.{DevExpress,MacOS,Linux}/Controls/CalendarDatePicker.axaml`:
+`Devolutions.AvaloniaTheme.{DevExpress,MacOS}/Controls/CalendarDatePicker.axaml`
+(Linux/Yaru is excluded — see Scope above):
 ```xml
 <Setter Property="behaviors:SegmentedDateInputBehavior.IsEnabled" Value="True" />
 ```

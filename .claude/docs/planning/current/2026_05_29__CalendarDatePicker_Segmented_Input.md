@@ -42,8 +42,8 @@ the field as a sequence of **segments** (year / month / day):
 
 Add a new **`SegmentedDateInputBehavior`** in
 `src/Devolutions.AvaloniaControls/Behaviors/` exposing an attached property
-`SegmentedDateInputBehavior.IsEnabled` on `CalendarDatePicker`. The three
-themes set this property to `True` via a `<Setter>` in the existing control
+`SegmentedDateInputBehavior.IsEnabled` on `CalendarDatePicker`. The two
+themes (DevExpress and MacOS) set this property to `True` via a `<Setter>` in the existing control
 theme (same pattern as `CalendarDatePickerBehavior.OpenOnSelectedDate`).
 
 ### Behavior responsibilities

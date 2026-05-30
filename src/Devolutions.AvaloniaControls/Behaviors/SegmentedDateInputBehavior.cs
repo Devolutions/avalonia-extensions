@@ -495,7 +495,7 @@ public static class SegmentedDateInputBehavior
             Segment seg = _segments[_activeIndex];
             int maxDigits = seg.Kind switch
             {
-                SegmentKind.Year  => 4,
+                SegmentKind.Year  => seg.TokenLength > 0 && seg.TokenLength < 4 ? seg.TokenLength : 4,
                 SegmentKind.Month => 2,
                 SegmentKind.Day   => 2,
                 _ => 0,
@@ -515,7 +515,7 @@ public static class SegmentedDateInputBehavior
 
             // For Month/Day, "0" is a valid prefix (continues a "01"/"02" entry) but
             // we don't apply it yet — only persist the buffer until a valid date emerges.
-            if (TryApplySegmentValue(seg.Kind, value, out DateTime applied))
+            if (TryApplySegmentValue(seg.Kind, value, seg.TokenLength, out DateTime applied))
             {
                 _editBuffer = candidate;
                 SetSelectedDate(applied);
@@ -538,14 +538,19 @@ public static class SegmentedDateInputBehavior
             // else: invalid candidate, ignore.
         }
 
-        private bool TryApplySegmentValue(SegmentKind kind, int value, out DateTime result)
+        private bool TryApplySegmentValue(SegmentKind kind, int value, int tokenLength, out DateTime result)
         {
             DateTime current = _picker.SelectedDate ?? _picker.DisplayDate;
             switch (kind)
             {
                 case SegmentKind.Year:
-                    if (value < 1 || value > 9999) { result = default; return false; }
-                    DateTime? y = SafeWithYear(current, value);
+                    // For short year tokens (y, yy, yyy), convert via the culture's two-digit year
+                    // window so that typing "26" with a "yy" pattern gives 2026, not 0026.
+                    int fullYear = (tokenLength > 0 && tokenLength < 4)
+                        ? CultureInfo.CurrentCulture.Calendar.ToFourDigitYear(value)
+                        : value;
+                    if (fullYear < 1 || fullYear > 9999) { result = default; return false; }
+                    DateTime? y = SafeWithYear(current, fullYear);
                     if (y == null) { result = default; return false; }
                     result = ClampToPickerRange(y.Value);
                     return true;
@@ -694,6 +699,14 @@ public static class SegmentedDateInputBehavior
                 {
                     literal.Append(pattern[i + 1]);
                     i += 2;
+                    continue;
+                }
+
+                // % modifier: single-char custom format disambiguator (e.g. "%d" means just the day).
+                // Strip it and let the next character be processed normally.
+                if (c == '%' && i + 1 < pattern.Length)
+                {
+                    i++;
                     continue;
                 }
 

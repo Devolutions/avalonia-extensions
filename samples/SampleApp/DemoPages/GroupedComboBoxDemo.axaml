@@ -16,9 +16,9 @@
         </TextBlock>
       </StackPanel>
 
-      <Grid ColumnDefinitions="Auto,280" ColumnSpacing="20">
+      <Grid ColumnDefinitions="Auto,200" ColumnSpacing="20">
       <Border Grid.Column="0" Margin="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-        <Grid ColumnDefinitions="Auto 280 260" RowDefinitions="Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
+        <Grid ColumnDefinitions="Auto 220 260" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
           <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 0 0">
             <Bold>Named groups:</Bold>
           </TextBlock>
@@ -148,12 +148,54 @@
           </TextBlock>
 
           <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 0 0">
-            <Bold>Pure XAML:</Bold>
+            <Bold>HeaderTemplate:</Bold>
           </TextBlock>
           <StackPanel Grid.Column="1" Grid.Row="4" Spacing="8">
+            <GroupedComboBox ItemsSource="{Binding GroupedItems}"
+                             PlaceholderText="Custom headers"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                             GroupOrderAlphabetical="True"
+                             HeaderMargin="2 8 8 4">
+              <GroupedComboBox.HeaderTemplate>
+                <DataTemplate>
+                  <Border Background="{DynamicResource SystemControlForegroundAccentBrush}"
+                          CornerRadius="3"
+                          Padding="6 2"
+                          HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding}"
+                               Foreground="White"
+                               FontWeight="Bold"
+                               FontSize="11" />
+                  </Border>
+                </DataTemplate>
+              </GroupedComboBox.HeaderTemplate>
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+          </StackPanel>
+          <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            HeaderTemplate customizes only group headers. Selectable rows still use ItemTemplate and theme ComboBoxItem chrome.
+          </TextBlock>
+
+          <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 0 0">
+            <Bold>Pure XAML:</Bold>
+          </TextBlock>
+          <StackPanel Grid.Column="1" Grid.Row="5" Spacing="8">
             <GroupedComboBox PlaceholderText="Choose target"
                              MaxDropDownHeight="220"
                              HeaderMargin="4 8 8 4">
+              <GroupedComboBox.HeaderTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="6" Height="6" CornerRadius="3" Background="{DynamicResource SystemControlForegroundAccentBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding}" FontWeight="Bold" />
+                  </StackPanel>
+                </DataTemplate>
+              </GroupedComboBox.HeaderTemplate>
               <GroupedComboBoxHeaderItem Content="Servers" />
               <GroupedComboBoxItem>Production</GroupedComboBoxItem>
               <GroupedComboBoxItem>Staging</GroupedComboBoxItem>
@@ -165,14 +207,14 @@
               <GroupedComboBoxItem>QA desktop</GroupedComboBoxItem>
             </GroupedComboBox>
           </StackPanel>
-          <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-            Headers and selectable items declared directly in XAML. Items keep the active theme's ComboBoxItem styling.
+          <TextBlock Grid.Column="2" Grid.Row="5" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Headers and selectable items declared directly in XAML. HeaderTemplate is inherited by inline header items too.
           </TextBlock>
 
-          <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 0 0">
+          <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 0 0">
             <Bold>Inner slots:</Bold>
           </TextBlock>
-          <GroupedComboBox Grid.Column="1" Grid.Row="5"
+          <GroupedComboBox Grid.Column="1" Grid.Row="6"
                            ItemsSource="{Binding GroupedItems}"
                            PlaceholderText="Same ComboBox chrome"
                            GroupBinding="{Binding Category}"
@@ -192,7 +234,7 @@
               <TextBlock Text="kg" Margin="2 0" VerticalAlignment="Center" />
             </ComboBoxContent.InnerRightContent>
           </GroupedComboBox>
-          <TextBlock Grid.Column="2" Grid.Row="5" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          <TextBlock Grid.Column="2" Grid.Row="6" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
             Attached ComboBoxContent slots still work because the control keeps the normal ComboBox template.
           </TextBlock>
         </Grid>

@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Media;
 
 /// <summary>
@@ -17,6 +18,9 @@ public class GroupedComboBoxHeaderItem : ComboBoxItem
 
     public static readonly StyledProperty<Thickness> HeaderMarginProperty =
         AvaloniaProperty.Register<GroupedComboBoxHeaderItem, Thickness>(nameof(HeaderMargin), new Thickness(4, 6, 8, 4), inherits: true);
+
+    public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
+        AvaloniaProperty.Register<GroupedComboBoxHeaderItem, IDataTemplate?>(nameof(HeaderTemplate), inherits: true);
 
     public GroupedComboBoxHeaderItem()
     {
@@ -40,6 +44,12 @@ public class GroupedComboBoxHeaderItem : ComboBoxItem
     {
         get => this.GetValue(HeaderMarginProperty);
         set => this.SetValue(HeaderMarginProperty, value);
+    }
+
+    public IDataTemplate? HeaderTemplate
+    {
+        get => this.GetValue(HeaderTemplateProperty);
+        set => this.SetValue(HeaderTemplateProperty, value);
     }
 
     protected override Type StyleKeyOverride => typeof(GroupedComboBoxHeaderItem);

@@ -2,6 +2,8 @@ namespace SampleApp.ViewModels;
 
 using System.Collections.Generic;
 
+using Avalonia;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 
 /// <summary>
@@ -20,6 +22,12 @@ public partial class GroupedComboBoxViewModel : ObservableObject
 
     [ObservableProperty]
     private FoodItem? selectedLargeItem;
+
+    [ObservableProperty]
+    private Thickness headerMargin = new(4, 6, 8, 4);
+
+    [ObservableProperty]
+    private string headerMarginText = "4 6 8 4";
 
     public List<FoodItem> GroupedItems { get; } = new()
     {
@@ -59,6 +67,17 @@ public partial class GroupedComboBoxViewModel : ObservableObject
     };
 
     public System.Func<string, int> EmptyGroupFirstSelector { get; } = group => string.IsNullOrEmpty(group) ? 0 : 1;
+
+    partial void OnHeaderMarginTextChanged(string value)
+    {
+        try
+        {
+            this.HeaderMargin = Thickness.Parse(value);
+        }
+        catch (FormatException)
+        {
+        }
+    }
 
     private static List<FoodItem> GenerateLargeItems()
     {

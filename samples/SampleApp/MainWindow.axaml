@@ -90,6 +90,16 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="GroupedComboBox" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:GroupedComboBoxDemo>
+                  <demoPages:GroupedComboBoxDemo.DataContext>
+                    <vm:GroupedComboBoxViewModel />
+                  </demoPages:GroupedComboBoxDemo.DataContext>
+                </demoPages:GroupedComboBoxDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="ContextMenu" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:ContextMenuDemo />

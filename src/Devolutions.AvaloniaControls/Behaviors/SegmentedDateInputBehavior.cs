@@ -94,6 +94,7 @@ public static class SegmentedDateInputBehavior
         private bool _suspendSelectionSync;
         private bool _suspendTextSync;
         private bool _segmentable;
+        private bool _pointerDown;
 
         public SegmentedState(CalendarDatePicker picker)
         {
@@ -134,6 +135,8 @@ public static class SegmentedDateInputBehavior
             if (_textBox == null) return;
             _textBox.AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
             _textBox.AddHandler(InputElement.TextInputEvent, OnTextInput, RoutingStrategies.Tunnel, handledEventsToo: true);
+            _textBox.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
+            _textBox.AddHandler(InputElement.PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
             _textBox.GotFocus += OnTextBoxGotFocus;
             _textBox.LostFocus += OnTextBoxLostFocus;
             _textBox.PropertyChanged += OnTextBoxPropertyChanged;
@@ -145,6 +148,8 @@ public static class SegmentedDateInputBehavior
             if (_textBox == null) return;
             _textBox.RemoveHandler(InputElement.KeyDownEvent, OnKeyDown);
             _textBox.RemoveHandler(InputElement.TextInputEvent, OnTextInput);
+            _textBox.RemoveHandler(InputElement.PointerPressedEvent, OnPointerPressed);
+            _textBox.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerReleased);
             _textBox.GotFocus -= OnTextBoxGotFocus;
             _textBox.LostFocus -= OnTextBoxLostFocus;
             _textBox.PropertyChanged -= OnTextBoxPropertyChanged;
@@ -196,7 +201,27 @@ public static class SegmentedDateInputBehavior
 
         private void OnTextBoxLostFocus(object? sender, RoutedEventArgs e)
         {
+            _pointerDown = false;
             CommitBuffer();
+            // Collapse the selection so the highlight doesn't persist while unfocused.
+            if (_textBox != null)
+            {
+                _suspendSelectionSync = true;
+                try { _textBox.SelectionStart = _textBox.SelectionEnd = 0; }
+                finally { _suspendSelectionSync = false; }
+            }
+        }
+
+        private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            _pointerDown = true;
+        }
+
+        private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            _pointerDown = false;
+            // After a click or drag, snap the final selection to the appropriate segment(s).
+            if (_segmentable) SnapSelectionToSegment();
         }
 
         // --------------------------------------------------------------------------------------
@@ -295,13 +320,39 @@ public static class SegmentedDateInputBehavior
             if (_textBox == null || _segments.Count == 0) return;
             if (string.IsNullOrEmpty(_textBox.Text)) return;
 
-            // Allow a full-text selection (e.g. Ctrl+A) to persist unsnapped so the user
-            // can then press Delete/Backspace to clear the date.
-            if (_textBox.SelectionStart == 0 && _textBox.SelectionEnd == _textBox.Text!.Length)
-                return;
+            int selStart = _textBox.SelectionStart;
+            int selEnd   = _textBox.SelectionEnd;
 
-            int caret = _textBox.SelectionStart;
-            int seg = FindSegmentAt(caret);
+            // Normalize: Avalonia's SelectionStart/End are not guaranteed to be in order.
+            int minSel = Math.Min(selStart, selEnd);
+            int maxSel = Math.Max(selStart, selEnd);
+
+            // Full-text selection (Ctrl+A / triple-click): leave it — Delete will clear the date.
+            if (minSel == 0 && maxSel == _textBox.Text!.Length) return;
+
+            // During a pointer drag, don't fight Avalonia's live selection — just track which
+            // segment the drag started in.  We snap on PointerReleased instead.
+            if (_pointerDown)
+            {
+                if (maxSel > minSel)
+                {
+                    int firstSeg = FindSegmentAt(minSel);
+                    if (firstSeg >= 0 && firstSeg != _activeIndex) { CommitBuffer(); _activeIndex = firstSeg; }
+                }
+                return;
+            }
+
+            // Multi-segment drag: if the selection spans more than one editable segment,
+            // leave the selection as-is so the user sees what they've spanned.
+            // Delete/Backspace will clear the date in this state.
+            if (maxSel > minSel && SpansMultipleSegments(minSel, maxSel))
+            {
+                int firstSeg = FindSegmentAt(minSel);
+                if (firstSeg >= 0 && firstSeg != _activeIndex) { CommitBuffer(); _activeIndex = firstSeg; }
+                return;
+            }
+
+            int seg = FindSegmentAt(minSel);
             if (seg < 0) return;
 
             if (seg != _activeIndex)
@@ -311,6 +362,25 @@ public static class SegmentedDateInputBehavior
             }
 
             SelectSegment(seg);
+        }
+
+        /// <summary>
+        /// Returns true if the character range [<paramref name="minSel"/>, <paramref name="maxSel"/>)
+        /// overlaps two or more distinct editable segments.
+        /// </summary>
+        private bool SpansMultipleSegments(int minSel, int maxSel)
+        {
+            int count = 0;
+            foreach (Segment s in _segments)
+            {
+                if (s.Kind == SegmentKind.Literal) continue;
+                // Standard half-open range overlap: segment [s.Start, s.Start+s.Length) ∩ [minSel, maxSel)
+                if (s.Start < maxSel && s.Start + s.Length > minSel)
+                {
+                    if (++count >= 2) return true;
+                }
+            }
+            return false;
         }
 
         private int FindSegmentAt(int caret)
@@ -391,9 +461,9 @@ public static class SegmentedDateInputBehavior
                     break;
                 case Key.Back:
                 case Key.Delete:
-                    // Full-text selected (e.g. after Ctrl+A) → clear the date entirely.
+                    // Full-text selected (Ctrl+A / triple-click) OR multi-segment drag → clear date.
                     if (_textBox != null && !string.IsNullOrEmpty(_textBox.Text)
-                        && _textBox.SelectionStart == 0 && _textBox.SelectionEnd == _textBox.Text!.Length)
+                        && IsMultiOrFullSelection())
                     {
                         ClearSelectedDate();
                     }
@@ -636,6 +706,16 @@ public static class SegmentedDateInputBehavior
             // The picker schedules the textbox update via Dispatcher.UIThread.InvokeAsync,
             // so we must defer our segment rebuild & re-snap.
             Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
+        }
+
+        private bool IsMultiOrFullSelection()
+        {
+            if (_textBox == null || string.IsNullOrEmpty(_textBox.Text)) return false;
+            int minSel = Math.Min(_textBox.SelectionStart, _textBox.SelectionEnd);
+            int maxSel = Math.Max(_textBox.SelectionStart, _textBox.SelectionEnd);
+            if (maxSel <= minSel) return false;
+            if (minSel == 0 && maxSel == _textBox.Text!.Length) return true;
+            return SpansMultipleSegments(minSel, maxSel);
         }
 
         private void ClearSelectedDate()

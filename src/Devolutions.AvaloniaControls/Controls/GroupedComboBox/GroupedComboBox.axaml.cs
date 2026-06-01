@@ -1,3 +1,5 @@
+// ReSharper disable AccessToStaticMemberViaDerivedType
+// ReSharper disable ArrangeStaticMemberQualifier
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System;
@@ -13,9 +15,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
-
+using Converters;
 using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
@@ -41,15 +44,15 @@ public class GroupedComboBox : ComboBox
 
     public static readonly StyledProperty<IBinding?> GroupOrderBindingProperty =
         AvaloniaProperty.Register<GroupedComboBox, IBinding?>(nameof(GroupOrderBinding));
-
-    public static readonly StyledProperty<IBrush?> GroupForegroundProperty =
-        AvaloniaProperty.Register<GroupedComboBox, IBrush?>(nameof(GroupForeground));
-
+    
+    public static readonly StyledProperty<IBrush?> HeaderForegroundProperty =
+        AvaloniaProperty.Register<GroupedComboBox, IBrush?>(nameof(HeaderForeground));
+    
     public static readonly StyledProperty<Thickness> HeaderMarginProperty =
-        GroupedComboBoxHeaderItem.HeaderMarginProperty.AddOwner<GroupedComboBox>();
+        AvaloniaProperty.Register<GroupedComboBox, Thickness>(nameof(HeaderMargin), new Thickness(4, 6, 8, 4));
 
     public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
-        GroupedComboBoxHeaderItem.HeaderTemplateProperty.AddOwner<GroupedComboBox>();
+        AvaloniaProperty.Register<GroupedComboBox, IDataTemplate?>(nameof(HeaderTemplate));
 
     /// <summary>
     /// Display name to use for the empty/null group key. When <c>null</c>, items in the empty
@@ -83,7 +86,6 @@ public class GroupedComboBox : ComboBox
         GroupOrderSelectorProperty.Changed.AddClassHandler<GroupedComboBox>((x, _) => x.RebuildDisplayItems());
         GroupOrderBindingProperty.Changed.AddClassHandler<GroupedComboBox>((x, _) => x.RebuildDisplayItems());
         EmptyGroupNameProperty.Changed.AddClassHandler<GroupedComboBox>((x, _) => x.RebuildDisplayItems());
-        GroupForegroundProperty.Changed.AddClassHandler<GroupedComboBox>((x, _) => x.RefreshHeaderContainers());
     }
 
     public GroupedComboBox()
@@ -126,10 +128,10 @@ public class GroupedComboBox : ComboBox
         set => this.SetValue(GroupOrderBindingProperty, value);
     }
 
-    public IBrush? GroupForeground
+    public IBrush? HeaderForeground
     {
-        get => this.GetValue(GroupForegroundProperty);
-        set => this.SetValue(GroupForegroundProperty, value);
+        get => this.GetValue(HeaderForegroundProperty);
+        set => this.SetValue(HeaderForegroundProperty, value);
     }
 
     public Thickness HeaderMargin
@@ -152,10 +154,9 @@ public class GroupedComboBox : ComboBox
 
     protected override Type StyleKeyOverride => typeof(ComboBox);
 
-    protected override void OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs e)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-
         this.TryCaptureInlineItems();
     }
 
@@ -170,7 +171,7 @@ public class GroupedComboBox : ComboBox
             return false;
         }
 
-        recycleKey = item is GroupHeader ? typeof(GroupHeader) : DefaultRecycleKey;
+        recycleKey = item is GroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
         return true;
     }
 
@@ -178,19 +179,23 @@ public class GroupedComboBox : ComboBox
     {
         base.PrepareContainerForItemOverride(container, item, index);
 
-        if (container is GroupedComboBoxHeaderItem headerContainer && item is GroupHeader header)
+        if (container is not GroupedComboBoxHeaderItem headerContainer) return;
+
+        if (item is GroupHeader header)
         {
-            headerContainer.HeaderText = header.text;
-            headerContainer.Content = header.text;
-            if (this.GroupForeground is { } groupForeground)
+            headerContainer[!GroupedComboBoxHeaderItem.ForegroundProperty] = new MultiBinding()
             {
-                headerContainer.HeaderForeground = groupForeground;
-            }
-            else
-            {
-                headerContainer.ClearValue(GroupedComboBoxHeaderItem.HeaderForegroundProperty);
-            }
+                Converter = new FirstNonNullValueMultiConverter(),
+                Bindings = [
+                    this[!HeaderForegroundProperty],
+                    new DynamicResourceExtension("SystemControlForegroundAccentBrush"),
+                ],
+            };
+            headerContainer[!GroupedComboBoxHeaderItem.MarginProperty] = this[!HeaderMarginProperty];
+            headerContainer.Content = header;
         }
+        
+        headerContainer.ContentTemplate = this.HeaderTemplate;
     }
 
     protected override void ClearContainerForItemOverride(Control container)
@@ -199,9 +204,10 @@ public class GroupedComboBox : ComboBox
 
         if (container is GroupedComboBoxHeaderItem headerContainer)
         {
-            headerContainer.HeaderText = null;
+            headerContainer.ClearValue(GroupedComboBoxHeaderItem.ForegroundProperty);
+            headerContainer.ClearValue(GroupedComboBoxHeaderItem.MarginProperty);
+            headerContainer.ClearValue(GroupedComboBoxHeaderItem.ContentTemplateProperty);
             headerContainer.Content = null;
-            headerContainer.ClearValue(GroupedComboBoxHeaderItem.HeaderForegroundProperty);
         }
     }
     
@@ -241,18 +247,20 @@ public class GroupedComboBox : ComboBox
 
     private void OnExternalCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // TODO: This could be more granular for performances / UX (preserving scroll)
         this.CaptureSourceItems(this.externalItemsSource);
         this.RebuildDisplayItems();
     }
 
     private void OnSourceItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // TODO: This could be more granular for performances / UX (preserving scroll)
         this.RebuildDisplayItems();
     }
 
     private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (this.applyingDisplayItems || this.externalItemsSource is not null || this.inlineItemsCaptured) return;
+        if (this.applyingDisplayItems || this.inlineItemsCaptured) return;
 
         this.CaptureSourceItems(this.Items, this.Items.Count);
     }
@@ -265,6 +273,7 @@ public class GroupedComboBox : ComboBox
 
         if (count > 0)
         {
+            this.sourceItems.EnsureCapacity(count);
             this.trackedItems.EnsureCapacity(count);
         }
 
@@ -300,10 +309,7 @@ public class GroupedComboBox : ComboBox
     private void RebuildDisplayItems()
     {
         Func<object, string>? selector = this.ResolveGroupSelector();
-        if (selector is null)
-        {
-            return;
-        }
+        if (selector is null) return;
 
         List<(object item, string groupName, int originalIndex)> source = new(this.sourceItems.Count);
         for (int i = 0; i < this.sourceItems.Count; ++i)
@@ -325,10 +331,11 @@ public class GroupedComboBox : ComboBox
 
         grouped.TryGetNonEnumeratedCount(out var groupedCount);
         List<object> displayItems = new(source.Count + groupedCount);
+        string? emptyName = this.EmptyGroupName;
+        bool hasEmptyName = string.IsNullOrEmpty(emptyName);
         foreach (IGrouping<string, (object item, string groupName, int originalIndex)> group in grouped)
         {
-            string? emptyName = this.EmptyGroupName;
-            bool isEmptyHeaderless = group.Key.Length == 0 && string.IsNullOrEmpty(emptyName);
+            bool isEmptyHeaderless = group.Key.Length == 0 && hasEmptyName;
             if (!isEmptyHeaderless)
             {
                 displayItems.Add(new GroupHeader(group.Key.Length == 0 ? emptyName : group.Key));
@@ -348,26 +355,6 @@ public class GroupedComboBox : ComboBox
         finally
         {
             this.applyingDisplayItems = false;
-        }
-    }
-
-    private void RefreshHeaderContainers()
-    {
-        for (int i = 0; i < this.ItemCount; ++i)
-        {
-            if (this.ContainerFromIndex(i) is GroupedComboBoxHeaderItem headerContainer && this.Items[i] is GroupHeader header)
-            {
-                headerContainer.HeaderText = header.text;
-                headerContainer.Content = header.text;
-                if (this.GroupForeground is { } groupForeground)
-                {
-                    headerContainer.HeaderForeground = groupForeground;
-                }
-                else
-                {
-                    headerContainer.ClearValue(GroupedComboBoxHeaderItem.HeaderForegroundProperty);
-                }
-            }
         }
     }
 

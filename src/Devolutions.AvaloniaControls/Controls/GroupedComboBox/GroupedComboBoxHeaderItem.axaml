@@ -3,19 +3,8 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <ControlTheme x:Key="{x:Type GroupedComboBoxHeaderItem}" TargetType="GroupedComboBoxHeaderItem">
-    <Setter Property="HeaderForeground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <ContentPresenter
-          Name="PART_ContentPresenter"
-          Content="{TemplateBinding Content}"
-          ContentTemplate="{TemplateBinding HeaderTemplate}"
-          Margin="{TemplateBinding HeaderMargin}"
-          Foreground="{TemplateBinding HeaderForeground}"
-          FontWeight="SemiBold"
-        />
-      </ControlTemplate>
-    </Setter>
+    <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+    <Setter Property="Margin" Value="4 6  8 4" />
+    <Setter Property="FontWeight" Value="SemiBold" />
   </ControlTheme>
-
 </ResourceDictionary>

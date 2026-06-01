@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
              x:Class="SampleApp.DemoPages.GroupedComboBoxDemo"
              x:DataType="vm:GroupedComboBoxViewModel">
@@ -91,7 +92,7 @@
             <GroupedComboBox ItemsSource="{Binding EmptyGroupItems}"
                              SelectedItem="{Binding SelectedEmptyGroupItemWithName}"
                              PlaceholderText="Choose item"
-                             GroupForeground="#266fd2"
+                             HeaderForeground="#266fd2"
                              GroupBinding="{Binding Category}"
                              GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
                              EmptyGroupName="NO GROUP"
@@ -187,16 +188,17 @@
           <StackPanel Grid.Column="1" Grid.Row="5" Spacing="8">
             <GroupedComboBox PlaceholderText="Choose target"
                              MaxDropDownHeight="220"
+                             HeaderForeground="#0000FF"
                              HeaderMargin="4 8 8 4">
               <GroupedComboBox.HeaderTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="system:String">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <Border Width="6" Height="6" CornerRadius="3" Background="{DynamicResource SystemControlForegroundAccentBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding}" FontWeight="Bold" />
                   </StackPanel>
                 </DataTemplate>
               </GroupedComboBox.HeaderTemplate>
-              <GroupedComboBoxHeaderItem Content="Servers" />
+              <GroupedComboBoxHeaderItem Content="Servers" Foreground="Green" />
               <GroupedComboBoxItem>Production</GroupedComboBoxItem>
               <GroupedComboBoxItem>Staging</GroupedComboBoxItem>
               <GroupedComboBoxItem>Development</GroupedComboBoxItem>

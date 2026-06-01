@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -56,6 +57,8 @@ public class GroupedComboBox : ComboBox
     protected static readonly object HeaderRecycleKey = typeof(GroupHeader);
 
     private readonly List<object> sourceItems = [];
+
+    private readonly List<INotifyPropertyChanged> trackedItems = [];
 
     private BindingEvaluator? bindingEvaluator;
 
@@ -143,20 +146,7 @@ public class GroupedComboBox : ComboBox
     {
         base.OnAttachedToVisualTree(e);
 
-        if (this.externalItemsSource is null && !this.inlineItemsCaptured && this.Items.Count > 0)
-        {
-            this.inlineItemsCaptured = true;
-            this.sourceItems.Clear();
-            foreach (object? item in this.Items)
-            {
-                if (item is not null)
-                {
-                    this.sourceItems.Add(item);
-                }
-            }
-
-            this.RebuildDisplayItems();
-        }
+        this.TryCaptureInlineItems();
     }
 
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
@@ -202,6 +192,26 @@ public class GroupedComboBox : ComboBox
             headerContainer.ClearValue(GroupedComboBoxHeaderItem.HeaderForegroundProperty);
         }
     }
+    
+    private void TryCaptureInlineItems()
+    {
+        if (this.externalItemsSource is null && !this.inlineItemsCaptured && this.Items.Count > 0)
+        {
+            this.inlineItemsCaptured = true;
+            this.sourceItems.Clear();
+            this.UnsubscribeFromSourceItemChanges();
+            foreach (object? item in this.Items)
+            {
+                if (item is not null)
+                {
+                    this.sourceItems.Add(item);
+                    this.SubscribeToSourceItemChanges(item);
+                }
+            }
+
+            this.RebuildDisplayItems();
+        }
+    }
 
     private void OnItemsSourceChanged(IEnumerable? itemsSource)
     {
@@ -233,23 +243,22 @@ public class GroupedComboBox : ComboBox
         this.RebuildDisplayItems();
     }
 
+    private void OnSourceItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        this.RebuildDisplayItems();
+    }
+
     private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (this.applyingDisplayItems || this.externalItemsSource is not null || this.inlineItemsCaptured) return;
 
-        this.sourceItems.Clear();
-        foreach (object? item in this.Items)
-        {
-            if (item is not null)
-            {
-                this.sourceItems.Add(item);
-            }
-        }
+        this.CaptureSourceItems(this.Items);
     }
 
     private void CaptureSourceItems(IEnumerable? itemsSource)
     {
         this.sourceItems.Clear();
+        this.UnsubscribeFromSourceItemChanges();
         if (itemsSource is null) return;
 
         foreach (object? item in itemsSource)
@@ -257,8 +266,28 @@ public class GroupedComboBox : ComboBox
             if (item is not null)
             {
                 this.sourceItems.Add(item);
+                this.SubscribeToSourceItemChanges(item);
             }
         }
+    }
+
+    private void SubscribeToSourceItemChanges(object item)
+    {
+        if (item is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged += this.OnSourceItemPropertyChanged;
+            this.trackedItems.Add(notifyPropertyChanged);
+        }
+    }
+
+    private void UnsubscribeFromSourceItemChanges()
+    {
+        foreach (INotifyPropertyChanged item in this.trackedItems)
+        {
+            item.PropertyChanged -= this.OnSourceItemPropertyChanged;
+        }
+
+        this.trackedItems.Clear();
     }
 
     private void RebuildDisplayItems()

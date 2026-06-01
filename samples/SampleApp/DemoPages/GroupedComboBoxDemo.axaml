@@ -8,7 +8,7 @@
              x:DataType="vm:GroupedComboBoxViewModel">
 
   <ScrollViewer>
-    <StackPanel Margin="20" Spacing="30" MaxWidth="760" HorizontalAlignment="Left">
+    <StackPanel Margin="20" Spacing="30" MaxWidth="1080" HorizontalAlignment="Left">
       <StackPanel Spacing="6">
         <TextBlock FontWeight="Bold" FontSize="18">GroupedComboBox</TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
@@ -16,7 +16,8 @@
         </TextBlock>
       </StackPanel>
 
-      <Border Margin="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <Grid ColumnDefinitions="Auto,280" ColumnSpacing="20">
+      <Border Grid.Column="0" Margin="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
         <Grid ColumnDefinitions="Auto 280 260" RowDefinitions="Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
           <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 0 0">
             <Bold>Named groups:</Bold>
@@ -44,10 +45,6 @@
             <StackPanel Orientation="Horizontal" Spacing="8">
               <TextBlock Text="Selected:" FontWeight="SemiBold" />
               <TextBlock Text="{Binding SelectedGroupedItem.Name, FallbackValue='(none)'}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="HeaderMargin:" FontWeight="SemiBold" VerticalAlignment="Center" />
-              <TextBox Width="90" Text="{Binding HeaderMarginText}" />
             </StackPanel>
           </StackPanel>
           <TextBlock Grid.Column="2" Grid.Row="0" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
@@ -200,6 +197,68 @@
           </TextBlock>
         </Grid>
       </Border>
+      <Border Grid.Column="1" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}" VerticalAlignment="Top">
+        <StackPanel Spacing="16">
+          <StackPanel Spacing="6">
+            <TextBlock FontWeight="Bold" FontSize="16">Live tests</TextBlock>
+            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              Keep a dropdown open on the left, then edit these values to validate dynamic updates.
+            </TextBlock>
+          </StackPanel>
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="HeaderMargin" FontWeight="SemiBold" />
+            <TextBox Text="{Binding HeaderMarginText}" Watermark="4 6 8 4" />
+            <TextBlock Text="Applied to the Named groups combo." TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+          </StackPanel>
+
+          <Separator />
+
+          <StackPanel Spacing="8">
+            <TextBlock Text="Dynamic items" FontWeight="SemiBold" />
+            <GroupedComboBox ItemsSource="{Binding DynamicItems}"
+                             SelectedItem="{Binding SelectedDynamicItem}"
+                             PlaceholderText="Edit this list live"
+                             HeaderMargin="{Binding HeaderMargin}"
+                             GroupBinding="{Binding Category}"
+                             GroupOrderAlphabetical="True"
+                             MaxDropDownHeight="260">
+              <GroupedComboBox.ItemTemplate>
+                <DataTemplate DataType="vm:DynamicFoodItem">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Category}"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                  </StackPanel>
+                </DataTemplate>
+              </GroupedComboBox.ItemTemplate>
+            </GroupedComboBox>
+            <TextBlock Text="Selected:"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="{Binding SelectedDynamicItem.Name, FallbackValue='(none)'}" />
+          </StackPanel>
+
+          <StackPanel Spacing="8">
+            <TextBlock Text="Add" FontWeight="SemiBold" />
+            <TextBox Text="{Binding NewItemName}" Watermark="Name" />
+            <TextBox Text="{Binding NewItemCategory}" Watermark="Category" />
+            <Button Content="Add item" Command="{Binding AddDynamicItemCommand}" />
+          </StackPanel>
+
+          <StackPanel Spacing="8">
+            <TextBlock Text="Edit selected" FontWeight="SemiBold" />
+            <TextBox Text="{Binding EditItemName}" Watermark="Name" />
+            <TextBox Text="{Binding EditItemCategory}" Watermark="Category" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="Apply edit" Command="{Binding ApplyDynamicItemEditCommand}" />
+              <Button Content="Remove" Command="{Binding RemoveSelectedDynamicItemCommand}" />
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      </Grid>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

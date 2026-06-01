@@ -2,6 +2,9 @@ namespace SampleApp;
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -23,12 +26,20 @@ public partial class MainWindow : Window
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
     // Once the window is fully loaded, update background, detect scale, and size containers
-    this.Loaded += (s, e) =>
+    this.Loaded += async (s, e) =>
     {
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
       this.InitializeContainerSizes();
       this.ApplyCurrentScale(); // Apply any pre-selected scale
+      try
+      {
+        this.Title = await BuildWindowTitleAsync(this.Title);
+      }
+      catch
+      {
+        // Title stays as-is from XAML if anything goes wrong
+      }
     };
 
 #if ENABLE_ACCELERATE
@@ -247,6 +258,71 @@ public partial class MainWindow : Window
     if (e.PropertyName == nameof(MainWindowViewModel.SelectedWallpaper))
     {
       this.UpdatePreviewBackground();
+    }
+  }
+
+  private static async Task<string> BuildWindowTitleAsync(string? baseTitle)
+  {
+    string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
+    string prefix = string.IsNullOrWhiteSpace(baseTitle) ? "SampleApp" : baseTitle;
+    string? branch = await GetGitBranchAsync();
+    return string.IsNullOrEmpty(branch)
+      ? $"{prefix} — {launchTime}"
+      : $"{prefix} — {branch} — {launchTime}";
+  }
+
+  private static async Task<string?> GetGitBranchAsync()
+  {
+    try
+    {
+      using Process process = new();
+      process.StartInfo = new ProcessStartInfo("git", "rev-parse --abbrev-ref HEAD")
+      {
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
+        UseShellExecute = false,
+        CreateNoWindow = true,
+        WorkingDirectory = AppContext.BaseDirectory
+      };
+      process.Start();
+
+      // Drain stderr in the background so a chatty git can't fill the pipe buffer and block.
+      Task<string> stderrTask = process.StandardError.ReadToEndAsync();
+
+      using CancellationTokenSource cts = new(TimeSpan.FromSeconds(2));
+      string branch;
+      try
+      {
+        branch = await process.StandardOutput.ReadToEndAsync(cts.Token);
+        await process.WaitForExitAsync(cts.Token);
+        await stderrTask;
+      }
+      catch (OperationCanceledException)
+      {
+        try
+        {
+          if (!process.HasExited)
+          {
+            process.Kill(entireProcessTree: true);
+            process.WaitForExit(500);
+          }
+        }
+        catch
+        {
+          // best effort — process may already be exited or unkillable
+        }
+
+        return null;
+      }
+
+      if (process.ExitCode != 0) return null;
+
+      branch = branch.Trim();
+      return string.IsNullOrEmpty(branch) || branch == "HEAD" ? null : branch;
+    }
+    catch
+    {
+      return null;
     }
   }
 

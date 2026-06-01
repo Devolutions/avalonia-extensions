@@ -244,8 +244,36 @@ public static class SegmentedDateInputBehavior
                 CalendarDatePickerFormat.Long   => dtfi.LongDatePattern,
                 CalendarDatePickerFormat.Custom => string.IsNullOrEmpty(_picker.CustomDateFormatString)
                     ? dtfi.ShortDatePattern
-                    : _picker.CustomDateFormatString!,
+                    : ExpandIfStandardSpecifier(_picker.CustomDateFormatString!, dtfi),
                 _ => dtfi.ShortDatePattern,
+            };
+        }
+
+        /// <summary>
+        /// Expands a single-character .NET standard date/time format specifier (e.g. "d", "D")
+        /// to its full pattern so the tokenizer sees the real token structure.
+        /// Single-character custom tokens ("%d", "%M", …) are left for the tokenizer's "%" handling.
+        /// </summary>
+        private static string ExpandIfStandardSpecifier(string pattern, DateTimeFormatInfo dtfi)
+        {
+            if (pattern.Length != 1) return pattern;
+            return pattern[0] switch
+            {
+                'd' => dtfi.ShortDatePattern,
+                'D' => dtfi.LongDatePattern,
+                'f' => $"{dtfi.LongDatePattern} {dtfi.ShortTimePattern}",
+                'F' => dtfi.FullDateTimePattern,
+                'g' => $"{dtfi.ShortDatePattern} {dtfi.ShortTimePattern}",
+                'G' => $"{dtfi.ShortDatePattern} {dtfi.LongTimePattern}",
+                'm' or 'M' => dtfi.MonthDayPattern,
+                'r' or 'R' => dtfi.RFC1123Pattern,
+                's' => dtfi.SortableDateTimePattern,
+                't' => dtfi.ShortTimePattern,
+                'T' => dtfi.LongTimePattern,
+                'u' => dtfi.UniversalSortableDateTimePattern,
+                'U' => dtfi.FullDateTimePattern,
+                'y' or 'Y' => dtfi.YearMonthPattern,
+                _ => pattern,
             };
         }
 
@@ -266,6 +294,11 @@ public static class SegmentedDateInputBehavior
         {
             if (_textBox == null || _segments.Count == 0) return;
             if (string.IsNullOrEmpty(_textBox.Text)) return;
+
+            // Allow a full-text selection (e.g. Ctrl+A) to persist unsnapped so the user
+            // can then press Delete/Backspace to clear the date.
+            if (_textBox.SelectionStart == 0 && _textBox.SelectionEnd == _textBox.Text!.Length)
+                return;
 
             int caret = _textBox.SelectionStart;
             int seg = FindSegmentAt(caret);
@@ -358,7 +391,16 @@ public static class SegmentedDateInputBehavior
                     break;
                 case Key.Back:
                 case Key.Delete:
-                    ResetActiveSegmentToMin();
+                    // Full-text selected (e.g. after Ctrl+A) → clear the date entirely.
+                    if (_textBox != null && !string.IsNullOrEmpty(_textBox.Text)
+                        && _textBox.SelectionStart == 0 && _textBox.SelectionEnd == _textBox.Text!.Length)
+                    {
+                        ClearSelectedDate();
+                    }
+                    else
+                    {
+                        ResetActiveSegmentToMin();
+                    }
                     e.Handled = true;
                     break;
             }
@@ -468,7 +510,8 @@ public static class SegmentedDateInputBehavior
         private void ResetActiveSegmentToMin()
         {
             CommitBuffer();
-            EnsureSelectedDate();
+            // If no date is currently selected, there is nothing to reset.
+            if (!_picker.SelectedDate.HasValue) return;
             if (_activeIndex < 0 || _activeIndex >= _segments.Count) return;
             DateTime current = _picker.SelectedDate ?? _picker.DisplayDate;
 
@@ -489,7 +532,6 @@ public static class SegmentedDateInputBehavior
 
         private void HandleDigit(char digit)
         {
-            EnsureSelectedDate();
             if (_activeIndex < 0 || _activeIndex >= _segments.Count) return;
 
             Segment seg = _segments[_activeIndex];
@@ -593,6 +635,21 @@ public static class SegmentedDateInputBehavior
             }
             // The picker schedules the textbox update via Dispatcher.UIThread.InvokeAsync,
             // so we must defer our segment rebuild & re-snap.
+            Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
+        }
+
+        private void ClearSelectedDate()
+        {
+            _editBuffer = string.Empty;
+            _suspendTextSync = true;
+            try
+            {
+                _picker.SetCurrentValue(CalendarDatePicker.SelectedDateProperty, (DateTime?)null);
+            }
+            finally
+            {
+                _suspendTextSync = false;
+            }
             Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
         }
 

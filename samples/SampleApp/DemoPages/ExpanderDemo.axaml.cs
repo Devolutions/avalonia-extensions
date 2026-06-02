@@ -8,6 +8,6 @@ public partial class ExpanderDemo : UserControl
 {
   public ExpanderDemo()
   {
-    InitializeComponent();
+      this.InitializeComponent();
   }
 }

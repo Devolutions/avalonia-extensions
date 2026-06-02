@@ -7,6 +7,6 @@ public partial class HyperlinkButtonDemo : UserControl
 {
     public HyperlinkButtonDemo()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

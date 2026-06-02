@@ -8,6 +8,6 @@ public partial class AnimatedIcon : UserControl
 {
   public AnimatedIcon()
   {
-    InitializeComponent();
+      this.InitializeComponent();
   }
 }

@@ -20,8 +20,8 @@
     <vm:TreeDataGridViewModel />
   </Design.DataContext>
 
-  <StackPanel Orientation="Horizontal" Spacing="50">
-    <StackPanel Orientation="Vertical" Spacing="20">
+  <Grid ColumnDefinitions="*,*" ColumnSpacing="50">
+    <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="20">
       <TextBlock Text="Row Selection" Classes="section-title" FontSize="18" />
 
       <TextBlock Text="Flat mode" Classes="section-title" />
@@ -34,7 +34,7 @@
       <TreeDataGrid Source="{Binding TreeRowSelectionSource}" />
     </StackPanel>
 
-    <StackPanel Orientation="Vertical" Spacing="20">
+    <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="20">
       <TextBlock Text="Cell Selection" Classes="section-title" FontSize="18" />
 
       <TextBlock Text="Flat mode" Classes="section-title" />
@@ -45,5 +45,5 @@
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
       <TreeDataGrid Classes="grid-lines alternating-rows" Source="{Binding TreeCellSelectionSource}" />
     </StackPanel>
-  </StackPanel>
+  </Grid>
 </UserControl>

@@ -7,7 +7,7 @@ public partial class AutoCompleteBoxDemo : UserControl
 {
   public AutoCompleteBoxDemo()
   {
-    InitializeComponent();
+      this.InitializeComponent();
     this.Animals.ItemsSource = new string[]
         { "cat", "camel", "cow", "chameleon", "mouse", "lion", "zebra", "dog", "frog", "jackal", "puffin", "quokka", "vole", "oryx" }
       .OrderBy(x=>x);

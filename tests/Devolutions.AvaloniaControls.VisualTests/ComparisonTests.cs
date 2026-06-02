@@ -13,8 +13,8 @@ public class ComparisonTests
         var path2 = Path.Combine(Path.GetTempPath(), "img2.png");
         var diff = Path.Combine(Path.GetTempPath(), "diff.png");
 
-        CreateTestImage(path1, SKColors.Blue);
-        CreateTestImage(path2, SKColors.Blue);
+        this.CreateTestImage(path1, SKColors.Blue);
+        this.CreateTestImage(path2, SKColors.Blue);
 
         bool result = ImageComparer.CompareImages(path1, path2, diff);
         Assert.True(result);
@@ -27,8 +27,8 @@ public class ComparisonTests
         var path2 = Path.Combine(Path.GetTempPath(), "img2_diff.png");
         var diff = Path.Combine(Path.GetTempPath(), "diff_out.png");
 
-        CreateTestImage(path1, SKColors.Blue);
-        CreateTestImage(path2, SKColors.Red);
+        this.CreateTestImage(path1, SKColors.Blue);
+        this.CreateTestImage(path2, SKColors.Red);
 
         bool result = ImageComparer.CompareImages(path1, path2, diff);
         Assert.False(result);

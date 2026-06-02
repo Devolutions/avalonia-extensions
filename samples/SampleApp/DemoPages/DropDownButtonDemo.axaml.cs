@@ -7,7 +7,7 @@ public partial class DropDownButtonDemo : UserControl
 {
     public DropDownButtonDemo()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
     private void InitializeComponent()

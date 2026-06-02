@@ -6,6 +6,6 @@ public partial class SeparatorDemo : UserControl
 {
   public SeparatorDemo()
   {
-    InitializeComponent();
+      this.InitializeComponent();
   }
 }

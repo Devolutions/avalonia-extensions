@@ -191,7 +191,7 @@ internal static class TabItemPositionBehavior
                 }
                 else
                 {
-                    ClearPseudoClasses(tab);
+                    this.ClearPseudoClasses(tab);
                 }
             }
 

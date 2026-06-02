@@ -15,7 +15,7 @@ public class ThemeIsOneOfExtension : MarkupExtension
 {
     public ThemeIsOneOfExtension(string themes)
     {
-        Themes = themes;
+        this.Themes = themes;
     }
 
     public string Themes { get; }
@@ -25,7 +25,7 @@ public class ThemeIsOneOfExtension : MarkupExtension
         return DevoConverters.IsOneOfConverter.Convert(
             App.EffectiveCurrentThemeName,
             typeof(bool),
-            Themes,
+            this.Themes,
             System.Globalization.CultureInfo.CurrentCulture);
     }
 }

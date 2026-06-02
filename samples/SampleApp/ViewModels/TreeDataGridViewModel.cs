@@ -2,10 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
-using Avalonia.Controls.Templates;
-using Avalonia.Layout;
-using Avalonia.Svg;
-using System;
 #endif
 
 namespace SampleApp.ViewModels;
@@ -15,14 +11,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 public class NetworkNode
 {
-  public string Name { get; set; } = string.Empty;
-  public string Type { get; set; } = string.Empty; // "Folder", "Computer", "User"
+  public string Name { get; set; }
+  public string Type { get; set; } // "Folder", "Computer", "User"
   public bool IsExpanded { get; set; }
-  public string IPAddress { get; set; } = string.Empty;
-  public string Status { get; set; } = string.Empty;
-  public string LastSeen { get; set; } = string.Empty;
+  public string IPAddress { get; set; }
+  public string Status { get; set; }
+  public string LastSeen { get; set; }
 
-    public string IconPath => Type switch
+    public string IconPath => this.Type switch
     {
         "Folder" => "/Assets/Folder.svg",
         "Computer" => "/Assets/Computer.svg",

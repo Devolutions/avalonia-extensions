@@ -81,13 +81,14 @@
                   ZIndex="999" />
 
           <Border CornerRadius="{TemplateBinding CornerRadius}" ClipToBounds="True" BorderThickness="0" ZIndex="1">
-            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*"
+            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto"
                   ZIndex="2"
                   Background="{TemplateBinding Background}">
 
               <!-- Column headers -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
                             Grid.Row="0"
+                            Grid.Column="0"
                             IsVisible="{TemplateBinding ShowColumnHeaders}"
                             HorizontalScrollBarVisibility="Hidden"
                             VerticalScrollBarVisibility="Disabled"
@@ -105,10 +106,25 @@
                                                       ItemContainerTheme="{TemplateBinding ColumnHeaderTheme}" />
                 </Border>
               </ScrollViewer>
+              <Border Grid.Row="0"
+                      Grid.Column="1"
+                      BorderBrush="{DynamicResource DataGridGridLinesBrush}"
+                      BorderThickness="0 0 0 1" />
+              <ScrollBar Grid.Row="0"
+                         Grid.RowSpan="2"
+                         Grid.Column="1"
+                         Orientation="Vertical"
+                         Opacity="0"
+                         IsHitTestVisible="False"
+                         Focusable="False"
+                         IsVisible="{TemplateBinding ShowColumnHeaders}" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"
                             Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            AllowAutoHide="False"
                             HorizontalScrollBarVisibility="Auto"
                             VerticalScrollBarVisibility="Auto"
                             BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
@@ -265,8 +281,7 @@
             <TreeDataGridCellsPresenter Name="PART_CellsPresenter"
                                         ElementFactory="{TemplateBinding ElementFactory}"
                                         Items="{TemplateBinding Columns}"
-                                        Rows="{TemplateBinding Rows}"
-                                        Margin="{DynamicResource DataGridRowPadding}" />
+                                        Rows="{TemplateBinding Rows}" />
           </Grid>
         </Border>
       </ControlTemplate>
@@ -286,7 +301,7 @@
   <!--  Cells                                                           -->
   <!-- ================================================================ -->
   <ControlTheme x:Key="{x:Type TreeDataGridTextCell}" TargetType="TreeDataGridTextCell">
-    <Setter Property="Padding" Value="12,0,12,0" />
+    <Setter Property="Padding" Value="18,0,18,0" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
@@ -344,7 +359,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridTemplateCell}" TargetType="TreeDataGridTemplateCell">
-    <Setter Property="Padding" Value="12,0,12,0" />
+    <Setter Property="Padding" Value="18,0,18,0" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
@@ -399,7 +414,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type TreeDataGridCheckBoxCell}" TargetType="TreeDataGridCheckBoxCell">
-    <Setter Property="Padding" Value="12,0,12,0" />
+    <Setter Property="Padding" Value="18,0,18,0" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />

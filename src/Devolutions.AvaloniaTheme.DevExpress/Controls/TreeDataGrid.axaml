@@ -50,8 +50,8 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <x:Double x:Key="TreeDataGridHeaderHeight">28</x:Double>
-  <x:Double x:Key="TreeDataGridRowHeight">24</x:Double>
+  <x:Double x:Key="TreeDataGridHeaderHeight">27</x:Double>
+  <x:Double x:Key="TreeDataGridRowHeight">25</x:Double>
   <SolidColorBrush x:Key="TreeDataGridHeaderBackground" Color="{DynamicResource SystemRegionColor}" />
   <SolidColorBrush x:Key="TreeDataGridSelectedRowBackgroundAccentBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.4" />
   <StaticResource x:Key="DataGridCurrencyVisualPrimaryBrush" ResourceKey="SystemControlTransparentBrush" />
@@ -86,13 +86,14 @@
                   ZIndex="999" />
 
           <Border CornerRadius="{TemplateBinding CornerRadius}" ClipToBounds="True" BorderThickness="0" ZIndex="1">
-            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*"
+            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto"
                   ZIndex="2"
                   Background="{TemplateBinding Background}">
 
               <!-- Column headers: add bottom grid line -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
                             Grid.Row="0"
+                            Grid.Column="0"
                             IsVisible="{TemplateBinding ShowColumnHeaders}"
                             HorizontalScrollBarVisibility="Hidden"
                             VerticalScrollBarVisibility="Disabled"
@@ -111,10 +112,27 @@
                                                       ItemContainerTheme="{TemplateBinding ColumnHeaderTheme}" />
                 </Border>
               </ScrollViewer>
+              <Border Grid.Row="0"
+                      Grid.Column="1"
+                      BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
+                      BorderThickness="0 0 0 1"/>
+              <ScrollBar Grid.Row="0"
+                         Grid.RowSpan="2"
+                         Grid.Column="1"
+                         Orientation="Vertical"
+                         Opacity="0"
+                         IsHitTestVisible="False"
+                         Focusable="False"
+                         Margin="0 0 1 0"
+                         IsVisible="{TemplateBinding ShowColumnHeaders}" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"
                             Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="0 0 1 1"
+                            AllowAutoHide="True"
                             HorizontalScrollBarVisibility="Auto"
                             VerticalScrollBarVisibility="Auto"
                             BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">

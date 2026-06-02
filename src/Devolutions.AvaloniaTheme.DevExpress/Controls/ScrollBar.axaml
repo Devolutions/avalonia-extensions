@@ -41,8 +41,8 @@
     </Setter>
     <Setter Property="Transitions">
       <Transitions>
-        <CornerRadiusTransition Property="CornerRadius" Duration="0:0:0.1" />
-        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
+        <CornerRadiusTransition Property="CornerRadius" Duration="0:0:0.034" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.034" />
       </Transitions>
     </Setter>
   </ControlTheme>
@@ -70,7 +70,7 @@
     </Setter>
     <Setter Property="Transitions">
       <Transitions>
-        <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+        <DoubleTransition Property="Opacity" Duration="0:0:0.034" />
       </Transitions>
     </Setter>
   </ControlTheme>
@@ -183,7 +183,7 @@
                             Data="{DynamicResource ScrollBarLineButtonPath}"
                             Foreground="{DynamicResource ScrollBarThumbBrush}"
                             HorizontalAlignment="Center"
-                            Width="7">
+                            Height="7">
                     <PathIcon.RenderTransform>
                       <RotateTransform Angle="-90" />
                     </PathIcon.RenderTransform>
@@ -227,7 +227,7 @@
                             Data="{DynamicResource ScrollBarLineButtonPath}"
                             Foreground="{DynamicResource ScrollBarThumbBrush}"
                             HorizontalAlignment="Center"
-                            Width="7">
+                            Height="7">
                     <PathIcon.RenderTransform>
                       <RotateTransform Angle="90" />
                     </PathIcon.RenderTransform>

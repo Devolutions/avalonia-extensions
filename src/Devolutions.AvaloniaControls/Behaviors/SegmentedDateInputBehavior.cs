@@ -340,9 +340,11 @@ public static class SegmentedDateInputBehavior
                 if (maxSel > minSel)
                 {
                     int firstSeg = this.FindSegmentAt(minSel);
-                    if (firstSeg >= 0 && firstSeg != this.activeIndex) {
+                    if (firstSeg >= 0 && firstSeg != this.activeIndex) 
+                    {
                         this.CommitBuffer();
-                        this.activeIndex = firstSeg; }
+                        this.activeIndex = firstSeg;
+                    }
                 }
                 return;
             }
@@ -353,9 +355,11 @@ public static class SegmentedDateInputBehavior
             if (maxSel > minSel && this.SpansMultipleSegments(minSel, maxSel))
             {
                 int firstSeg = this.FindSegmentAt(minSel);
-                if (firstSeg >= 0 && firstSeg != this.activeIndex) {
+                if (firstSeg >= 0 && firstSeg != this.activeIndex)
+                {
                     this.CommitBuffer();
-                    this.activeIndex = firstSeg; }
+                    this.activeIndex = firstSeg;
+                }
                 return;
             }
 
@@ -968,8 +972,6 @@ public static class SegmentedDateInputBehavior
                         break;
                 }
 
-                start += piece.Length;
-
                 result.Add(new Segment
                 {
                     kind = t.kind,
@@ -978,6 +980,8 @@ public static class SegmentedDateInputBehavior
                     tokenLength = t.tokenLength,
                     literalText = t.literalText,
                 });
+                
+                start += piece.Length;
             }
 
             return result;

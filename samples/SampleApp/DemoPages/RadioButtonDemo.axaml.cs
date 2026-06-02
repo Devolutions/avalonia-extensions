@@ -8,6 +8,6 @@ public partial class RadioButtonDemo : UserControl
 {
   public RadioButtonDemo()
   {
-    InitializeComponent();
+      this.InitializeComponent();
   }
 }

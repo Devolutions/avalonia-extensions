@@ -7,6 +7,6 @@ public partial class DataGridGroupedDemo : UserControl
 {
   public DataGridGroupedDemo()
   {
-    InitializeComponent();
+      this.InitializeComponent();
   }
 }

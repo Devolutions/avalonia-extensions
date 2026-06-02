@@ -6,6 +6,6 @@ public partial class SplitButtonDemo : UserControl
 {
     public SplitButtonDemo()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

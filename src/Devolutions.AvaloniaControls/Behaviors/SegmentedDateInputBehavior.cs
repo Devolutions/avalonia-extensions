@@ -39,7 +39,7 @@ public static class SegmentedDateInputBehavior
     public static readonly AttachedProperty<bool> IsEnabledProperty =
         AvaloniaProperty.RegisterAttached<CalendarDatePicker, bool>("IsEnabled", typeof(SegmentedDateInputBehavior));
 
-    private static readonly AttachedProperty<SegmentedState?> StateProperty =
+    private static readonly AttachedProperty<SegmentedState?> stateProperty =
         AvaloniaProperty.RegisterAttached<CalendarDatePicker, SegmentedState?>("State", typeof(SegmentedDateInputBehavior));
 
     static SegmentedDateInputBehavior()
@@ -65,20 +65,20 @@ public static class SegmentedDateInputBehavior
 
     private static void Attach(CalendarDatePicker picker)
     {
-        if (picker.GetValue(StateProperty) != null) return;
+        if (picker.GetValue(stateProperty) != null) return;
 
         SegmentedState state = new(picker);
-        picker.SetValue(StateProperty, state);
+        picker.SetValue(stateProperty, state);
         state.Hook();
     }
 
     private static void Detach(CalendarDatePicker picker)
     {
-        SegmentedState? state = picker.GetValue(StateProperty);
+        SegmentedState? state = picker.GetValue(stateProperty);
         if (state == null) return;
 
         state.Unhook();
-        picker.SetValue(StateProperty, null);
+        picker.SetValue(stateProperty, null);
     }
 
     // ------------------------------------------------------------------------------------------
@@ -87,77 +87,77 @@ public static class SegmentedDateInputBehavior
 
     private sealed class SegmentedState
     {
-        private readonly CalendarDatePicker _picker;
-        private TextBox? _textBox;
-        private List<Segment> _segments = new();
-        private int _activeIndex = -1;
-        private string _editBuffer = string.Empty;
-        private bool _suspendSelectionSync;
-        private bool _suspendTextSync;
-        private bool _segmentable;
-        private bool _pointerDown;
+        private readonly CalendarDatePicker picker;
+        private TextBox? textBox;
+        private List<Segment> segments = new();
+        private int activeIndex = -1;
+        private string editBuffer = string.Empty;
+        private bool suspendSelectionSync;
+        private bool suspendTextSync;
+        private bool segmentable;
+        private bool pointerDown;
 
         public SegmentedState(CalendarDatePicker picker)
         {
-            _picker = picker;
+            this.picker = picker;
         }
 
         public void Hook()
         {
-            _picker.TemplateApplied += OnTemplateApplied;
-            _picker.PropertyChanged += OnPickerPropertyChanged;
-            TryHookTextBox();
+            this.picker.TemplateApplied += this.OnTemplateApplied;
+            this.picker.PropertyChanged += this.OnPickerPropertyChanged;
+            this.TryHookTextBox();
         }
 
         public void Unhook()
         {
-            _picker.TemplateApplied -= OnTemplateApplied;
-            _picker.PropertyChanged -= OnPickerPropertyChanged;
-            UnhookTextBox();
+            this.picker.TemplateApplied -= this.OnTemplateApplied;
+            this.picker.PropertyChanged -= this.OnPickerPropertyChanged;
+            this.UnhookTextBox();
         }
 
         private void OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            UnhookTextBox();
-            _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
-            HookTextBox();
+            this.UnhookTextBox();
+            this.textBox = e.NameScope.Find<TextBox>("PART_TextBox");
+            this.HookTextBox();
         }
 
         private void TryHookTextBox()
         {
-            if (_textBox != null) return;
-            _textBox = _picker.GetVisualDescendants().OfType<TextBox>().FirstOrDefault(tb => tb.Name == "PART_TextBox")
-                       ?? _picker.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
-            HookTextBox();
+            if (this.textBox != null) return;
+            this.textBox = this.picker.GetVisualDescendants().OfType<TextBox>().FirstOrDefault(tb => tb.Name == "PART_TextBox")
+                            ?? this.picker.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
+            this.HookTextBox();
         }
 
         private void HookTextBox()
         {
-            if (_textBox == null) return;
-            _textBox.AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
-            _textBox.AddHandler(InputElement.TextInputEvent, OnTextInput, RoutingStrategies.Tunnel, handledEventsToo: true);
-            _textBox.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
-            _textBox.AddHandler(InputElement.PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
-            _textBox.GotFocus += OnTextBoxGotFocus;
-            _textBox.LostFocus += OnTextBoxLostFocus;
-            _textBox.PropertyChanged += OnTextBoxPropertyChanged;
-            RebuildSegments();
+            if (this.textBox == null) return;
+            this.textBox.AddHandler(InputElement.KeyDownEvent, this.OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
+            this.textBox.AddHandler(InputElement.TextInputEvent, this.OnTextInput, RoutingStrategies.Tunnel, handledEventsToo: true);
+            this.textBox.AddHandler(InputElement.PointerPressedEvent, this.OnPointerPressed, RoutingStrategies.Tunnel);
+            this.textBox.AddHandler(InputElement.PointerReleasedEvent, this.OnPointerReleased, RoutingStrategies.Tunnel);
+            this.textBox.GotFocus += this.OnTextBoxGotFocus;
+            this.textBox.LostFocus += this.OnTextBoxLostFocus;
+            this.textBox.PropertyChanged += this.OnTextBoxPropertyChanged;
+            this.RebuildSegments();
         }
 
         private void UnhookTextBox()
         {
-            if (_textBox == null) return;
-            _textBox.RemoveHandler(InputElement.KeyDownEvent, OnKeyDown);
-            _textBox.RemoveHandler(InputElement.TextInputEvent, OnTextInput);
-            _textBox.RemoveHandler(InputElement.PointerPressedEvent, OnPointerPressed);
-            _textBox.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerReleased);
-            _textBox.GotFocus -= OnTextBoxGotFocus;
-            _textBox.LostFocus -= OnTextBoxLostFocus;
-            _textBox.PropertyChanged -= OnTextBoxPropertyChanged;
-            _textBox = null;
-            _segments = new();
-            _activeIndex = -1;
-            _editBuffer = string.Empty;
+            if (this.textBox == null) return;
+            this.textBox.RemoveHandler(InputElement.KeyDownEvent, this.OnKeyDown);
+            this.textBox.RemoveHandler(InputElement.TextInputEvent, this.OnTextInput);
+            this.textBox.RemoveHandler(InputElement.PointerPressedEvent, this.OnPointerPressed);
+            this.textBox.RemoveHandler(InputElement.PointerReleasedEvent, this.OnPointerReleased);
+            this.textBox.GotFocus -= this.OnTextBoxGotFocus;
+            this.textBox.LostFocus -= this.OnTextBoxLostFocus;
+            this.textBox.PropertyChanged -= this.OnTextBoxPropertyChanged;
+            this.textBox = null;
+            this.segments = new();
+            this.activeIndex = -1;
+            this.editBuffer = string.Empty;
         }
 
         // --------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ public static class SegmentedDateInputBehavior
                 e.Property == CalendarDatePicker.CustomDateFormatStringProperty)
             {
                 // Format change → defer until the picker re-renders the text.
-                Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
+                Dispatcher.UIThread.Post(this.RebuildSegments, DispatcherPriority.Background);
             }
         }
 
@@ -178,51 +178,53 @@ public static class SegmentedDateInputBehavior
         {
             if (e.Property == TextBox.TextProperty)
             {
-                if (_suspendTextSync) return;
-                RebuildSegments();
+                if (this.suspendTextSync) return;
+                this.RebuildSegments();
             }
             else if ((e.Property == TextBox.SelectionStartProperty || e.Property == TextBox.SelectionEndProperty) &&
-                     !_suspendSelectionSync && _segmentable)
+                     !this.suspendSelectionSync && this.segmentable)
             {
-                SnapSelectionToSegment();
+                this.SnapSelectionToSegment();
             }
         }
 
         private void OnTextBoxGotFocus(object? sender, GotFocusEventArgs e)
         {
-            if (!_segmentable) return;
+            if (!this.segmentable) return;
             // Run after base CalendarDatePicker.OnGotFocus, which selects all on Tab nav.
             Dispatcher.UIThread.Post(() =>
             {
-                if (_textBox == null || !_textBox.IsFocused) return;
-                _editBuffer = string.Empty;
-                SelectSegment(_activeIndex >= 0 ? _activeIndex : FirstEditableSegment());
+                if (this.textBox == null || !this.textBox.IsFocused) return;
+                this.editBuffer = string.Empty;
+                this.SelectSegment(this.activeIndex >= 0 ? this.activeIndex : this.FirstEditableSegment());
             }, DispatcherPriority.Input);
         }
 
         private void OnTextBoxLostFocus(object? sender, RoutedEventArgs e)
         {
-            _pointerDown = false;
-            CommitBuffer();
+            this.pointerDown = false;
+            this.CommitBuffer();
             // Collapse the selection so the highlight doesn't persist while unfocused.
-            if (_textBox != null)
+            if (this.textBox != null)
             {
-                _suspendSelectionSync = true;
-                try { _textBox.SelectionStart = _textBox.SelectionEnd = 0; }
-                finally { _suspendSelectionSync = false; }
+                this.suspendSelectionSync = true;
+                try {
+                    this.textBox.SelectionStart = this.textBox.SelectionEnd = 0; }
+                finally {
+                    this.suspendSelectionSync = false; }
             }
         }
 
         private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            _pointerDown = true;
+            this.pointerDown = true;
         }
 
         private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
-            _pointerDown = false;
+            this.pointerDown = false;
             // After a click or drag, snap the final selection to the appropriate segment(s).
-            if (_segmentable) SnapSelectionToSegment();
+            if (this.segmentable) this.SnapSelectionToSegment();
         }
 
         // --------------------------------------------------------------------------------------
@@ -231,46 +233,46 @@ public static class SegmentedDateInputBehavior
 
         private void RebuildSegments()
         {
-            if (_textBox == null)
+            if (this.textBox == null)
             {
-                _segmentable = false;
+                this.segmentable = false;
                 return;
             }
 
-            string pattern = ResolvePattern();
+            string pattern = this.ResolvePattern();
             List<Segment>? parsed = DateFormatTokenizer.Tokenize(pattern);
             if (parsed == null)
             {
-                _segmentable = false;
-                _segments = new();
-                _activeIndex = -1;
+                this.segmentable = false;
+                this.segments = new();
+                this.activeIndex = -1;
                 return;
             }
 
-            _segmentable = true;
+            this.segmentable = true;
 
             // Render the segments against the current SelectedDate (or DisplayDate as fallback)
             // so we know the exact character offsets for selection-snapping.
-            DateTime renderDate = _picker.SelectedDate ?? _picker.DisplayDate;
-            (_, _segments) = DateFormatTokenizer.RenderSegments(parsed, renderDate);
+            DateTime renderDate = this.picker.SelectedDate ?? this.picker.DisplayDate;
+            this.segments = DateFormatTokenizer.RenderSegments(parsed, renderDate);
 
             // If picker has no SelectedDate, the textbox is empty (watermark shown).
             // Don't force-render; just keep segments in standby for first interaction.
-            if (_activeIndex < 0 || _activeIndex >= _segments.Count || _segments[_activeIndex].Kind == SegmentKind.Literal)
+            if (this.activeIndex < 0 || this.activeIndex >= this.segments.Count || this.segments[this.activeIndex].kind == SegmentKind.Literal)
             {
-                _activeIndex = FirstEditableSegment();
+                this.activeIndex = this.FirstEditableSegment();
             }
         }
 
         private string ResolvePattern()
         {
             DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
-            return _picker.SelectedDateFormat switch
+            return this.picker.SelectedDateFormat switch
             {
                 CalendarDatePickerFormat.Long   => dtfi.LongDatePattern,
-                CalendarDatePickerFormat.Custom => string.IsNullOrEmpty(_picker.CustomDateFormatString)
+                CalendarDatePickerFormat.Custom => string.IsNullOrEmpty(this.picker.CustomDateFormatString)
                     ? dtfi.ShortDatePattern
-                    : ExpandIfStandardSpecifier(_picker.CustomDateFormatString!, dtfi),
+                    : ExpandIfStandardSpecifier(this.picker.CustomDateFormatString, dtfi),
                 _ => dtfi.ShortDatePattern,
             };
         }
@@ -305,9 +307,9 @@ public static class SegmentedDateInputBehavior
 
         private int FirstEditableSegment()
         {
-            for (int i = 0; i < _segments.Count; i++)
+            for (int i = 0; i < this.segments.Count; i++)
             {
-                if (_segments[i].Kind != SegmentKind.Literal) return i;
+                if (this.segments[i].kind != SegmentKind.Literal) return i;
             }
             return -1;
         }
@@ -318,27 +320,31 @@ public static class SegmentedDateInputBehavior
 
         private void SnapSelectionToSegment()
         {
-            if (_textBox == null || _segments.Count == 0) return;
-            if (string.IsNullOrEmpty(_textBox.Text)) return;
+            if (this.textBox == null || this.segments.Count == 0) return;
+            if (string.IsNullOrEmpty(this.textBox.Text)) return;
 
-            int selStart = _textBox.SelectionStart;
-            int selEnd   = _textBox.SelectionEnd;
+            int selStart = this.textBox.SelectionStart;
+            int selEnd   = this.textBox.SelectionEnd;
 
             // Normalize: Avalonia's SelectionStart/End are not guaranteed to be in order.
             int minSel = Math.Min(selStart, selEnd);
             int maxSel = Math.Max(selStart, selEnd);
 
             // Full-text selection (Ctrl+A / triple-click): leave it — Delete will clear the date.
-            if (minSel == 0 && maxSel == _textBox.Text!.Length) return;
+            if (minSel == 0 && maxSel == this.textBox.Text!.Length) return;
 
             // During a pointer drag, don't fight Avalonia's live selection — just track which
             // segment the drag started in.  We snap on PointerReleased instead.
-            if (_pointerDown)
+            if (this.pointerDown)
             {
                 if (maxSel > minSel)
                 {
-                    int firstSeg = FindSegmentAt(minSel);
-                    if (firstSeg >= 0 && firstSeg != _activeIndex) { CommitBuffer(); _activeIndex = firstSeg; }
+                    int firstSeg = this.FindSegmentAt(minSel);
+                    if (firstSeg >= 0 && firstSeg != this.activeIndex) 
+                    {
+                        this.CommitBuffer();
+                        this.activeIndex = firstSeg;
+                    }
                 }
                 return;
             }
@@ -346,23 +352,27 @@ public static class SegmentedDateInputBehavior
             // Multi-segment drag: if the selection spans more than one editable segment,
             // leave the selection as-is so the user sees what they've spanned.
             // Delete/Backspace will clear the date in this state.
-            if (maxSel > minSel && SpansMultipleSegments(minSel, maxSel))
+            if (maxSel > minSel && this.SpansMultipleSegments(minSel, maxSel))
             {
-                int firstSeg = FindSegmentAt(minSel);
-                if (firstSeg >= 0 && firstSeg != _activeIndex) { CommitBuffer(); _activeIndex = firstSeg; }
+                int firstSeg = this.FindSegmentAt(minSel);
+                if (firstSeg >= 0 && firstSeg != this.activeIndex)
+                {
+                    this.CommitBuffer();
+                    this.activeIndex = firstSeg;
+                }
                 return;
             }
 
-            int seg = FindSegmentAt(minSel);
+            int seg = this.FindSegmentAt(minSel);
             if (seg < 0) return;
 
-            if (seg != _activeIndex)
+            if (seg != this.activeIndex)
             {
-                CommitBuffer();
-                _activeIndex = seg;
+                this.CommitBuffer();
+                this.activeIndex = seg;
             }
 
-            SelectSegment(seg);
+            this.SelectSegment(seg);
         }
 
         /// <summary>
@@ -372,11 +382,11 @@ public static class SegmentedDateInputBehavior
         private bool SpansMultipleSegments(int minSel, int maxSel)
         {
             int count = 0;
-            foreach (Segment s in _segments)
+            foreach (Segment s in this.segments)
             {
-                if (s.Kind == SegmentKind.Literal) continue;
+                if (s.kind == SegmentKind.Literal) continue;
                 // Standard half-open range overlap: segment [s.Start, s.Start+s.Length) ∩ [minSel, maxSel)
-                if (s.Start < maxSel && s.Start + s.Length > minSel)
+                if (s.start < maxSel && s.start + s.length > minSel)
                 {
                     if (++count >= 2) return true;
                 }
@@ -388,21 +398,21 @@ public static class SegmentedDateInputBehavior
         {
             // Prefer the segment whose range contains the caret; if the caret is on a literal
             // boundary, prefer the next editable segment to the right, then to the left.
-            for (int i = 0; i < _segments.Count; i++)
+            for (int i = 0; i < this.segments.Count; i++)
             {
-                Segment s = _segments[i];
-                if (s.Kind == SegmentKind.Literal) continue;
-                if (caret >= s.Start && caret <= s.Start + s.Length) return i;
+                Segment s = this.segments[i];
+                if (s.kind == SegmentKind.Literal) continue;
+                if (caret >= s.start && caret <= s.start + s.length) return i;
             }
 
             // Find the nearest editable segment.
             int best = -1;
             int bestDist = int.MaxValue;
-            for (int i = 0; i < _segments.Count; i++)
+            for (int i = 0; i < this.segments.Count; i++)
             {
-                Segment s = _segments[i];
-                if (s.Kind == SegmentKind.Literal) continue;
-                int dist = caret < s.Start ? s.Start - caret : caret - (s.Start + s.Length);
+                Segment s = this.segments[i];
+                if (s.kind == SegmentKind.Literal) continue;
+                int dist = caret < s.start ? s.start - caret : caret - (s.start + s.length);
                 if (dist < bestDist)
                 {
                     bestDist = dist;
@@ -414,23 +424,23 @@ public static class SegmentedDateInputBehavior
 
         private void SelectSegment(int index)
         {
-            if (_textBox == null || index < 0 || index >= _segments.Count) return;
-            Segment s = _segments[index];
-            string? text = _textBox.Text;
+            if (this.textBox == null || index < 0 || index >= this.segments.Count) return;
+            Segment s = this.segments[index];
+            string? text = this.textBox.Text;
             if (string.IsNullOrEmpty(text)) return;
 
-            int start = Math.Min(s.Start, text.Length);
-            int end = Math.Min(s.Start + s.Length, text.Length);
+            int start = Math.Min(s.start, text.Length);
+            int end = Math.Min(s.start + s.length, text.Length);
 
-            _suspendSelectionSync = true;
+            this.suspendSelectionSync = true;
             try
             {
-                _textBox.SelectionStart = start;
-                _textBox.SelectionEnd = end;
+                this.textBox.SelectionStart = start;
+                this.textBox.SelectionEnd = end;
             }
             finally
             {
-                _suspendSelectionSync = false;
+                this.suspendSelectionSync = false;
             }
         }
 
@@ -440,37 +450,37 @@ public static class SegmentedDateInputBehavior
 
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            if (!_segmentable || _segments.Count == 0) return;
+            if (!this.segmentable || this.segments.Count == 0) return;
 
             switch (e.Key)
             {
                 case Key.Left:
-                    MoveActiveSegment(-1);
+                    this.MoveActiveSegment(-1);
                     e.Handled = true;
                     break;
                 case Key.Right:
-                    MoveActiveSegment(+1);
+                    this.MoveActiveSegment(+1);
                     e.Handled = true;
                     break;
                 case Key.Up:
-                    AdjustActiveSegment(+1);
+                    this.AdjustActiveSegment(+1);
                     e.Handled = true;
                     break;
                 case Key.Down:
-                    AdjustActiveSegment(-1);
+                    this.AdjustActiveSegment(-1);
                     e.Handled = true;
                     break;
                 case Key.Back:
                 case Key.Delete:
                     // Full-text selected (Ctrl+A / triple-click) OR multi-segment drag → clear date.
-                    if (_textBox != null && !string.IsNullOrEmpty(_textBox.Text)
-                        && IsMultiOrFullSelection())
+                    if (this.textBox != null && !string.IsNullOrEmpty(this.textBox.Text)
+                                              && this.IsMultiOrFullSelection())
                     {
-                        ClearSelectedDate();
+                        this.ClearSelectedDate();
                     }
                     else
                     {
-                        ResetActiveSegmentToMin();
+                        this.ResetActiveSegmentToMin();
                     }
                     e.Handled = true;
                     break;
@@ -479,19 +489,19 @@ public static class SegmentedDateInputBehavior
 
         private void OnTextInput(object? sender, TextInputEventArgs e)
         {
-            if (!_segmentable || _segments.Count == 0) return;
+            if (!this.segmentable || this.segments.Count == 0) return;
             if (string.IsNullOrEmpty(e.Text)) return;
 
             foreach (char c in e.Text)
             {
                 if (char.IsDigit(c))
                 {
-                    HandleDigit(c);
+                    this.HandleDigit(c);
                 }
-                else if (IsSeparatorChar(c))
+                else if (this.IsSeparatorChar(c))
                 {
-                    CommitBuffer();
-                    MoveActiveSegment(+1);
+                    this.CommitBuffer();
+                    this.MoveActiveSegment(+1);
                 }
                 // Silently swallow everything else (letters, punctuation, etc.).
             }
@@ -508,14 +518,14 @@ public static class SegmentedDateInputBehavior
             // the configured format's specific separator.
             if (IsCommonDateSeparator(c)) return true;
 
-            if (_activeIndex < 0 || _activeIndex >= _segments.Count) return false;
+            if (this.activeIndex < 0 || this.activeIndex >= this.segments.Count) return false;
             // Also accept any literal character that follows the active segment in the pattern
             // (e.g. exotic localized separators like '年' / '월').
-            for (int i = _activeIndex + 1; i < _segments.Count; i++)
+            for (int i = this.activeIndex + 1; i < this.segments.Count; i++)
             {
-                Segment s = _segments[i];
-                if (s.Kind != SegmentKind.Literal) return false;
-                if (!string.IsNullOrEmpty(s.LiteralText) && s.LiteralText!.IndexOf(c) >= 0) return true;
+                Segment s = this.segments[i];
+                if (s.kind != SegmentKind.Literal) return false;
+                if (!string.IsNullOrEmpty(s.literalText) && s.literalText!.IndexOf(c) >= 0) return true;
             }
             return false;
         }
@@ -526,30 +536,30 @@ public static class SegmentedDateInputBehavior
 
         private void EnsureSelectedDate()
         {
-            if (_picker.SelectedDate.HasValue) return;
-            DateTime seed = _picker.DisplayDate;
-            SetSelectedDate(seed);
+            if (this.picker.SelectedDate.HasValue) return;
+            DateTime seed = this.picker.DisplayDate;
+            this.SetSelectedDate(seed);
         }
 
         private void MoveActiveSegment(int delta)
         {
-            CommitBuffer();
-            if (_segments.Count == 0) return;
-            int idx = _activeIndex;
+            this.CommitBuffer();
+            if (this.segments.Count == 0) return;
+            int idx = this.activeIndex;
             int step = Math.Sign(delta);
             if (step == 0) return;
 
-            for (int i = 0; i < _segments.Count; i++)
+            for (int i = 0; i < this.segments.Count; i++)
             {
                 idx += step;
-                if (idx < 0 || idx >= _segments.Count) return; // do not wrap
-                if (_segments[idx].Kind != SegmentKind.Literal)
+                if (idx < 0 || idx >= this.segments.Count) return; // do not wrap
+                if (this.segments[idx].kind != SegmentKind.Literal)
                 {
-                    _activeIndex = idx;
-                    int target = _activeIndex;
+                    this.activeIndex = idx;
+                    int target = this.activeIndex;
                     // Defer so we run after the TextBox's own KeyDown handler has finished
                     // moving the caret in response to Left/Right.
-                    Dispatcher.UIThread.Post(() => SelectSegment(target), DispatcherPriority.Background);
+                    Dispatcher.UIThread.Post(() => this.SelectSegment(target), DispatcherPriority.Background);
                     return;
                 }
             }
@@ -557,12 +567,12 @@ public static class SegmentedDateInputBehavior
 
         private void AdjustActiveSegment(int delta)
         {
-            CommitBuffer();
-            EnsureSelectedDate();
-            if (_activeIndex < 0 || _activeIndex >= _segments.Count) return;
-            DateTime current = _picker.SelectedDate ?? _picker.DisplayDate;
+            this.CommitBuffer();
+            this.EnsureSelectedDate();
+            if (this.activeIndex < 0 || this.activeIndex >= this.segments.Count) return;
+            DateTime current = this.picker.SelectedDate ?? this.picker.DisplayDate;
 
-            DateTime? candidate = _segments[_activeIndex].Kind switch
+            DateTime? candidate = this.segments[this.activeIndex].kind switch
             {
                 SegmentKind.Year  => SafeAddYears(current, delta),
                 SegmentKind.Month => SafeAddMonths(current, delta),
@@ -571,22 +581,22 @@ public static class SegmentedDateInputBehavior
             };
             if (candidate == null) return;
 
-            candidate = ClampToPickerRange(candidate.Value);
-            SetSelectedDate(candidate.Value);
+            candidate = this.ClampToPickerRange(candidate.Value);
+            this.SetSelectedDate(candidate.Value);
             // Re-select the same segment after the text re-renders.
-            int target = _activeIndex;
-            Dispatcher.UIThread.Post(() => SelectSegment(target), DispatcherPriority.Background);
+            int target = this.activeIndex;
+            Dispatcher.UIThread.Post(() => this.SelectSegment(target), DispatcherPriority.Background);
         }
 
         private void ResetActiveSegmentToMin()
         {
-            CommitBuffer();
+            this.CommitBuffer();
             // If no date is currently selected, there is nothing to reset.
-            if (!_picker.SelectedDate.HasValue) return;
-            if (_activeIndex < 0 || _activeIndex >= _segments.Count) return;
-            DateTime current = _picker.SelectedDate ?? _picker.DisplayDate;
+            if (!this.picker.SelectedDate.HasValue) return;
+            if (this.activeIndex < 0 || this.activeIndex >= this.segments.Count) return;
+            DateTime current = this.picker.SelectedDate ?? this.picker.DisplayDate;
 
-            DateTime? candidate = _segments[_activeIndex].Kind switch
+            DateTime? candidate = this.segments[this.activeIndex].kind switch
             {
                 SegmentKind.Year  => SafeWithYear(current, 1),
                 SegmentKind.Month => SafeWithMonth(current, 1),
@@ -595,27 +605,27 @@ public static class SegmentedDateInputBehavior
             };
             if (candidate == null) return;
 
-            candidate = ClampToPickerRange(candidate.Value);
-            SetSelectedDate(candidate.Value);
-            int target = _activeIndex;
-            Dispatcher.UIThread.Post(() => SelectSegment(target), DispatcherPriority.Background);
+            candidate = this.ClampToPickerRange(candidate.Value);
+            this.SetSelectedDate(candidate.Value);
+            int target = this.activeIndex;
+            Dispatcher.UIThread.Post(() => this.SelectSegment(target), DispatcherPriority.Background);
         }
 
         private void HandleDigit(char digit)
         {
-            if (_activeIndex < 0 || _activeIndex >= _segments.Count) return;
+            if (this.activeIndex < 0 || this.activeIndex >= this.segments.Count) return;
 
-            Segment seg = _segments[_activeIndex];
-            int maxDigits = seg.Kind switch
+            Segment seg = this.segments[this.activeIndex];
+            int maxDigits = seg.kind switch
             {
-                SegmentKind.Year  => seg.TokenLength > 0 && seg.TokenLength < 4 ? seg.TokenLength : 4,
+                SegmentKind.Year  => seg.tokenLength > 0 && seg.tokenLength < 4 ? seg.tokenLength : 4,
                 SegmentKind.Month => 2,
                 SegmentKind.Day   => 2,
                 _ => 0,
             };
             if (maxDigits == 0) return;
 
-            string candidate = (_editBuffer + digit);
+            string candidate = (this.editBuffer + digit);
             if (candidate.Length > maxDigits)
             {
                 candidate = digit.ToString();
@@ -628,32 +638,32 @@ public static class SegmentedDateInputBehavior
 
             // For Month/Day, "0" is a valid prefix (continues a "01"/"02" entry) but
             // we don't apply it yet — only persist the buffer until a valid date emerges.
-            if (TryApplySegmentValue(seg.Kind, value, seg.TokenLength, out DateTime applied))
+            if (this.TryApplySegmentValue(seg.kind, value, seg.tokenLength, out DateTime applied))
             {
-                _editBuffer = candidate;
-                SetSelectedDate(applied);
-                int target = _activeIndex;
-                Dispatcher.UIThread.Post(() => SelectSegment(target), DispatcherPriority.Background);
+                this.editBuffer = candidate;
+                this.SetSelectedDate(applied);
+                int target = this.activeIndex;
+                Dispatcher.UIThread.Post(() => this.SelectSegment(target), DispatcherPriority.Background);
 
                 // If the buffer is now "full" and any further digit would force a restart,
                 // auto-commit but stay on the segment (the next digit will then start over).
                 if (candidate.Length >= maxDigits)
                 {
-                    _editBuffer = string.Empty;
+                    this.editBuffer = string.Empty;
                 }
             }
             else if (candidate.Length == 1)
             {
                 // First digit doesn't yield a valid value (e.g. "0" for month). Keep the
                 // buffer so the next digit can complete it ("0" + "1" → "01").
-                _editBuffer = candidate;
+                this.editBuffer = candidate;
             }
             // else: invalid candidate, ignore.
         }
 
         private bool TryApplySegmentValue(SegmentKind kind, int value, int tokenLength, out DateTime result)
         {
-            DateTime current = _picker.SelectedDate ?? _picker.DisplayDate;
+            DateTime current = this.picker.SelectedDate ?? this.picker.DisplayDate;
             switch (kind)
             {
                 case SegmentKind.Year:
@@ -665,13 +675,13 @@ public static class SegmentedDateInputBehavior
                     if (fullYear < 1 || fullYear > 9999) { result = default; return false; }
                     DateTime? y = SafeWithYear(current, fullYear);
                     if (y == null) { result = default; return false; }
-                    result = ClampToPickerRange(y.Value);
+                    result = this.ClampToPickerRange(y.Value);
                     return true;
                 case SegmentKind.Month:
                     if (value < 1 || value > 12) { result = default; return false; }
                     DateTime? m = SafeWithMonth(current, value);
                     if (m == null) { result = default; return false; }
-                    result = ClampToPickerRange(m.Value);
+                    result = this.ClampToPickerRange(m.Value);
                     return true;
                 case SegmentKind.Day:
                     if (value < 1) { result = default; return false; }
@@ -679,7 +689,7 @@ public static class SegmentedDateInputBehavior
                     if (value > daysInMonth) { result = default; return false; }
                     DateTime? d = SafeWithDay(current, value);
                     if (d == null) { result = default; return false; }
-                    result = ClampToPickerRange(d.Value);
+                    result = this.ClampToPickerRange(d.Value);
                     return true;
                 default:
                     result = default;
@@ -687,7 +697,8 @@ public static class SegmentedDateInputBehavior
             }
         }
 
-        private void CommitBuffer() => _editBuffer = string.Empty;
+        private void CommitBuffer() =>
+            this.editBuffer = string.Empty;
 
         // --------------------------------------------------------------------------------------
         // Helpers
@@ -695,49 +706,49 @@ public static class SegmentedDateInputBehavior
 
         private void SetSelectedDate(DateTime value)
         {
-            _suspendTextSync = true;
+            this.suspendTextSync = true;
             try
             {
-                _picker.SetCurrentValue(CalendarDatePicker.SelectedDateProperty, value);
+                this.picker.SetCurrentValue(CalendarDatePicker.SelectedDateProperty, value);
             }
             finally
             {
-                _suspendTextSync = false;
+                this.suspendTextSync = false;
             }
             // The picker schedules the textbox update via Dispatcher.UIThread.InvokeAsync,
             // so we must defer our segment rebuild & re-snap.
-            Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(this.RebuildSegments, DispatcherPriority.Background);
         }
 
         private bool IsMultiOrFullSelection()
         {
-            if (_textBox == null || string.IsNullOrEmpty(_textBox.Text)) return false;
-            int minSel = Math.Min(_textBox.SelectionStart, _textBox.SelectionEnd);
-            int maxSel = Math.Max(_textBox.SelectionStart, _textBox.SelectionEnd);
+            if (this.textBox == null || string.IsNullOrEmpty(this.textBox.Text)) return false;
+            int minSel = Math.Min(this.textBox.SelectionStart, this.textBox.SelectionEnd);
+            int maxSel = Math.Max(this.textBox.SelectionStart, this.textBox.SelectionEnd);
             if (maxSel <= minSel) return false;
-            if (minSel == 0 && maxSel == _textBox.Text!.Length) return true;
-            return SpansMultipleSegments(minSel, maxSel);
+            if (minSel == 0 && maxSel == this.textBox.Text!.Length) return true;
+            return this.SpansMultipleSegments(minSel, maxSel);
         }
 
         private void ClearSelectedDate()
         {
-            _editBuffer = string.Empty;
-            _suspendTextSync = true;
+            this.editBuffer = string.Empty;
+            this.suspendTextSync = true;
             try
             {
-                _picker.SetCurrentValue(CalendarDatePicker.SelectedDateProperty, (DateTime?)null);
+                this.picker.SetCurrentValue(CalendarDatePicker.SelectedDateProperty, null);
             }
             finally
             {
-                _suspendTextSync = false;
+                this.suspendTextSync = false;
             }
-            Dispatcher.UIThread.Post(RebuildSegments, DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(this.RebuildSegments, DispatcherPriority.Background);
         }
 
         private DateTime ClampToPickerRange(DateTime date)
         {
-            if (_picker.DisplayDateStart is { } start && date < start) return start;
-            if (_picker.DisplayDateEnd is { } end && date > end) return end;
+            if (this.picker.DisplayDateStart is { } start && date < start) return start;
+            if (this.picker.DisplayDateEnd is { } end && date > end) return end;
             return date;
         }
 
@@ -790,11 +801,11 @@ public static class SegmentedDateInputBehavior
 
     internal sealed class Segment
     {
-        public SegmentKind Kind;
-        public int Start;       // character index in rendered text
-        public int Length;      // character length in rendered text
-        public int TokenLength; // pattern token length (1, 2, 4 …); 0 for literals
-        public string? LiteralText;
+        public SegmentKind kind;
+        public int start;       // character index in rendered text
+        public int length;      // character length in rendered text
+        public int tokenLength; // pattern token length (1, 2, 4 …); 0 for literals
+        public string? literalText;
     }
 
     internal static class DateFormatTokenizer
@@ -855,15 +866,19 @@ public static class SegmentedDateInputBehavior
                     {
                         segments.Add(new Segment
                         {
-                            Kind = SegmentKind.Literal,
-                            LiteralText = literal.ToString(),
-                            TokenLength = 0,
+                            kind = SegmentKind.Literal,
+                            literalText = literal.ToString(),
+                            tokenLength = 0,
                         });
                         literal.Clear();
                     }
 
                     int runStart = i;
-                    while (i < pattern.Length && pattern[i] == c) i++;
+                    while (i < pattern.Length && pattern[i] == c)
+                    {
+                        i++;
+                    }
+
                     int runLen = i - runStart;
 
                     SegmentKind kind;
@@ -884,7 +899,7 @@ public static class SegmentedDateInputBehavior
                             return null;
                     }
 
-                    segments.Add(new Segment { Kind = kind, TokenLength = runLen });
+                    segments.Add(new Segment { kind = kind, tokenLength = runLen });
                     continue;
                 }
 
@@ -903,15 +918,15 @@ public static class SegmentedDateInputBehavior
             {
                 segments.Add(new Segment
                 {
-                    Kind = SegmentKind.Literal,
-                    LiteralText = literal.ToString(),
-                    TokenLength = 0,
+                    kind = SegmentKind.Literal,
+                    literalText = literal.ToString(),
+                    tokenLength = 0,
                 });
             }
 
             // No editable segments → not segmentable (e.g. literal-only patterns or
             // standard format specifiers like "D" that the caller hasn't expanded).
-            if (!segments.Any(s => s.Kind != SegmentKind.Literal))
+            if (segments.All(s => s.kind == SegmentKind.Literal))
             {
                 return null;
             }
@@ -921,55 +936,55 @@ public static class SegmentedDateInputBehavior
 
         /// <summary>
         /// Renders the supplied date through the parsed segments and returns the
-        /// concatenated text plus segments updated with <see cref="Segment.Start"/>
-        /// and <see cref="Segment.Length"/> offsets.
+        /// concatenated text plus segments updated with <see cref="Segment.start"/>
+        /// and <see cref="Segment.length"/> offsets.
         /// </summary>
-        public static (string Text, List<Segment> Segments) RenderSegments(List<Segment> tokens, DateTime date)
+        public static List<Segment> RenderSegments(List<Segment> tokens, DateTime date)
         {
-            StringBuilder sb = new();
             List<Segment> result = new(tokens.Count);
 
+            int start = 0;
             foreach (Segment t in tokens)
             {
-                int start = sb.Length;
                 string piece;
-                switch (t.Kind)
+                switch (t.kind)
                 {
                     case SegmentKind.Year:
-                        piece = t.TokenLength switch
+                        piece = t.tokenLength switch
                         {
                             1 => date.Year.ToString(CultureInfo.InvariantCulture),
                             2 => (date.Year % 100).ToString("D2", CultureInfo.InvariantCulture),
-                            _ => date.Year.ToString("D" + t.TokenLength, CultureInfo.InvariantCulture),
+                            _ => date.Year.ToString("D" + t.tokenLength, CultureInfo.InvariantCulture),
                         };
                         break;
                     case SegmentKind.Month:
-                        piece = t.TokenLength == 1
+                        piece = t.tokenLength == 1
                             ? date.Month.ToString(CultureInfo.InvariantCulture)
                             : date.Month.ToString("D2", CultureInfo.InvariantCulture);
                         break;
                     case SegmentKind.Day:
-                        piece = t.TokenLength == 1
+                        piece = t.tokenLength == 1
                             ? date.Day.ToString(CultureInfo.InvariantCulture)
                             : date.Day.ToString("D2", CultureInfo.InvariantCulture);
                         break;
                     default:
-                        piece = t.LiteralText ?? string.Empty;
+                        piece = t.literalText ?? string.Empty;
                         break;
                 }
-                sb.Append(piece);
 
                 result.Add(new Segment
                 {
-                    Kind = t.Kind,
-                    Start = start,
-                    Length = piece.Length,
-                    TokenLength = t.TokenLength,
-                    LiteralText = t.LiteralText,
+                    kind = t.kind,
+                    start = start,
+                    length = piece.Length,
+                    tokenLength = t.tokenLength,
+                    literalText = t.literalText,
                 });
+                
+                start += piece.Length;
             }
 
-            return (sb.ToString(), result);
+            return result;
         }
     }
 }

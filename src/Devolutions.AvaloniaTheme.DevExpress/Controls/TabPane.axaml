@@ -27,7 +27,7 @@
   </Design.PreviewWith>
 
   <x:Double x:Key="TabItemPipeThickness">3</x:Double>
-  <x:Double x:Key="TabItemMinHeight">37</x:Double>
+  <x:Double x:Key="TabItemMinHeight">30</x:Double>
   <x:Double x:Key="TabItemHeaderFontSize">12</x:Double>
   <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{DynamicResource ForegroundColor}" />
   <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{DynamicResource ForegroundColor}" />
@@ -39,32 +39,44 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
     <Setter Property="Padding" Value="{DynamicResource TabItemHeaderMargin}" />
-    <Setter Property="Margin" Value="0 -7 0 0" />
+    <Setter Property="Margin" Value="0 0 0 0" />
     <Setter Property="MinHeight" Value="{DynamicResource TabItemMinHeight}" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="PART_LayoutRoot"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                Padding="{TemplateBinding Padding}"
-                Background="{Binding $parent[TabItem].Background}">
-          <Panel>
-            <ContentPresenter Name="PART_ContentPresenter"
-                              ContentTemplate="{TemplateBinding HeaderTemplate}"
-                              Content="{TemplateBinding Header}"
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                              FontFamily="{TemplateBinding FontFamily}"
-                              FontSize="{TemplateBinding FontSize}"
-                              FontWeight="{TemplateBinding FontWeight}" />
-            <Rectangle Name="PART_SelectedPipe"
-                       Fill="{DynamicResource Border}"
-                       IsVisible="False"
-                       RadiusX="2"
-                       RadiusY="2" />
-          </Panel>
-        </Border>
+        <Panel ClipToBounds="False">
+          <Border Name="PART_LayoutRoot"
+                  ClipToBounds="False"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Padding="{TemplateBinding Padding}"
+                  Background="{Binding $parent[TabItem].Background}">
+            <Panel>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                Content="{TemplateBinding Header}"
+                                Margin="0 0 0 7"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                FontWeight="{TemplateBinding FontWeight}" />
+              <Rectangle Name="PART_SelectedPipe"
+                         Fill="{DynamicResource Border}"
+                         IsVisible="False"
+                         RadiusX="2"
+                         RadiusY="2" />
+            </Panel>
+          </Border>
+          <Border Name="FocusVisual"
+                  IsVisible="False"
+                  IsHitTestVisible="False"
+                  Margin="0 0 0 4"
+                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
+                  BorderThickness="2"
+                  CornerRadius="3" />
+        </Panel>
       </ControlTemplate>
     </Setter>
 
@@ -77,6 +89,10 @@
         <Setter Property="IsVisible" Value="True" />
         <Setter Property="Fill" Value="{DynamicResource SystemAccentColor}" />
       </Style>
+    </Style>
+
+    <Style Selector="^:selected:focus-visible /template/ Rectangle#PART_SelectedPipe">
+      <Setter Property="IsVisible" Value="False" />
     </Style>
 
     <Style Selector="^:pointerover">
@@ -93,6 +109,11 @@
     <Style Selector="^:disabled /template/ Border#PART_LayoutRoot">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource TabItemHeaderForegroundDisabled}" />
+    </Style>
+
+    <!--  Focus visible state  -->
+    <Style Selector="^:focus-visible /template/ Border#FocusVisual">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <Style Selector="^[TabStripPlacement=Left]">
@@ -153,7 +174,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="TabPaneTheme" TargetType="TabControl">
-    <Setter Property="Margin" Value="0" />
+    <Setter Property="Margin" Value="0 0 0 0" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
@@ -169,11 +190,13 @@
           <DockPanel>
             <Border DockPanel.Dock="{TemplateBinding TabStripPlacement}"
                     Name="PART_UnderBorder"
+                    ClipToBounds="False"
                     BorderBrush="{DynamicResource BorderBrush}"
                     Padding="0 0 0 -5"
                     Margin="0 0 0 6"
                     BorderThickness="0 0 0 1">
               <ItemsPresenter Name="PART_ItemsPresenter"
+                              ClipToBounds="False"
                               ItemsPanel="{TemplateBinding ItemsPanel}" />
             </Border>
             <ContentPresenter Name="PART_SelectedContentHost"

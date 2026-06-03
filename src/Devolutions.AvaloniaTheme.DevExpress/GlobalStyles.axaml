@@ -22,7 +22,23 @@
     
     - sbergerondrouin 2025-06-09
   -->
-  
+
+  <Style Selector="MenuItem Svg">
+    <Setter Property="Css">
+      <Setter.Value>
+        <Binding Source="{StaticResource DefaultIconFillBrush}" Converter="{x:Static DevoConverters.ColorToCssFillConverter}" ConverterParameter='.st0' />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style Selector="MenuItem Svg:disabled">
+    <Setter Property="Css">
+      <Setter.Value>
+        <Binding Source="{StaticResource SvgIconDisabledColorBrush}" Converter="{x:Static DevoConverters.ColorToCssFillConverter}" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <StyleInclude Source="/Controls/TextBox.styles.axaml" />
 
   <Style Selector="MultiComboBox Popup ScrollBar:vertical">

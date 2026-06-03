@@ -26,6 +26,7 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <AvaloniaResource Include="Accents/Assets/**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,6 +41,7 @@
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Svg.Controls.Avalonia" Version="[11.3.6.2,)" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">

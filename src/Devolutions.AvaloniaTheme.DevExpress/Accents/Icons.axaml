@@ -8,4 +8,5 @@
   <StreamGeometry x:Key="CheckMarkIndeterminatePath">M1536 1536v-1024h-1024v1024h1024z</StreamGeometry>
   <StreamGeometry x:Key="ScrollBarLineButtonPath">M139.51,112.86l-64.84,112.3c-9.3,16.11,2.33,36.25,20.93,36.25h129.67c18.61,0,30.23-20.14,20.93-36.25l-64.84-112.3c-9.3-16.11-32.56-16.11-41.86,0Z</StreamGeometry>
   <StreamGeometry x:Key="DataGridSortIconPath">M 0,0 H 1855.86 V 167.17 H 0 Z M 337.18,507 H 1518.54 V 674.17 H 337.18 Z M 673.74,1013 H 1181.97 V 1180.17 H 673.74 Z</StreamGeometry>
+
 </ResourceDictionary>

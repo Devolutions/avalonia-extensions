@@ -96,7 +96,10 @@
       <SolidColorBrush x:Key="GroupedTileListBoxGroupHeaderBackgroundBrush" Color="#EEEEEE" />
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.1" />
     
-    <SolidColorBrush x:Key="DefaultFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.6" />
+      <SolidColorBrush x:Key="DefaultFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.6" />
+
+      <Color x:Key="SvgIconDefaultColor">#010101</Color>
+      <Color x:Key="SvgIconDisabledColor">#bdbdbd</Color>
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
@@ -191,10 +194,16 @@
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#3C3C3C" />
     
       <SolidColorBrush x:Key="DefaultFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
+
+      <Color x:Key="SvgIconDefaultColor">#f5f5f5</Color>
+      <Color x:Key="SvgIconDisabledColor">#656565</Color>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
   <!-- MARK: Common Resources -->
+
+  <SolidColorBrush x:Key="DefaultIconFillBrush" Color="{DynamicResource SvgIconDefaultColor}" />
+  <SolidColorBrush x:Key="SvgIconDisabledColorBrush" Color="{DynamicResource SvgIconDisabledColor}" />
 
   <converters:CornerRadiusFilterConverter x:Key="TopCornerRadiusFilterConverter" Filter="TopLeft, TopRight" />
   <converters:CornerRadiusFilterConverter x:Key="RightCornerRadiusFilterConverter" Filter="TopRight, BottomRight" />
@@ -394,6 +403,11 @@
   <converters:CornerRadiusToDoubleConverter x:Key="TopLeftCornerRadiusConverter" Corner="TopLeft" />
   <converters:CornerRadiusToDoubleConverter x:Key="BottomRightCornerRadiusConverter" Corner="BottomRight" />
 
+
+  <!-- TextBox context menu strings (Cut/Copy/Paste come from Avalonia.Themes.Fluent InvariantResources) -->
+  <x:String x:Key="StringTextFlyoutUndoText">Undo</x:String>
+  <x:String x:Key="StringTextFlyoutDeleteText">Delete</x:String>
+  <x:String x:Key="StringTextFlyoutSelectAllText">Select All</x:String>
 
   <!-- DEVELOPMENT ONLY -->
   <StaticResource x:Key="SampleAppBackground" ResourceKey="BackgroundBrush" />

@@ -1,11 +1,10 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using SampleApp.ViewModels;
 
 namespace SampleApp.DemoPages;
-
-using Avalonia.Data;
 
 public partial class TreeDataGridDemo : UserControl
 {
@@ -48,6 +47,8 @@ public partial class TreeDataGridDemo : UserControl
               CellTemplate = template,
           },
           ChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children),
+          HasChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children.Count > 0),
+          IsExpandedBinding = CompiledBinding.Create((NetworkNode node) => node.IsExpanded),
       };
   }
 }

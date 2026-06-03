@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Input;
 using Avalonia.Media;
 using Controls;
 using DemoPages;
@@ -49,8 +48,8 @@ public partial class MainWindow : Window
 #endif
 
 #if DEBUG
-      // Enable Accelerate dev tools (AvaloniaUI.DiagnosticsSupport)
-      (Application.Current as App)?.AttachDevToolsOnce();
+    // Enable Accelerate dev tools (AvaloniaUI.DiagnosticsSupport)
+    (Application.Current as App)?.AttachDevToolsOnce();
 #endif
   }
 

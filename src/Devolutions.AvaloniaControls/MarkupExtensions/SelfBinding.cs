@@ -37,7 +37,7 @@ public class SelfBindingExtension : CompiledBinding
             .Property(property, PropertyInfoAccessorFactory.CreateAvaloniaPropertyAccessor)
             .Build();
     }
-    
+
     public CompiledBinding ProvideValue(IServiceProvider? provider)
     {
         return new CompiledBinding()
@@ -53,7 +53,7 @@ public class SelfBindingExtension : CompiledBinding
             Priority = this.Priority,
             StringFormat = this.StringFormat,
             Source = this.Source,
-            UpdateSourceTrigger = this.UpdateSourceTrigger
+            UpdateSourceTrigger = this.UpdateSourceTrigger,
         };
     }
 

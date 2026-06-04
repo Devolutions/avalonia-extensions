@@ -58,16 +58,6 @@
         <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="26.1.0" />
     </ItemGroup>
 
-<!--    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">-->
-<!--        &lt;!&ndash; -->
-<!--            More recent versions of SkiaSharp are currently broken on Linux.-->
-<!--            See: https://github.com/mono/SkiaSharp/issues/3117#issuecomment-2896259517-->
-<!--            - sbergerondrouin 2025-06-18-->
-<!--        &ndash;&gt;-->
-<!--        <PackageReference Include="SkiaSharp" Version="3.116.1" />-->
-<!--        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />-->
-<!--    </ItemGroup>-->
-
     <ItemGroup>
         <None Remove="Assets\**" />
         <AvaloniaResource Include="Assets\**" />

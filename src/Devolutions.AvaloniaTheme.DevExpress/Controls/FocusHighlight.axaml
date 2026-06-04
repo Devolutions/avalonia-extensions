@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
+
+  <!--
+    FocusHighlight renders a 4-layer focus ring:
+      Layer 1 (Margin=0):  Foreground (black/white) — contrast outer edge
+      Layer 2 (Margin=0):  DefaultFocusBorderBrush (accent, ~50% opacity) — tint over contrast
+      Layer 3 (Margin=1):  BackgroundBrush — 1 px gap to separate inner from outer ring
+      Layer 4 (Margin=1):  DefaultFocusBorderBrush — inner accent ring
+
+    All layers use {TemplateBinding BorderThickness} and {TemplateBinding CornerRadius}, so
+    open-sided values like "2 2 2 0" naturally produce an open ring on all four layers.
+  -->
+  <ControlTheme x:Key="{x:Type devex:FocusHighlight}" TargetType="devex:FocusHighlight">
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource Foreground}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource BackgroundBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Margin="1" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Margin="1" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

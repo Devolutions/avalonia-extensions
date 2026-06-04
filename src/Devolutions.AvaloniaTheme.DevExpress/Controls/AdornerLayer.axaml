@@ -1,27 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
 
   <ControlTheme x:Key="{x:Type AdornerLayer}" TargetType="AdornerLayer">
     <Setter Property="DefaultFocusAdorner">
       <FocusAdornerTemplate>
-        <Panel>
-          <Border BorderThickness="1"
-                  BorderBrush="{DynamicResource Foreground}"
-                  CornerRadius="4"
-                  Margin="0" />
-          <Border BorderThickness="1"
-                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
-                  CornerRadius="4"
-                  Margin="0" />
-          <Border BorderThickness="1"
-                  BorderBrush="{DynamicResource BackgroundBrush}"
-                  CornerRadius="3"
-                  Margin="1" />
-          <Border BorderThickness="1"
-                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
-                  CornerRadius="3"
-                  Margin="1" />
-        </Panel>
+        <devex:FocusHighlight BorderThickness="1" CornerRadius="4" />
       </FocusAdornerTemplate>
     </Setter>
   </ControlTheme>

@@ -21,9 +21,6 @@ public partial class TimePickerUpDownViewModel : ObservableObject
   private TimeSpan? disabledSelectedTime = new(9, 0, 0);
 
   [ObservableProperty]
-  private TimeSpan? errorSelectedTime = new(11, 15, 0);
-
-  [ObservableProperty]
   private TimeSpan? secondsSelectedTime = new(10, 15, 6);
 
   [ObservableProperty]

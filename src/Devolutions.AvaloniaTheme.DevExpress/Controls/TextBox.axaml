@@ -92,12 +92,15 @@
   <MenuFlyout x:Key="HorizontalTextBoxContextFlyout"
               FlyoutPresenterTheme="{StaticResource HorizontalMenuFlyoutPresenter}"
               ItemContainerTheme="{StaticResource HorizontalMenuItem}">
+    <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}" Command="{Binding $parent[TextBox].Undo}"
+              IsEnabled="{Binding $parent[TextBox].CanUndo}" IsVisible="{Binding $parent[TextBox].CanUndo}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutCutText}" Command="{Binding $parent[TextBox].Cut}"
               IsEnabled="{Binding $parent[TextBox].CanCut}" IsVisible="{Binding $parent[TextBox].CanCut}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}" Command="{Binding $parent[TextBox].Copy}"
               IsEnabled="{Binding $parent[TextBox].CanCopy}" IsVisible="{Binding $parent[TextBox].CanCopy}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}" Command="{Binding $parent[TextBox].Paste}"
               IsEnabled="{Binding $parent[TextBox].CanPaste}" />
+    <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}" Command="{Binding $parent[TextBox].SelectAll}" />
   </MenuFlyout>
 
   <ControlTheme x:Key="FluentTextBoxButton" TargetType="Button">

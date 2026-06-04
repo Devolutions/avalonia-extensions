@@ -23,6 +23,14 @@ public class TestAppBuilder
         // OS, so baselines do not depend on macOS-specific wallpaper APIs being available.
         Environment.SetEnvironmentVariable("DEVOLUTIONS_SKIP_WALLPAPER_TINT_SAMPLING", "true");
 
+        // Since Avalonia 12, date/number formatting and calendar layout (first day of week)
+        // follow the current culture, so pin it to keep screenshots identical on every machine.
+        var culture = new System.Globalization.CultureInfo("en-US");
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+
         return AppBuilder.Configure<App>()
             .UseSkia()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions

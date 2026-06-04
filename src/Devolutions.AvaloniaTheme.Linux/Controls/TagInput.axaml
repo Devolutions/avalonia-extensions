@@ -102,7 +102,7 @@
     </Setter>
 
     <!-- Empty state: show watermark -->
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
@@ -115,7 +115,7 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
     </Style>
-    <Style Selector="^:disabled /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:disabled /template/ TextBlock#PART_Placeholder">
       <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundDisabled}" />
     </Style>
 

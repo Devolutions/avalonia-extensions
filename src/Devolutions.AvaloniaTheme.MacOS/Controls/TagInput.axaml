@@ -120,7 +120,7 @@
     </Setter>
 
     <!-- Empty state: show watermark -->
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 

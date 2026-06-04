@@ -122,7 +122,7 @@
     </Setter>
 
     <!-- Empty state: show watermark -->
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
@@ -146,7 +146,7 @@
         <Setter Property="IsVisible" Value="False" />
       </Style>
 
-      <Style Selector="^ /template/ TextBlock#PART_Watermark">
+      <Style Selector="^ /template/ TextBlock#PART_Placeholder">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
       </Style>
     </Style>

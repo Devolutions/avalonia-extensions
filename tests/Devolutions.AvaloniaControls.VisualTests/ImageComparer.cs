@@ -6,6 +6,11 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 
 public static class ImageComparer
 {
+    // Per-channel tolerance: GPU/blend rounding can shift individual channels by a few units
+    // between otherwise identical renders (deltas up to 6 observed on ColorView's alpha slider).
+    // Real regressions differ by far more, so this only absorbs imperceptible noise.
+    private const int ChannelTolerance = 8;
+
     public static bool CompareImages(string baselinePath, string testPath, string diffPath)
     {
         if (!File.Exists(baselinePath))
@@ -38,7 +43,7 @@ public static class ImageComparer
                 var p1 = baseline.GetPixel(x, y);
                 var p2 = screenshot.GetPixel(x, y);
 
-                if (p1 != p2)
+                if (!PixelsMatch(p1, p2))
                 {
                     areEqual = false;
                     // Highlight difference in red
@@ -69,5 +74,13 @@ public static class ImageComparer
         }
 
         return areEqual;
+    }
+
+    private static bool PixelsMatch(SKColor p1, SKColor p2)
+    {
+        return Math.Abs(p1.Red - p2.Red) <= ChannelTolerance
+            && Math.Abs(p1.Green - p2.Green) <= ChannelTolerance
+            && Math.Abs(p1.Blue - p2.Blue) <= ChannelTolerance
+            && Math.Abs(p1.Alpha - p2.Alpha) <= ChannelTolerance;
     }
 }

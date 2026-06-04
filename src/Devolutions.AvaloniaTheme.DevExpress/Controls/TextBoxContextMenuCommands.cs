@@ -11,7 +11,7 @@ using Avalonia.Input;
 /// Commands and platform-aware gestures used in the TextBox context menu flyout
 /// that are not directly exposed as public API on <see cref="TextBox"/>.
 /// </summary>
-internal static class TextBoxContextMenuCommands
+public static class TextBoxContextMenuCommands
 {
     /// <summary>
     /// Platform-aware gesture for Undo (Ctrl+Z on Windows/Linux, Cmd+Z on macOS).

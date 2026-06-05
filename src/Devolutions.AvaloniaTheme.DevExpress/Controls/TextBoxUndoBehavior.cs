@@ -44,10 +44,17 @@ public static class TextBoxUndoBehavior
 
     private static void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (sender is TextBox { IsUndoEnabled: true } tb)
+        if (sender is not TextBox tb) return;
+
+        // Unsubscribe immediately — we only want to clear once on initial load,
+        // not on every subsequent re-attach to the visual tree.
+        tb.Loaded -= OnLoaded;
+
+        if (tb.IsUndoEnabled)
         {
-            tb.IsUndoEnabled = false;
-            tb.IsUndoEnabled = true;
+            // Use SetCurrentValue to avoid overwriting a consumer binding on IsUndoEnabled.
+            tb.SetCurrentValue(TextBox.IsUndoEnabledProperty, false);
+            tb.SetCurrentValue(TextBox.IsUndoEnabledProperty, true);
         }
     }
 }

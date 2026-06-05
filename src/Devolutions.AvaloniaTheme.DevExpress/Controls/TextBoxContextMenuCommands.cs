@@ -52,7 +52,7 @@ public static class TextBoxContextMenuCommands
 
             if (length == 0) return;
 
-            tb.Text = (tb.Text ?? string.Empty).Remove(start, length);
+            tb.SetCurrentValue(TextBox.TextProperty, (tb.Text ?? string.Empty).Remove(start, length));
             tb.SelectionStart = start;
             tb.SelectionEnd = start;
         }

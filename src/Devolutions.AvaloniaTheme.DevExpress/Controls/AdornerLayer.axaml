@@ -1,0 +1,13 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
+
+  <ControlTheme x:Key="{x:Type AdornerLayer}" TargetType="AdornerLayer">
+    <Setter Property="DefaultFocusAdorner">
+      <FocusAdornerTemplate>
+        <devex:FocusHighlight BorderThickness="1" CornerRadius="4" />
+      </FocusAdornerTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

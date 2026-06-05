@@ -25,7 +25,6 @@
   </TextDecorationCollection>
   <ControlTheme x:Key="{x:Type HyperlinkButton}" TargetType="HyperlinkButton">
     <Setter Property="Cursor" Value="Hand" />
-    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource HyperlinkButtonBackground}" />
     <Setter Property="BackgroundSizing" Value="OuterBorderEdge" />
     <Setter Property="Foreground" Value="{DynamicResource HyperlinkButtonForeground}" />

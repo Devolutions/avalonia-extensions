@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
+                    xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
   <Design.PreviewWith>
     <design:ThemePreviewer Width="450">
       <StackPanel Orientation="Vertical">
@@ -48,6 +49,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderMidBrush}" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border
@@ -183,6 +185,13 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="1 0 0 1"
                     CornerRadius="0 0 0 4 " />
+            <devex:FocusHighlight Name="FocusVisual"
+                                  Grid.Row="0" Grid.Column="0"
+                                  Grid.RowSpan="3" Grid.ColumnSpan="3"
+                                  IsVisible="False"
+                                  CornerRadius="4 4 0 0"
+                                  Margin="4 0 4 0"
+                                  BorderThickness="2 2 2 0" />
           </Grid>
         </Border>
       </ControlTemplate>
@@ -207,6 +216,20 @@
       <Style Selector="^ /template/ Border#PointerOverBackground">
         <Setter Property="Margin" Value="0 0 4 0" />
       </Style>
+      <Style Selector="^ /template/ devex|FocusHighlight#FocusVisual">
+        <Setter Property="Margin" Value="0 0 4 0" />
+      </Style>
+    </Style>
+
+    <!--  Focus visible state: 3-sided ring (open at bottom) matching the index-card tab shape  -->
+    <Style Selector="^:focus-visible /template/ devex|FocusHighlight#FocusVisual">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <!--  Left placement: 3-sided ring open on right (toward content area)  -->
+    <Style Selector="^[TabStripPlacement=Left] /template/ devex|FocusHighlight#FocusVisual">
+      <Setter Property="CornerRadius" Value="4 0 0 4" />
+      <Setter Property="BorderThickness" Value="2 2 0 2" />
     </Style>
 
     <!-- Non-first tabs get extra left margin to account for their left border -->
@@ -282,7 +305,7 @@
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="IsVisible" Value="False" />
       </Style>
-      <Style Selector="^ /template/ Border#TopBorderSelected">
+      <Style Selector="^:not(:focus-visible) /template/ Border#TopBorderSelected">
         <Setter Property="IsVisible" Value="True" />
       </Style>
     </Style>
@@ -340,10 +363,10 @@
         <Style Selector="^ /template/ Border#BottomBorder">
           <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^ /template/ Border#TopBorderSelected">
+        <Style Selector="^:not(:focus-visible) /template/ Border#TopBorderSelected">
           <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^ /template/ Border#TopLeftBorderSelected">
+        <Style Selector="^:not(:focus-visible) /template/ Border#TopLeftBorderSelected">
           <Setter Property="IsVisible" Value="True" />
         </Style>
       </Style>

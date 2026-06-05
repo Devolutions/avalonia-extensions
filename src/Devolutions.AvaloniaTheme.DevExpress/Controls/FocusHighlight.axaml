@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
+
+  <!--
+    FocusHighlight renders a 2-colourfocus ring for optimal visibility across light/dark themes & 
+    good contrast even around accent colours:
+      Outer outline background = Foreground color (black/white) 
+      Outer outline:  DefaultFocusBorderBrush (accent, ~50% opacity) —> tint for contrast against background
+      Inner outline background = Background colour (white/black)
+      Inner outline: DefaultFocusBorderBrush (accent, ~50% opacity) —> tint for contrast against the control itself
+
+    All layers use {TemplateBinding BorderThickness} and {TemplateBinding CornerRadius}, so custom focus
+    hightlights can create open-sided outlines with values like "1 1 1 0" 
+  -->
+  <ControlTheme x:Key="{x:Type devex:FocusHighlight}" TargetType="devex:FocusHighlight">
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource Foreground}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource BackgroundBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Margin="1" />
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{DynamicResource DefaultFocusBorderBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Margin="1" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

@@ -29,7 +29,8 @@ public static class TextBoxContextMenuCommands
     /// <summary>
     /// Deletes the currently selected text in the target <see cref="TextBox"/>
     /// (passed as <c>CommandParameter</c>).
-    /// Enabled only when there is a non-empty selection.
+    /// Enablement is enforced via a separate XAML <c>IsEnabled</c> binding (CanCut);
+    /// <see cref="ICommand.CanExecute"/> always returns <see langword="true"/>.
     /// </summary>
     public static readonly ICommand DeleteSelection = new TextBoxDeleteSelectionCommand();
 
@@ -43,6 +44,7 @@ public static class TextBoxContextMenuCommands
         public void Execute(object? parameter)
         {
             if (parameter is not TextBox tb) return;
+            if (tb.IsReadOnly) return;
 
             int start = Math.Min(tb.SelectionStart, tb.SelectionEnd);
             int end = Math.Max(tb.SelectionStart, tb.SelectionEnd);

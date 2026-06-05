@@ -21,7 +21,7 @@
               CornerRadius="{DynamicResource LayoutCornerRadius}"
               Background="{DynamicResource LayoutBackgroundLowBrush}">
         <StackPanel Margin="20" Spacing="10" HorizontalAlignment="Left" Orientation="Horizontal">
-          <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left"> 
+          <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
             <Label>_Name:</Label>
             <TextBox Watermark="Enter your name" />
             <Label>Password:</Label>

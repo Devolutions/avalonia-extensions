@@ -114,6 +114,7 @@
               </ScrollViewer>
               <Border Grid.Row="0"
                       Grid.Column="1"
+                      Background="{DynamicResource TreeDataGridHeaderBackground}"
                       BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
                       BorderThickness="0 0 0 1"/>
               <ScrollBar Grid.Row="0"

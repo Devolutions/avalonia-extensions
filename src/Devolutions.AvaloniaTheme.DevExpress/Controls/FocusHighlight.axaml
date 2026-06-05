@@ -3,14 +3,15 @@
                     xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
 
   <!--
-    FocusHighlight renders a 4-layer focus ring:
-      Layer 1 (Margin=0):  Foreground (black/white) — contrast outer edge
-      Layer 2 (Margin=0):  DefaultFocusBorderBrush (accent, ~50% opacity) — tint over contrast
-      Layer 3 (Margin=1):  BackgroundBrush — 1 px gap to separate inner from outer ring
-      Layer 4 (Margin=1):  DefaultFocusBorderBrush — inner accent ring
+    FocusHighlight renders a 2-colourfocus ring for optimal visibility across light/dark themes & 
+    good contrast even around accent colours:
+      Outer outline background = Foreground color (black/white) 
+      Outer outline:  DefaultFocusBorderBrush (accent, ~50% opacity) —> tint for contrast against background
+      Inner outline background = Background colour (white/black)
+      Inner outline: DefaultFocusBorderBrush (accent, ~50% opacity) —> tint for contrast against the control itself
 
-    All layers use {TemplateBinding BorderThickness} and {TemplateBinding CornerRadius}, so
-    open-sided values like "2 2 2 0" naturally produce an open ring on all four layers.
+    All layers use {TemplateBinding BorderThickness} and {TemplateBinding CornerRadius}, so custom focus
+    hightlights can create open-sided outlines with values like "1 1 1 0" 
   -->
   <ControlTheme x:Key="{x:Type devex:FocusHighlight}" TargetType="devex:FocusHighlight">
     <Setter Property="IsHitTestVisible" Value="False" />

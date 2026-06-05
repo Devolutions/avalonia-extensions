@@ -1,5 +1,6 @@
 # Copies gitignored local config from the main worktree into the current worktree.
-# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/, and .vscode/.
+# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/,
+# .vscode/, and .env.
 #
 # Usage: pwsh scripts/setup-worktree.ps1
 
@@ -65,6 +66,16 @@ function Copy-IfExists {
             }
         }
         Write-Host "✓ Copied $Src -> $Dst"
+    } elseif (Test-Path -PathType Leaf $Src) {
+        # File copy — never overwrite an existing destination.
+        if (Test-Path $Dst) {
+            Write-Host "  (skipped $Src - destination $Dst already exists)"
+        } else {
+            $targetDir = Split-Path $Dst -Parent
+            if ($targetDir) { New-Item -ItemType Directory -Force -Path $targetDir | Out-Null }
+            Copy-Item $Src $Dst
+            Write-Host "✓ Copied $Src -> $Dst"
+        }
     } else {
         Write-Host "  (skipped $Src - not found in main worktree)"
     }
@@ -73,6 +84,7 @@ function Copy-IfExists {
 Copy-IfExists (Join-Path $mainRepo ".claude/local")         ".claude/local"
 Copy-IfExists (Join-Path $mainRepo ".github/skills/local")  ".github/skills/local"
 Copy-IfExists (Join-Path $mainRepo ".vscode")               ".vscode"
+Copy-IfExists (Join-Path $mainRepo ".env")                  ".env"
 
 Write-Host ""
 Write-Host "Done. Local config is ready in this worktree."

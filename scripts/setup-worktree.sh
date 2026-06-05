@@ -1,6 +1,7 @@
 #!/bin/bash
 # Copies gitignored local config from the main worktree into the current worktree.
-# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/, and .vscode/.
+# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/,
+# .vscode/, and .env.
 #
 # Usage: bash scripts/setup-worktree.sh
 
@@ -51,6 +52,15 @@ copy_if_exists() {
       exit "$rc"
     fi
     echo "✓ Copied $src → $dst"
+  elif [ -f "$src" ]; then
+    # File copy — never overwrite an existing destination.
+    if [ -e "$dst" ]; then
+      echo "  (skipped $src — destination $dst already exists)"
+    else
+      mkdir -p "$(dirname "$dst")"
+      cp "$src" "$dst"
+      echo "✓ Copied $src → $dst"
+    fi
   else
     echo "  (skipped $src — not found in main worktree)"
   fi
@@ -59,6 +69,7 @@ copy_if_exists() {
 copy_if_exists "$MAIN_REPO/.claude/local"        ".claude/local"
 copy_if_exists "$MAIN_REPO/.github/skills/local" ".github/skills/local"
 copy_if_exists "$MAIN_REPO/.vscode"              ".vscode"
+copy_if_exists "$MAIN_REPO/.env"                 ".env"
 
 echo ""
 echo "Done. Local config is ready in this worktree."

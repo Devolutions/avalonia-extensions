@@ -1,6 +1,7 @@
 #!/bin/bash
 # Copies gitignored local config from the main worktree into the current worktree.
-# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/, and .vscode/.
+# Run this once after creating a new worktree to get .claude/local/, .github/skills/local/,
+# .vscode/, and .env.
 #
 # Usage: bash scripts/setup-worktree.sh
 

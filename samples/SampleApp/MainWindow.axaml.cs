@@ -44,6 +44,8 @@ public partial class MainWindow : Window
 
 #if ENABLE_ACCELERATE
     this.AddTreeDataGridTab();
+#else
+    this.AddTreeDataGridInfoTab();
 #endif
 
 #if DEBUG
@@ -346,20 +348,43 @@ public partial class MainWindow : Window
 #if ENABLE_ACCELERATE
   private void AddTreeDataGridTab()
   {
+    TreeDataGridDemo demo = new();
+    demo.DataContext = new TreeDataGridViewModel();
+    this.InsertTreeDataGridTab(demo, isEnabled: true);
+  }
+#else
+  private void AddTreeDataGridInfoTab()
+  {
+    TextBlock placeholder = new()
+    {
+      Text = "TreeDataGrid requires Avalonia Pro.\n" +
+             "Add AVALONIA_LICENSE_KEY to a .env file at the repo root and rebuild.",
+      TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+      HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+      VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+      Margin = new Thickness(24),
+    };
+    this.InsertTreeDataGridTab(placeholder, isEnabled: true);
+  }
+#endif
+
+  private void InsertTreeDataGridTab(Control content, bool isEnabled)
+  {
     TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
     if (tabControl == null) return;
 
-    TabItem tabItem = new();
     SampleItemHeader header = new()
     {
-      Title = "TreeDataGrid (Accelerate)",
+      Title = "TreeDataGrid (Avalonia Pro)",
       ApplicableTo = "Fluent, MacClassic, DevExpress, Linux",
     };
-    tabItem.Header = header;
 
-    TreeDataGridDemo demo = new();
-    demo.DataContext = new TreeDataGridViewModel();
-    tabItem.Content = demo;
+    TabItem tabItem = new()
+    {
+      Header = header,
+      Content = content,
+      IsEnabled = isEnabled,
+    };
 
     // Insert before "TreeView" to keep alphabetical order
     int insertIndex = -1;
@@ -381,5 +406,4 @@ public partial class MainWindow : Window
       tabControl.Items.Add(tabItem);
     }
   }
-#endif
 }

@@ -86,9 +86,13 @@
                   ZIndex="999" />
 
           <Border CornerRadius="{TemplateBinding CornerRadius}" ClipToBounds="True" BorderThickness="0" ZIndex="1">
-            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto"
+            <Grid RowDefinitions="Auto,*"
                   ZIndex="2"
                   Background="{TemplateBinding Background}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="1" />
+              </Grid.ColumnDefinitions>
 
               <!-- Column headers: add bottom grid line -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
@@ -121,11 +125,14 @@
                          Grid.RowSpan="2"
                          Grid.Column="1"
                          Orientation="Vertical"
-                         Opacity="0"
-                         IsHitTestVisible="False"
-                         Focusable="False"
-                         Margin="0 0 1 0"
-                         IsVisible="{TemplateBinding ShowColumnHeaders}" />
+                          Opacity="0"
+                          IsHitTestVisible="False"
+                          Focusable="False"
+                          Margin="0 0 1 0"
+                         IsVisible="{AndBinding 
+                            {ScrollBarVisibilityBinding #PART_ScrollViewer, Vertical},
+                            {TemplateBinding ShowColumnHeaders}
+                         }" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"

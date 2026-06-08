@@ -117,7 +117,10 @@
                          Opacity="0"
                          IsHitTestVisible="False"
                          Focusable="False"
-                         IsVisible="{TemplateBinding ShowColumnHeaders}" />
+                         IsVisible="{AndBinding 
+                            {ScrollBarVisibilityBinding #PART_ScrollViewer, Vertical},
+                            {TemplateBinding ShowColumnHeaders}
+                         }" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"
@@ -525,7 +528,7 @@
                     BorderBrush="Transparent"
                     BorderThickness="1"
                     CornerRadius="5" />
-            <DockPanel>
+            <DockPanel Margin="8 0 0 0">
               <Border DockPanel.Dock="Left"
                       Margin="{StaticResource TreeViewItemChevronMargin}"
                       Width="{StaticResource TreeViewItemChevronSize}">

@@ -56,6 +56,7 @@
   <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
   <Thickness x:Key="MenuInputGestureTextMargin">15,0,0,0</Thickness>
   <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
+  <StreamGeometry x:Key="MenuItemCheckMarkPathData">M 0.5,4.5 L 3.5,7.5 L 10.5,0.5</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
@@ -226,9 +227,17 @@
       <Setter Property="IsVisible" Value="True" />
       <Setter Property="Content">
         <Template>
-          <Path Fill="{Binding $parent[MenuItem].Foreground}"
-                Width="16"
-                Data="{StaticResource CheckMarkPathData}" />
+          <Path Stroke="{Binding $parent[MenuItem].Foreground}"
+                StrokeThickness="1"
+                StrokeLineCap="Round"
+                StrokeJoin="Miter"
+                Fill="Transparent"
+                Width="12"
+                Height="9"
+                Stretch="None"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{StaticResource MenuItemCheckMarkPathData}" />
         </Template>
       </Setter>
     </Style>

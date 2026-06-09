@@ -22,6 +22,7 @@
         <MenuItem Header="Open with parameters">
           <MenuItem Header="Option 1" />
           <MenuItem Header="Option 2" />
+          <MenuItem Header="Checked option" ToggleType="CheckBox" IsChecked="True" />
         </MenuItem>
         <Separator />
         <MenuItem Header="View password">
@@ -217,6 +218,7 @@
             <MenuItem Header="Open with parameters">
               <MenuItem Header="Option 1" />
               <MenuItem Header="Option 2" />
+              <MenuItem Header="Checked option" ToggleType="CheckBox" IsChecked="True" />
             </MenuItem>
             <Separator />
             <MenuItem Header="View password">

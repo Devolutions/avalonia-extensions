@@ -56,12 +56,13 @@
   <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
   <Thickness x:Key="MenuInputGestureTextMargin">15,0,0,0</Thickness>
   <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
+  <StreamGeometry x:Key="MenuItemCheckMarkPathData">M 0.5,4.5 L 3.5,7.5 L 10.5,0.5</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForeground}" />
-    <Setter Property="Padding" Value="4 2" />
-    <Setter Property="Margin" Value="1 1 2 2" />
+    <Setter Property="Padding" Value="4 1" />
+    <Setter Property="Margin" Value="3" />
     <Setter Property="CornerRadius" Value="4" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <!-- Block inheritance of LineHeight from parent controls -->
@@ -106,6 +107,7 @@
                                 ContentTemplate="{TemplateBinding HeaderTemplate}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Stretch"
+                                Margin="0 0 4 0"
                                 Grid.Column="2" />
               <TextBlock x:Name="PART_InputGestureText"
                          Grid.Column="3"
@@ -116,7 +118,7 @@
                          Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}" />
               <PathIcon Name="PART_ChevronPath"
                         Grid.Column="4"
-                        Margin="9 0 0 0"
+                        Margin="8 0 0 0"
                         UseLayoutRounding="False"
                         IsHitTestVisible="False"
                         Width="9"
@@ -141,8 +143,7 @@
                     BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
                     BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
-                    Margin="{DynamicResource ComboBoxPopupBorderMargin}"
-                    Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+                    Padding="{DynamicResource ContextMenuBorderPadding}"
                     MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                     MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                     HorizontalAlignment="Stretch"
@@ -150,7 +151,6 @@
               <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
                 <ItemsPresenter Name="PART_ItemsPresenter"
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
-                                Margin="{DynamicResource MenuFlyoutScrollerMargin}"
                                 Grid.IsSharedSizeScope="True" />
               </ScrollViewer>
             </Border>
@@ -227,9 +227,17 @@
       <Setter Property="IsVisible" Value="True" />
       <Setter Property="Content">
         <Template>
-          <Path Fill="{Binding $parent[MenuItem].Foreground}"
-                Width="16"
-                Data="{StaticResource CheckMarkPathData}" />
+          <Path Stroke="{Binding $parent[MenuItem].Foreground}"
+                StrokeThickness="1"
+                StrokeLineCap="Round"
+                StrokeJoin="Miter"
+                Fill="Transparent"
+                Width="12"
+                Height="9"
+                Stretch="None"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{StaticResource MenuItemCheckMarkPathData}" />
         </Template>
       </Setter>
     </Style>
@@ -243,13 +251,13 @@
       </Setter>
     </Style>
   </ControlTheme>
+  
   <ControlTheme x:Key="HorizontalMenuItem" TargetType="MenuItem" BasedOn="{StaticResource FluentTopLevelMenuItem}">
     <Setter Property="Padding" Value="{DynamicResource HorizontalMenuFlyoutItemThemePaddingNarrow}" />
     <Setter Property="Margin" Value="{DynamicResource HorizontalMenuFlyoutItemMargin}" />
   </ControlTheme>
 
-  <ControlTheme x:Key="FluentMenuItemIconTheme"
-                TargetType="ContentControl">
+  <ControlTheme x:Key="FluentMenuItemIconTheme" TargetType="ContentControl">
     <Setter Property="Width"
             Value="16" />
     <Setter Property="Height"

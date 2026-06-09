@@ -66,7 +66,6 @@
           <ScrollViewer>
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
-                            Margin="{DynamicResource MenuFlyoutScrollerMargin}"
                             KeyboardNavigation.TabNavigation="Continue"
                             Grid.IsSharedSizeScope="True" />
           </ScrollViewer>

@@ -832,6 +832,19 @@
   <converters:CornerRadiusToDoubleConverter x:Key="TopLeftCornerRadiusConverter" Corner="TopLeft" />
   <converters:CornerRadiusToDoubleConverter x:Key="BottomRightCornerRadiusConverter" Corner="BottomRight" />
 
+  <!--
+  TextBox context menu strings. Cut/Copy/Paste come from Avalonia.Themes.Fluent's
+    InvariantResources.xaml, which also is English-only with no per-culture
+    variants — so these defaults are hardcoded English, consistent with the framework itself.
+    All six keys are referenced via DynamicResource, so a consuming app can localize them by
+    defining same-keyed x:String resources higher in the resource hierarchy (e.g. in a
+    culture-specific ResourceDictionary), which will resolve in preference to
+    these defaults.
+  -->
+  <x:String x:Key="StringTextFlyoutUndoText">Undo</x:String>
+  <x:String x:Key="StringTextFlyoutDeleteText">Delete</x:String>
+  <x:String x:Key="StringTextFlyoutSelectAllText">Select All</x:String>
+
 
   <!-- DEVELOPMENT ONLY -->
 

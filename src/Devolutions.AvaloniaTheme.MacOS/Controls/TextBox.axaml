@@ -2,6 +2,7 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters"
+  xmlns:controls="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
@@ -42,22 +43,56 @@
   </Design.PreviewWith>
 
   <MenuFlyout x:Key="DefaultTextBoxContextFlyout">
+    <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}" Command="{Binding $parent[TextBox].Undo}"
+              IsEnabled="{Binding $parent[TextBox].CanUndo}"
+              InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
+      <MenuItem.Icon>
+        <Svg Path="/Accents/Assets/Undo.svg" />
+      </MenuItem.Icon>
+    </MenuItem>
+    <Separator />
     <MenuItem Header="{DynamicResource StringTextFlyoutCutText}" Command="{Binding $parent[TextBox].Cut}"
-              IsEnabled="{Binding $parent[TextBox].CanCut}" InputGesture="{x:Static TextBox.CutGesture}" />
+              IsEnabled="{Binding $parent[TextBox].CanCut}" InputGesture="{x:Static TextBox.CutGesture}">
+      <MenuItem.Icon>
+        <Svg Path="/Accents/Assets/Cut.svg" />
+      </MenuItem.Icon>
+    </MenuItem>
     <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}" Command="{Binding $parent[TextBox].Copy}"
-              IsEnabled="{Binding $parent[TextBox].CanCopy}" InputGesture="{x:Static TextBox.CopyGesture}" />
+              IsEnabled="{Binding $parent[TextBox].CanCopy}" InputGesture="{x:Static TextBox.CopyGesture}">
+      <MenuItem.Icon>
+        <Svg Path="/Accents/Assets/Copy.svg" />
+      </MenuItem.Icon>
+    </MenuItem>
     <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}" Command="{Binding $parent[TextBox].Paste}"
-              IsEnabled="{Binding $parent[TextBox].CanPaste}" InputGesture="{x:Static TextBox.PasteGesture}" />
+              IsEnabled="{Binding $parent[TextBox].CanPaste}" InputGesture="{x:Static TextBox.PasteGesture}">
+      <MenuItem.Icon>
+        <Svg Path="/Accents/Assets/Paste.svg" />
+      </MenuItem.Icon>
+    </MenuItem>
+    <MenuItem Header="{DynamicResource StringTextFlyoutDeleteText}"
+              Command="{x:Static controls:TextBoxContextMenuCommands.DeleteSelection}"
+              CommandParameter="{Binding $parent[TextBox]}"
+              IsEnabled="{Binding $parent[TextBox].CanCut}">
+      <MenuItem.Icon>
+        <Svg Path="/Accents/Assets/Delete.svg" />
+      </MenuItem.Icon>
+    </MenuItem>
+    <Separator />
+    <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}" Command="{Binding $parent[TextBox].SelectAll}"
+              InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
   </MenuFlyout>
   <MenuFlyout x:Key="HorizontalTextBoxContextFlyout"
               FlyoutPresenterTheme="{StaticResource HorizontalMenuFlyoutPresenter}"
               ItemContainerTheme="{StaticResource HorizontalMenuItem}">
+    <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}" Command="{Binding $parent[TextBox].Undo}"
+              IsEnabled="{Binding $parent[TextBox].CanUndo}" IsVisible="{Binding $parent[TextBox].CanUndo}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutCutText}" Command="{Binding $parent[TextBox].Cut}"
               IsEnabled="{Binding $parent[TextBox].CanCut}" IsVisible="{Binding $parent[TextBox].CanCut}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}" Command="{Binding $parent[TextBox].Copy}"
               IsEnabled="{Binding $parent[TextBox].CanCopy}" IsVisible="{Binding $parent[TextBox].CanCopy}" />
     <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}" Command="{Binding $parent[TextBox].Paste}"
               IsEnabled="{Binding $parent[TextBox].CanPaste}" />
+    <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}" Command="{Binding $parent[TextBox].SelectAll}" />
   </MenuFlyout>
 
   <ControlTheme x:Key="FluentTextBoxButton" TargetType="Button">
@@ -127,6 +162,7 @@
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ContextFlyout"
             Value="{OnFormFactor Desktop={StaticResource DefaultTextBoxContextFlyout}, Mobile={StaticResource HorizontalTextBoxContextFlyout}}" />
+    <Setter Property="controls:TextBoxUndoBehavior.ClearUndoOnLoaded" Value="True" />
     <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>

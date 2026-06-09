@@ -16,18 +16,17 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using Extensions;
 using Helpers;
 
 [TemplatePart("PART_InnerTextBox", typeof(InnerComboBox), IsRequired = true)]
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
-[PseudoClasses(PC_DropdownOpen, PC_Pressed)]
+[PseudoClasses(PC_DROPDOWN_OPEN, PC_PRESSED)]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public partial class EditableComboBox : SelectingItemsControl, IInputElement
 {
-    public const string PC_DropdownOpen = ":dropdownopen";
+    public const string PC_DROPDOWN_OPEN = ":dropdownopen";
 
-    public const string PC_Pressed = ":pressed";
+    public const string PC_PRESSED = ":pressed";
 
     public static readonly StyledProperty<TimeSpan> CaretBlinkIntervalProperty =
         AvaloniaProperty.Register<EditableComboBox, TimeSpan>(nameof(CaretBlinkInterval), TimeSpan.FromMilliseconds(500));
@@ -115,7 +114,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private readonly InnerTextBox innerTextBox;
 
-    private static readonly object NullSourceKey = new();
+    private static readonly object nullSourceKey = new();
 
     private Dictionary<object, string> realizedItems = new();
 
@@ -412,8 +411,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return true;
     }
 
-    protected virtual string? CoerceText(string? value) =>
-        value;
+    protected virtual string? CoerceText(string? value) => value;
 
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
@@ -539,7 +537,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         base.OnPointerPressed(e);
         if (!e.Handled && e.Source is Visual source)
         {
-            if (this.innerComboBox._popup?.IsInsidePopup(source) == true)
+            if (this.innerComboBox.Popup?.IsInsidePopup(source) == true)
             {
                 e.Handled = true;
                 return;
@@ -555,7 +553,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
         else
         {
-            this.PseudoClasses.Set(PC_Pressed, true);
+            this.PseudoClasses.Set(PC_PRESSED, true);
         }
     }
 
@@ -563,12 +561,12 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         if (!e.Handled && e.Source is Visual source)
         {
-            if (this.innerComboBox._popup?.IsInsidePopup(source) == true)
+            if (this.innerComboBox.Popup?.IsInsidePopup(source) == true)
             {
-                this.innerComboBox._popup.Close();
+                this.innerComboBox.Popup.Close();
                 e.Handled = true;
             }
-            else if (this.PseudoClasses.Contains(PC_Pressed))
+            else if (this.PseudoClasses.Contains(PC_PRESSED))
             {
                 bool newIsOpen = !this.IsDropDownOpen;
                 this.IsDropDownOpen = newIsOpen;
@@ -576,7 +574,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             }
         }
 
-        this.PseudoClasses.Set(PC_Pressed, false);
+        this.PseudoClasses.Set(PC_PRESSED, false);
         base.OnPointerReleased(e);
     }
 
@@ -672,7 +670,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return this.realizedItems.TryGetValue(GetSourceKey(selected), out string? value) ? value : selected.ToString();
     }
 
-    private static object GetSourceKey(object? item) => item ?? NullSourceKey;
+    private static object GetSourceKey(object? item) => item ?? nullSourceKey;
 
     private string GetValueForItem(object? item)
     {

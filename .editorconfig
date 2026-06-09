@@ -13,3 +13,4 @@ indent_size = 2
 [*.cs]
 resharper_local_variable_hides_member_highlighting = hint
 resharper_redundant_default_member_initializer_highlighting = hint
+resharper_class_with_virtual_members_never_inherited_local_highlighting = hint

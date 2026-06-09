@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -8,7 +9,6 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Platform;
 using Avalonia.VisualTree;
 
 // ReSharper disable MemberHidesStaticFromOuterClass
@@ -20,6 +20,7 @@ public partial class EditableComboBox
     [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl), IsRequired = false)]
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
+    [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
     public class InnerComboBox : ComboBox, INavigableContainer
     {
         public static readonly StyledProperty<Thickness> FocusedBorderThicknessProperty = AvaloniaProperty.Register<InnerComboBox, Thickness>(
@@ -63,12 +64,12 @@ public partial class EditableComboBox
         public InnerComboBox(EditableComboBox parent, InnerTextBox innerTextBox)
         {
             this.parent = parent;
-            this._innerTextBox = innerTextBox;
+            this.InnerTextBox = innerTextBox;
         }
 
-        public InnerTextBox _innerTextBox { get; init; }
+        public InnerTextBox InnerTextBox { get; init; }
 
-        public Popup? _popup { get; private set; }
+        public Popup? Popup { get; private set; }
 
         public Thickness FocusedBorderThickness
         {
@@ -153,12 +154,12 @@ public partial class EditableComboBox
             this.innerRightContentControl = e.NameScope.Get<ItemsControl>("PART_InnerRightContent");
 
             this.textboxContentPresenter = e.NameScope.Get<ContentPresenter>("PART_TextBoxPresenter");
-            this.textboxContentPresenter.Content = this._innerTextBox;
+            this.textboxContentPresenter.Content = this.InnerTextBox;
 
-            this._popup = e.NameScope.Get<Popup>("PART_Popup");
-            this._popup.Focusable = false;
-            this._popup.IsTabStop = false;
-            this._popup.PlacementTarget = this.parent;
+            this.Popup = e.NameScope.Get<Popup>("PART_Popup");
+            this.Popup.Focusable = false;
+            this.Popup.IsTabStop = false;
+            this.Popup.PlacementTarget = this.parent;
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -197,7 +198,7 @@ public partial class EditableComboBox
                 }
 
                 containerChild = this.parent;
-                while (containerChild?.FindAncestorOfType<Grid>() is { } grid)
+                while (containerChild.FindAncestorOfType<Grid>() is { } grid)
                 {
                     int index = -1;
                     if (containerChild is Control control) index = grid.Children.IndexOf(control);
@@ -250,20 +251,9 @@ public partial class EditableComboBox
             }
         }
 
-        private static bool IsSplitBetweenScreen(Visual visual)
-        {
-            if (TopLevel.GetTopLevel(visual) is not { } topLevel) return false;
-
-            PixelPoint topLeftPoint = visual.PointToScreen(new Point(0, 0));
-            PixelPoint bottomRightPoint = visual.PointToScreen(new Point(visual.Bounds.Width, visual.Bounds.Height));
-            Screen? screen1 = topLevel.Screens?.ScreenFromPoint(topLeftPoint);
-            Screen? screen2 = topLevel.Screens?.ScreenFromPoint(bottomRightPoint);
-            return screen1 is not null && screen2 is not null && screen1 != screen2;
-        }
-
         private IInputElement? GetNextControl(IInputElement? from)
         {
-            bool foundCurrent = Equals(from, this._innerTextBox);
+            bool foundCurrent = Equals(from, this.InnerTextBox);
 
             if (this.innerLeftContentControl != null)
             {
@@ -315,7 +305,7 @@ public partial class EditableComboBox
 
         private IInputElement? GetPreviousControl(IInputElement? from)
         {
-            if (Equals(from, this._innerTextBox) || Equals(from, this) || Equals(from, this.parent)) return null;
+            if (Equals(from, this.InnerTextBox) || Equals(from, this) || Equals(from, this.parent)) return null;
 
             bool foundCurrent = false;
 
@@ -364,7 +354,7 @@ public partial class EditableComboBox
                 }
             }
 
-            if (foundCurrent) return this._innerTextBox;
+            if (foundCurrent) return this.InnerTextBox;
 
             return null;
         }

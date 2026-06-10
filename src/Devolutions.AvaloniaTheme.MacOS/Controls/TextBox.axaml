@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters"
-  xmlns:controls="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls"
+  xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
@@ -162,7 +163,7 @@
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ContextFlyout"
             Value="{OnFormFactor Desktop={StaticResource DefaultTextBoxContextFlyout}, Mobile={StaticResource HorizontalTextBoxContextFlyout}}" />
-    <Setter Property="controls:TextBoxUndoBehavior.ClearUndoOnLoaded" Value="True" />
+    <Setter Property="behaviors:TextBoxUndoBehavior.ClearUndoOnLoaded" Value="True" />
     <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>

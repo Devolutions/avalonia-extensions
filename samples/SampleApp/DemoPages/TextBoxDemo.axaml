@@ -4,9 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
-             xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Controls;assembly=Devolutions.AvaloniaTheme.DevExpress"
-             xmlns:macos="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls;assembly=Devolutions.AvaloniaTheme.MacOS"
-             xmlns:linux="clr-namespace:Devolutions.AvaloniaTheme.Linux.Controls;assembly=Devolutions.AvaloniaTheme.Linux"
+             xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
              x:DataType="vm:TextBoxViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
@@ -93,7 +91,7 @@
             <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.UndoGesture}">
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.DevExpress/Accents/Assets/Undo.svg" />
                 </MenuItem.Icon>
@@ -124,13 +122,13 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.SelectAllGesture}" />
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
             </MenuFlyoutPresenter>
 
             <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.UndoGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
                         IsEnabled="False">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.DevExpress/Accents/Assets/Undo.svg" />
@@ -165,7 +163,7 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.SelectAllGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
                         IsEnabled="False" />
             </MenuFlyoutPresenter>
           </StackPanel>
@@ -175,7 +173,7 @@
             <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static macos:TextBoxContextMenuCommands.UndoGesture}">
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Undo.svg" />
                 </MenuItem.Icon>
@@ -206,13 +204,13 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static macos:TextBoxContextMenuCommands.SelectAllGesture}" />
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
             </MenuFlyoutPresenter>
 
             <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static macos:TextBoxContextMenuCommands.UndoGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
                         IsEnabled="False">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Undo.svg" />
@@ -247,7 +245,7 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static macos:TextBoxContextMenuCommands.SelectAllGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
                         IsEnabled="False" />
             </MenuFlyoutPresenter>
           </StackPanel>
@@ -257,7 +255,7 @@
             <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static linux:TextBoxContextMenuCommands.UndoGesture}">
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Undo.svg" />
                 </MenuItem.Icon>
@@ -288,13 +286,13 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static linux:TextBoxContextMenuCommands.SelectAllGesture}" />
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
             </MenuFlyoutPresenter>
 
             <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static linux:TextBoxContextMenuCommands.UndoGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
                         IsEnabled="False">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Undo.svg" />
@@ -329,7 +327,7 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static linux:TextBoxContextMenuCommands.SelectAllGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
                         IsEnabled="False" />
             </MenuFlyoutPresenter>
           </StackPanel>

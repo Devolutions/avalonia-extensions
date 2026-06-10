@@ -195,6 +195,9 @@
       <Style Selector="^ /template/ Path#PART_ChevronPath">
         <Setter Property="Fill" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
       </Style>
+      <Style Selector="^ /template/ ContentControl#PART_IconPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
+      </Style>
     </Style>
 
     <Style Selector="^:empty /template/ Path#PART_ChevronPath">

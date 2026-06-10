@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <AvaloniaResource Include="Accents/Assets/**" />
     </ItemGroup>
 
     <ItemGroup>

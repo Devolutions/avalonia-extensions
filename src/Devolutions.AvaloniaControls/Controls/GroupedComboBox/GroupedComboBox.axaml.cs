@@ -33,8 +33,8 @@ public class GroupedComboBox : ComboBox
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedComboBox, Func<object, string>?>("GroupSelector");
 
-    public static readonly StyledProperty<IBinding?> GroupBindingProperty =
-        AvaloniaProperty.Register<GroupedComboBox, IBinding?>(nameof(GroupBinding));
+    public static readonly StyledProperty<BindingBase?> GroupBindingProperty =
+        AvaloniaProperty.Register<GroupedComboBox, BindingBase?>(nameof(GroupBinding));
 
     public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
         AvaloniaProperty.Register<GroupedComboBox, bool>(nameof(GroupOrderAlphabetical));
@@ -42,8 +42,8 @@ public class GroupedComboBox : ComboBox
     public static readonly StyledProperty<Func<string, int>?> GroupOrderSelectorProperty =
         AvaloniaProperty.Register<GroupedComboBox, Func<string, int>?>("GroupOrderSelector");
 
-    public static readonly StyledProperty<IBinding?> GroupOrderBindingProperty =
-        AvaloniaProperty.Register<GroupedComboBox, IBinding?>(nameof(GroupOrderBinding));
+    public static readonly StyledProperty<BindingBase?> GroupOrderBindingProperty =
+        AvaloniaProperty.Register<GroupedComboBox, BindingBase?>(nameof(GroupOrderBinding));
     
     public static readonly StyledProperty<IBrush?> HeaderForegroundProperty =
         AvaloniaProperty.Register<GroupedComboBox, IBrush?>(nameof(HeaderForeground));
@@ -102,7 +102,7 @@ public class GroupedComboBox : ComboBox
 
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
-    public IBinding? GroupBinding
+    public BindingBase? GroupBinding
     {
         get => this.GetValue(GroupBindingProperty);
         set => this.SetValue(GroupBindingProperty, value);
@@ -122,7 +122,7 @@ public class GroupedComboBox : ComboBox
 
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
-    public IBinding? GroupOrderBinding
+    public BindingBase? GroupOrderBinding
     {
         get => this.GetValue(GroupOrderBindingProperty);
         set => this.SetValue(GroupOrderBindingProperty, value);

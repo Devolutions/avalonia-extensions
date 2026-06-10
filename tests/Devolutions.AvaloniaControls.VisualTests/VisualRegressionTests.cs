@@ -312,6 +312,12 @@ public class VisualRegressionTests
       // Wait for layout and theme application
       Dispatcher.UIThread.RunJobs();
 
+      // Settle time-based transitions (e.g. the ToggleSwitch thumb slide) by advancing the headless
+      // render clock, so the captured frame is the animation's final state instead of a mid-transition
+      // frame that shifts the thumb a sub-pixel between runs and flips the comparison.
+      AvaloniaHeadlessPlatform.ForceRenderTimerTick(60);
+      Dispatcher.UIThread.RunJobs();
+
       // Capture
       WriteableBitmap? frame = window.CaptureRenderedFrame();
       if (frame == null) throw new Exception($"Failed to capture frame for {variant}");

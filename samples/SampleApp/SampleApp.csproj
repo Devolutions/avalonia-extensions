@@ -42,6 +42,10 @@
 
         <PackageReference Include="Avalonia.Themes.Simple" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+
+        <!-- Transitive security pin: Avalonia.X11 pulls Tmds.DBus.Protocol 0.90.3, flagged by GHSA-xrw6-gwf8-vvr9.
+             0.92.0 is the first patched release in the 0.9x line. Remove once Avalonia ships a fixed transitive version. -->
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
     </ItemGroup>
 
     <ItemGroup>

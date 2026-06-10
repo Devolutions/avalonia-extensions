@@ -513,7 +513,7 @@ public class TimePickerUpDown : TemplatedControl
     this.SelectSegment(this._activeSegment);
   }
 
-  private void OnSegmentGotFocus(object? sender, GotFocusEventArgs e)
+  private void OnSegmentGotFocus(object? sender, FocusChangedEventArgs e)
   {
     if (sender is TextBox textBox)
     {

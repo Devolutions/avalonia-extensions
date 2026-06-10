@@ -11,5 +11,5 @@ public class EditableComboBoxDataTemplate : DataTemplate
     /// Example: ItemStringValue="{Binding Name}"
     /// </summary>
     [AssignBinding]
-    public IBinding? SelectedItemValue { get; set; }
+    public BindingBase? SelectedItemValue { get; set; }
 }

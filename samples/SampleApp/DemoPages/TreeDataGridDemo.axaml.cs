@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using SampleApp.ViewModels;
 
 namespace SampleApp.DemoPages;
@@ -37,13 +37,18 @@ public partial class TreeDataGridDemo : UserControl
       }
   }
 
-  private HierarchicalExpanderColumn<NetworkNode> CreateNameExpanderColumn(IDataTemplate template)
+  private TreeDataGridHierarchicalExpanderColumn CreateNameExpanderColumn(IDataTemplate template)
   {
-      return new HierarchicalExpanderColumn<NetworkNode>(
-          new TemplateColumn<NetworkNode>("Name", template),
-          node => node.Children,
-          hasChildrenSelector: node => node.Children.Count > 0,
-          isExpandedSelector: node => node.IsExpanded
-      );
+      return new TreeDataGridHierarchicalExpanderColumn()
+      {
+          Header = "Name",
+          Inner = new TreeDataGridTemplateColumn()
+          {
+              CellTemplate = template,
+          },
+          ChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children),
+          HasChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children.Count > 0),
+          IsExpandedBinding = CompiledBinding.Create((NetworkNode node) => node.IsExpanded),
+      };
   }
 }

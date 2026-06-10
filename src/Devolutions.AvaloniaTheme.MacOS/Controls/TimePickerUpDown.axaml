@@ -14,7 +14,7 @@
                          Maximum="10"
                          Increment="0.5"
                          Value="10"
-                         Watermark="Enter text" />
+                         PlaceholderText="Enter text" />
         </StackPanel>
         <controls:TimePickerUpDown ClockIdentifier="24HourClock"
                                    SelectedTime="00:00:00"
@@ -136,7 +136,7 @@
                              Foreground="{TemplateBinding Foreground}"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              MaxLength="2"
-                             Watermark="hh" />
+                             PlaceholderText="hh" />
                     <TextBlock Classes="segment-separator"
                                VerticalAlignment="Center"
                                Foreground="{TemplateBinding Foreground}"
@@ -150,7 +150,7 @@
                              IsTabStop="False"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              MaxLength="2"
-                             Watermark="mm" />
+                             PlaceholderText="mm" />
                     <TextBlock Name="PART_SecondSeparator"
                                Classes="segment-separator"
                                VerticalAlignment="Center"
@@ -165,7 +165,7 @@
                              IsTabStop="False"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              MaxLength="2"
-                             Watermark="ss" />
+                             PlaceholderText="ss" />
                     <TextBox Name="PART_PeriodTextBox"
                              AutomationProperties.Name="AM or PM"
                              Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
@@ -174,7 +174,7 @@
                              IsTabStop="False"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              MaxLength="8"
-                             Watermark="AM" />
+                             PlaceholderText="AM" />
                   </StackPanel>
                 </Border>
                 <Border Name="BottomBorder"

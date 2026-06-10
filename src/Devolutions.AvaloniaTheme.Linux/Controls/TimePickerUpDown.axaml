@@ -139,7 +139,7 @@
                   Foreground="{TemplateBinding Foreground}"
                   IsReadOnly="{TemplateBinding IsReadOnly}"
                   MaxLength="2"
-                  Watermark="hh" />
+                  PlaceholderText="hh" />
                 <TextBlock
                   Classes="segment-separator"
                   VerticalAlignment="Center"
@@ -155,7 +155,7 @@
                   IsTabStop="False"
                   IsReadOnly="{TemplateBinding IsReadOnly}"
                   MaxLength="2"
-                  Watermark="mm" />
+                  PlaceholderText="mm" />
                 <TextBlock
                   Name="PART_SecondSeparator"
                   Classes="segment-separator"
@@ -172,7 +172,7 @@
                   IsTabStop="False"
                   IsReadOnly="{TemplateBinding IsReadOnly}"
                   MaxLength="2"
-                  Watermark="ss" />
+                  PlaceholderText="ss" />
                 <TextBox
                   Name="PART_PeriodTextBox"
                   AutomationProperties.Name="AM or PM"
@@ -182,7 +182,7 @@
                   IsTabStop="False"
                   IsReadOnly="{TemplateBinding IsReadOnly}"
                   MaxLength="8"
-                  Watermark="AM" />
+                  PlaceholderText="AM" />
               </StackPanel>
             </ButtonSpinner>
             <Border

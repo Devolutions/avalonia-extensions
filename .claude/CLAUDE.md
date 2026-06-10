@@ -113,10 +113,7 @@ The SampleApp provides:
 - Visual demos of all styled controls
 - Theme switching via /worksetup command (see .claude/commands/worksetup.md)
 - Inspection:
-  - if `USE_AVALONIA_ACCELERATE_TOOLS=true` env var is set:
-    - F12 opens Avalonia Accelerate Dev Tools
-    - F10 opens classic Avalonia Dev Tools
-  - otherwise F12 opens classic Avalonia Dev Tools
+  - F12 opens Avalonia Accelerate Dev Tools
 
 ### Runtime Tab Convention (SampleApp)
 - Some tabs are inserted at runtime and are not statically present in `samples/SampleApp/MainWindow.axaml`.

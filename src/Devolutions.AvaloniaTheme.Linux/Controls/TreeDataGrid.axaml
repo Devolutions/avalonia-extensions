@@ -241,8 +241,8 @@
       </ControlTemplate>
     </Setter>
     
-    <Style Selector="^:selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
-      <Setter Property="Background" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
+    <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
     </Style>
 
     <Style Selector="^:invalid /template/ Rectangle#InvalidVisualElement">

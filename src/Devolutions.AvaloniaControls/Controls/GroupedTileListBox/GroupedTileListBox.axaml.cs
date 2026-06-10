@@ -66,8 +66,8 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, string>?>(
             "GroupSelector");
 
-    public static readonly StyledProperty<IBinding?> GroupBindingProperty =
-        AvaloniaProperty.Register<GroupedTileListBox, IBinding?>(
+    public static readonly StyledProperty<BindingBase?> GroupBindingProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, BindingBase?>(
             nameof(GroupBinding));
 
     public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
@@ -77,8 +77,8 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, Func<string, int>?>(
             "GroupOrderSelector");
 
-    public static readonly StyledProperty<IBinding?> GroupOrderBindingProperty =
-        AvaloniaProperty.Register<GroupedTileListBox, IBinding?>(
+    public static readonly StyledProperty<BindingBase?> GroupOrderBindingProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, BindingBase?>(
             nameof(GroupOrderBinding));
 
     private double? cachedHeaderHeight;
@@ -220,7 +220,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
-    public IBinding? GroupBinding
+    public BindingBase? GroupBinding
     {
         get => this.GetValue(GroupBindingProperty);
         set => this.SetValue(GroupBindingProperty, value);
@@ -255,7 +255,7 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
-    public IBinding? GroupOrderBinding
+    public BindingBase? GroupOrderBinding
     {
         get => this.GetValue(GroupOrderBindingProperty);
         set => this.SetValue(GroupOrderBindingProperty, value);

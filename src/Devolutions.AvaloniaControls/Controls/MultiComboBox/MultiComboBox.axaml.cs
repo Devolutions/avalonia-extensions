@@ -2,6 +2,7 @@
 
 namespace Devolutions.AvaloniaControls.Controls;
 
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
@@ -107,8 +108,11 @@ public partial class MultiComboBox : SelectingItemsControl
         AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(
             nameof(SelectedItemTemplate));
 
-    public static readonly StyledProperty<string?> WatermarkProperty =
-        TextBox.WatermarkProperty.AddOwner<MultiComboBox>();
+    public static readonly StyledProperty<string?> PlaceholderTextProperty =
+        TextBox.PlaceholderTextProperty.AddOwner<MultiComboBox>();
+
+    [Obsolete("Use PlaceholderTextProperty instead.")]
+    public static readonly StyledProperty<string?> WatermarkProperty = AvaloniaProperty.Register<MultiComboBox, string?>(nameof(Watermark));
 
     public static readonly StyledProperty<object?> PopupInnerTopContentProperty =
         AvaloniaProperty.Register<MultiComboBox, object?>(
@@ -209,6 +213,10 @@ public partial class MultiComboBox : SelectingItemsControl
         this.ItemsView.CollectionChanged += (_, _) => this.ApplyFilter(null);
 
         ObservableExtension.Subscribe(IsDropDownOpenProperty.Changed, args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
+
+#pragma warning disable CS0618 // Watermark is kept for back-compat; forward to PlaceholderText
+        this.GetObservable(WatermarkProperty).Subscribe(value => this.PlaceholderText = value);
+#pragma warning restore CS0618
     }
 
     public AvaloniaList<object?> FilteredItems { get; } = [];
@@ -301,6 +309,13 @@ public partial class MultiComboBox : SelectingItemsControl
         set => this.SetValue(SelectedItemTemplateProperty, value);
     }
 
+    public string? PlaceholderText
+    {
+        get => this.GetValue(PlaceholderTextProperty);
+        set => this.SetValue(PlaceholderTextProperty, value);
+    }
+
+    [Obsolete("Use PlaceholderText instead.")]
     public string? Watermark
     {
         get => this.GetValue(WatermarkProperty);
@@ -702,7 +717,7 @@ public partial class MultiComboBox : SelectingItemsControl
             return false;
         }
 
-        if (source.GetVisualRoot() is PopupRoot)
+        if (TopLevel.GetTopLevel(source) is PopupRoot)
         {
             return false;
         }

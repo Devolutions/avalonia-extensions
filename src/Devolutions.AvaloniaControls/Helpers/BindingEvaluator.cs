@@ -23,12 +23,12 @@ public sealed class BindingEvaluator<TDataContext>
         this.inner = new BindingEvaluator(anchor, typeof(TDataContext));
     }
 
-    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression(IBinding? binding)
+    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression(BindingBase? binding)
     {
         return this.inner.BuildFormattedGetterExpression<TDataContext>(binding);
     }
 
-    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression(IBinding binding)
+    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression(BindingBase binding)
     {
         return this.inner.BuildRawGetterExpression<TDataContext>(binding);
     }
@@ -82,7 +82,7 @@ public sealed partial class BindingEvaluator
             .FirstOrDefault(static iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             ?.GetGenericArguments()[0];
 
-    public Func<object, string>? BuildFormattedGetter(IBinding? binding)
+    public Func<object, string>? BuildFormattedGetter(BindingBase? binding)
     {
         if (binding is null)
         {
@@ -102,7 +102,7 @@ public sealed partial class BindingEvaluator
         return this.BuildFrameworkDelegatedGetter(binding);
     }
 
-    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression<TDataContext>(IBinding? binding)
+    public Expression<Func<TDataContext, string>>? BuildFormattedGetterExpression<TDataContext>(BindingBase? binding)
     {
         if (binding is null)
         {
@@ -122,7 +122,7 @@ public sealed partial class BindingEvaluator
         return this.BuildFrameworkDelegatedGetterExpression<TDataContext>(binding);
     }
 
-    public Func<object, object?> BuildRawGetter(IBinding binding)
+    public Func<object, object?> BuildRawGetter(BindingBase binding)
     {
         if (this.TryBuildFastPathRawGetter(binding, out Func<object, object?>? getter))
         {
@@ -132,7 +132,7 @@ public sealed partial class BindingEvaluator
         return this.BuildProxyRawGetter(binding);
     }
 
-    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression<TDataContext>(IBinding binding)
+    public Expression<Func<TDataContext, object?>> BuildRawGetterExpression<TDataContext>(BindingBase binding)
     {
         if (TryBuildFastPathRawExpression(binding, out Expression<Func<TDataContext, object?>>? expression))
         {
@@ -252,7 +252,7 @@ public sealed partial class BindingEvaluator
         return resolved;
     }
 
-    private static string? GetSimplePathWithoutExtras(IBinding binding)
+    private static string? GetSimplePathWithoutExtras(BindingBase binding)
     {
         string? pathString = binding switch
             {
@@ -329,7 +329,7 @@ public sealed partial class BindingEvaluator
         return Expression.Condition(Expression.Equal(value, Expression.Constant(null, value.Type)), Expression.Constant(string.Empty), toStringOrEmpty);
     }
 
-    private static bool TryBuildFastPathRawExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, object?>>? expression)
+    private static bool TryBuildFastPathRawExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, object?>>? expression)
     {
         string? pathString = GetSimplePathWithoutExtras(binding);
         if (string.IsNullOrEmpty(pathString))
@@ -342,7 +342,7 @@ public sealed partial class BindingEvaluator
         return expression is not null;
     }
 
-    private bool TryBuildFastPathRawGetter(IBinding binding, [NotNullWhen(true)] out Func<object, object?>? getter)
+    private bool TryBuildFastPathRawGetter(BindingBase binding, [NotNullWhen(true)] out Func<object, object?>? getter)
     {
         string? pathString = GetSimplePathWithoutExtras(binding);
         if (string.IsNullOrEmpty(pathString))
@@ -363,7 +363,7 @@ public sealed partial class BindingEvaluator
         }
     }
 
-    private static bool TryBuildIntermediateExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
+    private static bool TryBuildIntermediateExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
     {
         if (!TryGetIntermediateParts(binding, out string? path, out object? source, out IValueConverter? converter, out object? converterParameter,
                 out CultureInfo? converterCulture, out string? stringFormat, out object? fallbackValue, out object? targetNullValue))
@@ -377,7 +377,7 @@ public sealed partial class BindingEvaluator
         return true;
     }
 
-    private bool TryBuildIntermediateGetter(IBinding binding, [NotNullWhen(true)] out Func<object, string>? getter)
+    private bool TryBuildIntermediateGetter(BindingBase binding, [NotNullWhen(true)] out Func<object, string>? getter)
     {
         if (!TryGetIntermediateParts(binding, out string? path, out object? source, out IValueConverter? converter, out object? converterParameter,
                 out CultureInfo? converterCulture, out string? stringFormat, out object? fallbackValue, out object? targetNullValue))
@@ -438,7 +438,7 @@ public sealed partial class BindingEvaluator
     }
 
     private static bool TryGetIntermediateParts(
-        IBinding binding,
+        BindingBase binding,
         [NotNullWhen(true)] out string? path,
         out object? source,
         out IValueConverter? converter,
@@ -490,7 +490,7 @@ public sealed partial class BindingEvaluator
         return false;
     }
 
-    private static bool TryGetSimpleBindingExpression<TDataContext>(IBinding binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
+    private static bool TryGetSimpleBindingExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
     {
         string? pathString = GetSimplePathWithoutExtras(binding);
         if (!string.IsNullOrEmpty(pathString))
@@ -506,7 +506,7 @@ public sealed partial class BindingEvaluator
         return false;
     }
 
-    private bool TryGetSimpleBindingGetter(IBinding binding, [NotNullWhen(true)] out Func<object, string>? getter)
+    private bool TryGetSimpleBindingGetter(BindingBase binding, [NotNullWhen(true)] out Func<object, string>? getter)
     {
         string? pathString = GetSimplePathWithoutExtras(binding);
         if (string.IsNullOrEmpty(pathString))
@@ -535,7 +535,7 @@ public sealed partial class BindingEvaluator
         return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
     }
 
-    private Func<object, string> BuildFrameworkDelegatedGetter(IBinding binding)
+    private Func<object, string> BuildFrameworkDelegatedGetter(BindingBase binding)
     {
         binding = this.RewriteParentBindingIfNeeded(binding);
         BindingEvaluatorProxyElement proxy = new(this.anchor, binding);
@@ -555,14 +555,14 @@ public sealed partial class BindingEvaluator
     }
 
     [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
-    private Expression<Func<TDataContext, string>> BuildFrameworkDelegatedGetterExpression<TDataContext>(IBinding binding)
+    private Expression<Func<TDataContext, string>> BuildFrameworkDelegatedGetterExpression<TDataContext>(BindingBase binding)
     {
         Func<object, string> getter = this.BuildFrameworkDelegatedGetter(binding);
         return WrapObjectDelegateAsExpression<TDataContext>(getter);
     }
 
     [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
-    private Func<object, object?> BuildProxyRawGetter(IBinding binding)
+    private Func<object, object?> BuildProxyRawGetter(BindingBase binding)
     {
         binding = this.RewriteParentBindingIfNeeded(binding);
         BindingEvaluatorProxyElement proxy = new(this.anchor, binding);
@@ -580,7 +580,7 @@ public sealed partial class BindingEvaluator
             };
     }
 
-    private Expression<Func<TDataContext, object?>> BuildProxyRawGetterExpression<TDataContext>(IBinding binding)
+    private Expression<Func<TDataContext, object?>> BuildProxyRawGetterExpression<TDataContext>(BindingBase binding)
     {
         Func<object, object?> getter = this.BuildProxyRawGetter(binding);
         ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
@@ -633,7 +633,7 @@ public sealed partial class BindingEvaluator
         return ancestor;
     }
 
-    private IBinding RewriteParentBindingIfNeeded(IBinding binding)
+    private BindingBase RewriteParentBindingIfNeeded(BindingBase binding)
     {
         if (binding is not Binding { Path: { Length: > 0 } path } reflectionBinding)
         {
@@ -677,11 +677,11 @@ public sealed partial class BindingEvaluator
 
         private readonly IDisposable valueSubscription;
 
-        public BindingEvaluatorProxyElement(ILogical anchor, IBinding binding)
+        public BindingEvaluatorProxyElement(ILogical anchor, BindingBase binding)
         {
             ((ISetLogicalParent)this).SetParent(anchor);
 #pragma warning disable CS0618 // Type or member is obsolete
-            this.valueSubscription = this.Bind(ValueProperty, binding, anchor: anchor);
+            this.valueSubscription = this.Bind(ValueProperty, binding);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

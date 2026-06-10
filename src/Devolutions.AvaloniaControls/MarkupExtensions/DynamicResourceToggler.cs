@@ -4,22 +4,23 @@ using Avalonia;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Metadata;
 using Helpers;
 
 public class DynamicResourceTogglerExtension : MarkupExtension
 {
-    private readonly WeakReference<IBinding?> weakConditionBinding;
+    private readonly WeakReference<BindingBase?> weakConditionBinding;
 
     public DynamicResourceTogglerExtension(object conditionBinding, object whenTrueResourceKey, object whenFalseResourceKey)
     {
         this.ConditionBinding = MarkupExtensionHelpers.GetBinding<bool>(conditionBinding);
-        this.weakConditionBinding = new WeakReference<IBinding?>(this.ConditionBinding);
+        this.weakConditionBinding = new WeakReference<BindingBase?>(this.ConditionBinding);
         this.WhenTrueResourceKey = whenTrueResourceKey;
         this.WhenFalseResourceKey = whenFalseResourceKey;
     }
 
     [ConstructorArgument("conditionBinding")]
-    public IBinding? ConditionBinding { get; private set; }
+    public BindingBase? ConditionBinding { get; private set; }
 
     [ConstructorArgument("whenTrueResourceKey")]
     public object WhenTrueResourceKey { get; init; }
@@ -29,7 +30,7 @@ public class DynamicResourceTogglerExtension : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        if (!this.weakConditionBinding.TryGetTarget(out IBinding? conditionBinding)) return AvaloniaProperty.UnsetValue;
+        if (!this.weakConditionBinding.TryGetTarget(out BindingBase? conditionBinding)) return AvaloniaProperty.UnsetValue;
 
         var ret = new BindingTogglerExtension(
             conditionBinding,

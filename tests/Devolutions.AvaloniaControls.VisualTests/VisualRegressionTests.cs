@@ -250,6 +250,15 @@ public class VisualRegressionTests
     };
     App.SetTheme(theme);
 
+    // Normalize the theme variant before building the page so suite runs start each test in the
+    // same state as an isolated run (a previous test may have left the application in Dark mode).
+    if (Application.Current != null)
+    {
+      Application.Current.RequestedThemeVariant = ThemeVariant.Light;
+    }
+
+    Dispatcher.UIThread.RunJobs();
+
     // 2. Instantiate the page
     var content = (Control)Activator.CreateInstance(pageType)!;
 
@@ -303,6 +312,12 @@ public class VisualRegressionTests
       // Wait for layout and theme application
       Dispatcher.UIThread.RunJobs();
 
+      // Settle time-based transitions (e.g. the ToggleSwitch thumb slide) by advancing the headless
+      // render clock, so the captured frame is the animation's final state instead of a mid-transition
+      // frame that shifts the thumb a sub-pixel between runs and flips the comparison.
+      AvaloniaHeadlessPlatform.ForceRenderTimerTick(60);
+      Dispatcher.UIThread.RunJobs();
+
       // Capture
       WriteableBitmap? frame = window.CaptureRenderedFrame();
       if (frame == null) throw new Exception($"Failed to capture frame for {variant}");
@@ -349,17 +364,18 @@ internal static class TestInitializer
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
+      // Must use stderr: xunit.v3 expects the test process's first stdout line to be its JSON handshake.
       Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine("\n\n" + new string('!', 80));
-      Console.WriteLine("\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
-      Console.WriteLine("Visual regression baselines will be updated.");
-      Console.WriteLine("If this was not intentional:");
-      Console.WriteLine("");
-      Console.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");
-      Console.WriteLine("");
-      Console.WriteLine("Remove the variable from the current shell with:");
-      Console.WriteLine("`export UPDATE_BASELINES=false`");
-      Console.WriteLine(new string('!', 80) + "\n");
+      Console.Error.WriteLine("\n\n" + new string('!', 80));
+      Console.Error.WriteLine("\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
+      Console.Error.WriteLine("Visual regression baselines will be updated.");
+      Console.Error.WriteLine("If this was not intentional:");
+      Console.Error.WriteLine("");
+      Console.Error.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");
+      Console.Error.WriteLine("");
+      Console.Error.WriteLine("Remove the variable from the current shell with:");
+      Console.Error.WriteLine("`export UPDATE_BASELINES=false`");
+      Console.Error.WriteLine(new string('!', 80) + "\n");
       Console.ResetColor();
     }
   }

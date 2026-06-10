@@ -107,7 +107,7 @@
                                 ContentTemplate="{TemplateBinding HeaderTemplate}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Stretch"
-                                Margin="0 0 4 0"
+                                Margin="0 0 2 0"
                                 Grid.Column="2" />
               <TextBlock x:Name="PART_InputGestureText"
                          Grid.Column="3"

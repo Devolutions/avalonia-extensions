@@ -16,6 +16,7 @@ public class NetworkNode
   public string IPAddress { get; set; }
   public string Status { get; set; }
   public string LastSeen { get; set; }
+  public bool HasChildren => this.Children.Count > 0;
 
     public string IconPath => this.Type switch
     {

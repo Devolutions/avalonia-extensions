@@ -47,7 +47,7 @@ public partial class TreeDataGridDemo : UserControl
               CellTemplate = template,
           },
           ChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children),
-          HasChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.Children.Count > 0),
+          HasChildrenBinding = CompiledBinding.Create((NetworkNode node) => node.HasChildren),
           IsExpandedBinding = CompiledBinding.Create((NetworkNode node) => node.IsExpanded),
       };
   }

@@ -92,8 +92,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors ClipToBounds="False">
-          <Panel Name="ReservedSpaceForFocus"
-                 Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <Panel ClipToBounds="False">
             <Border
               Name="border"
               Background="{TemplateBinding Background}"
@@ -192,12 +191,6 @@
                   IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
               </Grid>
             </Border>
-
-            <Border
-              Name="FocusBorderElement"
-              Margin="{StaticResource FocusBorderMargin}"
-              BorderThickness="{StaticResource FocusBorderThickness}"
-              CornerRadius="7" />
 
             <Popup
               Name="PART_Popup"
@@ -305,9 +298,15 @@
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible">
-      <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-      </Style>
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="7" />
+        </Template>
+      </Setter>
     </Style>
 
     <Style Selector="^:disabled">

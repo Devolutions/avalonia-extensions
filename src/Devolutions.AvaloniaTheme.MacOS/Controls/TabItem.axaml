@@ -105,19 +105,21 @@
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 RecognizesAccessKey="True" />
             </Border>
-            <Border Name="FocusBorderElement"
-                    Margin="-3"
-                    BorderThickness="{StaticResource FocusBorderThickness}"
-                    CornerRadius="7" />
           </Panel>
         </ControlTemplate>
       </Setter>
 
       <!-- Tabbing focus -->
       <Style Selector="^:focus-visible">
-        <Style Selector="^ /template/ Border#FocusBorderElement">
-          <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-        </Style>
+        <Setter Property="AdornerLayer.Adorner">
+          <Template>
+            <Border AdornerLayer.IsClipEnabled="False"
+                    Margin="-3"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="7" />
+          </Template>
+        </Setter>
       </Style>
 
       <Style Selector="^:nth-last-child(1) /template/ Border#TabDivider">
@@ -147,28 +149,29 @@
       <Setter Property="Padding" Value="8 4" />
       <Setter Property="Template">
         <ControlTemplate>
-          <Border Name="FocusBorderElement"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  CornerRadius="7">
-            <ContentPresenter Name="PART_ContentPresenter"
-                              Padding="{TemplateBinding Padding}"
-                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                              Background="{TemplateBinding Background}"
-                              Content="{TemplateBinding Header}"
-                              ContentTemplate="{TemplateBinding HeaderTemplate}"
-                              CornerRadius="{TemplateBinding CornerRadius}"
-                              RecognizesAccessKey="True" />
-          </Border>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{TemplateBinding Background}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            RecognizesAccessKey="True" />
         </ControlTemplate>
       </Setter>
 
       <!-- Tabbing focus -->
       <Style Selector="^:focus-visible">
-        <Style Selector="^ /template/ Border#FocusBorderElement">
-          <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-        </Style>
+        <Setter Property="AdornerLayer.Adorner">
+          <Template>
+            <Border AdornerLayer.IsClipEnabled="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="7" />
+          </Template>
+        </Setter>
       </Style>
 
       <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">

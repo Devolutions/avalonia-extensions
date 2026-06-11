@@ -148,18 +148,11 @@
   </ControlTheme>
 
   <ControlTheme x:Key="ComboBoxEditableTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-    <Setter Property="Margin">
-      <Binding Source="{StaticResource InputControlsSpaceForFocusBorder}"
-               Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
-               ConverterParameter="{StaticResource EmbeddedTextBoxSpaceForFocusFactors}" />
-    </Setter>
+    <Setter Property="Margin" Value="1.5 0" />
     <Style Selector="^ /template/ Border#BottomBorder">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <Style Selector="^ /template/ Border#BottomBorderShadow">
-      <Setter Property="IsVisible" Value="False" />
-    </Style>
-    <Style Selector="^ /template/ Border#FocusBorderElement">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <Style Selector="^ /template/ Border#PART_BorderElement">
@@ -188,9 +181,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors ClipToBounds="False">
-          <Panel Name="ReservedSpaceForFocus"
-                 ClipToBounds="False"
-                 Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <Panel ClipToBounds="False">
             <Border
               Name="BorderElement"
               Background="{TemplateBinding Background}"
@@ -237,6 +228,7 @@
                 <TextBox Name="PART_EditableTextBox"
                          Grid.Column="1"
                          Theme="{StaticResource ComboBoxEditableTextBox}"
+                         Classes="no-focus-border"
                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                          Foreground="{TemplateBinding Foreground}"
@@ -281,10 +273,6 @@
                 </ItemsControl>
               </Grid>
             </Border>
-            <Border Name="FocusBorderElement"
-                    Margin="{StaticResource FocusBorderMargin}"
-                    BorderThickness="{StaticResource FocusBorderThickness}"
-                    CornerRadius="7" />
             <Popup
               Name="PART_Popup"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
@@ -350,9 +338,15 @@
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible">
-      <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-      </Style>
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="7" />
+        </Template>
+      </Setter>
     </Style>
 
     <Style Selector="^:disabled">

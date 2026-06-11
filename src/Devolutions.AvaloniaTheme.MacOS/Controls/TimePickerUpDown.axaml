@@ -101,104 +101,96 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate TargetType="controls:TimePickerUpDown">
-        <Panel Name="ReservedSpaceForFocus"
-               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
-          <DataValidationErrors ClipToBounds="False">
-            <ButtonSpinner Name="PART_Spinner"
-                           ClipToBounds="False"
-                           Background="{TemplateBinding Background}"
-                           BorderBrush="{TemplateBinding BorderBrush}"
-                           BorderThickness="{TemplateBinding BorderThickness}"
-                           CornerRadius="{TemplateBinding CornerRadius}"
+        <DataValidationErrors ClipToBounds="False">
+          <ButtonSpinner Name="PART_Spinner"
+                         ClipToBounds="False"
+                         Background="{TemplateBinding Background}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
+                         CornerRadius="{TemplateBinding CornerRadius}"
+                         IsTabStop="False"
+                         Padding="0"
+                         MinWidth="0"
+                         HorizontalContentAlignment="Stretch"
+                         VerticalContentAlignment="Stretch"
+                         AllowSpin="{TemplateBinding AllowSpin}"
+                         ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
+                         ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
+            <Grid Name="PART_InputChrome"
+                  ClipToBounds="False"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center">
+              <Border Name="PART_BorderElement">
+                <StackPanel Margin="0 2 0 0 "
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal"
+                            Spacing="0"
+                            VerticalAlignment="Center">
+                  <TextBox Name="PART_HourTextBox"
+                           AutomationProperties.Name="Hours"
+                           HorizontalContentAlignment="Center"
+                           Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                           Classes="segment-box borderless no-focus-border"
+                           Foreground="{TemplateBinding Foreground}"
+                           IsReadOnly="{TemplateBinding IsReadOnly}"
+                           MaxLength="2"
+                           Watermark="hh" />
+                  <TextBlock Classes="segment-separator"
+                             VerticalAlignment="Center"
+                             Foreground="{TemplateBinding Foreground}"
+                             Text=":" />
+                  <TextBox Name="PART_MinuteTextBox"
+                           AutomationProperties.Name="Minutes"
+                           HorizontalContentAlignment="Center"
+                           Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                           Classes="segment-box borderless no-focus-border"
+                           Foreground="{TemplateBinding Foreground}"
                            IsTabStop="False"
-                           Padding="0"
-                           MinWidth="0"
-                           HorizontalContentAlignment="Stretch"
-                           VerticalContentAlignment="Stretch"
-                           AllowSpin="{TemplateBinding AllowSpin}"
-                           ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
-                           ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
-              <Grid Name="PART_InputChrome"
-                    ClipToBounds="False"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
-                <Border Name="PART_BorderElement">
-                  <StackPanel Margin="0 2 0 0 "
-                              HorizontalAlignment="Left"
-                              Orientation="Horizontal"
-                              Spacing="0"
-                              VerticalAlignment="Center">
-                    <TextBox Name="PART_HourTextBox"
-                             AutomationProperties.Name="Hours"
-                             HorizontalContentAlignment="Center"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box borderless no-focus-border"
+                           IsReadOnly="{TemplateBinding IsReadOnly}"
+                           MaxLength="2"
+                           Watermark="mm" />
+                  <TextBlock Name="PART_SecondSeparator"
+                             Classes="segment-separator"
+                             VerticalAlignment="Center"
                              Foreground="{TemplateBinding Foreground}"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             Watermark="hh" />
-                    <TextBlock Classes="segment-separator"
-                               VerticalAlignment="Center"
-                               Foreground="{TemplateBinding Foreground}"
-                               Text=":" />
-                    <TextBox Name="PART_MinuteTextBox"
-                             AutomationProperties.Name="Minutes"
-                             HorizontalContentAlignment="Center"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             Watermark="mm" />
-                    <TextBlock Name="PART_SecondSeparator"
-                               Classes="segment-separator"
-                               VerticalAlignment="Center"
-                               Foreground="{TemplateBinding Foreground}"
-                               Text=":" />
-                    <TextBox Name="PART_SecondTextBox"
-                             AutomationProperties.Name="Seconds"
-                             HorizontalContentAlignment="Center"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             Watermark="ss" />
-                    <TextBox Name="PART_PeriodTextBox"
-                             AutomationProperties.Name="AM or PM"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box period-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="8"
-                             Watermark="AM" />
-                  </StackPanel>
-                </Border>
-                <Border Name="BottomBorder"
-                        BorderThickness="0 0 0 0.6"
-                        BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        Margin="0.6 0"
-                        IsHitTestVisible="False" />
-                <Border Name="BottomBorderShadow"
-                        BorderThickness="0 0 0 0.6"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                        Margin="0.6 0 0.6 -0.6"
-                        IsHitTestVisible="False" />
-                <Border Name="FocusBorderElement"
-                        Margin="{StaticResource FocusBorderMargin}"
-                        BorderThickness="{StaticResource FocusBorderThickness}"
-                        CornerRadius="{DynamicResource TextBoxFocusCornerRadius}"
-                        IsHitTestVisible="False" />
-              </Grid>
-            </ButtonSpinner>
-          </DataValidationErrors>
-        </Panel>
+                             Text=":" />
+                  <TextBox Name="PART_SecondTextBox"
+                           AutomationProperties.Name="Seconds"
+                           HorizontalContentAlignment="Center"
+                           Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                           Classes="segment-box borderless no-focus-border"
+                           Foreground="{TemplateBinding Foreground}"
+                           IsTabStop="False"
+                           IsReadOnly="{TemplateBinding IsReadOnly}"
+                           MaxLength="2"
+                           Watermark="ss" />
+                  <TextBox Name="PART_PeriodTextBox"
+                           AutomationProperties.Name="AM or PM"
+                           Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
+                           Classes="segment-box period-box borderless no-focus-border"
+                           Foreground="{TemplateBinding Foreground}"
+                           IsTabStop="False"
+                           IsReadOnly="{TemplateBinding IsReadOnly}"
+                           MaxLength="8"
+                           Watermark="AM" />
+                </StackPanel>
+              </Border>
+              <Border Name="BottomBorder"
+                      BorderThickness="0 0 0 0.6"
+                      BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      Margin="0.6 0"
+                      IsHitTestVisible="False" />
+              <Border Name="BottomBorderShadow"
+                      BorderThickness="0 0 0 0.6"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
+                      Margin="0.6 0 0.6 -0.6"
+                      IsHitTestVisible="False" />
+            </Grid>
+          </ButtonSpinner>
+        </DataValidationErrors>
       </ControlTemplate>
     </Setter>
 
@@ -244,8 +236,17 @@
     </Style>
 
     <Style Selector="^:focus-within">
-      <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
+      <Style Selector="^ /template/ Grid#PART_InputChrome">
+        <Setter Property="AdornerLayer.Adorner">
+          <Template>
+            <Border AdornerLayer.IsClipEnabled="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
+          </Template>
+        </Setter>
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />

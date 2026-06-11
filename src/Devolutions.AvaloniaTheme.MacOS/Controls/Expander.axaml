@@ -88,10 +88,6 @@
   <Thickness x:Key="BorderlessExpanderBottomBorderThickness">0 0 0 1</Thickness>
 
   <!-- Content -->
-  <Thickness x:Key="ExpanderContentDownMarginFactors">1 -2 1 1</Thickness>
-  <Thickness x:Key="ExpanderContentUpMarginFactors">1 1 1 -2</Thickness>
-  <Thickness x:Key="ExpanderContentLeftMarginFactors">-2 1 1 1</Thickness>
-  <Thickness x:Key="ExpanderContentRightMarginFactors">1 1 -2 1</Thickness>
   <Thickness x:Key="ExpanderContentPadding">16</Thickness>
   <Thickness x:Key="ExpanderContentDownBorderThickness">0.6,0,0.6,0.6</Thickness>
   <Thickness x:Key="ExpanderContentUpBorderThickness">0.6,0.6,0.6,0</Thickness>
@@ -112,8 +108,7 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel Name="ReservedSpaceForFocus"
-               Margin="1.5">
+        <Panel>
           <Border x:Name="ToggleButtonBackground"
                   CornerRadius="{TemplateBinding CornerRadius}"
                   Background="{TemplateBinding Background}"
@@ -163,20 +158,21 @@
               </MultiBinding>
             </Border.BorderThickness>
           </Border>
-          <Border Name="FocusBorderElement"
-                  ClipToBounds="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  CornerRadius="{TemplateBinding CornerRadius}" />
         </Panel>
       </ControlTemplate>
     </Setter>
 
     <!-- Tabbing focus -->
     <Style Selector="^:focus-visible">
-      <Style Selector="^ /template/ Border#FocusBorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-      </Style>
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="{Binding $parent[ToggleButton].CornerRadius}" />
+        </Template>
+      </Setter>
     </Style>
 
     <Style Selector="^[Tag=expanded]">
@@ -373,31 +369,6 @@
       <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}" />
     </Style>
 
-    <Style Selector="^:left /template/ Panel#ContentTray">
-      <Setter Property="Margin"
-              Value="{Binding Source={StaticResource InputControlsSpaceForFocusBorder},
-      Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter},
-      ConverterParameter={StaticResource ExpanderContentLeftMarginFactors}}" />
-    </Style>
-    <Style Selector="^:up /template/ Panel#ContentTray">
-      <Setter Property="Margin"
-              Value="{Binding Source={StaticResource InputControlsSpaceForFocusBorder},
-      Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter},
-      ConverterParameter={StaticResource ExpanderContentUpMarginFactors}}" />
-    </Style>
-    <Style Selector="^:right /template/ Panel#ContentTray">
-      <Setter Property="Margin"
-              Value="{Binding Source={StaticResource InputControlsSpaceForFocusBorder},
-      Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter},
-      ConverterParameter={StaticResource ExpanderContentRightMarginFactors}}" />
-    </Style>
-    <Style Selector="^:down /template/ Panel#ContentTray">
-      <Setter Property="Margin"
-              Value="{Binding Source={StaticResource InputControlsSpaceForFocusBorder},
-      Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter},
-      ConverterParameter={StaticResource ExpanderContentDownMarginFactors}}" />
-    </Style>
-
     <Style Selector="^.borderless">
       <Setter Property="Background" Value="Transparent" />
     </Style>
@@ -410,11 +381,6 @@
     <!-- Suppress the ContentTray BottomBorder for borderless to avoid a double bottom line -->
     <Style Selector="^.borderless:expanded:down /template/ Border#BottomBorder">
       <Setter Property="Opacity" Value="0" />
-    </Style>
-
-    <!-- Remove the focus-space margins from ContentTray for borderless -->
-    <Style Selector="^.borderless /template/ Panel#ContentTray">
-      <Setter Property="Margin" Value="0" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

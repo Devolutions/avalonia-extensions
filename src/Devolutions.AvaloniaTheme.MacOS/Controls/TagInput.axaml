@@ -49,73 +49,65 @@
     </Setter>
     <Setter Property="Template">
       <ControlTemplate TargetType="u:TagInput">
-        <Panel Name="ReservedSpaceForFocus"
-               Margin="{DynamicResource InputControlsSpaceForFocusBorder}"
-               ClipToBounds="False">
-          <DataValidationErrors ClipToBounds="False">
-            <Panel ClipToBounds="False">
-              <!-- Main border (no bottom border - handled by BottomBorder overlays) -->
-              <Border
-                Name="PART_BorderElement"
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness} "
-                CornerRadius="{TemplateBinding CornerRadius}"
-                Padding="{TemplateBinding Padding}">
-                <Panel VerticalAlignment="Stretch">
-                  <!-- Watermark -->
-                  <TextBlock
-                    Name="{x:Static u:TagInput.PART_Watermark}"
-                    Text="{TemplateBinding Watermark}"
-                    Foreground="{DynamicResource ForegroundLowBrush}"
-                    FontSize="{StaticResource ControlFontSize}"
-                    IsVisible="False"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left" />
+        <DataValidationErrors ClipToBounds="False">
+          <Panel ClipToBounds="False">
+            <!-- Main border (no bottom border - handled by BottomBorder overlays) -->
+            <Border
+              Name="PART_BorderElement"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness} "
+              CornerRadius="{TemplateBinding CornerRadius}"
+              Padding="{TemplateBinding Padding}">
+              <Panel VerticalAlignment="Stretch">
+                <!-- Watermark -->
+                <TextBlock
+                  Name="{x:Static u:TagInput.PART_Watermark}"
+                  Text="{TemplateBinding Watermark}"
+                  Foreground="{DynamicResource ForegroundLowBrush}"
+                  FontSize="{StaticResource ControlFontSize}"
+                  IsVisible="False"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left" />
 
-                  <!-- Tags and input -->
-                  <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
-                  <ItemsControl
-                    Name="PART_ItemsControl"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    MaxWidth="{TemplateBinding MaxWidth}"
-                    ItemTemplate="{TemplateBinding ItemTemplate}"
-                    ItemsSource="{TemplateBinding Items}">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <u:TagInputPanel VerticalAlignment="Center" />
-                      </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.Styles>
-                      <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
-                      <Style Selector="ContentPresenter:nth-last-child(2)">
-                        <Setter Property="Margin" Value="0,0,4,0" />
-                      </Style>
-                    </ItemsControl.Styles>
-                  </ItemsControl>
-                </Panel>
-              </Border>
+                <!-- Tags and input -->
+                <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
+                <ItemsControl
+                  Name="PART_ItemsControl"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  MaxWidth="{TemplateBinding MaxWidth}"
+                  ItemTemplate="{TemplateBinding ItemTemplate}"
+                  ItemsSource="{TemplateBinding Items}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <u:TagInputPanel VerticalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.Styles>
+                    <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
+                    <Style Selector="ContentPresenter:nth-last-child(2)">
+                      <Setter Property="Margin" Value="0,0,4,0" />
+                    </Style>
+                  </ItemsControl.Styles>
+                </ItemsControl>
+              </Panel>
+            </Border>
 
-              <Border Name="BottomBorder"
-                      BorderThickness="0 0 0 0.6"
-                      BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                      CornerRadius="{TemplateBinding CornerRadius}"
-                      Margin="0.6 0  " />
-              <Border Name="BottomBorderShadow"
-                      BorderThickness="0 0 0 0.6"
-                      BorderBrush="{TemplateBinding BorderBrush}"
-                      CornerRadius="{TemplateBinding CornerRadius}"
-                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                      Margin="0.6 0 0.6 -0.6 " />
-              <Border Name="FocusBorderElement"
-                      Margin="{StaticResource FocusBorderMargin}"
-                      BorderThickness="{StaticResource FocusBorderThickness}"
-                      CornerRadius="2" />
-            </Panel>
-          </DataValidationErrors>
-        </Panel>
+            <Border Name="BottomBorder"
+                    BorderThickness="0 0 0 0.6"
+                    BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
+                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    Margin="0.6 0  " />
+            <Border Name="BottomBorderShadow"
+                    BorderThickness="0 0 0 0.6"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    BoxShadow="{DynamicResource TextBoxBorderShadows}"
+                    Margin="0.6 0 0.6 -0.6 " />
+          </Panel>
+        </DataValidationErrors>
       </ControlTemplate>
     </Setter>
 
@@ -125,11 +117,19 @@
     </Style>
 
     <!-- Focus state -->
-    <Style Selector="^:focus-within /template/ Border#FocusBorderElement">
-      <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
-    </Style>
-    <Style Selector="^:focus-within /template/ Border#BottomBorder">
-      <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+    <Style Selector="^:focus-within">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="2" />
+        </Template>
+      </Setter>
+      <Style Selector="^ /template/ Border#BottomBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+      </Style>
     </Style>
 
     <!-- Disabled state -->

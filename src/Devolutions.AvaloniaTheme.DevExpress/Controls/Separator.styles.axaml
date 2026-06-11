@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
         xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
     <Design.PreviewWith>
@@ -14,5 +15,18 @@
 
     <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator">
         <Setter Property="Margin" Value="{DynamicResource SeparatorContextMenuMargin}" />
+        <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="True" />
+    </Style>
+
+    <Style Selector="ContextMenu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                     Menu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                     MenuItem.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter">
+        <Setter Property="Grid.Column" Value="0" />
+    </Style>
+
+    <Style Selector="ContextMenu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                     Menu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                     MenuItem.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter">
+        <Setter Property="IsVisible" Value="False" />
     </Style>
 </Styles>

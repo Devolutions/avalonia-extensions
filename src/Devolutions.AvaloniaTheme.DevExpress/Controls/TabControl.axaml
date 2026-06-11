@@ -22,7 +22,7 @@
         </TabControl>
 
         <TabControl TabStripPlacement="Left" Margin="5" Height="200" Classes="NavBar">
-          <TabItem Header="General">
+          <TabItem Header="General">        
             <StackPanel Orientation="Horizontal" Spacing="30">
               <TextBlock Text="Company" />
               <TextBox Width="200" />

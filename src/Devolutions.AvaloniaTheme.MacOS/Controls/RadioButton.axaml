@@ -34,6 +34,7 @@
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="MinHeight" Value="23" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">

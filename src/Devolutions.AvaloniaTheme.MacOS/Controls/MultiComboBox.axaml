@@ -78,7 +78,7 @@
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Padding" Value="8 1 6 2" />
-    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="MinHeight" Value="19" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="ItemTemplate">

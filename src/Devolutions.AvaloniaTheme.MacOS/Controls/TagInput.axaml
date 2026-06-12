@@ -28,7 +28,7 @@
     <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="MinHeight" Value="19" />
     <Setter Property="MaxWidth" Value="800" />
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />

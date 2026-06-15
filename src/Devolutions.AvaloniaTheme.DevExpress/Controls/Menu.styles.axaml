@@ -1,0 +1,22 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
+        xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
+
+  <Design.PreviewWith>
+    <design:ThemePreviewer>
+      <StackPanel Orientation="Vertical" Margin="10">
+        <TextBlock Text="Some text" />
+        <Separator />
+        <TextBlock Text="Separated by a separator" />
+      </StackPanel>
+    </design:ThemePreviewer>
+  </Design.PreviewWith>
+
+  <Style Selector="Menu > Separator, Menu > MenuItem:separator > Separator">
+    <Setter Property="Margin" Value="0 4" />
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="False" />
+  </Style>
+</Styles>

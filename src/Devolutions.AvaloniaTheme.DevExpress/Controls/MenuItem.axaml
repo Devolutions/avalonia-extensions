@@ -67,6 +67,7 @@
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <!-- Block inheritance of LineHeight from parent controls -->
     <Setter Property="TextBlock.LineHeight" Value="NaN" />
+    
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
@@ -212,6 +213,7 @@
     </Style>
 
     <Style Selector="^:separator">
+      <Setter Property="Margin" Value="0" />
       <Setter Property="Template">
         <ControlTemplate>
           <Separator />
@@ -250,11 +252,6 @@
         </Template>
       </Setter>
     </Style>
-  </ControlTheme>
-  
-  <ControlTheme x:Key="HorizontalMenuItem" TargetType="MenuItem" BasedOn="{StaticResource FluentTopLevelMenuItem}">
-    <Setter Property="Padding" Value="{DynamicResource HorizontalMenuFlyoutItemThemePaddingNarrow}" />
-    <Setter Property="Margin" Value="{DynamicResource HorizontalMenuFlyoutItemMargin}" />
   </ControlTheme>
 
   <ControlTheme x:Key="FluentMenuItemIconTheme" TargetType="ContentControl">

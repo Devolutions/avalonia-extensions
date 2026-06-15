@@ -37,5 +37,6 @@
     <Setter Property="Css" Value="{DynamicResource SvgMenuItemDisabledCss}" />
   </Style>
 
-  <StyleInclude Source="/Controls/Separator.Styles.axaml" />
+  <StyleInclude Source="/Controls/Separator.styles.axaml" />
+  <StyleInclude Source="/Controls/Menu.styles.axaml" />
 </Styles>

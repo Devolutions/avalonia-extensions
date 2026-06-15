@@ -46,5 +46,6 @@
   </Style>
 
   <StyleInclude Source="/Controls/Separator.Styles.axaml" />
+  <StyleInclude Source="/Controls/Menu.Styles.axaml" />
   <StyleInclude Source="/SearchHighlightStyles.axaml" />
 </Styles>

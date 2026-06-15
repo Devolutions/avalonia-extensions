@@ -89,7 +89,7 @@
                                   SharedSizeGroup="MenuItemChevron" />
               </Grid.ColumnDefinitions>
 
-              <StackPanel Grid.Column="0" Orientation="Horizontal" MinWidth="26">
+              <StackPanel Grid.Column="0" Orientation="Horizontal" MinWidth="25">
                 <ContentControl Name="PART_ToggleIconPresenter"
                                 IsVisible="False"
                                 Theme="{StaticResource FluentMenuItemIconTheme}"

@@ -24,13 +24,13 @@
     <Setter Property="Foreground" Value="{DynamicResource ClosableTagForeground}" />
     <Setter Property="Background" Value="{DynamicResource ClosableTagBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ClosableTagBorder}" />
-    <Setter Property="MinHeight" Value="16" />
+    <Setter Property="MinHeight" Value="14" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">
       <ControlTemplate TargetType="u:ClosableTag">
         <Border
-          Margin="1"
+          Margin="1 0"
           Padding="8,0,4,0"
           Background="{TemplateBinding Background}"
           BorderBrush="{TemplateBinding BorderBrush}"

@@ -82,7 +82,7 @@
   <x:Double x:Key="EditableComboBoxMinWidth">100</x:Double>
 
   <!-- Need to override default height in EditableComboBox control -->
-  <x:Double x:Key="EditableComboBoxHeight">21</x:Double>
+  <x:Double x:Key="EditableComboBoxHeight">22</x:Double>
   <x:Double x:Key="EditableComboBoxItemsHeight">22</x:Double>
 
   <ControlTheme x:Key="{x:Type EditableComboBoxItem}" TargetType="EditableComboBoxItem" BasedOn="{StaticResource {x:Type EditableComboBoxItem}}">

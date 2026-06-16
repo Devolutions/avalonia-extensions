@@ -10,6 +10,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Converters;
 
+[RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
+[RequiresDynamicCode("Types used in reflection bindings will need to be excluded from trimming")]
 public class ScrollBarVisibilityBindingExtension : MarkupExtension
 {
     private readonly IMultiValueConverter converter;
@@ -37,8 +39,6 @@ public class ScrollBarVisibilityBindingExtension : MarkupExtension
     // derive from MultiBinding nor set the namescope by hand. Build the element-name child bindings
     // through ReflectionBindingExtension.ProvideValue, which captures the template namescope from the
     // service provider, then assemble them into a MultiBinding (same behavior as before).
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "Element-name reflection bindings are required because the element name is supplied by markup extension argument.")]
     public override object ProvideValue(IServiceProvider serviceProvider) =>
         new MultiBinding
         {
@@ -51,8 +51,6 @@ public class ScrollBarVisibilityBindingExtension : MarkupExtension
             ],
         };
 
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "Element-name reflection bindings are required because the element name is supplied by markup extension argument.")]
     private BindingBase ElementBinding(string path, IServiceProvider serviceProvider) =>
         new ReflectionBindingExtension(path) { ElementName = this.scrollViewerName }.ProvideValue(serviceProvider);
 }

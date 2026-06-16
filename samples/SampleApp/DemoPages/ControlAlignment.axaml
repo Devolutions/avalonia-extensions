@@ -43,9 +43,9 @@
           <MultiComboBoxItem>Item 4</MultiComboBoxItem>
           <MultiComboBoxItem>Item 5</MultiComboBoxItem>
         </MultiComboBox>
-        <TagInput Grid.Column="7" x:Name="HorizontalGridTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
+        <TagInput Grid.Column="7" Name="HorizontalGridTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
         <ColorPicker Grid.Column="8" />
-        <AutoCompleteBox Grid.Column="9" x:Name="Animals" FilterMode="Contains" PlaceholderText="AutoComplete" />
+        <AutoCompleteBox Grid.Column="9" Name="Animals" FilterMode="Contains" PlaceholderText="AutoComplete" />
         <NumericUpDown Grid.Column="10" Value="0"
                        Increment="1"
                        PlaceholderText="mm" />
@@ -99,7 +99,7 @@
         </MultiComboBox>
         <TagInput Grid.Row="8" PlaceholderText="TagInput" />
         <ColorPicker Grid.Row="9" />
-        <AutoCompleteBox Grid.Row="10" x:Name="Animals2" FilterMode="Contains" PlaceholderText="AutoComplete" />
+        <AutoCompleteBox Grid.Row="10" Name="Animals2" FilterMode="Contains" PlaceholderText="AutoComplete" />
         <NumericUpDown Grid.Row="11" Value="0"
                        Increment="1"
                        PlaceholderText="mm" />
@@ -151,9 +151,9 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput x:Name="HorizontalStackPanelTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
+          <TagInput Name="HorizontalStackPanelTagInput" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
           <ColorPicker />
-          <AutoCompleteBox x:Name="Animals3" FilterMode="Contains" PlaceholderText="AutoComplete" />
+          <AutoCompleteBox Name="Animals3" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
                          PlaceholderText="mm" />
@@ -208,9 +208,9 @@
             <MultiComboBoxItem>Item 4</MultiComboBoxItem>
             <MultiComboBoxItem>Item 5</MultiComboBoxItem>
           </MultiComboBox>
-          <TagInput Height="33" x:Name="HorizontalStackPanelTagInputCustomHeight" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
+          <TagInput Height="33" Name="HorizontalStackPanelTagInputCustomHeight" PlaceholderText="TagInput" Width="150" VerticalAlignment="Center" />
           <ColorPicker Height="33" />
-          <AutoCompleteBox Height="33" x:Name="AnimalsCustomHeight" FilterMode="Contains" PlaceholderText="AutoComplete" />
+          <AutoCompleteBox Height="33" Name="AnimalsCustomHeight" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Height="33" Value="0"
                          Increment="1"
                          PlaceholderText="mm" />
@@ -260,7 +260,7 @@
           <TagInput PlaceholderText="TagInput" />
           <ColorPicker HorizontalAlignment="Stretch" Width="NaN" />
           <ColorPicker />
-          <AutoCompleteBox x:Name="Animals4" FilterMode="Contains" PlaceholderText="AutoComplete" />
+          <AutoCompleteBox Name="Animals4" FilterMode="Contains" PlaceholderText="AutoComplete" />
           <NumericUpDown Value="0"
                          Increment="1"
                          PlaceholderText="mm" />

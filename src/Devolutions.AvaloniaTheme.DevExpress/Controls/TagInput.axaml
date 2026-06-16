@@ -13,11 +13,11 @@
 
         <TextBlock>With Tags:</TextBlock>
         <TagInput x:Name="PrePopulated">
-          <TagInput.Items>
-            <ClosableTag>a</ClosableTag>
-            <ClosableTag>b</ClosableTag>
-            <TextBlock></TextBlock>
-          </TagInput.Items>
+          <TagInput.Tags>
+            <x:String>a</x:String>
+            <x:String>b</x:String>
+            <x:String>c</x:String>
+          </TagInput.Tags>
         </TagInput>
 
         <TextBlock>Disabled:</TextBlock>
@@ -31,7 +31,6 @@
 
   <!-- DevExpress theme for Ursa TagInput control -->
   <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
-    <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="MinHeight" Value="{DynamicResource TextBasedInputMinHeight}" />
@@ -107,10 +106,14 @@
                   VerticalAlignment="Center"
                   MaxWidth="{TemplateBinding MaxWidth}"
                   ItemTemplate="{TemplateBinding ItemTemplate}"
-                  ItemsSource="{TemplateBinding Items}">
+                  ItemsSource="{TemplateBinding Tags}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:TagInputPanel VerticalAlignment="Top" />
+                      <u:WrapPanelWithTrailingItem TrailingWrapWidth="24">
+                        <u:WrapPanelWithTrailingItem.TrailingItem>
+                          <TextBox VerticalAlignment="Center" MinHeight="24" Margin="{DynamicResource TextBoxContentPadding}" Theme="{DynamicResource TagInputTextBoxTheme}" />
+                        </u:WrapPanelWithTrailingItem.TrailingItem>
+                      </u:WrapPanelWithTrailingItem>
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                 </ItemsControl>

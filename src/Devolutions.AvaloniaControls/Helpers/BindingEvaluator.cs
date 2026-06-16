@@ -13,7 +13,8 @@ using Avalonia.Data.Converters;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 
-[RequiresUnreferencedCode("BindingEvaluator required preserved types")]
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public sealed class BindingEvaluator<TDataContext>
 {
     private readonly BindingEvaluator inner;
@@ -35,6 +36,7 @@ public sealed class BindingEvaluator<TDataContext>
 }
 
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public sealed partial class BindingEvaluator
 {
     private static readonly MethodInfo objectToStringMethod = typeof(object).GetMethod(nameof(ToString))!;
@@ -267,7 +269,7 @@ public sealed partial class BindingEvaluator
                     && c.StringFormat is null
                     && c.FallbackValue == AvaloniaProperty.UnsetValue
                     && c.TargetNullValue == AvaloniaProperty.UnsetValue
-                    && c.Source == AvaloniaProperty.UnsetValue => c.Path.ToString(),
+                    && c.Source == AvaloniaProperty.UnsetValue => c.Path?.ToString(),
                 _ => null,
             };
 
@@ -462,8 +464,8 @@ public sealed partial class BindingEvaluator
                 return true;
 
             case CompiledBindingExtension c:
-                string pathString = c.Path.ToString();
-                if (pathString.Length == 0 || !IsSimpleDotPath(pathString))
+                string? pathString = c.Path?.ToString();
+                if (string.IsNullOrEmpty(pathString) || !IsSimpleDotPath(pathString))
                 {
                     break;
                 }
@@ -554,14 +556,12 @@ public sealed partial class BindingEvaluator
             };
     }
 
-    [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
     private Expression<Func<TDataContext, string>> BuildFrameworkDelegatedGetterExpression<TDataContext>(BindingBase binding)
     {
         Func<object, string> getter = this.BuildFrameworkDelegatedGetter(binding);
         return WrapObjectDelegateAsExpression<TDataContext>(getter);
     }
 
-    [RequiresUnreferencedCode("Types used in reflection bindings will need to be excluded from trimming")]
     private Func<object, object?> BuildProxyRawGetter(BindingBase binding)
     {
         binding = this.RewriteParentBindingIfNeeded(binding);

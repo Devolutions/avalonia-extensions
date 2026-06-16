@@ -182,12 +182,12 @@
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedPressedBackground" Opacity="0.20" Color="#242424" />
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedDisabledBackground" Opacity="0.03" Color="#242424" />
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedDisabledBorderBrush" Opacity="0.26" Color="#242424" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDefaultBackground" Color="{StaticResource SystemAccentColor}" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPointeroverBackground" Color="{StaticResource SystemAccentColor}" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPressedBackground" Color="{StaticResource SystemAccentColorDark1}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDefaultBackground" Color="{DynamicResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPointeroverBackground" Color="{DynamicResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPressedBackground" Color="{DynamicResource SystemAccentColorDark1}" />
       <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDisabledBackground" Opacity="0.12" Color="#242424" />
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerUnCheckedForeground" Opacity="0.62" Color="#1C1F23" />
-      <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{StaticResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{DynamicResource SystemAccentColor}" />
       <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 4 6 0 #1A000000, 0 0 1 0 #4D000000</BoxShadows>
 
       <SolidColorBrush x:Key="ExpanderBackgroundBrush" Color="#ffffff" />
@@ -407,12 +407,12 @@
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedPressedBackground" Opacity="0.28" Color="#f5f5f5" />
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedDisabledBackground" Opacity="0.08" Color="#f5f5f5" />
       <SolidColorBrush x:Key="ToggleSwitchContainerUnCheckedDisabledBorderBrush" Opacity="0.20" Color="#f5f5f5" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDefaultBackground" Color="{StaticResource SystemAccentColorDark1}" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPointeroverBackground" Color="{StaticResource SystemAccentColorDark1}" />
-      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPressedBackground" Color="{StaticResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDefaultBackground" Color="{DynamicResource SystemAccentColorDark1}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPointeroverBackground" Color="{DynamicResource SystemAccentColorDark1}" />
+      <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPressedBackground" Color="{DynamicResource SystemAccentColor}" />
       <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDisabledBackground" Opacity="0.15" Color="#f5f5f5" />
       <SolidColorBrush x:Key="SimpleToggleSwitchContainerUnCheckedForeground" Opacity="0.55" Color="#f5f5f5" />
-      <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{StaticResource SystemAccentColorDark1}" />
+      <SolidColorBrush x:Key="SimpleToggleSwitchContainerCheckedForeground" Color="{DynamicResource SystemAccentColorDark1}" />
       <BoxShadows x:Key="ToggleSwitchIndicatorBoxShadow">0 2 4 0 #40000000</BoxShadows>
 
       <SolidColorBrush x:Key="ExpanderBackgroundBrush" Color="#2b2b2b" />
@@ -535,8 +535,8 @@
   <SolidColorBrush x:Key="ControlBackgroundHighBrush" Color="{DynamicResource ControlBackgroundHighColor}" />
   <SolidColorBrush x:Key="ControlBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.1" />
   <SolidColorBrush x:Key="ControlBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.9" />
-  <SolidColorBrush x:Key="ControlBackgroundAccentHighBrush" Color="{StaticResource SystemAccentColor}" />
-  <SolidColorBrush x:Key="ControlBackgroundAccentMidBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.63" />
+  <SolidColorBrush x:Key="ControlBackgroundAccentHighBrush" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="ControlBackgroundAccentMidBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
 
   <SolidColorBrush x:Key="ControlBorderAccentBrush" Color="{DynamicResource ControlBorderAccentColor}" />
 
@@ -545,7 +545,7 @@
   <SolidColorBrush x:Key="ControlBorderBrush" Color="{DynamicResource ControlBorderMidColor}" />
   <SolidColorBrush x:Key="ControlBorderDisabledBrush" Color="{DynamicResource ControlBorderLowColor}" />
 
-  <SolidColorBrush x:Key="FocusBorderBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.5" />
+  <SolidColorBrush x:Key="FocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
   <Thickness x:Key="FocusBorderThickness">3.5</Thickness>
   <Thickness x:Key="FocusBorderMargin">-3</Thickness>
 
@@ -568,7 +568,7 @@
   <VisualBrush x:Key="TempButtonAccentBackgroundPrecise" Stretch="Fill">
     <VisualBrush.Visual>
       <Panel>
-        <!-- <Rectangle Fill="{StaticResource SystemAccentColor}" Width="20" Height="20" /> // might not have access to Logical tree where resources are defined-->
+        <!-- <Rectangle Fill="{DynamicResource SystemAccentColor}" Width="20" Height="20" /> // might not have access to Logical tree where resources are defined-->
         <Rectangle Fill="#007aff" Width="20" Height="20" />
         <Rectangle>
           <Rectangle.Fill>
@@ -663,7 +663,7 @@
   <!-- TextBox Resources -->
   <SolidColorBrush x:Key="TextBoxClearButtonBackgroundBrush"
                    Color="{DynamicResource TextBoxClearButtonBackgroundColor}" />
-  <SolidColorBrush x:Key="TextBoxSelectionHighlightBrush" Color="{StaticResource SystemAccentColor}" Opacity="0.3" />
+  <SolidColorBrush x:Key="TextBoxSelectionHighlightBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.3" />
   <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxMultiLineBackgroundBrush" Color="{DynamicResource InputBackgroundColor}" />
   <SolidColorBrush x:Key="TextBoxBackgroundDisabledHighBrush"
@@ -684,14 +684,14 @@
 
 
   <!-- TreeView Resources -->
-  <SolidColorBrush x:Key="TreeViewItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="TreeViewItemBackgroundSelected" Color="{DynamicResource SystemAccentColor}" />
   <SolidColorBrush x:Key="TreeViewItemForegroundSelected" Color="{DynamicResource AccentForegroundColor}" />
   <x:Double x:Key="TreeViewItemChevronSize">8</x:Double>
   <x:Double x:Key="TreeViewItemIndent">13</x:Double>
   <Thickness x:Key="TreeViewItemChevronMargin">4, 0, 5, 0</Thickness>
 
   <!-- DataGrid Resources -->
-  <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{DynamicResource SystemAccentColor}" />
   <SolidColorBrush x:Key="DataGridForegroundSelectedBrush" Color="{DynamicResource AccentForegroundColor}" />
   <SolidColorBrush x:Key="DataGridCellBorderSelectedBrush" Color="{DynamicResource AccentForegroundColor}" Opacity="0.8" />
   <x:Double x:Key="DataGridColumnHeaderFontSize">11</x:Double>

@@ -3,7 +3,8 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
-  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+  xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+  xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
@@ -12,13 +13,15 @@
         <TagInput PlaceholderText="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <TagInput x:Name="PrePopulated">
-          <TagInput.Tags>
-            <x:String>a</x:String>
-            <x:String>b</x:String>
-            <x:String>c</x:String>
-          </TagInput.Tags>
-        </TagInput>
+        <u:TagInput x:Name="PrePopulated">
+          <u:TagInput.Tags>
+            <generic:List x:TypeArguments="sys:String">
+              <x:String>a</x:String>
+              <x:String>b</x:String>
+              <x:String>c</x:String>
+            </generic:List>
+          </u:TagInput.Tags>
+        </u:TagInput>
 
         <TextBlock>Disabled:</TextBlock>
         <TagInput IsEnabled="False" PlaceholderText="Disabled..." />
@@ -42,14 +45,7 @@
     <Setter Property="Padding" Value="0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
-    <Setter Property="ItemTemplate">
-      <DataTemplate>
-        <ClosableTag
-          x:DataType="sys:Object"
-          Content="{Binding}"
-          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
-      </DataTemplate>
-    </Setter>
+
     <Setter Property="Template">
       <ControlTemplate TargetType="u:TagInput">
         <DataValidationErrors>
@@ -85,7 +81,7 @@
 
             <!-- Content area with proper margin for borders -->
             <Border Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
-              <Panel Margin="1 1 1 2">
+              <Panel Margin="0 0 0 1">
                 <!-- Watermark -->
                 <TextBlock
                   Name="{x:Static u:TagInput.PART_Placeholder}"
@@ -100,23 +96,27 @@
 
                 <!-- Tags and input -->
                 <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
-                <ItemsControl
+                <u:MultiComboBoxSelectedItemList
                   Name="PART_ItemsControl"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Center"
                   MaxWidth="{TemplateBinding MaxWidth}"
+                  RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Close}"
                   ItemTemplate="{TemplateBinding ItemTemplate}"
                   ItemsSource="{TemplateBinding Tags}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:WrapPanelWithTrailingItem TrailingWrapWidth="24">
+                      <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
                         <u:WrapPanelWithTrailingItem.TrailingItem>
-                          <TextBox VerticalAlignment="Center" MinHeight="24" Margin="{DynamicResource TextBoxContentPadding}" Theme="{DynamicResource TagInputTextBoxTheme}" />
+                          <TextBox VerticalAlignment="Center" 
+                                   MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}" 
+                                   Margin="{DynamicResource TextBoxContentPadding}" 
+                                   Theme="{DynamicResource TagInputTextBoxTheme}" />
                         </u:WrapPanelWithTrailingItem.TrailingItem>
                       </u:WrapPanelWithTrailingItem>
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                </u:MultiComboBoxSelectedItemList>
               </Panel>
             </Border>
           </Panel>

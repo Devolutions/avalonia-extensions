@@ -165,7 +165,6 @@
                   MaxHeight="{TemplateBinding MaxSelectionBoxHeight}"
                   Background="Transparent"
                   Margin="1"
-                  MinHeight="21"
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">

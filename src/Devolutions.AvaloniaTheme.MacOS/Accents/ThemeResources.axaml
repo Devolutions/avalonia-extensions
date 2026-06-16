@@ -672,7 +672,7 @@
   <x:Double x:Key="TextBoxMinDimensions">16</x:Double>
   <StaticResource x:Key="TimePickerUpDownMinHeight" ResourceKey="TextBoxMinDimensions" />
   <x:Double x:Key="MultiComboBoxMinHeight">19</x:Double>
-  <x:Double x:Key="TagInputMinHeight">19</x:Double>
+  <x:Double x:Key="TagInputMinHeight">23</x:Double>
   <x:Double x:Key="EditableComboBoxMinHeight">17</x:Double>
   <Thickness x:Key="TextBoxPadding">2 0 2 0</Thickness>
   <x:Boolean x:Key="TextBoxBottomBorderIsVisible">True</x:Boolean>

@@ -30,7 +30,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxCornerRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
-    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="MinHeight" Value="20" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">

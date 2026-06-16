@@ -11,4 +11,8 @@ public class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+
+    public static void Main(string[] args)
+    {
+    }
 }

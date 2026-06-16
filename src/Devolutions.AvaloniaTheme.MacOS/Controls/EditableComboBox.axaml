@@ -406,7 +406,7 @@
     <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="MinHeight" Value="17" />
+    <Setter Property="MinHeight" Value="{DynamicResource EditableComboBoxMinHeight}" />
     <Setter Property="CaretBrush" Value="{DynamicResource SystemAccentColor}" />
     <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionHighlightBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />

@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaTheme.MacOS.Controls;
+namespace Devolutions.AvaloniaControls.Behaviors;
 
 using Avalonia;
 using Avalonia.Controls;

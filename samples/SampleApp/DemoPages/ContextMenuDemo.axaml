@@ -21,7 +21,17 @@
         <Separator />
         <MenuItem Header="Open with parameters">
           <MenuItem Header="Option 1" />
-          <MenuItem Header="Option 2" />
+          <MenuItem Header="Option 2">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/Padlock.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator />
+          <MenuItem Header="Option 3" ToggleType="CheckBox" IsChecked="True">
+            <MenuItem.Icon>
+              <Svg Path="/Assets/User.svg" />
+            </MenuItem.Icon>
+          </MenuItem>
           <MenuItem Header="Checked option" ToggleType="CheckBox" IsChecked="True" />
         </MenuItem>
         <Separator />
@@ -70,6 +80,9 @@
         </MenuItem>
         <MenuItem Header="Add">
           <MenuItem Header="Item 1" />
+          <MenuItem Header="Item 2" />
+          <Separator />
+          <MenuItem Header="Item 3" />
         </MenuItem>
         <MenuItem Header="Edit">
           <MenuItem Header="Edit entry..." InputGesture="Ctrl+E">
@@ -215,9 +228,14 @@
                 <Svg Path="/Assets/User.svg" />
               </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Open with parameters">
+            <MenuItem Header="Open with parameters" Classes="single-icon-slot">
               <MenuItem Header="Option 1" />
-              <MenuItem Header="Option 2" />
+              <MenuItem Header="Option 2" ToggleType="CheckBox">
+                <MenuItem.Icon>
+                  <Svg Path="/Assets/User.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
               <MenuItem Header="Checked option" ToggleType="CheckBox" IsChecked="True" />
             </MenuItem>
             <Separator />

@@ -58,7 +58,7 @@
       <SolidColorBrush x:Key="EditableComboBoxGlyphPressedBrush" Color="{ChangeColorOpacity {DynamicResource SystemAccentColorLight3}, 0.2}" />
       <BoxShadows x:Key='ComboBoxBoxShadow'>0 0 3 0 #33101010</BoxShadows>
 
-      <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{StaticResource SystemAccentColor}" Opacity="0.2" />
+      <SolidColorBrush x:Key="DataGridItemBackgroundSelected" Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
       <SolidColorBrush x:Key="SelectionInInactiveWindow" Color="{StaticResource ForegroundColor}" Opacity="0.15" />
       <SolidColorBrush x:Key="DataGridItemBackgroundAlternating" Color="{DynamicResource SystemAccentColor}" Opacity="0.04" />
       <SolidColorBrush x:Key="DataGridItemBackgroundAlternatingInInactiveWindow" Color="{DynamicResource ForegroundColor}" Opacity="0.04" />
@@ -338,7 +338,8 @@
 
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="SeparatorMargin">0 2</Thickness>
-  <Thickness x:Key="SeparatorContextMenuMargin">37 1 0 1</Thickness>
+  <Thickness x:Key="SeparatorContextMenuMargin">7 1 0 1</Thickness>
+  <x:Double x:Key="SeparatorContextMenuIconColumnWidth">30</x:Double>
 
   <x:Double x:Key="OpacityVisible">1</x:Double>
   <x:Double x:Key="OpacityHidden">0</x:Double>

@@ -85,6 +85,8 @@
           <MenuItem Header="Menu Item" />
         </MenuItem>
         <MenuItem Header="-" />
+        <MenuItem Header="Tools" />
+        <Separator />
         <MenuItem Header="Help">
           <MenuItem.Icon>
             <Svg Path="/Assets/Help.svg" />
@@ -92,6 +94,8 @@
           <MenuItem Header="Menu Item" />
           <MenuItem Header="Menu Item" />
           <MenuItem Header="-" />
+          <MenuItem Header="Menu Item" />
+          <Separator />
           <MenuItem Header="Menu Item" />
         </MenuItem>
       </Menu>

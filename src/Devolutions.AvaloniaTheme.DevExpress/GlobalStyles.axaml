@@ -45,7 +45,7 @@
     <Setter Property="Margin" Value="0 -4 -4 -4" />
   </Style>
 
-  <StyleInclude Source="/Controls/Separator.Styles.axaml" />
-  <StyleInclude Source="/Controls/Menu.Styles.axaml" />
+  <StyleInclude Source="/Controls/Separator.styles.axaml" />
+  <StyleInclude Source="/Controls/Menu.styles.axaml" />
   <StyleInclude Source="/SearchHighlightStyles.axaml" />
 </Styles>

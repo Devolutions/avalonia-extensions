@@ -1,5 +1,6 @@
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable ArrangeStaticMemberQualifier
+// ReSharper disable MemberCanBePrivate.Local
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System;
@@ -18,8 +19,9 @@ using Avalonia.Data;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
+
 using Converters;
-using Devolutions.AvaloniaControls.Helpers;
+using Helpers;
 
 /// <summary>
 /// A grouped <see cref="ComboBox"/> that keeps the active theme's normal <see cref="ComboBox"/>
@@ -28,6 +30,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// </summary>
 [PseudoClasses(":empty")]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public class GroupedComboBox : ComboBox
 {
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =

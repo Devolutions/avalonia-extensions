@@ -1,3 +1,4 @@
+// ReSharper disable MergeIntoPattern
 namespace Devolutions.AvaloniaControls.Helpers;
 
 using System.Diagnostics.CodeAnalysis;
@@ -675,14 +676,18 @@ public sealed partial class BindingEvaluator
             set => this.SetAndRaise(ValueProperty, ref this.value, value);
         }
 
-        private readonly IDisposable valueSubscription;
+        private readonly BindingExpressionBase valueSubscription;
 
         public BindingEvaluatorProxyElement(ILogical anchor, BindingBase binding)
         {
             ((ISetLogicalParent)this).SetParent(anchor);
-#pragma warning disable CS0618 // Type or member is obsolete
+            
+            // Null at construction; it is set at Evaluation.
+            // We NEED to null it now in order to prevent the binding's creation from throwing due to
+            // missmatched DataContext type if we inherited a DataContext of a different type.
+            this.DataContext = null;
+            
             this.valueSubscription = this.Bind(ValueProperty, binding);
-#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         public object? Evaluate(object dataContext)

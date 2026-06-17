@@ -351,19 +351,7 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus-within">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="7" />
-        </Template>
-      </Setter>
-    </Style>
-
-    <Style Selector="^:focus-visible">
+    <Style Selector="^:focus-within, ^:focus-visible">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
           <Border AdornerLayer.IsClipEnabled="False"

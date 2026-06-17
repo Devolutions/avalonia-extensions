@@ -2,7 +2,8 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters"
-  xmlns:controls="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls"
+  xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
@@ -10,11 +11,11 @@
       <Border Background="{DynamicResource LayoutBackgroundLowBrush}">
         <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
           <TextBlock>Name:</TextBlock>
-          <TextBox Watermark="Enter your name">Anna</TextBox>
+          <TextBox PlaceholderText="Enter your name">Anna</TextBox>
           <TextBlock>Password:</TextBlock>
-          <TextBox PasswordChar="*" Watermark="Enter your password" />
+          <TextBox PasswordChar="*" PlaceholderText="Enter your password" />
           <TextBlock>Notes:</TextBlock>
-          <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Hello" VerticalContentAlignment="Top" />
+          <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="Hello" VerticalContentAlignment="Top" />
           <TextBox Height="60" AcceptsReturn="True" TextWrapping="Wrap">
             Note: explicitly styling TextBlock causes massive problems, because there are so many dynamically created TextBlocks in controls' ContentPresenters (i.e. they only get created if the content provided is a simple string, and therefore they are not a part of the logical tree and do not receive the local template styling anymore if there is a general TextBlock rule, and cannot easily overwritten then - except with hard-coded styles rather than template bindings ...
           </TextBox>
@@ -24,18 +25,18 @@
             InnerLeftContent="http://"
             InnerRightContent=".com" />
           <TextBox Classes="clearButton">With 'Clear' button</TextBox>
-          <TextBox Watermark="Enter your name" IsEnabled="False" />
+          <TextBox PlaceholderText="Enter your name" IsEnabled="False" />
           <TextBox PasswordChar="•" Classes="revealPasswordButton">Reveal Password</TextBox>
           <TextBox PasswordChar="•" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
           <TextBlock>Custom Height:</TextBlock>
           <StackPanel Orientation="Horizontal" Spacing="5">
-            <TextBox Watermark="Type here" Height="30" Width="250" VerticalContentAlignment="Center" />
+            <TextBox PlaceholderText="Type here" Height="30" Width="250" VerticalContentAlignment="Center" />
             <Button Content="..." Height="30" Width="30" />
           </StackPanel>
-          <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
-          <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="no-focus-border">no focus</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless">borderless</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+          <TextBox PlaceholderText="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless and no focus</TextBox>
 
         </StackPanel>
       </Border>
@@ -162,10 +163,11 @@
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ContextFlyout"
             Value="{OnFormFactor Desktop={StaticResource DefaultTextBoxContextFlyout}, Mobile={StaticResource HorizontalTextBoxContextFlyout}}" />
-    <Setter Property="controls:TextBoxUndoBehavior.ClearUndoOnLoaded" Value="True" />
+    <Setter Property="behaviors:TextBoxUndoBehavior.ClearUndoOnLoaded" Value="True" />
     <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
+<<<<<<< HEAD
         <DataValidationErrors ClipToBounds="False">
           <Panel ClipToBounds="False">
             <Border Name="PART_BorderElement">
@@ -263,6 +265,112 @@
                     Margin="0.6 0 0.6 -0.6 " />
           </Panel>
         </DataValidationErrors>
+=======
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}">
+          <DataValidationErrors ClipToBounds="False">
+            <Panel ClipToBounds="False">
+              <Border Name="PART_BorderElement">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <ContentPresenter Name="PrefixContent"
+                                    Grid.Column="0"
+                                    Content="{TemplateBinding InnerLeftContent}"
+                                    Padding="3 2 3 1"
+                                    VerticalAlignment="Center">
+                    <ContentPresenter.IsVisible>
+                      <Binding RelativeSource="{RelativeSource Self}" Path="Content"
+                               Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                    </ContentPresenter.IsVisible>
+                  </ContentPresenter>
+                  <DockPanel Name="PART_InnerDockPanel"
+                             Grid.Column="1"
+                             Margin="{DynamicResource TextBoxInnerDockPanelMargin}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  Margin="{DynamicResource TextBoxScrollViewerMargin}"
+                                  HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                  IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                                  AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                                  BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                      <Panel Margin="{DynamicResource TextBoxScrollPanelMargin}">
+                        <TextBlock Name="PART_Watermark"
+                                   Foreground="{DynamicResource ForegroundLowBrush}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   FontSize="{StaticResource ControlFontSize}"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   TextWrapping="{TemplateBinding TextWrapping}"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="Center">
+                          <TextBlock.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                              <Binding ElementName="PART_TextPresenter" Path="PreeditText"
+                                       Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                              <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text"
+                                       Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                            </MultiBinding>
+                          </TextBlock.IsVisible>
+                        </TextBlock>
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       RevealPassword="{TemplateBinding RevealPassword}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}"
+                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                       VerticalAlignment="Center">
+                          <TextPresenter.PasswordChar>
+                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="PasswordChar"
+                                     Converter="{x:Static converters:MacOSConverters.CharToMacOsPasswordCharConverter}" />
+                          </TextPresenter.PasswordChar>
+                        </TextPresenter>
+                      </Panel>
+                      <ScrollViewer.Styles>
+                        <Style Selector="ScrollContentPresenter#PART_ContentPresenter">
+                          <Setter Property="Cursor" Value="IBeam" />
+                        </Style>
+                      </ScrollViewer.Styles>
+                    </ScrollViewer>
+                  </DockPanel>
+                  <ContentPresenter Name="SuffixContent"
+                                    Grid.Column="2"
+                                    Padding="3 2 3 1"
+                                    Content="{TemplateBinding InnerRightContent}"
+                                    VerticalAlignment="Center">
+                    <ContentPresenter.IsVisible>
+                      <Binding RelativeSource="{RelativeSource Self}" Path="Content"
+                               Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                    </ContentPresenter.IsVisible>
+                  </ContentPresenter>
+                </Grid>
+              </Border>
+              <Border Name="BottomBorder"
+                      BorderThickness="0 0 0 0.6"
+                      BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      Margin="0.6 0" />
+              <Border Name="BottomBorderShadow"
+                      BorderThickness="0 0 0 0.6"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      BoxShadow="{DynamicResource TextBoxBorderShadows}"
+                      Margin="0.6 0 0.6 -0.6 " />
+              <Border Name="FocusBorderElement"
+                      Margin="{StaticResource FocusBorderMargin}"
+                      BorderThickness="{StaticResource FocusBorderThickness}"
+                      CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
+            </Panel>
+          </DataValidationErrors>
+        </Panel>
+>>>>>>> master
       </ControlTemplate>
     </Setter>
 

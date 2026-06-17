@@ -2,30 +2,28 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
-  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Height="400" Width="400" Margin="20" Spacing="15">
         <TextBlock>Basic TagInput:</TextBlock>
-        <TagInput Watermark="Enter tags..." />
+        <TagInput PlaceholderText="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+        <TagInput x:Name="PrePopulated" PlaceholderText="Add more tags..." />
 
         <TextBlock>Disabled:</TextBlock>
-        <TagInput IsEnabled="False" Watermark="Disabled..." />
+        <TagInput IsEnabled="False" PlaceholderText="Disabled..." />
 
         <TextBlock>Wrapper type:</TextBlock>
-        <TagInput Watermark="Using wrapper..." />
+        <TagInput PlaceholderText="Using wrapper..." />
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <!-- MacOS theme for Ursa TagInput control -->
   <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
-    <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="MinHeight" Value="{DynamicResource TagInputMinHeight}" />
@@ -38,17 +36,9 @@
     <Setter Property="CornerRadius" Value="{DynamicResource TextBoxCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
-    <Setter Property="ItemTemplate">
-      <DataTemplate>
-        <ClosableTag
-          Theme="{StaticResource TagInputClosableTag}"
-          x:DataType="sys:Object"
-          Content="{Binding}"
-          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
-      </DataTemplate>
-    </Setter>
     <Setter Property="Template">
       <ControlTemplate TargetType="u:TagInput">
+<<<<<<< HEAD
         <DataValidationErrors ClipToBounds="False">
           <Panel ClipToBounds="False">
             <!-- Main border (no bottom border - handled by BottomBorder overlays) -->
@@ -93,6 +83,63 @@
                 </ItemsControl>
               </Panel>
             </Border>
+=======
+        <Panel Name="ReservedSpaceForFocus"
+               Margin="{DynamicResource InputControlsSpaceForFocusBorder}"
+               ClipToBounds="False">
+          <DataValidationErrors ClipToBounds="False">
+            <Panel ClipToBounds="False">
+              <!-- Main border (no bottom border - handled by BottomBorder overlays) -->
+              <Border
+                Name="PART_BorderElement"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness} "
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+                <Panel VerticalAlignment="Stretch">
+                  <!-- Watermark -->
+                  <TextBlock
+                    Name="{x:Static u:TagInput.PART_Placeholder}"
+                    Text="{TemplateBinding PlaceholderText}"
+                    Foreground="{DynamicResource ForegroundLowBrush}"
+                    FontSize="{StaticResource ControlFontSize}"
+                    IsVisible="False"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left" />
+
+                  <!-- Tags and input -->
+                  <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
+                  <u:MultiComboBoxSelectedItemList
+                    Name="PART_ItemsControl"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    MaxWidth="{TemplateBinding MaxWidth}"
+                    RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Close}"
+                    ItemTemplate="{TemplateBinding ItemTemplate}"
+                    ItemsSource="{TemplateBinding Tags}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
+                          <u:WrapPanelWithTrailingItem.TrailingItem>
+                            <TextBox VerticalAlignment="Center" 
+                                     MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
+                                     Margin="4 0 0 0"
+                                     Theme="{DynamicResource TagInputTextBoxTheme}" />
+                          </u:WrapPanelWithTrailingItem.TrailingItem>
+                        </u:WrapPanelWithTrailingItem>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Styles>
+                      <!-- Add right margin to last tag (second-to-last ContentPresenter, before TextBox) -->
+                      <Style Selector="ContentPresenter:nth-last-child(2)">
+                        <Setter Property="Margin" Value="0,0,4,0" />
+                      </Style>
+                    </ItemsControl.Styles>
+                  </u:MultiComboBoxSelectedItemList>
+                </Panel>
+              </Border>
+>>>>>>> master
 
             <Border Name="BottomBorder"
                     BorderThickness="0 0 0 0.6"
@@ -112,7 +159,7 @@
     </Setter>
 
     <!-- Empty state: show watermark -->
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
@@ -143,10 +190,6 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="TagInputClosableTag" TargetType="u:ClosableTag" BasedOn="{StaticResource {x:Type u:ClosableTag}}">
-    <Setter Property="Background" Value="{DynamicResource TagInputTagBackgroundBrush}" />
-  </ControlTheme>
-
   <!-- Theme for embedded TextBox within TagInput -->
   <ControlTheme x:Key="TagInputTextBoxTheme" TargetType="TextBox">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
@@ -160,7 +203,6 @@
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MinHeight" Value="0" />
-    <Setter Property="MinWidth" Value="50" />
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="Template">
       <ControlTemplate TargetType="TextBox">

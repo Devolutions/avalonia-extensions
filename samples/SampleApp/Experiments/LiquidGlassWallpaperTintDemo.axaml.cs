@@ -3,6 +3,7 @@ namespace SampleApp.Experiments;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -149,7 +150,9 @@ public partial class LiquidGlassWallpaperTintDemo : UserControl
   {
     if (TopLevel.GetTopLevel(this)?.Clipboard is { } clipboard)
     {
-      await clipboard.SetTextAsync(text);
+      DataTransfer data = new();
+      data.Add(DataTransferItem.CreateText(text));
+      await clipboard.SetDataAsync(data);
     }
   }
 }

@@ -41,9 +41,10 @@
                                Grid.Column="1"
                                IsEnabled="False"
                                SelectedTime="{Binding DisabledSelectedTime}" />
+    <!-- No SelectedTime binding here: since Avalonia 12, a validated binding's initial update clears a manually set DataValidationErrors.Error -->
     <controls:TimePickerUpDown Grid.Row="5"
                                Grid.Column="1"
-                               SelectedTime="{Binding ErrorSelectedTime}">
+                               SelectedTime="11:15:00">
       <DataValidationErrors.Error>
         <system:Exception>
           <x:Arguments>

@@ -29,9 +29,9 @@ public class ChangeColorOpacity(object color, object opacity) : MarkupExtension
     return DoChangeColorOpacity(color, opacity);
   });
 
-  protected readonly IBinding color = MarkupExtensionHelpers.GetBinding<Color>(color)!;
+  protected readonly BindingBase color = MarkupExtensionHelpers.GetBinding<Color>(color)!;
 
-  protected readonly IBinding opacity = MarkupExtensionHelpers.GetBinding<double>(opacity)!;
+  protected readonly BindingBase opacity = MarkupExtensionHelpers.GetBinding<double>(opacity)!;
 
   public override object ProvideValue(IServiceProvider serviceProvider) =>
     new MultiBinding

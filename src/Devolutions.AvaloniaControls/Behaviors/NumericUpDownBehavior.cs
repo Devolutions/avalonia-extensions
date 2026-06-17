@@ -26,7 +26,7 @@ public static class NumericUpDownBehavior
                     nud.TemplateApplied += OnTemplateApplied;
 
                     // If template is already applied, hook up now
-                    if (nud.GetTemplateChildren().OfType<TextBox>().FirstOrDefault() is { } textBox)
+                    if (nud.GetTemplateDescendants().OfType<TextBox>().FirstOrDefault() is { } textBox)
                     {
                         HookTextBox(textBox);
                     }

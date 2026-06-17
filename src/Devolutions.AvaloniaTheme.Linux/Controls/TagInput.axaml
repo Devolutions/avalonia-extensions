@@ -2,27 +2,25 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:u="https://irihi.tech/ursa"
-  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
-  xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+  xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
 
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Height="400" Width="400" Margin="20" Spacing="15">
         <TextBlock>Basic TagInput:</TextBlock>
-        <TagInput Watermark="Enter tags..." />
+        <TagInput PlaceholderText="Enter tags..." />
 
         <TextBlock>With Tags:</TextBlock>
-        <TagInput x:Name="PrePopulated" Watermark="Add more tags..." />
+        <TagInput x:Name="PrePopulated" PlaceholderText="Add more tags..." />
 
         <TextBlock>Disabled:</TextBlock>
-        <TagInput IsEnabled="False" Watermark="Disabled..." />
+        <TagInput IsEnabled="False" PlaceholderText="Disabled..." />
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
   <!-- Linux theme for Ursa TagInput control -->
   <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
-    <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Margin" Value="0" />
@@ -35,15 +33,6 @@
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
-    <Setter Property="ItemTemplate">
-      <DataTemplate>
-        <ClosableTag
-          Padding="2,4,4,4"
-          x:DataType="sys:Object"
-          Content="{Binding}"
-          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
-      </DataTemplate>
-    </Setter>
     <Setter Property="Template">
       <ControlTemplate TargetType="u:TagInput">
         <DataValidationErrors>
@@ -59,8 +48,8 @@
               <Panel>
                 <!-- Watermark -->
                 <TextBlock
-                  Name="{x:Static u:TagInput.PART_Watermark}"
-                  Text="{TemplateBinding Watermark}"
+                  Name="{x:Static u:TagInput.PART_Placeholder}"
+                  Text="{TemplateBinding PlaceholderText}"
                   Margin="{DynamicResource TextInputTextPadding}"
                   Foreground="{DynamicResource TextControlPlaceholderForeground}"
                   Opacity="0.5"
@@ -70,16 +59,24 @@
 
                 <!-- Tags and input -->
                 <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
-                <ItemsControl
+                <u:MultiComboBoxSelectedItemList
                   Name="PART_ItemsControl"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Center"
                   MaxWidth="{TemplateBinding MaxWidth}"
+                  RemoveCommand="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Close}"
                   ItemTemplate="{TemplateBinding ItemTemplate}"
-                  ItemsSource="{TemplateBinding Items}">
+                  ItemsSource="{TemplateBinding Tags}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:TagInputPanel VerticalAlignment="Center" />
+                      <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
+                        <u:WrapPanelWithTrailingItem.TrailingItem>
+                          <TextBox VerticalAlignment="Center" 
+                                   MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
+                                   Margin="4 0 0 0"
+                                   Theme="{DynamicResource TagInputTextBoxTheme}" />
+                        </u:WrapPanelWithTrailingItem.TrailingItem>
+                      </u:WrapPanelWithTrailingItem>
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                   <ItemsControl.Styles>
@@ -88,7 +85,7 @@
                       <Setter Property="Margin" Value="0,0,4,0" />
                     </Style>
                   </ItemsControl.Styles>
-                </ItemsControl>
+                </u:MultiComboBoxSelectedItemList>
               </Panel>
             </Border>
             <Border Name="FocusBorderElement"
@@ -102,7 +99,7 @@
     </Setter>
 
     <!-- Empty state: show watermark -->
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
@@ -115,7 +112,7 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
     </Style>
-    <Style Selector="^:disabled /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:disabled /template/ TextBlock#PART_Placeholder">
       <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundDisabled}" />
     </Style>
 
@@ -140,7 +137,6 @@
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MinHeight" Value="0" />
-    <Setter Property="MinWidth" Value="50" />
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="Template">
       <ControlTemplate TargetType="TextBox">

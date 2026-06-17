@@ -42,6 +42,7 @@
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="ListBoxItem.axaml" />
     <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
+    <MergeResourceInclude Source="Menu.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="MultiComboBox.axaml" />
     <MergeResourceInclude Source="MultiComboBoxItem.axaml" />

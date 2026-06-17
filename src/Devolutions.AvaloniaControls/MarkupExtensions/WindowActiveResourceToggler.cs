@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.MarkupExtensions;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Metadata;
 
 public class WindowActiveResourceTogglerExtension : MarkupExtension
 {

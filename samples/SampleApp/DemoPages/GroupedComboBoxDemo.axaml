@@ -252,7 +252,7 @@
 
           <StackPanel Spacing="6">
             <TextBlock Text="HeaderMargin" FontWeight="SemiBold" />
-            <TextBox Text="{Binding HeaderMarginText}" Watermark="4 6 8 4" />
+            <TextBox Text="{Binding HeaderMarginText}" PlaceholderText="4 6 8 4" />
             <TextBlock Text="Applied to the Named groups combo." TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}" />
           </StackPanel>
 
@@ -286,15 +286,15 @@
 
           <StackPanel Spacing="8">
             <TextBlock Text="Add" FontWeight="SemiBold" />
-            <TextBox Text="{Binding NewItemName}" Watermark="Name" />
-            <TextBox Text="{Binding NewItemCategory}" Watermark="Category" />
+            <TextBox Text="{Binding NewItemName}" PlaceholderText="Name" />
+            <TextBox Text="{Binding NewItemCategory}" PlaceholderText="Category" />
             <Button Content="Add item" Command="{Binding AddDynamicItemCommand}" />
           </StackPanel>
 
           <StackPanel Spacing="8">
             <TextBlock Text="Edit selected" FontWeight="SemiBold" />
-            <TextBox Text="{Binding EditItemName}" Watermark="Name" />
-            <TextBox Text="{Binding EditItemCategory}" Watermark="Category" />
+            <TextBox Text="{Binding EditItemName}" PlaceholderText="Name" />
+            <TextBox Text="{Binding EditItemCategory}" PlaceholderText="Category" />
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Button Content="Apply edit" Command="{Binding ApplyDynamicItemEditCommand}" />
               <Button Content="Remove" Command="{Binding RemoveSelectedDynamicItemCommand}" />

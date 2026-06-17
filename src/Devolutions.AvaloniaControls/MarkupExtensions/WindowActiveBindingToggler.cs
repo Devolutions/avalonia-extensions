@@ -2,14 +2,15 @@ namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 using Avalonia.Styling;
 using Helpers;
 
 public class WindowActiveBindingTogglerExtension : MarkupExtension
 {
-    private readonly WeakReference<IBinding?> weakResolvedActiveBinding = new(null);
+    private readonly WeakReference<BindingBase?> weakResolvedActiveBinding = new(null);
 
-    private readonly WeakReference<IBinding?> weakResolvedInactiveBinding = new(null);
+    private readonly WeakReference<BindingBase?> weakResolvedInactiveBinding = new(null);
 
     public WindowActiveBindingTogglerExtension(object whenActiveBinding, object whenInactiveBinding)
     {
@@ -29,7 +30,7 @@ public class WindowActiveBindingTogglerExtension : MarkupExtension
         Setter? setter = provideTarget?.TargetObject as Setter;
         Type? targetType = setter?.Property?.PropertyType;
 
-        this.weakResolvedActiveBinding.TryGetTarget(out IBinding? resolvedActiveBinding);
+        this.weakResolvedActiveBinding.TryGetTarget(out BindingBase? resolvedActiveBinding);
         if (resolvedActiveBinding is null && this.WhenActiveBinding is not null)
         {
             resolvedActiveBinding = targetType is not null
@@ -38,7 +39,7 @@ public class WindowActiveBindingTogglerExtension : MarkupExtension
             this.weakResolvedActiveBinding.SetTarget(resolvedActiveBinding);
         }
 
-        this.weakResolvedInactiveBinding.TryGetTarget(out IBinding? resolvedInactiveBinding);
+        this.weakResolvedInactiveBinding.TryGetTarget(out BindingBase? resolvedInactiveBinding);
         if (resolvedInactiveBinding is null && this.WhenInactiveBinding is not null)
         {
             resolvedInactiveBinding = targetType is not null

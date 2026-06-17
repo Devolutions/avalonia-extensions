@@ -28,6 +28,7 @@
     <MergeResourceInclude Source="GroupedTileListBoxItem.axaml" />
     <MergeResourceInclude Source="HyperlinkButton.axaml" />
     <MergeResourceInclude Source="ListBox.axaml" />
+    <MergeResourceInclude Source="Menu.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />

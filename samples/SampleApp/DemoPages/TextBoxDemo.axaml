@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SampleApp.ViewModels"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
-             xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Controls;assembly=Devolutions.AvaloniaTheme.DevExpress"
+             xmlns:controls="clr-namespace:Devolutions.AvaloniaControls.Controls;assembly=Devolutions.AvaloniaControls"
              x:DataType="vm:TextBoxViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="SampleApp.DemoPages.TextBoxDemo">
@@ -23,21 +23,21 @@
         <StackPanel Margin="20" Spacing="10" HorizontalAlignment="Left" Orientation="Horizontal">
           <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
             <Label>_Name:</Label>
-            <TextBox Watermark="Enter your name" />
+            <TextBox PlaceholderText="Enter your name" />
             <Label>Password:</Label>
-            <TextBox PasswordChar="*" Watermark="Enter your password" />
+            <TextBox PasswordChar="*" PlaceholderText="Enter your password" />
             <Label>Notes:</Label>
             <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap"
                      Text="Create powerful dashboards, orchestrate tasks, and streamline administrative workflows — all from a unified, secure, and flexible automation platform. Automate with confidence. Design and run PowerShell scripts, scheduled jobs, and workflows. Build secure dashboards and portals with PowerShell. Create interactive dashboards, forms, and administrative portals." />
             <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap"
-                     Watermark="More Notes ..." />
+                     PlaceholderText="More Notes ..." />
             <TextBox InnerLeftContent="http://" />
             <TextBox InnerRightContent=".com" />
             <TextBox
               InnerLeftContent="http://"
               InnerRightContent=".com" />
             <TextBox Classes="clearButton">With 'Clear' button</TextBox>
-            <TextBox Watermark="Disabled with Watermark" IsEnabled="False" />
+            <TextBox PlaceholderText="Disabled with PlaceholderText" IsEnabled="False" />
             <TextBox IsEnabled="False">Disabled Filled</TextBox>
             <TextBox PasswordChar="*" Classes="revealPasswordButton">Reveal Password</TextBox>
             <TextBox PasswordChar="*" Classes="revealPasswordButton" RevealPassword="True">Password Revealed</TextBox>
@@ -45,7 +45,7 @@
           <StackPanel Margin="20" Width="300" Spacing="10" HorizontalAlignment="Left">
             <Label>Custom Height:</Label>
             <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
-              <TextBox Grid.Column="0" Watermark="Type here" Height="35" VerticalContentAlignment="Center" />
+              <TextBox Grid.Column="0" PlaceholderText="Type here" Height="35" VerticalContentAlignment="Center" />
               <Button Grid.Column="1" Content="..." HorizontalContentAlignment="Center" Height="35" Width="35"
                       Margin="5 0 0 0 " />
             </Grid>
@@ -53,7 +53,7 @@
             <TextBox IsReadOnly="True" Text="This is read-only text" />
 
             <Label>Error Indicator:</Label>
-            <TextBox Watermark="Required Input" Text="{Binding RequiredInput}" />
+            <TextBox PlaceholderText="Required Input" Text="{Binding RequiredInput}" />
 
             <TextBox Height="22" MinHeight="22" MaxHeight="22"
                      IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
@@ -65,12 +65,12 @@
               <TextBlock Classes="code">borderless</TextBlock> /
               <TextBlock Classes="code">no-focus-border</TextBlock>:
             </TextBlock>
-            <TextBox Watermark="Enter your name" Classes="no-focus-border">no focus</TextBox>
-            <TextBox Watermark="Enter your name" Classes="borderless">borderless</TextBox>
-            <TextBox Watermark="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
-            <TextBox Watermark="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless</TextBox>
+            <TextBox PlaceholderText="Enter your name" Classes="no-focus-border">no focus</TextBox>
+            <TextBox PlaceholderText="Enter your name" Classes="borderless">borderless</TextBox>
+            <TextBox PlaceholderText="Enter your name" Classes="borderless no-focus-border">Borderless and no focus</TextBox>
+            <TextBox PlaceholderText="Enter your name" Classes="borderless" IsEnabled="False">Disabled Borderless</TextBox>
 
-            <TextBox Watermark="Inner left and right">
+            <TextBox PlaceholderText="Inner left and right">
               <TextBox.InnerLeftContent>
                 <Border Width="12" Height="12" Background="Green" />
               </TextBox.InnerLeftContent>
@@ -81,16 +81,17 @@
 
           </StackPanel>
 
-          <!-- Third column: open context menus for visual regression testing (DevExpress only).
+          <!-- Third column: open context menus for visual regression testing.
                Uses MenuFlyoutPresenter (same visual as the real flyout) with the actual theme
                string resources, SVG assets, and platform-aware gestures — so only item
-               structure needs to be kept in sync, not content. -->
+               structure needs to be kept in sync, not content. One column per theme so each
+               references its own assembly's SVG assets and command/gesture statics. -->
           <StackPanel Margin="20" Spacing="30" HorizontalAlignment="Left"
                       IsVisible="{ext:ThemeIsOneOf 'DevExpress'}">
             <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.UndoGesture}">
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.DevExpress/Accents/Assets/Undo.svg" />
                 </MenuItem.Icon>
@@ -121,13 +122,13 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.SelectAllGesture}" />
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
             </MenuFlyoutPresenter>
 
             <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
             <MenuFlyoutPresenter>
               <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.UndoGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
                         IsEnabled="False">
                 <MenuItem.Icon>
                   <Svg Path="avares://Devolutions.AvaloniaTheme.DevExpress/Accents/Assets/Undo.svg" />
@@ -162,7 +163,171 @@
               </MenuItem>
               <Separator />
               <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
-                        InputGesture="{x:Static devex:TextBoxContextMenuCommands.SelectAllGesture}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
+                        IsEnabled="False" />
+            </MenuFlyoutPresenter>
+          </StackPanel>
+
+          <StackPanel Margin="20" Spacing="30" HorizontalAlignment="Left"
+                      IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
+            <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
+            <MenuFlyoutPresenter>
+              <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Undo.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutCutText}"
+                        InputGesture="{x:Static TextBox.CutGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Cut.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}"
+                        InputGesture="{x:Static TextBox.CopyGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Copy.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}"
+                        InputGesture="{x:Static TextBox.PasteGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Paste.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutDeleteText}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Delete.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
+            </MenuFlyoutPresenter>
+
+            <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
+            <MenuFlyoutPresenter>
+              <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Undo.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutCutText}"
+                        InputGesture="{x:Static TextBox.CutGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Cut.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}"
+                        InputGesture="{x:Static TextBox.CopyGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Copy.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}"
+                        InputGesture="{x:Static TextBox.PasteGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Paste.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutDeleteText}" IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.MacOS/Accents/Assets/Delete.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
+                        IsEnabled="False" />
+            </MenuFlyoutPresenter>
+          </StackPanel>
+
+          <StackPanel Margin="20" Spacing="30" HorizontalAlignment="Left"
+                      IsVisible="{ext:ThemeIsOneOf 'Linux'}">
+            <TextBlock FontWeight="SemiBold">Context Menu (enabled)</TextBlock>
+            <MenuFlyoutPresenter>
+              <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Undo.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutCutText}"
+                        InputGesture="{x:Static TextBox.CutGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Cut.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}"
+                        InputGesture="{x:Static TextBox.CopyGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Copy.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}"
+                        InputGesture="{x:Static TextBox.PasteGesture}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Paste.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutDeleteText}">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Delete.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}" />
+            </MenuFlyoutPresenter>
+
+            <TextBlock FontWeight="SemiBold">Context Menu (disabled)</TextBlock>
+            <MenuFlyoutPresenter>
+              <MenuItem Header="{DynamicResource StringTextFlyoutUndoText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.UndoGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Undo.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutCutText}"
+                        InputGesture="{x:Static TextBox.CutGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Cut.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutCopyText}"
+                        InputGesture="{x:Static TextBox.CopyGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Copy.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutPasteText}"
+                        InputGesture="{x:Static TextBox.PasteGesture}"
+                        IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Paste.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{DynamicResource StringTextFlyoutDeleteText}" IsEnabled="False">
+                <MenuItem.Icon>
+                  <Svg Path="avares://Devolutions.AvaloniaTheme.Linux/Accents/Assets/Delete.svg" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="{DynamicResource StringTextFlyoutSelectAllText}"
+                        InputGesture="{x:Static controls:TextBoxContextMenuCommands.SelectAllGesture}"
                         IsEnabled="False" />
             </MenuFlyoutPresenter>
           </StackPanel>

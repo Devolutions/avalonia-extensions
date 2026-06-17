@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaTheme.MacOS.Controls;
+namespace Devolutions.AvaloniaControls.Controls;
 
 using System;
 using System.Linq;
@@ -11,17 +11,22 @@ using Avalonia.Input;
 /// Commands and platform-aware gestures used in the TextBox context menu flyout
 /// that are not directly exposed as public API on <see cref="TextBox"/>.
 /// </summary>
+/// <remarks>
+/// These helpers are theme-agnostic and opt-in: they do nothing unless explicitly referenced
+/// (e.g. from a context-menu flyout). They are shared here so the Devolutions themes — and any
+/// other consumer of <see cref="TextBox"/> — can reuse them without duplication.
+/// </remarks>
 public static class TextBoxContextMenuCommands
 {
     /// <summary>
-    /// Platform-aware gesture for Undo (Cmd+Z on macOS).
+    /// Platform-aware gesture for Undo (Ctrl+Z on Windows/Linux, Cmd+Z on macOS).
     /// Mirrors how <see cref="TextBox.CutGesture"/> works.
     /// </summary>
     public static KeyGesture? UndoGesture =>
         Application.Current?.PlatformSettings?.HotkeyConfiguration.Undo.FirstOrDefault();
 
     /// <summary>
-    /// Platform-aware gesture for Select All (Cmd+A on macOS).
+    /// Platform-aware gesture for Select All (Ctrl+A on Windows/Linux, Cmd+A on macOS).
     /// </summary>
     public static KeyGesture? SelectAllGesture =>
         Application.Current?.PlatformSettings?.HotkeyConfiguration.SelectAll.FirstOrDefault();

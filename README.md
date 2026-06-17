@@ -20,23 +20,6 @@ Contributors can use the SampleApp to test, debug and document styles for the va
 
 The SampleApp attaches the Avalonia Dev Tools for inspecting controls (open with F12).
 
-### Support for new AvaloniaUI Developer Tools
-If you own a licence for the new Dev Tools in _Avalonia Accelerate_, you can set an environment variable in your IDE's debug configuration. 
-For example, in Rider: 
-
-- Open **Run > Edit Configurations**
-- Pick your configuration for the SampleApp 
-- In the **Environment Variables** field add `USE_AVALONIA_ACCELERATE_TOOLS=true`
-
-Make sure DeveloperTools are installed:
-
-```batch
-dotnet tool install --global AvaloniaUI.DeveloperTools.<your_OS>
-```
-(replace `<your_OS>` with `Windows`, `macOS` or `Linux`)
-
-The F12 key then opens the new Dev Tools, and F10 opens the old version
-
 ## Avalonia Accelerate Controls
 
 We will soon start to add styles for at least some [Avalonia Accelerate](https://avaloniaui.net/accelerate) controls, starting with `TreeDataGrid` in the DevExpress theme.

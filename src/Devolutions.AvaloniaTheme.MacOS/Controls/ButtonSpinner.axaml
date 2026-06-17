@@ -6,7 +6,7 @@
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Spacing="20" Width="100">
-        <NumericUpDown Minimum="0" Maximum="10" Increment="1" Watermark="Days" />
+        <NumericUpDown Minimum="0" Maximum="10" Increment="1" PlaceholderText="Days" />
         <NumericUpDown Minimum="0" Maximum="10" Increment="0.5" Value="10" />
         <NumericUpDown Minimum="0" Maximum="10" Increment="0.5" Value="5" IsEnabled="False" />
         <NumericUpDown Minimum="0" Maximum="10" Increment="0.5" Value="5" IsReadOnly="True" />
@@ -16,7 +16,7 @@
                        VerticalContentAlignment="Center"
                        HorizontalContentAlignment="Center"
                        ButtonSpinnerLocation="Left"
-                       Watermark="Enter text" />
+                       PlaceholderText="Enter text" />
         <NumericUpDown ButtonSpinnerLocation="Right">
           <NumericUpDown.InnerLeftContent>
             <Button Content="X" />

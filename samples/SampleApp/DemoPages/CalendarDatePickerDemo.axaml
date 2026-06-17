@@ -12,7 +12,7 @@
     <StackPanel>
     <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <CalendarDatePicker Watermark=" ">
+      <CalendarDatePicker PlaceholderText=" ">
         <CalendarDatePicker.Styles>
           <Style Selector="TextBox">
             <Setter Property="CaretBrush" Value="Transparent" />
@@ -44,7 +44,7 @@
         <CalendarDatePicker Grid.Row="3" Grid.Column="1" Name="DatePicker3" HorizontalAlignment="Left" SelectedDateFormat="Long" />
         <CalendarDatePicker Grid.Row="4" Grid.Column="1" Name="DatePicker5" HorizontalAlignment="Left"
                             SelectedDateFormat="Custom" CustomDateFormatString="yyyy'/'MM'/'dd"
-                            Watermark="yyyy/MM/dd" />
+                            PlaceholderText="yyyy/MM/dd" />
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Spacing="10">
           <Button Content="Today" Command="{Binding SetToTodayCommand}" />
           <CalendarDatePicker Name="DatePicker4" HorizontalAlignment="Left" SelectedDate="{Binding SelectedDate}" />

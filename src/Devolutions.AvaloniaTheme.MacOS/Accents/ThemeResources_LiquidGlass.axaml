@@ -147,9 +147,9 @@
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
 
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
-      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource LightModeAccentHighlightConverter}}"
+      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource LightModeAccentHighlightConverter}}"
                        Opacity="0.64" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
@@ -227,9 +227,9 @@
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
+      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
-      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={StaticResource SystemAccentColor}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
+      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
                        Opacity="0.69" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->

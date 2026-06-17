@@ -294,11 +294,16 @@
     <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch">
+        <Panel>
+          <!--
+            BorderElement / BottomBorderElement are direct children of this Panel (sized to the full
+            control bounds) rather than children spanning a Grid with a '*' column. A column-spanning
+            border is arranged to the sum of the independently layout-rounded column widths, which at
+            fractional DPI can fall ~1px short of the control width and clip the right border edge.
+            This mirrors how ComboBox.axaml lays out its BorderElement.
+          -->
           <Border
             Name="BorderElement"
-            Grid.Column="0"
-            Grid.ColumnSpan="5"
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
             BorderThickness="{TemplateBinding BorderThickness}"
@@ -307,8 +312,6 @@
             MinHeight="{TemplateBinding MinHeight}" />
           <Border
             Name="BottomBorderElement"
-            Grid.Column="0"
-            Grid.ColumnSpan="5"
             Background="Transparent"
             Margin="1 0"
             BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
@@ -316,6 +319,7 @@
             CornerRadius="{TemplateBinding CornerRadius}"
             MinWidth="{TemplateBinding MinWidth}"
             MinHeight="{TemplateBinding MinHeight}" />
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" HorizontalAlignment="Stretch">
 
           <ItemsControl
             Grid.Column="0"
@@ -427,7 +431,8 @@
               </Border>
             </Panel>
           </Popup>
-        </Grid>
+          </Grid>
+        </Panel>
       </ControlTemplate>
     </Setter>
 

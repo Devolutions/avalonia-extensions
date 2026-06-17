@@ -12,7 +12,4 @@ public class Program
             .WithInterFont()
             .LogToTrace();
 
-    public static void Main(string[] args)
-    {
-    }
 }

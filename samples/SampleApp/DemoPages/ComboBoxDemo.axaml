@@ -18,9 +18,10 @@
         <ComboBoxItem>Option 4</ComboBoxItem>
       </ComboBox>
     </StackPanel>
-    <StackPanel Orientation="Horizontal">
-      <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-        <Grid ColumnDefinitions="Auto 240 240" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+    <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the ComboBoxes) at runtime, to compare against EditableComboBox -->
+    <Grid ColumnDefinitions="500 Auto * Auto">
+      <Border Grid.Column="0" Margin="20" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <Grid ColumnDefinitions="Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
           <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
             <Bold>ComboBox: </Bold>
           </TextBlock>
@@ -139,9 +140,10 @@
           <ComboBox Grid.Column="1" Grid.Row="12" ItemsSource="{Binding LargeItemsList}" MaxDropDownHeight="200" VerticalAlignment="Top" Margin="10 0 20 0" />
         </Grid>
       </Border>
+      <GridSplitter Grid.Column="1" Width="6" ResizeDirection="Columns" Background="Gray" />
 
       <!-- Transparency Test Area -->
-      <StackPanel Margin="20" Spacing="20">
+      <StackPanel Grid.Column="3" Margin="20" Spacing="20">
         <TextBlock FontWeight="Bold">Transparency Test</TextBlock>
         <StackPanel Spacing="5">
           <ComboBox PlaceholderText="Options"
@@ -160,6 +162,6 @@
           </StackPanel>
         </StackPanel>
       </StackPanel>
-    </StackPanel>
+    </Grid>
   </StackPanel>
 </UserControl>

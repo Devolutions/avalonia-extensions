@@ -109,6 +109,9 @@ internal static class TabStripScrollBehavior
         {
             this.templateSubscriptions.Dispose();
             this.templateSubscriptions = [];
+            this.tabHeaderScrollViewer = null;
+            this.scrollLeftButton = null;
+            this.scrollRightButton = null;
         }
 
         private void OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)

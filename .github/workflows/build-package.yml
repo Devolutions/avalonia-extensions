@@ -3,6 +3,11 @@ name: build package
 on:
   workflow_dispatch:
     inputs:
+      build-branch:
+        description: "Branch to build from (must be 'master' or 'release/*')"
+        type: string
+        default: 'master'
+        required: true
       build-mac:
         description: 'AvaloniaTheme.MacOS'
         type: boolean
@@ -48,6 +53,7 @@ jobs:
       package-list: ${{ steps.info.outputs.package-list }}
       skip-publish: ${{ steps.info.outputs.skip-publish }}
       dry-run: ${{ steps.info.outputs.dry-run }}
+      build-branch: ${{ steps.info.outputs.build-branch }}
 
     steps:
       - name: Package information
@@ -55,6 +61,13 @@ jobs:
         shell: pwsh
         run: |
           $IsScheduledJob = ('${{ github.event_name }}' -eq 'schedule')
+
+          # Branch to build from. Scheduled jobs have no inputs, so default to 'master'.
+          $BuildBranch = '${{ inputs.build-branch }}'
+          if ([string]::IsNullOrEmpty($BuildBranch)) { $BuildBranch = 'master' }
+          if ($BuildBranch -ne 'master' -And $BuildBranch -NotMatch '^release/.+') {
+            throw "invalid build branch: $BuildBranch, must be 'master' or 'release/*'"
+          }
 
           $PublishMode = '${{ inputs.publish-mode }}'
           if ([string]::IsNullOrEmpty($PublishMode)) { $PublishMode = 'Skip Publishing' }
@@ -120,8 +133,9 @@ jobs:
           echo "package-list=$PackageList" >> $Env:GITHUB_OUTPUT
           echo "skip-publish=$($SkipPublish.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
           echo "dry-run=$($DryRun.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
+          echo "build-branch=$BuildBranch" >> $Env:GITHUB_OUTPUT
 
-          echo "::notice::Branch: ${{ github.ref_name }}"
+          echo "::notice::Branch: $BuildBranch"
           echo "::notice::Building Packages: $PackageList"
           echo "::notice::Version: $PackageVersion"
           echo "::notice::SkipPublish: $SkipPublish"
@@ -136,6 +150,8 @@ jobs:
     steps:
       - name: Check out ${{ github.repository }}
         uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.preflight.outputs.build-branch }}
 
       - name: Configure runner
         shell: pwsh

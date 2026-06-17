@@ -67,6 +67,24 @@
             </TabItem>
           </TabControl>
         </Border>
+        <Border Width="400" Padding="20 0" HorizontalAlignment="Left">
+          <TabControl TabStripPlacement="Top">
+            <TabItem Header="General">
+              <TextBlock Text="Overflow demo: Too many tabs to fit" VerticalAlignment="Top" />
+            </TabItem>
+            <TabItem Header="Display" />
+            <TabItem Header="Local resources" />
+            <TabItem Header="Programs" />
+            <TabItem Header="Experience" />
+            <TabItem Header="Authentication" />
+            <TabItem Header="RD Gateway" />
+            <TabItem Header="Advanced" />
+            <TabItem Header="Security" />
+            <TabItem Header="Proxy" />
+            <TabItem Header="Logs" />
+            <TabItem Header="About" />
+          </TabControl>
+        </Border>
         <Border Width="700" Classes="alternativeBackground" Padding="20">
           <StackPanel>
             <TextBlock Classes="section-title" Margin="0 0 0 0" Text="TabControl with ItemsSource" />

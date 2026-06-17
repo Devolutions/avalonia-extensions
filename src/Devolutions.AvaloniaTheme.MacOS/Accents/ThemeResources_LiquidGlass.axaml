@@ -384,6 +384,7 @@
   <StaticResource x:Key="TagInputMinHeight" ResourceKey="ControlSize24" />
   <StaticResource x:Key="EditableComboBoxMinHeight" ResourceKey="ControlSize24" />
   <StaticResource x:Key="EditableComboBoxHeight" ResourceKey="ControlSize24" />
+  <StaticResource x:Key="CalendarControlHeight" ResourceKey="ControlSize24" />
   <StaticResource x:Key="TextBoxCornerRadius" ResourceKey="ButtonCornerRadius" />
   <StaticResource x:Key="TextBoxFocusCornerRadius" ResourceKey="Radius9" />
   <!-- Use BoxShadow instead of BorderThickness for LiquidGlass to ensure border is drawn "outside" 

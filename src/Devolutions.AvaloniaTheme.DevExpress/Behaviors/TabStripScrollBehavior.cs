@@ -123,6 +123,11 @@ internal static class TabStripScrollBehavior
                 return;
             }
 
+            // Dispose subscriptions from old parts BEFORE overwriting the field references.
+            // Otherwise closures inside templateSubscriptions would detach from the new parts.
+            this.templateSubscriptions.Dispose();
+            this.templateSubscriptions = [];
+
             this.tabHeaderScrollViewer = nameScope?.Find<ScrollViewer>("PART_TabHeaderScrollViewer")
                                        ?? this.tabControl.FindDescendantOfType<ScrollViewer>("PART_TabHeaderScrollViewer");
             this.scrollLeftButton = nameScope?.Find<RepeatButton>("PART_TabScrollLeftButton")
@@ -130,19 +135,20 @@ internal static class TabStripScrollBehavior
             this.scrollRightButton = nameScope?.Find<RepeatButton>("PART_TabScrollRightButton")
                                      ?? this.tabControl.FindDescendantOfType<RepeatButton>("PART_TabScrollRightButton");
 
-            this.templateSubscriptions.Dispose();
-            this.templateSubscriptions = [];
-
             if (this.tabHeaderScrollViewer is null || this.scrollLeftButton is null || this.scrollRightButton is null)
             {
                 return;
             }
 
-            this.scrollLeftButton.Click += this.OnScrollLeftClick;
-            this.scrollRightButton.Click += this.OnScrollRightClick;
+            // Capture in locals so the disposal closures always reference these specific instances.
+            var leftButton = this.scrollLeftButton;
+            var rightButton = this.scrollRightButton;
 
-            this.templateSubscriptions.Add(Disposable.Create(() => this.scrollLeftButton.Click -= this.OnScrollLeftClick));
-            this.templateSubscriptions.Add(Disposable.Create(() => this.scrollRightButton.Click -= this.OnScrollRightClick));
+            leftButton.Click += this.OnScrollLeftClick;
+            rightButton.Click += this.OnScrollRightClick;
+
+            this.templateSubscriptions.Add(Disposable.Create(() => leftButton.Click -= this.OnScrollLeftClick));
+            this.templateSubscriptions.Add(Disposable.Create(() => rightButton.Click -= this.OnScrollRightClick));
             this.templateSubscriptions.Add(this.tabHeaderScrollViewer.GetObservable(ScrollViewer.OffsetProperty).Subscribe(_ => this.UpdateScrollButtonState()));
             this.templateSubscriptions.Add(this.tabHeaderScrollViewer.GetObservable(ScrollViewer.ViewportProperty).Subscribe(_ => this.UpdateScrollButtonState()));
             this.templateSubscriptions.Add(this.tabHeaderScrollViewer.GetObservable(ScrollViewer.ExtentProperty).Subscribe(_ => this.UpdateScrollButtonState()));
@@ -277,6 +283,6 @@ internal static class TabStripScrollBehavior
     {
         return visual.GetVisualDescendants()
             .OfType<T>()
-            .FirstOrDefault(element => element.Name == name);
+            .FirstOrDefault(element => element.Name == name && element.TemplatedParent == visual);
     }
 }

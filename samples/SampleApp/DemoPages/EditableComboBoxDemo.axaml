@@ -18,8 +18,10 @@
         <EditableComboBoxItem>Option 2</EditableComboBoxItem>
       </EditableComboBox>
     </StackPanel>
-    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto 240 Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+    <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the EditableComboBoxes) at runtime -->
+    <Grid Margin="20" ColumnDefinitions="500 Auto *">
+      <Border Grid.Column="0" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <Grid ColumnDefinitions="Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -380,6 +382,9 @@
         <TextBlock Grid.Column="1" Grid.Row="22" Margin="10 4 20 15"
                    Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
       </Grid>
-    </Border>
+      </Border>
+      <GridSplitter Grid.Column="1" Width="6" ResizeDirection="Columns"
+                    Background="Gray" />
+    </Grid>
   </StackPanel>
 </UserControl>

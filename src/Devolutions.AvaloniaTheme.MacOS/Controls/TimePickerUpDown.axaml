@@ -136,7 +136,7 @@
                            Foreground="{TemplateBinding Foreground}"
                            IsReadOnly="{TemplateBinding IsReadOnly}"
                            MaxLength="2"
-                           Watermark="hh" />
+                           PlaceholderText="hh" />
                   <TextBlock Classes="segment-separator"
                              VerticalAlignment="Center"
                              Foreground="{TemplateBinding Foreground}"
@@ -150,12 +150,11 @@
                            IsTabStop="False"
                            IsReadOnly="{TemplateBinding IsReadOnly}"
                            MaxLength="2"
-                           Watermark="mm" />
+                           PlaceholderText="mm" />
                   <TextBlock Name="PART_SecondSeparator"
                              Classes="segment-separator"
                              VerticalAlignment="Center"
                              Foreground="{TemplateBinding Foreground}"
-<<<<<<< HEAD
                              Text=":" />
                   <TextBox Name="PART_SecondTextBox"
                            AutomationProperties.Name="Seconds"
@@ -166,7 +165,7 @@
                            IsTabStop="False"
                            IsReadOnly="{TemplateBinding IsReadOnly}"
                            MaxLength="2"
-                           Watermark="ss" />
+                           PlaceholderText="ss" />
                   <TextBox Name="PART_PeriodTextBox"
                            AutomationProperties.Name="AM or PM"
                            Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
@@ -175,7 +174,7 @@
                            IsTabStop="False"
                            IsReadOnly="{TemplateBinding IsReadOnly}"
                            MaxLength="8"
-                           Watermark="AM" />
+                           PlaceholderText="AM" />
                 </StackPanel>
               </Border>
               <Border Name="BottomBorder"
@@ -194,73 +193,6 @@
             </Grid>
           </ButtonSpinner>
         </DataValidationErrors>
-=======
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             PlaceholderText="hh" />
-                    <TextBlock Classes="segment-separator"
-                               VerticalAlignment="Center"
-                               Foreground="{TemplateBinding Foreground}"
-                               Text=":" />
-                    <TextBox Name="PART_MinuteTextBox"
-                             AutomationProperties.Name="Minutes"
-                             HorizontalContentAlignment="Center"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             PlaceholderText="mm" />
-                    <TextBlock Name="PART_SecondSeparator"
-                               Classes="segment-separator"
-                               VerticalAlignment="Center"
-                               Foreground="{TemplateBinding Foreground}"
-                               Text=":" />
-                    <TextBox Name="PART_SecondTextBox"
-                             AutomationProperties.Name="Seconds"
-                             HorizontalContentAlignment="Center"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="2"
-                             PlaceholderText="ss" />
-                    <TextBox Name="PART_PeriodTextBox"
-                             AutomationProperties.Name="AM or PM"
-                             Theme="{StaticResource MacOSTimePickerUpDownInnerTextBoxTheme}"
-                             Classes="segment-box period-box borderless no-focus-border"
-                             Foreground="{TemplateBinding Foreground}"
-                             IsTabStop="False"
-                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                             MaxLength="8"
-                             PlaceholderText="AM" />
-                  </StackPanel>
-                </Border>
-                <Border Name="BottomBorder"
-                        BorderThickness="0 0 0 0.6"
-                        BorderBrush="{DynamicResource TextBoxBottomBorderBrush}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        Margin="0.6 0"
-                        IsHitTestVisible="False" />
-                <Border Name="BottomBorderShadow"
-                        BorderThickness="0 0 0 0.6"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        BoxShadow="{DynamicResource TextBoxBorderShadows}"
-                        Margin="0.6 0 0.6 -0.6"
-                        IsHitTestVisible="False" />
-                <Border Name="FocusBorderElement"
-                        Margin="{StaticResource FocusBorderMargin}"
-                        BorderThickness="{StaticResource FocusBorderThickness}"
-                        CornerRadius="{DynamicResource TextBoxFocusCornerRadius}"
-                        IsHitTestVisible="False" />
-              </Grid>
-            </ButtonSpinner>
-          </DataValidationErrors>
-        </Panel>
->>>>>>> master
       </ControlTemplate>
     </Setter>
 

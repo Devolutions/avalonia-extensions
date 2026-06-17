@@ -100,7 +100,7 @@ internal static class ComboBoxItemFocusTrackerBehavior
             }, DispatcherPriority.Background);
         }
 
-        EventHandler<GotFocusEventArgs> gotFocusHandler = (_, _) => ScheduleUpdate();
+        EventHandler<FocusChangedEventArgs> gotFocusHandler = (_, _) => ScheduleUpdate();
         EventHandler<RoutedEventArgs> lostFocusHandler = (_, _) => ScheduleUpdate();
         EventHandler<PointerEventArgs> pointerEnteredHandler = (_, _) => ScheduleUpdate();
         EventHandler<PointerEventArgs> pointerExitedHandler = (_, _) => ScheduleUpdate();

@@ -15,17 +15,17 @@ public partial class ControlAlignment : UserControl
     // Pre-populate horizontal TagInput controls with "A" tag for visibility
     if (this.HorizontalGridTagInput is not null)
     {
-      this.HorizontalGridTagInput.Tags.Add("Tag");
+      this.HorizontalGridTagInput.Tags?.Add("Tag");
     }
 
     if (this.HorizontalStackPanelTagInput is not null)
     {
-      this.HorizontalStackPanelTagInput.Tags.Add("Tag");
+      this.HorizontalStackPanelTagInput.Tags?.Add("Tag");
     }
 
     if (this.HorizontalStackPanelTagInputCustomHeight is not null)
     {
-      this.HorizontalStackPanelTagInputCustomHeight.Tags.Add("Tag");
+      this.HorizontalStackPanelTagInputCustomHeight.Tags?.Add("Tag");
     }
   }
 }

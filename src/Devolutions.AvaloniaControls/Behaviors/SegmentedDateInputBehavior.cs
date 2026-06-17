@@ -188,7 +188,7 @@ public static class SegmentedDateInputBehavior
             }
         }
 
-        private void OnTextBoxGotFocus(object? sender, GotFocusEventArgs e)
+        private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
         {
             if (!this.segmentable) return;
             // Run after base CalendarDatePicker.OnGotFocus, which selects all on Tab nav.

@@ -8,14 +8,13 @@
 
   <Design.PreviewWith>
     <StackPanel Height="300" Width="400" Margin="20">
-      <u:TagInput Watermark="Enter tags..." />
-      <TagInput Watermark="Wrapper test..." />
+      <u:TagInput PlaceholderText="Enter tags..." />
+      <TagInput PlaceholderText="Wrapper test..." />
     </StackPanel>
   </Design.PreviewWith>
 
   <!-- Default theme for Ursa TagInput control -->
   <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
-    <Setter Property="InputTheme" Value="{DynamicResource TagInputTextBoxTheme}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="MinHeight" Value="30" />
@@ -44,21 +43,28 @@
           CornerRadius="{DynamicResource TextBoxDefaultCornerRadius}">
           <Panel HorizontalAlignment="Stretch">
             <TextBlock
-              Name="{x:Static u:TagInput.PART_Watermark}"
+              Name="{x:Static u:TagInput.PART_Placeholder}"
               Opacity="0.5"
               IsVisible="False"
               VerticalAlignment="Center"
-              Text="{TemplateBinding Watermark}" />
+              Text="{TemplateBinding PlaceholderText}" />
             <ItemsControl
               Name="PART_ItemsControl"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Top"
               ItemTemplate="{TemplateBinding ItemTemplate}"
-              ItemsSource="{TemplateBinding Items}">
+              ItemsSource="{TemplateBinding Tags}">
 
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <u:TagInputPanel VerticalAlignment="Top" />
+                  <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
+                    <u:WrapPanelWithTrailingItem.TrailingItem>
+                      <TextBox VerticalAlignment="Center" 
+                               MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
+                               Margin="{DynamicResource TextBoxContentPadding}"
+                               Theme="{DynamicResource TagInputTextBoxTheme}" />
+                    </u:WrapPanelWithTrailingItem.TrailingItem>
+                  </u:WrapPanelWithTrailingItem>
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -66,7 +72,7 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    <Style Selector="^:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="^:empty /template/ TextBlock#PART_Placeholder">
       <Setter Property="IsVisible" Value="True" />
     </Style>
     <Style Selector="^:pointerover /template/ Border#PART_RootBorder">

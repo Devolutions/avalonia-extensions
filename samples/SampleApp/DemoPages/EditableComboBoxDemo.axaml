@@ -36,7 +36,7 @@
         <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
           - watermark:
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="2" Watermark="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
+        <EditableComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
           <EditableComboBoxItem>Option 2</EditableComboBoxItem>
           <EditableComboBoxItem>Option 3</EditableComboBoxItem>
@@ -251,7 +251,7 @@
         <EditableComboBox
           Grid.Column="1" Grid.Row="10"
           VerticalAlignment="Top"
-          Watermark="Required error"
+          PlaceholderText="Required error"
           Value="{Binding RequiredTextValue}"
           Margin="10 0 20 20" />
 
@@ -263,7 +263,7 @@
           VerticalAlignment="Top"
           Mode="Filter"
           AllowCustomValue="False"
-          Watermark="Type to filter..."
+          PlaceholderText="Type to filter..."
           Margin="10 0 20 20">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
           <EditableComboBoxItem>Option 2</EditableComboBoxItem>
@@ -280,7 +280,7 @@
                           SelectedItem="{Binding SelectedCountry}"
                           Mode="Filter"
                           AllowCustomValue="False"
-                          Watermark="Choose a country..." 
+                          PlaceholderText="Choose a country..." 
                           Margin="10 0 20 0" />
         <TextBlock Grid.Column="1" Grid.Row="13" Margin="10 0 20 20">
           <TextBlock.Text>
@@ -298,7 +298,7 @@
           SelectedItem="{Binding DynamicSelectedCountry}"
           Mode="Filter"
           AllowCustomValue="False"
-          Watermark="Choose a country..."
+          PlaceholderText="Choose a country..."
           Margin="10 0 20 0" />
         <TextBlock Grid.Column="1" Grid.Row="15" Margin="10 0 20 0">
           <TextBlock.Text>
@@ -321,7 +321,7 @@
           SelectedItem="{Binding ProgrammaticSelectedCountry}"
           Mode="Filter"
           AllowCustomValue="False"
-          Watermark="Choose a country..."
+          PlaceholderText="Choose a country..."
           Margin="10 0 20 0" />
         <TextBlock Grid.Column="1" Grid.Row="18" Margin="10 4 20 4">
           <TextBlock.Text>
@@ -345,7 +345,7 @@
                           SelectedItem="{Binding SelectedCountry2}"
                           Mode="Filter"
                           AllowCustomValue="False"
-                          Watermark="Choose a country..." 
+                          PlaceholderText="Choose a country..." 
                           Margin="10 0 20 0">
           <EditableComboBox.ItemTemplate>
             <EditableComboBoxDataTemplate x:DataType="viewModels:Country" SelectedItemValue="{Binding Name}">

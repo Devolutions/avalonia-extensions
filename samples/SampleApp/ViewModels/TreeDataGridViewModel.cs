@@ -1,6 +1,5 @@
 #if ENABLE_ACCELERATE
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
 #endif
 
@@ -17,6 +16,7 @@ public class NetworkNode
   public string IPAddress { get; set; }
   public string Status { get; set; }
   public string LastSeen { get; set; }
+  public bool HasChildren => this.Children.Count > 0;
 
     public string IconPath => this.Type switch
     {
@@ -118,20 +118,20 @@ public class TreeDataGridViewModel : ObservableObject
 
     private static void AddSharedColumns(FlatTreeDataGridSource<NetworkNode> source)
     {
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Name", x => x.Name));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Type", x => x.Type));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Status", x => x.Status));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen));
+        source.WithTextColumn("Name", x => x.Name);
+        source.WithTextColumn("Type", x => x.Type);
+        source.WithTextColumn("IP Address", x => x.IPAddress);
+        source.WithTextColumn("Status", x => x.Status);
+        source.WithTextColumn("Last Seen", x => x.LastSeen);
     }
 
     private static void AddTreeSharedColumns(HierarchicalTreeDataGridSource<NetworkNode> source)
     {
         // Name column will be added by the View to use XAML DataTemplate
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Type", x => x.Type));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("IP Address", x => x.IPAddress));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Status", x => x.Status));
-        source.Columns.Add(new TextColumn<NetworkNode, string>("Last Seen", x => x.LastSeen));
+        source.WithTextColumn("Type", x => x.Type);
+        source.WithTextColumn("IP Address", x => x.IPAddress);
+        source.WithTextColumn("Status", x => x.Status);
+        source.WithTextColumn("Last Seen", x => x.LastSeen);
     }
 
     public FlatTreeDataGridSource<NetworkNode> CellSelectionSource { get; }

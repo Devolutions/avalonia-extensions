@@ -20,7 +20,7 @@
         <TextBox x:Name="SearchBox"
                  Text="lazy"
                  Width="250"
-                 Watermark="Type to highlight matches" />
+                 PlaceholderText="Type to highlight matches" />
         <Button Content="Clear" Click="OnClearSearchClicked" />
       </StackPanel>
 

@@ -10,29 +10,29 @@ using Helpers;
 
 public abstract class AbstractMultipleValueBinding<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] TIn> : MarkupExtension
 {
-    private readonly WeakReference<IBinding>[]? bindings;
+    private readonly WeakReference<BindingBase>[]? bindings;
 
     protected AbstractMultipleValueBinding(object b1, object b2)
     {
-        if (GetBinding(b1) is IBinding bA && GetBinding(b2) is IBinding bB)
+        if (GetBinding(b1) is BindingBase bA && GetBinding(b2) is BindingBase bB)
         {
             this.bindings =
             [
-                new WeakReference<IBinding>(bA),
-                new WeakReference<IBinding>(bB),
+                new WeakReference<BindingBase>(bA),
+                new WeakReference<BindingBase>(bB),
             ];
         }
     }
 
     protected AbstractMultipleValueBinding(object b1, object b2, params object[] bindings)
     {
-        if (GetBinding(b1) is IBinding bA && GetBinding(b2) is IBinding bB)
+        if (GetBinding(b1) is BindingBase bA && GetBinding(b2) is BindingBase bB)
         {
             this.bindings =
             [
-                new WeakReference<IBinding>(bA),
-                new WeakReference<IBinding>(bB),
-                ..bindings.Select(GetBinding).SkipNulls().Select(static b => new WeakReference<IBinding>(b)),
+                new WeakReference<BindingBase>(bA),
+                new WeakReference<BindingBase>(bB),
+                ..bindings.Select(GetBinding).SkipNulls().Select(static b => new WeakReference<BindingBase>(b)),
             ];
         }
     }
@@ -45,10 +45,10 @@ public abstract class AbstractMultipleValueBinding<[DynamicallyAccessedMembers(D
 
         return new MultiBinding
         {
-            Bindings = this.bindings.Select(b => b.TryGetTarget(out IBinding? t) ? t : null).SkipNulls().ToArray(),
+            Bindings = this.bindings.Select(b => b.TryGetTarget(out BindingBase? t) ? t : null).SkipNulls().ToArray(),
             Converter = this.MultiValueConverter,
         };
     }
 
-    private static IBinding? GetBinding(object? v) => MarkupExtensionHelpers.GetBinding<TIn>(v);
+    private static BindingBase? GetBinding(object? v) => MarkupExtensionHelpers.GetBinding<TIn>(v);
 }

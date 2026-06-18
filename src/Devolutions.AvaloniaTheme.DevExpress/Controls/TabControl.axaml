@@ -196,6 +196,7 @@
                   <PathIcon Width="8"
                             Height="8"
                             Data="{StaticResource ChevronPath}"
+                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
                             RenderTransformOrigin="50%,50%">
                     <PathIcon.RenderTransform>
                       <RotateTransform Angle="90" />
@@ -232,6 +233,7 @@
                   <PathIcon Width="8"
                             Height="8"
                             Data="{StaticResource ChevronPath}"
+                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
                             RenderTransformOrigin="50%,50%">
                     <PathIcon.RenderTransform>
                       <RotateTransform Angle="-90" />

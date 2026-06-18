@@ -1,13 +1,55 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+normalize_filter_expression() {
+  local expression="$1"
+
+  if [[ "$expression" == *"~"* ||
+        "$expression" == *"="* ||
+        "$expression" == *"!"* ||
+        "$expression" == *"<"* ||
+        "$expression" == *">"* ||
+        "$expression" == *"|"* ||
+        "$expression" == *"&"* ||
+        "$expression" == *"("* ||
+        "$expression" == *")"* ]]; then
+    printf '%s' "$expression"
+    return
+  fi
+
+  printf 'DisplayName~%s' "$expression"
+}
+
+dotnet_args=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --filter)
+      if [[ $# -lt 2 ]]; then
+        dotnet_args+=("$1")
+        shift
+        continue
+      fi
+      dotnet_args+=("--filter" "$(normalize_filter_expression "$2")")
+      shift 2
+      ;;
+    --filter=*)
+      dotnet_args+=("--filter=$(normalize_filter_expression "${1#--filter=}")")
+      shift
+      ;;
+    *)
+      dotnet_args+=("$1")
+      shift
+      ;;
+  esac
+done
+
 summary_file="$(mktemp -t visual-regression-summary.XXXXXX)"
 cleanup() {
   rm -f "$summary_file"
 }
 trap cleanup EXIT
 
-dotnet test "$@" 2>&1 | while IFS= read -r line; do
+dotnet test "${dotnet_args[@]}" 2>&1 | while IFS= read -r line; do
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then

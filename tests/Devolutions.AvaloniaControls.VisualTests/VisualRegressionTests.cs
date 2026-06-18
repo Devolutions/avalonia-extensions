@@ -331,13 +331,11 @@ public class VisualRegressionTests
       bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
       if (!passed)
       {
-        Console.Error.WriteLine($"\u001b[33;1mVisual regression detected\u001b[0m for \u001b[33;1m[{themeName}] {pageName} - {variant}\u001b[0m. Diff saved to {Path.GetDirectoryName(diffPath)}");
         Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}. Diff saved to {Path.GetDirectoryName(diffPath)}");
       }
     }
     else
     {
-      Console.Error.WriteLine($"\u001b[33;1mNo baseline found\u001b[0m for \u001b[33;1m[{themeName}] {pageName} - {variant}\u001b[0m. Saved screenshot to {testPath}");
       Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}. Saved screenshot to {testPath}");
     }
   }
@@ -355,16 +353,11 @@ internal static class TestInitializer
       // xUnit v3 spawns the test process multiple times (discovery + execution).
       // Use a sentinel file to show the warning banner only once per 30-second window.
       string sentinelFile = Path.Combine(Path.GetTempPath(), "avalonia-update-baselines-warning.tmp");
-      bool shouldShowBanner = true;
-      if (File.Exists(sentinelFile))
-      {
-        var age = DateTime.UtcNow - File.GetLastWriteTimeUtc(sentinelFile);
-        shouldShowBanner = age.TotalSeconds > 30;
-      }
+      bool shouldShowBanner = ShouldShowUpdateBaselinesBanner(sentinelFile);
 
       if (shouldShowBanner)
       {
-        File.WriteAllText(sentinelFile, "");
+        TryMarkUpdateBaselinesBannerShown(sentinelFile);
         TextWriter stderr = Console.Error;
         stderr.WriteLine("\n\n" + new string('_', 80));
         stderr.WriteLine("\u001b[33m\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
@@ -377,6 +370,49 @@ internal static class TestInitializer
         stderr.WriteLine("`export UPDATE_BASELINES=false`");
         stderr.WriteLine(new string('_', 80) + "\n");
       }
+    }
+  }
+
+  private static bool ShouldShowUpdateBaselinesBanner(string sentinelFile)
+  {
+    try
+    {
+      if (File.Exists(sentinelFile))
+      {
+        var age = DateTime.UtcNow - File.GetLastWriteTimeUtc(sentinelFile);
+        return age.TotalSeconds > 30;
+      }
+
+      return true;
+    }
+    catch (IOException)
+    {
+      return true;
+    }
+    catch (UnauthorizedAccessException)
+    {
+      return true;
+    }
+    catch (NotSupportedException)
+    {
+      return true;
+    }
+  }
+
+  private static void TryMarkUpdateBaselinesBannerShown(string sentinelFile)
+  {
+    try
+    {
+      File.WriteAllText(sentinelFile, "");
+    }
+    catch (IOException)
+    {
+    }
+    catch (UnauthorizedAccessException)
+    {
+    }
+    catch (NotSupportedException)
+    {
     }
   }
 

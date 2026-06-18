@@ -85,7 +85,7 @@ jobs:
 
           if ($IsScheduledJob) {
             $SkipPublish = $true # scheduled jobs always skip publishing
-            $DryRun = $false # just to avoid confusing 'Notice' messages
+            $DryRun = $false
           }
 
           $PackageVersion = '${{ inputs.version }}'

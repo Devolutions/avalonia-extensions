@@ -182,6 +182,7 @@
                               AutomationProperties.Name="Scroll tabs left"
                               IsTabStop="False"
                               Focusable="False"
+                              Foreground="{DynamicResource ForegroundHighBrush}"
                               Background="Transparent"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               BorderThickness="1 1 0 0"
@@ -219,6 +220,7 @@
                               AutomationProperties.Name="Scroll tabs right"
                               IsTabStop="False"
                               Focusable="False"
+                              Foreground="{DynamicResource ForegroundHighBrush}"
                               Background="Transparent"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               BorderThickness="0 1 1 0"
@@ -255,7 +257,7 @@
           </Border>
         </ControlTemplate>
       </Setter>
-      <Style Selector="^ /template/ RepeatButton#PART_TabScrollLeftButton:disabled PathIcon, ^ /template/ RepeatButton#PART_TabScrollRightButton:disabled PathIcon">
+      <Style Selector="^ /template/ RepeatButton#PART_TabScrollLeftButton:disabled, ^ /template/ RepeatButton#PART_TabScrollRightButton:disabled">
         <Setter Property="Foreground" Value="{DynamicResource TabItemHeaderForegroundDisabled}" />
       </Style>
     </Style>

@@ -279,10 +279,10 @@ public class VisualRegressionTests
       Dispatcher.UIThread.RunJobs();
 
       // 4. Test Light Mode
-      CaptureAndCompare("", ThemeVariant.Light);
+      CaptureAndCompare(window, pageName, themeName, "", ThemeVariant.Light);
 
       // 5. Test Dark Mode
-      CaptureAndCompare("_dark", ThemeVariant.Dark);
+      CaptureAndCompare(window, pageName, themeName, "_dark", ThemeVariant.Dark);
     }
     finally
     {
@@ -291,51 +291,52 @@ public class VisualRegressionTests
       window.Content = null;
       Dispatcher.UIThread.RunJobs();
     }
+  }
 
-
-    void CaptureAndCompare(string suffix, ThemeVariant variant)
+  [System.Diagnostics.StackTraceHidden]
+  private static void CaptureAndCompare(Window window, string pageName, string themeName, string suffix, ThemeVariant variant)
+  {
+    if (Application.Current != null)
     {
-      if (Application.Current != null)
+      Application.Current.RequestedThemeVariant = variant;
+    }
+
+    // Wait for layout and theme application
+    Dispatcher.UIThread.RunJobs();
+
+    // Capture
+    WriteableBitmap? frame = window.CaptureRenderedFrame();
+    if (frame == null) throw new Exception($"Failed to capture frame for {variant}");
+    using WriteableBitmap bitmap = frame;
+
+    // Save and Compare
+    var fileName = $"{pageName}{suffix}.png";
+    string baselinePath = Path.Combine(BaselinesDirectory, themeName, fileName);
+    string testPath = Path.Combine(TestResultsDirectory, themeName, fileName);
+    string diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
+
+    // Ensure subdirectories exist
+    Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
+    Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
+
+    bitmap.Save(testPath);
+
+    if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
+    {
+      File.Copy(testPath, baselinePath, true);
+    }
+
+    if (File.Exists(baselinePath))
+    {
+      bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
+      if (!passed)
       {
-        Application.Current.RequestedThemeVariant = variant;
+        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}. Diff saved to {Path.GetDirectoryName(diffPath)}");
       }
-
-      // Wait for layout and theme application
-      Dispatcher.UIThread.RunJobs();
-
-      // Capture
-      WriteableBitmap? frame = window.CaptureRenderedFrame();
-      if (frame == null) throw new Exception($"Failed to capture frame for {variant}");
-      using WriteableBitmap bitmap = frame;
-
-      // Save and Compare
-      var fileName = $"{pageName}{suffix}.png";
-      string baselinePath = Path.Combine(BaselinesDirectory, themeName, fileName);
-      string testPath = Path.Combine(TestResultsDirectory, themeName, fileName);
-      string diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
-
-      // Ensure subdirectories exist
-      Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
-      Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
-
-      bitmap.Save(testPath);
-
-      if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
-      {
-        File.Copy(testPath, baselinePath, true);
-      }
-
-      if (File.Exists(baselinePath))
-      {
-        bool result = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
-        Assert.True(result,
-          $"\n\u001b[1mVisual regression detected\u001b[0m for \u001b[1m[{themeName}] {pageName} - {variant}\u001b[0m. Diff saved to {Path.GetDirectoryName(diffPath)}");
-      }
-      else
-      {
-        Assert.Fail(
-          $"\n\u001b[1mNo baseline found\u001b[0m for \u001b[1m[{themeName}] {pageName} - {variant}\u001b[0m. Saved screenshot to {testPath}");
-      }
+    }
+    else
+    {
+      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}. Saved screenshot to {testPath}");
     }
   }
 }
@@ -349,18 +350,69 @@ internal static class TestInitializer
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
-      Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine("\n\n" + new string('!', 80));
-      Console.WriteLine("\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
-      Console.WriteLine("Visual regression baselines will be updated.");
-      Console.WriteLine("If this was not intentional:");
-      Console.WriteLine("");
-      Console.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");
-      Console.WriteLine("");
-      Console.WriteLine("Remove the variable from the current shell with:");
-      Console.WriteLine("`export UPDATE_BASELINES=false`");
-      Console.WriteLine(new string('!', 80) + "\n");
-      Console.ResetColor();
+      // xUnit v3 spawns the test process multiple times (discovery + execution).
+      // Use a sentinel file to show the warning banner only once per 30-second window.
+      string sentinelFile = Path.Combine(Path.GetTempPath(), "avalonia-update-baselines-warning.tmp");
+      bool shouldShowBanner = ShouldShowUpdateBaselinesBanner(sentinelFile);
+
+      if (shouldShowBanner)
+      {
+        TryMarkUpdateBaselinesBannerShown(sentinelFile);
+        TextWriter stderr = Console.Error;
+        stderr.WriteLine("\n\n" + new string('_', 80));
+        stderr.WriteLine("\u001b[33m\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
+        stderr.WriteLine("Visual regression baselines will be updated.");
+        stderr.WriteLine("If this was not intentional:");
+        stderr.WriteLine("");
+        stderr.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");
+        stderr.WriteLine("");
+        stderr.WriteLine("Remove the variable from the current shell with:");
+        stderr.WriteLine("`export UPDATE_BASELINES=false`");
+        stderr.WriteLine(new string('_', 80) + "\n");
+      }
+    }
+  }
+
+  private static bool ShouldShowUpdateBaselinesBanner(string sentinelFile)
+  {
+    try
+    {
+      if (File.Exists(sentinelFile))
+      {
+        var age = DateTime.UtcNow - File.GetLastWriteTimeUtc(sentinelFile);
+        return age.TotalSeconds > 30;
+      }
+
+      return true;
+    }
+    catch (IOException)
+    {
+      return true;
+    }
+    catch (UnauthorizedAccessException)
+    {
+      return true;
+    }
+    catch (NotSupportedException)
+    {
+      return true;
+    }
+  }
+
+  private static void TryMarkUpdateBaselinesBannerShown(string sentinelFile)
+  {
+    try
+    {
+      File.WriteAllText(sentinelFile, "");
+    }
+    catch (IOException)
+    {
+    }
+    catch (UnauthorizedAccessException)
+    {
+    }
+    catch (NotSupportedException)
+    {
     }
   }
 

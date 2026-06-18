@@ -84,8 +84,8 @@ jobs:
           }
 
           if ($IsScheduledJob) {
-            $SkipPublish = $true # force skipping publish (jobs running in 'publish-test' cannot test the publishing step)
-            $DryRun = $false
+            $SkipPublish = $true # scheduled jobs always skip publishing
+            $DryRun = $false # just to avoid confusing 'Notice' messages
           }
 
           $PackageVersion = '${{ inputs.version }}'

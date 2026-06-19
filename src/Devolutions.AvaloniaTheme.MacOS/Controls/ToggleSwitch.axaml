@@ -21,12 +21,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
 
-    <Setter Property="FocusAdorner">
-      <FocusAdornerTemplate>
-        <Border Theme="{DynamicResource AdornerLayerBorder}"
-                CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
-      </FocusAdornerTemplate>
-    </Setter>
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="KnobTransitions">
       <Transitions>
         <DoubleTransition
@@ -172,6 +167,19 @@
       </Style>
     </Style>
 
+    <!-- Tabbing focus -->
+    <Style Selector="^:focus-visible /template/ Border#SwitchBackgroundBorder">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
+        </Template>
+      </Setter>
+    </Style>
+
     <Style Selector="^.Loading">
       <Style Selector="^ /template/ Border#SwitchKnobIndicator">
         <Setter Property="IsVisible" Value="False" />
@@ -234,11 +242,7 @@
     <Setter Property="Padding" Value="8" />
     <Setter Property="CornerRadius" Value="3" />
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="FocusAdorner">
-      <FocusAdornerTemplate>
-        <Border Theme="{StaticResource AdornerLayerBorder}" />
-      </FocusAdornerTemplate>
-    </Setter>
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate TargetType="ToggleSwitch">
         <Border
@@ -269,6 +273,19 @@
     </Style>
     <Style Selector="^:pressed">
       <Setter Property="Background" Value="{DynamicResource ControlBackgroundActiveHighBrush}" />
+    </Style>
+
+    <!-- Tabbing focus -->
+    <Style Selector="^:focus-visible /template/ Border#Background">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Border AdornerLayer.IsClipEnabled="False"
+                  Margin="{StaticResource FocusBorderMargin}"
+                  BorderThickness="{StaticResource FocusBorderThickness}"
+                  BorderBrush="{DynamicResource FocusBorderBrush}"
+                  CornerRadius="3" />
+        </Template>
+      </Setter>
     </Style>
   </ControlTheme>
 

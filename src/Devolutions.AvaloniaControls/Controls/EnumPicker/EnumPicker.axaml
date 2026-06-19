@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <ControlTheme x:Key="{x:Type EnumPicker}" TargetType="EnumPicker">
+    <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
         <ComboBox ItemsSource="{TemplateBinding Items}"

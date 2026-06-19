@@ -52,12 +52,8 @@
                      HorizontalAlignment="Center"
                      ZIndex="1"
                      UseLayoutRounding="False"
-                     ClipToBounds="False">
-                <Panel.Margin>
-                  <Binding Source="{StaticResource InputControlsSpaceForFocusBorder}"
-                           Converter="{x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}"
-                           ConverterParameter="{StaticResource TabControlSpaceForFocusFactors}" />
-                </Panel.Margin>
+                     ClipToBounds="False"
+                     Margin="0 0 0 -2.25">
                 <Border Name="TabStripBackgroundClassic"
                         IsVisible="{DynamicResource IsClassicTheme}"
                         Background="{DynamicResource TabControlTabstripBackgroundBrush}"

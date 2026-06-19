@@ -30,7 +30,7 @@
     <Setter Property="Template">
       <ControlTemplate TargetType="u:ClosableTag">
         <Border
-          Margin="1"
+          Margin="1 0"
           Padding="8,0,4,0"
           Background="{TemplateBinding Background}"
           BorderBrush="{TemplateBinding BorderBrush}"

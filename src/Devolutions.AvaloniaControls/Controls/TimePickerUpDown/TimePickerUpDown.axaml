@@ -17,6 +17,8 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </ControlTheme>
 
+  <x:Double x:Key="TimePickerUpDownMinHeight">32</x:Double>
+
   <ControlTheme x:Key="{x:Type controls:TimePickerUpDown}" TargetType="controls:TimePickerUpDown">
     <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
@@ -24,7 +26,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="4" />
     <Setter Property="HorizontalAlignment" Value="Left" />
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="MinHeight" Value="{DynamicResource TimePickerUpDownMinHeight}" />
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="ButtonSpinnerLocation" Value="Right" />
     <Setter Property="ShowButtonSpinner" Value="True" />

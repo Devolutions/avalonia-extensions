@@ -97,6 +97,14 @@
       </ControlTemplate>
     </Setter>
 
+    <Style Selector="^[ButtonSpinnerLocation=Right] /template/ TextBox#PART_TextBox">
+      <Setter Property="Margin" Value="0 0 2 0" />
+    </Style>
+
+    <Style Selector="^[ButtonSpinnerLocation=Left] /template/ TextBox#PART_TextBox">
+      <Setter Property="Margin" Value="2 0 0 0" />
+    </Style>
+
     <Style Selector="^:error /template/ TextBox#PART_TextBox">
       <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
       <Setter Property="BorderThickness" Value="1" />

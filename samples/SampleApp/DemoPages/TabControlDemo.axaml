@@ -104,6 +104,29 @@
       </StackPanel>
     </StackPanel>
 
+    <!-- <Border BorderBrush="{DynamicResource LayoutBorderHighBrush}" BorderThickness="1" Padding="20"> -->
+      <Grid ColumnDefinitions="400, 4, *">
+        <TabControl Grid.Column="0" TabStripPlacement="Top">
+          <TabItem Header="General">
+            <TextBlock VerticalAlignment="Top"><Bold>Overflow demo:</Bold> Drag the right edge to resize</TextBlock>
+          </TabItem>
+          <TabItem Header="Display" />
+          <TabItem Header="Local resources" />
+          <TabItem Header="Programs" />
+          <TabItem Header="Experience" />
+          <TabItem Header="Authentication" />
+          <TabItem Header="RD Gateway" />
+          <TabItem Header="Advanced" />
+          <TabItem Header="Security" />
+          <TabItem Header="Proxy" />
+          <TabItem Header="Logs" />
+          <TabItem Header="About" />
+        </TabControl>
+        <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+        <Border Grid.Column="2" />
+      </Grid>
+    <!-- </Border> -->
+
     <TextBlock Classes="section-title" Margin="0 10 0 0" Text="TabPane" />
     <TextBlock>Custom control <TextBlock Classes="code" Text="TabPane" /> - use exactly like <TextBlock Classes="code" Text="TabControl" /></TextBlock>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Spacing="10">

@@ -313,6 +313,7 @@
   <!-- TabControl & TabItem -->
   <Thickness x:Key="TabControlBorderThickness">0</Thickness>
   <Thickness x:Key="TabControlTabStripBorderThickness">0</Thickness>
+  <Thickness x:Key="TabControlTopItemsPresenterMargin">2 0 0 0</Thickness>
   <StaticResource x:Key="TabItemDividerBorderBrush" ResourceKey="SurfaceT10" />
   <Thickness x:Key="TabItemPadding">16 4</Thickness>
   <x:Double x:Key="TabItemDividerHeight">14</x:Double>

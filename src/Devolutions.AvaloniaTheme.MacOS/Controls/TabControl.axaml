@@ -152,7 +152,7 @@
         </ControlTemplate>
       </Setter>
       <Style Selector="^/template/ ItemsPresenter#PART_ItemsPresenter">
-        <Setter Property="Margin" Value="0" />
+        <Setter Property="Margin" Value="{DynamicResource TabControlTopItemsPresenterMargin}" />
       </Style>
       <Style Selector="^/template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">
         <Setter Property="Margin" Value="0 0 0 0" />

@@ -249,44 +249,96 @@
           Name="Background"
           Padding="{TemplateBinding Padding}"
           Background="{TemplateBinding Background}"
-          CornerRadius="{TemplateBinding CornerRadius}"
-          Cursor="Hand">
-          <Panel>
-            <Panel Name="PART_SwitchKnob" />
-            <Panel Name="PART_MovingKnobs" />
+          CornerRadius="{TemplateBinding CornerRadius}">
+          <DockPanel HorizontalAlignment="Stretch">
+            <Border
+              Name="SwitchBackgroundBorder"
+              DockPanel.Dock="Right"
+              TemplatedControl.IsTemplateFocusTarget="True"
+              Width="{DynamicResource ToggleSwitchDefaultWidth}"
+              Height="{DynamicResource ToggleSwitchDefaultHeight}"
+              BorderBrush="{DynamicResource ToggleSwitchDefaultBorderBrush}"
+              BorderThickness="1"
+              CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="Background" Duration="0:0:0.2" />
+                </Transitions>
+              </Border.Transitions>
+              <Canvas
+                Name="PART_SwitchKnob"
+                Width="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                Height="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                HorizontalAlignment="Left">
+                <Grid
+                  Name="PART_MovingKnobs"
+                  Width="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                  Height="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                  Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
+                  <Border
+                    Name="SwitchKnobIndicator"
+                    Background="{DynamicResource ToggleSwitchKnobBackground}"
+                    BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
+                    CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
+                  <Arc
+                    Name="SwitchKnobLoadingIndicator"
+                    IsVisible="False"
+                    StrokeThickness="2"
+                    StartAngle="0"
+                    SweepAngle="140"
+                    StrokeJoin="Round"
+                    StrokeLineCap="Round">
+                    <Arc.Stroke>
+                      <ConicGradientBrush>
+                        <GradientStops>
+                          <GradientStop Offset="0.1" Color="Transparent" />
+                          <GradientStop Offset="0.7" Color="White" />
+                        </GradientStops>
+                      </ConicGradientBrush>
+                    </Arc.Stroke>
+                    <Arc.Styles>
+                      <Style Selector="Arc[IsVisible=True]">
+                        <Style.Animations>
+                          <Animation IterationCount="Infinite" Duration="0:0:0.6">
+                            <KeyFrame Cue="0%">
+                              <Setter Property="RotateTransform.Angle" Value="0.0" />
+                            </KeyFrame>
+                            <KeyFrame Cue="100%">
+                              <Setter Property="RotateTransform.Angle" Value="360.0" />
+                            </KeyFrame>
+                          </Animation>
+                        </Style.Animations>
+                      </Style>
+                    </Arc.Styles>
+                  </Arc>
+                </Grid>
+              </Canvas>
+            </Border>
+
+            <ContentPresenter
+              Name="PART_ContentPresenter"
+              Margin="{DynamicResource ToggleSwitchHeaderMargin}"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Left"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
+              IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+              RecognizesAccessKey="True" />
+
             <ContentPresenter
               Name="PART_OnContentPresenter"
-              Margin="{DynamicResource ToggleSwitchOnContentMargin}"
+              Margin="0"
               Content="{TemplateBinding OnContent}"
               ContentTemplate="{TemplateBinding OnContentTemplate}" />
             <ContentPresenter
               Name="PART_OffContentPresenter"
-              Margin="{DynamicResource ToggleSwitchOnContentMargin}"
+              Margin="0"
               Content="{TemplateBinding OffContent}"
               ContentTemplate="{TemplateBinding OffContentTemplate}" />
-          </Panel>
+          </DockPanel>
         </Border>
       </ControlTemplate>
     </Setter>
-    <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="{DynamicResource ButtonDefaultPointeroverBackground}" />
-    </Style>
-    <Style Selector="^:pressed">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundActiveHighBrush}" />
-    </Style>
-
-    <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible /template/ Border#Background">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="3" />
-        </Template>
-      </Setter>
-    </Style>
   </ControlTheme>
 
   <ControlTheme
@@ -301,7 +353,6 @@
         <Border
           Name="SwitchBackgroundBorder"
           Background="{TemplateBinding Background}"
-          Cursor="Hand"
           Width="{DynamicResource ToggleSwitchDefaultWidth}"
           Height="{DynamicResource ToggleSwitchDefaultHeight}"
           BorderBrush="{DynamicResource ToggleSwitchDefaultBorderBrush}"

@@ -3,6 +3,11 @@ name: build package
 on:
   workflow_dispatch:
     inputs:
+      build-branch:
+        description: "Branch to build from (must be 'master' or 'release/*')"
+        type: string
+        default: 'master'
+        required: true
       build-mac:
         description: 'AvaloniaTheme.MacOS'
         type: boolean
@@ -32,8 +37,8 @@ on:
         type: choice
         options:
           - 'Skip Publishing'
-          - 'Dry Run (Master only)'
-          - 'Publish (Master only)'
+          - 'Dry Run'
+          - 'Publish'
         default: 'Skip Publishing'
   schedule:
     - cron: '32 5 * * 1' # 05:32 AM UTC every Monday
@@ -48,34 +53,38 @@ jobs:
       package-list: ${{ steps.info.outputs.package-list }}
       skip-publish: ${{ steps.info.outputs.skip-publish }}
       dry-run: ${{ steps.info.outputs.dry-run }}
+      build-branch: ${{ steps.info.outputs.build-branch }}
 
     steps:
       - name: Package information
         id: info
         shell: pwsh
         run: |
-          $IsMasterBranch = ('${{ github.ref_name }}' -eq 'master')
           $IsScheduledJob = ('${{ github.event_name }}' -eq 'schedule')
+
+          # Branch to build from. Scheduled jobs have no inputs, so default to 'master'.
+          $BuildBranch = '${{ inputs.build-branch }}'
+          if ([string]::IsNullOrEmpty($BuildBranch)) { $BuildBranch = 'master' }
+          if ($BuildBranch -ne 'master' -And $BuildBranch -NotMatch '^release/.+') {
+            throw "invalid build branch: $BuildBranch, must be 'master' or 'release/*'"
+          }
 
           $PublishMode = '${{ inputs.publish-mode }}'
           if ([string]::IsNullOrEmpty($PublishMode)) { $PublishMode = 'Skip Publishing' }
 
           $SkipPublish = ($PublishMode -eq 'Skip Publishing')
-          $DryRun = ($PublishMode -eq 'Dry Run (Master only)')
+          $DryRun = ($PublishMode -eq 'Dry Run')
 
-          $IsPrerelease = -Not [string]::IsNullOrEmpty('${{ inputs.prerelease-suffix }}')
-
-          $PackageEnv = if ((-Not $SkipPublish) -And (-Not $IsScheduledJob) -And ($IsMasterBranch -Or $IsPrerelease)) {
+          # Manual dispatch can publish from any branch selected in the Actions UI ref picker.
+          # Scheduled jobs always skip publishing.
+          $PackageEnv = if ((-Not $SkipPublish) -And (-Not $IsScheduledJob)) {
             "publish-prod"
           } else {
             "publish-test"
           }
 
           if ($IsScheduledJob) {
-            $SkipPublish = $true # force skipping publish for scheduled jobs
-            $DryRun = $false # just to avoid confusing 'Notice' messages
-          } elseif (-Not $IsMasterBranch -And -Not $IsPrerelease) {
-            $SkipPublish = $true # force skipping publish (jobs running in 'publish-test' cannot test the publishing step)
+            $SkipPublish = $true # scheduled jobs always skip publishing
             $DryRun = $false
           }
 
@@ -124,7 +133,9 @@ jobs:
           echo "package-list=$PackageList" >> $Env:GITHUB_OUTPUT
           echo "skip-publish=$($SkipPublish.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
           echo "dry-run=$($DryRun.ToString().ToLower())" >> $Env:GITHUB_OUTPUT
+          echo "build-branch=$BuildBranch" >> $Env:GITHUB_OUTPUT
 
+          echo "::notice::Branch: $BuildBranch"
           echo "::notice::Building Packages: $PackageList"
           echo "::notice::Version: $PackageVersion"
           echo "::notice::SkipPublish: $SkipPublish"
@@ -139,6 +150,8 @@ jobs:
     steps:
       - name: Check out ${{ github.repository }}
         uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.preflight.outputs.build-branch }}
 
       - name: Configure runner
         shell: pwsh

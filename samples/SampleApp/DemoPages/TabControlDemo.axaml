@@ -104,13 +104,11 @@
       </StackPanel>
     </StackPanel>
 
-    <TextBlock Classes="section-title" Margin="0 10 0 0" Text="TabControl overflow resizing demo" />
-    <TextBlock TextWrapping="Wrap">Drag the splitter to resize the tab header viewport and validate overflow behavior across width changes.</TextBlock>
-    <Border BorderBrush="{DynamicResource LayoutBorderHighBrush}" BorderThickness="1" Padding="20">
+    <!-- <Border BorderBrush="{DynamicResource LayoutBorderHighBrush}" BorderThickness="1" Padding="20"> -->
       <Grid ColumnDefinitions="400, 4, *">
         <TabControl Grid.Column="0" TabStripPlacement="Top">
           <TabItem Header="General">
-            <TextBlock Text="Overflow demo: Too many tabs to fit" VerticalAlignment="Top" />
+            <TextBlock VerticalAlignment="Top"><Bold>Overflow demo:</Bold> Drag the right edge to resize</TextBlock>
           </TabItem>
           <TabItem Header="Display" />
           <TabItem Header="Local resources" />
@@ -127,7 +125,7 @@
         <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
         <Border Grid.Column="2" />
       </Grid>
-    </Border>
+    <!-- </Border> -->
 
     <TextBlock Classes="section-title" Margin="0 10 0 0" Text="TabPane" />
     <TextBlock>Custom control <TextBlock Classes="code" Text="TabPane" /> - use exactly like <TextBlock Classes="code" Text="TabControl" /></TextBlock>

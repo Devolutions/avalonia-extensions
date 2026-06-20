@@ -107,7 +107,10 @@
                             Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
                             Stretch="Uniform">
                         <Path.RenderTransform>
-                          <RotateTransform Angle="-90" />
+                          <TransformGroup>
+                            <RotateTransform Angle="90" />
+                            <ScaleTransform ScaleX="-1" />
+                          </TransformGroup>
                         </Path.RenderTransform>
                       </Path>
                     </RepeatButton>

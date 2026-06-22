@@ -18,6 +18,12 @@
       <DevolutionsDevExpressThemeGlobalStyles />
       <local:SampleAppStyles />
     </Styles>
+    <Styles x:Key="WinUiStyles">
+      <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
+      <DevolutionsWinUiTheme GlobalStyles="False" />
+      <DevolutionsWinUiThemeGlobalStyles />
+      <local:SampleAppStyles />
+    </Styles>
     <Styles x:Key="MacOsStyles">
       <actipro:ModernTheme AreNativeControlThemesEnabled="False" />
       <DevolutionsMacOsTheme GlobalStyles="False" />
@@ -50,6 +56,7 @@
     <!-- <local:MacOsClassicThemeStyle /> -->
     <!-- <local:MacOsLiquidGlassThemeStyle /> -->
     <!-- <DevolutionsDevExpressTheme /> -->
+    <!-- <DevolutionsWinUiTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
     <!-- <local:FluentThemePlusAddOns /> -->
 

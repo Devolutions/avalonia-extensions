@@ -73,6 +73,7 @@
         <ProjectReference Include="..\..\src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
         <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.MacOS\Devolutions.AvaloniaTheme.MacOS.csproj" />
         <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.DevExpress\Devolutions.AvaloniaTheme.DevExpress.csproj" />
+        <ProjectReference Include="..\..\src\Devolutions.Avalonia.WinUI\Devolutions.Avalonia.WinUI.csproj" />
         <ProjectReference Include="..\..\src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj" />
     </ItemGroup>
 
@@ -91,6 +92,7 @@
         <!-- Devolutions Avalonia assemblies -->
         <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.DevExpress" />
+        <TrimmerRootAssembly Include="Devolutions.Avalonia.WinUI" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.Linux" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.MacOS" />
     </ItemGroup>

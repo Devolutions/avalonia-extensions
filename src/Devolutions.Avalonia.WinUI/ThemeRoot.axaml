@@ -1,0 +1,19 @@
+<Styles x:Class="Devolutions.AvaloniaTheme.WinUI.Internal.WinUITheme"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Use Fluent theme as fallback for controls not explicitly overridden in WinUI. -->
+  <FluentTheme />
+
+  <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
+
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Accents/Icons.axaml" />
+        <MergeResourceInclude Source="/Accents/ThemeResources.axaml" />
+        <MergeResourceInclude Source="/Controls/_index.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

@@ -13,6 +13,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.Threading;
+using Devolutions.AvaloniaTheme.WinUI;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
 using ViewModels;
@@ -31,6 +32,7 @@ public class App : Application
     private Styles? fluentStyles;
     private Styles? linuxYaruStyles;
     private Styles? simpleStyles;
+    private Styles? winUiStyles;
 
     /// <summary>
     ///   Returns true if the currently applied theme is LiquidGlass (either explicitly or via auto-detection).
@@ -60,6 +62,7 @@ public class App : Application
 
         this.linuxYaruStyles = this.Resources["LinuxYaruStyles"] as Styles;
         this.devExpressStyles = this.Resources["DevExpressStyles"] as Styles;
+        this.winUiStyles = this.Resources["WinUiStyles"] as Styles;
         this.fluentStyles = this.Resources["FluentStyles"] as Styles;
         this.simpleStyles = this.Resources["SimpleStyles"] as Styles;
 
@@ -143,12 +146,14 @@ public class App : Application
             "MacOsLiquidGlassThemeStyle" => new MacOsLiquidGlassTheme(),
             "DevolutionsLinuxYaruTheme" => new LinuxYaruTheme(),
             "DevolutionsDevExpressTheme" => new DevExpressTheme(),
+            "DevolutionsWinUiTheme" => new WinUiTheme(),
             "FluentThemePlusAddOns" => new FluentTheme(),
             "StyleInclude" => elem.GetAttribute("Source") switch
             {
                 "avares://Devolutions.AvaloniaTheme.MacOS/MacOSTheme.axaml" => new MacOsTheme(),
                 "avares://Devolutions.AvaloniaTheme.Linux/LinuxTheme.axaml" => new LinuxYaruTheme(),
                 "avares://Devolutions.AvaloniaTheme.DevExpress/DevExpressTheme.axaml" => new DevExpressTheme(),
+                "avares://Devolutions.Avalonia.WinUI/WinUITheme.axaml" => new WinUiTheme(),
                 _ => null,
             },
             _ => null,
@@ -227,6 +232,7 @@ public class App : Application
                 {
                     LinuxYaruTheme => app.linuxYaruStyles,
                     DevExpressTheme => app.devExpressStyles,
+                    WinUiTheme => app.winUiStyles,
                     FluentTheme => app.fluentStyles,
                     SimpleTheme => app.simpleStyles,
                     _ => null,
@@ -416,6 +422,12 @@ public class DevExpressTheme : Theme
 {
     public override string Name => "DevExpress";
     public override string DisplayName => "Windows - DevExpress";
+}
+
+public class WinUiTheme : Theme
+{
+    public override string Name => "WinUI";
+    public override string DisplayName => "Windows - WinUI";
 }
 
 public class MacOsTheme : Theme

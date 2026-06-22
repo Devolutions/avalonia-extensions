@@ -363,7 +363,7 @@ public partial class MainWindow : Window
     SampleItemHeader header = new()
     {
       Title = "TreeDataGrid (Avalonia Pro)",
-      ApplicableTo = "Fluent, MacClassic, DevExpress, Linux",
+      ApplicableTo = "MacClassic, DevExpress, Linux",
     };
 
     TabItem tabItem = new()

@@ -16,6 +16,10 @@ on:
         description: 'AvaloniaTheme.DevExpress'
         type: boolean
         default: false
+      build-winui:
+        description: 'Avalonia.WinUI'
+        type: boolean
+        default: false
       build-linux:
         description: 'AvaloniaTheme.Linux'
         type: boolean
@@ -112,6 +116,9 @@ jobs:
           if ('${{ inputs.build-devexpress }}' -eq 'true') {
               $Packages += "AvaloniaTheme.DevExpress"
           }
+          if ('${{ inputs.build-winui }}' -eq 'true') {
+              $Packages += "Avalonia.WinUI"
+          }
           if ('${{ inputs.build-linux }}' -eq 'true') {
               $Packages += "AvaloniaTheme.Linux"
           }
@@ -122,6 +129,7 @@ jobs:
               $Packages = @(
                   "AvaloniaTheme.MacOS",
                   "AvaloniaTheme.DevExpress",
+                  "Avalonia.WinUI",
                   "AvaloniaTheme.Linux",
                   "AvaloniaControls"
               )

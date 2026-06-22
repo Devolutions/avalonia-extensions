@@ -88,55 +88,84 @@
                                       ClipToBounds="False"
                                       ItemsPanel="{TemplateBinding ItemsPanel}" />
                     </ScrollViewer>
-                    <RepeatButton Name="PART_TabScrollLeftButton"
-                                  Grid.Column="1"
-                                  Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
-                                  AutomationProperties.Name="Scroll tabs left"
-                                  IsTabStop="False"
-                                  Focusable="False"
-                                  Foreground="{DynamicResource ForegroundHighBrush}"
-                                  Background="Transparent"
-                                  BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-                                  BorderThickness="1 0 0 0"
-                                  Padding="8 0"
-                                  IsVisible="False"
-                                  IsEnabled="False">
-                      <Path Width="8"
-                            Height="4"
-                            Data="{StaticResource ChevronPath}"
-                            Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
-                            Stretch="Uniform">
-                        <Path.RenderTransform>
-                          <TransformGroup>
-                            <RotateTransform Angle="90" />
-                            <ScaleTransform ScaleX="-1" />
-                          </TransformGroup>
-                        </Path.RenderTransform>
-                      </Path>
-                    </RepeatButton>
-                    <RepeatButton Name="PART_TabScrollRightButton"
-                                  Grid.Column="2"
-                                  Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
-                                  AutomationProperties.Name="Scroll tabs right"
-                                  IsTabStop="False"
-                                  Focusable="False"
-                                  Foreground="{DynamicResource ForegroundHighBrush}"
-                                  Background="Transparent"
-                                  BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-                                  BorderThickness="1 0 0 0"
-                                  Padding="8 0"
-                                  IsVisible="False"
-                                  IsEnabled="False">
-                      <Path Width="8"
-                            Height="4"
-                            Data="{StaticResource ChevronPath}"
-                            Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
-                            Stretch="Uniform">
-                        <Path.RenderTransform>
-                          <RotateTransform Angle="90" />
-                        </Path.RenderTransform>
-                      </Path>
-                    </RepeatButton>
+                    <Border Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            MinHeight="{DynamicResource ButtonMinHeight}"
+                            Background="{DynamicResource ButtonBackgroundBrush}"
+                            BorderBrush="{DynamicResource ButtonBorderBrush}"
+                            BorderThickness="{DynamicResource ButtonBorderThickness}"
+                            CornerRadius="{DynamicResource ButtonCornerRadius}"
+                            BoxShadow="{DynamicResource ButtonBorderBoxShadow}">
+                      <Grid ColumnDefinitions="Auto,Auto,Auto">
+                        <RepeatButton Name="PART_TabScrollLeftButton"
+                                      Grid.Column="0"
+                                      Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+                                      AutomationProperties.Name="Scroll tabs left"
+                                      IsTabStop="False"
+                                      Focusable="False"
+                                      Foreground="{DynamicResource ForegroundHighBrush}"
+                                      Background="Transparent"
+                                      BorderBrush="Transparent"
+                                      BorderThickness="0"
+                                      MinWidth="22"
+                                      Padding="0"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      IsVisible="False"
+                                      IsEnabled="False">
+                          <PathIcon Width="9"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
+                                    Data="{StaticResource ChevronPath}"
+                                    RenderTransformOrigin="50%,50%">
+                            <PathIcon.RenderTransform>
+                              <TransformGroup>
+                                <RotateTransform Angle="90" />
+                                <ScaleTransform ScaleX="-1" />
+                              </TransformGroup>
+                            </PathIcon.RenderTransform>
+                          </PathIcon>
+                        </RepeatButton>
+
+                        <Rectangle Grid.Column="1"
+                                   HorizontalAlignment="Left"
+                                   Height="15"
+                                   VerticalAlignment="Center"
+                                   Width="{DynamicResource SplitButtonSeparatorWidth}"
+                                   Fill="{DynamicResource ForegroundHighBrush}"
+                                   IsHitTestVisible="False"
+                                   Opacity="0.5" />
+
+                        <RepeatButton Name="PART_TabScrollRightButton"
+                                      Grid.Column="2"
+                                      Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+                                      AutomationProperties.Name="Scroll tabs right"
+                                      IsTabStop="False"
+                                      Focusable="False"
+                                      Foreground="{DynamicResource ForegroundHighBrush}"
+                                      Background="Transparent"
+                                      BorderBrush="Transparent"
+                                      BorderThickness="0"
+                                      MinWidth="22"
+                                      Padding="0"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      IsVisible="False"
+                                      IsEnabled="False">
+                          <PathIcon Width="9"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
+                                    Data="{StaticResource ChevronPath}"
+                                    RenderTransformOrigin="50%,50%">
+                            <PathIcon.RenderTransform>
+                              <RotateTransform Angle="90" />
+                            </PathIcon.RenderTransform>
+                          </PathIcon>
+                        </RepeatButton>
+                      </Grid>
+                    </Border>
                   </Grid>
                 </Border>
               </Panel>

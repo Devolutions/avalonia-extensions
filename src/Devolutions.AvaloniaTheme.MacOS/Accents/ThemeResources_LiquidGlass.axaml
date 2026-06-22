@@ -147,7 +147,8 @@
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
 
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
+      <SolidColorBrush x:Key="AccentBackgroundWash" x:DataType="SolidColorBrush"
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
       <SolidColorBrush x:Key="AccentHighlight" x:DataType="SolidColorBrush"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentHighlightConverter}}"
@@ -228,7 +229,8 @@
 
       <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
 
-      <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
+      <SolidColorBrush x:Key="AccentBackgroundWash"
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
       <SolidColorBrush x:Key="AccentHighlight"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentHighlightConverter}}"

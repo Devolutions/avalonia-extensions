@@ -149,7 +149,8 @@
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
-      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource LightModeAccentHighlightConverter}}"
+      <SolidColorBrush x:Key="AccentHighlight" x:DataType="SolidColorBrush"
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentHighlightConverter}}"
                        Opacity="0.64" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
@@ -207,7 +208,7 @@
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT20" />
-      <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -229,7 +230,8 @@
 
       <SolidColorBrush x:Key="AccentBackgroundWash" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
-      <SolidColorBrush x:Key="AccentHighlight" Color="{Binding Source={DynamicResource SystemAccentColor}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
+      <SolidColorBrush x:Key="AccentHighlight"
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
                        Opacity="0.69" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
@@ -286,7 +288,7 @@
       <StaticResource x:Key="CheckBoxBoxShadow" ResourceKey="NoShadow" />
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT26" />
-      <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='AccentHighlight' />
+      <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -374,8 +376,8 @@
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>
   <x:Double x:Key="MenuItemMinHeight">24</x:Double>
-  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="ComboBoxItemPointerOverBackgroundBrush" />
-  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ComboBoxItemPointerOverBackgroundBrush" />
+  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
+  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
 
 
   <!-- TextBox -->

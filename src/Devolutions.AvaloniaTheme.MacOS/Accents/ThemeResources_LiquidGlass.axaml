@@ -314,6 +314,7 @@
   <Thickness x:Key="TabControlBorderThickness">0</Thickness>
   <Thickness x:Key="TabControlTabStripBorderThickness">0</Thickness>
   <Thickness x:Key="TabControlTopItemsPresenterMargin">2 0 0 0</Thickness>
+  <BoxShadows x:Key="TabControlScrollButtonBoxShadow">-1 0 4 0 #40000000</BoxShadows>
   <StaticResource x:Key="TabItemDividerBorderBrush" ResourceKey="SurfaceT10" />
   <Thickness x:Key="TabItemPadding">16 4</Thickness>
   <x:Double x:Key="TabItemDividerHeight">14</x:Double>

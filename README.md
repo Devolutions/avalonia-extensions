@@ -12,6 +12,12 @@ Custom Avalonia Themes developed by [Devolutions](https://devolutions.net/)
 
 ➡️ [Avalonia Controls](https://github.com/Devolutions/avalonia-themes/blob/master/src/Devolutions.AvaloniaControls/README.md)
 
+## Package Compatibility
+
+> **Avalonia 12 line.** Packages `2026.6.17-avalonia12` and later are on the Avalonia 12 line. The first stable Avalonia 12 release is `2026.6.23`, and `2026.6.16` is the last stable release compatible with Avalonia 11.
+>
+> Maintenance-only fixes for the Avalonia 11 line may still be published as `2026.6.16.x` for a limited time. See the [Avalonia 11 -> 12 breaking changes](https://docs.avaloniaui.net/docs/avalonia12-breaking-changes) for upstream migration guidance.
+
 # Sample App
 
 Contributors can use the SampleApp to test, debug and document styles for the various controls under each theme.

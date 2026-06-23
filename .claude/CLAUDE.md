@@ -168,7 +168,7 @@ The `Devolutions.AvaloniaControls` package contains:
 - All themes support both light and dark modes
 
 ## Target Framework
-All projects target `.NET 10.0` and use Avalonia `11.3.x` packages.
+All projects target `.NET 10.0` and use Avalonia `12.0.x` packages.
 
 ## CI/CD
 The repository uses GitHub Actions for building and publishing NuGet packages. The workflow:
@@ -176,7 +176,7 @@ The repository uses GitHub Actions for building and publishing NuGet packages. T
 - Code signs DLLs using Azure Key Vault
 - Publishes to nuget.org
 - Supports individual or batch package publishing
-- Automatic versioning based on date (yyyy.MM.dd.0) for scheduled builds
+- Automatic stable versioning based on date (`yyyy.MM.dd.0`), with optional prerelease suffixes for migration/testing builds
 
 ## Control Status Tracking
 Each theme's README.md maintains a checklist of styled controls with status indicators:

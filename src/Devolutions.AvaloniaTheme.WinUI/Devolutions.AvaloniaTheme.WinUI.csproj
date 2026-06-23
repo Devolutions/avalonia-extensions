@@ -13,11 +13,11 @@
         <Version>1.0.0</Version>
         <Company>Devolutions</Company>
         <Description>Devolutions Avalonia WinUI Theme</Description>
-        <PackageId>Devolutions.Avalonia.WinUI</PackageId>
+        <PackageId>Devolutions.AvaloniaTheme.WinUI</PackageId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions</PackageProjectUrl>
         <PackageReleaseNotes>
-            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.Avalonia.WinUI/CHANGELOG.md
+            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.WinUI/CHANGELOG.md
         </PackageReleaseNotes>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>

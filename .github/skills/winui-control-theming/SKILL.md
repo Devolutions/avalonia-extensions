@@ -1,11 +1,11 @@
 ---
 name: winui-control-theming
-description: "Create or update Devolutions.Avalonia.WinUI control templates, ControlThemes, and ThemeResources. Use when adding a new WinUI-styled control, porting Fluent overrides from another app, choosing WinUI brush/resource names, or deciding whether a resource belongs in ThemeResources.axaml or a control file."
+description: "Create or update Devolutions.AvaloniaTheme.WinUI control templates, ControlThemes, and ThemeResources. Use when adding a new WinUI-styled control, porting Fluent overrides from another app, choosing WinUI brush/resource names, or deciding whether a resource belongs in ThemeResources.axaml or a control file."
 ---
 
 # WinUI Control Theming
 
-Use this skill when working on `src/Devolutions.Avalonia.WinUI/` and the goal is to add or refine WinUI-styled control themes while staying consistent with the resource strategy already used for this theme.
+Use this skill when working on `src/Devolutions.AvaloniaTheme.WinUI/` and the goal is to add or refine WinUI-styled control themes while staying consistent with the resource strategy already used for this theme.
 
 ## Core Principle
 
@@ -48,8 +48,8 @@ When adding or updating a WinUI control theme:
    - Add only the resources that are actually referenced by the new or updated control theme, unless there is a clear near-term reason to add a small shared set together.
 
 5. **Place resources in the right layer**
-   - Put reusable cross-control WinUI tokens in `src/Devolutions.Avalonia.WinUI/Accents/ThemeResources.axaml`
-   - Put control-only resources in the relevant `src/Devolutions.Avalonia.WinUI/Controls/*.axaml`
+   - Put reusable cross-control WinUI tokens in `src/Devolutions.AvaloniaTheme.WinUI/Accents/ThemeResources.axaml`
+   - Put control-only resources in the relevant `src/Devolutions.AvaloniaTheme.WinUI/Controls/*.axaml`
    - Keep `SampleAppBackground` and similar development-only resources clearly marked
 
 6. **Prefer ControlTheme isolation**
@@ -109,7 +109,7 @@ After adding or changing a control:
 
 ## Repository-Specific Notes
 
-- The WinUI theme lives in `src/Devolutions.Avalonia.WinUI/`
+- The WinUI theme lives in `src/Devolutions.AvaloniaTheme.WinUI/`
 - `ThemeRoot.axaml` should continue loading Fluent as fallback
 - `Controls/_index.axaml` should include each committed control resource file
 - `Accents/ThemeResources.axaml` should stay intentionally small and grow only as new control themes require it

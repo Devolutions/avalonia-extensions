@@ -153,7 +153,7 @@ public class App : Application
                 "avares://Devolutions.AvaloniaTheme.MacOS/MacOSTheme.axaml" => new MacOsTheme(),
                 "avares://Devolutions.AvaloniaTheme.Linux/LinuxTheme.axaml" => new LinuxYaruTheme(),
                 "avares://Devolutions.AvaloniaTheme.DevExpress/DevExpressTheme.axaml" => new DevExpressTheme(),
-                "avares://Devolutions.Avalonia.WinUI/WinUITheme.axaml" => new WinUiTheme(),
+                "avares://Devolutions.AvaloniaTheme.WinUI/WinUITheme.axaml" => new WinUiTheme(),
                 _ => null,
             },
             _ => null,

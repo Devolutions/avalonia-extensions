@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.Linux", "src\Devolutions.AvaloniaTheme.Linux\Devolutions.AvaloniaTheme.Linux.csproj", "{2B21E358-E385-44C8-B346-8654E9D61377}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.Avalonia.WinUI", "src\Devolutions.Avalonia.WinUI\Devolutions.Avalonia.WinUI.csproj", "{A28F77D4-27F9-490B-8AA0-72F15E16D58E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaTheme.WinUI", "src\Devolutions.AvaloniaTheme.WinUI\Devolutions.AvaloniaTheme.WinUI.csproj", "{A28F77D4-27F9-490B-8AA0-72F15E16D58E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaControls", "src\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj", "{3652052E-B032-409A-AB43-C18CB6A18086}"
 EndProject

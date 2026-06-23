@@ -18,7 +18,7 @@ internal class WinUITheme : Styles
         AvaloniaXamlLoader.Load(sp, this);
 
 #if DEBUG
-        Uri themePreviewerUri = new("avares://Devolutions.Avalonia.WinUI/Design/ThemePreviewer.axaml");
+        Uri themePreviewerUri = new("avares://Devolutions.AvaloniaTheme.WinUI/Design/ThemePreviewer.axaml");
         this.Resources.MergedDictionaries.Add(new ResourceInclude(themePreviewerUri) { Source = themePreviewerUri });
 #endif
     }

@@ -1,0 +1,34 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- DataGridRow: WinUI-style border-only selection.
+       A permanent transparent border reserves layout space so adjacent rows don't
+       shift on select and the accent border isn't clipped on the first/last rows. -->
+  <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow"
+                BasedOn="{StaticResource {x:Type DataGridRow}}">
+    <Setter Property="BorderThickness" Value="2"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Style Selector="^:selected">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}"/>
+    </Style>
+    <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="{DynamicResource SettingsCardHoverBackground}"/>
+    </Style>
+  </ControlTheme>
+
+  <!-- DataGridColumnHeader: WinUI renders column headers at 14 px (Avalonia Fluent defaults to 12 px). -->
+  <ControlTheme x:Key="{x:Type DataGridColumnHeader}" TargetType="DataGridColumnHeader"
+                BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+    <Setter Property="FontSize" Value="14"/>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderHoveredBackgroundBrush}"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderPressedBackgroundBrush}"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

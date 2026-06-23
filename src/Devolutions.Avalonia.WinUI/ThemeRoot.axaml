@@ -6,6 +6,7 @@
   <FluentTheme />
 
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
+  <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
 
   <Styles.Resources>
     <ResourceDictionary>

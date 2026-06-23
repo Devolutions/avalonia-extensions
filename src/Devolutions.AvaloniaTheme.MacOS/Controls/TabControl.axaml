@@ -95,7 +95,8 @@
                             BorderBrush="{DynamicResource ButtonBorderBrush}"
                             BorderThickness="{DynamicResource ButtonBorderThickness}"
                             CornerRadius="{DynamicResource ButtonCornerRadius}"
-                            BoxShadow="{DynamicResource TabControlScrollButtonBoxShadow}">
+                            BoxShadow="{DynamicResource TabControlScrollButtonBoxShadow}"
+                            IsVisible="{Binding IsVisible, ElementName=PART_TabScrollLeftButton}">
                       <Grid ColumnDefinitions="Auto,Auto,Auto">
                         <RepeatButton Name="PART_TabScrollLeftButton"
                                       Grid.Column="0"

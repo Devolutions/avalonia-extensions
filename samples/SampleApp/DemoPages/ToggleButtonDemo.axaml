@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SampleApp.DemoPages.ToggleButtonDemo">
+
+  <StackPanel Margin="20" Spacing="20">
+    <TextBlock Classes="section-title">ToggleButton</TextBlock>
+
+    <Border Padding="20">
+      <Grid ColumnDefinitions="160,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Default</TextBlock>
+        <ToggleButton Grid.Row="0" Grid.Column="1" Content="Toggle" />
+        <ToggleButton Grid.Row="0" Grid.Column="2" IsChecked="True" Content="Toggled" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+        <ToggleButton Grid.Row="1" Grid.Column="1" IsEnabled="False" Content="Toggle" />
+        <ToggleButton Grid.Row="1" Grid.Column="2" IsEnabled="False" IsChecked="True" Content="Toggled" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Icon content</TextBlock>
+        <ToggleButton Grid.Row="2" Grid.Column="1" Width="36" Height="30" FontSize="14" Content="▶" />
+        <ToggleButton Grid.Row="2" Grid.Column="2" Width="36" Height="30" FontSize="14" IsChecked="True" Content="▼" />
+      </Grid>
+    </Border>
+
+    <StackPanel Spacing="20" IsVisible="{ext:ThemeIsOneOf 'WinUI'}">
+      <Border Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Spacing="12">
+          <TextBlock FontWeight="Bold">WinUI filter toggle theme</TextBlock>
+          <TextBlock>
+            Uses <Run FontFamily="Courier New, Courier, monospace" Text="WinUiFilterToggleTheme" />
+            to render checked items with the SettingsCard surface instead of Fluent's accent fill.
+          </TextBlock>
+
+          <Grid ColumnDefinitions="150,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Unchecked / checked</TextBlock>
+            <ToggleButton Grid.Row="0" Grid.Column="1"
+                          Theme="{StaticResource WinUiFilterToggleTheme}"
+                          Content="All packages" />
+            <ToggleButton Grid.Row="0" Grid.Column="2"
+                          Theme="{StaticResource WinUiFilterToggleTheme}"
+                          IsChecked="True"
+                          Content="Installed" />
+            <ToggleButton Grid.Row="0" Grid.Column="3"
+                          Theme="{StaticResource WinUiFilterToggleTheme}"
+                          IsChecked="True"
+                          Content="Updates" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Disabled</TextBlock>
+            <ToggleButton Grid.Row="1" Grid.Column="1"
+                          Theme="{StaticResource WinUiFilterToggleTheme}"
+                          IsEnabled="False"
+                          Content="Available" />
+            <ToggleButton Grid.Row="1" Grid.Column="2"
+                          Theme="{StaticResource WinUiFilterToggleTheme}"
+                          IsEnabled="False"
+                          IsChecked="True"
+                          Content="Pinned" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Border Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Spacing="12">
+          <TextBlock FontWeight="Bold">WinUI tree chevron theme</TextBlock>
+          <TextBlock>
+            Uses <Run FontFamily="Courier New, Courier, monospace" Text="WinUiTreeChevronTheme" />
+            for transparent icon-button chrome with only subtle hover/press feedback.
+          </TextBlock>
+
+          <Grid ColumnDefinitions="150,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Unchecked / checked</TextBlock>
+            <ToggleButton Grid.Row="0" Grid.Column="1"
+                          Theme="{StaticResource WinUiTreeChevronTheme}"
+                          Width="28"
+                          Height="28"
+                          FontSize="14"
+                          Content="▶" />
+            <ToggleButton Grid.Row="0" Grid.Column="2"
+                          Theme="{StaticResource WinUiTreeChevronTheme}"
+                          Width="28"
+                          Height="28"
+                          FontSize="14"
+                          IsChecked="True"
+                          Content="▼" />
+            <ToggleButton Grid.Row="0" Grid.Column="3"
+                          Theme="{StaticResource WinUiTreeChevronTheme}"
+                          Width="28"
+                          Height="28"
+                          FontSize="14"
+                          Content="▶" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Inside a row</TextBlock>
+            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Padding="8" CornerRadius="4">
+              <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <ToggleButton Theme="{StaticResource WinUiTreeChevronTheme}"
+                              Width="28"
+                              Height="28"
+                              FontSize="14"
+                              IsChecked="True"
+                              Content="▼" />
+                <TextBlock VerticalAlignment="Center" Text="Node with transparent chevron chrome" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

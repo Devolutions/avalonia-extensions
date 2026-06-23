@@ -106,7 +106,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent" />
+                  <controls:SampleItemHeader Title="DataGrid" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, WinUI" />
                 </TabItem.Header>
                 <demoPages:DataGridDemo>
                   <demoPages:DataGridDemo.DataContext>
@@ -190,7 +190,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple" />
+                  <controls:SampleItemHeader Title="ListBox" ApplicableTo="MacClassic, DevExpress, Linux, Fluent, Simple, WinUI" />
                 </TabItem.Header>
                 <demoPages:ListBoxDemo />
               </TabItem>
@@ -295,6 +295,12 @@
                     <vm:TimePickerUpDownViewModel />
                   </demoPages:TimePickerUpDownDemo.DataContext>
                 </demoPages:TimePickerUpDownDemo>
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
+                  <controls:SampleItemHeader Title="ToggleButton" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple, WinUI" />
+                </TabItem.Header>
+                <demoPages:ToggleButtonDemo />
               </TabItem>
               <TabItem>
                 <TabItem.Header>

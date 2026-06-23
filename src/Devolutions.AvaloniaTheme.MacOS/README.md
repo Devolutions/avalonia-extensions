@@ -75,6 +75,8 @@ the goal is to create a theme that helps all of the Avalonia community to bring 
 
 ## Installation
 
+> **Avalonia 12 required.** Packages `2026.6.17-avalonia12` and later require Avalonia 12. The last stable release compatible with Avalonia 11 is [`2026.6.16`](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.MacOS/2026.6.16).
+
 Install the Devolutions.AvaloniaTheme.MacOS package
 via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.MacOS):
 
@@ -233,4 +235,3 @@ For an always up-to-date visual reference you can also browse the [baseline scre
 || Controls inherit basic MacOS-specific Fore-/Background & Font styling from Window (or EmbeddableControlRoot)|
 || <h3>WindowNotificationManager</h3> |
 |||
-

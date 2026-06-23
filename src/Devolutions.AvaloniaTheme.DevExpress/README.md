@@ -61,6 +61,8 @@ the Avalonia community to add more DevExpress-style controls.
 
 ## Installation
 
+> **Avalonia 12 required.** Packages `2026.6.17-avalonia12` and later require Avalonia 12. The last stable release compatible with Avalonia 11 is [`2026.6.16`](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.DevExpress/2026.6.16).
+
 Install the Devolutions.AvaloniaTheme.DevExpress package
 via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.DevExpress):
 
@@ -223,4 +225,3 @@ For an always up-to-date visual reference you can also browse the [baseline scre
 || Controls inherit basic DevEx-specific Fore-/Background & Font styling (or EmbeddableControlRoot) |
 || <h3>WindowNotificationManager</h3> |
 |||
-

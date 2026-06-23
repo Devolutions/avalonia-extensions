@@ -17,6 +17,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions</PackageProjectUrl>
         <PackageReleaseNotes>
+            BREAKING: 2026.6.23 requires Avalonia 12. Last Avalonia 11 stable release: 2026.6.16.
             See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.Linux/CHANGELOG.md
         </PackageReleaseNotes>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

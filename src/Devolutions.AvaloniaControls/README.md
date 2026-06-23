@@ -21,6 +21,8 @@ Desktop Manager](https://devolutions.net/remote-desktop-manager/). The more gene
 
 ## Installation
 
+> **Avalonia 12 required.** Packages `2026.6.17-avalonia12` and later require Avalonia 12. The last stable release compatible with Avalonia 11 is [`2026.6.16`](https://www.nuget.org/packages/Devolutions.AvaloniaControls/2026.6.16).
+
 Install the Devolutions.AvaloniaControls package
 via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaControls):
 

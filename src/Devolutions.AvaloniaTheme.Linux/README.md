@@ -29,6 +29,8 @@ the Avalonia community to add more controls.
 
 ## Installation
 
+> **Avalonia 12 required.** Packages `2026.6.17-avalonia12` and later require Avalonia 12. The last stable release compatible with Avalonia 11 is [`2026.6.16`](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.Linux/2026.6.16).
+
 Install the Devolutions.AvaloniaTheme.Linux package
 via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.Linux):
 
@@ -191,4 +193,3 @@ Below are some screenshots from the [SampleApp test and demo pages](https://gith
 |||
 || <h3>WindowNotificationManager</h3> |
 |||
-

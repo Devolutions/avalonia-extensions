@@ -97,6 +97,49 @@ When the source is another Avalonia app with Fluent overrides, such as UniGetUI:
 
 Do not assume the app's entire resource file belongs in this repository. Import the minimum coherent subset.
 
+## Windows 11 Mica Overlay
+
+The theme supports two variants: classic (solid surfaces, the default `Accents/ThemeResources.axaml`)
+and Windows 11 Mica (translucent surfaces). The Mica variant lives in
+`Accents/ThemeResources.Windows11.axaml` and is merged conditionally at runtime by
+`DevolutionsWinUiTheme` when `Windows11MicaDetector.IsMicaSupported()` is true.
+
+Rules for the Mica overlay:
+
+- **Grow it one control at a time.** When a new or updated control theme introduces a surface
+  brush that should become translucent under Mica (card/panel/page/flyout/header backgrounds,
+  borders), add that brush's Mica variant to `ThemeResources.Windows11.axaml` in the SAME change.
+- **Only override keys this theme actually defines.** Every key in the Mica overlay must have a
+  matching solid key in `Accents/ThemeResources.axaml` that a control theme consumes. Never add a
+  Mica key for a control that has no WinUI theme yet.
+- **Never import app-specific keys.** Keys like `PackageListBackground`, `AppDialog*`, or
+  `MicaPageBackground` from source apps are layout concerns of those apps, not reusable theme
+  tokens. Leave them out.
+- **Keep both variants in sync.** A Mica key without a base key (or vice versa) is a smell.
+
+### Critical: overlay placement and resource priority
+
+The base `ThemeResources.axaml` is pulled into `ThemeRoot.axaml` via `MergeResourceInclude`, which
+**flattens** it into the theme's own `ThemeDictionaries`. An owner dictionary's own
+`ThemeDictionaries` take priority over anything in its `MergedDictionaries`, so an overlay appended
+to the same dictionary as the base will NOT win. The Mica overlay must therefore be merged in a
+Styles level ABOVE the base theme — this is why it lives in `DevolutionsWinUiTheme.EndInit()`
+(above `WinUITheme`/`WinUIThemeWithGlobalStyles`), not inside `ThemeRoot.axaml`.
+
+`WinUiMicaProbe` in the visual tests project guards this behaviour for both the `GlobalStyles=false`
+(SampleApp) and `GlobalStyles=true` (simple consumer) paths. Keep it passing.
+
+### Testing the variants
+
+`Windows11MicaDetector.SetTestOverride(bool?)` forces the variant on/off regardless of OS, mirroring
+`MacOSVersionDetector`. The SampleApp exposes three dropdown entries — WinUI (automatic), WinUI
+classic, WinUI (Win11 Mica) — so the translucent brushes can be previewed on macOS/Linux. The actual
+native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` sets
+`TransparencyLevelHint = WindowTransparencyLevel.Mica` when `App.IsWinUiMicaTheme` is true. Avalonia
+drives the DWM system backdrop from that hint, so it lights up automatically on real Windows 11 (no
+extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. On macOS the visual approximation
+comes from the wallpaper preview layer, not a real compositor backdrop.
+
 ## Resource Audit Checklist
 
 After adding or changing a control:
@@ -113,6 +156,7 @@ After adding or changing a control:
 - `ThemeRoot.axaml` should continue loading Fluent as fallback
 - `Controls/_index.axaml` should include each committed control resource file
 - `Accents/ThemeResources.axaml` should stay intentionally small and grow only as new control themes require it
+- `Accents/ThemeResources.Windows11.axaml` is the Mica overlay; grow it in lockstep with the base file, never bulk-import
 - `GlobalStyles.axaml` should remain empty unless a genuine global styling requirement appears
 
 ## Good Outcome

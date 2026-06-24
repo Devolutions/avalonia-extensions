@@ -24,6 +24,8 @@ public partial class MainWindow : Window
     this.InitializeComponent();
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
+    this.ApplyWindowsMicaBackdrop();
+
     // Once the window is fully loaded, update background, detect scale, and size containers
     this.Loaded += async (s, e) =>
     {
@@ -156,6 +158,19 @@ public partial class MainWindow : Window
     wrapper.Height = baseHeight * relativeScale;
   }
 
+  private void ApplyWindowsMicaBackdrop()
+  {
+    // Native Windows 11 Mica backdrop. Avalonia drives the DWM system backdrop when the
+    // Mica transparency level is requested; it is a no-op on Windows 10 and non-Windows
+    // platforms (the level simply does not apply). This is opt-in for the WinUI Mica
+    // variant only -- App.IsWinUiMicaTheme is already resolved from real Win11 detection
+    // or the dev override, so the backdrop lights up automatically on Windows 11 with no
+    // extra UI. On the Mac the visual approximation comes from the wallpaper preview layer.
+    if (!App.IsWinUiMicaTheme) return;
+
+    this.TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica };
+  }
+
   private void UpdatePreviewBackground()
   {
     if (this.currentViewModel == null) return;
@@ -163,6 +178,16 @@ public partial class MainWindow : Window
     Panel? wallpaperPanel = this.FindControl<Panel>("PreviewWallpaper");
     Panel? contentPanel = this.FindControl<Panel>("MainContentPanel");
     if (wallpaperPanel == null || contentPanel == null) return;
+
+    // Only the translucent preview themes (LiquidGlass, WinUI Mica) render over a wallpaper.
+    // For any other theme, keep the wallpaper hidden and the content surface unaffected so a
+    // previously selected custom wallpaper does not leak into an opaque theme.
+    if (!App.IsWallpaperPreviewTheme)
+    {
+      wallpaperPanel.Background = Brushes.Transparent;
+      contentPanel.SetValue(Panel.BackgroundProperty, AvaloniaProperty.UnsetValue);
+      return;
+    }
 
     switch (this.currentViewModel.SelectedWallpaper.Option)
     {
@@ -172,12 +197,12 @@ public partial class MainWindow : Window
         break;
       case WallpaperOption.CustomLight:
         wallpaperPanel.Background = Brushes.Transparent;
-        if (this.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightResource) &&
+        if (this.TryGetResource("PreviewCustomWallpaperLight", this.ActualThemeVariant, out object? lightResource) &&
             lightResource is IBrush lightBrush)
         {
           contentPanel.Background = lightBrush;
         }
-        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperLight", this.ActualThemeVariant, out object? lightAppResource) &&
+        else if (Application.Current!.TryGetResource("PreviewCustomWallpaperLight", this.ActualThemeVariant, out object? lightAppResource) &&
                  lightAppResource is IBrush lightAppBrush)
         {
           contentPanel.Background = lightAppBrush;
@@ -186,12 +211,12 @@ public partial class MainWindow : Window
         break;
       case WallpaperOption.CustomDark:
         wallpaperPanel.Background = Brushes.Transparent;
-        if (this.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkResource) &&
+        if (this.TryGetResource("PreviewCustomWallpaperDark", this.ActualThemeVariant, out object? darkResource) &&
             darkResource is IBrush darkBrush)
         {
           contentPanel.Background = darkBrush;
         }
-        else if (Application.Current!.TryGetResource("LiquidGlassCustomWallpaperDark", this.ActualThemeVariant, out object? darkAppResource) &&
+        else if (Application.Current!.TryGetResource("PreviewCustomWallpaperDark", this.ActualThemeVariant, out object? darkAppResource) &&
                  darkAppResource is IBrush darkAppBrush)
         {
           contentPanel.Background = darkAppBrush;

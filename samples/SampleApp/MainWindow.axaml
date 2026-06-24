@@ -21,7 +21,7 @@
       <!-- Content container that gets scaled -->
       <Border Name="ScaledContainer">
         <Panel>
-          <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}" />
+          <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsWallpaperPreviewTheme}, Mode=OneTime}" />
           <Panel Name="MainContentPanel" Classes="mainControl">
             <TabControl x:Name="MainTabControl" TabStripPlacement="Left" VerticalAlignment="Stretch">
               <TabItem IsSelected="True">
@@ -411,7 +411,7 @@
                     VerticalAlignment="Top"
                     Width="250"
                     Padding="0 8 8 0"
-                    IsVisible="{Binding Source={x:Static sampleApp:App.IsLiquidGlassTheme}, Mode=OneTime}">
+                    IsVisible="{Binding Source={x:Static sampleApp:App.IsWallpaperPreviewTheme}, Mode=OneTime}">
               <actipro:ShadowChrome Elevation="8" ShadowColor="Black" ShadowOpacity="0.7">
                  <Border Background="{DynamicResource BackgroundColor}"
                          CornerRadius="5"

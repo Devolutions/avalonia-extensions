@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaTheme.WinUI;
 
 using System.ComponentModel;
+using global::Avalonia.Markup.Xaml.Styling;
 using global::Avalonia.Styling;
 using Internal;
 
@@ -37,6 +38,16 @@ public class DevolutionsWinUiTheme : Styles, ISupportInitialize
 
     public void EndInit()
     {
+        // Conditionally apply the Windows 11 Mica surface overrides above the base theme.
+        // This sits one level above WinUITheme/WinUIThemeWithGlobalStyles so it reliably
+        // overrides the base ThemeResources (which are flattened into the theme's own
+        // ThemeDictionaries via MergeResourceInclude and would otherwise take priority).
+        if (Windows11MicaDetector.IsMicaSupported())
+        {
+            global::System.Uri micaUri = new("avares://Devolutions.AvaloniaTheme.WinUI/Accents/ThemeResources.Windows11.axaml");
+            this.Resources.MergedDictionaries.Add(new ResourceInclude(micaUri) { Source = micaUri });
+        }
+
         this.Add(this.GlobalStyles
             ? new WinUIThemeWithGlobalStyles(this.sp)
             : new WinUITheme(this.sp));

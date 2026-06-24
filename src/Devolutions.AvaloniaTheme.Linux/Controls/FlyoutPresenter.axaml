@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type FlyoutPresenter}" TargetType="FlyoutPresenter"
+                BasedOn="{StaticResource {x:Type FlyoutPresenter}}">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
+    
+    <Style Selector="^ /template/ Border#LayoutRoot">
+      <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDropDownShadow}" />
+      <Setter Property="Margin" Value="{DynamicResource ComboBoxPopupBorderMargin}" />
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

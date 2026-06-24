@@ -334,6 +334,9 @@
   <x:Double x:Key="MenuFlyoutSeparatorThemeHeight">1</x:Double>
 
   <SolidColorBrush x:Key="MenuBackground" Color="{DynamicResource SystemRegionColor}" />
+  <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="MenuBackground" />
+  <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="ComboBoxDropDownBorderBrush" />
+  <StaticResource x:Key="DefaultFontFamily" ResourceKey="DevExpressThemeFontFamily" />
   <SolidColorBrush x:Key="MenuItemBackgroundPointerOver" Color="{DynamicResource MenuItemBackgroundPointerOverColor}" />
 
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />

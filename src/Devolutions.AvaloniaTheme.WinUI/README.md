@@ -7,7 +7,7 @@ Custom Avalonia Themes developed by [Devolutions](https://devolutions.net/)
 [![NuGet Version](https://img.shields.io/nuget/vpre/Devolutions.AvaloniaTheme.WinUI)](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.WinUI)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Devolutions.AvaloniaTheme.WinUI)
 
-## WinUI Theme [Work in Progress]
+## WinUI Theme [Work in Progress 🚧]
 
 This theme is based on [Avalonia.Themes.Fluent](https://github.com/AvaloniaUI/Avalonia/tree/master/src/Avalonia.Themes.Fluent)
 as fallback for controls not explicitly overridden yet.

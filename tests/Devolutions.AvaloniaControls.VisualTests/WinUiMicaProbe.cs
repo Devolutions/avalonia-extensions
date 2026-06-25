@@ -32,13 +32,17 @@ public class WinUiMicaProbe
         window.Styles.Add(theme);
         window.Show();
 
-        Assert.True(window.TryFindResource("SettingsCardBackground", variant, out var value),
-            $"SettingsCardBackground not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
-        var color = ((ISolidColorBrush)value!).Color;
-
-        window.Close();
-        Windows11MicaDetector.SetTestOverride(null);
-        return color;
+        try
+        {
+            Assert.True(window.TryFindResource("SettingsCardBackground", variant, out var value),
+                $"SettingsCardBackground not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
+            return ((ISolidColorBrush)value!).Color;
+        }
+        finally
+        {
+            window.Close();
+            Windows11MicaDetector.SetTestOverride(null);
+        }
     }
 
     [AvaloniaTheory]
@@ -69,16 +73,16 @@ public class WinUiMicaProbe
     public void Mica_provides_translucent_sampleapp_background_and_wallpaper_colours()
     {
         Windows11MicaDetector.SetTestOverride(true);
+        var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+        theme.BeginInit();
+        theme.EndInit();
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(theme);
+        window.Show();
+
         try
         {
-            var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
-            theme.BeginInit();
-            theme.EndInit();
-
-            var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
-            window.Styles.Add(theme);
-            window.Show();
-
             Assert.True(window.TryFindResource("SampleAppBackground", ThemeVariant.Light, out var bg));
             Assert.True(((ISolidColorBrush)bg!).Opacity < 1.0, "Mica SampleAppBackground should be translucent so the wallpaper preview reads through.");
 
@@ -86,11 +90,10 @@ public class WinUiMicaProbe
             Assert.Equal(Colors.White, ((ISolidColorBrush)light!).Color);
             Assert.True(window.TryFindResource("PreviewCustomWallpaperDark", out var dark));
             Assert.Equal(Colors.Black, ((ISolidColorBrush)dark!).Color);
-
-            window.Close();
         }
         finally
         {
+            window.Close();
             Windows11MicaDetector.SetTestOverride(null);
         }
     }

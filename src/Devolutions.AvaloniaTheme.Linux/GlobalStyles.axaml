@@ -19,14 +19,6 @@
 
     This is to ensure consumers are granted enough control to prevent styles "bleeding-out" in cases
     where that might be undesirable.
-
-    SVG icon coloring uses DynamicResource CSS string resources (SvgMenuItemDefaultCss /
-    SvgMenuItemDisabledCss defined in ThemeResources.axaml) rather than a Binding+converter against
-    DefaultIconFillBrush. The converter approach cannot be made reactive for statically-created
-    controls (e.g. always-visible demo popups) because Binding.Source is evaluated once and does not
-    re-run when the brush's Color property changes. Consumers who want to customize icon colors
-    should override SvgMenuItemDefaultCss / SvgMenuItemDisabledCss rather than DefaultIconFillBrush.
-    DefaultIconFillBrush remains available for other uses (e.g. explicit icon coloring in consumer XAML).
   -->
 
   <Style Selector="MenuItem Svg">

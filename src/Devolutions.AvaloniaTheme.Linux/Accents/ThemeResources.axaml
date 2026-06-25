@@ -81,8 +81,6 @@
 
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#F1F1F1" />
 
-      <Color x:Key="SvgIconDefaultColor">#010101</Color>
-      <Color x:Key="SvgIconDisabledColor">#bdbdbd</Color>
       <x:String x:Key="SvgMenuItemDefaultCss">.st0{fill:#010101;}</x:String>
       <x:String x:Key="SvgMenuItemDisabledCss">.st0,.st1,.st2,.st3{fill:#bdbdbd;}</x:String>
 
@@ -171,8 +169,6 @@
 
       <SolidColorBrush x:Key="GroupedTileListBoxItemPointerOverBrush" Color="#363636" />
 
-      <Color x:Key="SvgIconDefaultColor">#f5f5f5</Color>
-      <Color x:Key="SvgIconDisabledColor">#656565</Color>
       <x:String x:Key="SvgMenuItemDefaultCss">.st0{fill:#f5f5f5;}</x:String>
       <x:String x:Key="SvgMenuItemDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>
 
@@ -180,9 +176,6 @@
   </ResourceDictionary.ThemeDictionaries>
 
   <!-- MARK: Common Resources -->
-
-  <SolidColorBrush x:Key="DefaultIconFillBrush" Color="{DynamicResource SvgIconDefaultColor}" />
-  <SolidColorBrush x:Key="SvgIconDisabledColorBrush" Color="{DynamicResource SvgIconDisabledColor}" />
 
   <FontFamily x:Key="DefaultFontFamily">Open Sans, sans-serif</FontFamily>
   <x:Double x:Key="DefaultFontSize">14</x:Double>

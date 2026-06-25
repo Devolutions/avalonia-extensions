@@ -298,7 +298,7 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
-                  <controls:SampleItemHeader Title="ToggleButton" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux, Fluent, Simple, WinUI" />
+                  <controls:SampleItemHeader Title="ToggleButton" ApplicableTo="Fluent, Simple, WinUI" />
                 </TabItem.Header>
                 <demoPages:ToggleButtonDemo />
               </TabItem>

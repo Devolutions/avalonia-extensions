@@ -41,6 +41,7 @@
       <SolidColorBrush x:Key='ScrollControlBorder'>#dddddd</SolidColorBrush>
 
       <x:String x:Key="SvgMenuItemDefaultCss">.st0 {fill : #000000; }</x:String>
+      <x:String x:Key="SvgMenuItemPointerOverCss">.st0 {fill : #FFFFFF; }</x:String>
       <x:String x:Key="SvgMenuItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #B2B2B2; }</x:String>
       <Color x:Key="CalendarIconColor">#7b7b7b</Color>
       <Color x:Key="CalendarSelectedBackgroundColor">#dcdcdc</Color>
@@ -269,6 +270,7 @@
       <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>
 
       <x:String x:Key="SvgMenuItemDefaultCss">.st0 {fill : #B8B8B8; }</x:String>
+      <x:String x:Key="SvgMenuItemPointerOverCss">.st0 {fill : #DEECF9; }</x:String>
       <x:String x:Key="SvgMenuItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #757575; }</x:String>
       <Color x:Key="CalendarIconColor">#9f9f9f</Color>
       <Color x:Key="CalendarSelectedBackgroundColor">#454545</Color>

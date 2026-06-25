@@ -35,6 +35,10 @@
     <Setter Property="Css" Value="{DynamicResource SvgMenuItemDefaultCss}" />
   </Style>
 
+  <Style Selector="MenuItem:pointerover Svg">
+    <Setter Property="Css" Value="{DynamicResource SvgMenuItemPointerOverCss}" />
+  </Style>
+
   <Style Selector="MenuItem Svg:disabled">
     <Setter Property="Css" Value="{DynamicResource SvgMenuItemDisabledCss}" />
   </Style>

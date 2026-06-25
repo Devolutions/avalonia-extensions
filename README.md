@@ -55,7 +55,8 @@ Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linu
 - `dotnet test --filter "DisplayName~DevExpress"` - runs tests for all controls implemented in DevExpress
 - `dotnet test --filter "DisplayName~Button"` - runs tests for Button under each of the themes it's implemented in
 - `dotnet test --list-tests` - lists all test cases
-- 🆕 `scripts/test.sh [dotnet test args]` - runs `dotnet test` and prints one deduplicated visual-regression summary at the end. It also lets you use shorthand filter values (for example `--filter EditableCombo` instead of `--filter "DisplayName~EditableCombo"`).
+🆕 **Shor hand command & cleaner output:**
+- `./devtest` (macOS/Linux/Git Bash) or `.\devtest` (Windows PowerShell/CMD) - runs a script that calls the tests and prints a succinct visual-regression summary at the end. You can also use it with shorthand filter values (for example `--filter EditableCombo` instead of `--filter "DisplayName~EditableCombo"`).
 
 **Updating baseline screenshots** when changes are intentional:
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`

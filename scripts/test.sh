@@ -49,7 +49,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-dotnet test "${dotnet_args[@]}" 2>&1 | while IFS= read -r line; do
+dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line; do
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then

@@ -13,6 +13,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Svg;
 using Avalonia.Threading;
+using Devolutions.AvaloniaTheme.WinUI;
+using Devolutions.AvaloniaTheme.WinUI.Internal;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
 using ViewModels;
@@ -22,6 +24,13 @@ public class App : Application
     // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
     internal const string MacClassicThemeName = "MacClassic";
     internal const string LiquidGlassThemeName = "LiquidGlass";
+
+    // WinUI theme name constants. All three WinUI variants share the same logical
+    // identity ("WinUI") for control applicability/visibility gating; the variant names
+    // are only used to distinguish dropdown entries and force the Mica override.
+    internal const string WinUiThemeName = "WinUI";
+    internal const string WinUiClassicThemeName = "WinUiClassic";
+    internal const string WinUiMicaThemeName = "WinUiMica";
     private static readonly Lock ThemeLock = new();
     private static bool isSettingTheme;
 
@@ -37,6 +46,18 @@ public class App : Application
     /// </summary>
     public static bool IsLiquidGlassTheme =>
         EffectiveCurrentThemeName == LiquidGlassThemeName;
+
+    /// <summary>
+    ///   Returns true if the currently applied theme is WinUI with the Windows 11 Mica surface treatment active.
+    ///   Updated whenever the theme changes (in SetTheme()).
+    /// </summary>
+    public static bool IsWinUiMicaTheme { get; private set; }
+
+    /// <summary>
+    ///   Returns true when the current theme renders translucent surfaces over a backdrop, so the SampleApp
+    ///   wallpaper-preview affordance is relevant. Covers macOS LiquidGlass and Windows 11 WinUI Mica.
+    /// </summary>
+    public static bool IsWallpaperPreviewTheme => IsLiquidGlassTheme || IsWinUiMicaTheme;
 
     public static Theme? CurrentTheme { get; set; }
 
@@ -143,12 +164,14 @@ public class App : Application
             "MacOsLiquidGlassThemeStyle" => new MacOsLiquidGlassTheme(),
             "DevolutionsLinuxYaruTheme" => new LinuxYaruTheme(),
             "DevolutionsDevExpressTheme" => new DevExpressTheme(),
+            "DevolutionsWinUiTheme" => new WinUiTheme(),
             "FluentThemePlusAddOns" => new FluentTheme(),
             "StyleInclude" => elem.GetAttribute("Source") switch
             {
                 "avares://Devolutions.AvaloniaTheme.MacOS/MacOSTheme.axaml" => new MacOsTheme(),
                 "avares://Devolutions.AvaloniaTheme.Linux/LinuxTheme.axaml" => new LinuxYaruTheme(),
                 "avares://Devolutions.AvaloniaTheme.DevExpress/DevExpressTheme.axaml" => new DevExpressTheme(),
+                "avares://Devolutions.AvaloniaTheme.WinUI/WinUITheme.axaml" => new WinUiTheme(),
                 _ => null,
             },
             _ => null,
@@ -185,6 +208,33 @@ public class App : Application
         return styles;
     }
 
+    /// <summary>
+    ///   Creates fresh WinUI theme styles with the current Mica override active.
+    ///   This mirrors App.axaml's WinUiStyles resource, but is rebuilt per switch so the
+    ///   classic/Win11 override re-triggers the conditional Mica resource merge in the theme.
+    /// </summary>
+    private Styles CreateWinUiStyles()
+    {
+        Styles styles = new();
+
+        // Order matches App.axaml's WinUiStyles resource.
+        styles.Add(new ModernTheme
+        {
+            AreNativeControlThemesEnabled = false,
+        });
+
+        DevolutionsWinUiTheme winUiTheme = new() { GlobalStyles = false };
+        winUiTheme.BeginInit();
+        winUiTheme.EndInit();
+        styles.Add(winUiTheme);
+
+        styles.Add(new DevolutionsWinUiThemeGlobalStyles());
+
+        styles.Add(new SampleAppStyles());
+
+        return styles;
+    }
+
     public static void SetTheme(Theme theme)
     {
         lock (ThemeLock)
@@ -209,6 +259,9 @@ public class App : Application
 
             Styles? styles;
 
+            // Default: only the dedicated WinUI-Mica branch below turns this on.
+            IsWinUiMicaTheme = false;
+
             // MacOS themes require special handling to support sub-theme switching
             if (theme is MacOsTheme macOsTheme)
             {
@@ -219,6 +272,14 @@ public class App : Application
                 // Create fresh styles with the new override active
                 // This is necessary because theme resources are loaded at initialization time
                 styles = app.CreateMacOsStyles();
+            }
+            // WinUI themes likewise need fresh styles so the classic/Win11-Mica override
+            // re-triggers the conditional Mica resource merge inside the theme loader.
+            else if (theme is WinUiTheme winUiTheme)
+            {
+                Windows11MicaDetector.SetTestOverride(winUiTheme.Windows11Override);
+                IsWinUiMicaTheme = Windows11MicaDetector.IsMicaSupported();
+                styles = app.CreateWinUiStyles();
             }
             else
             {
@@ -245,6 +306,12 @@ public class App : Application
                 EffectiveCurrentThemeName = MacOSVersionDetector.IsLiquidGlassSupported()
                     ? LiquidGlassThemeName
                     : MacClassicThemeName;
+            }
+            else if (theme is WinUiTheme)
+            {
+                // All WinUI variants (automatic / classic / Win11) share the same logical
+                // identity for applicability gating; Mica only swaps surface translucency.
+                EffectiveCurrentThemeName = WinUiThemeName;
             }
             else
             {
@@ -416,6 +483,40 @@ public class DevExpressTheme : Theme
 {
     public override string Name => "DevExpress";
     public override string DisplayName => "Windows - DevExpress";
+}
+
+public class WinUiTheme : Theme
+{
+    public override string Name => App.WinUiThemeName;
+    public override string DisplayName => "Windows - WinUI (automatic)";
+
+    /// <summary>
+    ///   Mica override to apply before loading theme resources.
+    ///   null = use actual OS detection (default behavior)
+    /// </summary>
+    public virtual bool? Windows11Override => null;
+}
+
+public class WinUiClassicTheme : WinUiTheme
+{
+    public override string Name => App.WinUiClassicThemeName;
+    public override string DisplayName => "Windows - WinUI classic";
+
+    /// <summary>
+    ///   Force the classic (solid, Windows 10 era) surfaces by disabling Mica.
+    /// </summary>
+    public override bool? Windows11Override => false;
+}
+
+public class WinUiMicaTheme : WinUiTheme
+{
+    public override string Name => App.WinUiMicaThemeName;
+    public override string DisplayName => "Windows - WinUI (Win11 Mica)";
+
+    /// <summary>
+    ///   Force the Windows 11 Mica translucent surfaces.
+    /// </summary>
+    public override bool? Windows11Override => true;
 }
 
 public class MacOsTheme : Theme

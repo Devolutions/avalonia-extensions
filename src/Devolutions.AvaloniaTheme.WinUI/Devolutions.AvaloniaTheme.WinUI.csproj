@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../../Common.props" />
+    <Import Project="../../Accelerate.Packages.props" />
+
+    <PropertyGroup>
+        <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
+        <RootNamespace>Devolutions.AvaloniaTheme.WinUI</RootNamespace>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <Company>Devolutions</Company>
+        <Description>Devolutions Avalonia WinUI Theme</Description>
+        <PackageId>Devolutions.AvaloniaTheme.WinUI</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/Devolutions/avalonia-extensions</PackageProjectUrl>
+        <PackageReleaseNotes>
+            See https://github.com/Devolutions/avalonia-extensions/blob/master/src/Devolutions.AvaloniaTheme.WinUI/CHANGELOG.md
+        </PackageReleaseNotes>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+        <AvaloniaResource Include="Accents/Assets/**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+        <EmbeddedResource Include="ILLink.Descriptors.xml">
+            <LogicalName>ILLink.Descriptors.xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaDataGridVersion)" />
+        <PackageReference Include="Svg.Controls.Avalonia" Version="$(MinimumSvgVersion)" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
+        <DefaultItemExcludes>$(DefaultItemExcludes);Controls/TreeDataGrid.axaml;Controls/TreeDataGrid.styles.axaml</DefaultItemExcludes>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Devolutions.AvaloniaControls" Version="$(MinimumAvaloniaControlsVersion)" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Devolutions.AvaloniaControls\Devolutions.AvaloniaControls.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="Design\ThemePreviewer.axaml" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <Compile Remove="Design\ThemePreviewer.axaml.cs" />
+        <None Include="Design\ThemePreviewer.axaml.cs" />
+        <AvaloniaXaml Remove="Design\ThemePreviewer.axaml" />
+        <None Include="Design\ThemePreviewer.axaml" />
+    </ItemGroup>
+</Project>

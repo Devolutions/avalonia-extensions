@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- WinUI filter/toolbar toggle ToggleButton.
+       Apply via Theme="{StaticResource WinUiFilterToggleTheme}" on ToggleButton controls.
+       The checked state renders with a card-like fill matching SettingsCard surfaces,
+       rather than Fluent's accent-colour fill. -->
+  <ControlTheme x:Key="WinUiFilterToggleTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource {x:Type ToggleButton}}">
+    <Style Selector="^:checked">
+      <Setter Property="Background" Value="{DynamicResource SettingsCardBackground}"/>
+      <Setter Property="BorderBrush"  Value="{DynamicResource SettingsCardBorderBrush}"/>
+      <Setter Property="Foreground"   Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    </Style>
+    <Style Selector="^:checked:pointerover">
+      <Setter Property="Background" Value="{DynamicResource SettingsCardHoverBackground}"/>
+      <Setter Property="BorderBrush"  Value="{DynamicResource SettingsCardBorderBrush}"/>
+      <Setter Property="Foreground"   Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    </Style>
+    <Style Selector="^:checked:pressed">
+      <Setter Property="Background" Value="{DynamicResource SettingsCardBackground}"/>
+      <Setter Property="BorderBrush"  Value="{DynamicResource SettingsCardBorderBrush}"/>
+      <Setter Property="Foreground"   Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    </Style>
+    <Style Selector="^:checked:disabled">
+      <Setter Property="Background" Value="{DynamicResource SettingsCardBackground}"/>
+      <Setter Property="BorderBrush"  Value="{DynamicResource SettingsCardBorderBrush}"/>
+    </Style>
+  </ControlTheme>
+
+  <!-- WinUI expand-chevron / tree-node toggle ToggleButton.
+       Apply via Theme="{StaticResource WinUiTreeChevronTheme}" on ToggleButton controls.
+       Fully transparent background with a subtle overlay on hover/press — no border —
+       matching WinUI's transparent icon-button style for tree node expanders. -->
+  <ControlTheme x:Key="WinUiTreeChevronTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource {x:Type ToggleButton}}">
+    <Setter Property="Background"   Value="Transparent"/>
+    <Setter Property="BorderBrush"  Value="Transparent"/>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background"  Value="{DynamicResource SubtleFillColorSecondaryBrush}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background"  Value="{DynamicResource SubtleFillColorTertiaryBrush}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:checked">
+      <Setter Property="Background"   Value="Transparent"/>
+      <Setter Property="BorderBrush"  Value="Transparent"/>
+    </Style>
+    <Style Selector="^:checked:pointerover">
+      <Setter Property="Background"  Value="{DynamicResource SubtleFillColorSecondaryBrush}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:checked:pressed">
+      <Setter Property="Background"  Value="{DynamicResource SubtleFillColorTertiaryBrush}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

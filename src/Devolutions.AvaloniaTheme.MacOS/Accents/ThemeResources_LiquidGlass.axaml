@@ -421,7 +421,7 @@
   <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemRegionColor}" Opacity="0.8" />
 
   <!-- Custom wallpaper colours for testing transparency issues -->
-  <SolidColorBrush x:Key="LiquidGlassCustomWallpaperLight" Color="White" />
-  <SolidColorBrush x:Key="LiquidGlassCustomWallpaperDark" Color="Black" />
+  <SolidColorBrush x:Key="PreviewCustomWallpaperLight" Color="White" />
+  <SolidColorBrush x:Key="PreviewCustomWallpaperDark" Color="Black" />
 
 </ResourceDictionary>

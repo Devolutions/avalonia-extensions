@@ -1,0 +1,98 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+
+      <!-- WinUI Fluent v2 accent fills -->
+      <SolidColorBrush x:Key="AccentFillColorDefaultBrush"                  Color="{DynamicResource SystemAccentColor}"/>
+      <SolidColorBrush x:Key="AccentFillColorSecondaryBrush"                Color="{DynamicResource SystemAccentColorDark1}"/>
+      <SolidColorBrush x:Key="AccentFillColorTertiaryBrush"                 Color="{DynamicResource SystemAccentColorDark2}"/>
+      <SolidColorBrush x:Key="AccentFillColorDisabledBrush"                 Color="#37000000"/>
+      <SolidColorBrush x:Key="AccentFillColorSelectedTextBackgroundBrush"   Color="{DynamicResource SystemAccentColor}"/>
+
+      <!-- WinUI subtle fills (NavigationViewItem hover/selected backgrounds) -->
+      <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#09000000"/>
+      <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#06000000"/>
+
+      <!-- WinUI accent text -->
+      <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorDark2}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush"  Color="{DynamicResource SystemAccentColorDark3}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorTertiaryBrush"   Color="{DynamicResource SystemAccentColorDark1}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorDisabledBrush"   Color="#5C000000"/>
+
+      <!-- WinUI hyperlink — fixed blue so links stay readable over accent-tinted backgrounds -->
+      <SolidColorBrush x:Key="HyperlinkForeground" Color="#1C5FB8"/>
+
+      <!-- WinUI text fill -->
+      <SolidColorBrush x:Key="TextFillColorPrimaryBrush"    Color="#E4000000"/>
+      <SolidColorBrush x:Key="TextFillColorSecondaryBrush"  Color="#9E000000"/>
+      <SolidColorBrush x:Key="TextFillColorTertiaryBrush"   Color="#72000000"/>
+      <SolidColorBrush x:Key="TextFillColorDisabledBrush"   Color="#5C000000"/>
+      <SolidColorBrush x:Key="TextFillColorInverseBrush"    Color="#FFFFFFFF"/>
+
+      <!-- WinUI text on accent -->
+      <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush"       Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush"     Color="#B3FFFFFF"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorDisabledBrush"      Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorSelectedTextBrush"  Color="#FFFFFFFF"/>
+
+      <!-- WinUI SettingsCard surface -->
+      <SolidColorBrush x:Key="SettingsCardBackground"       Color="#FBFBFB"/>
+      <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#ECECEC"/>
+      <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#F6F6F6"/>
+
+      <!-- WinUI DataGrid column header hover/press -->
+      <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackgroundBrush"  Color="#05000000"/>
+      <SolidColorBrush x:Key="DataGridColumnHeaderPressedBackgroundBrush"  Color="#14000000"/>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+
+      <!-- WinUI Fluent v2 accent fills (lighter variants on dark background) -->
+      <SolidColorBrush x:Key="AccentFillColorDefaultBrush"                  Color="{DynamicResource SystemAccentColorLight2}"/>
+      <SolidColorBrush x:Key="AccentFillColorSecondaryBrush"                Color="{DynamicResource SystemAccentColorLight1}"/>
+      <SolidColorBrush x:Key="AccentFillColorTertiaryBrush"                 Color="{DynamicResource SystemAccentColor}"/>
+      <SolidColorBrush x:Key="AccentFillColorDisabledBrush"                 Color="#28FFFFFF"/>
+      <SolidColorBrush x:Key="AccentFillColorSelectedTextBackgroundBrush"   Color="{DynamicResource SystemAccentColor}"/>
+
+      <!-- WinUI subtle fills -->
+      <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#0FFFFFFF"/>
+      <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#0AFFFFFF"/>
+
+      <!-- WinUI accent text -->
+      <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorLight3}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush"  Color="{DynamicResource SystemAccentColorLight3}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorTertiaryBrush"   Color="{DynamicResource SystemAccentColorLight2}"/>
+      <SolidColorBrush x:Key="AccentTextFillColorDisabledBrush"   Color="#5CFFFFFF"/>
+
+      <!-- WinUI hyperlink -->
+      <SolidColorBrush x:Key="HyperlinkForeground" Color="#A6D4FF"/>
+
+      <!-- WinUI text fill -->
+      <SolidColorBrush x:Key="TextFillColorPrimaryBrush"    Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="TextFillColorSecondaryBrush"  Color="#C5FFFFFF"/>
+      <SolidColorBrush x:Key="TextFillColorTertiaryBrush"   Color="#87FFFFFF"/>
+      <SolidColorBrush x:Key="TextFillColorDisabledBrush"   Color="#5DFFFFFF"/>
+      <SolidColorBrush x:Key="TextFillColorInverseBrush"    Color="#E4000000"/>
+
+      <!-- WinUI text on accent -->
+      <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush"       Color="#000000"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush"     Color="#80000000"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorDisabledBrush"      Color="#87FFFFFF"/>
+      <SolidColorBrush x:Key="TextOnAccentFillColorSelectedTextBrush"  Color="#FFFFFFFF"/>
+
+      <!-- WinUI SettingsCard surface -->
+      <SolidColorBrush x:Key="SettingsCardBackground"       Color="#2D2D2D"/>
+      <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#393939"/>
+      <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#323232"/>
+
+      <!-- WinUI DataGrid column header hover/press -->
+      <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackgroundBrush"  Color="#0AFFFFFF"/>
+      <SolidColorBrush x:Key="DataGridColumnHeaderPressedBackgroundBrush"  Color="#1FFFFFFF"/>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- DEVELOPMENT ONLY -->
+  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemAltHighColor}" />
+  
+</ResourceDictionary>

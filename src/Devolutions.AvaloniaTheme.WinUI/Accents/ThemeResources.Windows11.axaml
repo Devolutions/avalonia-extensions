@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--
+    Windows 11 Mica overrides. Merged into the WinUI theme ONLY when Mica is active
+    (Windows 11, build 22000+) — see Windows11MicaDetector / WinUITheme.
+
+    On macOS, Linux, or Windows 10 this is never merged, so the theme keeps the solid
+    surfaces from Accents/ThemeResources.axaml. These keys make surfaces translucent so
+    the Mica backdrop shows through and inherits its (wallpaper-derived) tint.
+
+    Scope: grow this overlay one control at a time. When a control gains a WinUI theme
+    that introduces a new surface brush, add that brush's Mica variant here in the same
+    change. Do NOT bulk-import app-specific keys from source apps.
+  -->
+  <ResourceDictionary.ThemeDictionaries>
+
+    <ResourceDictionary x:Key="Light">
+      <!-- WinUI SettingsCard surface — translucent white layers over the (light) Mica -->
+      <SolidColorBrush x:Key="SettingsCardBackground"       Color="#80FFFFFF"/>
+      <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#14000000"/>
+      <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#99FFFFFF"/>
+
+      <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
+           reads through, approximating the Mica backdrop on non-Windows hosts. -->
+      <SolidColorBrush x:Key="SampleAppBackground" Color="#F3F3F3" Opacity="0.8"/>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <!-- WinUI SettingsCard surface — translucent dark layers over the (dark) Mica -->
+      <SolidColorBrush x:Key="SettingsCardBackground"       Color="#662D2D2D"/>
+      <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#26FFFFFF"/>
+      <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#66383838"/>
+
+      <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
+           reads through, approximating the Mica backdrop on non-Windows hosts. -->
+      <SolidColorBrush x:Key="SampleAppBackground" Color="#202020" Opacity="0.8"/>
+    </ResourceDictionary>
+
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- DEVELOPMENT ONLY: custom wallpaper colours for testing surface translucency.
+       Shared key names with the macOS LiquidGlass preview so the SampleApp wallpaper
+       selector works identically for both translucent themes. -->
+  <SolidColorBrush x:Key="PreviewCustomWallpaperLight" Color="White" />
+  <SolidColorBrush x:Key="PreviewCustomWallpaperDark" Color="Black" />
+
+</ResourceDictionary>

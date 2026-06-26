@@ -32,19 +32,15 @@
   </Style>
 
   <Style Selector="MenuItem Svg">
-    <Setter Property="Css">
-      <Setter.Value>
-        <Binding Source="{StaticResource DefaultIconFillBrush}" Converter="{x:Static DevoConverters.ColorToCssFillConverter}" ConverterParameter='.st0' />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDefaultCss}" />
+  </Style>
+
+  <Style Selector="MenuItem:pointerover Svg">
+    <Setter Property="Css" Value="{DynamicResource SvgMenuItemPointerOverCss}" />
   </Style>
 
   <Style Selector="MenuItem Svg:disabled">
-    <Setter Property="Css">
-      <Setter.Value>
-        <Binding Source="{StaticResource SvgIconDisabledColorBrush}" Converter="{x:Static DevoConverters.ColorToCssFillConverter}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDisabledCss}" />
   </Style>
 
   <!-- Custom Classes used as ConverterParameters in Template styles - declared here to make them available to the IDE's parser to avoid false error highlighting -->

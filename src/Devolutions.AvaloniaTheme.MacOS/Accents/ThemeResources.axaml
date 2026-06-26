@@ -25,7 +25,6 @@
       <Color x:Key="ControlBorderLowColor">#14000000</Color> <!-- 8% -->
 
       <Color x:Key="GridSplitterLineColor">#4D000000</Color> <!-- 30% -->
-      <Color x:Key="SvgIconDisabledColor">#b2b2b2</Color>
       <Color x:Key="ToolTipBackgroundColor">#e1e1e1</Color>
       <Color x:Key="ToolTipBorderColor">Transparent</Color>
 
@@ -41,7 +40,9 @@
       <Color x:Key="ScrollBarTrackBorderColor">#d6d6d6</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#dddddd</SolidColorBrush>
 
-      <Color x:Key="DefaultIconColor">#000000</Color>
+      <x:String x:Key="SvgMenuItemDefaultCss">.st0 {fill : #000000; }</x:String>
+      <x:String x:Key="SvgMenuItemPointerOverCss">.st0 {fill : #FFFFFF; }</x:String>
+      <x:String x:Key="SvgMenuItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #B2B2B2; }</x:String>
       <Color x:Key="CalendarIconColor">#7b7b7b</Color>
       <Color x:Key="CalendarSelectedBackgroundColor">#dcdcdc</Color>
 
@@ -253,7 +254,6 @@
       <Color x:Key="ControlBorderLowColor">#14ffffff</Color> <!-- 8% -->
 
       <Color x:Key="GridSplitterLineColor">#30ffffff</Color> <!-- 19% -->
-      <Color x:Key="SvgIconDisabledColor">#757575</Color>
       <Color x:Key="ToolTipBackgroundColor">#2a2a2a</Color>
       <Color x:Key="ToolTipBorderColor">#4a4a4a</Color>
 
@@ -269,7 +269,9 @@
       <Color x:Key="ScrollBarTrackBorderColor">#3f3f3f</Color>
       <SolidColorBrush x:Key='ScrollControlBorder'>#343337</SolidColorBrush>
 
-      <Color x:Key="DefaultIconColor">#b8b8b8</Color>
+      <x:String x:Key="SvgMenuItemDefaultCss">.st0 {fill : #B8B8B8; }</x:String>
+      <x:String x:Key="SvgMenuItemPointerOverCss">.st0 {fill : #DEECF9; }</x:String>
+      <x:String x:Key="SvgMenuItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #757575; }</x:String>
       <Color x:Key="CalendarIconColor">#9f9f9f</Color>
       <Color x:Key="CalendarSelectedBackgroundColor">#454545</Color>
 
@@ -547,8 +549,6 @@
   <Thickness x:Key="FocusBorderThickness">3.5</Thickness>
   <Thickness x:Key="FocusBorderMargin">-3</Thickness>
 
-  <SolidColorBrush x:Key="DefaultIconFillBrush" Color="{DynamicResource DefaultIconColor}" />
-
   <!-- TODO: Button Resources -->
 
   <!-- Button Resources (& button-like parts of other controls) -->
@@ -732,7 +732,6 @@
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
-  <SolidColorBrush x:Key="SvgIconDisabledColorBrush" Color="{DynamicResource SvgIconDisabledColor}" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
   <x:Double x:Key="MenuHeaderFontSizeSmall">10</x:Double>
 

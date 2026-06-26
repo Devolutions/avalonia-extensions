@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="{x:Type FlyoutPresenter}" TargetType="FlyoutPresenter"
+                BasedOn="{StaticResource {x:Type FlyoutPresenter}}">
+    <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThickness}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource PopupCornerRadius}" />
+    
+    <Style Selector="^ /template/ Border#LayoutRoot">
+      <Setter Property="BoxShadow" Value="{DynamicResource PopupShadow}" />
+      <Setter Property="Margin" Value="{StaticResource PopupMargin}" />
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

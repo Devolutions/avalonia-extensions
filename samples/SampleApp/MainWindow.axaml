@@ -158,6 +158,12 @@
               </TabItem>
               <TabItem>
                 <TabItem.Header>
+                  <controls:SampleItemHeader Title="FlyoutPresenter" ApplicableTo="MacClassic, LiquidGlass, DevExpress, Linux" />
+                </TabItem.Header>
+                <demoPages:FlyoutPresenterDemo />
+              </TabItem>
+              <TabItem>
+                <TabItem.Header>
                   <controls:SampleItemHeader Title="GridSplitter" ApplicableTo="MacClassic, Fluent, Simple" />
                 </TabItem.Header>
                 <demoPages:GridSplitterDemo />

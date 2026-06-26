@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SampleApp.DemoPages.FlyoutPresenterDemo">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+
+      <TextBlock Classes="h1">FlyoutPresenter</TextBlock>
+
+      <!-- Buttons that trigger flyouts to check live appearance -->
+      <TextBlock Classes="section-title">Live Flyout (click to open)</TextBlock>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+
+        <Button Content="Plain Flyout">
+          <Button.Flyout>
+            <Flyout>
+              <StackPanel Spacing="8" Margin="4">
+                <TextBlock Classes="section-title">FlyoutPresenter</TextBlock>
+                <TextBlock>Default Placement is <TextBlock Classes="code">BottomEdgeAlignedLeft</TextBlock></TextBlock>
+                <Button HorizontalAlignment="Left" Content="A button inside" Margin="0 10 0 0" />
+              </StackPanel>
+            </Flyout>
+          </Button.Flyout>
+        </Button>
+
+        <Button Content="MenuFlyout">
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="Item One" />
+              <MenuItem Header="Item Two" />
+              <Separator />
+              <MenuItem Header="Item Three (disabled)" IsEnabled="False" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+
+      </StackPanel>
+
+      <!-- Static FlyoutPresenter for visual inspection without clicking -->
+      <TextBlock Classes="section-title" Margin="0 10 0 0">Static FlyoutPresenter (always visible)</TextBlock>
+      <TextBlock>Background, BorderBrush, BorderThickness, CornerRadius, FontFamily, FontSize and BoxShadow should all match the theme.</TextBlock>
+
+      <FlyoutPresenter HorizontalAlignment="Left">
+        <StackPanel Spacing="8" Margin="4">
+          <TextBlock Classes="section-title">FlyoutPresenter content</TextBlock>
+          <TextBlock>The background should use MenuFlyoutPresenterBackground.</TextBlock>
+          <TextBlock>The border should use MenuFlyoutPresenterBorderBrush.</TextBlock>
+          <TextBlock>The corner radius should match OverlayCornerRadius.</TextBlock>
+          <TextBlock>Font family and size should match DefaultFontFamily / DefaultFontSize.</TextBlock>
+          <TextBlock>The outer margin and box shadow should match ComboBoxPopupBorderMargin / ComboBoxDropDownShadow.</TextBlock>
+          <Button HorizontalAlignment="Left" Content="A button" />
+        </StackPanel>
+      </FlyoutPresenter>
+
+      <!-- Static MenuFlyoutPresenter side-by-side for comparison -->
+      <TextBlock Classes="section-title" Margin="0 20 0 0">Side-by-side: FlyoutPresenter vs MenuFlyoutPresenter</TextBlock>
+      <TextBlock>Both should look consistent with the theme's popup / overlay style.</TextBlock>
+
+      <StackPanel Orientation="Horizontal" Spacing="30" VerticalAlignment="Top">
+        <StackPanel Spacing="4">
+          <TextBlock FontSize="11">FlyoutPresenter</TextBlock>
+          <FlyoutPresenter HorizontalAlignment="Left">
+            <StackPanel Spacing="10">
+              <TextBlock Text="Connection summary" FontWeight="SemiBold" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource ThemeForegroundLowBrush}">
+                  This flyout hosts arbitrary content.
+              </TextBlock>
+            </StackPanel>
+          </FlyoutPresenter>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+          <TextBlock FontSize="11">MenuFlyoutPresenter</TextBlock>
+          <MenuFlyoutPresenter HorizontalAlignment="Left">
+            <MenuItem Header="Item One" />
+            <MenuItem Header="Item Two" />
+            <MenuItem Header="Item Three (disabled)" IsEnabled="False" />
+          </MenuFlyoutPresenter>
+        </StackPanel>
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

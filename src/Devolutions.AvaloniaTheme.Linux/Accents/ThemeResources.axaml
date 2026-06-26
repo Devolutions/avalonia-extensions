@@ -251,6 +251,8 @@
   <SolidColorBrush x:Key="ExpanderBodyBackgroundBrush" Color="{DynamicResource ExpanderBodyBackgroundColor}" />
 
   <BoxShadows x:Key="PopupShadow">0 0 1 0 #66000000</BoxShadows>
+  <StaticResource x:Key="ComboBoxDropDownShadow" ResourceKey="PopupShadow" />
+  <Thickness x:Key="ComboBoxPopupBorderMargin">0</Thickness>
 
   <Thickness x:Key='TabItemMargin'>10</Thickness>
 

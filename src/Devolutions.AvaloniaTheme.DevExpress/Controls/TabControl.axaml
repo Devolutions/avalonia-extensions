@@ -170,12 +170,13 @@
               <Grid DockPanel.Dock="{TemplateBinding TabStripPlacement}"
                     ColumnDefinitions="*,Auto,Auto"
                     ZIndex="2">
-                <Border Name="CardBorderBeyondTheTabs"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Stretch"
+                <Border Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="0 0 0 1" />
+                        Margin="0"
+                        BorderThickness="1 0 0 0"
+                        IsVisible="{Binding !!#PART_TabHeaderScrollViewer.Offset.X}" />
                 <RepeatButton Name="PART_TabScrollLeftButton"
                               Grid.Column="1"
                               Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
@@ -185,7 +186,7 @@
                               Foreground="{DynamicResource ForegroundHighBrush}"
                               Background="Transparent"
                               BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="1 1 0 0"
+                              BorderThickness="1 1 0 1"
                               CornerRadius="4 0 0 0"
                               Margin="0"
                               Padding="8 0"
@@ -208,11 +209,20 @@
                               Grid.Column="0"
                               HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Hidden">
-                  <ItemsPresenter Name="PART_ItemsPresenter"
-                                  Margin="{DynamicResource TabsContainerMargin}"
-                                  VerticalAlignment="Top"
-                                  ItemsPanel="{TemplateBinding ItemsPanel}"
-                                  ZIndex="2" />
+                  <DockPanel>
+                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                    DockPanel.Dock="Left"
+                                    Margin="{DynamicResource TabsContainerMargin}"
+                                    VerticalAlignment="Top"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    ZIndex="2" />
+                    <Border Name="CardBorderBeyondTheTabs"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="6 0 0 0"
+                            BorderThickness="0 0 0 1" />
+                  </DockPanel>
                 </ScrollViewer>
                 <RepeatButton Name="PART_TabScrollRightButton"
                               Grid.Column="2"
@@ -223,7 +233,7 @@
                               Foreground="{DynamicResource ForegroundHighBrush}"
                               Background="Transparent"
                               BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="0 1 1 0"
+                              BorderThickness="0 1 1 1"
                               CornerRadius="0 4 0 0"
                               Margin="0"
                               Padding="8 0"

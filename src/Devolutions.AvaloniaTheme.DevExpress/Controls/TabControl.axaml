@@ -170,13 +170,6 @@
               <Grid DockPanel.Dock="{TemplateBinding TabStripPlacement}"
                     ColumnDefinitions="*,Auto,Auto"
                     ZIndex="2">
-                <!-- <Border Name="CardBorderBeyondTheTabs" -->
-                <!--         Grid.Column="1" -->
-                <!--         Grid.ColumnSpan="2" -->
-                <!--         VerticalAlignment="Bottom" -->
-                <!--         HorizontalAlignment="Stretch" -->
-                <!--         BorderBrush="{TemplateBinding BorderBrush}" -->
-                <!--         BorderThickness="0 0 0 1" /> -->
                 <RepeatButton Name="PART_TabScrollLeftButton"
                               Grid.Column="1"
                               Theme="{StaticResource FluentButtonSpinnerRepeatButton}"

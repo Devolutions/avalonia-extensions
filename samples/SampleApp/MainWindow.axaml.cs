@@ -15,6 +15,8 @@ using ViewModels;
 
 public partial class MainWindow : Window
 {
+  private static readonly string LaunchTime = DateTime.Now.ToString("MMM d, HH:mm");
+  private static readonly Lazy<Task<string?>> LaunchBranch = new(GetGitBranchAsync);
   private readonly IBrush tieDyeBrush;
   private MainWindowViewModel? currentViewModel;
   private bool suppressThemeChangeEvents;
@@ -277,12 +279,11 @@ public partial class MainWindow : Window
 
   private static async Task<string> BuildWindowTitleAsync(string? baseTitle)
   {
-    string launchTime = DateTime.Now.ToString("MMM d, HH:mm");
     string prefix = string.IsNullOrWhiteSpace(baseTitle) ? "SampleApp" : baseTitle;
-    string? branch = await GetGitBranchAsync();
+    string? branch = await LaunchBranch.Value;
     return string.IsNullOrEmpty(branch)
-      ? $"{prefix} — {launchTime}"
-      : $"{prefix} — {branch} — {launchTime}";
+      ? $"{prefix} — {LaunchTime}"
+      : $"{prefix} — {branch} — {LaunchTime}";
   }
 
   private static async Task<string?> GetGitBranchAsync()

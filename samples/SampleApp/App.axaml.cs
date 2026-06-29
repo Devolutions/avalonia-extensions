@@ -21,6 +21,8 @@ using ViewModels;
 
 public class App : Application
 {
+    private readonly record struct WindowPlacement(PixelPoint Position, double Width, double Height, WindowState State);
+
     // Theme name constants to avoid unnecessary allocations when resolving MacOS automatic theme
     internal const string MacClassicThemeName = "MacClassic";
     internal const string LiquidGlassThemeName = "LiquidGlass";
@@ -323,6 +325,7 @@ public class App : Application
                 // IMPORTANT: Capture state and hide old window BEFORE changing styles
                 // to prevent expensive re-rendering of a window we're about to discard
                 Window? oldWindow = desktopLifetime.MainWindow;
+                WindowPlacement? windowPlacement = CaptureWindowPlacement(oldWindow);
                 int selectedTabIndex = oldWindow is MainWindow oldMainWindow
                     ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
                     : 0;
@@ -344,7 +347,7 @@ public class App : Application
                 app.themeStylesContainer.Clear();
                 app.themeStylesContainer.AddRange(styles);
 
-                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex);
+                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex, windowPlacement);
             }
             else
             {
@@ -372,11 +375,50 @@ public class App : Application
         DevolutionsMacOsTheme.ClearWallpaperTintResources(app);
     }
 
-    private static void RecreateMainWindow(IClassicDesktopStyleApplicationLifetime lifetime, Window? oldWindow, int selectedTabIndex)
+    private static WindowPlacement? CaptureWindowPlacement(Window? window)
+    {
+        if (window == null)
+        {
+            return null;
+        }
+
+        Rect bounds = window.Bounds;
+        return new WindowPlacement(window.Position, bounds.Width, bounds.Height, window.WindowState);
+    }
+
+    private static void ApplyWindowPlacement(MainWindow window, WindowPlacement? placement)
+    {
+        if (placement is null)
+        {
+            return;
+        }
+
+        WindowPlacement p = placement.Value;
+
+        // Manual startup location prevents centering on the primary display when recreating the window.
+        window.WindowStartupLocation = WindowStartupLocation.Manual;
+        window.Position = p.Position;
+
+        if (p.Width > 0 && p.Height > 0)
+        {
+            window.Width = p.Width;
+            window.Height = p.Height;
+        }
+
+        // Don't carry a minimized state across recreation.
+        window.WindowState = p.State == WindowState.Minimized ? WindowState.Normal : p.State;
+    }
+
+    private static void RecreateMainWindow(
+        IClassicDesktopStyleApplicationLifetime lifetime,
+        Window? oldWindow,
+        int selectedTabIndex,
+        WindowPlacement? windowPlacement)
     {
         object? dataContext = oldWindow?.DataContext;
 
         MainWindow newWindow = new() { DataContext = dataContext };
+        ApplyWindowPlacement(newWindow, windowPlacement);
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize

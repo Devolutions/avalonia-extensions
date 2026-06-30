@@ -2,7 +2,7 @@
 
 ## Goal
 Decouple visual test discovery from MainWindow UI structure by introducing a single source of truth for demo metadata, then use that same source to drive both:
-1. SampleApp navigation UI (initially TabControl-compatible, future TreeView-friendly).
+1. SampleApp navigation UI (initially TabControl-compatible, next create a searchable TreeView).
 2. Visual regression test case discovery (including dynamic entries).
 
 This removes the current coupling between test discovery and MainWindow TabItem layout, and unlocks future navigation refactors without test breakage.
@@ -24,7 +24,7 @@ This removes the current coupling between test discovery and MainWindow TabItem 
   - Existing visual testing background and constraints.
 
 ## Principles and Key Decisions
-- One metadata source should define demo entries, applicability, and optional ViewModel wiring.
+- One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.
 - Test discovery must remain side-effect free (no runtime window probing during xUnit discovery).
 - Navigation rendering (tabs/tree/etc.) must consume metadata, not define metadata.
 - Keep migration incremental: avoid big-bang rewrite of MainWindow.
@@ -34,7 +34,8 @@ This removes the current coupling between test discovery and MainWindow TabItem 
 A shared descriptor object (name TBD), for example:
 - Demo page type (or factory)
 - Display title
-- Applicable themes
+- Applicable themes - i.e. the themes that implement a control & therefore need a test case
+- NEW: status (currently we just have 'applicable' or not - indicated by red & green bullets. But it would be good to support also 'under construction' or other arbitrary status icons)
 - Optional ViewModel type (or factory)
 - Optional flags (Experimental, Pro, Devolutions, HiddenFromTests, etc.)
 - Group path for hierarchical navigation, for example:

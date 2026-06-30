@@ -1,14 +1,18 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
@@ -21,6 +25,8 @@ public class VisualRegressionTests
   private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
   private static readonly string[] SupportedThemes = ["MacClassic", "LiquidGlass", "Linux", "DevExpress"];
+  private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
+  private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
 
   private static Dictionary<string, List<string>>? _pageThemes;
   private static Dictionary<string, string>? _pageViewModels;
@@ -304,10 +310,7 @@ public class VisualRegressionTests
     // Wait for layout and theme application
     Dispatcher.UIThread.RunJobs();
 
-    // Capture
-    WriteableBitmap? frame = window.CaptureRenderedFrame();
-    if (frame == null) throw new Exception($"Failed to capture frame for {variant}");
-    using WriteableBitmap bitmap = frame;
+    using WriteableBitmap bitmap = CaptureStableFrame(window, variant);
 
     // Save and Compare
     var fileName = $"{pageName}{suffix}.png";
@@ -338,6 +341,53 @@ public class VisualRegressionTests
     {
       Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}. Saved screenshot to {testPath}");
     }
+  }
+
+  private static WriteableBitmap CaptureStableFrame(Window window, ThemeVariant variant)
+  {
+    WriteableBitmap? previousFrame = window.CaptureRenderedFrame();
+    if (previousFrame == null)
+    {
+      throw new Exception($"Failed to capture frame for {variant}");
+    }
+
+    byte[] previousPixels = CopyFramePixels(previousFrame);
+    var stabilizationTimer = Stopwatch.StartNew();
+
+    while (stabilizationTimer.Elapsed < CaptureStabilizationTimeout)
+    {
+      Thread.Sleep(CaptureStabilizationInterval);
+      Dispatcher.UIThread.RunJobs();
+
+      WriteableBitmap? currentFrame = window.CaptureRenderedFrame();
+      if (currentFrame == null)
+      {
+        previousFrame.Dispose();
+        throw new Exception($"Failed to capture frame for {variant}");
+      }
+
+      byte[] currentPixels = CopyFramePixels(currentFrame);
+      if (previousPixels.AsSpan().SequenceEqual(currentPixels))
+      {
+        previousFrame.Dispose();
+        return currentFrame;
+      }
+
+      previousFrame.Dispose();
+      previousFrame = currentFrame;
+      previousPixels = currentPixels;
+    }
+
+    return previousFrame;
+  }
+
+  private static byte[] CopyFramePixels(WriteableBitmap frame)
+  {
+    using ILockedFramebuffer lockedFramebuffer = frame.Lock();
+    int byteCount = lockedFramebuffer.RowBytes * lockedFramebuffer.Size.Height;
+    var buffer = new byte[byteCount];
+    Marshal.Copy(lockedFramebuffer.Address, buffer, 0, byteCount);
+    return buffer;
   }
 }
 

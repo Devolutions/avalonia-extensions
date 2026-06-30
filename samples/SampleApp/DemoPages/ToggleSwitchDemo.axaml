@@ -5,36 +5,22 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.ToggleSwitchDemo">
 
-  <StackPanel HorizontalAlignment="Left" Spacing="20">
-    <TextBlock TextWrapping="Wrap"><Bold>Note:</Bold> ToggleSwitch is only minimally styled to be usable - see the ThemeControl for various options not supported yet</TextBlock>
-    <StackPanel Width="300" HorizontalAlignment="Left" Spacing="10">
-      <ToggleSwitch>Toggle with Title</ToggleSwitch>
-      <ToggleSwitch>Toggle 2</ToggleSwitch>
-
+  <StackPanel HorizontalAlignment="Left" Spacing="20" Margin="20">
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0 0 0 20">
+      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+      <ToggleSwitch/>
+    </StackPanel>
+    <TextBlock Text="ToggleSwitch" Classes="section-title" />
+    <StackPanel Width="150" HorizontalAlignment="Left" Spacing="10">
+      <ToggleSwitch>Off</ToggleSwitch>
+      <ToggleSwitch IsChecked="True">On</ToggleSwitch>
 
       <Separator Margin="0 20" />
 
-      <TextBlock Text="Disabled States" FontWeight="Bold" Margin="0 0 0 10" />
+      <TextBlock Text="Disabled States" Classes="section-title" />
       <ToggleSwitch IsEnabled="False">Off</ToggleSwitch>
       <ToggleSwitch IsEnabled="False" IsChecked="True">On</ToggleSwitch>
 
-      <Separator Margin="0 20" />
-
-      <TextBlock Text="ButtonToggleSwitch variant" FontWeight="Bold" Margin="0 0 0 10" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Toggle me" />
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Checked" IsChecked="True" />
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Disabled" IsEnabled="False" />
-      </StackPanel>
-
-      <Separator Margin="0 20" />
-
-      <TextBlock Text="SimpleToggleSwitch variant" FontWeight="Bold" Margin="0 0 0 10" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Toggle me" />
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Checked" IsChecked="True" />
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Disabled" IsEnabled="False" />
-      </StackPanel>
     </StackPanel>
   </StackPanel>
 </UserControl>

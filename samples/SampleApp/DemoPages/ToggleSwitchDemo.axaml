@@ -11,30 +11,12 @@
       <ToggleSwitch>Toggle with Title</ToggleSwitch>
       <ToggleSwitch>Toggle 2</ToggleSwitch>
 
-
       <Separator Margin="0 20" />
 
       <TextBlock Text="Disabled States" FontWeight="Bold" Margin="0 0 0 10" />
       <ToggleSwitch IsEnabled="False">Off</ToggleSwitch>
       <ToggleSwitch IsEnabled="False" IsChecked="True">On</ToggleSwitch>
 
-      <Separator Margin="0 20" />
-
-      <TextBlock Text="ButtonToggleSwitch variant" FontWeight="Bold" Margin="0 0 0 10" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Toggle me" />
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Checked" IsChecked="True" />
-        <ToggleSwitch Theme="{StaticResource ButtonToggleSwitch}" Content="Disabled" IsEnabled="False" />
-      </StackPanel>
-
-      <Separator Margin="0 20" />
-
-      <TextBlock Text="SimpleToggleSwitch variant" FontWeight="Bold" Margin="0 0 0 10" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Toggle me" />
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Checked" IsChecked="True" />
-        <ToggleSwitch Theme="{StaticResource SimpleToggleSwitch}" Content="Disabled" IsEnabled="False" />
-      </StackPanel>
     </StackPanel>
   </StackPanel>
 </UserControl>

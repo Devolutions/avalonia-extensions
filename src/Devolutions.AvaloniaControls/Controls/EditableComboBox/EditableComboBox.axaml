@@ -82,7 +82,7 @@
     <Setter Property="Height" Value="{DynamicResource EditableComboBoxItemsHeight}" />
     <Setter Property="ContentTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock />
+        <SearchHighlightTextBlock ShowToolTipWhenTextOverflowing="True" />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">
@@ -92,6 +92,7 @@
             Name="PART_ContentPresenter"
             Content="{TemplateBinding DataContext}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
+            TextTrimming="CharacterEllipsis"
             VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
@@ -195,7 +196,7 @@
   <ControlTheme x:Key="{x:Type EditableComboBox+InnerComboBox}" TargetType="EditableComboBox+InnerComboBox">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="MaxDropDownHeight" Value="{Binding MaxDropDownHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -236,7 +237,7 @@
               </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" Margin="0" Padding="0" />
+            <ContentPresenter x:Name="PART_TextBoxPresenter" Grid.Column="1" Margin="0" Padding="0" TextTrimming="CharacterEllipsis" />
 
             <ItemsControl
               Grid.Column="2"
@@ -322,9 +323,10 @@
                 BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                 Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                 HorizontalAlignment="Stretch"
+                MaxWidth="{TemplateBinding MaxDropDownWidth}"
                 CornerRadius="{DynamicResource OverlayCornerRadius}">
                 <ScrollViewer
-                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                   IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
                   <ItemsPresenter

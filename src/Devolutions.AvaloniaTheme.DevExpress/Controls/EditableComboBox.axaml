@@ -114,7 +114,7 @@
 
     <Setter Property="ContentTemplate">
       <DataTemplate>
-        <SearchHighlightTextBlock />
+        <SearchHighlightTextBlock ShowToolTipWhenTextOverflowing="True" />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">
@@ -402,6 +402,7 @@
             WindowManagerAddShadowHint="False"
             IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
             MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+            MaxWidth="{TemplateBinding MaxDropDownWidth}"
             MaxHeight="{TemplateBinding MaxDropDownHeight}"
             PlacementTarget="BorderElement"
             Placement="BottomEdgeAlignedLeft"
@@ -417,10 +418,11 @@
                 BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                 Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                 HorizontalAlignment="Stretch"
+                MaxWidth="{TemplateBinding MaxDropDownWidth}"
                 BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
                 Margin="{DynamicResource ComboBoxPopupBorderMargin}">
                 <ScrollViewer
-                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                  HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                   IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                   <ItemsPresenter

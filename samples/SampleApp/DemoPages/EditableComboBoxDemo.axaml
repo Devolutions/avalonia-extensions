@@ -19,9 +19,9 @@
       </EditableComboBox>
     </StackPanel>
     <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the EditableComboBoxes) at runtime -->
-    <Grid Margin="20" ColumnDefinitions="500 Auto *">
+    <Grid Margin="20" ColumnDefinitions="900 Auto *">
       <Border Grid.Column="0" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+      <Grid ColumnDefinitions="Auto * 24 Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
           <Bold>Preferred Usage Pattern: </Bold>
         </TextBlock>
@@ -66,11 +66,25 @@
           <EditableComboBoxItem>Option 3</EditableComboBoxItem>
         </EditableComboBox>
 
+        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
+          - MaxDropDownWidth:
+        </TextBlock>
+        <EditableComboBox
+          Grid.Column="1" Grid.Row="5"
+          MaxDropDownWidth="280"
+          VerticalAlignment="Top"
+          Margin="10 0 20 20">
+          <EditableComboBoxItem>Short option</EditableComboBoxItem>
+          <EditableComboBoxItem>This is a deliberately very long dropdown entry used to validate MaxDropDownWidth: 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ end</EditableComboBoxItem>
+          <EditableComboBoxItem>Another option</EditableComboBoxItem>
+        </EditableComboBox>
+
         <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
           - Scrolling options list
         </TextBlock>
         <EditableComboBox
           Grid.Column="1" Grid.Row="6"
+          MaxDropDownWidth=""
           MaxDropDownHeight="100" VerticalAlignment="Top"
           Margin="10 0 20 20">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
@@ -274,17 +288,17 @@
           <EditableComboBoxItem>Option 5</EditableComboBoxItem>
         </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Top" Margin="0 5 10 15">
+        <TextBlock Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
           - SelectedItem binding:
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="12"
+        <EditableComboBox Grid.Column="4" Grid.Row="1"
                           ItemsSource="{Binding Countries}"
                           SelectedItem="{Binding SelectedCountry}"
                           Mode="Filter"
                           AllowCustomValue="False"
                           PlaceholderText="Choose a country..." 
                           Margin="10 0 20 0" />
-        <TextBlock Grid.Column="1" Grid.Row="13" Margin="10 0 20 20">
+        <TextBlock Grid.Column="4" Grid.Row="2" Margin="10 0 20 20">
           <TextBlock.Text>
             <MultiBinding StringFormat="Selected: {0} ({1})">
               <Binding Path="SelectedCountry.Name" />
@@ -292,17 +306,17 @@
             </MultiBinding>
           </TextBlock.Text>
         </TextBlock>
-        <TextBlock Grid.Column="0" Grid.Row="14" VerticalAlignment="Top" Margin="0 5 10 0">
+        <TextBlock Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 0">
           - Dynamic ItemsSource:<LineBreak />(some common, some not)
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="14"
+        <EditableComboBox Grid.Column="4" Grid.Row="3"
           ItemsSource="{Binding DynamicCountries}"
           SelectedItem="{Binding DynamicSelectedCountry}"
           Mode="Filter"
           AllowCustomValue="False"
           PlaceholderText="Choose a country..."
           Margin="10 0 20 0" />
-        <TextBlock Grid.Column="1" Grid.Row="15" Margin="10 0 20 0">
+        <TextBlock Grid.Column="4" Grid.Row="4" Margin="10 0 20 0">
           <TextBlock.Text>
             <MultiBinding StringFormat="Selected: {0} ({1})">
               <Binding Path="DynamicSelectedCountry.Name" />
@@ -310,22 +324,22 @@
             </MultiBinding>
           </TextBlock.Text>
         </TextBlock>
-        <Button Grid.Column="1" Grid.Row="16" 
+        <Button Grid.Column="4" Grid.Row="5" 
                 Command="{Binding ToggleCountrySetCommand}"
                 Content="{Binding DynamicSetLabel, StringFormat='Switch to {0}'}"
                 Margin="10 0 20 20" />
 
-        <TextBlock Grid.Column="0" Grid.Row="17" VerticalAlignment="Top" Margin="0 5 10 0">
+        <TextBlock Grid.Column="3" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 0">
           - Programmatic SelectedItem:
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="17"
+        <EditableComboBox Grid.Column="4" Grid.Row="6"
           ItemsSource="{Binding Countries}"
           SelectedItem="{Binding ProgrammaticSelectedCountry}"
           Mode="Filter"
           AllowCustomValue="False"
           PlaceholderText="Choose a country..."
           Margin="10 0 20 0" />
-        <TextBlock Grid.Column="1" Grid.Row="18" Margin="10 4 20 4">
+        <TextBlock Grid.Column="4" Grid.Row="7" Margin="10 4 20 4">
           <TextBlock.Text>
             <MultiBinding StringFormat="Selected: {0} ({1})">
               <Binding Path="ProgrammaticSelectedCountry.Name" />
@@ -333,16 +347,16 @@
             </MultiBinding>
           </TextBlock.Text>
         </TextBlock>
-        <StackPanel Grid.Column="1" Grid.Row="19" Orientation="Horizontal" Spacing="4" Margin="10 0 20 20">
+        <StackPanel Grid.Column="4" Grid.Row="8" Orientation="Horizontal" Spacing="4" Margin="10 0 20 20">
           <Button Command="{Binding SelectFirstCountryCommand}" Content="Select first" />
           <Button Command="{Binding SelectLastCountryCommand}" Content="Select last" />
           <Button Command="{Binding ClearCountryCommand}" Content="Clear" />
         </StackPanel>
         
-        <TextBlock Grid.Column="0" Grid.Row="20" VerticalAlignment="Top" Margin="0 5 10 15">
+        <TextBlock Grid.Column="3" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
           - ItemTemplate:
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="20"
+        <EditableComboBox Grid.Column="4" Grid.Row="9"
                           ItemsSource="{Binding Countries2}"
                           SelectedItem="{Binding SelectedCountry2}"
                           Mode="Filter"
@@ -369,17 +383,17 @@
           </EditableComboBox.InnerLeftContent>
         </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="21" VerticalAlignment="Top" Margin="0 5 10 0">
+        <TextBlock Grid.Column="3" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 0">
           - 1000 items (memory leak test):
         </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="21"
+        <EditableComboBox Grid.Column="4" Grid.Row="10"
                           SelectedItem="{Binding SelectedLargeItem}"
                           ItemsSource="{Binding LargeItemsList}"
                           AllowCustomValue="False"
                           Mode="Filter"
                           VerticalAlignment="Top"
                           Margin="10 0 20 0" />
-        <TextBlock Grid.Column="1" Grid.Row="22" Margin="10 4 20 15"
+        <TextBlock Grid.Column="4" Grid.Row="11" Margin="10 4 20 15"
                    Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
       </Grid>
       </Border>

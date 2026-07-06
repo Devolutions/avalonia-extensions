@@ -200,7 +200,7 @@
               </GroupedComboBox.HeaderTemplate>
               <GroupedComboBoxHeaderItem Content="Servers" Foreground="Green" />
               <GroupedComboBoxItem>Production</GroupedComboBoxItem>
-              <GroupedComboBoxItem>Staging</GroupedComboBoxItem>
+              <GroupedComboBoxItem IsEnabled="False">Staging</GroupedComboBoxItem>
               <GroupedComboBoxItem>Development</GroupedComboBoxItem>
 
               <GroupedComboBoxHeaderItem Content="Workstations" />

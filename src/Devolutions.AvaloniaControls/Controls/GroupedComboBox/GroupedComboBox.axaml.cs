@@ -291,6 +291,7 @@ public class GroupedComboBox : ComboBox
         int startIndex = this.SelectedIndex < 0
             ? direction > 0 ? 0 : this.Items.Count - 1
             : this.SelectedIndex + direction;
+
         int selectableIndex = this.FindSelectableIndex(startIndex, direction);
         if (selectableIndex >= 0)
         {
@@ -305,7 +306,9 @@ public class GroupedComboBox : ComboBox
     {
         for (int i = startIndex; i >= 0 && i < this.Items.Count; i += direction)
         {
-            if (this.Items[i] is not GroupHeader)
+            object? item = this.Items[i];
+            GroupedComboBoxItem? groupedComboBoxItem = item as GroupedComboBoxItem;
+            if (item is not GroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
             {
                 return i;
             }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using SampleApp.ControlCatalog;
 
 public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
 {
@@ -38,7 +39,9 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     get
     {
       string[] themeNames = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-      return themeNames.Any(themeName => string.Equals(themeName, App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
+      return themeNames
+        .Select(ControlThemeIds.Parse)
+        .Any(themeId => string.Equals(themeId.ToThemeName(), App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
     }
   }
 

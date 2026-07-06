@@ -71,6 +71,11 @@ Note: there may be other agents changing the code while you work.
   ```
 - This reduces the window where another agent's changes could interfere
 
+### WIP commits before rebasing
+- If a session-start rebase is blocked by your own in-progress local changes, prefer creating a clearly marked `[WIP]` commit instead of stashing or leaving the branch dirty.
+- This keeps the branch rebaseable, preserves work safely, and makes conflict discovery happen earlier.
+- It is acceptable to squash or rewrite these WIP commits later before merge if desired.
+
 ### Important Notes
 - If the code is in a partial/broken state, prioritise commits that leave the codebase working
 - If you encounter merge conflicts or ANY unexpected issues, stop and ask the user immediately

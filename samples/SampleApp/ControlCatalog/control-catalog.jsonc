@@ -1,0 +1,468 @@
+{
+  "statusSymbols": {
+    "✅": "Supported",
+    "❌": "Not Supported",
+    "🚧": "In Progress",
+    "⚠️": "Needs some work / updates"
+  },
+  // By default, statusSymbols determine test inclusion: ❌ will be excluded, all others included. 
+  // To override this, use "excludeFromTests" to explicitly exclude a control from tests on a specific platform:
+  //
+  //   "excludeFromTests": {
+  //     "Linux": true,
+  //   }
+  //
+  "controls": [
+    {
+      "name": "AutoCompleteBox",
+      "type": "AutoCompleteBox",
+      "source": "Avalonia",
+      "category": "Input",
+      "demo": "AutoCompleteBoxDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "Button",
+      "type": "Button",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "ButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "CalendarDatePicker",
+      "type": "CalendarDatePicker",
+      "source": "Avalonia",
+      "category": "Input/Date and Time",
+      "demo": "CalendarDatePickerDemo.axaml",
+      "viewModel": "CalendarDatePickerViewModel",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "CheckBox",
+      "type": "CheckBox",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "CheckBoxDemo.axaml",
+      "viewModel": "CheckboxViewModel",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "CheckBoxListBox",
+      "type": "CheckBoxListBox",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "CheckBoxListBoxDemo.axaml",
+      "viewModel": "CheckBoxListBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ColorPicker",
+      "type": "ColorPicker",
+      "source": "Avalonia",
+      "category": "Input",
+      "demo": "ColorPickerDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ComboBox",
+      "type": "ComboBox",
+      "source": "Avalonia",
+      "category": "Selectors",
+      "demo": "ComboBoxDemo.axaml",
+      "viewModel": "ComboBoxViewModel",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "GroupedComboBox",
+      "type": "GroupedComboBox",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "GroupedComboBoxDemo.axaml",
+      "viewModel": "GroupedComboBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ContextMenu",
+      "type": "ContextMenu",
+      "source": "Avalonia",
+      "category": "Navigation",
+      "demo": "ContextMenuDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "DataGrid",
+      "type": "DataGrid",
+      "source": "Avalonia",
+      "category": "Data",
+      "demo": "DataGridDemo.axaml",
+      "viewModel": "DataGridViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "✅"
+      }
+    },
+    {
+      "name": "DataGrid grouped",
+      "type": "DataGrid",
+      "source": "Avalonia",
+      "category": "Data",
+      "demo": "DataGridGroupedDemo.axaml",
+      "viewModel": "DataGridGroupedViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "DropDownButton",
+      "type": "DropDownButton",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "DropDownButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "EditableComboBox",
+      "type": "EditableComboBox",
+      "source": "Devolutions",
+      "category": "Input",
+      "demo": "EditableComboBoxDemo.axaml",
+      "viewModel": "EditableComboBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "EnumPicker",
+      "type": "EnumPicker",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "EnumPickerDemo.axaml",
+      "viewModel": "EnumPickerViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "Expander",
+      "type": "Expander",
+      "source": "Avalonia",
+      "category": "Layout",
+      "demo": "ExpanderDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "FlyoutPresenter",
+      "type": "FlyoutPresenter",
+      "source": "Avalonia",
+      "category": "Popups",
+      "demo": "FlyoutPresenterDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "GridSplitter",
+      "type": "GridSplitter",
+      "source": "Avalonia",
+      "category": "Layout",
+      "demo": "GridSplitterDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "GroupedListBox",
+      "type": "GroupedListBox",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "GroupedListBoxDemo.axaml",
+      "viewModel": "GroupedListBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "GroupedTileListBox",
+      "type": "GroupedTileListBox",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "GroupedTileListBoxDemo.axaml",
+      "viewModel": "GroupedTileListBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "HyperlinkButton",
+      "type": "HyperlinkButton",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "HyperlinkButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ListBox",
+      "type": "ListBox",
+      "source": "Avalonia",
+      "category": "Selectors",
+      "demo": "ListBoxDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "✅"
+      }
+    },
+    {
+      "name": "Menu",
+      "type": "Menu",
+      "source": "Avalonia",
+      "category": "Navigation",
+      "demo": "MenuDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "MenuFlyout",
+      "type": "MenuFlyout",
+      "source": "Avalonia",
+      "category": "Navigation",
+      "demo": "MenuFlyoutDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "MultiComboBox",
+      "type": "MultiComboBox",
+      "source": "Devolutions",
+      "category": "Selectors",
+      "demo": "MultiComboBoxDemo.axaml",
+      "viewModel": "MultiComboBoxViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "NumericUpDown",
+      "type": "NumericUpDown",
+      "source": "Avalonia",
+      "category": "Input",
+      "demo": "NumericUpDownDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "RadioButton",
+      "type": "RadioButton",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "RadioButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ScrollBar",
+      "type": "ScrollBar",
+      "source": "Avalonia",
+      "category": "Layout",
+      "demo": "ScrollBarDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ScrollViewer",
+      "type": "ScrollViewer",
+      "source": "Avalonia",
+      "category": "Layout",
+      "demo": "ScrollViewerDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "SearchHighlightTextBlock",
+      "type": "SearchHighlightTextBlock",
+      "source": "Devolutions",
+      "category": "Text",
+      "demo": "SearchHighlightTextBlockDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "Separator",
+      "type": "Separator",
+      "source": "Avalonia",
+      "category": "Layout",
+      "demo": "SeparatorDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "SplitButton",
+      "type": "SplitButton",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "SplitButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TabControl / TabPane / NavBar",
+      "type": "TabControl",
+      "source": "Devolutions",
+      "category": "Navigation",
+      "demo": "TabControlDemo.axaml",
+      "viewModel": "TabControlViewModel",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TagInput",
+      "type": "TagInput",
+      "source": "Devolutions",
+      "category": "Input",
+      "demo": "TagInputDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TextBox",
+      "type": "TextBox",
+      "source": "Avalonia",
+      "category": "Input",
+      "demo": "TextBoxDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TimePicker",
+      "type": "TimePicker",
+      "source": "Avalonia",
+      "category": "Input/Date and Time",
+      "demo": "TimePickerDemo.axaml",
+      "viewModel": "TimePickerViewModel",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TimePickerUpDown",
+      "type": "TimePickerUpDown",
+      "source": "Devolutions",
+      "category": "Input/Date and Time",
+      "demo": "TimePickerUpDownDemo.axaml",
+      "viewModel": "TimePickerUpDownViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ToggleButton",
+      "type": "ToggleButton",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "ToggleButtonDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "✅"
+      }
+    },
+    {
+      "name": "Toggle Switch",
+      "type": "ToggleSwitch",
+      "source": "Avalonia",
+      "category": "Buttons",
+      "demo": "ToggleSwitchDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "ToolTip",
+      "type": "ToolTip",
+      "source": "Avalonia",
+      "category": "Popups",
+      "demo": "ToolTipDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TreeDataGrid (Avalonia Pro)",
+      "type": "TreeDataGrid",
+      "source": "AvaloniaPro",
+      "category": "Data",
+      "demo": "TreeDataGridDemo.axaml",
+      "viewModel": "TreeDataGridViewModel",
+      "status": {
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+      }
+    },
+    {
+      "name": "TreeView",
+      "type": "TreeView",
+      "source": "Avalonia",
+      "category": "Navigation",
+      "demo": "TreeViewDemo.axaml",
+      "viewModel": null,
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+      }
+    }
+  ]
+}

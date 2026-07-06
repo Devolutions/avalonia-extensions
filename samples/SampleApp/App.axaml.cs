@@ -17,6 +17,7 @@ using Devolutions.AvaloniaTheme.WinUI;
 using Devolutions.AvaloniaTheme.WinUI.Internal;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
+using ControlCatalog;
 using ViewModels;
 
 public class App : Application
@@ -91,6 +92,8 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
+            ControlRegistry.EnsureValid();
+
             Theme? theme = this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
         }

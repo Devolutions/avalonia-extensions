@@ -9,7 +9,7 @@ using Helpers;
 
 public class ChangeColorOpacity(object color, object opacity) : MarkupExtension
 {
-  private static readonly FuncMultiValueConverter<object, object> Converter = new(static e =>
+  public static readonly FuncMultiValueConverter<object, object> Converter = new(static e =>
   {
     using var enumerator = e.GetEnumerator();
     enumerator.MoveNext();

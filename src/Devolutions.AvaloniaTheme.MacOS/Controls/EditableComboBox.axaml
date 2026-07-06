@@ -94,6 +94,7 @@
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <SearchHighlightTextBlock
+          ShowToolTipWhenTextOverflowing="True"
           Foreground="{BindingToggler
                         {Binding $parent[EditableComboBoxItem].IsPointerOver},
                         {DynamicResource ControlForegroundAccentHighBrush},
@@ -186,7 +187,7 @@
             Value="{Binding InnerLeftOfDropDownArrowContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
     <Setter Property="InnerRightContent"
             Value="{Binding InnerRightContent, RelativeSource={RelativeSource FindAncestor, AncestorType=EditableComboBox}, Mode=OneWay}" />
-    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -299,6 +300,7 @@
                                     {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}},
                                     24
                                 }"
+                MaxWidth="{TemplateBinding MaxDropDownWidth}"
                 MaxHeight="{TemplateBinding MaxDropDownHeight}"
                 VerticalOffset="2"
                 HorizontalAlignment="Stretch"
@@ -313,12 +315,13 @@
                   BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
                   Padding="{DynamicResource PopupPadding}"
                   HorizontalAlignment="Stretch"
+                  MaxWidth="{TemplateBinding MaxDropDownWidth}"
                   BoxShadow="{DynamicResource PopupShadow}"
                   Margin="{DynamicResource PopupMargin}"
                   CornerRadius="{DynamicResource LayoutCornerRadius}">
                   <ScrollViewer
                     CornerRadius="{DynamicResource LayoutCornerRadius}"
-                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                    HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                     IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
                     <ItemsPresenter

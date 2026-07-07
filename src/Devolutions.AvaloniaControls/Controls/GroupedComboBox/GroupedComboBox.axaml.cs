@@ -16,6 +16,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
@@ -213,6 +214,13 @@ public class GroupedComboBox : ComboBox
             headerContainer.Content = null;
         }
     }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (this.TryHandleClosedDropDownNavigation(e)) return;
+
+        base.OnKeyDown(e);
+    }
     
     private void TryCaptureInlineItems()
     {
@@ -266,6 +274,47 @@ public class GroupedComboBox : ComboBox
         if (this.applyingDisplayItems || this.inlineItemsCaptured) return;
 
         this.CaptureSourceItems(this.Items, this.Items.Count);
+    }
+
+    private bool TryHandleClosedDropDownNavigation(KeyEventArgs e)
+    {
+        if (e.Handled || this.IsDropDownOpen || e.KeyModifiers.HasFlag(KeyModifiers.Alt)) return false;
+
+        int direction = e.Key switch
+        {
+            Key.Down => 1,
+            Key.Up => -1,
+            _ => 0,
+        };
+        if (direction == 0) return false;
+
+        int startIndex = this.SelectedIndex < 0
+            ? direction > 0 ? 0 : this.Items.Count - 1
+            : this.SelectedIndex + direction;
+
+        int selectableIndex = this.FindSelectableIndex(startIndex, direction);
+        if (selectableIndex >= 0)
+        {
+            this.SelectedIndex = selectableIndex;
+        }
+
+        e.Handled = true;
+        return true;
+    }
+
+    private int FindSelectableIndex(int startIndex, int direction)
+    {
+        for (int i = startIndex; i >= 0 && i < this.Items.Count; i += direction)
+        {
+            object? item = this.Items[i];
+            GroupedComboBoxItem? groupedComboBoxItem = item as GroupedComboBoxItem;
+            if (item is not GroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private void CaptureSourceItems(IEnumerable? itemsSource, int count = 0)

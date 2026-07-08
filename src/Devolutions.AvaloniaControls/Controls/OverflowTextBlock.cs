@@ -73,7 +73,6 @@ public class OverflowTextBlock : Control
             FontStyleProperty, FontWeightProperty, FontStretchProperty, TextAlignmentProperty, TextWrappingProperty,
             TextTrimmingProperty, TextDecorationsProperty, LineHeightProperty, LetterSpacingProperty, MaxLinesProperty,
             FontFeaturesProperty, PaddingProperty, InnerTextMarginProperty);
-
         AffectsArrange<OverflowTextBlock>(InnerTextMarginProperty, ShowToolTipProperty);
     }
 

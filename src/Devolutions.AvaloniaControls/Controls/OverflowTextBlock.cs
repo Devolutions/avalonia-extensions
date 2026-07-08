@@ -240,7 +240,9 @@ public class OverflowTextBlock : Control
                              && this.CreateTextLayout(double.PositiveInfinity, double.PositiveInfinity).Width > availableWidth + 0.5;
 
         this.PseudoClasses.Set(":is-overflowing", isOverflowing);
-        ToolTip.SetTip(this.GetToolTipTarget(), isOverflowing && this.ShowToolTip ? text : null);
+        var toolTipTarget = this.GetToolTipTarget();
+        ToolTip.SetTip(toolTipTarget, isOverflowing && this.ShowToolTip ? text : null);
+        ToolTip.SetShowDelay(toolTipTarget, 200);
     }
 
     private Control GetToolTipTarget()

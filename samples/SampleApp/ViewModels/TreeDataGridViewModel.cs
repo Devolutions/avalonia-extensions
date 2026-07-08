@@ -6,17 +6,19 @@ using Avalonia.Controls.Selection;
 namespace SampleApp.ViewModels;
 
 using System.Collections.ObjectModel;
+using Avalonia.Data;
+using Avalonia.Svg;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 public class NetworkNode
 {
-  public string Name { get; set; }
-  public string Type { get; set; } // "Folder", "Computer", "User"
-  public bool IsExpanded { get; set; }
-  public string IPAddress { get; set; }
-  public string Status { get; set; }
-  public string LastSeen { get; set; }
-  public bool HasChildren => this.Children.Count > 0;
+    public string Name { get; set; }
+    public string Type { get; set; } // "Folder", "Computer", "User"
+    public bool IsExpanded { get; set; }
+    public string IPAddress { get; set; }
+    public string Status { get; set; }
+    public string LastSeen { get; set; }
+    public bool HasChildren => this.Children.Count > 0;
 
     public string IconPath => this.Type switch
     {
@@ -28,15 +30,15 @@ public class NetworkNode
 
     public ObservableCollection<NetworkNode> Children { get; } = new();
 
-  public NetworkNode(string name, string type, string ip = "", string status = "", string lastSeen = "")
-  {
-    this.Name = name;
-    this.Type = type;
-    this.IsExpanded = type == "Folder" && name != "Workstations";
-    this.IPAddress = ip;
-    this.Status = status;
-    this.LastSeen = lastSeen;
-  }
+    public NetworkNode(string name, string type, string ip = "", string status = "", string lastSeen = "")
+    {
+        this.Name = name;
+        this.Type = type;
+        this.IsExpanded = type == "Folder" && name != "Workstations";
+        this.IPAddress = ip;
+        this.Status = status;
+        this.LastSeen = lastSeen;
+    }
 }
 
 public class TreeDataGridViewModel : ObservableObject
@@ -123,6 +125,7 @@ public class TreeDataGridViewModel : ObservableObject
         source.WithTextColumn("IP Address", x => x.IPAddress);
         source.WithTextColumn("Status", x => x.Status);
         source.WithTextColumn("Last Seen", x => x.LastSeen);
+        source.WithTemplateColumnFromResourceKeys("Icon", "IconColumnTemplate");
     }
 
     private static void AddTreeSharedColumns(HierarchicalTreeDataGridSource<NetworkNode> source)

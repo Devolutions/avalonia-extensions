@@ -5,8 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Core;
+using Avalonia.Utilities;
 
 public static class MarkupExtensionHelpers
 {
@@ -28,6 +31,24 @@ public static class MarkupExtensionHelpers
                 return ObservableHelpers.ValueBinding(clrProperty);
             case string str:
             {
+                var tin = typeof(TIn);
+                if (tin == typeof(string))
+                {
+                    return ObservableHelpers.ValueBinding(str);
+                }
+                else if (tin == typeof(Thickness))
+                {
+                    return ObservableHelpers.ValueBinding(Thickness.Parse(str));
+                }
+                else if (tin == typeof(CornerRadius))
+                {
+                    return ObservableHelpers.ValueBinding(CornerRadius.Parse(str));
+                }
+                else if (tin == typeof(GridLength))
+                {
+                    return ObservableHelpers.ValueBinding(GridLength.Parse(str));
+                }
+                
                 bool isParsable = typeof(TIn).GetInterfaces()
                     .Any(static c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>));
                 if (isParsable)
@@ -79,6 +100,18 @@ public static class MarkupExtensionHelpers
                 if (underlyingType == typeof(string))
                 {
                     return ObservableHelpers.ValueBinding(str);
+                } 
+                else if (underlyingType == typeof(Thickness))
+                {
+                    return ObservableHelpers.ValueBinding(Thickness.Parse(str));
+                }
+                else if (underlyingType == typeof(CornerRadius))
+                {
+                    return ObservableHelpers.ValueBinding(CornerRadius.Parse(str));
+                }
+                else if (underlyingType == typeof(GridLength))
+                {
+                    return ObservableHelpers.ValueBinding(GridLength.Parse(str));
                 }
 
                 bool isParsable = underlyingType.GetInterfaces()

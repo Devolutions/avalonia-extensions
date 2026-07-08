@@ -175,18 +175,19 @@
                   CornerRadius="{TemplateBinding CornerRadius}"
                   ClipToBounds="False"
                   IsHitTestVisible="False">
-            <DockPanel VerticalAlignment="Stretch" ClipToBounds="False">
+            <Panel VerticalAlignment="Stretch" ClipToBounds="False">
               <!-- Sort icon (reusing DataGrid foreground) -->
               <Path Name="SortIcon"
-                    DockPanel.Dock="Right"
                     Fill="{TemplateBinding Foreground}"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Margin="1 0 3 0"
+                    Margin="-6 0 3 0"
                     Stretch="Uniform"
+                    Width="12"
                     Height="7"
-                    TabIndex="1"
-                    IsVisible="False"
+                    TabIndex="-1"
+                    IsTabStop="False"
+                    Opacity="0"
                     Data="{StaticResource TreeDataGridSortIconPath}" />
 
               <!-- Header content -->
@@ -197,14 +198,22 @@
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                 IsHitTestVisible="False"
+                                Margin="0 0 6 0"
                                 TabIndex="0">
                 <ContentPresenter.DataTemplates>
                   <DataTemplate DataType="x:String">
-                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
+                    <OverflowTextBlock Text="{Binding}"
+                                       InnerTextMargin="{BindingToggler
+                                          {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
+                                          0 0 12 0,
+                                          0 0 0 0
+                                       }"
+                                       TextTrimming="CharacterEllipsis"
+                                       ShowToolTip="True" />
                   </DataTemplate>
                 </ContentPresenter.DataTemplates>
               </ContentPresenter>
-            </DockPanel>
+            </Panel>
           </Border>
           
           <!-- hit-target, for the column itself, offset to the left for the Thumb overflow) -->
@@ -256,12 +265,16 @@
     </Style>
 
     <!-- Sort Adorners -->
+    <Style Selector="^[SortDirection=Ascending] /template/ ContentPresenter#PART_ContentPresenter OverflowTextBlock,
+                     ^[SortDirection=Descending] /template/ ContentPresenter#PART_ContentPresenter OverflowTextBlock">
+      <Setter Property="OverflowTextBlock.InnerTextMargin" Value="0 0 18 0" />
+    </Style>
     <Style Selector="^[SortDirection=Ascending] /template/ Path#SortIcon">
-      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Opacity" Value="1" />
       <Setter Property="RenderTransform" Value="scaleY(-1)" />
     </Style>
     <Style Selector="^[SortDirection=Descending] /template/ Path#SortIcon">
-      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Opacity" Value="1" />
     </Style>
   </ControlTheme>
 

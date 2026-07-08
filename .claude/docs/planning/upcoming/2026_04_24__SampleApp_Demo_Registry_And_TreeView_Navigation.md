@@ -34,7 +34,8 @@ This removes the current coupling between test discovery and MainWindow TabItem 
     - 2026-07-06: Created WIP checkpoint commit, rebased successfully onto `origin/master`, and revisited the schema. Key change: move from demo-level applicability/status to a control x theme styling-state matrix.
       - 2026-07-06: Implemented the revised control-centric contract (`ControlThemeId`, `ControlStylingState`, `ControlCatalogEntry`, `ControlRegistry`) with explicit `ControlSource` and category paths.
         - 2026-07-07: Refactored contract to emoji-based per-theme status symbols plus `ExcludeFromTests` overrides (exclude-only), with shorthand helpers for readable registry entries.
-          - 2026-07-07: Replaced the in-code catalog list with a human-edited JSON catalog resource that is parsed into the internal control registry at runtime/startup.
+          - 2026-07-07: Replaced the in-code catalog list with a human-edited JSONC catalog resource that is parsed into the internal control registry at runtime/startup.
+            - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `ControlRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.
@@ -150,27 +151,34 @@ Implementation notes:
     - other symbols => include by default
     - explicit exclude override => skip
   - Added/kept readability helpers in `ControlRegistry` (`Supported(...)`, `InProgress(...)`, etc.) to keep entries concise.
-- 2026-07-07: Replaced those in-code helpers as the authoring surface with an embedded JSON catalog:
-  - file: `samples/SampleApp/ControlCatalog/control-catalog.json`
+- 2026-07-07: Replaced those in-code helpers as the authoring surface with an embedded JSONC catalog:
+  - file: `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
   - parser: `System.Text.Json` with comment/trailing-comma tolerant options
   - internal registry still materializes typed `ControlCatalogEntry` objects from that file
   - `statusSymbols` legend now comes from the catalog file itself
   - `excludeFromTests` is stored in the file as a theme->bool object, with only `true` entries having effect
 - 2026-07-07: Verification:
   - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests"` ✅
-  - full `dotnet test` still fails with the same pre-existing `EditableComboBoxDemo` visual diffs in 4 themes.
+  - earlier full `dotnet test` runs still failed with pre-existing `EditableComboBoxDemo` visual diffs in 4 themes.
 
 ### Phase 2: Switch Visual Tests to Registry-backed Discovery
-- [ ] Replace MainWindow source parsing in VisualRegressionTests discovery with registry consumption.
-- [ ] Keep test matrix behavior equivalent (page x applicable themes x optional viewmodel).
-- [ ] Ensure discovery remains static and deterministic (no UI creation in MemberData path).
-- [ ] Add guard assertions/logging when registry entry points to missing types.
+- [x] Replace MainWindow source parsing in VisualRegressionTests discovery with registry consumption.
+- [x] Keep test matrix behavior equivalent (page x applicable themes x optional viewmodel).
+- [x] Ensure discovery remains static and deterministic (no UI creation in MemberData path).
+- [x] Add guard assertions/logging when registry entry points to missing types.
 - [ ] Run visual tests in normal mode and baseline-update mode to validate parity.
-- [ ] Update this planning doc with migration notes and any edge cases.
+- [x] Update this planning doc with migration notes and any edge cases.
 
 Acceptance criteria:
 - VisualRegressionTests no longer parse MainWindow AXAML or code-behind.
 - Test coverage set remains equivalent or intentionally documented.
+
+Phase 2 notes (2026-07-07):
+- `VisualRegressionTests.GetDemoPages()` now iterates `ControlRegistry.All`, filters to the currently supported visual-test themes (`MacClassic`, `LiquidGlass`, `Linux`, `DevExpress`), and uses `ControlCatalogEntry.ShouldTest(theme)` plus the registry-provided `ViewModelType`.
+- Discovery now calls `ControlRegistry.EnsureValid()` up front instead of relying on AXAML/code-behind parsing to fail later.
+- Added regression coverage in `PageDiscoveryTests` to pin key discovery cases (`EditableComboBoxDemo`, `TreeDataGridDemo`) to their expected theme sets.
+- Full `dotnet test` after the refactor produced 3 visual diffs, all for `TreeDataGridDemo` (`MacClassic`, `DevExpress`, `Linux`).
+- `EditableComboBoxDemo` is still discovered and still covered; a focused run for `DisplayName~EditableComboBoxDemo` passed in all 4 expected themes during this session.
 
 ### Phase 3: Refactor MainWindow to Render from Registry (Tab-compatible)
 - [ ] Introduce a composition layer that builds current TabItems from registry entries.

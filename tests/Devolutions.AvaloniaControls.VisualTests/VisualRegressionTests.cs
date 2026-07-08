@@ -1,10 +1,8 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
@@ -16,7 +14,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
-using SampleApp.DemoPages;
+using SampleApp.ControlCatalog;
 
 [Collection("VisualTests")]
 public class VisualRegressionTests
@@ -24,12 +22,15 @@ public class VisualRegressionTests
   private const string TestResultsDirectory = "../../../Screenshots/Test";
   private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
-  private static readonly string[] SupportedThemes = ["MacClassic", "LiquidGlass", "Linux", "DevExpress"];
+  private static readonly ControlThemeId[] SupportedThemes =
+  [
+    ControlThemeId.MacClassic,
+    ControlThemeId.LiquidGlass,
+    ControlThemeId.Linux,
+    ControlThemeId.DevExpress,
+  ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
-
-  private static Dictionary<string, List<string>>? _pageThemes;
-  private static Dictionary<string, string>? _pageViewModels;
 
   private static string GetCurrentOS()
   {
@@ -51,185 +52,27 @@ public class VisualRegressionTests
     return "Unknown";
   }
 
-  // Finds applicable themes and ViewModel for each control by parsing MainWindow.axaml
-  private static void EnsureMetadataLoaded()
-  {
-    if (_pageThemes != null && _pageViewModels != null) return;
-
-    _pageThemes = new Dictionary<string, List<string>>();
-    _pageViewModels = new Dictionary<string, string>();
-    Dictionary<string, List<string>> pageThemes = _pageThemes;
-    Dictionary<string, string> pageViewModels = _pageViewModels;
-
-    // Locate MainWindow.axaml relative to the test execution directory
-    // Assuming running from bin/Debug/net10.0/ or similar
-    string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-    string mainWindowPath = Path.GetFullPath(Path.Combine(baseDir, "../../../../../samples/SampleApp/MainWindow.axaml"));
-    string mainWindowCodeBehindPath = Path.GetFullPath(Path.Combine(baseDir, "../../../../../samples/SampleApp/MainWindow.axaml.cs"));
-
-    if (!File.Exists(mainWindowPath))
-    {
-      throw new FileNotFoundException($"Could not find MainWindow.axaml at {mainWindowPath}");
-    }
-
-    if (!File.Exists(mainWindowCodeBehindPath))
-    {
-      throw new FileNotFoundException($"Could not find MainWindow.axaml.cs at {mainWindowCodeBehindPath}");
-    }
-
-    string content = File.ReadAllText(mainWindowPath);
-    string codeBehindContent = File.ReadAllText(mainWindowCodeBehindPath);
-
-    // We can split by TabItem to be safer
-    string[] tabItems = Regex.Split(content, "<TabItem");
-
-    foreach (string item in tabItems)
-    {
-      Match applicableMatch = Regex.Match(item, "ApplicableTo=\"([^\"]+)\"");
-      Match pageMatch = Regex.Match(item, "<demoPages:([a-zA-Z0-9]+)");
-
-      if (applicableMatch.Success && pageMatch.Success)
-      {
-        string pageName = pageMatch.Groups[1].Value;
-        AddPageMetadata(pageName, applicableMatch.Groups[1].Value);
-
-        // Check for ViewModel
-        Match viewModelMatch = Regex.Match(item, @"<vm:(\w+)");
-        if (viewModelMatch.Success)
-        {
-          pageViewModels[pageName] = viewModelMatch.Groups[1].Value;
-        }
-      }
-    }
-
-    MatchCollection dynamicTabCommentMatches = Regex.Matches(
-      content,
-      "<!--\\s*TabItem\\s+\"([^\"]+)\"\\s+inserted here through code-behind[^>]*-->");
-
-    foreach (Match dynamicTabCommentMatch in dynamicTabCommentMatches)
-    {
-      string tabName = dynamicTabCommentMatch.Groups[1].Value;
-      var methodName = $"Add{NormalizeIdentifier(tabName)}Tab";
-      string? methodBody = TryGetMethodBody(codeBehindContent, methodName);
-
-      if (methodBody == null)
-      {
-        continue;
-      }
-
-      Match applicableToMatch = Regex.Match(methodBody, "ApplicableTo\\s*=\\s*\"([^\"]+)\"");
-      if (!applicableToMatch.Success)
-      {
-        continue;
-      }
-
-      Match dynamicPageMatch = Regex.Match(methodBody, @"\b([A-Za-z0-9_]+Demo)\b\s+\w+\s*=\s*new\s*\(");
-      if (!dynamicPageMatch.Success)
-      {
-        continue;
-      }
-
-      string dynamicPageName = dynamicPageMatch.Groups[1].Value;
-      AddPageMetadata(dynamicPageName, applicableToMatch.Groups[1].Value);
-
-      Match dynamicViewModelMatch = Regex.Match(methodBody, @"new\s+([A-Za-z0-9_]+ViewModel)\s*\(");
-      if (dynamicViewModelMatch.Success)
-      {
-        pageViewModels[dynamicPageName] = dynamicViewModelMatch.Groups[1].Value;
-      }
-    }
-
-    void AddPageMetadata(string pageName, string applicableTo)
-    {
-      List<string> themes = applicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries)
-        .Select(t => t.Trim())
-        .ToList();
-
-      pageThemes[pageName] = [.. themes.Intersect(SupportedThemes)];
-    }
-  }
-
-  private static string NormalizeIdentifier(string value)
-  {
-    char[] chars = value.Where(char.IsLetterOrDigit).ToArray();
-    return new string(chars);
-  }
-
-  private static string? TryGetMethodBody(string source, string methodName)
-  {
-    Match declarationMatch = Regex.Match(
-      source,
-      $@"\b(?:public|private|protected|internal)\s+(?:static\s+)?(?:partial\s+)?[\w<>,\[\]\?\s]+\s+{Regex.Escape(methodName)}\s*\(\s*\)\s*\{{");
-
-    if (!declarationMatch.Success)
-    {
-      return null;
-    }
-
-    int openBraceIndex = source.IndexOf('{', declarationMatch.Index);
-    if (openBraceIndex == -1)
-    {
-      return null;
-    }
-
-    var depth = 0;
-    for (int i = openBraceIndex; i < source.Length; i++)
-    {
-      if (source[i] == '{')
-      {
-        depth++;
-      }
-      else if (source[i] == '}')
-      {
-        depth--;
-        if (depth == 0)
-        {
-          return source.Substring(openBraceIndex + 1, i - openBraceIndex - 1);
-        }
-      }
-    }
-
-    return null;
-  }
-
   public static IEnumerable<object?[]> GetDemoPages()
   {
-    Assembly assembly = typeof(ButtonDemo).Assembly;
-    List<Type> pages = assembly.GetTypes()
-      .Where(t => t.Namespace == "SampleApp.DemoPages" &&
-                  t.IsSubclassOf(typeof(UserControl)) &&
-                  !t.IsAbstract &&
-                  t.Name.EndsWith("Demo"))
-      .OrderBy(t => t.Name)
-      .ToList();
+    ControlRegistry.EnsureValid();
 
-    EnsureMetadataLoaded();
-    var result = new List<object?[]>();
-
-    foreach (Type page in pages)
+    foreach (ControlCatalogEntry control in ControlRegistry.All.OrderBy(control => control.PageType.Name))
     {
-      if (!_pageThemes!.ContainsKey(page.Name))
+      if (!control.PageType.Name.EndsWith("Demo", StringComparison.Ordinal))
       {
-        // If a theme is not among the applicable themes for this control (as per SampleItemHeader in MainWindow.axaml), skip it
         continue;
       }
 
-      List<string> applicableThemes = _pageThemes[page.Name];
-
-      // Resolve ViewModel type if any
-      Type? viewModelType = null;
-      if (_pageViewModels!.TryGetValue(page.Name, out string? viewModelName))
+      foreach (ControlThemeId themeId in SupportedThemes)
       {
-        viewModelType = assembly.GetTypes().FirstOrDefault(t => t.Name == viewModelName);
-      }
+        if (!control.ShouldTest(themeId))
+        {
+          continue;
+        }
 
-      foreach (string applicableTheme in applicableThemes)
-      {
-        result.Add([page, applicableTheme, viewModelType]);
+        yield return [control.PageType, themeId.ToThemeName(), control.ViewModelType];
       }
     }
-
-    return result;
   }
 
   // TestPage() is called automatically by the xUnit Test Runner for each entry 

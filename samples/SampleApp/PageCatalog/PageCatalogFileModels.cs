@@ -1,9 +1,9 @@
-namespace SampleApp.ControlCatalog;
+namespace SampleApp.PageCatalog;
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-public sealed class ControlCatalogFile
+public sealed class PageCatalogFile
 {
   [JsonPropertyName("sampleAppStartUpSettings")]
   public SampleAppStartupSettings StartupSettings { get; init; } = new();
@@ -15,10 +15,10 @@ public sealed class ControlCatalogFile
   public List<string> TopLevelOrder { get; init; } = [];
 
   [JsonPropertyName("pages")]
-  public Dictionary<string, List<ControlCatalogFileEntry>> Pages { get; init; } = [];
+  public Dictionary<string, List<PageCatalogFileEntry>> Pages { get; init; } = [];
 }
 
-public sealed class ControlCatalogFileEntry
+public sealed class PageCatalogFileEntry
 {
   [JsonPropertyName("uniqueTitle")]
   public string UniqueTitle { get; init; } = "";

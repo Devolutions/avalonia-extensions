@@ -14,7 +14,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
-using SampleApp.ControlCatalog;
+using SampleApp.PageCatalog;
 
 [Collection("VisualTests")]
 public class VisualRegressionTests
@@ -22,12 +22,12 @@ public class VisualRegressionTests
   private const string TestResultsDirectory = "../../../Screenshots/Test";
   private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
-  private static readonly ControlThemeId[] SupportedThemes =
+  private static readonly ThemeId[] SupportedThemes =
   [
-    ControlThemeId.MacClassic,
-    ControlThemeId.LiquidGlass,
-    ControlThemeId.Linux,
-    ControlThemeId.DevExpress,
+    ThemeId.MacClassic,
+    ThemeId.LiquidGlass,
+    ThemeId.Linux,
+    ThemeId.DevExpress,
   ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
@@ -54,16 +54,16 @@ public class VisualRegressionTests
 
   public static IEnumerable<object?[]> GetDemoPages()
   {
-    ControlRegistry.EnsureValid();
+    PageRegistry.EnsureValid();
 
-    foreach (ControlCatalogEntry control in ControlRegistry.All.OrderBy(control => control.PageType.Name))
+    foreach (PageCatalogEntry control in PageRegistry.All.OrderBy(control => control.PageType.Name))
     {
       if (!control.PageType.Name.EndsWith("Demo", StringComparison.Ordinal))
       {
         continue;
       }
 
-      foreach (ControlThemeId themeId in SupportedThemes)
+      foreach (ThemeId themeId in SupportedThemes)
       {
         if (!control.ShouldTest(themeId))
         {

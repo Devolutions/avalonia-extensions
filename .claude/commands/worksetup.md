@@ -15,7 +15,7 @@ Arguments:
 - Validate theme and scale against allowed values
 - Theme matching is case-insensitive and accepts aliases listed above
 
-  ## 2) Update startup settings in `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
+  ## 2) Update startup settings in `samples/SampleApp/PageCatalog/page-catalog.jsonc`
   Edit only the `sampleAppStartUpSettings` block:
 
   ```jsonc
@@ -34,7 +34,7 @@ Arguments:
 
   ## 3) Resolve tab title
 Collect candidate tab titles from:
-- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` -> `pages.*[].uniqueTitle`
+- `samples/SampleApp/PageCatalog/page-catalog.jsonc` -> `pages.*[].uniqueTitle`
 - explicit non-control tabs in `samples/SampleApp/MainWindow.axaml`:
   - `Overview`
   - `Control Alignment`

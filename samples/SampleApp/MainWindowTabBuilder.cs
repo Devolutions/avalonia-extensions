@@ -6,32 +6,32 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using SampleApp.ControlCatalog;
+using SampleApp.PageCatalog;
 using SampleApp.Controls;
 
 internal static class MainWindowTabBuilder
 {
   public static IReadOnlyList<TabItem> BuildControlTabs()
   {
-    ControlRegistry.EnsureValid();
-    return [.. ControlRegistry.ControlDemos.Select(CreateControlTab)];
+    PageRegistry.EnsureValid();
+    return [.. PageRegistry.ControlDemos.Select(CreateControlTab)];
   }
 
-  private static TabItem CreateControlTab(ControlCatalogEntry control) =>
+  private static TabItem CreateControlTab(PageCatalogEntry control) =>
     new()
     {
       Header = CreateHeader(control),
       Content = CreateContent(control),
     };
 
-  private static SampleItemHeader CreateHeader(ControlCatalogEntry control) =>
+  private static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
     new()
     {
       Title = control.Title,
       ApplicableTo = control.ApplicableToCsv,
     };
 
-  private static Control CreateContent(ControlCatalogEntry control)
+  private static Control CreateContent(PageCatalogEntry control)
   {
 #if !ENABLE_ACCELERATE
     if (control.Source == ControlSource.AvaloniaPro)
@@ -43,7 +43,7 @@ internal static class MainWindowTabBuilder
     return CreateDemoContent(control);
   }
 
-  private static Control CreateDemoContent(ControlCatalogEntry control)
+  private static Control CreateDemoContent(PageCatalogEntry control)
   {
     if (Activator.CreateInstance(control.PageType) is not Control content)
     {
@@ -64,7 +64,7 @@ internal static class MainWindowTabBuilder
     return content;
   }
 
-  private static Control CreateAvaloniaProPlaceholder(ControlCatalogEntry control) =>
+  private static Control CreateAvaloniaProPlaceholder(PageCatalogEntry control) =>
     new TextBlock
     {
       Text = $"The {control.Title} demo requires Avalonia Pro.\nAdd AVALONIA_LICENSE_KEY to a .env file at the repo root and rebuild.",

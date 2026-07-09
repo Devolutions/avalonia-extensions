@@ -7,7 +7,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
-using SampleApp.ControlCatalog;
+using SampleApp.PageCatalog;
 using SampleApp.Controls;
 using SampleApp.ViewModels;
 
@@ -42,12 +42,12 @@ public class MainWindowTabsTests
       .Where(static tabItem => tabItem.Header is SampleItemHeader)
       .ToList();
 
-    Assert.Equal(ControlRegistry.ControlDemos.Count, generatedTabs.Count);
+    Assert.Equal(PageRegistry.ControlDemos.Count, generatedTabs.Count);
     Assert.Equal(
-      ControlRegistry.ControlDemos.Select(static control => control.Title),
+      PageRegistry.ControlDemos.Select(static control => control.Title),
       generatedTabs.Select(static tabItem => ((SampleItemHeader)tabItem.Header!).Title));
 
-    foreach (ControlCatalogEntry control in ControlRegistry.ControlDemos)
+    foreach (PageCatalogEntry control in PageRegistry.ControlDemos)
     {
       TabItem tabItem = Assert.Single(
         generatedTabs,

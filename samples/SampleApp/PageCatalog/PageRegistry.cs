@@ -1,4 +1,4 @@
-namespace SampleApp.ControlCatalog;
+namespace SampleApp.PageCatalog;
 
 using System;
 using System.Collections.Generic;
@@ -8,26 +8,26 @@ using System.Reflection;
 using System.Text.Json;
 using Avalonia.Controls;
 
-public static class ControlRegistry
+public static class PageRegistry
 {
   public const string ControlDemosSection = "Control Demos";
   private const string NotSupportedDescription = "Not Supported";
-  private const string CatalogResourceName = "SampleApp.ControlCatalog.control-catalog.jsonc";
-  private static readonly ControlCatalogFile CatalogFile = LoadCatalogFile();
-  private static readonly IReadOnlyList<ControlCatalogEntry> Controls = CreateControls(CatalogFile);
-  private static readonly IReadOnlyList<string> ValidationErrors = ControlCatalogEntry.Validate(Controls);
-  private static readonly IReadOnlyDictionary<string, IReadOnlyList<ControlCatalogEntry>> ControlsBySection =
+  private const string CatalogResourceName = "SampleApp.PageCatalog.page-catalog.jsonc";
+  private static readonly PageCatalogFile CatalogFile = LoadCatalogFile();
+  private static readonly IReadOnlyList<PageCatalogEntry> Controls = CreateControls(CatalogFile);
+  private static readonly IReadOnlyList<string> ValidationErrors = PageCatalogEntry.Validate(Controls);
+  private static readonly IReadOnlyDictionary<string, IReadOnlyList<PageCatalogEntry>> ControlsBySection =
     Controls
       .GroupBy(static entry => entry.Section, StringComparer.OrdinalIgnoreCase)
       .ToDictionary(
         static group => group.Key,
-        static group => (IReadOnlyList<ControlCatalogEntry>)group.ToArray(),
+        static group => (IReadOnlyList<PageCatalogEntry>)group.ToArray(),
         StringComparer.OrdinalIgnoreCase);
 
-  public static IReadOnlyList<ControlCatalogEntry> All => Controls;
+  public static IReadOnlyList<PageCatalogEntry> All => Controls;
 
-  public static IReadOnlyList<ControlCatalogEntry> ControlDemos =>
-    ControlsBySection.TryGetValue(ControlDemosSection, out IReadOnlyList<ControlCatalogEntry>? entries)
+  public static IReadOnlyList<PageCatalogEntry> ControlDemos =>
+    ControlsBySection.TryGetValue(ControlDemosSection, out IReadOnlyList<PageCatalogEntry>? entries)
       ? entries
       : [];
 
@@ -43,7 +43,7 @@ public static class ControlRegistry
     }
 
     string joinedErrors = string.Join(Environment.NewLine, ValidationErrors);
-    throw new InvalidOperationException($"The controls catalog is invalid:{Environment.NewLine}{joinedErrors}");
+    throw new InvalidOperationException($"The page catalog is invalid:{Environment.NewLine}{joinedErrors}");
   }
 
   public static string GetStatusDescription(string symbol) =>
@@ -55,18 +55,18 @@ public static class ControlRegistry
     string.IsNullOrEmpty(symbol) ||
     string.Equals(GetStatusDescription(symbol), NotSupportedDescription, StringComparison.OrdinalIgnoreCase);
 
-  private static ControlCatalogFile LoadCatalogFile()
+  private static PageCatalogFile LoadCatalogFile()
   {
-    Assembly assembly = typeof(ControlRegistry).Assembly;
+    Assembly assembly = typeof(PageRegistry).Assembly;
     using Stream? stream = assembly.GetManifestResourceStream(CatalogResourceName);
     if (stream == null)
     {
-      throw new InvalidOperationException($"Could not find embedded control catalog resource '{CatalogResourceName}'.");
+      throw new InvalidOperationException($"Could not find embedded page catalog resource '{CatalogResourceName}'.");
     }
 
     using var reader = new StreamReader(stream);
     string json = reader.ReadToEnd();
-    ControlCatalogFile? catalogFile = JsonSerializer.Deserialize<ControlCatalogFile>(
+    PageCatalogFile? catalogFile = JsonSerializer.Deserialize<PageCatalogFile>(
       json,
       new JsonSerializerOptions
       {
@@ -75,17 +75,17 @@ public static class ControlRegistry
         ReadCommentHandling = JsonCommentHandling.Skip,
       });
 
-    return catalogFile ?? throw new InvalidOperationException("Failed to deserialize the control catalog file.");
+    return catalogFile ?? throw new InvalidOperationException("Failed to deserialize the page catalog file.");
   }
 
-  private static IReadOnlyList<ControlCatalogEntry> CreateControls(ControlCatalogFile catalogFile)
+  private static IReadOnlyList<PageCatalogEntry> CreateControls(PageCatalogFile catalogFile)
   {
     IReadOnlyList<string> sectionOrder = GetSectionOrder(catalogFile);
-    var controls = new List<ControlCatalogEntry>();
+    var controls = new List<PageCatalogEntry>();
 
     foreach (string section in sectionOrder)
     {
-      if (!catalogFile.Pages.TryGetValue(section, out List<ControlCatalogFileEntry>? entries))
+      if (!catalogFile.Pages.TryGetValue(section, out List<PageCatalogFileEntry>? entries))
       {
         continue;
       }
@@ -96,7 +96,7 @@ public static class ControlRegistry
     return controls;
   }
 
-  private static IReadOnlyList<string> GetSectionOrder(ControlCatalogFile catalogFile)
+  private static IReadOnlyList<string> GetSectionOrder(PageCatalogFile catalogFile)
   {
     var ordered = new List<string>();
     var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -122,13 +122,13 @@ public static class ControlRegistry
     return ordered;
   }
 
-  private static ControlCatalogEntry CreateControl(string section, ControlCatalogFileEntry entry)
+  private static PageCatalogEntry CreateControl(string section, PageCatalogFileEntry entry)
   {
     string demoTypeName = NormalizeTypeName(entry.Demo);
     Type pageType = ResolvePageType(entry.Source, demoTypeName);
     Type? viewModelType = ResolveViewModelType(entry.Source, entry.ViewModel);
 
-    return new ControlCatalogEntry(
+    return new PageCatalogEntry(
       key: entry.UniqueTitle,
       section: section,
       title: entry.UniqueTitle,
@@ -195,19 +195,19 @@ public static class ControlRegistry
     return parts.Length == 0 ? [] : parts;
   }
 
-  private static IReadOnlyDictionary<ControlThemeId, string> ParseStatuses(IReadOnlyDictionary<string, string>? statuses)
+  private static IReadOnlyDictionary<ThemeId, string> ParseStatuses(IReadOnlyDictionary<string, string>? statuses)
   {
-    var parsedStatuses = new Dictionary<ControlThemeId, string>();
+    var parsedStatuses = new Dictionary<ThemeId, string>();
 
     if (statuses != null)
     {
       foreach ((string themeName, string symbol) in statuses)
       {
-        parsedStatuses[ControlThemeIds.Parse(themeName)] = symbol;
+        parsedStatuses[ThemeIds.Parse(themeName)] = symbol;
       }
     }
 
-    foreach (ControlThemeId themeId in ControlThemeIds.All)
+    foreach (ThemeId themeId in ThemeIds.All)
     {
       parsedStatuses.TryAdd(themeId, string.Empty);
     }
@@ -215,7 +215,7 @@ public static class ControlRegistry
     return parsedStatuses;
   }
 
-  private static IReadOnlyCollection<ControlThemeId> ParseExcludedThemes(IReadOnlyDictionary<string, bool>? excludeFromTests)
+  private static IReadOnlyCollection<ThemeId> ParseExcludedThemes(IReadOnlyDictionary<string, bool>? excludeFromTests)
   {
     if (excludeFromTests == null)
     {
@@ -224,7 +224,7 @@ public static class ControlRegistry
 
     return excludeFromTests
       .Where(static pair => pair.Value)
-      .Select(pair => ControlThemeIds.Parse(pair.Key))
+      .Select(pair => ThemeIds.Parse(pair.Key))
       .ToArray();
   }
 }

@@ -32,25 +32,37 @@ This removes the current coupling between test discovery and MainWindow TabItem 
   - 2026-06-30: Kickoff review completed. Rebased `agents/controls-registry-refactor-setup` onto `origin/master` (already up to date).
     - 2026-07-06: Session-start rebase was blocked by local uncommitted registry work. Agreed team practice: create a clearly marked `[WIP]` commit before rebasing when needed, then squash later if desired.
     - 2026-07-06: Created WIP checkpoint commit, rebased successfully onto `origin/master`, and revisited the schema. Key change: move from demo-level applicability/status to a control x theme styling-state matrix.
-      - 2026-07-06: Implemented the revised control-centric contract (`ControlThemeId`, `ControlStylingState`, `ControlCatalogEntry`, `ControlRegistry`) with explicit `ControlSource` and category paths.
+      - 2026-07-06: Implemented the revised control-centric contract (`ThemeId`, `ControlStylingState`, `PageCatalogEntry`, `PageRegistry`) with explicit `ControlSource` and category paths.
         - 2026-07-07: Refactored contract to emoji-based per-theme status symbols plus `ExcludeFromTests` overrides (exclude-only), with shorthand helpers for readable registry entries.
           - 2026-07-07: Replaced the in-code catalog list with a human-edited JSONC catalog resource that is parsed into the internal control registry at runtime/startup.
-            - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `ControlRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
+            - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `PageRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
               - 2026-07-08: Rebased `agents/controls-registry-refactor-setup` onto `origin/master` and completed the tab-compatible MainWindow composition refactor for Phase 3.
-                - 2026-07-09: Follow-up cleanup after merge: removed the redundant per-entry `type` field from `control-catalog.jsonc`.
+                - 2026-07-09: Follow-up cleanup after merge: removed the redundant per-entry `type` field from `page-catalog.jsonc`.
                   - The field had become authoring noise; runtime logic now uses the existing entry title where placeholder text needs a control name.
                   - Verification:
-                    - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~MainWindowTabsTests"` ✅
+                    - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests"` ✅
                     - `dotnet test` ✅ (136/136)
                 - 2026-07-09: Started the page-catalog migration to align navigation metadata with demos/pages (not just controls).
                   - Catalog schema migrated from a single `controls` array to sectioned `pages` with explicit `topLevelOrder`.
                   - Entry identity is now `uniqueTitle` (human-authored, globally unique in catalog) instead of a separate catalog key field.
-                  - Added section-aware flattening in `ControlRegistry`; `MainWindowTabBuilder` now consumes only the `"Control Demos"` section.
+                  - Added section-aware flattening in `PageRegistry`; `MainWindowTabBuilder` now consumes only the `"Control Demos"` section.
                   - Added support for omitted status blocks by defaulting missing theme statuses to `""` (no icon, excluded from tests).
                   - Added catalog legend entry for `""` and seeded non-control sections with `Overview` and `Control Alignment` pages (no status block).
                   - Startup settings block renamed to `sampleAppStartUpSettings` and now supports `selectedPage` (with `selectedTab` compatibility in runtime model).
                   - Verification:
-                    - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+                    - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+                    - `dotnet test` ✅ (137/137)
+                - 2026-07-09: Renamed catalog implementation surface from control-oriented naming to page-oriented naming.
+                  - Renamed folder/resources to `samples/SampleApp/PageCatalog/page-catalog.jsonc` and updated SampleApp embedded-resource path.
+                  - Renamed runtime API to `PageRegistry` + `PageCatalogEntry` and updated app/test imports to `SampleApp.PageCatalog`.
+                  - Renamed `ControlCatalogTests` file/class to `PageCatalogTests` and updated test names for consistency.
+                  - Verification:
+                    - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+                    - `dotnet test` ✅ (137/137)
+                - 2026-07-09: Renamed page-catalog theme identifiers from `ControlThemeId`/`ControlThemeIds` to `ThemeId`/`ThemeIds` to avoid confusion with Avalonia `ControlTheme`.
+                  - Updated page catalog runtime/test usages and moved `ControlThemeId.cs` to `ThemeId.cs`.
+                  - Verification:
+                    - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
                     - `dotnet test` ✅ (137/137)
 
 ## Principles and Key Decisions
@@ -145,11 +157,11 @@ Implementation notes:
 - 2026-06-30: A first-pass registry contract was implemented (`DemoThemeId`, `DemoDescriptor`, `DemoRegistry`, validation, tests).
 - 2026-07-06: That first-pass shape is now considered provisional/superseded because it models applicability/status at the wrong level. The next implementation pass should refactor it to a control-centric schema with a control x theme styling-state matrix.
 - 2026-07-06: Refactored the implementation to:
-  - `ControlThemeId` / `ControlThemeIds`
+  - `ThemeId` / `ThemeIds`
   - `ControlStylingStatus`, `ControlStylingFlags`, and `ControlStylingState`
   - `ControlSource`
-  - `ControlCatalogEntry`
-  - `ControlRegistry`
+  - `PageCatalogEntry`
+  - `PageRegistry`
 - 2026-07-06: Kept demo linkage explicit via `PageType` rather than deriving `[ControlName]Demo` by convention.
 - 2026-07-06: Populated explicit `Source` and category-path metadata for the current controls catalog.
 - 2026-07-06: Validation now checks:
@@ -158,7 +170,7 @@ Implementation notes:
   - page/viewmodel type shape
   - complete theme coverage for every control entry
 - 2026-07-06: Verification:
-  - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests"` ✅
+  - `dotnet test --filter "FullyQualifiedName~PageCatalogTests"` ✅
   - full `dotnet test` currently fails on existing visual diffs for `EditableComboBoxDemo` across 4 themes; those pages were not changed by this catalog refactor and need separate investigation before relying on a full-green suite.
 - 2026-07-07: Refined implementation details:
   - Replaced enum-based status values with symbol-based `StatusByTheme` map and `ControlStatusSymbols` legend/description helpers.
@@ -166,15 +178,15 @@ Implementation notes:
     - `❌` => skip by default
     - other symbols => include by default
     - explicit exclude override => skip
-  - Added/kept readability helpers in `ControlRegistry` (`Supported(...)`, `InProgress(...)`, etc.) to keep entries concise.
+  - Added/kept readability helpers in `PageRegistry` (`Supported(...)`, `InProgress(...)`, etc.) to keep entries concise.
 - 2026-07-07: Replaced those in-code helpers as the authoring surface with an embedded JSONC catalog:
-  - file: `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
+  - file: `samples/SampleApp/PageCatalog/page-catalog.jsonc`
   - parser: `System.Text.Json` with comment/trailing-comma tolerant options
-  - internal registry still materializes typed `ControlCatalogEntry` objects from that file
+  - internal registry still materializes typed `PageCatalogEntry` objects from that file
   - `statusSymbols` legend now comes from the catalog file itself
   - `excludeFromTests` is stored in the file as a theme->bool object, with only `true` entries having effect
 - 2026-07-07: Verification:
-  - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests"` ✅
+  - `dotnet test --filter "FullyQualifiedName~PageCatalogTests"` ✅
   - earlier full `dotnet test` runs still failed with pre-existing `EditableComboBoxDemo` visual diffs in 4 themes.
 
 ### Phase 2: Switch Visual Tests to Registry-backed Discovery
@@ -190,8 +202,8 @@ Acceptance criteria:
 - Test coverage set remains equivalent or intentionally documented.
 
 Phase 2 notes (2026-07-07):
-- `VisualRegressionTests.GetDemoPages()` now iterates `ControlRegistry.All`, filters to the currently supported visual-test themes (`MacClassic`, `LiquidGlass`, `Linux`, `DevExpress`), and uses `ControlCatalogEntry.ShouldTest(theme)` plus the registry-provided `ViewModelType`.
-- Discovery now calls `ControlRegistry.EnsureValid()` up front instead of relying on AXAML/code-behind parsing to fail later.
+- `VisualRegressionTests.GetDemoPages()` now iterates `PageRegistry.All`, filters to the currently supported visual-test themes (`MacClassic`, `LiquidGlass`, `Linux`, `DevExpress`), and uses `PageCatalogEntry.ShouldTest(theme)` plus the registry-provided `ViewModelType`.
+- Discovery now calls `PageRegistry.EnsureValid()` up front instead of relying on AXAML/code-behind parsing to fail later.
 - Added regression coverage in `PageDiscoveryTests` to pin key discovery cases (`EditableComboBoxDemo`, `TreeDataGridDemo`) to their expected theme sets.
 - Full `dotnet test` after the refactor produced 3 visual diffs, all for `TreeDataGridDemo` (`MacClassic`, `DevExpress`, `Linux`).
 - `EditableComboBoxDemo` is still discovered and still covered; a focused run for `DisplayName~EditableComboBoxDemo` passed in all 4 expected themes during this session.
@@ -211,14 +223,14 @@ Phase 3 notes (2026-07-08):
 - Kept `Overview`, `Control Alignment`, and `Experiments` as explicit top-level tabs in XAML, matching the earlier decision to keep non-control areas outside the future registry-driven navigation tree.
 - Removed the long static run of control demo `TabItem`s from `MainWindow.axaml`.
 - Added `MainWindowTabBuilder`, which now:
-  - iterates `ControlRegistry.All` in catalog order,
+  - iterates `PageRegistry.All` in catalog order,
   - creates `SampleItemHeader` from registry metadata (`Title` + `ApplicableToCsv`),
   - instantiates the demo page and optional ViewModel from the typed registry entry,
   - substitutes the Avalonia Pro placeholder message when `ENABLE_ACCELERATE` is not available.
 - `MainWindow` now inserts the generated control tabs immediately before the `Control Alignment` tab, preserving the existing top-level tab layout while eliminating duplicated per-control metadata from AXAML/code-behind.
 - Replaced the earlier brittle “pin a couple of demos” style of regression coverage with a maintainable headless `MainWindowTabsTests` check that verifies the generated control-tab set, header metadata, and declared ViewModel wiring against the catalog itself.
 - Verification:
-  - `dotnet test --filter "FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+  - `dotnet test --filter "FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageCatalogTests|FullyQualifiedName~PageDiscoveryTests"` ✅
   - `dotnet test` ✅ (132/132)
 
 ### Phase 4: Plan Information Architecture for TreeView

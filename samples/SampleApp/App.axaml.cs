@@ -17,7 +17,7 @@ using Devolutions.AvaloniaTheme.WinUI;
 using Devolutions.AvaloniaTheme.WinUI.Internal;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
-using ControlCatalog;
+using PageCatalog;
 using ViewModels;
 
 public class App : Application
@@ -92,7 +92,7 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            ControlRegistry.EnsureValid();
+            PageRegistry.EnsureValid();
 
             Theme? theme = ResolveStartupThemeFromCatalog() ?? this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
@@ -101,7 +101,7 @@ public class App : Application
 
     private static Theme? ResolveStartupThemeFromCatalog()
     {
-        string theme = ControlRegistry.StartupSettings.Theme.Trim();
+        string theme = PageRegistry.StartupSettings.Theme.Trim();
         if (string.IsNullOrWhiteSpace(theme) || string.Equals(theme, "default", StringComparison.OrdinalIgnoreCase))
         {
             return null;
@@ -120,20 +120,20 @@ public class App : Application
             "fluent" => new FluentTheme(),
             "simple" => new SimpleTheme(),
             _ => throw new InvalidOperationException(
-                $"Unknown startup theme '{theme}' in control-catalog.jsonc. " +
+                $"Unknown startup theme '{theme}' in page-catalog.jsonc. " +
                 "Expected one of: default, MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple."),
         };
     }
 
     private static void ApplyStartupSettings(MainWindowViewModel viewModel)
     {
-        string startupTabTitle = ControlRegistry.StartupSettings.StartupPage.Trim();
+        string startupTabTitle = PageRegistry.StartupSettings.StartupPage.Trim();
         if (!string.IsNullOrWhiteSpace(startupTabTitle))
         {
             viewModel.StartupTabTitle = startupTabTitle;
         }
 
-        string startupScale = ControlRegistry.StartupSettings.Scale.Trim();
+        string startupScale = PageRegistry.StartupSettings.Scale.Trim();
         if (string.IsNullOrWhiteSpace(startupScale))
         {
             return;
@@ -157,7 +157,7 @@ public class App : Application
         if (selectedScale == null)
         {
             throw new InvalidOperationException(
-                $"Unknown startup scale '{startupScale}' in control-catalog.jsonc. " +
+                $"Unknown startup scale '{startupScale}' in page-catalog.jsonc. " +
                 "Expected one of: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%.");
         }
 

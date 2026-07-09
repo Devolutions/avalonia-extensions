@@ -6,7 +6,7 @@
     "⚠️": "Needs some work / updates"
   },
   // By default, statusSymbols determine test inclusion: ❌ will be excluded, all others included. 
-  // To override this, use "excludeFromTests" to explicitly exclude a control from tests on a specific platform:
+  // To override this, use "excludeFromTests" to explicitly exclude a control from tests in a specific theme:
   //
   //   "excludeFromTests": {
   //     "Linux": true,

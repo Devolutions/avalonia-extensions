@@ -129,9 +129,7 @@ public static class ControlRegistry
 
   private static IReadOnlyDictionary<ControlThemeId, string> ParseStatuses(IReadOnlyDictionary<string, string> statuses)
   {
-    Dictionary<ControlThemeId, string> parsedStatuses = ControlThemeIds.All.ToDictionary(
-      static themeId => themeId,
-      _ => GetRequiredStatusSymbol(NotSupportedDescription));
+    var parsedStatuses = new Dictionary<ControlThemeId, string>();
 
     foreach ((string themeName, string symbol) in statuses)
     {
@@ -139,19 +137,6 @@ public static class ControlRegistry
     }
 
     return parsedStatuses;
-  }
-
-  private static string GetRequiredStatusSymbol(string description)
-  {
-    foreach ((string symbol, string meaning) in StatusDescriptions)
-    {
-      if (string.Equals(meaning, description, StringComparison.OrdinalIgnoreCase))
-      {
-        return symbol;
-      }
-    }
-
-    throw new InvalidOperationException($"The control catalog status legend must define a symbol for '{description}'.");
   }
 
   private static IReadOnlyCollection<ControlThemeId> ParseExcludedThemes(IReadOnlyDictionary<string, bool>? excludeFromTests)

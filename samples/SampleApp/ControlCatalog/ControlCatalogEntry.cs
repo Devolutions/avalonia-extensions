@@ -3,6 +3,7 @@ namespace SampleApp.ControlCatalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Controls;
 
 public enum ControlSource
 {
@@ -134,6 +135,10 @@ public sealed class ControlCatalogEntry
         {
           errors.Add($"'{control.Key}' has an empty status symbol for theme '{themeId}'.");
         }
+        else if (!ControlRegistry.StatusDescriptions.ContainsKey(symbol))
+        {
+          errors.Add($"'{control.Key}' has unknown status symbol '{symbol}' for theme '{themeId}'.");
+        }
       }
 
       foreach (ControlThemeId excludedTheme in control.ExcludeFromTests)
@@ -141,6 +146,23 @@ public sealed class ControlCatalogEntry
         if (!ControlThemeIds.All.Contains(excludedTheme))
         {
           errors.Add($"'{control.Key}' excludes unknown theme '{excludedTheme}' from tests.");
+        }
+      }
+
+      if (!typeof(Control).IsAssignableFrom(control.PageType))
+      {
+        errors.Add($"Page type '{control.PageType.FullName}' for '{control.Key}' must derive from {nameof(Control)}.");
+      }
+      else
+      {
+        if (control.PageType.IsAbstract)
+        {
+          errors.Add($"Page type '{control.PageType.FullName}' for '{control.Key}' cannot be abstract.");
+        }
+
+        if (control.PageType.GetConstructor(Type.EmptyTypes) == null)
+        {
+          errors.Add($"Page type '{control.PageType.FullName}' for '{control.Key}' must have a public parameterless constructor.");
         }
       }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
+using SampleApp.ControlCatalog;
 using Xunit;
 
 namespace Devolutions.AvaloniaControls.VisualTests;
@@ -11,12 +12,12 @@ public class PageDiscoveryTests
     [Fact]
     public void CanDiscoverDemoPages()
     {
-        var assembly = typeof(SampleApp.DemoPages.ButtonDemo).Assembly;
-        var demoPages = assembly.GetTypes()
-            .Where(t => t.Namespace == "SampleApp.DemoPages" && 
-                        t.IsSubclassOf(typeof(UserControl)) && 
-                        !t.IsAbstract && 
+        var demoPages = ControlRegistry.All
+            .Select(control => control.PageType)
+            .Where(t => t.IsSubclassOf(typeof(UserControl)) &&
+                        !t.IsAbstract &&
                         t.Name.EndsWith("Demo"))
+            .Distinct()
             .OrderBy(t => t.Name)
             .ToList();
 

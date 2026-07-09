@@ -2,7 +2,7 @@
 
 ## Goal
 Decouple visual test discovery from MainWindow UI structure by introducing a single source of truth for demo metadata, then use that same source to drive both:
-1. SampleApp navigation UI (initially TabControl-compatible, future TreeView-friendly).
+1. SampleApp navigation UI (initially TabControl-compatible, next create a searchable TreeView).
 2. Visual regression test case discovery (including dynamic entries).
 
 This removes the current coupling between test discovery and MainWindow TabItem layout, and unlocks future navigation refactors without test breakage.
@@ -23,30 +23,66 @@ This removes the current coupling between test discovery and MainWindow TabItem 
 - .claude/docs/planning/current/visual-regression-testing.md
   - Existing visual testing background and constraints.
 
+## Working Session Cadence and Branch Hygiene
+- Active branch: `agents/controls-registry-refactor-setup`
+- Agreed workflow for this project:
+  - At the start of each work session, rebase this branch onto `origin/master` to discover conflicts early.
+  - Record decisions/progress in this document each day we make changes.
+- Session log:
+  - 2026-06-30: Kickoff review completed. Rebased `agents/controls-registry-refactor-setup` onto `origin/master` (already up to date).
+    - 2026-07-06: Session-start rebase was blocked by local uncommitted registry work. Agreed team practice: create a clearly marked `[WIP]` commit before rebasing when needed, then squash later if desired.
+    - 2026-07-06: Created WIP checkpoint commit, rebased successfully onto `origin/master`, and revisited the schema. Key change: move from demo-level applicability/status to a control x theme styling-state matrix.
+      - 2026-07-06: Implemented the revised control-centric contract (`ControlThemeId`, `ControlStylingState`, `ControlCatalogEntry`, `ControlRegistry`) with explicit `ControlSource` and category paths.
+        - 2026-07-07: Refactored contract to emoji-based per-theme status symbols plus `ExcludeFromTests` overrides (exclude-only), with shorthand helpers for readable registry entries.
+          - 2026-07-07: Replaced the in-code catalog list with a human-edited JSONC catalog resource that is parsed into the internal control registry at runtime/startup.
+            - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `ControlRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
+              - 2026-07-08: Rebased `agents/controls-registry-refactor-setup` onto `origin/master` and completed the tab-compatible MainWindow composition refactor for Phase 3.
+
 ## Principles and Key Decisions
-- One metadata source should define demo entries, applicability, and optional ViewModel wiring.
+- One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.
 - Test discovery must remain side-effect free (no runtime window probing during xUnit discovery).
 - Navigation rendering (tabs/tree/etc.) must consume metadata, not define metadata.
 - Keep migration incremental: avoid big-bang rewrite of MainWindow.
 - Preserve existing behavior and ordering first, then iterate on grouping and UX.
 
-## Proposed Metadata Model (Draft)
-A shared descriptor object (name TBD), for example:
-- Demo page type (or factory)
+## Proposed Metadata Model (Revised 2026-07-06)
+The registry should be control-centric rather than demo-centric.
+
+### Control entry
+One entry per control/sampleable feature, for example:
+- Key
 - Display title
-- Applicable themes
-- Optional ViewModel type (or factory)
-- Optional flags (Experimental, Pro, Devolutions, HiddenFromTests, etc.)
-- Group path for hierarchical navigation, for example:
-  - Avalonia/Input
-  - Avalonia/Data
-  - Avalonia/Layout
-  - Avalonia Pro/Actipro
-  - Devolutions/Custom Controls
+- Demo page type (or an explicit equivalent control-level reference; do not center the naming on the demo itself)
+- Optional ViewModel type
+- Source (for example `Avalonia`, `AvaloniaPro`, `Devolutions`)
+- Category path, for example:
+  - `Input`
+  - `Selectors`
+  - `Layout`
+  - `Data/Grid`
+  - `Devolutions/Custom Controls`
+- Per-theme styling matrix (`ControlStylingState` by theme)
+
+### Per-theme styling matrix
+For each control and theme pair, store:
+- `Status`:
+  - `NotStyled` => `❌`
+  - `InProgress` => `🚧`
+  - `Done` => `✅`
+- Per-theme flags/overrides:
+  - `ExcludeFromTests`
+
+Behavior:
+- MainWindow status indicator for the active theme is derived from that theme's `ControlStylingState`.
+- Visual tests should run by default for `InProgress` and `Done`.
+- Visual tests should skip `NotStyled`.
+- `ExcludeFromTests` can override the default and skip a theme even when styling status is not `NotStyled`.
 
 Notes:
-- Keep descriptor values strongly typed where possible (Type references, enum for theme IDs).
-- Allow explicit ordering within groups.
+- Keep values strongly typed where possible (Type references, enums for theme IDs, source IDs, and status IDs).
+- Do not add a custom ordering property for now; group by source/category and sort alphabetically within groups.
+- `Experiments` remain outside this controls registry.
+- `Control Alignment` and `Experiments` should remain outside the eventual TreeView as directly accessible navigation entries.
 
 ## Navigation Direction (Draft)
 Potential first-level grouping candidates:
@@ -59,45 +95,116 @@ Under Avalonia, align subgrouping to Avalonia documentation categories where pra
 Reminder: exact grouping structure is intentionally not finalized in this document. A lightweight information architecture pass is required before TreeView implementation.
 
 ## Open Questions (Low-effort Clarifications)
-1. Should experiments remain outside the main registry (separate area), or become registry entries with an Experimental flag?
-2. For first pass, should the UI continue to render tabs from registry data, then switch to TreeView later, or should we move directly to TreeView?
-3. For theme applicability, do you want to keep string values for flexibility, or move to a typed enum set now?
+Resolved on 2026-06-30:
+1. Experiments stay outside the controls registry. They remain a separate area (potential future experiments-specific registry).
+2. First pass keeps tab-compatible rendering path; TreeView follows in a later phase.
+3. Theme applicability moves to a typed enum set now.
+4. TreeView IA direction note: final MainWindow should keep `Experiments` and `Control Alignment` as navigation entries outside the TreeView so they stay immediately accessible.
+
+Additional schema decisions on 2026-07-06:
+5. Status is not a one-dimensional property of a demo; it is a per-theme property of a control (`ControlStylingState` matrix).
+6. The model should use control-centric naming/logic rather than demo-centric naming where possible.
+7. Keep `Source` explicit instead of encoding it through generic flags.
+8. Use category paths for future TreeView grouping.
+9. Do not add `HiddenInUiForTheme`.
+10. Do not add a custom ordering property at this stage; alphabetical ordering within source/category groupings is preferred.
+11. Use emoji symbols as status values in the matrix for scanability (`✅`, `❌`, `🚧`, `⚠️`) with a central symbol-description legend for tooltips/fallback text.
+12. Test overrides are exclude-only (`excludeFromTests`): overrides may remove tests from otherwise testable statuses, but cannot force-test `❌` entries.
+13. The authoring source of truth should be a human-readable file (JSON-style), not a large hand-maintained C# list. The app can parse that file into internal runtime objects.
 
 ## Phased Actions
 
 ### Phase 1: Define and Validate Registry Contract
-- [ ] Create a shared demo descriptor type in SampleApp (location TBD, likely Models or a dedicated DemoCatalog folder).
-- [ ] Define typed theme applicability values and conversion helpers needed by current UI and tests.
-- [ ] Include support for dynamic/demo-only entries currently added in code-behind.
-- [ ] Add minimal unit-like validation checks (or startup asserts) for duplicate keys, missing page types, and invalid ViewModel types.
-- [ ] Update this planning doc with final contract decisions and any deviations.
+- [x] Replace the first-pass demo-centric contract with the revised control-centric schema.
+- [x] Define `ControlStylingState` / per-theme overrides and remove one-dimensional applicability/status assumptions.
+- [x] Introduce explicit `Source` and category-path metadata.
+- [x] Decide whether demo page linkage should stay explicit as a page type property or be convention-derived from control identity. (explicit `PageType` retained)
+- [x] Re-run validation design against the revised schema.
+- [x] Update this planning doc with final contract decisions and any deviations.
 
 Acceptance criteria:
-- A single list can represent all currently testable demos.
+- A single registry can represent controls, their per-theme styling status, and test applicability.
 - Existing dynamic entries can be represented without AXAML/code-behind scraping.
 
+Implementation notes:
+- 2026-06-30: A first-pass registry contract was implemented (`DemoThemeId`, `DemoDescriptor`, `DemoRegistry`, validation, tests).
+- 2026-07-06: That first-pass shape is now considered provisional/superseded because it models applicability/status at the wrong level. The next implementation pass should refactor it to a control-centric schema with a control x theme styling-state matrix.
+- 2026-07-06: Refactored the implementation to:
+  - `ControlThemeId` / `ControlThemeIds`
+  - `ControlStylingStatus`, `ControlStylingFlags`, and `ControlStylingState`
+  - `ControlSource`
+  - `ControlCatalogEntry`
+  - `ControlRegistry`
+- 2026-07-06: Kept demo linkage explicit via `PageType` rather than deriving `[ControlName]Demo` by convention.
+- 2026-07-06: Populated explicit `Source` and category-path metadata for the current controls catalog.
+- 2026-07-06: Validation now checks:
+  - duplicate control keys
+  - non-empty category paths
+  - page/viewmodel type shape
+  - complete theme coverage for every control entry
+- 2026-07-06: Verification:
+  - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests"` ✅
+  - full `dotnet test` currently fails on existing visual diffs for `EditableComboBoxDemo` across 4 themes; those pages were not changed by this catalog refactor and need separate investigation before relying on a full-green suite.
+- 2026-07-07: Refined implementation details:
+  - Replaced enum-based status values with symbol-based `StatusByTheme` map and `ControlStatusSymbols` legend/description helpers.
+  - Added exclude-only per-theme override collection (`ExcludeFromTests`) and preserved default test behavior:
+    - `❌` => skip by default
+    - other symbols => include by default
+    - explicit exclude override => skip
+  - Added/kept readability helpers in `ControlRegistry` (`Supported(...)`, `InProgress(...)`, etc.) to keep entries concise.
+- 2026-07-07: Replaced those in-code helpers as the authoring surface with an embedded JSONC catalog:
+  - file: `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
+  - parser: `System.Text.Json` with comment/trailing-comma tolerant options
+  - internal registry still materializes typed `ControlCatalogEntry` objects from that file
+  - `statusSymbols` legend now comes from the catalog file itself
+  - `excludeFromTests` is stored in the file as a theme->bool object, with only `true` entries having effect
+- 2026-07-07: Verification:
+  - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests"` ✅
+  - earlier full `dotnet test` runs still failed with pre-existing `EditableComboBoxDemo` visual diffs in 4 themes.
+
 ### Phase 2: Switch Visual Tests to Registry-backed Discovery
-- [ ] Replace MainWindow source parsing in VisualRegressionTests discovery with registry consumption.
-- [ ] Keep test matrix behavior equivalent (page x applicable themes x optional viewmodel).
-- [ ] Ensure discovery remains static and deterministic (no UI creation in MemberData path).
-- [ ] Add guard assertions/logging when registry entry points to missing types.
+- [x] Replace MainWindow source parsing in VisualRegressionTests discovery with registry consumption.
+- [x] Keep test matrix behavior equivalent (page x applicable themes x optional viewmodel).
+- [x] Ensure discovery remains static and deterministic (no UI creation in MemberData path).
+- [x] Add guard assertions/logging when registry entry points to missing types.
 - [ ] Run visual tests in normal mode and baseline-update mode to validate parity.
-- [ ] Update this planning doc with migration notes and any edge cases.
+- [x] Update this planning doc with migration notes and any edge cases.
 
 Acceptance criteria:
 - VisualRegressionTests no longer parse MainWindow AXAML or code-behind.
 - Test coverage set remains equivalent or intentionally documented.
 
+Phase 2 notes (2026-07-07):
+- `VisualRegressionTests.GetDemoPages()` now iterates `ControlRegistry.All`, filters to the currently supported visual-test themes (`MacClassic`, `LiquidGlass`, `Linux`, `DevExpress`), and uses `ControlCatalogEntry.ShouldTest(theme)` plus the registry-provided `ViewModelType`.
+- Discovery now calls `ControlRegistry.EnsureValid()` up front instead of relying on AXAML/code-behind parsing to fail later.
+- Added regression coverage in `PageDiscoveryTests` to pin key discovery cases (`EditableComboBoxDemo`, `TreeDataGridDemo`) to their expected theme sets.
+- Full `dotnet test` after the refactor produced 3 visual diffs, all for `TreeDataGridDemo` (`MacClassic`, `DevExpress`, `Linux`).
+- `EditableComboBoxDemo` is still discovered and still covered; a focused run for `DisplayName~EditableComboBoxDemo` passed in all 4 expected themes during this session.
+
 ### Phase 3: Refactor MainWindow to Render from Registry (Tab-compatible)
-- [ ] Introduce a composition layer that builds current TabItems from registry entries.
-- [ ] Preserve current ordering, headers, and ViewModel assignment behavior.
-- [ ] Keep the existing UI shape stable in this phase to minimize regression risk.
-- [ ] Remove duplicated metadata literals from AXAML/code-behind once parity is confirmed.
-- [ ] Update this planning doc with before/after mapping notes.
+- [x] Introduce a composition layer that builds current TabItems from registry entries.
+- [x] Preserve current ordering, headers, and ViewModel assignment behavior.
+- [x] Keep the existing UI shape stable in this phase to minimize regression risk.
+- [x] Remove duplicated metadata literals from AXAML/code-behind once parity is confirmed.
+- [x] Update this planning doc with before/after mapping notes.
 
 Acceptance criteria:
 - MainWindow no longer hardcodes most demo metadata in TabItem markup.
 - Visual behavior remains functionally equivalent.
+
+Phase 3 notes (2026-07-08):
+- Kept `Overview`, `Control Alignment`, and `Experiments` as explicit top-level tabs in XAML, matching the earlier decision to keep non-control areas outside the future registry-driven navigation tree.
+- Removed the long static run of control demo `TabItem`s from `MainWindow.axaml`.
+- Added `MainWindowTabBuilder`, which now:
+  - iterates `ControlRegistry.All` in catalog order,
+  - creates `SampleItemHeader` from registry metadata (`Title` + `ApplicableToCsv`),
+  - instantiates the demo page and optional ViewModel from the typed registry entry,
+  - substitutes the Avalonia Pro placeholder message when `ENABLE_ACCELERATE` is not available.
+- `MainWindow` now inserts the generated control tabs immediately before the `Control Alignment` tab, preserving the existing top-level tab layout while eliminating duplicated per-control metadata from AXAML/code-behind.
+- Replaced the earlier brittle “pin a couple of demos” style of regression coverage with a maintainable headless `MainWindowTabsTests` check that verifies the generated control-tab set, header metadata, and declared ViewModel wiring against the catalog itself.
+- Verification:
+  - `dotnet test --filter "FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+  - `dotnet test` ✅ (132/132)
 
 ### Phase 4: Plan Information Architecture for TreeView
 - [ ] Draft the exact hierarchical structure for categories and subcategories.

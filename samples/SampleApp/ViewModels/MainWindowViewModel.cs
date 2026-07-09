@@ -23,6 +23,8 @@ public record ScaleOption(string Name, double Scale)
 
 public partial class MainWindowViewModel : ObservableObject
 {
+  private bool startupTabSelectionPending = true;
+
   [ObservableProperty]
   private Theme? currentTheme;
 
@@ -35,11 +37,27 @@ public partial class MainWindowViewModel : ObservableObject
   [ObservableProperty]
   private double systemScale;
 
+  [ObservableProperty]
+  private string startupTabTitle = "Overview"; // Fallback when catalog startup settings are missing/invalid
+
   public MainWindowViewModel()
   {
     this.SelectedWallpaper = this.AvailableWallpapers[0];
     this.CurrentTheme = this.AvailableThemes.FirstOrDefault(t => Equals(t, App.CurrentTheme!))!;
     this.SelectedScale = this.AvailableScales[0]; // 0 = System Default, 10 = 400%
+  }
+
+  public bool TryConsumeStartupTabTitle(out string tabTitle)
+  {
+    tabTitle = this.StartupTabTitle;
+
+    if (!this.startupTabSelectionPending)
+    {
+      return false;
+    }
+
+    this.startupTabSelectionPending = false;
+    return true;
   }
 
   public WallpaperItem[] AvailableWallpapers { get; } =

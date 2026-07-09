@@ -67,6 +67,10 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="ControlCatalog\control-catalog.jsonc" />
+    </ItemGroup>
+
     <!-- Temporary link for development. 
          (To use the published nuget, uncomment PackageReference above (update version) or install with Nuget manager) -->
     <ItemGroup>

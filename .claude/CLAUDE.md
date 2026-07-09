@@ -53,6 +53,7 @@ src/
 
 samples/
 └── SampleApp/                                # Demo application
+    ├── ControlCatalog/                       # JSONC source-of-truth + registry loader
     ├── DemoPages/                            # Control demo pages
     └── Experiments/                          # Experimental features
 ```
@@ -116,11 +117,10 @@ The SampleApp provides:
   - F12 opens Avalonia Accelerate Dev Tools
 
 ### Runtime Tab Convention (SampleApp)
-- Some tabs are inserted at runtime and are not statically present in `samples/SampleApp/MainWindow.axaml`.
-- Dynamic insertion points are marked by comments like `<!-- TabItem "..." inserted here through code-behind ... -->`.
-- Runtime tabs should be added from appropriately named methods in `samples/SampleApp/MainWindow.axaml.cs` using the `Add...Tab()` pattern (for example, `AddTreeDataGridTab()`).
-- `/worksetup` may temporarily force runtime tab selection in those methods for local development.
-- Those temporary runtime-selection lines are local-only setup state and should not be committed by default (follow `.claude/commands/commit.md`).
+- Control demo tabs are generated at runtime from `samples/SampleApp/ControlCatalog/control-catalog.jsonc` via `MainWindowTabBuilder` and `ControlRegistry`.
+- `samples/SampleApp/MainWindow.axaml` intentionally keeps only non-control top-level tabs explicit (`Overview`, `Control Alignment`, `Experiments`).
+- To add/update a control tab, edit catalog metadata first (title, source, category, per-theme status, optional view model), then ensure the corresponding page/viewmodel types exist.
+- `/worksetup` can still adjust local theme/tab/scale development state, but those local defaults should not be committed (follow `.claude/commands/commit.md`).
 
 **Note on Theme Detection:**
 The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the working directory to be 
@@ -128,7 +128,11 @@ The app's theme detection (`DetectDesignTheme()` in App.axaml.cs) expects the wo
 to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is why building and running from the bin directory is required for proper theme detection configured via `/worksetup` command.
 
 ### Testing
-There are no automated tests in this repository. Testing is done manually via the SampleApp.
+Automated tests are available and should be used:
+- `dotnet test` runs the repository test suite, including visual regression tests.
+- Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `ControlCatalogTests`, `VisualRegressionTests`, and `MainWindowTabsTests`).
+
+Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 
 ### Packaging
 ```bash

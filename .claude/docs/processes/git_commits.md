@@ -71,6 +71,11 @@ Note: there may be other agents changing the code while you work.
   ```
 - This reduces the window where another agent's changes could interfere
 
+### WIP commits before rebasing
+- If a session-start rebase is blocked by your own in-progress local changes, prefer creating a clearly marked `[WIP]` commit instead of stashing or leaving the branch dirty.
+- This keeps the branch rebaseable, preserves work safely, and makes conflict discovery happen earlier.
+- It is acceptable to squash or rewrite these WIP commits later before merge if desired.
+
 ### Important Notes
 - If the code is in a partial/broken state, prioritise commits that leave the codebase working
 - If you encounter merge conflicts or ANY unexpected issues, stop and ask the user immediately
@@ -82,29 +87,20 @@ Note: there may be other agents changing the code while you work.
 
 **CRITICAL: Never commit /worksetup development changes**
 
-The `/worksetup` command modifies these files for local development only:
-- `samples/SampleApp/App.axaml` (theme selection in Application.Styles block)
-- `samples/SampleApp/MainWindow.axaml` (TabItem IsSelected attributes)
-- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (SelectedScale initialization)
+The `/worksetup` command modifies this file for local startup defaults:
+- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` (`SampleAppStartUpSettings` theme/tab/scale values)
 
-**Master branch defaults**:
-- Theme: All themes commented out (automatically selects platform-appropriate theme)
-  ```xml
-  <!-- <DevolutionsMacOsTheme /> -->
-  <!-- <local:MacOsClassicThemeStyle /> -->
-  <!-- <local:MacOsLiquidGlassThemeStyle /> -->
-  <!-- <DevolutionsDevExpressTheme /> -->
-  <!-- <DevolutionsLinuxYaruTheme /> -->
-  ```
-- Tab: `IsSelected="True"` on Overview tab only
-- Scale: `this.SelectedScale = this.AvailableScales[0];` (System Default)
+**Master branch startup defaults**:
+- Theme: `"theme": "default"`
+- Startup tab: `"selectedTab": "Overview"`
+- Scale: `"scale": "default"`
 
 **Pre-commit workflow**:
-1. Check if App.axaml, MainWindow.axaml, or MainWindowViewModel.cs have changes
+1. Check if control-catalog.jsonc has changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/worksetup Default Overview` to restore defaults (all themes commented, Overview tab, Default scale)
-   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme, tab, and scale`
+   - First, run `/worksetup Default Overview` to restore startup defaults in `SampleAppStartUpSettings`
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default startup settings`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them

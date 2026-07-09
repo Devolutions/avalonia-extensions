@@ -5,9 +5,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using SampleApp;
 using SampleApp.ControlCatalog;
 using SampleApp.Controls;
+using SampleApp.ViewModels;
 
 public class MainWindowTabsTests
 {
@@ -17,8 +19,23 @@ public class MainWindowTabsTests
     Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
     App.SetTheme(new MacOsClassicTheme());
 
-    MainWindow window = new();
+    MainWindowViewModel viewModel = new()
+    {
+      StartupTabTitle = "ComboBox",
+    };
+
+    MainWindow window = new()
+    {
+      DataContext = viewModel,
+    };
+    window.Show();
+    Dispatcher.UIThread.RunJobs();
+
     TabControl tabControl = window.FindControl<TabControl>("MainTabControl")!;
+
+    TabItem selectedTab = Assert.IsType<TabItem>(tabControl.SelectedItem);
+    SampleItemHeader selectedHeader = Assert.IsType<SampleItemHeader>(selectedTab.Header);
+    Assert.Equal("ComboBox", selectedHeader.Title);
 
     List<TabItem> generatedTabs = tabControl.Items
       .OfType<TabItem>()
@@ -50,5 +67,8 @@ public class MainWindowTabsTests
         Assert.IsType(control.ViewModelType, content.DataContext);
       }
     }
+
+    window.Close();
+    Dispatcher.UIThread.RunJobs();
   }
 }

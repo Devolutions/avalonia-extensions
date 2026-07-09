@@ -1,14 +1,17 @@
 namespace SampleApp;
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using SampleApp.Controls;
 using ViewModels;
 
 public partial class MainWindow : Window
@@ -30,6 +33,7 @@ public partial class MainWindow : Window
     // Once the window is fully loaded, update background, detect scale, and size containers
     this.Loaded += async (s, e) =>
     {
+      this.ApplyStartupTabSelection();
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
       this.InitializeContainerSizes();
@@ -371,4 +375,60 @@ public partial class MainWindow : Window
       tabControl.Items.Insert(insertIndex++, tabItem);
     }
   }
+
+  private void ApplyStartupTabSelection()
+  {
+    if (this.DataContext is not MainWindowViewModel viewModel)
+    {
+      return;
+    }
+
+    if (!viewModel.TryConsumeStartupTabTitle(out string tabTitle) || string.IsNullOrWhiteSpace(tabTitle))
+    {
+      return;
+    }
+
+    TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
+    if (tabControl == null)
+    {
+      return;
+    }
+
+    TabItem? selectedTab = FindMatchingTab(tabControl, tabTitle);
+    if (selectedTab == null)
+    {
+      return;
+    }
+
+    tabControl.SelectedItem = selectedTab;
+    selectedTab.IsSelected = true;
+  }
+
+  private static TabItem? FindMatchingTab(TabControl tabControl, string targetTitle)
+  {
+    List<(TabItem Tab, string Title)> titledTabs = tabControl.Items
+      .OfType<TabItem>()
+      .Select(tab => (Tab: tab, Title: GetHeaderTitle(tab)))
+      .Where(static item => !string.IsNullOrWhiteSpace(item.Title))
+      .ToList();
+
+    string normalizedTarget = targetTitle.Trim();
+
+    return titledTabs.FirstOrDefault(item => string.Equals(item.Title, normalizedTarget, StringComparison.OrdinalIgnoreCase)).Tab ??
+           titledTabs.FirstOrDefault(item => item.Title.Contains(normalizedTarget, StringComparison.OrdinalIgnoreCase)).Tab ??
+           titledTabs.FirstOrDefault(item => normalizedTarget.Contains(item.Title, StringComparison.OrdinalIgnoreCase)).Tab;
+  }
+
+  private static string GetHeaderTitle(TabItem tabItem) =>
+    tabItem.Header switch
+    {
+      SampleItemHeader sampleHeader => sampleHeader.Title ?? string.Empty,
+      string headerText => headerText,
+      TextBlock headerTextBlock => headerTextBlock.Text ?? string.Empty,
+      StackPanel headerPanel => headerPanel.Children
+        .OfType<TextBlock>()
+        .Select(static text => text.Text)
+        .FirstOrDefault(static text => !string.IsNullOrWhiteSpace(text)) ?? string.Empty,
+      _ => string.Empty,
+    };
 }

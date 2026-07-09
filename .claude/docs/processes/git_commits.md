@@ -87,28 +87,20 @@ Note: there may be other agents changing the code while you work.
 
 **CRITICAL: Never commit /worksetup development changes**
 
-The `/worksetup` command modifies these files for local startup defaults only:
-- `samples/SampleApp/App.axaml` (startup theme selection in Application.Styles)
-- `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (startup tab title + startup scale defaults)
+The `/worksetup` command modifies this file for local startup defaults:
+- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` (`SampleAppStartUpSettings` theme/tab/scale values)
 
 **Master branch startup defaults**:
-- Theme: All themes commented out (automatically selects platform-appropriate theme)
-  ```xml
-  <!-- <DevolutionsMacOsTheme /> -->
-  <!-- <local:MacOsClassicThemeStyle /> -->
-  <!-- <local:MacOsLiquidGlassThemeStyle /> -->
-  <!-- <DevolutionsDevExpressTheme /> -->
-  <!-- <DevolutionsLinuxYaruTheme /> -->
-  ```
-- Startup tab: `private string startupTabTitle = "Overview";`
-- Scale: `this.SelectedScale = this.AvailableScales[0];` (System Default)
+- Theme: `"theme": "default"`
+- Startup tab: `"selectedTab": "Overview"`
+- Scale: `"scale": "default"`
 
 **Pre-commit workflow**:
-1. Check if App.axaml or MainWindowViewModel.cs have changes
+1. Check if control-catalog.jsonc has changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/worksetup Default Overview` to restore startup defaults (all themes commented, Overview startup tab, Default scale)
-   - Create a commit with those restorations if needed: `[SampleApp] Restore default theme, tab, and scale`
+   - First, run `/worksetup Default Overview` to restore startup defaults in `SampleAppStartUpSettings`
+   - Create a commit with those restorations if needed: `[SampleApp] Restore default startup settings`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:
    - User explicitly requests committing them

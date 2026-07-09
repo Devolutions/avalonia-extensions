@@ -1,4 +1,13 @@
 {
+  // SampleApp start-up setting options: 
+  //  theme: Default or theme name (MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple)
+  //  selectedTab: Default or any control name / tab title (partial match is allowed)
+  //  scale: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%
+  "SampleAppStartUpSettings": {
+    "theme": "DevEx",
+    "selectedTab": "datagrid",
+    "scale": "Default"
+  },
   "statusSymbols": {
     "✅": "Supported",
     "❌": "Not Supported",

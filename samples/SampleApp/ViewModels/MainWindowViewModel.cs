@@ -38,7 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
   private double systemScale;
 
   [ObservableProperty]
-  private string startupTabTitle = "Overview"; // Default: "Overview"
+  private string startupTabTitle = "Overview"; // Fallback when catalog startup settings are missing/invalid
 
   public MainWindowViewModel()
   {

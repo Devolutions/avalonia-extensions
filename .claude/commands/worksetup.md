@@ -15,17 +15,24 @@ Arguments:
 - Validate theme and scale against allowed values
 - Theme matching is case-insensitive and accepts aliases listed above
 
-## 2) Set startup theme in `samples/SampleApp/App.axaml`
-- In `<Application.Styles>`, keep exactly one theme uncommented (or all commented for `Default`)
-- Theme mapping:
-  - `MacOS` -> `<DevolutionsMacOsTheme />`
-  - `MacOSClassic` -> `<local:MacOsClassicThemeStyle />`
-  - `MacOSLiquidGlass` -> `<local:MacOsLiquidGlassThemeStyle />`
-  - `DevExpress` -> `<DevolutionsDevExpressTheme />`
-  - `Linux` -> `<DevolutionsLinuxYaruTheme />`
-  - `Default` -> all theme lines commented
+  ## 2) Update startup settings in `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
+  Edit only the `SampleAppStartUpSettings` block:
 
-## 3) Resolve tab title
+  ```jsonc
+  "SampleAppStartUpSettings": {
+    "theme": "DevExpress",
+    "selectedTab": "ComboBox",
+    "scale": "default"
+  }
+  ```
+
+  - `theme`: set from the validated theme argument
+  - `selectedTab`: set from resolved tab title (see Step 3)
+  - `scale`: set from validated scale argument (if provided), otherwise preserve existing value
+
+  The app applies these settings at runtime; do not edit `App.axaml` or `MainWindowViewModel.cs` for normal `/worksetup` usage.
+
+  ## 3) Resolve tab title
 Collect candidate tab titles from:
 - `samples/SampleApp/ControlCatalog/control-catalog.jsonc` -> `controls[].name`
 - explicit non-control tabs in `samples/SampleApp/MainWindow.axaml`:
@@ -39,44 +46,27 @@ Match rules:
 - then partial match
 - if ambiguous, ask user to clarify
 
-## 4) Set startup tab in `samples/SampleApp/ViewModels/MainWindowViewModel.cs`
-- Update:
-  - `private string startupTabTitle = "...";`
-- Do **not** set `IsSelected` flags in `MainWindow.axaml` for control tab selection
+  ## 4) Scale value format
+  In `SampleAppStartUpSettings.scale`, write one of:
+  - `default`
+  - `100%`, `125%`, `150%`, `175%`, `200%`, `225%`, `250%`, `275%`, `300%`, `400%`
 
-## 5) Set startup scale in `samples/SampleApp/ViewModels/MainWindowViewModel.cs` (if provided)
-- Update only the index in:
-  - `this.SelectedScale = this.AvailableScales[X]; // 0 = System Default, 10 = 400%`
-- Preserve the existing comment exactly
-- Scale index mapping:
-  - `Default` -> 0
-  - `100%` -> 1
-  - `125%` -> 2
-  - `150%` -> 3
-  - `175%` -> 4
-  - `200%` -> 5
-  - `225%` -> 6
-  - `250%` -> 7
-  - `275%` -> 8
-  - `300%` -> 9
-  - `400%` -> 10
+  ## 5) Error handling
+  - Invalid theme: report valid theme options
+  - Invalid scale: report valid scale options
+  - No tab match: list available tab titles from catalog + explicit non-control tabs
+  - Ambiguous tab match: ask user to be more specific
 
-## 6) Error handling
-- Invalid theme: report valid theme options
-- Invalid scale: report valid scale options
-- No tab match: list available tab titles from catalog + explicit non-control tabs
-- Ambiguous tab match: ask user to be more specific
+  ## 6) Completion message
+  Report:
+  - selected theme
+  - selected startup tab
+  - selected startup scale (if changed)
+  - files edited
 
-## 7) Completion message
-Report:
-- selected theme
-- selected startup tab
-- selected startup scale (if changed)
-- files edited
+  Do not run the app unless explicitly asked.
 
-Do not run the app unless explicitly asked.
-
-## 8) Optional planning doc handling
+  ## 7) Optional planning doc handling
 If `projectPlan` is provided (or an open planning doc is detected):
 - locate matching file in `.claude/docs/planning/**/*.md`
 - load and summarize current phase + next steps

@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 public sealed class ControlCatalogFile
 {
+  [JsonPropertyName("SampleAppStartUpSettings")]
+  public SampleAppStartupSettings StartupSettings { get; init; } = new();
+
   [JsonPropertyName("statusSymbols")]
   public Dictionary<string, string> StatusSymbols { get; init; } = [];
 
@@ -37,4 +40,16 @@ public sealed class ControlCatalogFileEntry
 
   [JsonPropertyName("excludeFromTests")]
   public Dictionary<string, bool>? ExcludeFromTests { get; init; }
+}
+
+public sealed class SampleAppStartupSettings
+{
+  [JsonPropertyName("theme")]
+  public string Theme { get; init; } = "default";
+
+  [JsonPropertyName("selectedTab")]
+  public string SelectedTab { get; init; } = "Overview";
+
+  [JsonPropertyName("scale")]
+  public string Scale { get; init; } = "default";
 }

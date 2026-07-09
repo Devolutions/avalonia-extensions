@@ -94,9 +94,74 @@ public class App : Application
         {
             ControlRegistry.EnsureValid();
 
-            Theme? theme = this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
+            Theme? theme = ResolveStartupThemeFromCatalog() ?? this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
         }
+    }
+
+    private static Theme? ResolveStartupThemeFromCatalog()
+    {
+        string theme = ControlRegistry.StartupSettings.Theme.Trim();
+        if (string.IsNullOrWhiteSpace(theme) || string.Equals(theme, "default", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return theme.ToLowerInvariant() switch
+        {
+            "macos" => new MacOsTheme(),
+            "macosclassic" or "classic" or "macclassic" => new MacOsClassicTheme(),
+            "macosliquidglass" or "liquidglass" or "liquid" or "glass" => new MacOsLiquidGlassTheme(),
+            "devexpress" or "devex" => new DevExpressTheme(),
+            "linux" => new LinuxYaruTheme(),
+            "winui" => new WinUiTheme(),
+            "winuiclassic" => new WinUiClassicTheme(),
+            "winuimica" => new WinUiMicaTheme(),
+            "fluent" => new FluentTheme(),
+            "simple" => new SimpleTheme(),
+            _ => throw new InvalidOperationException(
+                $"Unknown startup theme '{theme}' in control-catalog.jsonc. " +
+                "Expected one of: default, MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple."),
+        };
+    }
+
+    private static void ApplyStartupSettings(MainWindowViewModel viewModel)
+    {
+        string startupTabTitle = ControlRegistry.StartupSettings.SelectedTab.Trim();
+        if (!string.IsNullOrWhiteSpace(startupTabTitle))
+        {
+            viewModel.StartupTabTitle = startupTabTitle;
+        }
+
+        string startupScale = ControlRegistry.StartupSettings.Scale.Trim();
+        if (string.IsNullOrWhiteSpace(startupScale))
+        {
+            return;
+        }
+
+        ScaleOption? selectedScale = viewModel.AvailableScales
+            .FirstOrDefault(scaleOption => string.Equals(scaleOption.Name, startupScale, StringComparison.OrdinalIgnoreCase));
+
+        if (selectedScale == null && !startupScale.EndsWith('%'))
+        {
+            string normalizedPercent = $"{startupScale}%";
+            selectedScale = viewModel.AvailableScales
+                .FirstOrDefault(scaleOption => string.Equals(scaleOption.Name, normalizedPercent, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (selectedScale == null && string.Equals(startupScale, "default", StringComparison.OrdinalIgnoreCase))
+        {
+            selectedScale = viewModel.AvailableScales.FirstOrDefault(scaleOption => scaleOption.Scale == 0);
+        }
+
+        if (selectedScale == null)
+        {
+            throw new InvalidOperationException(
+                $"Unknown startup scale '{startupScale}' in control-catalog.jsonc. " +
+                "Expected one of: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%.");
+        }
+
+        viewModel.SelectedScale = selectedScale;
     }
 
     private static Theme GetDefaultThemeForPlatform() => OperatingSystem.IsWindows() ? new DevExpressTheme()
@@ -476,7 +541,10 @@ public class App : Application
     {
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            MainWindow mainWindow = new() { DataContext = new MainWindowViewModel() };
+            MainWindowViewModel mainWindowViewModel = new();
+            ApplyStartupSettings(mainWindowViewModel);
+
+            MainWindow mainWindow = new() { DataContext = mainWindowViewModel };
 
             // Suppress theme changes during initial window setup
             mainWindow.SuppressThemeChangeEvents(true);

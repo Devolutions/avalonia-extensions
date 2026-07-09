@@ -18,6 +18,8 @@ public static class ControlRegistry
 
   public static IReadOnlyList<ControlCatalogEntry> All => Controls;
 
+  public static SampleAppStartupSettings StartupSettings => CatalogFile.StartupSettings;
+
   public static IReadOnlyDictionary<string, string> StatusDescriptions => CatalogFile.StatusSymbols;
 
   public static void EnsureValid()

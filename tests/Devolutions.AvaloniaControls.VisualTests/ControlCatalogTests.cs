@@ -15,6 +15,14 @@ public class ControlCatalogTests
   }
 
   [Fact]
+  public void ControlCatalog_ExposesStartupSettings()
+  {
+    Assert.Equal("DevExpress", ControlRegistry.StartupSettings.Theme);
+    Assert.Equal("ComboBox", ControlRegistry.StartupSettings.SelectedTab);
+    Assert.Equal("default", ControlRegistry.StartupSettings.Scale);
+  }
+
+  [Fact]
   public void ControlCatalog_KeepsExperimentsOutOfControlsCatalog()
   {
     Assert.DoesNotContain(

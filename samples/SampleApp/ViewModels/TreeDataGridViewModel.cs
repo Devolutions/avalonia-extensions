@@ -107,6 +107,8 @@ public class TreeDataGridViewModel : ObservableObject
 
         this.RowSelectionSource = new FlatTreeDataGridSource<NetworkNode>(this.flatNodes);
         AddSharedColumns(this.RowSelectionSource);
+        this.RowSelectionSource.Columns[2].Width = new GridLength(90);
+        this.RowSelectionSource.Columns[3].Width = new GridLength(90);
         this.RowSelectionSource.Selection = new TreeDataGridRowSelectionModel<NetworkNode>(this.RowSelectionSource);
 
         this.TreeCellSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(this.treeNodes);
@@ -121,9 +123,11 @@ public class TreeDataGridViewModel : ObservableObject
     private static void AddSharedColumns(FlatTreeDataGridSource<NetworkNode> source)
     {
         source.WithTextColumn("Name", x => x.Name);
-        source.WithTextColumn("Type", x => x.Type);
-        source.WithTextColumn("IP Address", x => x.IPAddress);
-        source.WithTextColumn("Status", x => x.Status);
+        source.WithTextColumn(CreateHeaderWithToolTip("Type", "Explicit consumer tooltip: Type header"), x => x.Type);
+        source.WithTextColumn(
+            CreateHeaderWithToolTip("IP Address (IPv4 or IPv6)", "Explicit consumer tooltip: IP Address header"),
+            x => x.IPAddress);
+        source.WithTextColumn("Status of the item", x => x.Status);
         source.WithTextColumn("Last Seen", x => x.LastSeen);
         source.WithTemplateColumnFromResourceKeys("Icon", "IconColumnTemplate");
     }
@@ -135,6 +139,13 @@ public class TreeDataGridViewModel : ObservableObject
         source.WithTextColumn("IP Address", x => x.IPAddress);
         source.WithTextColumn("Status", x => x.Status);
         source.WithTextColumn("Last Seen", x => x.LastSeen);
+    }
+
+    private static TextBlock CreateHeaderWithToolTip(string headerText, string tooltipText)
+    {
+        var header = new TextBlock { Text = headerText };
+        ToolTip.SetTip(header, tooltipText);
+        return header;
     }
 
     public FlatTreeDataGridSource<NetworkNode> CellSelectionSource { get; }

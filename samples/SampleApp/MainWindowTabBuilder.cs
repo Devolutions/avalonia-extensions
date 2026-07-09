@@ -24,14 +24,14 @@ internal static class MainWindowTabBuilder
       Content = CreateContent(control),
     };
 
-  private static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
+  public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
     new()
     {
       Title = control.Title,
       ApplicableTo = control.ApplicableToCsv,
     };
 
-  private static Control CreateContent(PageCatalogEntry control)
+  public static Control CreateContent(PageCatalogEntry control)
   {
 #if !ENABLE_ACCELERATE
     if (control.Source == ControlSource.AvaloniaPro)

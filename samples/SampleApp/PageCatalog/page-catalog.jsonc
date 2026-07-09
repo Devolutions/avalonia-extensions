@@ -432,6 +432,43 @@
         "demo": "ControlAlignment.axaml"
       }
     ],
-    "Experiments": []
+    "Experiments": [
+      {
+        "uniqueTitle": "ActiPro Controls",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "ActiProDemo.axaml"
+      },
+      {
+        "uniqueTitle": "System Colours",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "SystemColoursDemo.axaml"
+      },
+      {
+        "uniqueTitle": "Toggle Buttons",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "ToggleButtonExperiments.axaml"
+      },
+      {
+        "uniqueTitle": "Search Highlights",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "SearchHighlights.axaml"
+      },
+      {
+        "uniqueTitle": "Animated Icon",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "AnimatedIcon.axaml"
+      },
+      {
+        "uniqueTitle": "LG Wallpaper Tint",
+        "source": "Devolutions",
+        "category": "Experiments",
+        "demo": "LiquidGlassWallpaperTintDemo.axaml"
+      }
+    ]
   }
 }

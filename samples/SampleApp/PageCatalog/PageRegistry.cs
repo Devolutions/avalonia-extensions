@@ -142,7 +142,8 @@ public static class PageRegistry
 
   private static Type ResolvePageType(string source, string demoTypeName)
   {
-    Type? pageType = Type.GetType($"SampleApp.DemoPages.{demoTypeName}, SampleApp", throwOnError: false);
+    Type? pageType = Type.GetType($"SampleApp.DemoPages.{demoTypeName}, SampleApp", throwOnError: false)
+                     ?? Type.GetType($"SampleApp.Experiments.{demoTypeName}, SampleApp", throwOnError: false);
     if (pageType != null)
     {
       return pageType;

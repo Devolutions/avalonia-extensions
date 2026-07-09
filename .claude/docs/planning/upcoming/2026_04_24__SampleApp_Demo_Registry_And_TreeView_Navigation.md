@@ -64,6 +64,16 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
                     - `dotnet test` ✅ (137/137)
+                - 2026-07-09: Implemented TreeView navigation first pass on MainWindow.
+                  - Replaced the top-level `TabControl` with a left navigation `TreeView` + right `ContentControl` host.
+                  - Navigation nodes are now built from `PageRegistry` section/page metadata, with section flattening for single-item sections where title matches section name.
+                  - Page rendering reuses the catalog-driven content creation path (including Avalonia Pro placeholder behavior).
+                  - Startup page selection and theme-recreate state restoration now preserve selected page title instead of tab index.
+                  - Added experiments pages to `page-catalog.jsonc` and updated page-type resolution to support both `SampleApp.DemoPages.*` and `SampleApp.Experiments.*`.
+                  - Updated `MainWindowTabsTests` to validate tree-driven navigation/content behavior.
+                  - Verification:
+                    - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+                    - `dotnet test` ✅ (137/137)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

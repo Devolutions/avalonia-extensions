@@ -394,9 +394,9 @@ public class App : Application
                 // to prevent expensive re-rendering of a window we're about to discard
                 Window? oldWindow = desktopLifetime.MainWindow;
                 WindowPlacement? windowPlacement = CaptureWindowPlacement(oldWindow);
-                int selectedTabIndex = oldWindow is MainWindow oldMainWindow
-                    ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
-                    : 0;
+                string? selectedPageTitle = oldWindow is MainWindow oldMainWindow
+                    ? oldMainWindow.GetSelectedPageTitle()
+                    : null;
 
                 // Suppress theme changes on old window to prevent its ComboBox binding from
                 // triggering SetTheme when we update CurrentTheme
@@ -415,7 +415,7 @@ public class App : Application
                 app.themeStylesContainer.Clear();
                 app.themeStylesContainer.AddRange(styles);
 
-                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex, windowPlacement);
+                RecreateMainWindow(desktopLifetime, oldWindow, selectedPageTitle, windowPlacement);
             }
             else
             {
@@ -480,13 +480,14 @@ public class App : Application
     private static void RecreateMainWindow(
         IClassicDesktopStyleApplicationLifetime lifetime,
         Window? oldWindow,
-        int selectedTabIndex,
+        string? selectedPageTitle,
         WindowPlacement? windowPlacement)
     {
         object? dataContext = oldWindow?.DataContext;
 
         MainWindow newWindow = new() { DataContext = dataContext };
         ApplyWindowPlacement(newWindow, windowPlacement);
+        newWindow.SetPendingStartupPageTitle(selectedPageTitle);
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize
@@ -495,36 +496,10 @@ public class App : Application
         lifetime.MainWindow = newWindow;
         newWindow.Show();
 
-        RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
-
         // Re-enable theme changes after window is fully initialized
         EnableThemeChangesWhenReady(newWindow);
 
         oldWindow?.Close();
-    }
-
-    private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
-    {
-        EventHandler? layoutHandler = null;
-        layoutHandler = (sender, e) =>
-        {
-            // CRITICAL: Unsubscribe immediately to prevent handler accumulation
-            window.LayoutUpdated -= layoutHandler;
-
-            TabControl? tabControl = window.FindControl<TabControl>("MainTabControl");
-            if (tabControl?.ContainerFromIndex(0) is null) return;
-
-            // Clear all IsSelected properties from TabItems to remove XAML hardcoded values
-            foreach (TabItem tabItem in tabControl.Items.OfType<TabItem>())
-            {
-                tabItem.IsSelected = false;
-            }
-
-            // Now SelectedIndex works correctly without XAML interference
-            tabControl.SelectedIndex = selectedTabIndex;
-        };
-
-        window.LayoutUpdated += layoutHandler;
     }
 
     private static void EnableThemeChangesWhenReady(MainWindow window)

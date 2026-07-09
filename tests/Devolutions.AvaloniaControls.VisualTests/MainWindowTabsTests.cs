@@ -1,6 +1,5 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -8,13 +7,12 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
 using SampleApp.PageCatalog;
-using SampleApp.Controls;
 using SampleApp.ViewModels;
 
 public class MainWindowTabsTests
 {
   [AvaloniaFact]
-  public void MainWindow_BuildsControlTabsFromRegistry()
+  public void MainWindow_BuildsNavigationTreeFromRegistry()
   {
     Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
     App.SetTheme(new MacOsClassicTheme());
@@ -31,40 +29,24 @@ public class MainWindowTabsTests
     window.Show();
     Dispatcher.UIThread.RunJobs();
 
-    TabControl tabControl = window.FindControl<TabControl>("MainTabControl")!;
+    Assert.Equal("ComboBox", window.GetSelectedPageTitle());
+    ContentControl contentHost = window.FindControl<ContentControl>("MainPageHost")!;
+    Assert.NotNull(contentHost.Content);
 
-    TabItem selectedTab = Assert.IsType<TabItem>(tabControl.SelectedItem);
-    SampleItemHeader selectedHeader = Assert.IsType<SampleItemHeader>(selectedTab.Header);
-    Assert.Equal("ComboBox", selectedHeader.Title);
-
-    List<TabItem> generatedTabs = tabControl.Items
-      .OfType<TabItem>()
-      .Where(static tabItem => tabItem.Header is SampleItemHeader)
-      .ToList();
-
-    Assert.Equal(PageRegistry.ControlDemos.Count, generatedTabs.Count);
-    Assert.Equal(
-      PageRegistry.ControlDemos.Select(static control => control.Title),
-      generatedTabs.Select(static tabItem => ((SampleItemHeader)tabItem.Header!).Title));
-
-    foreach (PageCatalogEntry control in PageRegistry.ControlDemos)
+    foreach (PageCatalogEntry page in PageRegistry.ControlDemos)
     {
-      TabItem tabItem = Assert.Single(
-        generatedTabs,
-        tab => ((SampleItemHeader)tab.Header!).Title == control.Title);
+      Assert.True(window.TrySelectPageByTitle(page.Title));
+      Assert.Equal(page.Title, window.GetSelectedPageTitle());
 
-      SampleItemHeader header = (SampleItemHeader)tabItem.Header!;
-      Assert.Equal(control.ApplicableToCsv, header.ApplicableTo);
-
-      if (control.Source == ControlSource.AvaloniaPro && tabItem.Content is TextBlock)
+      if (page.Source == ControlSource.AvaloniaPro && contentHost.Content is TextBlock)
       {
         continue;
       }
 
-      Control content = Assert.IsAssignableFrom<Control>(tabItem.Content);
-      if (control.ViewModelType != null)
+      Control content = Assert.IsAssignableFrom<Control>(contentHost.Content);
+      if (page.ViewModelType != null)
       {
-        Assert.IsType(control.ViewModelType, content.DataContext);
+        Assert.IsType(page.ViewModelType, content.DataContext);
       }
     }
 

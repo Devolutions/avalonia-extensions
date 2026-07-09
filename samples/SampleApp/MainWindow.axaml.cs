@@ -12,6 +12,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using SampleApp.Controls;
+using SampleApp.PageCatalog;
 using ViewModels;
 
 public partial class MainWindow : Window
@@ -20,12 +21,14 @@ public partial class MainWindow : Window
   private static readonly Lazy<Task<string?>> LaunchBranch = new(GetGitBranchAsync);
   private readonly IBrush tieDyeBrush;
   private MainWindowViewModel? currentViewModel;
+  private IReadOnlyList<NavigationNode> navigationNodes = [];
+  private string? pendingStartupPageTitle;
   private bool suppressThemeChangeEvents;
 
   public MainWindow()
   {
     this.InitializeComponent();
-    this.PopulateControlTabs();
+    this.InitializeNavigationTree();
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
     this.ApplyWindowsMicaBackdrop();
@@ -33,7 +36,7 @@ public partial class MainWindow : Window
     // Once the window is fully loaded, update background, detect scale, and size containers
     this.Loaded += async (s, e) =>
     {
-      this.ApplyStartupTabSelection();
+      this.ApplyStartupPageSelection();
       this.UpdatePreviewBackground();
       this.DetectSystemScale();
       this.InitializeContainerSizes();
@@ -355,80 +358,205 @@ public partial class MainWindow : Window
       }
     };
 
-  private void PopulateControlTabs()
+  public string? GetSelectedPageTitle()
   {
-    TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
-    TabItem? controlAlignmentTab = this.FindControl<TabItem>("ControlAlignmentTab");
-    if (tabControl == null || controlAlignmentTab == null)
+    if (this.FindControl<TreeView>("MainNavigationTree")?.SelectedItem is NavigationNode node && node.Page != null)
     {
-      throw new InvalidOperationException("MainWindow tab placeholders were not found.");
+      return node.Title;
     }
 
-    int insertIndex = tabControl.Items.IndexOf(controlAlignmentTab);
-    if (insertIndex < 0)
+    return null;
+  }
+
+  public void SetPendingStartupPageTitle(string? pageTitle)
+  {
+    this.pendingStartupPageTitle = pageTitle;
+  }
+
+  public bool TrySelectPageByTitle(string title)
+  {
+    TreeView? treeView = this.FindControl<TreeView>("MainNavigationTree");
+    if (treeView == null)
     {
-      throw new InvalidOperationException("Could not find the Control Alignment tab insertion point.");
+      return false;
     }
 
-    foreach (TabItem tabItem in MainWindowTabBuilder.BuildControlTabs())
+    NavigationNode? targetNode = FindMatchingPageNode(this.navigationNodes, title);
+    if (targetNode?.Page == null)
     {
-      tabControl.Items.Insert(insertIndex++, tabItem);
+      return false;
+    }
+
+    treeView.SelectedItem = targetNode;
+    this.ShowPage(targetNode);
+    return true;
+  }
+
+  private void InitializeNavigationTree()
+  {
+    PageRegistry.EnsureValid();
+
+    this.navigationNodes = BuildNavigationNodes();
+    TreeView? treeView = this.FindControl<TreeView>("MainNavigationTree");
+    if (treeView == null)
+    {
+      throw new InvalidOperationException("Main navigation tree was not found.");
+    }
+
+    treeView.ItemsSource = this.navigationNodes;
+
+    NavigationNode? initialNode = this.navigationNodes.FirstOrDefault(static node => node.Page != null)
+                              ?? this.navigationNodes.SelectMany(static node => node.Children).FirstOrDefault(static node => node.Page != null);
+    if (initialNode != null)
+    {
+      treeView.SelectedItem = initialNode;
+      this.ShowPage(initialNode);
     }
   }
 
-  private void ApplyStartupTabSelection()
+  private void ApplyStartupPageSelection()
   {
-    if (this.DataContext is not MainWindowViewModel viewModel)
+    string? startupPageTitle = this.pendingStartupPageTitle;
+    this.pendingStartupPageTitle = null;
+
+    if (string.IsNullOrWhiteSpace(startupPageTitle) &&
+        this.DataContext is MainWindowViewModel viewModel &&
+        viewModel.TryConsumeStartupTabTitle(out string configuredTitle) &&
+        !string.IsNullOrWhiteSpace(configuredTitle))
+    {
+      startupPageTitle = configuredTitle;
+    }
+
+    if (string.IsNullOrWhiteSpace(startupPageTitle))
     {
       return;
     }
 
-    if (!viewModel.TryConsumeStartupTabTitle(out string tabTitle) || string.IsNullOrWhiteSpace(tabTitle))
-    {
-      return;
-    }
-
-    TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
-    if (tabControl == null)
-    {
-      return;
-    }
-
-    TabItem? selectedTab = FindMatchingTab(tabControl, tabTitle);
-    if (selectedTab == null)
-    {
-      return;
-    }
-
-    tabControl.SelectedItem = selectedTab;
-    selectedTab.IsSelected = true;
+    this.TrySelectPageByTitle(startupPageTitle);
   }
 
-  private static TabItem? FindMatchingTab(TabControl tabControl, string targetTitle)
+  private static IReadOnlyList<NavigationNode> BuildNavigationNodes()
   {
-    List<(TabItem Tab, string Title)> titledTabs = tabControl.Items
-      .OfType<TabItem>()
-      .Select(tab => (Tab: tab, Title: GetHeaderTitle(tab)))
-      .Where(static item => !string.IsNullOrWhiteSpace(item.Title))
-      .ToList();
+    var roots = new List<NavigationNode>();
+    var sectionLookup = new Dictionary<string, NavigationNode>(StringComparer.OrdinalIgnoreCase);
 
+    foreach (PageCatalogEntry page in PageRegistry.All)
+    {
+      if (!sectionLookup.TryGetValue(page.Section, out NavigationNode? sectionNode))
+      {
+        sectionNode = new NavigationNode(page.Section, new TextBlock { Text = page.Section, FontWeight = FontWeight.SemiBold }, page: null);
+        sectionLookup.Add(page.Section, sectionNode);
+        roots.Add(sectionNode);
+      }
+
+      object pageHeader = string.Equals(page.Section, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase)
+        ? CreateHeader(page)
+        : new TextBlock { Text = page.Title };
+
+      sectionNode.Children.Add(new NavigationNode(page.Title, pageHeader, page));
+    }
+
+    var flattenedRoots = new List<NavigationNode>();
+    foreach (NavigationNode root in roots)
+    {
+      if (root.Children.Count == 1 && root.Children[0].Page != null &&
+          string.Equals(root.Title, root.Children[0].Title, StringComparison.OrdinalIgnoreCase))
+      {
+        flattenedRoots.Add(root.Children[0]);
+      }
+      else
+      {
+        flattenedRoots.Add(root);
+      }
+    }
+
+    return flattenedRoots;
+  }
+
+  private static NavigationNode? FindMatchingPageNode(IEnumerable<NavigationNode> nodes, string targetTitle)
+  {
     string normalizedTarget = targetTitle.Trim();
 
-    return titledTabs.FirstOrDefault(item => string.Equals(item.Title, normalizedTarget, StringComparison.OrdinalIgnoreCase)).Tab ??
-           titledTabs.FirstOrDefault(item => item.Title.Contains(normalizedTarget, StringComparison.OrdinalIgnoreCase)).Tab ??
-           titledTabs.FirstOrDefault(item => normalizedTarget.Contains(item.Title, StringComparison.OrdinalIgnoreCase)).Tab;
+    List<NavigationNode> pageNodes = nodes
+      .SelectMany(static node => node.Flatten())
+      .Where(static node => node.Page != null)
+      .ToList();
+
+    return pageNodes.FirstOrDefault(node => string.Equals(node.Title, normalizedTarget, StringComparison.OrdinalIgnoreCase)) ??
+           pageNodes.FirstOrDefault(node => node.Title.Contains(normalizedTarget, StringComparison.OrdinalIgnoreCase)) ??
+           pageNodes.FirstOrDefault(node => normalizedTarget.Contains(node.Title, StringComparison.OrdinalIgnoreCase));
   }
 
-  private static string GetHeaderTitle(TabItem tabItem) =>
-    tabItem.Header switch
+  private void NavigationTree_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+  {
+    if (sender is not TreeView treeView || treeView.SelectedItem is not NavigationNode selectedNode)
     {
-      SampleItemHeader sampleHeader => sampleHeader.Title ?? string.Empty,
-      string headerText => headerText,
-      TextBlock headerTextBlock => headerTextBlock.Text ?? string.Empty,
-      StackPanel headerPanel => headerPanel.Children
-        .OfType<TextBlock>()
-        .Select(static text => text.Text)
-        .FirstOrDefault(static text => !string.IsNullOrWhiteSpace(text)) ?? string.Empty,
-      _ => string.Empty,
+      return;
+    }
+
+    if (selectedNode.Page == null && selectedNode.Children.Count > 0)
+    {
+      NavigationNode? firstPage = selectedNode.Flatten().FirstOrDefault(static node => node.Page != null);
+      if (firstPage != null)
+      {
+        treeView.SelectedItem = firstPage;
+        this.ShowPage(firstPage);
+      }
+
+      return;
+    }
+
+    this.ShowPage(selectedNode);
+  }
+
+  private void ShowPage(NavigationNode selectedNode)
+  {
+    if (selectedNode.Page == null)
+    {
+      return;
+    }
+
+    ContentControl? pageHost = this.FindControl<ContentControl>("MainPageHost");
+    if (pageHost == null)
+    {
+      throw new InvalidOperationException("Main page host was not found.");
+    }
+
+    pageHost.Content = MainWindowTabBuilder.CreateContent(selectedNode.Page);
+  }
+
+  private static SampleItemHeader CreateHeader(PageCatalogEntry page) =>
+    new()
+    {
+      Title = page.Title,
+      ApplicableTo = page.ApplicableToCsv,
     };
+
+  private sealed class NavigationNode
+  {
+    public NavigationNode(string title, object header, PageCatalogEntry? page)
+    {
+      this.Title = title;
+      this.Header = header;
+      this.Page = page;
+    }
+
+    public string Title { get; }
+
+    public object Header { get; }
+
+    public PageCatalogEntry? Page { get; }
+
+    public List<NavigationNode> Children { get; } = [];
+
+    public IEnumerable<NavigationNode> Flatten()
+    {
+      yield return this;
+
+      foreach (NavigationNode child in this.Children.SelectMany(static child => child.Flatten()))
+      {
+        yield return child;
+      }
+    }
+  }
 }

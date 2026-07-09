@@ -38,16 +38,22 @@ public class ControlCatalogTests
   [Fact]
   public void ControlCatalog_ExcludeFromTestsOnlyRemovesCoverage()
   {
-    ControlCatalogEntry? treeDataGridInfo = ControlRegistry.All
-      .SingleOrDefault(control => control.Key == "TreeDataGridInfo");
+    Dictionary<ControlThemeId, string> statuses = CreateValidStatuses();
+    statuses[ControlThemeId.MacClassic] = "✅";
 
-    if (treeDataGridInfo == null)
-    {
-      return;
-    }
+    var entry = new ControlCatalogEntry(
+      key: "ExcludeFromTestsDemo",
+      controlTypeName: "ExcludeFromTestsControl",
+      title: "Exclude From Tests",
+      pageType: typeof(UserControl),
+      source: ControlSource.Avalonia,
+      categoryPath: ["Input"],
+      statusByTheme: statuses,
+      excludeFromTests: [ControlThemeId.MacClassic]);
 
-    Assert.Equal("Supported", ControlRegistry.GetStatusDescription(treeDataGridInfo.GetStatusSymbol(ControlThemeId.MacClassic)));
-    Assert.False(treeDataGridInfo.ShouldTest(ControlThemeId.MacClassic));
+    Assert.Equal("Supported", ControlRegistry.GetStatusDescription(entry.GetStatusSymbol(ControlThemeId.MacClassic)));
+    Assert.False(entry.ShouldTest(ControlThemeId.MacClassic));
+    Assert.True(entry.ShouldTest(ControlThemeId.DevExpress));
   }
 
   [Fact]

@@ -69,7 +69,7 @@ public static class ControlRegistry
   {
     string demoTypeName = NormalizeTypeName(entry.Demo);
     Type pageType = ResolvePageType(entry.Source, demoTypeName);
-    Type? viewModelType = ResolveViewModelType(entry.ViewModel);
+    Type? viewModelType = ResolveViewModelType(entry.Source, entry.ViewModel);
 
     return new ControlCatalogEntry(
       key: demoTypeName,
@@ -99,7 +99,7 @@ public static class ControlRegistry
     throw new InvalidOperationException($"Could not resolve demo page type '{demoTypeName}'.");
   }
 
-  private static Type? ResolveViewModelType(string? viewModelName)
+  private static Type? ResolveViewModelType(string source, string? viewModelName)
   {
     if (string.IsNullOrWhiteSpace(viewModelName))
     {
@@ -107,7 +107,18 @@ public static class ControlRegistry
     }
 
     string normalizedName = NormalizeTypeName(viewModelName);
-    return Type.GetType($"SampleApp.ViewModels.{normalizedName}, SampleApp", throwOnError: true);
+    Type? viewModelType = Type.GetType($"SampleApp.ViewModels.{normalizedName}, SampleApp", throwOnError: false);
+    if (viewModelType != null)
+    {
+      return viewModelType;
+    }
+
+    if (string.Equals(source, nameof(ControlSource.AvaloniaPro), StringComparison.OrdinalIgnoreCase))
+    {
+      return null;
+    }
+
+    throw new InvalidOperationException($"Could not resolve view model type '{normalizedName}'.");
   }
 
   private static string NormalizeTypeName(string typeOrFileName)

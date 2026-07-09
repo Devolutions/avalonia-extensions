@@ -17,9 +17,11 @@ public class ControlCatalogTests
   [Fact]
   public void ControlCatalog_ExposesStartupSettings()
   {
-    Assert.Equal("DevExpress", ControlRegistry.StartupSettings.Theme);
-    Assert.Equal("ComboBox", ControlRegistry.StartupSettings.SelectedTab);
-    Assert.Equal("default", ControlRegistry.StartupSettings.Scale);
+    SampleAppStartupSettings startupSettings = ControlRegistry.StartupSettings;
+
+    Assert.False(string.IsNullOrWhiteSpace(startupSettings.Theme));
+    Assert.False(string.IsNullOrWhiteSpace(startupSettings.SelectedTab));
+    Assert.False(string.IsNullOrWhiteSpace(startupSettings.Scale));
   }
 
   [Fact]

@@ -42,6 +42,16 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~MainWindowTabsTests"` ✅
                     - `dotnet test` ✅ (136/136)
+                - 2026-07-09: Started the page-catalog migration to align navigation metadata with demos/pages (not just controls).
+                  - Catalog schema migrated from a single `controls` array to sectioned `pages` with explicit `topLevelOrder`.
+                  - Entry identity is now `uniqueTitle` (human-authored, globally unique in catalog) instead of a separate catalog key field.
+                  - Added section-aware flattening in `ControlRegistry`; `MainWindowTabBuilder` now consumes only the `"Control Demos"` section.
+                  - Added support for omitted status blocks by defaulting missing theme statuses to `""` (no icon, excluded from tests).
+                  - Added catalog legend entry for `""` and seeded non-control sections with `Overview` and `Control Alignment` pages (no status block).
+                  - Startup settings block renamed to `sampleAppStartUpSettings` and now supports `selectedPage` (with `selectedTab` compatibility in runtime model).
+                  - Verification:
+                    - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+                    - `dotnet test` ✅ (137/137)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

@@ -29,7 +29,7 @@
                 </TabItem.Header>
                 <demoPages:Overview />
               </TabItem>
-              // Controls are added from control-catalog.jsonc 
+              <!-- Controls are added from control-catalog.jsonc  -->
               <TabItem x:Name="ControlAlignmentTab" Header="✜ Control Alignment">
                 <demoPages:ControlAlignment />
               </TabItem>

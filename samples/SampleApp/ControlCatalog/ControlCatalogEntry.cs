@@ -16,6 +16,7 @@ public sealed class ControlCatalogEntry
 {
   public ControlCatalogEntry(
     string key,
+    string section,
     string title,
     Type pageType,
     ControlSource source,
@@ -25,12 +26,14 @@ public sealed class ControlCatalogEntry
     Type? viewModelType = null)
   {
     ArgumentException.ThrowIfNullOrWhiteSpace(key);
+    ArgumentException.ThrowIfNullOrWhiteSpace(section);
     ArgumentException.ThrowIfNullOrWhiteSpace(title);
     ArgumentNullException.ThrowIfNull(pageType);
     ArgumentNullException.ThrowIfNull(categoryPath);
     ArgumentNullException.ThrowIfNull(statusByTheme);
 
     this.Key = key;
+    this.Section = section;
     this.Title = title;
     this.PageType = pageType;
     this.Source = source;
@@ -43,6 +46,8 @@ public sealed class ControlCatalogEntry
   }
 
   public string Key { get; }
+
+  public string Section { get; }
 
   public string Title { get; }
 
@@ -101,7 +106,7 @@ public sealed class ControlCatalogEntry
 
     foreach (ControlCatalogEntry control in controls)
     {
-      if (control.CategoryPath.Count == 0 || control.CategoryPath.Any(string.IsNullOrWhiteSpace))
+      if (control.CategoryPath.Any(string.IsNullOrWhiteSpace))
       {
         errors.Add($"'{control.Key}' must define a non-empty category path.");
       }
@@ -121,11 +126,7 @@ public sealed class ControlCatalogEntry
 
       foreach ((ControlThemeId themeId, string symbol) in control.StatusByTheme)
       {
-        if (string.IsNullOrWhiteSpace(symbol))
-        {
-          errors.Add($"'{control.Key}' has an empty status symbol for theme '{themeId}'.");
-        }
-        else if (!ControlRegistry.StatusDescriptions.ContainsKey(symbol))
+        if (!ControlRegistry.StatusDescriptions.ContainsKey(symbol))
         {
           errors.Add($"'{control.Key}' has unknown status symbol '{symbol}' for theme '{themeId}'.");
         }

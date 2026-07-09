@@ -88,18 +88,18 @@ Note: there may be other agents changing the code while you work.
 **CRITICAL: Never commit /worksetup development changes**
 
 The `/worksetup` command modifies this file for local startup defaults:
-- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` (`SampleAppStartUpSettings` theme/tab/scale values)
+- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` (`sampleAppStartUpSettings` theme/page/scale values)
 
 **Master branch startup defaults**:
 - Theme: `"theme": "default"`
-- Startup tab: `"selectedTab": "Overview"`
+- Startup page: `"selectedPage": "Overview"`
 - Scale: `"scale": "default"`
 
 **Pre-commit workflow**:
 1. Check if control-catalog.jsonc has changes
 2. If they do, verify they match the master defaults above
 3. If they DON'T match defaults:
-   - First, run `/worksetup Default Overview` to restore startup defaults in `SampleAppStartUpSettings`
+   - First, run `/worksetup Default Overview` to restore startup defaults in `sampleAppStartUpSettings`
    - Create a commit with those restorations if needed: `[SampleApp] Restore default startup settings`
    - Then reapply user's development settings (but don't commit them)
 4. Exclude these files from commits unless:

@@ -20,16 +20,29 @@ public class ControlCatalogTests
     SampleAppStartupSettings startupSettings = ControlRegistry.StartupSettings;
 
     Assert.False(string.IsNullOrWhiteSpace(startupSettings.Theme));
-    Assert.False(string.IsNullOrWhiteSpace(startupSettings.SelectedTab));
+    Assert.False(string.IsNullOrWhiteSpace(startupSettings.StartupPage));
     Assert.False(string.IsNullOrWhiteSpace(startupSettings.Scale));
   }
 
   [Fact]
-  public void ControlCatalog_KeepsExperimentsOutOfControlsCatalog()
+  public void ControlCatalog_ControlDemosSectionExcludesExperiments()
   {
     Assert.DoesNotContain(
-      ControlRegistry.All,
+      ControlRegistry.ControlDemos,
       control => control.Key.Contains("Experiment", StringComparison.OrdinalIgnoreCase));
+  }
+
+  [Fact]
+  public void ControlCatalog_DefaultsOmittedStatusesToEmptySymbol()
+  {
+    ControlCatalogEntry overview = Assert.Single(ControlRegistry.All, control => control.Key == "Overview");
+    Assert.Null(overview.ViewModelType);
+
+    foreach (ControlThemeId themeId in ControlThemeIds.All)
+    {
+      Assert.Equal(string.Empty, overview.GetStatusSymbol(themeId));
+      Assert.False(overview.ShouldTest(themeId));
+    }
   }
 
   [Fact]
@@ -37,7 +50,7 @@ public class ControlCatalogTests
   {
     ControlCatalogEntry toggleButton = Assert.Single(
       ControlRegistry.All,
-      control => control.Key == nameof(SampleApp.DemoPages.ToggleButtonDemo));
+      control => control.Key == "ToggleButton");
 
     Assert.Equal("Not Supported", ControlRegistry.GetStatusDescription(toggleButton.GetStatusSymbol(ControlThemeId.MacClassic)));
     Assert.Equal("Supported", ControlRegistry.GetStatusDescription(toggleButton.GetStatusSymbol(ControlThemeId.WinUi)));
@@ -53,6 +66,7 @@ public class ControlCatalogTests
 
     var entry = new ControlCatalogEntry(
       key: "ExcludeFromTestsDemo",
+      section: "Control Demos",
       title: "Exclude From Tests",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -70,6 +84,7 @@ public class ControlCatalogTests
   {
     var entry = new ControlCatalogEntry(
       key: "MissingThemesDemo",
+      section: "Control Demos",
       title: "Missing Themes",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -91,6 +106,7 @@ public class ControlCatalogTests
 
     var entry = new ControlCatalogEntry(
       key: "UnknownSymbolDemo",
+      section: "Control Demos",
       title: "Unknown Symbol",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -106,6 +122,7 @@ public class ControlCatalogTests
   {
     var entry = new ControlCatalogEntry(
       key: "InvalidPageDemo",
+      section: "Control Demos",
       title: "Invalid Page",
       pageType: typeof(string),
       source: ControlSource.Avalonia,

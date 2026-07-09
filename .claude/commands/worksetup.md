@@ -16,25 +16,25 @@ Arguments:
 - Theme matching is case-insensitive and accepts aliases listed above
 
   ## 2) Update startup settings in `samples/SampleApp/ControlCatalog/control-catalog.jsonc`
-  Edit only the `SampleAppStartUpSettings` block:
+  Edit only the `sampleAppStartUpSettings` block:
 
   ```jsonc
-  "SampleAppStartUpSettings": {
+  "sampleAppStartUpSettings": {
     "theme": "DevExpress",
-    "selectedTab": "ComboBox",
+    "selectedPage": "ComboBox",
     "scale": "default"
   }
   ```
 
   - `theme`: set from the validated theme argument
-  - `selectedTab`: set from resolved tab title (see Step 3)
+  - `selectedPage`: set from resolved page title (see Step 3)
   - `scale`: set from validated scale argument (if provided), otherwise preserve existing value
 
   The app applies these settings at runtime; do not edit `App.axaml` or `MainWindowViewModel.cs` for normal `/worksetup` usage.
 
   ## 3) Resolve tab title
 Collect candidate tab titles from:
-- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` -> `controls[].name`
+- `samples/SampleApp/ControlCatalog/control-catalog.jsonc` -> `pages.*[].uniqueTitle`
 - explicit non-control tabs in `samples/SampleApp/MainWindow.axaml`:
   - `Overview`
   - `Control Alignment`
@@ -47,7 +47,7 @@ Match rules:
 - if ambiguous, ask user to clarify
 
   ## 4) Scale value format
-  In `SampleAppStartUpSettings.scale`, write one of:
+  In `sampleAppStartUpSettings.scale`, write one of:
   - `default`
   - `100%`, `125%`, `150%`, `175%`, `200%`, `225%`, `250%`, `275%`, `300%`, `400%`
 

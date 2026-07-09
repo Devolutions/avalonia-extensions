@@ -14,7 +14,7 @@ internal static class MainWindowTabBuilder
   public static IReadOnlyList<TabItem> BuildControlTabs()
   {
     ControlRegistry.EnsureValid();
-    return [.. ControlRegistry.All.Select(CreateControlTab)];
+    return [.. ControlRegistry.ControlDemos.Select(CreateControlTab)];
   }
 
   private static TabItem CreateControlTab(ControlCatalogEntry control) =>

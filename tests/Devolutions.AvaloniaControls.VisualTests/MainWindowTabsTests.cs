@@ -42,12 +42,12 @@ public class MainWindowTabsTests
       .Where(static tabItem => tabItem.Header is SampleItemHeader)
       .ToList();
 
-    Assert.Equal(ControlRegistry.All.Count, generatedTabs.Count);
+    Assert.Equal(ControlRegistry.ControlDemos.Count, generatedTabs.Count);
     Assert.Equal(
-      ControlRegistry.All.Select(static control => control.Title),
+      ControlRegistry.ControlDemos.Select(static control => control.Title),
       generatedTabs.Select(static tabItem => ((SampleItemHeader)tabItem.Header!).Title));
 
-    foreach (ControlCatalogEntry control in ControlRegistry.All)
+    foreach (ControlCatalogEntry control in ControlRegistry.ControlDemos)
     {
       TabItem tabItem = Assert.Single(
         generatedTabs,

@@ -1,49 +1,63 @@
 {
-  // SampleApp start-up setting options: 
+  // SampleApp start-up setting options:
   //  theme: Default or theme name (MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple)
-  //  selectedTab: Default or any control name / tab title (partial match is allowed)
+  //  selectedPage/selectedTab: Default or any page title (partial match is allowed)
   //  scale: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%
-  "SampleAppStartUpSettings": {
+  "sampleAppStartUpSettings": {
     "theme": "Default",
-    "selectedTab": "Default",
+    "selectedPage": "Default",
     "scale": "Default"
   },
   "statusSymbols": {
+    "": "No status",
     "✅": "Supported",
     "❌": "Not Supported",
     "🚧": "In Progress",
     "⚠️": "Needs some work / updates"
   },
-  // By default, statusSymbols determine test inclusion: ❌ will be excluded, all others included. 
+  // By default, statusSymbols determine test inclusion: "" and ❌ are excluded, all others included.
   // To override this, use "excludeFromTests" to explicitly exclude a control from tests in a specific theme:
   //
   //   "excludeFromTests": {
   //     "Linux": true,
   //   }
   //
-  "controls": [
+  "topLevelOrder": [
+    "Overview",
+    "Control Demos",
+    "Controls in Context",
+    "Experiments"
+  ],
+  "pages": {
+    "Overview": [
+      {
+        "uniqueTitle": "Overview",
+        "source": "Devolutions",
+        "category": "Overview",
+        "demo": "Overview.axaml"
+      }
+    ],
+    "Control Demos": [
     {
-      "name": "AutoCompleteBox",
+      "uniqueTitle": "AutoCompleteBox",
       "source": "Avalonia",
       "category": "Input",
       "demo": "AutoCompleteBoxDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "Button",
+      "uniqueTitle": "Button",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "CalendarDatePicker",
+      "uniqueTitle": "CalendarDatePicker",
       "source": "Avalonia",
       "category": "Input/Date and Time",
       "demo": "CalendarDatePickerDemo.axaml",
@@ -53,7 +67,7 @@
       }
     },
     {
-      "name": "CheckBox",
+      "uniqueTitle": "CheckBox",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "CheckBoxDemo.axaml",
@@ -63,7 +77,7 @@
       }
     },
     {
-      "name": "CheckBoxListBox",
+      "uniqueTitle": "CheckBoxListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "CheckBoxListBoxDemo.axaml",
@@ -73,17 +87,16 @@
       }
     },
     {
-      "name": "ColorPicker",
+      "uniqueTitle": "ColorPicker",
       "source": "Avalonia",
       "category": "Input",
       "demo": "ColorPickerDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "ComboBox",
+      "uniqueTitle": "ComboBox",
       "source": "Avalonia",
       "category": "Selectors",
       "demo": "ComboBoxDemo.axaml",
@@ -93,7 +106,7 @@
       }
     },
     {
-      "name": "GroupedComboBox",
+      "uniqueTitle": "GroupedComboBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedComboBoxDemo.axaml",
@@ -103,17 +116,16 @@
       }
     },
     {
-      "name": "ContextMenu",
+      "uniqueTitle": "ContextMenu",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "ContextMenuDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "DataGrid",
+      "uniqueTitle": "DataGrid",
       "source": "Avalonia",
       "category": "Data",
       "demo": "DataGridDemo.axaml",
@@ -123,7 +135,7 @@
       }
     },
     {
-      "name": "DataGrid grouped",
+      "uniqueTitle": "DataGrid grouped",
       "source": "Avalonia",
       "category": "Data",
       "demo": "DataGridGroupedDemo.axaml",
@@ -133,17 +145,16 @@
       }
     },
     {
-      "name": "DropDownButton",
+      "uniqueTitle": "DropDownButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "DropDownButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "EditableComboBox",
+      "uniqueTitle": "EditableComboBox",
       "source": "Devolutions",
       "category": "Input",
       "demo": "EditableComboBoxDemo.axaml",
@@ -153,7 +164,7 @@
       }
     },
     {
-      "name": "EnumPicker",
+      "uniqueTitle": "EnumPicker",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "EnumPickerDemo.axaml",
@@ -163,37 +174,34 @@
       }
     },
     {
-      "name": "Expander",
+      "uniqueTitle": "Expander",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ExpanderDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "FlyoutPresenter",
+      "uniqueTitle": "FlyoutPresenter",
       "source": "Avalonia",
       "category": "Popups",
       "demo": "FlyoutPresenterDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "GridSplitter",
+      "uniqueTitle": "GridSplitter",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "GridSplitterDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "GroupedListBox",
+      "uniqueTitle": "GroupedListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedListBoxDemo.axaml",
@@ -203,7 +211,7 @@
       }
     },
     {
-      "name": "GroupedTileListBox",
+      "uniqueTitle": "GroupedTileListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedTileListBoxDemo.axaml",
@@ -213,47 +221,43 @@
       }
     },
     {
-      "name": "HyperlinkButton",
+      "uniqueTitle": "HyperlinkButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "HyperlinkButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "ListBox",
+      "uniqueTitle": "ListBox",
       "source": "Avalonia",
       "category": "Selectors",
       "demo": "ListBoxDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "✅"
       }
     },
     {
-      "name": "Menu",
+      "uniqueTitle": "Menu",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "MenuDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "MenuFlyout",
+      "uniqueTitle": "MenuFlyout",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "MenuFlyoutDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "MultiComboBox",
+      "uniqueTitle": "MultiComboBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "MultiComboBoxDemo.axaml",
@@ -263,77 +267,70 @@
       }
     },
     {
-      "name": "NumericUpDown",
+      "uniqueTitle": "NumericUpDown",
       "source": "Avalonia",
       "category": "Input",
       "demo": "NumericUpDownDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "RadioButton",
+      "uniqueTitle": "RadioButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "RadioButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "ScrollBar",
+      "uniqueTitle": "ScrollBar",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ScrollBarDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "ScrollViewer",
+      "uniqueTitle": "ScrollViewer",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ScrollViewerDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "SearchHighlightTextBlock",
+      "uniqueTitle": "SearchHighlightTextBlock",
       "source": "Devolutions",
       "category": "Text",
       "demo": "SearchHighlightTextBlockDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "Separator",
+      "uniqueTitle": "Separator",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "SeparatorDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "SplitButton",
+      "uniqueTitle": "SplitButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "SplitButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "TabControl / TabPane / NavBar",
+      "uniqueTitle": "TabControl / TabPane / NavBar",
       "source": "Devolutions",
       "category": "Navigation",
       "demo": "TabControlDemo.axaml",
@@ -343,27 +340,25 @@
       }
     },
     {
-      "name": "TagInput",
+      "uniqueTitle": "TagInput",
       "source": "Devolutions",
       "category": "Input",
       "demo": "TagInputDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "TextBox",
+      "uniqueTitle": "TextBox",
       "source": "Avalonia",
       "category": "Input",
       "demo": "TextBoxDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
       }
     },
     {
-      "name": "TimePicker",
+      "uniqueTitle": "TimePicker",
       "source": "Avalonia",
       "category": "Input/Date and Time",
       "demo": "TimePickerDemo.axaml",
@@ -373,7 +368,7 @@
       }
     },
     {
-      "name": "TimePickerUpDown",
+      "uniqueTitle": "TimePickerUpDown",
       "source": "Devolutions",
       "category": "Input/Date and Time",
       "demo": "TimePickerUpDownDemo.axaml",
@@ -383,37 +378,34 @@
       }
     },
     {
-      "name": "ToggleButton",
+      "uniqueTitle": "ToggleButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ToggleButtonDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "✅"
       }
     },
     {
-      "name": "Toggle Switch",
+      "uniqueTitle": "Toggle Switch",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ToggleSwitchDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "ToolTip",
+      "uniqueTitle": "ToolTip",
       "source": "Avalonia",
       "category": "Popups",
       "demo": "ToolTipDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
       }
     },
     {
-      "name": "TreeDataGrid (Avalonia Pro)",
+      "uniqueTitle": "TreeDataGrid (Avalonia Pro)",
       "source": "AvaloniaPro",
       "category": "Data",
       "demo": "TreeDataGridDemo.axaml",
@@ -423,14 +415,23 @@
       }
     },
     {
-      "name": "TreeView",
+      "uniqueTitle": "TreeView",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "TreeViewDemo.axaml",
-      "viewModel": null,
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
       }
     }
-  ]
+    ],
+    "Controls in Context": [
+      {
+        "uniqueTitle": "Control Alignment",
+        "source": "Devolutions",
+        "category": "Alignment",
+        "demo": "ControlAlignment.axaml"
+      }
+    ],
+    "Experiments": []
+  }
 }

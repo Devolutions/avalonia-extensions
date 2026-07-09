@@ -127,7 +127,7 @@ public class App : Application
 
     private static void ApplyStartupSettings(MainWindowViewModel viewModel)
     {
-        string startupTabTitle = ControlRegistry.StartupSettings.SelectedTab.Trim();
+        string startupTabTitle = ControlRegistry.StartupSettings.StartupPage.Trim();
         if (!string.IsNullOrWhiteSpace(startupTabTitle))
         {
             viewModel.StartupTabTitle = startupTabTitle;

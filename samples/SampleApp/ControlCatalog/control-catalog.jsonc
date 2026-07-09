@@ -24,7 +24,6 @@
   "controls": [
     {
       "name": "AutoCompleteBox",
-      "type": "AutoCompleteBox",
       "source": "Avalonia",
       "category": "Input",
       "demo": "AutoCompleteBoxDemo.axaml",
@@ -35,7 +34,6 @@
     },
     {
       "name": "Button",
-      "type": "Button",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ButtonDemo.axaml",
@@ -46,7 +44,6 @@
     },
     {
       "name": "CalendarDatePicker",
-      "type": "CalendarDatePicker",
       "source": "Avalonia",
       "category": "Input/Date and Time",
       "demo": "CalendarDatePickerDemo.axaml",
@@ -57,7 +54,6 @@
     },
     {
       "name": "CheckBox",
-      "type": "CheckBox",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "CheckBoxDemo.axaml",
@@ -68,7 +64,6 @@
     },
     {
       "name": "CheckBoxListBox",
-      "type": "CheckBoxListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "CheckBoxListBoxDemo.axaml",
@@ -79,7 +74,6 @@
     },
     {
       "name": "ColorPicker",
-      "type": "ColorPicker",
       "source": "Avalonia",
       "category": "Input",
       "demo": "ColorPickerDemo.axaml",
@@ -90,7 +84,6 @@
     },
     {
       "name": "ComboBox",
-      "type": "ComboBox",
       "source": "Avalonia",
       "category": "Selectors",
       "demo": "ComboBoxDemo.axaml",
@@ -101,7 +94,6 @@
     },
     {
       "name": "GroupedComboBox",
-      "type": "GroupedComboBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedComboBoxDemo.axaml",
@@ -112,7 +104,6 @@
     },
     {
       "name": "ContextMenu",
-      "type": "ContextMenu",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "ContextMenuDemo.axaml",
@@ -123,7 +114,6 @@
     },
     {
       "name": "DataGrid",
-      "type": "DataGrid",
       "source": "Avalonia",
       "category": "Data",
       "demo": "DataGridDemo.axaml",
@@ -134,7 +124,6 @@
     },
     {
       "name": "DataGrid grouped",
-      "type": "DataGrid",
       "source": "Avalonia",
       "category": "Data",
       "demo": "DataGridGroupedDemo.axaml",
@@ -145,7 +134,6 @@
     },
     {
       "name": "DropDownButton",
-      "type": "DropDownButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "DropDownButtonDemo.axaml",
@@ -156,7 +144,6 @@
     },
     {
       "name": "EditableComboBox",
-      "type": "EditableComboBox",
       "source": "Devolutions",
       "category": "Input",
       "demo": "EditableComboBoxDemo.axaml",
@@ -167,7 +154,6 @@
     },
     {
       "name": "EnumPicker",
-      "type": "EnumPicker",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "EnumPickerDemo.axaml",
@@ -178,7 +164,6 @@
     },
     {
       "name": "Expander",
-      "type": "Expander",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ExpanderDemo.axaml",
@@ -189,7 +174,6 @@
     },
     {
       "name": "FlyoutPresenter",
-      "type": "FlyoutPresenter",
       "source": "Avalonia",
       "category": "Popups",
       "demo": "FlyoutPresenterDemo.axaml",
@@ -200,7 +184,6 @@
     },
     {
       "name": "GridSplitter",
-      "type": "GridSplitter",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "GridSplitterDemo.axaml",
@@ -211,7 +194,6 @@
     },
     {
       "name": "GroupedListBox",
-      "type": "GroupedListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedListBoxDemo.axaml",
@@ -222,7 +204,6 @@
     },
     {
       "name": "GroupedTileListBox",
-      "type": "GroupedTileListBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "GroupedTileListBoxDemo.axaml",
@@ -233,7 +214,6 @@
     },
     {
       "name": "HyperlinkButton",
-      "type": "HyperlinkButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "HyperlinkButtonDemo.axaml",
@@ -244,7 +224,6 @@
     },
     {
       "name": "ListBox",
-      "type": "ListBox",
       "source": "Avalonia",
       "category": "Selectors",
       "demo": "ListBoxDemo.axaml",
@@ -255,7 +234,6 @@
     },
     {
       "name": "Menu",
-      "type": "Menu",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "MenuDemo.axaml",
@@ -266,7 +244,6 @@
     },
     {
       "name": "MenuFlyout",
-      "type": "MenuFlyout",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "MenuFlyoutDemo.axaml",
@@ -277,7 +254,6 @@
     },
     {
       "name": "MultiComboBox",
-      "type": "MultiComboBox",
       "source": "Devolutions",
       "category": "Selectors",
       "demo": "MultiComboBoxDemo.axaml",
@@ -288,7 +264,6 @@
     },
     {
       "name": "NumericUpDown",
-      "type": "NumericUpDown",
       "source": "Avalonia",
       "category": "Input",
       "demo": "NumericUpDownDemo.axaml",
@@ -299,7 +274,6 @@
     },
     {
       "name": "RadioButton",
-      "type": "RadioButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "RadioButtonDemo.axaml",
@@ -310,7 +284,6 @@
     },
     {
       "name": "ScrollBar",
-      "type": "ScrollBar",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ScrollBarDemo.axaml",
@@ -321,7 +294,6 @@
     },
     {
       "name": "ScrollViewer",
-      "type": "ScrollViewer",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "ScrollViewerDemo.axaml",
@@ -332,7 +304,6 @@
     },
     {
       "name": "SearchHighlightTextBlock",
-      "type": "SearchHighlightTextBlock",
       "source": "Devolutions",
       "category": "Text",
       "demo": "SearchHighlightTextBlockDemo.axaml",
@@ -343,7 +314,6 @@
     },
     {
       "name": "Separator",
-      "type": "Separator",
       "source": "Avalonia",
       "category": "Layout",
       "demo": "SeparatorDemo.axaml",
@@ -354,7 +324,6 @@
     },
     {
       "name": "SplitButton",
-      "type": "SplitButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "SplitButtonDemo.axaml",
@@ -365,7 +334,6 @@
     },
     {
       "name": "TabControl / TabPane / NavBar",
-      "type": "TabControl",
       "source": "Devolutions",
       "category": "Navigation",
       "demo": "TabControlDemo.axaml",
@@ -376,7 +344,6 @@
     },
     {
       "name": "TagInput",
-      "type": "TagInput",
       "source": "Devolutions",
       "category": "Input",
       "demo": "TagInputDemo.axaml",
@@ -387,7 +354,6 @@
     },
     {
       "name": "TextBox",
-      "type": "TextBox",
       "source": "Avalonia",
       "category": "Input",
       "demo": "TextBoxDemo.axaml",
@@ -398,7 +364,6 @@
     },
     {
       "name": "TimePicker",
-      "type": "TimePicker",
       "source": "Avalonia",
       "category": "Input/Date and Time",
       "demo": "TimePickerDemo.axaml",
@@ -409,7 +374,6 @@
     },
     {
       "name": "TimePickerUpDown",
-      "type": "TimePickerUpDown",
       "source": "Devolutions",
       "category": "Input/Date and Time",
       "demo": "TimePickerUpDownDemo.axaml",
@@ -420,7 +384,6 @@
     },
     {
       "name": "ToggleButton",
-      "type": "ToggleButton",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ToggleButtonDemo.axaml",
@@ -431,7 +394,6 @@
     },
     {
       "name": "Toggle Switch",
-      "type": "ToggleSwitch",
       "source": "Avalonia",
       "category": "Buttons",
       "demo": "ToggleSwitchDemo.axaml",
@@ -442,7 +404,6 @@
     },
     {
       "name": "ToolTip",
-      "type": "ToolTip",
       "source": "Avalonia",
       "category": "Popups",
       "demo": "ToolTipDemo.axaml",
@@ -453,7 +414,6 @@
     },
     {
       "name": "TreeDataGrid (Avalonia Pro)",
-      "type": "TreeDataGrid",
       "source": "AvaloniaPro",
       "category": "Data",
       "demo": "TreeDataGridDemo.axaml",
@@ -464,7 +424,6 @@
     },
     {
       "name": "TreeView",
-      "type": "TreeView",
       "source": "Avalonia",
       "category": "Navigation",
       "demo": "TreeViewDemo.axaml",

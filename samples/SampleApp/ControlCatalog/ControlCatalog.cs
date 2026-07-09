@@ -75,7 +75,6 @@ public static class ControlRegistry
 
     return new ControlCatalogEntry(
       key: demoTypeName,
-      controlTypeName: entry.Type,
       title: entry.Name,
       pageType: pageType,
       source: ParseSource(entry.Source),

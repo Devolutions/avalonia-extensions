@@ -37,6 +37,11 @@ This removes the current coupling between test discovery and MainWindow TabItem 
           - 2026-07-07: Replaced the in-code catalog list with a human-edited JSONC catalog resource that is parsed into the internal control registry at runtime/startup.
             - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `ControlRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
               - 2026-07-08: Rebased `agents/controls-registry-refactor-setup` onto `origin/master` and completed the tab-compatible MainWindow composition refactor for Phase 3.
+                - 2026-07-09: Follow-up cleanup after merge: removed the redundant per-entry `type` field from `control-catalog.jsonc`.
+                  - The field had become authoring noise; runtime logic now uses the existing entry title where placeholder text needs a control name.
+                  - Verification:
+                    - `dotnet test --filter "FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~MainWindowTabsTests"` ✅
+                    - `dotnet test` ✅ (136/136)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

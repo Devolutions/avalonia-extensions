@@ -16,7 +16,6 @@ public sealed class ControlCatalogEntry
 {
   public ControlCatalogEntry(
     string key,
-    string controlTypeName,
     string title,
     Type pageType,
     ControlSource source,
@@ -26,14 +25,12 @@ public sealed class ControlCatalogEntry
     Type? viewModelType = null)
   {
     ArgumentException.ThrowIfNullOrWhiteSpace(key);
-    ArgumentException.ThrowIfNullOrWhiteSpace(controlTypeName);
     ArgumentException.ThrowIfNullOrWhiteSpace(title);
     ArgumentNullException.ThrowIfNull(pageType);
     ArgumentNullException.ThrowIfNull(categoryPath);
     ArgumentNullException.ThrowIfNull(statusByTheme);
 
     this.Key = key;
-    this.ControlTypeName = controlTypeName;
     this.Title = title;
     this.PageType = pageType;
     this.Source = source;
@@ -46,8 +43,6 @@ public sealed class ControlCatalogEntry
   }
 
   public string Key { get; }
-
-  public string ControlTypeName { get; }
 
   public string Title { get; }
 
@@ -106,11 +101,6 @@ public sealed class ControlCatalogEntry
 
     foreach (ControlCatalogEntry control in controls)
     {
-      if (string.IsNullOrWhiteSpace(control.ControlTypeName))
-      {
-        errors.Add($"'{control.Key}' must define a control type name.");
-      }
-
       if (control.CategoryPath.Count == 0 || control.CategoryPath.Any(string.IsNullOrWhiteSpace))
       {
         errors.Add($"'{control.Key}' must define a non-empty category path.");

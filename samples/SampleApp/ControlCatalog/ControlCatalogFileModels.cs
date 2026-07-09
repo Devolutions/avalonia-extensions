@@ -20,9 +20,6 @@ public sealed class ControlCatalogFileEntry
   [JsonPropertyName("name")]
   public string Name { get; init; } = "";
 
-  [JsonPropertyName("type")]
-  public string Type { get; init; } = "";
-
   [JsonPropertyName("source")]
   public string Source { get; init; } = "";
 

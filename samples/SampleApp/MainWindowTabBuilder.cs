@@ -67,7 +67,7 @@ internal static class MainWindowTabBuilder
   private static Control CreateAvaloniaProPlaceholder(ControlCatalogEntry control) =>
     new TextBlock
     {
-      Text = $"{control.ControlTypeName} requires Avalonia Pro.\nAdd AVALONIA_LICENSE_KEY to a .env file at the repo root and rebuild.",
+      Text = $"The {control.Title} demo requires Avalonia Pro.\nAdd AVALONIA_LICENSE_KEY to a .env file at the repo root and rebuild.",
       TextWrapping = Avalonia.Media.TextWrapping.Wrap,
       HorizontalAlignment = HorizontalAlignment.Center,
       VerticalAlignment = VerticalAlignment.Center,

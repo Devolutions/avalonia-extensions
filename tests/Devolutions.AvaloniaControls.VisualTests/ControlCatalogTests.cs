@@ -53,7 +53,6 @@ public class ControlCatalogTests
 
     var entry = new ControlCatalogEntry(
       key: "ExcludeFromTestsDemo",
-      controlTypeName: "ExcludeFromTestsControl",
       title: "Exclude From Tests",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -71,7 +70,6 @@ public class ControlCatalogTests
   {
     var entry = new ControlCatalogEntry(
       key: "MissingThemesDemo",
-      controlTypeName: "MissingThemesControl",
       title: "Missing Themes",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -93,7 +91,6 @@ public class ControlCatalogTests
 
     var entry = new ControlCatalogEntry(
       key: "UnknownSymbolDemo",
-      controlTypeName: "UnknownSymbolControl",
       title: "Unknown Symbol",
       pageType: typeof(UserControl),
       source: ControlSource.Avalonia,
@@ -109,7 +106,6 @@ public class ControlCatalogTests
   {
     var entry = new ControlCatalogEntry(
       key: "InvalidPageDemo",
-      controlTypeName: "InvalidPageControl",
       title: "Invalid Page",
       pageType: typeof(string),
       source: ControlSource.Avalonia,

@@ -9,8 +9,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
-using Controls;
-using DemoPages;
 using ViewModels;
 
 public partial class MainWindow : Window
@@ -24,6 +22,7 @@ public partial class MainWindow : Window
   public MainWindow()
   {
     this.InitializeComponent();
+    this.PopulateControlTabs();
     this.tieDyeBrush = this.GenerateTieDyeBrush();
 
     this.ApplyWindowsMicaBackdrop();
@@ -44,12 +43,6 @@ public partial class MainWindow : Window
         // Title stays as-is from XAML if anything goes wrong
       }
     };
-
-#if ENABLE_ACCELERATE
-    this.AddTreeDataGridTab();
-#else
-    this.AddTreeDataGridInfoTab();
-#endif
 
 #if DEBUG
     // Enable Accelerate dev tools (AvaloniaUI.DiagnosticsSupport)
@@ -358,65 +351,24 @@ public partial class MainWindow : Window
       }
     };
 
-#if ENABLE_ACCELERATE
-  private void AddTreeDataGridTab()
-  {
-    TreeDataGridDemo demo = new();
-    demo.DataContext = new TreeDataGridViewModel();
-    this.InsertTreeDataGridTab(demo, isEnabled: true);
-  }
-#else
-  private void AddTreeDataGridInfoTab()
-  {
-    TextBlock placeholder = new()
-    {
-      Text = "TreeDataGrid requires Avalonia Pro.\n" +
-             "Add AVALONIA_LICENSE_KEY to a .env file at the repo root and rebuild.",
-      TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-      HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-      VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-      Margin = new Thickness(24),
-    };
-    this.InsertTreeDataGridTab(placeholder, isEnabled: true);
-  }
-#endif
-
-  private void InsertTreeDataGridTab(Control content, bool isEnabled)
+  private void PopulateControlTabs()
   {
     TabControl? tabControl = this.FindControl<TabControl>("MainTabControl");
-    if (tabControl == null) return;
-
-    SampleItemHeader header = new()
+    TabItem? controlAlignmentTab = this.FindControl<TabItem>("ControlAlignmentTab");
+    if (tabControl == null || controlAlignmentTab == null)
     {
-      Title = "TreeDataGrid (Avalonia Pro)",
-      ApplicableTo = "MacClassic, DevExpress, Linux",
-    };
-
-    TabItem tabItem = new()
-    {
-      Header = header,
-      Content = content,
-      IsEnabled = isEnabled,
-    };
-
-    // Insert before "TreeView" to keep alphabetical order
-    int insertIndex = -1;
-    for (int i = 0; i < tabControl.Items.Count; i++)
-    {
-      if (tabControl.Items[i] is TabItem ti && ti.Header is SampleItemHeader h && h.Title == "TreeView")
-      {
-        insertIndex = i;
-        break;
-      }
+      throw new InvalidOperationException("MainWindow tab placeholders were not found.");
     }
 
-    if (insertIndex != -1)
+    int insertIndex = tabControl.Items.IndexOf(controlAlignmentTab);
+    if (insertIndex < 0)
     {
-      tabControl.Items.Insert(insertIndex, tabItem);
+      throw new InvalidOperationException("Could not find the Control Alignment tab insertion point.");
     }
-    else
+
+    foreach (TabItem tabItem in MainWindowTabBuilder.BuildControlTabs())
     {
-      tabControl.Items.Add(tabItem);
+      tabControl.Items.Insert(insertIndex++, tabItem);
     }
   }
 }

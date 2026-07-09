@@ -36,6 +36,7 @@ This removes the current coupling between test discovery and MainWindow TabItem 
         - 2026-07-07: Refactored contract to emoji-based per-theme status symbols plus `ExcludeFromTests` overrides (exclude-only), with shorthand helpers for readable registry entries.
           - 2026-07-07: Replaced the in-code catalog list with a human-edited JSONC catalog resource that is parsed into the internal control registry at runtime/startup.
             - 2026-07-07: Phase 2 discovery refactor completed: `VisualRegressionTests` now consumes `ControlRegistry` directly instead of parsing `MainWindow.axaml` and `MainWindow.axaml.cs`.
+              - 2026-07-08: Rebased `agents/controls-registry-refactor-setup` onto `origin/master` and completed the tab-compatible MainWindow composition refactor for Phase 3.
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.
@@ -181,15 +182,29 @@ Phase 2 notes (2026-07-07):
 - `EditableComboBoxDemo` is still discovered and still covered; a focused run for `DisplayName~EditableComboBoxDemo` passed in all 4 expected themes during this session.
 
 ### Phase 3: Refactor MainWindow to Render from Registry (Tab-compatible)
-- [ ] Introduce a composition layer that builds current TabItems from registry entries.
-- [ ] Preserve current ordering, headers, and ViewModel assignment behavior.
-- [ ] Keep the existing UI shape stable in this phase to minimize regression risk.
-- [ ] Remove duplicated metadata literals from AXAML/code-behind once parity is confirmed.
-- [ ] Update this planning doc with before/after mapping notes.
+- [x] Introduce a composition layer that builds current TabItems from registry entries.
+- [x] Preserve current ordering, headers, and ViewModel assignment behavior.
+- [x] Keep the existing UI shape stable in this phase to minimize regression risk.
+- [x] Remove duplicated metadata literals from AXAML/code-behind once parity is confirmed.
+- [x] Update this planning doc with before/after mapping notes.
 
 Acceptance criteria:
 - MainWindow no longer hardcodes most demo metadata in TabItem markup.
 - Visual behavior remains functionally equivalent.
+
+Phase 3 notes (2026-07-08):
+- Kept `Overview`, `Control Alignment`, and `Experiments` as explicit top-level tabs in XAML, matching the earlier decision to keep non-control areas outside the future registry-driven navigation tree.
+- Removed the long static run of control demo `TabItem`s from `MainWindow.axaml`.
+- Added `MainWindowTabBuilder`, which now:
+  - iterates `ControlRegistry.All` in catalog order,
+  - creates `SampleItemHeader` from registry metadata (`Title` + `ApplicableToCsv`),
+  - instantiates the demo page and optional ViewModel from the typed registry entry,
+  - substitutes the Avalonia Pro placeholder message when `ENABLE_ACCELERATE` is not available.
+- `MainWindow` now inserts the generated control tabs immediately before the `Control Alignment` tab, preserving the existing top-level tab layout while eliminating duplicated per-control metadata from AXAML/code-behind.
+- Replaced the earlier brittle “pin a couple of demos” style of regression coverage with a maintainable headless `MainWindowTabsTests` check that verifies the generated control-tab set, header metadata, and declared ViewModel wiring against the catalog itself.
+- Verification:
+  - `dotnet test --filter "FullyQualifiedName~MainWindowTabsTests|FullyQualifiedName~ControlCatalogTests|FullyQualifiedName~PageDiscoveryTests"` ✅
+  - `dotnet test` ✅ (132/132)
 
 ### Phase 4: Plan Information Architecture for TreeView
 - [ ] Draft the exact hierarchical structure for categories and subcategories.

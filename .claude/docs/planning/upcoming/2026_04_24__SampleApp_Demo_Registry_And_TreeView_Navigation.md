@@ -48,7 +48,7 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Added section-aware flattening in `PageRegistry`; `MainWindowNavigationBuilder` now consumes only the `"Control Demos"` section.
                   - Added support for omitted status blocks by defaulting missing theme statuses to `""` (no icon, excluded from tests).
                   - Added catalog legend entry for `""` and seeded non-control sections with `Overview` and `Control Alignment` pages (no status block).
-                  - Startup settings block renamed to `sampleAppStartUpSettings` and now supports `selectedPage` (with `selectedTab` compatibility in runtime model).
+                  - Startup settings block renamed to `sampleAppStartUpSettings` and now supports `selectedPage`.
                   - Verification:
                     - `dotnet test --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅
                     - `dotnet test` ✅ (137/137)
@@ -142,6 +142,14 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (14/14)
                     - `dotnet test --nologo` ✅ (140/140)
+                - 2026-07-10: Removed legacy `selectedTab` startup compatibility and hardened AOT publish behavior.
+                  - Startup settings now support only `selectedPage`; removed the obsolete `selectedTab` fallback in runtime models.
+                  - Added a startup settings test that verifies fallback to `"Overview"` when `selectedPage` is omitted.
+                  - Added `TrimmerRootAssembly Include=\"SampleApp\"` because catalog-driven page/viewmodel activation uses type names from JSON and otherwise risks trimming required constructors/types in Release NativeAOT publish.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (15/15)
+                    - `dotnet test --nologo` ✅ (141/141)
+                    - `dotnet publish samples/SampleApp/SampleApp.csproj -c Release` ⚠️ fails on pre-existing AVLN2000 errors in theme EditableComboBox AXAML (not introduced by this change)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

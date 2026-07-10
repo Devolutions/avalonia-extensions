@@ -50,12 +50,9 @@ public sealed class SampleAppStartupSettings
   [JsonPropertyName("selectedPage")]
   public string? SelectedPage { get; init; }
 
-  [JsonPropertyName("selectedTab")]
-  public string? SelectedTab { get; init; }
-
   [JsonPropertyName("scale")]
   public string Scale { get; init; } = "default";
 
   [JsonIgnore]
-  public string StartupPage => this.SelectedPage ?? this.SelectedTab ?? "Overview";
+  public string StartupPage => this.SelectedPage ?? "Overview";
 }

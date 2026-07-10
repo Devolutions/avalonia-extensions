@@ -26,6 +26,18 @@ public class PageCatalogTests
   }
 
   [Fact]
+  public void PageCatalog_StartupSettings_DefaultToOverviewWhenSelectedPageMissing()
+  {
+    SampleAppStartupSettings settings = new()
+    {
+      Theme = "default",
+      Scale = "default",
+    };
+
+    Assert.Equal("Overview", settings.StartupPage);
+  }
+
+  [Fact]
   public void PageCatalog_UsesCatalogOrderAndProvidesEntries()
   {
     Assert.NotEmpty(PageRegistry.All);

@@ -281,8 +281,8 @@ public partial class MainWindow : Window
     string prefix = string.IsNullOrWhiteSpace(baseTitle) ? "SampleApp" : baseTitle;
     string? branch = await LaunchBranch.Value;
     return string.IsNullOrEmpty(branch)
-      ? $"{prefix} — {LaunchTime}"
-      : $"{prefix} — {branch} — {LaunchTime}";
+      ? $"{prefix}   ( {LaunchTime} )"
+      : $"{prefix}   ( Branch: {branch} — {LaunchTime} )";
   }
 
   private static async Task<string?> GetGitBranchAsync()

@@ -36,7 +36,20 @@ public class MainWindowNavigationTests
     ContentControl contentHost = window.FindControl<ContentControl>("MainPageHost")!;
     Assert.NotNull(contentHost.Content);
 
-    foreach (PageCatalogEntry page in PageRegistry.ControlDemos)
+    var sectionGroup = PageRegistry.All
+      .GroupBy(page => page.Section)
+      .First(group =>
+        !string.Equals(group.Key, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase) &&
+        group.Count() > 1);
+
+    string targetSection = sectionGroup.Key;
+    string targetPageTitle = sectionGroup.First().Title;
+    Assert.False(window.IsSectionExpanded(targetSection));
+    Assert.True(window.TrySelectPageByTitle(targetPageTitle));
+    Assert.Equal(targetPageTitle, window.GetSelectedPageTitle());
+    Assert.True(window.IsSectionExpanded(targetSection));
+
+    foreach (PageCatalogEntry page in PageRegistry.All)
     {
       Assert.True(window.TrySelectPageByTitle(page.Title));
       Assert.Equal(page.Title, window.GetSelectedPageTitle());
@@ -53,8 +66,8 @@ public class MainWindowNavigationTests
       }
     }
 
-    PageCatalogEntry cachedPage = PageRegistry.ControlDemos.First(page => page.Source != ControlSource.AvaloniaPro);
-    PageCatalogEntry otherPage = PageRegistry.ControlDemos.First(page =>
+    PageCatalogEntry cachedPage = PageRegistry.All.First(page => page.Source != ControlSource.AvaloniaPro);
+    PageCatalogEntry otherPage = PageRegistry.All.First(page =>
       page.Source != ControlSource.AvaloniaPro &&
       !string.Equals(page.Key, cachedPage.Key, StringComparison.OrdinalIgnoreCase));
 
@@ -64,19 +77,6 @@ public class MainWindowNavigationTests
     Assert.True(window.TrySelectPageByTitle(otherPage.Title));
     Assert.True(window.TrySelectPageByTitle(cachedPage.Title));
     Assert.Same(firstInstance, contentHost.Content);
-
-    var sectionGroup = PageRegistry.All
-      .GroupBy(page => page.Section)
-      .First(group =>
-        !string.Equals(group.Key, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase) &&
-        group.Count() > 1);
-
-    string targetSection = sectionGroup.Key;
-    string targetPageTitle = sectionGroup.First().Title;
-    Assert.False(window.IsSectionExpanded(targetSection));
-    Assert.True(window.TrySelectPageByTitle(targetPageTitle));
-    Assert.Equal(targetPageTitle, window.GetSelectedPageTitle());
-    Assert.True(window.IsSectionExpanded(targetSection));
 
     window.Close();
     Dispatcher.UIThread.RunJobs();

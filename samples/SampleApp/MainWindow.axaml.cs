@@ -22,6 +22,7 @@ public partial class MainWindow : Window
   private MainWindowViewModel? currentViewModel;
   private IReadOnlyList<NavigationNode> navigationNodes = [];
   private string? pendingStartupPageTitle;
+  private string? lastDisplayedPageTitle;
   private bool suppressThemeChangeEvents;
 
   public MainWindow()
@@ -364,7 +365,7 @@ public partial class MainWindow : Window
       return node.Title;
     }
 
-    return null;
+    return this.lastDisplayedPageTitle;
   }
 
   public bool IsSectionExpanded(string sectionTitle)
@@ -561,6 +562,7 @@ public partial class MainWindow : Window
     }
 
     pageHost.Content = MainWindowNavigationBuilder.CreateContent(selectedNode.Page);
+    this.lastDisplayedPageTitle = selectedNode.Title;
   }
 
   private sealed class NavigationNode : INotifyPropertyChanged

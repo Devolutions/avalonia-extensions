@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avalonia.Controls;
 using SampleApp.PageCatalog;
 
@@ -61,6 +62,35 @@ public class PageCatalogTests
     Assert.True(PageRegistry.IsNotSupportedSymbol("❌"));
     Assert.False(PageRegistry.IsNotSupportedSymbol("✅"));
     Assert.False(PageRegistry.IsNotSupportedSymbol("🚧"));
+  }
+
+  [Fact]
+  public void PageCatalog_CreateControls_HandlesCaseMismatchedSectionKeys()
+  {
+    PageCatalogFile catalog = new()
+    {
+      TopLevelOrder = ["control demos"],
+      Pages = new Dictionary<string, List<PageCatalogFileEntry>>
+      {
+        ["Control Demos"] =
+        [
+          new PageCatalogFileEntry
+          {
+            UniqueTitle = "Case Mismatch Demo",
+            Source = nameof(ControlSource.AvaloniaPro),
+            Category = "Input",
+            Demo = "DoesNotExistDemo",
+          },
+        ],
+      },
+    };
+
+    MethodInfo method = typeof(PageRegistry).GetMethod("CreateControls", BindingFlags.NonPublic | BindingFlags.Static)!;
+    IReadOnlyList<PageCatalogEntry> entries = (IReadOnlyList<PageCatalogEntry>)method.Invoke(null, [catalog])!;
+
+    PageCatalogEntry entry = Assert.Single(entries);
+    Assert.Equal("Case Mismatch Demo", entry.Title);
+    Assert.Equal("control demos", entry.Section);
   }
 
   [Fact]

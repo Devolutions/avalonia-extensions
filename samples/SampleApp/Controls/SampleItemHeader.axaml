@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
              xmlns:controls="clr-namespace:SampleApp.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Controls.SampleItemHeader">
@@ -12,6 +13,7 @@
                Text="{Binding $parent[controls:SampleItemHeader].StatusSymbol}"
                ClipToBounds="False"
                IsVisible="{Binding $parent[controls:SampleItemHeader].HasStatusSymbol}"
+               automation:AutomationProperties.HelpText="{Binding $parent[controls:SampleItemHeader].StatusTooltip}"
                ToolTip.Tip="{Binding $parent[controls:SampleItemHeader].StatusTooltip}"
                Margin="0,0,10,0"
                VerticalAlignment="Center" />

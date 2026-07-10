@@ -108,6 +108,13 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (10/10)
                     - `dotnet test --nologo` ✅ (136/136)
+                - 2026-07-10: Addressed follow-up PR #580 review comments (ordering + accessibility metadata).
+                  - Fixed `topLevelOrder`/`pages` section-name case mismatch handling by resolving entries through a case-insensitive section map in `PageRegistry.CreateControls`.
+                  - Added targeted regression test for case-mismatched section keys by invoking `CreateControls` with a crafted `PageCatalogFile`.
+                  - Added minimal accessibility metadata by binding `AutomationProperties.HelpText` to `StatusTooltip` on the status symbol text, while preserving the visual tooltip.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (11/11)
+                    - `dotnet test --nologo` ✅ (137/137)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

@@ -82,10 +82,14 @@ public static class PageRegistry
   {
     IReadOnlyList<string> sectionOrder = GetSectionOrder(catalogFile);
     var controls = new List<PageCatalogEntry>();
+    Dictionary<string, List<PageCatalogFileEntry>> pagesBySection = catalogFile.Pages.ToDictionary(
+      static pair => pair.Key,
+      static pair => pair.Value,
+      StringComparer.OrdinalIgnoreCase);
 
     foreach (string section in sectionOrder)
     {
-      if (!catalogFile.Pages.TryGetValue(section, out List<PageCatalogFileEntry>? entries))
+      if (!pagesBySection.TryGetValue(section, out List<PageCatalogFileEntry>? entries))
       {
         continue;
       }

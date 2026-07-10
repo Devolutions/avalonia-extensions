@@ -1,17 +1,17 @@
 ---
-description: "/worksetup [theme] [tabTitle?] [scale?] [projectPlan?] - Switch theme, set startup tab, set scale, optionally load a planning doc"
+description: "/worksetup [theme] [pageTitle?] [scale?] [projectPlan?] - Switch theme, set startup page, set scale, optionally load a planning doc"
 ---
 
 Configure SampleApp startup defaults for development.
 
 Arguments:
 1. **theme** (required): `MacOS`, `MacOSClassic`/`Classic`/`MacClassic`, `MacOSLiquidGlass`/`LiquidGlass`/`Liquid`/`Glass`, `DevExpress`, `Linux`, or `Default`
-2. **tabTitle** (optional, default `Overview`): page title to select at startup
+2. **pageTitle** (optional, default `Overview`): page title to select at startup
 3. **scale** (optional, default `Default`): `Default`, `100%`, `125%`, `150%`, `175%`, `200%`, `225%`, `250%`, `275%`, `300%`, `400%`
 4. **projectPlan** (optional): planning doc name/partial name under `.claude/docs/planning`
 
 ## 1) Parse and validate inputs
-- Parse `/worksetup [theme] [tabTitle] [scale] [projectPlan]`
+- Parse `/worksetup [theme] [pageTitle] [scale] [projectPlan]`
 - Validate theme and scale against allowed values
 - Theme matching is case-insensitive and accepts aliases listed above
 
@@ -32,7 +32,7 @@ Arguments:
 
   The app applies these settings at runtime; do not edit `App.axaml` or `MainWindowViewModel.cs` for normal `/worksetup` usage.
 
-  ## 3) Resolve tab title
+  ## 3) Resolve page title
 Collect candidate page titles from:
 - `samples/SampleApp/PageCatalog/page-catalog.jsonc` -> `pages.*[].uniqueTitle`
 
@@ -50,8 +50,8 @@ Match rules:
   ## 5) Error handling
   - Invalid theme: report valid theme options
   - Invalid scale: report valid scale options
-  - No tab match: list available page titles from catalog
-  - Ambiguous tab match: ask user to be more specific
+  - No page match: list available page titles from catalog
+  - Ambiguous page match: ask user to be more specific
 
   ## 6) Completion message
   Report:

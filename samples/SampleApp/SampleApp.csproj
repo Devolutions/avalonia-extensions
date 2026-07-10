@@ -68,7 +68,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="ControlCatalog\control-catalog.jsonc" />
+        <EmbeddedResource Include="PageCatalog\page-catalog.jsonc" />
     </ItemGroup>
 
     <!-- Temporary link for development. 
@@ -94,6 +94,8 @@
         <!--        <TrimmerRootAssembly Include="ActiproSoftware.Avalonia.Fundamentals" />-->
 
         <!-- Devolutions Avalonia assemblies -->
+        <!-- Catalog-driven page/viewmodel activation uses type names from JSON; keep SampleApp types rooted for AOT. -->
+        <TrimmerRootAssembly Include="SampleApp" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaControls" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.DevExpress" />
         <TrimmerRootAssembly Include="Devolutions.AvaloniaTheme.WinUI" />

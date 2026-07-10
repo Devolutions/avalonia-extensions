@@ -17,7 +17,7 @@ using Devolutions.AvaloniaTheme.WinUI;
 using Devolutions.AvaloniaTheme.WinUI.Internal;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
-using ControlCatalog;
+using PageCatalog;
 using ViewModels;
 
 public class App : Application
@@ -92,7 +92,7 @@ public class App : Application
 
         if (!Design.IsDesignMode)
         {
-            ControlRegistry.EnsureValid();
+            PageRegistry.EnsureValid();
 
             Theme? theme = ResolveStartupThemeFromCatalog() ?? this.DetectDesignTheme() ?? GetDefaultThemeForPlatform();
             SetTheme(theme);
@@ -101,7 +101,7 @@ public class App : Application
 
     private static Theme? ResolveStartupThemeFromCatalog()
     {
-        string theme = ControlRegistry.StartupSettings.Theme.Trim();
+        string theme = PageRegistry.StartupSettings.Theme.Trim();
         if (string.IsNullOrWhiteSpace(theme) || string.Equals(theme, "default", StringComparison.OrdinalIgnoreCase))
         {
             return null;
@@ -120,20 +120,20 @@ public class App : Application
             "fluent" => new FluentTheme(),
             "simple" => new SimpleTheme(),
             _ => throw new InvalidOperationException(
-                $"Unknown startup theme '{theme}' in control-catalog.jsonc. " +
+                $"Unknown startup theme '{theme}' in page-catalog.jsonc. " +
                 "Expected one of: default, MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple."),
         };
     }
 
     private static void ApplyStartupSettings(MainWindowViewModel viewModel)
     {
-        string startupTabTitle = ControlRegistry.StartupSettings.SelectedTab.Trim();
-        if (!string.IsNullOrWhiteSpace(startupTabTitle))
+        string startupPageTitle = PageRegistry.StartupSettings.StartupPage.Trim();
+        if (!string.IsNullOrWhiteSpace(startupPageTitle))
         {
-            viewModel.StartupTabTitle = startupTabTitle;
+            viewModel.StartupPageTitle = startupPageTitle;
         }
 
-        string startupScale = ControlRegistry.StartupSettings.Scale.Trim();
+        string startupScale = PageRegistry.StartupSettings.Scale.Trim();
         if (string.IsNullOrWhiteSpace(startupScale))
         {
             return;
@@ -157,7 +157,7 @@ public class App : Application
         if (selectedScale == null)
         {
             throw new InvalidOperationException(
-                $"Unknown startup scale '{startupScale}' in control-catalog.jsonc. " +
+                $"Unknown startup scale '{startupScale}' in page-catalog.jsonc. " +
                 "Expected one of: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%.");
         }
 
@@ -394,9 +394,9 @@ public class App : Application
                 // to prevent expensive re-rendering of a window we're about to discard
                 Window? oldWindow = desktopLifetime.MainWindow;
                 WindowPlacement? windowPlacement = CaptureWindowPlacement(oldWindow);
-                int selectedTabIndex = oldWindow is MainWindow oldMainWindow
-                    ? oldMainWindow.FindControl<TabControl>("MainTabControl")?.SelectedIndex ?? 0
-                    : 0;
+                string? selectedPageTitle = oldWindow is MainWindow oldMainWindow
+                    ? oldMainWindow.GetSelectedPageTitle()
+                    : null;
 
                 // Suppress theme changes on old window to prevent its ComboBox binding from
                 // triggering SetTheme when we update CurrentTheme
@@ -415,7 +415,7 @@ public class App : Application
                 app.themeStylesContainer.Clear();
                 app.themeStylesContainer.AddRange(styles);
 
-                RecreateMainWindow(desktopLifetime, oldWindow, selectedTabIndex, windowPlacement);
+                RecreateMainWindow(desktopLifetime, oldWindow, selectedPageTitle, windowPlacement);
             }
             else
             {
@@ -480,13 +480,14 @@ public class App : Application
     private static void RecreateMainWindow(
         IClassicDesktopStyleApplicationLifetime lifetime,
         Window? oldWindow,
-        int selectedTabIndex,
+        string? selectedPageTitle,
         WindowPlacement? windowPlacement)
     {
         object? dataContext = oldWindow?.DataContext;
 
         MainWindow newWindow = new() { DataContext = dataContext };
         ApplyWindowPlacement(newWindow, windowPlacement);
+        newWindow.SetPendingStartupPageTitle(selectedPageTitle);
 
         // Suppress theme change events during window initialization to prevent
         // SelectionChanged from firing multiple times as bindings initialize
@@ -495,36 +496,10 @@ public class App : Application
         lifetime.MainWindow = newWindow;
         newWindow.Show();
 
-        RestoreTabSelectionWhenReady(newWindow, selectedTabIndex);
-
         // Re-enable theme changes after window is fully initialized
         EnableThemeChangesWhenReady(newWindow);
 
         oldWindow?.Close();
-    }
-
-    private static void RestoreTabSelectionWhenReady(MainWindow window, int selectedTabIndex)
-    {
-        EventHandler? layoutHandler = null;
-        layoutHandler = (sender, e) =>
-        {
-            // CRITICAL: Unsubscribe immediately to prevent handler accumulation
-            window.LayoutUpdated -= layoutHandler;
-
-            TabControl? tabControl = window.FindControl<TabControl>("MainTabControl");
-            if (tabControl?.ContainerFromIndex(0) is null) return;
-
-            // Clear all IsSelected properties from TabItems to remove XAML hardcoded values
-            foreach (TabItem tabItem in tabControl.Items.OfType<TabItem>())
-            {
-                tabItem.IsSelected = false;
-            }
-
-            // Now SelectedIndex works correctly without XAML interference
-            tabControl.SelectedIndex = selectedTabIndex;
-        };
-
-        window.LayoutUpdated += layoutHandler;
     }
 
     private static void EnableThemeChangesWhenReady(MainWindow window)

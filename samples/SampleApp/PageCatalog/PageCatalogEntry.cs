@@ -1,4 +1,4 @@
-namespace SampleApp.ControlCatalog;
+namespace SampleApp.PageCatalog;
 
 using System;
 using System.Collections.Generic;
@@ -12,42 +12,42 @@ public enum ControlSource
   Devolutions,
 }
 
-public sealed class ControlCatalogEntry
+public sealed class PageCatalogEntry
 {
-  public ControlCatalogEntry(
+  public PageCatalogEntry(
     string key,
-    string controlTypeName,
+    string section,
     string title,
     Type pageType,
-    ControlSource source,
+    ControlSource? source,
     IReadOnlyList<string> categoryPath,
-    IReadOnlyDictionary<ControlThemeId, string> statusByTheme,
-    IReadOnlyCollection<ControlThemeId>? excludeFromTests = null,
+    IReadOnlyDictionary<ThemeId, string> statusByTheme,
+    IReadOnlyCollection<ThemeId>? excludeFromTests = null,
     Type? viewModelType = null)
   {
     ArgumentException.ThrowIfNullOrWhiteSpace(key);
-    ArgumentException.ThrowIfNullOrWhiteSpace(controlTypeName);
+    ArgumentException.ThrowIfNullOrWhiteSpace(section);
     ArgumentException.ThrowIfNullOrWhiteSpace(title);
     ArgumentNullException.ThrowIfNull(pageType);
     ArgumentNullException.ThrowIfNull(categoryPath);
     ArgumentNullException.ThrowIfNull(statusByTheme);
 
     this.Key = key;
-    this.ControlTypeName = controlTypeName;
+    this.Section = section;
     this.Title = title;
     this.PageType = pageType;
     this.Source = source;
     this.CategoryPath = categoryPath.ToArray();
-    this.StatusByTheme = new Dictionary<ControlThemeId, string>(statusByTheme);
+    this.StatusByTheme = new Dictionary<ThemeId, string>(statusByTheme);
     this.ExcludeFromTests = excludeFromTests == null
-      ? new HashSet<ControlThemeId>()
-      : new HashSet<ControlThemeId>(excludeFromTests);
+      ? new HashSet<ThemeId>()
+      : new HashSet<ThemeId>(excludeFromTests);
     this.ViewModelType = viewModelType;
   }
 
   public string Key { get; }
 
-  public string ControlTypeName { get; }
+  public string Section { get; }
 
   public string Title { get; }
 
@@ -55,23 +55,23 @@ public sealed class ControlCatalogEntry
 
   public Type? ViewModelType { get; }
 
-  public ControlSource Source { get; }
+  public ControlSource? Source { get; }
 
   public IReadOnlyList<string> CategoryPath { get; }
 
-  public IReadOnlyDictionary<ControlThemeId, string> StatusByTheme { get; }
+  public IReadOnlyDictionary<ThemeId, string> StatusByTheme { get; }
 
-  public IReadOnlySet<ControlThemeId> ExcludeFromTests { get; }
+  public IReadOnlySet<ThemeId> ExcludeFromTests { get; }
 
   public string CategoryPathText => string.Join("/", this.CategoryPath);
 
   public string ApplicableToCsv =>
-    ControlThemeIds.ToCsv(
+    ThemeIds.ToCsv(
       this.StatusByTheme
-        .Where(pair => !ControlRegistry.IsNotSupportedSymbol(pair.Value))
+        .Where(pair => !PageRegistry.IsNotSupportedSymbol(pair.Value))
         .Select(static pair => pair.Key));
 
-  public string GetStatusSymbol(ControlThemeId themeId)
+  public string GetStatusSymbol(ThemeId themeId)
   {
     if (this.StatusByTheme.TryGetValue(themeId, out string? symbol))
     {
@@ -83,40 +83,35 @@ public sealed class ControlCatalogEntry
 
   public string GetStatusSymbol(string themeName)
   {
-    ControlThemeId themeId = ControlThemeIds.Parse(themeName);
+    ThemeId themeId = ThemeIds.Parse(themeName);
     return this.GetStatusSymbol(themeId);
   }
 
-  public bool ShouldTest(ControlThemeId themeId) =>
-    !ControlRegistry.IsNotSupportedSymbol(this.GetStatusSymbol(themeId)) &&
+  public bool ShouldTest(ThemeId themeId) =>
+    !PageRegistry.IsNotSupportedSymbol(this.GetStatusSymbol(themeId)) &&
     !this.ExcludeFromTests.Contains(themeId);
 
-  public static IReadOnlyList<string> Validate(IReadOnlyList<ControlCatalogEntry> controls)
+  public static IReadOnlyList<string> Validate(IReadOnlyList<PageCatalogEntry> controls)
   {
     ArgumentNullException.ThrowIfNull(controls);
 
     var errors = new List<string>();
 
-    foreach (IGrouping<string, ControlCatalogEntry> duplicateKeyGroup in controls
+    foreach (IGrouping<string, PageCatalogEntry> duplicateKeyGroup in controls
       .GroupBy(static control => control.Key, StringComparer.OrdinalIgnoreCase)
       .Where(static group => group.Count() > 1))
     {
-      errors.Add($"Duplicate control key '{duplicateKeyGroup.Key}'.");
+      errors.Add($"Duplicate page key '{duplicateKeyGroup.Key}'.");
     }
 
-    foreach (ControlCatalogEntry control in controls)
+    foreach (PageCatalogEntry control in controls)
     {
-      if (string.IsNullOrWhiteSpace(control.ControlTypeName))
+      if (control.CategoryPath.Count > 0 && control.CategoryPath.Any(string.IsNullOrWhiteSpace))
       {
-        errors.Add($"'{control.Key}' must define a control type name.");
+        errors.Add($"'{control.Key}' has an invalid category path segment.");
       }
 
-      if (control.CategoryPath.Count == 0 || control.CategoryPath.Any(string.IsNullOrWhiteSpace))
-      {
-        errors.Add($"'{control.Key}' must define a non-empty category path.");
-      }
-
-      foreach (ControlThemeId themeId in ControlThemeIds.All)
+      foreach (ThemeId themeId in ThemeIds.All)
       {
         if (!control.StatusByTheme.ContainsKey(themeId))
         {
@@ -124,26 +119,22 @@ public sealed class ControlCatalogEntry
         }
       }
 
-      foreach (ControlThemeId unexpectedTheme in control.StatusByTheme.Keys.Except(ControlThemeIds.All))
+      foreach (ThemeId unexpectedTheme in control.StatusByTheme.Keys.Except(ThemeIds.All))
       {
         errors.Add($"'{control.Key}' defines an unexpected theme '{unexpectedTheme}'.");
       }
 
-      foreach ((ControlThemeId themeId, string symbol) in control.StatusByTheme)
+      foreach ((ThemeId themeId, string symbol) in control.StatusByTheme)
       {
-        if (string.IsNullOrWhiteSpace(symbol))
-        {
-          errors.Add($"'{control.Key}' has an empty status symbol for theme '{themeId}'.");
-        }
-        else if (!ControlRegistry.StatusDescriptions.ContainsKey(symbol))
+        if (!PageRegistry.StatusDescriptions.ContainsKey(symbol))
         {
           errors.Add($"'{control.Key}' has unknown status symbol '{symbol}' for theme '{themeId}'.");
         }
       }
 
-      foreach (ControlThemeId excludedTheme in control.ExcludeFromTests)
+      foreach (ThemeId excludedTheme in control.ExcludeFromTests)
       {
-        if (!ControlThemeIds.All.Contains(excludedTheme))
+        if (!ThemeIds.All.Contains(excludedTheme))
         {
           errors.Add($"'{control.Key}' excludes unknown theme '{excludedTheme}' from tests.");
         }

@@ -14,7 +14,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using SampleApp;
-using SampleApp.ControlCatalog;
+using SampleApp.PageCatalog;
 
 [Collection("VisualTests")]
 public class VisualRegressionTests
@@ -22,12 +22,12 @@ public class VisualRegressionTests
   private const string TestResultsDirectory = "../../../Screenshots/Test";
   private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
-  private static readonly ControlThemeId[] SupportedThemes =
+  private static readonly ThemeId[] SupportedThemes =
   [
-    ControlThemeId.MacClassic,
-    ControlThemeId.LiquidGlass,
-    ControlThemeId.Linux,
-    ControlThemeId.DevExpress,
+    ThemeId.MacClassic,
+    ThemeId.LiquidGlass,
+    ThemeId.Linux,
+    ThemeId.DevExpress,
   ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
@@ -52,33 +52,28 @@ public class VisualRegressionTests
     return "Unknown";
   }
 
-  public static IEnumerable<object?[]> GetDemoPages()
+  public static IEnumerable<object?[]> GetTestPages()
   {
-    ControlRegistry.EnsureValid();
+    PageRegistry.EnsureValid();
 
-    foreach (ControlCatalogEntry control in ControlRegistry.All.OrderBy(control => control.PageType.Name))
+    foreach (PageCatalogEntry page in PageRegistry.All.OrderBy(page => page.PageType.Name))
     {
-      if (!control.PageType.Name.EndsWith("Demo", StringComparison.Ordinal))
+      foreach (ThemeId themeId in SupportedThemes)
       {
-        continue;
-      }
-
-      foreach (ControlThemeId themeId in SupportedThemes)
-      {
-        if (!control.ShouldTest(themeId))
+        if (!page.ShouldTest(themeId))
         {
           continue;
         }
 
-        yield return [control.PageType, themeId.ToThemeName(), control.ViewModelType];
+        yield return [page.PageType, themeId.ToThemeName(), page.ViewModelType];
       }
     }
   }
 
-  // TestPage() is called automatically by the xUnit Test Runner for each entry 
-  //   returned by GetDemoPages() when you run the tests.
+  // TestPage() is called automatically by the xUnit Test Runner for each entry
+  //   returned by GetTestPages() when you run the tests.
   [AvaloniaTheory]
-  [MemberData(nameof(GetDemoPages))]
+  [MemberData(nameof(GetTestPages))]
   public void TestPage(Type pageType, string themeName, Type? viewModelType)
   {
     string pageName = pageType.Name;

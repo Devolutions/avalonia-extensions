@@ -2,13 +2,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
              xmlns:controls="clr-namespace:SampleApp.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Controls.SampleItemHeader">
 
-  <StackPanel Orientation="Horizontal" Spacing="10">
-    <!-- Non-retina displays will click the status indicator icon if not set to ClipToBounds="False" -->
-    <TextBlock Text="{Binding $parent[controls:SampleItemHeader].Status}" ClipToBounds="False" />
-    <TextBlock Text="{Binding $parent[controls:SampleItemHeader].Title}" />
-  </StackPanel>
+  <Grid ColumnDefinitions="Auto,Auto,*,Auto"
+        HorizontalAlignment="Stretch">
+    <TextBlock Grid.Column="0"
+               Text="{Binding $parent[controls:SampleItemHeader].StatusSymbol}"
+               ClipToBounds="False"
+               IsVisible="{Binding $parent[controls:SampleItemHeader].HasStatusSymbol}"
+               automation:AutomationProperties.HelpText="{Binding $parent[controls:SampleItemHeader].StatusTooltip}"
+               ToolTip.Tip="{Binding $parent[controls:SampleItemHeader].StatusTooltip}"
+               Margin="0,0,10,0"
+               VerticalAlignment="Center" />
+    <TextBlock Grid.Column="1"
+               Text="{Binding $parent[controls:SampleItemHeader].Title}"
+               VerticalAlignment="Center" />
+    <Border Grid.Column="3"
+            IsVisible="{Binding $parent[controls:SampleItemHeader].HasSourceBadge}"
+            Margin="8,0"
+            Padding="6,1"
+            Background="{Binding $parent[controls:SampleItemHeader].SourceBadgeBackground}"
+            CornerRadius="999"
+            VerticalAlignment="Center">
+      <TextBlock Text="{Binding $parent[controls:SampleItemHeader].SourceBadgeText}"
+                 Foreground="White"
+                 FontSize="11"
+                 FontWeight="SemiBold" />
+    </Border>
+  </Grid>
 </UserControl>

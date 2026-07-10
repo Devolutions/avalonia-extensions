@@ -87,9 +87,10 @@
     </TabControl>
 
     <TextBlock FontSize="15" LineSpacing="2" TextWrapping="Wrap" Margin="0 30 0 0">
-      Use the tabs on the left for a closer look at specific controls.<LineBreak />
-      🟢 Controls that have been styled for the current theme (even if they may still need more work)<LineBreak />
-      🔴 Controls not started yet <LineBreak />
+      Check out the list on the left for a closer look at specific controls.<LineBreak />
+      ✅ styled for the current theme (or ⚠️ if they still need a bit more work)<LineBreak />
+      🚧 styling in progress<LineBreak />
+      ❌ not styled (yet) <LineBreak />
       <LineBreak />
       Use the tools below to select a different theme or switch modes.<LineBreak />
     </TextBlock>

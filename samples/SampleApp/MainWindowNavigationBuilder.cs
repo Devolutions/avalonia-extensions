@@ -10,6 +10,9 @@ using SampleApp.Controls;
 
 internal static class MainWindowNavigationBuilder
 {
+  private static readonly IBrush AvaloniaProBadgeBackground = new SolidColorBrush(Color.Parse("#7C3AED"));
+  private static readonly IBrush DevolutionsBadgeBackground = new SolidColorBrush(Color.Parse("#0068C3"));
+
   public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
     CreateHeader(
       control,
@@ -38,8 +41,8 @@ internal static class MainWindowNavigationBuilder
   private static (string? badgeText, IBrush? badgeBackground) GetSourceBadge(ControlSource? source) =>
     source switch
     {
-      ControlSource.AvaloniaPro => ("Pro", new SolidColorBrush(Color.Parse("#7C3AED"))),
-      ControlSource.Devolutions => ("Devo", new SolidColorBrush(Color.Parse("#0068C3"))),
+      ControlSource.AvaloniaPro => ("Pro", AvaloniaProBadgeBackground),
+      ControlSource.Devolutions => ("Devo", DevolutionsBadgeBackground),
       _ => (null, null),
     };
 

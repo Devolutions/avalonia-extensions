@@ -115,6 +115,11 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (11/11)
                     - `dotnet test --nologo` ✅ (137/137)
+                - 2026-07-10: Addressed follow-up PR #580 performance nit.
+                  - Cached source-badge brushes in `MainWindowNavigationBuilder` so `GetSourceBadge` no longer allocates/parses colors per header build.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (11/11)
+                    - `dotnet test --nologo` ✅ (137/137)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

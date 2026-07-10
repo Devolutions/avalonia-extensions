@@ -1,7 +1,9 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -80,5 +82,44 @@ public class MainWindowNavigationTests
 
     window.Close();
     Dispatcher.UIThread.RunJobs();
+  }
+
+  [AvaloniaFact]
+  public void MainWindowNavigationBuilder_MapsStatusAndSourceMetadata()
+  {
+    Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+    App.SetTheme(new MacOsClassicTheme());
+
+    PageCatalogEntry proEntry = CreateTestEntry("Header Pro", ControlSource.AvaloniaPro, "🚧");
+    SampleApp.Controls.SampleItemHeader proHeader = CreateHeader(proEntry);
+    Assert.Equal("🚧", proHeader.StatusSymbol);
+    Assert.Equal(PageRegistry.GetStatusDescription("🚧"), proHeader.StatusTooltip);
+    Assert.Equal("Pro", proHeader.SourceBadgeText);
+    Assert.NotNull(proHeader.SourceBadgeBackground);
+
+    PageCatalogEntry devoEntry = CreateTestEntry("Header Devo", ControlSource.Devolutions, "✅");
+    SampleApp.Controls.SampleItemHeader devoHeader = CreateHeader(devoEntry);
+    Assert.Equal("Devo", devoHeader.SourceBadgeText);
+    Assert.NotNull(devoHeader.SourceBadgeBackground);
+  }
+
+  private static PageCatalogEntry CreateTestEntry(string key, ControlSource? source, string statusSymbol)
+  {
+    Dictionary<ThemeId, string> statusByTheme = ThemeIds.All.ToDictionary(static themeId => themeId, _ => statusSymbol);
+    return new PageCatalogEntry(
+      key: key,
+      section: "Control Demos",
+      title: key,
+      pageType: typeof(UserControl),
+      source: source,
+      categoryPath: ["Input"],
+      statusByTheme: statusByTheme);
+  }
+
+  private static SampleApp.Controls.SampleItemHeader CreateHeader(PageCatalogEntry entry)
+  {
+    Type builderType = Type.GetType("SampleApp.MainWindowNavigationBuilder, SampleApp", throwOnError: true)!;
+    MethodInfo createHeader = builderType.GetMethod("CreateHeader", BindingFlags.Static | BindingFlags.Public)!;
+    return (SampleApp.Controls.SampleItemHeader)createHeader.Invoke(null, [entry])!;
   }
 }

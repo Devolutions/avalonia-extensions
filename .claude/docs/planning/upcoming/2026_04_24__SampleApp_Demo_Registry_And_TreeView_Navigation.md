@@ -126,6 +126,15 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (11/11)
                     - `dotnet test --nologo` ✅ (137/137)
+                - 2026-07-10: Addressed follow-up PR #580 header-metadata coverage feedback.
+                  - Added focused navigation-builder test coverage for status/source projection in headers:
+                    - status symbol + tooltip mapping (`🚧`),
+                    - source badge mapping for `AvaloniaPro` (`Pro`) and `Devolutions` (`Devo`).
+                  - Implemented via test-local synthetic `PageCatalogEntry` instances to avoid pinning assertions to mutable catalog values.
+                  - Used reflection for invoking `MainWindowNavigationBuilder.CreateHeader` from tests to avoid broadening production visibility.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (12/12)
+                    - `dotnet test --nologo` ✅ (138/138)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

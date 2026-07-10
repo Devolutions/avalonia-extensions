@@ -52,7 +52,7 @@ public static class ThemeIds
       ThemeId.Fluent => "Fluent",
       ThemeId.Simple => "Simple",
       ThemeId.WinUi => App.WinUiThemeName,
-      _ => throw new ArgumentOutOfRangeException(nameof(themeId), themeId, "Unknown control theme id."),
+      _ => throw new ArgumentOutOfRangeException(nameof(themeId), themeId, "Unknown theme id."),
     };
 
   public static bool TryParse(string? themeName, out ThemeId themeId)

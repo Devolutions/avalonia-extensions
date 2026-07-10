@@ -434,7 +434,8 @@ public partial class MainWindow : Window
       startupPageTitle = configuredTitle;
     }
 
-    if (string.IsNullOrWhiteSpace(startupPageTitle))
+    if (string.IsNullOrWhiteSpace(startupPageTitle) ||
+        string.Equals(startupPageTitle.Trim(), "Default", StringComparison.OrdinalIgnoreCase))
     {
       return;
     }
@@ -479,7 +480,13 @@ public partial class MainWindow : Window
       if (root.Children.Count == 1 && root.Children[0].Page != null &&
           string.Equals(root.Title, root.Children[0].Title, StringComparison.OrdinalIgnoreCase))
       {
-        flattenedRoots.Add(root.Children[0]);
+        NavigationNode child = root.Children[0];
+        flattenedRoots.Add(new NavigationNode(
+          title: child.Title,
+          header: child.Header,
+          page: child.Page,
+          depth: 0,
+          isExpanded: child.IsExpanded));
       }
       else
       {

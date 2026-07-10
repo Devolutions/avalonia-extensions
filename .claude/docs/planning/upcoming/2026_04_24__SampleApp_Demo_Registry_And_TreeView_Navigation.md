@@ -135,6 +135,13 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (12/12)
                     - `dotnet test --nologo` ✅ (138/138)
+                - 2026-07-10: Made `category` optional in page catalog entries.
+                  - Updated file model + parser to treat omitted/empty `category` as an empty category path.
+                  - Updated validation wording to enforce only valid non-empty segments when a category path is present (empty path is now intentional/valid).
+                  - Added coverage for omitted category parsing and empty category-path validation behavior.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (14/14)
+                    - `dotnet test --nologo` ✅ (140/140)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

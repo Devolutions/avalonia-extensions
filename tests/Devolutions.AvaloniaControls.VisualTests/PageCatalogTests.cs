@@ -94,6 +94,48 @@ public class PageCatalogTests
   }
 
   [Fact]
+  public void PageCatalog_CreateControls_AllowsOmittedCategory()
+  {
+    PageCatalogFile catalog = new()
+    {
+      TopLevelOrder = ["Control Demos"],
+      Pages = new Dictionary<string, List<PageCatalogFileEntry>>
+      {
+        ["Control Demos"] =
+        [
+          new PageCatalogFileEntry
+          {
+            UniqueTitle = "No Category Demo",
+            Source = nameof(ControlSource.AvaloniaPro),
+            Demo = "DoesNotExistDemo",
+          },
+        ],
+      },
+    };
+
+    MethodInfo method = typeof(PageRegistry).GetMethod("CreateControls", BindingFlags.NonPublic | BindingFlags.Static)!;
+    IReadOnlyList<PageCatalogEntry> entries = (IReadOnlyList<PageCatalogEntry>)method.Invoke(null, [catalog])!;
+    PageCatalogEntry entry = Assert.Single(entries);
+    Assert.Empty(entry.CategoryPath);
+  }
+
+  [Fact]
+  public void PageCatalogValidation_AllowsEmptyCategoryPath()
+  {
+    var entry = new PageCatalogEntry(
+      key: "NoCategoryDemo",
+      section: "Control Demos",
+      title: "No Category",
+      pageType: typeof(UserControl),
+      source: ControlSource.Avalonia,
+      categoryPath: [],
+      statusByTheme: CreateValidStatuses());
+
+    IReadOnlyList<string> errors = PageCatalogEntry.Validate([entry]);
+    Assert.DoesNotContain(errors, error => error.Contains("category", StringComparison.OrdinalIgnoreCase));
+  }
+
+  [Fact]
   public void PageCatalogValidation_RequiresAllThemeStatuses()
   {
     var entry = new PageCatalogEntry(

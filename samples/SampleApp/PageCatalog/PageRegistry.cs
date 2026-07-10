@@ -209,8 +209,13 @@ public static class PageRegistry
     throw new InvalidOperationException($"Unknown control source '{source}'.");
   }
 
-  private static IReadOnlyList<string> ParseCategoryPath(string category)
+  private static IReadOnlyList<string> ParseCategoryPath(string? category)
   {
+    if (string.IsNullOrWhiteSpace(category))
+    {
+      return [];
+    }
+
     string[] parts = category.Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     return parts.Length == 0 ? [] : parts;
   }

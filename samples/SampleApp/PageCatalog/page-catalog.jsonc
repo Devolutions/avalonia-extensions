@@ -33,7 +33,6 @@
     "Overview": [
       {
         "uniqueTitle": "Overview",
-        "category": "Overview",
         "demo": "Overview.axaml"
       }
     ],
@@ -427,7 +426,6 @@
     "Controls in Context": [
       {
         "uniqueTitle": "Control Alignment",
-        "category": "Alignment",
         "demo": "ControlAlignment.axaml",
         "status": {
           "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "⚠️", "WinUI": "❌"
@@ -437,32 +435,26 @@
     "Experiments": [
       {
         "uniqueTitle": "ActiPro Controls",
-        "category": "Experiments",
         "demo": "ActiProDemo.axaml"
       },
       {
         "uniqueTitle": "System Colours",
-        "category": "Experiments",
         "demo": "SystemColoursDemo.axaml"
       },
       {
         "uniqueTitle": "Toggle Buttons",
-        "category": "Experiments",
         "demo": "ToggleButtonExperiments.axaml"
       },
       {
         "uniqueTitle": "Search Highlights",
-        "category": "Experiments",
         "demo": "SearchHighlights.axaml"
       },
       {
         "uniqueTitle": "Animated Icon",
-        "category": "Experiments",
         "demo": "AnimatedIcon.axaml"
       },
       {
         "uniqueTitle": "LG Wallpaper Tint",
-        "category": "Experiments",
         "demo": "LiquidGlassWallpaperTintDemo.axaml",
         "status": {
           "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"

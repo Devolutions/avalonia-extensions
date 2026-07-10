@@ -106,9 +106,9 @@ public sealed class PageCatalogEntry
 
     foreach (PageCatalogEntry control in controls)
     {
-      if (control.CategoryPath.Any(string.IsNullOrWhiteSpace))
+      if (control.CategoryPath.Count > 0 && control.CategoryPath.Any(string.IsNullOrWhiteSpace))
       {
-        errors.Add($"'{control.Key}' must define a non-empty category path.");
+        errors.Add($"'{control.Key}' has an invalid category path segment.");
       }
 
       foreach (ThemeId themeId in ThemeIds.All)

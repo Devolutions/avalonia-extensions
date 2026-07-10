@@ -539,15 +539,8 @@ public partial class MainWindow : Window
       return;
     }
 
-    if (selectedNode.Page == null && selectedNode.Children.Count > 0)
+    if (selectedNode.Page == null)
     {
-      NavigationNode? firstPage = selectedNode.Flatten().FirstOrDefault(static node => node.Page != null);
-      if (firstPage != null)
-      {
-        ExpandAncestorSections(firstPage);
-        treeView.SelectedItem = firstPage;
-      }
-
       return;
     }
 

@@ -11,7 +11,11 @@ using SampleApp.Controls;
 internal static class MainWindowNavigationBuilder
 {
   public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
-    CreateHeader(control, control.GetStatusSymbol(App.EffectiveCurrentThemeName));
+    CreateHeader(
+      control,
+      string.IsNullOrWhiteSpace(App.EffectiveCurrentThemeName)
+        ? string.Empty
+        : control.GetStatusSymbol(App.EffectiveCurrentThemeName));
 
   private static SampleItemHeader CreateHeader(PageCatalogEntry control, string statusSymbol)
   {

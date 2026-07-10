@@ -100,6 +100,14 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (9/9)
                     - `dotnet test --nologo` ✅ (135/135)
+                - 2026-07-10: Addressed latest PR #580 reviewer feedback wave.
+                  - Session-start upstream check: `origin/master` had 0 commits ahead of this branch (no rebase needed today).
+                  - Cached rendered page content per catalog entry in `MainWindow` so navigation preserves interactive page state when switching away and back.
+                  - Added direct symbol-semantics test coverage for `PageRegistry.IsNotSupportedSymbol` (`""`, `❌`, `✅`, `🚧`) to guard test-exclusion behavior independently of discovery assertions.
+                  - Added navigation test coverage that re-selecting a page reuses the same content instance (state-preserving behavior).
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (10/10)
+                    - `dotnet test --nologo` ✅ (136/136)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

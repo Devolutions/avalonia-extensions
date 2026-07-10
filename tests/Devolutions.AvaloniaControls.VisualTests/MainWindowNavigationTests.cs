@@ -53,6 +53,18 @@ public class MainWindowNavigationTests
       }
     }
 
+    PageCatalogEntry cachedPage = PageRegistry.ControlDemos.First(page => page.Source != ControlSource.AvaloniaPro);
+    PageCatalogEntry otherPage = PageRegistry.ControlDemos.First(page =>
+      page.Source != ControlSource.AvaloniaPro &&
+      !string.Equals(page.Key, cachedPage.Key, StringComparison.OrdinalIgnoreCase));
+
+    Assert.True(window.TrySelectPageByTitle(cachedPage.Title));
+    object? firstInstance = contentHost.Content;
+    Assert.NotNull(firstInstance);
+    Assert.True(window.TrySelectPageByTitle(otherPage.Title));
+    Assert.True(window.TrySelectPageByTitle(cachedPage.Title));
+    Assert.Same(firstInstance, contentHost.Content);
+
     var sectionGroup = PageRegistry.All
       .GroupBy(page => page.Section)
       .First(group =>

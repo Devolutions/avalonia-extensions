@@ -55,6 +55,15 @@ public class PageCatalogTests
   }
 
   [Fact]
+  public void PageCatalog_IsNotSupportedSymbol_UsesSymbolSemantics()
+  {
+    Assert.True(PageRegistry.IsNotSupportedSymbol(string.Empty));
+    Assert.True(PageRegistry.IsNotSupportedSymbol("❌"));
+    Assert.False(PageRegistry.IsNotSupportedSymbol("✅"));
+    Assert.False(PageRegistry.IsNotSupportedSymbol("🚧"));
+  }
+
+  [Fact]
   public void PageCatalogValidation_RequiresAllThemeStatuses()
   {
     var entry = new PageCatalogEntry(

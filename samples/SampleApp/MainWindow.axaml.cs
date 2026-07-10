@@ -21,6 +21,7 @@ public partial class MainWindow : Window
   private readonly IBrush tieDyeBrush;
   private MainWindowViewModel? currentViewModel;
   private IReadOnlyList<NavigationNode> navigationNodes = [];
+  private readonly Dictionary<string, Control> pageContentCache = new(StringComparer.OrdinalIgnoreCase);
   private string? pendingStartupPageTitle;
   private string? lastDisplayedPageTitle;
   private bool suppressThemeChangeEvents;
@@ -561,7 +562,13 @@ public partial class MainWindow : Window
       throw new InvalidOperationException("Main page host was not found.");
     }
 
-    pageHost.Content = MainWindowNavigationBuilder.CreateContent(selectedNode.Page);
+    if (!this.pageContentCache.TryGetValue(selectedNode.Page.Key, out Control? pageContent))
+    {
+      pageContent = MainWindowNavigationBuilder.CreateContent(selectedNode.Page);
+      this.pageContentCache[selectedNode.Page.Key] = pageContent;
+    }
+
+    pageHost.Content = pageContent;
     this.lastDisplayedPageTitle = selectedNode.Title;
   }
 

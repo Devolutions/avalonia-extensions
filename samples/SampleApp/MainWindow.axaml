@@ -13,7 +13,6 @@
         x:DataType="vm:MainWindowViewModel"
         Title="Devolutions Theme Sampler">
 
-  <!-- TODO: move the margins into the theme ?? -->
   <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <!-- Canvas wrapper sized for the scaled content so ScrollViewer knows bounds -->
     <Canvas Name="ScaledWrapper">
@@ -22,17 +21,23 @@
         <Panel>
           <Panel Name="PreviewWallpaper" IsVisible="{Binding Source={x:Static sampleApp:App.IsWallpaperPreviewTheme}, Mode=OneTime}" />
           <Panel Name="MainContentPanel" Classes="mainControl">
-            <Grid ColumnDefinitions="280,*" ColumnSpacing="8">
-              <TreeView x:Name="MainNavigationTree"
-                        Grid.Column="0"
-                        Margin="8"
-                        SelectionChanged="NavigationTree_OnSelectionChanged">
-                <TreeView.ItemTemplate>
-                  <TreeDataTemplate ItemsSource="{ReflectionBinding Children}">
-                    <ContentPresenter Content="{ReflectionBinding Header}" />
-                  </TreeDataTemplate>
-                </TreeView.ItemTemplate>
-              </TreeView>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <Border Grid.Column="0" Margin="8 8 0 8" BorderBrush="Gray" BorderThickness="0,0,1,0">
+                <TreeView x:Name="MainNavigationTree"
+                          Margin="0 0 8 0"
+                          SelectionChanged="NavigationTree_OnSelectionChanged">
+                  <TreeView.Styles>
+                    <Style Selector="TreeViewItem">
+                      <Setter Property="IsExpanded" Value="{ReflectionBinding IsExpanded}" />
+                    </Style>
+                  </TreeView.Styles>
+                  <TreeView.ItemTemplate>
+                    <TreeDataTemplate ItemsSource="{ReflectionBinding Children}">
+                      <ContentPresenter Content="{ReflectionBinding Header}" />
+                    </TreeDataTemplate>
+                  </TreeView.ItemTemplate>
+                </TreeView>
+              </Border>
 
               <Border Grid.Column="1" Margin="0 8 8 8">
                 <ContentControl x:Name="MainPageHost" />

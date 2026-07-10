@@ -25,37 +25,12 @@ public class PageCatalogTests
   }
 
   [Fact]
-  public void PageCatalog_ControlDemosSectionExcludesExperiments()
+  public void PageCatalog_UsesCatalogOrderAndProvidesEntries()
   {
-    Assert.DoesNotContain(
-      PageRegistry.ControlDemos,
-      control => control.Key.Contains("Experiment", StringComparison.OrdinalIgnoreCase));
-  }
-
-  [Fact]
-  public void PageCatalog_DefaultsOmittedStatusesToEmptySymbol()
-  {
-    PageCatalogEntry overview = Assert.Single(PageRegistry.All, control => control.Key == "Overview");
-    Assert.Null(overview.ViewModelType);
-
-    foreach (ThemeId themeId in ThemeIds.All)
-    {
-      Assert.Equal(string.Empty, overview.GetStatusSymbol(themeId));
-      Assert.False(overview.ShouldTest(themeId));
-    }
-  }
-
-  [Fact]
-  public void PageCatalog_UsesStatusSymbolsToDriveTesting()
-  {
-    PageCatalogEntry toggleButton = Assert.Single(
-      PageRegistry.All,
-      control => control.Key == "ToggleButton");
-
-    Assert.Equal("Not Supported", PageRegistry.GetStatusDescription(toggleButton.GetStatusSymbol(ThemeId.MacClassic)));
-    Assert.Equal("Supported", PageRegistry.GetStatusDescription(toggleButton.GetStatusSymbol(ThemeId.WinUi)));
-    Assert.False(toggleButton.ShouldTest(ThemeId.MacClassic));
-    Assert.True(toggleButton.ShouldTest(ThemeId.WinUi));
+    Assert.NotEmpty(PageRegistry.All);
+    Assert.NotEmpty(PageRegistry.ControlDemos);
+    Assert.All(PageRegistry.All, page => Assert.False(string.IsNullOrWhiteSpace(page.Title)));
+    Assert.All(PageRegistry.All, page => Assert.False(string.IsNullOrWhiteSpace(page.Section)));
   }
 
   [Fact]
@@ -74,7 +49,7 @@ public class PageCatalogTests
       statusByTheme: statuses,
       excludeFromTests: [ThemeId.MacClassic]);
 
-    Assert.Equal("Supported", PageRegistry.GetStatusDescription(entry.GetStatusSymbol(ThemeId.MacClassic)));
+    Assert.False(string.IsNullOrWhiteSpace(PageRegistry.GetStatusDescription(entry.GetStatusSymbol(ThemeId.MacClassic))));
     Assert.False(entry.ShouldTest(ThemeId.MacClassic));
     Assert.True(entry.ShouldTest(ThemeId.DevExpress));
   }

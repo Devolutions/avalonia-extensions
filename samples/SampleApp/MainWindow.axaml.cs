@@ -11,7 +11,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
-using SampleApp.Controls;
 using SampleApp.PageCatalog;
 using ViewModels;
 
@@ -387,6 +386,7 @@ public partial class MainWindow : Window
       return false;
     }
 
+    ExpandAncestorSections(targetNode);
     treeView.SelectedItem = targetNode;
     this.ShowPage(targetNode);
     return true;
@@ -404,6 +404,7 @@ public partial class MainWindow : Window
     }
 
     treeView.ItemsSource = this.navigationNodes;
+    treeView.Width = CalculateNavigationWidth(this.navigationNodes);
 
     NavigationNode? initialNode = this.navigationNodes.FirstOrDefault(static node => node.Page != null)
                               ?? this.navigationNodes.SelectMany(static node => node.Children).FirstOrDefault(static node => node.Page != null);
@@ -444,16 +445,26 @@ public partial class MainWindow : Window
     {
       if (!sectionLookup.TryGetValue(page.Section, out NavigationNode? sectionNode))
       {
-        sectionNode = new NavigationNode(page.Section, new TextBlock { Text = page.Section, FontWeight = FontWeight.SemiBold }, page: null);
+        bool expandByDefault = string.Equals(page.Section, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase);
+        sectionNode = new NavigationNode(
+          title: page.Section,
+          header: new TextBlock { Text = page.Section, FontWeight = FontWeight.SemiBold },
+          page: null,
+          depth: 0,
+          isExpanded: expandByDefault);
         sectionLookup.Add(page.Section, sectionNode);
         roots.Add(sectionNode);
       }
 
-      object pageHeader = string.Equals(page.Section, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase)
-        ? CreateHeader(page)
-        : new TextBlock { Text = page.Title };
+      object pageHeader = MainWindowNavigationBuilder.CreateHeader(page);
 
-      sectionNode.Children.Add(new NavigationNode(page.Title, pageHeader, page));
+      sectionNode.Children.Add(new NavigationNode(
+        title: page.Title,
+        header: pageHeader,
+        page: page,
+        depth: sectionNode.Depth + 1,
+        isExpanded: false,
+        parent: sectionNode));
     }
 
     var flattenedRoots = new List<NavigationNode>();
@@ -473,6 +484,17 @@ public partial class MainWindow : Window
     return flattenedRoots;
   }
 
+  private static double CalculateNavigationWidth(IEnumerable<NavigationNode> roots)
+  {
+    int maxTitleScore = roots
+      .SelectMany(static root => root.Flatten())
+      .Select(static node => node.Title.Length + (node.Depth * 2))
+      .DefaultIfEmpty(20)
+      .Max();
+
+    return Math.Clamp(maxTitleScore * 11, 280, 700);
+  }
+
   private static NavigationNode? FindMatchingPageNode(IEnumerable<NavigationNode> nodes, string targetTitle)
   {
     string normalizedTarget = targetTitle.Trim();
@@ -485,6 +507,16 @@ public partial class MainWindow : Window
     return pageNodes.FirstOrDefault(node => string.Equals(node.Title, normalizedTarget, StringComparison.OrdinalIgnoreCase)) ??
            pageNodes.FirstOrDefault(node => node.Title.Contains(normalizedTarget, StringComparison.OrdinalIgnoreCase)) ??
            pageNodes.FirstOrDefault(node => normalizedTarget.Contains(node.Title, StringComparison.OrdinalIgnoreCase));
+  }
+
+  private static void ExpandAncestorSections(NavigationNode targetNode)
+  {
+    NavigationNode? current = targetNode.Parent;
+    while (current != null)
+    {
+      current.IsExpanded = true;
+      current = current.Parent;
+    }
   }
 
   private void NavigationTree_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -522,23 +554,27 @@ public partial class MainWindow : Window
       throw new InvalidOperationException("Main page host was not found.");
     }
 
-    pageHost.Content = MainWindowTabBuilder.CreateContent(selectedNode.Page);
+    pageHost.Content = MainWindowNavigationBuilder.CreateContent(selectedNode.Page);
   }
 
-  private static SampleItemHeader CreateHeader(PageCatalogEntry page) =>
-    new()
-    {
-      Title = page.Title,
-      ApplicableTo = page.ApplicableToCsv,
-    };
-
-  private sealed class NavigationNode
+  private sealed class NavigationNode : INotifyPropertyChanged
   {
-    public NavigationNode(string title, object header, PageCatalogEntry? page)
+    private bool isExpanded;
+
+    public NavigationNode(
+      string title,
+      object header,
+      PageCatalogEntry? page,
+      int depth,
+      bool isExpanded,
+      NavigationNode? parent = null)
     {
       this.Title = title;
       this.Header = header;
       this.Page = page;
+      this.Depth = depth;
+      this.Parent = parent;
+      this.isExpanded = isExpanded;
     }
 
     public string Title { get; }
@@ -547,7 +583,28 @@ public partial class MainWindow : Window
 
     public PageCatalogEntry? Page { get; }
 
+    public int Depth { get; }
+
+    public NavigationNode? Parent { get; }
+
+    public bool IsExpanded
+    {
+      get => this.isExpanded;
+      set
+      {
+        if (this.isExpanded == value)
+        {
+          return;
+        }
+
+        this.isExpanded = value;
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsExpanded)));
+      }
+    }
+
     public List<NavigationNode> Children { get; } = [];
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public IEnumerable<NavigationNode> Flatten()
     {

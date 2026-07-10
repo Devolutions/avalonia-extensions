@@ -6,9 +6,11 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Controls.SampleItemHeader">
 
-  <StackPanel Orientation="Horizontal" Spacing="10">
-    <!-- Non-retina displays will click the status indicator icon if not set to ClipToBounds="False" -->
-    <TextBlock Text="{Binding $parent[controls:SampleItemHeader].Status}" ClipToBounds="False" />
+  <StackPanel Orientation="Horizontal" Spacing="0">
+    <TextBlock Text="{Binding $parent[controls:SampleItemHeader].StatusSymbol}"
+               ClipToBounds="False"
+               IsVisible="{Binding $parent[controls:SampleItemHeader].HasStatusSymbol}"
+               Margin="0,0,10,0" />
     <TextBlock Text="{Binding $parent[controls:SampleItemHeader].Title}" />
   </StackPanel>
 </UserControl>

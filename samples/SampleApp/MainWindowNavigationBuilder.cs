@@ -1,34 +1,19 @@
 namespace SampleApp;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using SampleApp.PageCatalog;
 using SampleApp.Controls;
 
-internal static class MainWindowTabBuilder
+internal static class MainWindowNavigationBuilder
 {
-  public static IReadOnlyList<TabItem> BuildControlTabs()
-  {
-    PageRegistry.EnsureValid();
-    return [.. PageRegistry.ControlDemos.Select(CreateControlTab)];
-  }
-
-  private static TabItem CreateControlTab(PageCatalogEntry control) =>
-    new()
-    {
-      Header = CreateHeader(control),
-      Content = CreateContent(control),
-    };
-
   public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
     new()
     {
       Title = control.Title,
-      ApplicableTo = control.ApplicableToCsv,
+      StatusSymbol = control.GetStatusSymbol(App.EffectiveCurrentThemeName),
     };
 
   public static Control CreateContent(PageCatalogEntry control)

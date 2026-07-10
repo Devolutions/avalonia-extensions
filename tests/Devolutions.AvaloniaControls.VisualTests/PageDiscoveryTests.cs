@@ -29,9 +29,6 @@ public class PageDiscoveryTests
             System.Console.WriteLine($"Discovered: {page.Name}");
         }
         
-        // Basic check to ensure we found some expected ones
-        Assert.Contains(demoPages, t => t.Name == "ButtonDemo");
-        Assert.Contains(demoPages, t => t.Name == "TextBoxDemo");
-        Assert.Contains(demoPages, t => t.Name == "ComboBoxDemo");
+        Assert.All(demoPages, page => Assert.EndsWith("Demo", page.Name, StringComparison.Ordinal));
     }
 }

@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -9,17 +10,18 @@ using SampleApp;
 using SampleApp.PageCatalog;
 using SampleApp.ViewModels;
 
-public class MainWindowTabsTests
+public class MainWindowNavigationTests
 {
   [AvaloniaFact]
   public void MainWindow_BuildsNavigationTreeFromRegistry()
   {
     Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
     App.SetTheme(new MacOsClassicTheme());
+    string startupPageTitle = PageRegistry.All.First().Title;
 
     MainWindowViewModel viewModel = new()
     {
-      StartupTabTitle = "ComboBox",
+      StartupTabTitle = startupPageTitle,
     };
 
     MainWindow window = new()
@@ -29,7 +31,7 @@ public class MainWindowTabsTests
     window.Show();
     Dispatcher.UIThread.RunJobs();
 
-    Assert.Equal("ComboBox", window.GetSelectedPageTitle());
+    Assert.Equal(startupPageTitle, window.GetSelectedPageTitle());
     ContentControl contentHost = window.FindControl<ContentControl>("MainPageHost")!;
     Assert.NotNull(contentHost.Content);
 

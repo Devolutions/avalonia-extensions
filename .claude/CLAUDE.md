@@ -117,7 +117,7 @@ The SampleApp provides:
   - F12 opens Avalonia Accelerate Dev Tools
 
 ### Runtime Tab Convention (SampleApp)
-- Control demo tabs are generated at runtime from `samples/SampleApp/PageCatalog/page-catalog.jsonc` via `MainWindowTabBuilder` and `PageRegistry`.
+- Control demo tabs are generated at runtime from `samples/SampleApp/PageCatalog/page-catalog.jsonc` via `MainWindowNavigationBuilder` and `PageRegistry`.
 - `samples/SampleApp/MainWindow.axaml` intentionally keeps only non-control top-level tabs explicit (`Overview`, `Control Alignment`, `Experiments`).
 - To add/update a control tab, edit catalog metadata first (title, source, category, per-theme status, optional view model), then ensure the corresponding page/viewmodel types exist.
 - `/worksetup` can still adjust local theme/tab/scale development state, but those local defaults should not be committed (follow `.claude/commands/commit.md`).
@@ -130,7 +130,7 @@ to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is w
 ### Testing
 Automated tests are available and should be used:
 - `dotnet test` runs the repository test suite, including visual regression tests.
-- Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `PageCatalogTests`, `VisualRegressionTests`, and `MainWindowTabsTests`).
+- Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `PageCatalogTests`, `VisualRegressionTests`, and `MainWindowNavigationTests`).
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 

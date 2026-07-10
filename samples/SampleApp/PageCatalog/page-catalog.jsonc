@@ -19,7 +19,7 @@
   // To override this, use "excludeFromTests" to explicitly exclude a control from tests in a specific theme:
   //
   //   "excludeFromTests": {
-  //     "Linux": true,
+  //     "Linux": true
   //   }
   //
   "topLevelOrder": [
@@ -131,7 +131,7 @@
       "demo": "DataGridDemo.axaml",
       "viewModel": "DataGridViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "✅"
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "🚧"
       }
     },
     {
@@ -235,7 +235,7 @@
       "category": "Selectors",
       "demo": "ListBoxDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "✅"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "🚧"
       }
     },
     {
@@ -383,7 +383,7 @@
       "category": "Buttons",
       "demo": "ToggleButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "✅"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "🚧"
       }
     },
     {
@@ -429,7 +429,10 @@
         "uniqueTitle": "Control Alignment",
         "source": "Devolutions",
         "category": "Alignment",
-        "demo": "ControlAlignment.axaml"
+        "demo": "ControlAlignment.axaml",
+        "status": {
+          "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "⚠️", "WinUI": "❌"
+        }
       }
     ],
     "Experiments": [
@@ -467,7 +470,13 @@
         "uniqueTitle": "LG Wallpaper Tint",
         "source": "Devolutions",
         "category": "Experiments",
-        "demo": "LiquidGlassWallpaperTintDemo.axaml"
+        "demo": "LiquidGlassWallpaperTintDemo.axaml",
+        "status": {
+          "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+        },
+        "excludeFromTests": {
+          "LiquidGlass": true
+        }
       }
     ]
   }

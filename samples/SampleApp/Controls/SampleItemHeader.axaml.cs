@@ -1,20 +1,16 @@
 namespace SampleApp.Controls;
 
-using System;
 using System.ComponentModel;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using SampleApp.PageCatalog;
 
 public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
 {
   public static readonly StyledProperty<string?> TitleProperty =
     AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(Title));
 
-  public static readonly StyledProperty<string> ApplicableToProperty =
-    AvaloniaProperty.Register<SampleItemHeader, string>(nameof(ApplicableTo), "");
-
+  public static readonly StyledProperty<string?> StatusSymbolProperty =
+    AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(StatusSymbol), string.Empty);
 
   public SampleItemHeader()
   {
@@ -27,37 +23,23 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     set => this.SetValue(TitleProperty, value);
   }
 
-  public string ApplicableTo
+  public string? StatusSymbol
   {
-    get => this.GetValue(ApplicableToProperty);
-    set => this.SetValue(ApplicableToProperty, value);
+    get => this.GetValue(StatusSymbolProperty);
+    set => this.SetValue(StatusSymbolProperty, value);
   }
 
-
-  private bool IsApplicable
-  {
-    get
-    {
-      string[] themeNames = this.ApplicableTo.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-      return themeNames
-        .Select(ThemeIds.Parse)
-        .Any(themeId => string.Equals(themeId.ToThemeName(), App.EffectiveCurrentThemeName, StringComparison.OrdinalIgnoreCase));
-    }
-  }
-
-  public string? Status =>
-    // Always show green/red icon, even for MacOS Automatic, using resolved theme
-    this.IsApplicable ? "🟢" : "🔴";
+  public bool HasStatusSymbol => !string.IsNullOrWhiteSpace(this.StatusSymbol);
 
   public new event PropertyChangedEventHandler? PropertyChanged;
 
-  private void OnPropertyChanged(string name) =>
-    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-  protected override void OnInitialized()
+  protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
   {
-    base.OnInitialized();
-    this.OnPropertyChanged(nameof(this
-      .Status)); // let Avalonia know to re-evaluate the Status binding (initial rendering only has the StyledProperty values available) 
+    base.OnPropertyChanged(change);
+
+    if (change.Property == StatusSymbolProperty)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HasStatusSymbol)));
+    }
   }
 }

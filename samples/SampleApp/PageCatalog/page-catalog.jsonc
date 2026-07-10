@@ -10,8 +10,8 @@
   },
   "statusSymbols": {
     "": "No status",
-    "✅": "Supported",
-    "❌": "Not Supported",
+    "✅": "Styled",
+    "❌": "Not styled (yet) / not supported",
     "🚧": "In Progress",
     "⚠️": "Needs some work / updates"
   },
@@ -32,7 +32,7 @@
     "Overview": [
       {
         "uniqueTitle": "Overview",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Overview",
         "demo": "Overview.axaml"
       }
@@ -331,7 +331,7 @@
     },
     {
       "uniqueTitle": "TabControl / TabPane / NavBar",
-      "source": "Devolutions",
+      "source": "Avalonia",
       "category": "Navigation",
       "demo": "TabControlDemo.axaml",
       "viewModel": "TabControlViewModel",
@@ -427,7 +427,7 @@
     "Controls in Context": [
       {
         "uniqueTitle": "Control Alignment",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Alignment",
         "demo": "ControlAlignment.axaml",
         "status": {
@@ -438,37 +438,37 @@
     "Experiments": [
       {
         "uniqueTitle": "ActiPro Controls",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "ActiProDemo.axaml"
       },
       {
         "uniqueTitle": "System Colours",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "SystemColoursDemo.axaml"
       },
       {
         "uniqueTitle": "Toggle Buttons",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "ToggleButtonExperiments.axaml"
       },
       {
         "uniqueTitle": "Search Highlights",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "SearchHighlights.axaml"
       },
       {
         "uniqueTitle": "Animated Icon",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "AnimatedIcon.axaml"
       },
       {
         "uniqueTitle": "LG Wallpaper Tint",
-        "source": "Devolutions",
+        "source": "SampleApp",
         "category": "Experiments",
         "demo": "LiquidGlassWallpaperTintDemo.axaml",
         "status": {

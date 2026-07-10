@@ -1,8 +1,9 @@
 {
   // SampleApp start-up setting options:
-  //  theme: Default or theme name (MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple)
-  //  selectedPage/selectedTab: Default or any page title (partial match is allowed)
-  //  scale: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%
+  //  - theme: Default or theme name (MacOS, MacOSClassic, MacOSLiquidGlass, DevExpress, Linux, WinUI, WinUiClassic, WinUiMica, Fluent, Simple)
+  //           NOTE: Design Preview still requires uncommenting the right theme in App.xaml
+  //  - selectedPage: Default or any page title (partial match is allowed)
+  //  - scale: Default, 100%, 125%, 150%, 175%, 200%, 225%, 250%, 275%, 300%, 400%
   "sampleAppStartUpSettings": {
     "theme": "Default",
     "selectedPage": "Default",

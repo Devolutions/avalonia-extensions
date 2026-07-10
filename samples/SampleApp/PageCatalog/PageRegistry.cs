@@ -11,7 +11,7 @@ using Avalonia.Controls;
 public static class PageRegistry
 {
   public const string ControlDemosSection = "Control Demos";
-  private const string NotSupportedDescription = "Not Supported";
+  private const string NotSupportedSymbol = "❌";
   private const string CatalogResourceName = "SampleApp.PageCatalog.page-catalog.jsonc";
   private static readonly PageCatalogFile CatalogFile = LoadCatalogFile();
   private static readonly IReadOnlyList<PageCatalogEntry> Controls = CreateControls(CatalogFile);
@@ -53,7 +53,7 @@ public static class PageRegistry
 
   public static bool IsNotSupportedSymbol(string symbol) =>
     string.IsNullOrEmpty(symbol) ||
-    string.Equals(GetStatusDescription(symbol), NotSupportedDescription, StringComparison.OrdinalIgnoreCase);
+    string.Equals(symbol, NotSupportedSymbol, StringComparison.Ordinal);
 
   private static PageCatalogFile LoadCatalogFile()
   {
@@ -213,19 +213,15 @@ public static class PageRegistry
 
   private static IReadOnlyDictionary<ThemeId, string> ParseStatuses(IReadOnlyDictionary<string, string>? statuses)
   {
-    var parsedStatuses = new Dictionary<ThemeId, string>();
-
-    if (statuses != null)
+    if (statuses == null)
     {
-      foreach ((string themeName, string symbol) in statuses)
-      {
-        parsedStatuses[ThemeIds.Parse(themeName)] = symbol;
-      }
+      return ThemeIds.All.ToDictionary(static themeId => themeId, static _ => string.Empty);
     }
 
-    foreach (ThemeId themeId in ThemeIds.All)
+    var parsedStatuses = new Dictionary<ThemeId, string>();
+    foreach ((string themeName, string symbol) in statuses)
     {
-      parsedStatuses.TryAdd(themeId, string.Empty);
+      parsedStatuses[ThemeIds.Parse(themeName)] = symbol;
     }
 
     return parsedStatuses;

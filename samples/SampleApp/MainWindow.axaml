@@ -33,7 +33,7 @@
                   </TreeView.Styles>
                   <TreeView.ItemTemplate>
                     <TreeDataTemplate ItemsSource="{ReflectionBinding Children}">
-                      <ContentPresenter Content="{ReflectionBinding Header}" />
+                      <ContentPresenter Content="{ReflectionBinding Header}" HorizontalAlignment="Stretch" />
                     </TreeDataTemplate>
                   </TreeView.ItemTemplate>
                 </TreeView>

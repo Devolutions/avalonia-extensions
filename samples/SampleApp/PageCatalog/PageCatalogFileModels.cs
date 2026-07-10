@@ -24,7 +24,7 @@ public sealed class PageCatalogFileEntry
   public string UniqueTitle { get; init; } = "";
 
   [JsonPropertyName("source")]
-  public string Source { get; init; } = "";
+  public string? Source { get; init; }
 
   [JsonPropertyName("category")]
   public string Category { get; init; } = "";

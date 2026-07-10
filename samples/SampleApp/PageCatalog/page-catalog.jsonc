@@ -32,7 +32,6 @@
     "Overview": [
       {
         "uniqueTitle": "Overview",
-        "source": "SampleApp",
         "category": "Overview",
         "demo": "Overview.axaml"
       }
@@ -405,7 +404,7 @@
       }
     },
     {
-      "uniqueTitle": "TreeDataGrid (Avalonia Pro)",
+      "uniqueTitle": "TreeDataGrid",
       "source": "AvaloniaPro",
       "category": "Data",
       "demo": "TreeDataGridDemo.axaml",
@@ -427,7 +426,6 @@
     "Controls in Context": [
       {
         "uniqueTitle": "Control Alignment",
-        "source": "SampleApp",
         "category": "Alignment",
         "demo": "ControlAlignment.axaml",
         "status": {
@@ -438,37 +436,31 @@
     "Experiments": [
       {
         "uniqueTitle": "ActiPro Controls",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "ActiProDemo.axaml"
       },
       {
         "uniqueTitle": "System Colours",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "SystemColoursDemo.axaml"
       },
       {
         "uniqueTitle": "Toggle Buttons",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "ToggleButtonExperiments.axaml"
       },
       {
         "uniqueTitle": "Search Highlights",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "SearchHighlights.axaml"
       },
       {
         "uniqueTitle": "Animated Icon",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "AnimatedIcon.axaml"
       },
       {
         "uniqueTitle": "LG Wallpaper Tint",
-        "source": "SampleApp",
         "category": "Experiments",
         "demo": "LiquidGlassWallpaperTintDemo.axaml",
         "status": {

@@ -3,6 +3,7 @@ namespace SampleApp.Controls;
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 
 public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
 {
@@ -14,6 +15,12 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
 
   public static readonly StyledProperty<string?> StatusTooltipProperty =
     AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(StatusTooltip));
+
+  public static readonly StyledProperty<string?> SourceBadgeTextProperty =
+    AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(SourceBadgeText));
+
+  public static readonly StyledProperty<IBrush?> SourceBadgeBackgroundProperty =
+    AvaloniaProperty.Register<SampleItemHeader, IBrush?>(nameof(SourceBadgeBackground));
 
   public SampleItemHeader()
   {
@@ -40,6 +47,20 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     set => this.SetValue(StatusTooltipProperty, value);
   }
 
+  public string? SourceBadgeText
+  {
+    get => this.GetValue(SourceBadgeTextProperty);
+    set => this.SetValue(SourceBadgeTextProperty, value);
+  }
+
+  public IBrush? SourceBadgeBackground
+  {
+    get => this.GetValue(SourceBadgeBackgroundProperty);
+    set => this.SetValue(SourceBadgeBackgroundProperty, value);
+  }
+
+  public bool HasSourceBadge => !string.IsNullOrWhiteSpace(this.SourceBadgeText);
+
   public new event PropertyChangedEventHandler? PropertyChanged;
 
   protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -49,6 +70,11 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     if (change.Property == StatusSymbolProperty)
     {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HasStatusSymbol)));
+    }
+
+    if (change.Property == SourceBadgeTextProperty)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HasSourceBadge)));
     }
   }
 }

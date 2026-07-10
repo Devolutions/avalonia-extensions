@@ -4,6 +4,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 using SampleApp.PageCatalog;
 using SampleApp.Controls;
 
@@ -18,13 +19,25 @@ internal static class MainWindowNavigationBuilder
       ? null
       : PageRegistry.GetStatusDescription(statusSymbol);
 
+    (string? badgeText, IBrush? badgeBackground) = GetSourceBadge(control.Source);
+
     return new SampleItemHeader
     {
       Title = control.Title,
       StatusSymbol = statusSymbol,
       StatusTooltip = statusTooltip,
+      SourceBadgeText = badgeText,
+      SourceBadgeBackground = badgeBackground,
     };
   }
+
+  private static (string? badgeText, IBrush? badgeBackground) GetSourceBadge(ControlSource? source) =>
+    source switch
+    {
+      ControlSource.AvaloniaPro => ("Pro", new SolidColorBrush(Color.Parse("#7C3AED"))),
+      ControlSource.Devolutions => ("Devo", new SolidColorBrush(Color.Parse("#0068C3"))),
+      _ => (null, null),
+    };
 
   public static Control CreateContent(PageCatalogEntry control)
   {

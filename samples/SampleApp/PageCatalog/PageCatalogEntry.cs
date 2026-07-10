@@ -19,7 +19,7 @@ public sealed class PageCatalogEntry
     string section,
     string title,
     Type pageType,
-    ControlSource source,
+    ControlSource? source,
     IReadOnlyList<string> categoryPath,
     IReadOnlyDictionary<ThemeId, string> statusByTheme,
     IReadOnlyCollection<ThemeId>? excludeFromTests = null,
@@ -55,7 +55,7 @@ public sealed class PageCatalogEntry
 
   public Type? ViewModelType { get; }
 
-  public ControlSource Source { get; }
+  public ControlSource? Source { get; }
 
   public IReadOnlyList<string> CategoryPath { get; }
 

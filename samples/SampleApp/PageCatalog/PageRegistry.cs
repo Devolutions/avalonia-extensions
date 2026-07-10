@@ -140,7 +140,7 @@ public static class PageRegistry
       viewModelType: viewModelType);
   }
 
-  private static Type ResolvePageType(string source, string demoTypeName)
+  private static Type ResolvePageType(string? source, string demoTypeName)
   {
     Type? pageType = Type.GetType($"SampleApp.DemoPages.{demoTypeName}, SampleApp", throwOnError: false)
                      ?? Type.GetType($"SampleApp.Experiments.{demoTypeName}, SampleApp", throwOnError: false);
@@ -157,7 +157,7 @@ public static class PageRegistry
     throw new InvalidOperationException($"Could not resolve demo page type '{demoTypeName}'.");
   }
 
-  private static Type? ResolveViewModelType(string source, string? viewModelName)
+  private static Type? ResolveViewModelType(string? source, string? viewModelName)
   {
     if (string.IsNullOrWhiteSpace(viewModelName))
     {
@@ -185,8 +185,13 @@ public static class PageRegistry
     return Path.GetFileNameWithoutExtension(trimmed);
   }
 
-  private static ControlSource ParseSource(string source)
+  private static ControlSource? ParseSource(string? source)
   {
+    if (string.IsNullOrWhiteSpace(source))
+    {
+      return null;
+    }
+
     if (Enum.TryParse(source, ignoreCase: true, out ControlSource parsedSource))
     {
       return parsedSource;
@@ -194,7 +199,7 @@ public static class PageRegistry
 
     if (string.Equals(source, "SampleApp", StringComparison.OrdinalIgnoreCase))
     {
-      return ControlSource.Devolutions;
+      return null;
     }
 
     throw new InvalidOperationException($"Unknown control source '{source}'.");

@@ -6,7 +6,7 @@ Configure SampleApp startup defaults for development.
 
 Arguments:
 1. **theme** (required): `MacOS`, `MacOSClassic`/`Classic`/`MacClassic`, `MacOSLiquidGlass`/`LiquidGlass`/`Liquid`/`Glass`, `DevExpress`, `Linux`, or `Default`
-2. **tabTitle** (optional, default `Overview`): tab to select at startup (control tab or explicit top-level tab)
+2. **tabTitle** (optional, default `Overview`): page title to select at startup
 3. **scale** (optional, default `Default`): `Default`, `100%`, `125%`, `150%`, `175%`, `200%`, `225%`, `250%`, `275%`, `300%`, `400%`
 4. **projectPlan** (optional): planning doc name/partial name under `.claude/docs/planning`
 
@@ -33,12 +33,8 @@ Arguments:
   The app applies these settings at runtime; do not edit `App.axaml` or `MainWindowViewModel.cs` for normal `/worksetup` usage.
 
   ## 3) Resolve tab title
-Collect candidate tab titles from:
+Collect candidate page titles from:
 - `samples/SampleApp/PageCatalog/page-catalog.jsonc` -> `pages.*[].uniqueTitle`
-- explicit non-control tabs in `samples/SampleApp/MainWindow.axaml`:
-  - `Overview`
-  - `Control Alignment`
-  - `Experiments`
 
 Match rules:
 - case-insensitive
@@ -54,13 +50,13 @@ Match rules:
   ## 5) Error handling
   - Invalid theme: report valid theme options
   - Invalid scale: report valid scale options
-  - No tab match: list available tab titles from catalog + explicit non-control tabs
+  - No tab match: list available page titles from catalog
   - Ambiguous tab match: ask user to be more specific
 
   ## 6) Completion message
   Report:
   - selected theme
-  - selected startup tab
+  - selected startup page
   - selected startup scale (if changed)
   - files edited
 

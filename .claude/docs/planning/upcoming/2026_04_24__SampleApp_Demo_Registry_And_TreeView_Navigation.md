@@ -91,7 +91,15 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                   - Removed brittle tests that depended on specific mutable catalog entries/titles and switched to structural assertions.
                   - Verification:
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (9/9)
-                    - `dotnet test --nologo` ⚠️ fails on missing visual baseline for `[LiquidGlass] LiquidGlassWallpaperTintDemo - Light` (pre-existing baseline gap, not caused by these logic/layout changes).
+                    - `dotnet test --nologo` ✅ (135/135) after excluding the wallpaper tint experiment from visual coverage in the catalog.
+                - 2026-07-09: Addressed PR #580 Copilot review feedback.
+                  - Removed duplicate page-content construction paths by relying on `SelectionChanged` for content updates (no extra `ShowPage` call after programmatic selection).
+                  - Added a targeted navigation assertion that selecting a page in a collapsed non-`Control Demos` section expands its ancestor section.
+                  - Strengthened page-discovery coverage by asserting `VisualRegressionTests.GetDemoPages()` only emits registry-backed, test-eligible demo/theme rows.
+                  - Updated `.claude/CLAUDE.md` and `.claude/commands/worksetup.md` to match the current catalog-driven TreeView navigation model.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (9/9)
+                    - `dotnet test --nologo` ✅ (135/135)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

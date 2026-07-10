@@ -116,10 +116,10 @@ The SampleApp provides:
 - Inspection:
   - F12 opens Avalonia Accelerate Dev Tools
 
-### Runtime Tab Convention (SampleApp)
-- Control demo tabs are generated at runtime from `samples/SampleApp/PageCatalog/page-catalog.jsonc` via `MainWindowNavigationBuilder` and `PageRegistry`.
-- `samples/SampleApp/MainWindow.axaml` intentionally keeps only non-control top-level tabs explicit (`Overview`, `Control Alignment`, `Experiments`).
-- To add/update a control tab, edit catalog metadata first (title, source, category, per-theme status, optional view model), then ensure the corresponding page/viewmodel types exist.
+### Runtime Navigation Convention (SampleApp)
+- SampleApp navigation is generated at runtime from `samples/SampleApp/PageCatalog/page-catalog.jsonc` via `MainWindowNavigationBuilder` and `PageRegistry`.
+- `samples/SampleApp/MainWindow.axaml` hosts the navigation shell (`TreeView` + content host); page entries come from catalog `pages.*[].uniqueTitle`.
+- To add/update a page entry, edit catalog metadata first (section, title, source, category, per-theme status, optional view model), then ensure the corresponding page/viewmodel types exist.
 - `/worksetup` can still adjust local theme/tab/scale development state, but those local defaults should not be committed (follow `.claude/commands/commit.md`).
 
 **Note on Theme Detection:**

@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
+using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -51,6 +52,19 @@ public class MainWindowNavigationTests
         Assert.IsType(page.ViewModelType, content.DataContext);
       }
     }
+
+    var sectionGroup = PageRegistry.All
+      .GroupBy(page => page.Section)
+      .First(group =>
+        !string.Equals(group.Key, PageRegistry.ControlDemosSection, StringComparison.OrdinalIgnoreCase) &&
+        group.Count() > 1);
+
+    string targetSection = sectionGroup.Key;
+    string targetPageTitle = sectionGroup.First().Title;
+    Assert.False(window.IsSectionExpanded(targetSection));
+    Assert.True(window.TrySelectPageByTitle(targetPageTitle));
+    Assert.Equal(targetPageTitle, window.GetSelectedPageTitle());
+    Assert.True(window.IsSectionExpanded(targetSection));
 
     window.Close();
     Dispatcher.UIThread.RunJobs();

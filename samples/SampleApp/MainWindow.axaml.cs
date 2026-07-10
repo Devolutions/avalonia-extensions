@@ -367,6 +367,14 @@ public partial class MainWindow : Window
     return null;
   }
 
+  public bool IsSectionExpanded(string sectionTitle)
+  {
+    NavigationNode? sectionNode = this.navigationNodes.FirstOrDefault(
+      node => node.Page == null && string.Equals(node.Title, sectionTitle, StringComparison.OrdinalIgnoreCase));
+
+    return sectionNode?.IsExpanded ?? false;
+  }
+
   public void SetPendingStartupPageTitle(string? pageTitle)
   {
     this.pendingStartupPageTitle = pageTitle;
@@ -388,7 +396,6 @@ public partial class MainWindow : Window
 
     ExpandAncestorSections(targetNode);
     treeView.SelectedItem = targetNode;
-    this.ShowPage(targetNode);
     return true;
   }
 
@@ -411,7 +418,6 @@ public partial class MainWindow : Window
     if (initialNode != null)
     {
       treeView.SelectedItem = initialNode;
-      this.ShowPage(initialNode);
     }
   }
 
@@ -532,7 +538,6 @@ public partial class MainWindow : Window
       if (firstPage != null)
       {
         treeView.SelectedItem = firstPage;
-        this.ShowPage(firstPage);
       }
 
       return;

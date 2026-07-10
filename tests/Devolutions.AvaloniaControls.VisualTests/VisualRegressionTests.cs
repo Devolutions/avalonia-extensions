@@ -52,33 +52,28 @@ public class VisualRegressionTests
     return "Unknown";
   }
 
-  public static IEnumerable<object?[]> GetDemoPages()
+  public static IEnumerable<object?[]> GetTestPages()
   {
     PageRegistry.EnsureValid();
 
-    foreach (PageCatalogEntry control in PageRegistry.All.OrderBy(control => control.PageType.Name))
+    foreach (PageCatalogEntry page in PageRegistry.All.OrderBy(page => page.PageType.Name))
     {
-      if (!control.PageType.Name.EndsWith("Demo", StringComparison.Ordinal))
-      {
-        continue;
-      }
-
       foreach (ThemeId themeId in SupportedThemes)
       {
-        if (!control.ShouldTest(themeId))
+        if (!page.ShouldTest(themeId))
         {
           continue;
         }
 
-        yield return [control.PageType, themeId.ToThemeName(), control.ViewModelType];
+        yield return [page.PageType, themeId.ToThemeName(), page.ViewModelType];
       }
     }
   }
 
-  // TestPage() is called automatically by the xUnit Test Runner for each entry 
-  //   returned by GetDemoPages() when you run the tests.
+  // TestPage() is called automatically by the xUnit Test Runner for each entry
+  //   returned by GetTestPages() when you run the tests.
   [AvaloniaTheory]
-  [MemberData(nameof(GetDemoPages))]
+  [MemberData(nameof(GetTestPages))]
   public void TestPage(Type pageType, string themeName, Type? viewModelType)
   {
     string pageName = pageType.Name;

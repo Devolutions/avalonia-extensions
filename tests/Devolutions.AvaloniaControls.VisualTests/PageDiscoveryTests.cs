@@ -17,9 +17,9 @@ public class PageDiscoveryTests
   ];
 
   [Fact]
-  public void VisualDiscovery_OnlyReturnsRegistryBackedTestableDemoPages()
+  public void VisualDiscovery_OnlyReturnsRegistryBackedTestablePages()
   {
-    HashSet<string> discoveredCases = VisualRegressionTests.GetDemoPages()
+    HashSet<string> discoveredCases = VisualRegressionTests.GetTestPages()
       .Select(static testCase =>
       {
         Type pageType = Assert.IsAssignableFrom<Type>(testCase[0]);
@@ -30,7 +30,6 @@ public class PageDiscoveryTests
       .ToHashSet(StringComparer.Ordinal);
 
     HashSet<string> expectedCases = PageRegistry.All
-      .Where(static page => page.PageType.Name.EndsWith("Demo", StringComparison.Ordinal))
       .SelectMany(page => VisualDiscoveryThemes
         .Where(page.ShouldTest)
         .Select(themeId => BuildCaseKey(page.PageType, themeId, page.ViewModelType)))
@@ -38,6 +37,15 @@ public class PageDiscoveryTests
 
     Assert.NotEmpty(discoveredCases);
     Assert.Equal(expectedCases, discoveredCases);
+
+    Assert.Contains(
+      discoveredCases,
+      static key => key.Contains("ControlAlignment", StringComparison.Ordinal) &&
+                    key.Contains("|MacClassic|", StringComparison.Ordinal));
+    Assert.Contains(
+      discoveredCases,
+      static key => key.Contains("ToggleButtonExperiments", StringComparison.Ordinal) &&
+                    key.Contains("|LiquidGlass|", StringComparison.Ordinal));
   }
 
   private static string BuildCaseKey(Type pageType, ThemeId themeId, Type? viewModelType) =>

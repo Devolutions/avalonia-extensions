@@ -26,7 +26,7 @@
   "topLevelOrder": [
     "Overview",
     "Control Demos",
-    "Controls in Context",
+    "Control Alignment",
     "Experiments"
   ],
   "pages": {
@@ -423,7 +423,7 @@
       }
     }
     ],
-    "Controls in Context": [
+    "Control Alignment": [
       {
         "uniqueTitle": "Control Alignment",
         "demo": "ControlAlignment.axaml",

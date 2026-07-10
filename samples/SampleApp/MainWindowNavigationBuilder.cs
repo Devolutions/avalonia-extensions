@@ -10,11 +10,21 @@ using SampleApp.Controls;
 internal static class MainWindowNavigationBuilder
 {
   public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
-    new()
+    CreateHeader(control, control.GetStatusSymbol(App.EffectiveCurrentThemeName));
+
+  private static SampleItemHeader CreateHeader(PageCatalogEntry control, string statusSymbol)
+  {
+    string? statusTooltip = string.IsNullOrWhiteSpace(statusSymbol)
+      ? null
+      : PageRegistry.GetStatusDescription(statusSymbol);
+
+    return new SampleItemHeader
     {
       Title = control.Title,
-      StatusSymbol = control.GetStatusSymbol(App.EffectiveCurrentThemeName),
+      StatusSymbol = statusSymbol,
+      StatusTooltip = statusTooltip,
     };
+  }
 
   public static Control CreateContent(PageCatalogEntry control)
   {

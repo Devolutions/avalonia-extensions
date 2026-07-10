@@ -12,6 +12,9 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
   public static readonly StyledProperty<string?> StatusSymbolProperty =
     AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(StatusSymbol), string.Empty);
 
+  public static readonly StyledProperty<string?> StatusTooltipProperty =
+    AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(StatusTooltip));
+
   public SampleItemHeader()
   {
     this.InitializeComponent();
@@ -30,6 +33,12 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
   }
 
   public bool HasStatusSymbol => !string.IsNullOrWhiteSpace(this.StatusSymbol);
+
+  public string? StatusTooltip
+  {
+    get => this.GetValue(StatusTooltipProperty);
+    set => this.SetValue(StatusTooltipProperty, value);
+  }
 
   public new event PropertyChangedEventHandler? PropertyChanged;
 

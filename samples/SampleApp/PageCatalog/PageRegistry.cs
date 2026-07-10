@@ -185,10 +185,20 @@ public static class PageRegistry
     return Path.GetFileNameWithoutExtension(trimmed);
   }
 
-  private static ControlSource ParseSource(string source) =>
-    Enum.TryParse(source, ignoreCase: true, out ControlSource parsedSource)
-      ? parsedSource
-      : throw new InvalidOperationException($"Unknown control source '{source}'.");
+  private static ControlSource ParseSource(string source)
+  {
+    if (Enum.TryParse(source, ignoreCase: true, out ControlSource parsedSource))
+    {
+      return parsedSource;
+    }
+
+    if (string.Equals(source, "SampleApp", StringComparison.OrdinalIgnoreCase))
+    {
+      return ControlSource.Devolutions;
+    }
+
+    throw new InvalidOperationException($"Unknown control source '{source}'.");
+  }
 
   private static IReadOnlyList<string> ParseCategoryPath(string category)
   {

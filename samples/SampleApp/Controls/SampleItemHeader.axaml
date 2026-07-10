@@ -10,6 +10,7 @@
     <TextBlock Text="{Binding $parent[controls:SampleItemHeader].StatusSymbol}"
                ClipToBounds="False"
                IsVisible="{Binding $parent[controls:SampleItemHeader].HasStatusSymbol}"
+               ToolTip.Tip="{Binding $parent[controls:SampleItemHeader].StatusTooltip}"
                Margin="0,0,10,0" />
     <TextBlock Text="{Binding $parent[controls:SampleItemHeader].Title}" />
   </StackPanel>

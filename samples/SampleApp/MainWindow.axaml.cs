@@ -544,6 +544,7 @@ public partial class MainWindow : Window
       NavigationNode? firstPage = selectedNode.Flatten().FirstOrDefault(static node => node.Page != null);
       if (firstPage != null)
       {
+        ExpandAncestorSections(firstPage);
         treeView.SelectedItem = firstPage;
       }
 

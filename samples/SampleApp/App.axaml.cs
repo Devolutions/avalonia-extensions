@@ -127,10 +127,10 @@ public class App : Application
 
     private static void ApplyStartupSettings(MainWindowViewModel viewModel)
     {
-        string startupTabTitle = PageRegistry.StartupSettings.StartupPage.Trim();
-        if (!string.IsNullOrWhiteSpace(startupTabTitle))
+        string startupPageTitle = PageRegistry.StartupSettings.StartupPage.Trim();
+        if (!string.IsNullOrWhiteSpace(startupPageTitle))
         {
-            viewModel.StartupTabTitle = startupTabTitle;
+            viewModel.StartupPageTitle = startupPageTitle;
         }
 
         string startupScale = PageRegistry.StartupSettings.Scale.Trim();

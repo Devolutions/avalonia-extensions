@@ -24,7 +24,7 @@ public class MainWindowNavigationTests
 
     MainWindowViewModel viewModel = new()
     {
-      StartupTabTitle = startupPageTitle,
+      StartupPageTitle = startupPageTitle,
     };
 
     MainWindow window = new()

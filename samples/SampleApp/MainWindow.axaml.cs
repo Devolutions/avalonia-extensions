@@ -430,7 +430,7 @@ public partial class MainWindow : Window
 
     if (string.IsNullOrWhiteSpace(startupPageTitle) &&
         this.DataContext is MainWindowViewModel viewModel &&
-        viewModel.TryConsumeStartupTabTitle(out string configuredTitle) &&
+        viewModel.TryConsumeStartupPageTitle(out string configuredTitle) &&
         !string.IsNullOrWhiteSpace(configuredTitle))
     {
       startupPageTitle = configuredTitle;

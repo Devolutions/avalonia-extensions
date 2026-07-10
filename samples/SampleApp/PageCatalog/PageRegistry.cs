@@ -14,20 +14,20 @@ public static class PageRegistry
   private const string NotSupportedSymbol = "❌";
   private const string CatalogResourceName = "SampleApp.PageCatalog.page-catalog.jsonc";
   private static readonly PageCatalogFile CatalogFile = LoadCatalogFile();
-  private static readonly IReadOnlyList<PageCatalogEntry> Controls = CreateControls(CatalogFile);
-  private static readonly IReadOnlyList<string> ValidationErrors = PageCatalogEntry.Validate(Controls);
-  private static readonly IReadOnlyDictionary<string, IReadOnlyList<PageCatalogEntry>> ControlsBySection =
-    Controls
+  private static readonly IReadOnlyList<PageCatalogEntry> Pages = CreatePages(CatalogFile);
+  private static readonly IReadOnlyList<string> ValidationErrors = PageCatalogEntry.Validate(Pages);
+  private static readonly IReadOnlyDictionary<string, IReadOnlyList<PageCatalogEntry>> PagesBySection =
+    Pages
       .GroupBy(static entry => entry.Section, StringComparer.OrdinalIgnoreCase)
       .ToDictionary(
         static group => group.Key,
         static group => (IReadOnlyList<PageCatalogEntry>)group.ToArray(),
         StringComparer.OrdinalIgnoreCase);
 
-  public static IReadOnlyList<PageCatalogEntry> All => Controls;
+  public static IReadOnlyList<PageCatalogEntry> All => Pages;
 
   public static IReadOnlyList<PageCatalogEntry> ControlDemos =>
-    ControlsBySection.TryGetValue(ControlDemosSection, out IReadOnlyList<PageCatalogEntry>? entries)
+    PagesBySection.TryGetValue(ControlDemosSection, out IReadOnlyList<PageCatalogEntry>? entries)
       ? entries
       : [];
 
@@ -78,10 +78,10 @@ public static class PageRegistry
     return catalogFile ?? throw new InvalidOperationException("Failed to deserialize the page catalog file.");
   }
 
-  private static IReadOnlyList<PageCatalogEntry> CreateControls(PageCatalogFile catalogFile)
+  private static IReadOnlyList<PageCatalogEntry> CreatePages(PageCatalogFile catalogFile)
   {
     IReadOnlyList<string> sectionOrder = GetSectionOrder(catalogFile);
-    var controls = new List<PageCatalogEntry>();
+    var pages = new List<PageCatalogEntry>();
     Dictionary<string, List<PageCatalogFileEntry>> pagesBySection = catalogFile.Pages.ToDictionary(
       static pair => pair.Key,
       static pair => pair.Value,
@@ -94,10 +94,10 @@ public static class PageRegistry
         continue;
       }
 
-      controls.AddRange(entries.Select(entry => CreateControl(section, entry)));
+      pages.AddRange(entries.Select(entry => CreatePageEntry(section, entry)));
     }
 
-    return controls;
+    return pages;
   }
 
   private static IReadOnlyList<string> GetSectionOrder(PageCatalogFile catalogFile)
@@ -126,7 +126,7 @@ public static class PageRegistry
     return ordered;
   }
 
-  private static PageCatalogEntry CreateControl(string section, PageCatalogFileEntry entry)
+  private static PageCatalogEntry CreatePageEntry(string section, PageCatalogFileEntry entry)
   {
     string demoTypeName = NormalizeTypeName(entry.Demo);
     Type pageType = ResolvePageType(entry.Source, demoTypeName);

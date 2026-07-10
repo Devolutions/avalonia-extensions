@@ -150,6 +150,19 @@ This removes the current coupling between test discovery and MainWindow TabItem 
                     - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (15/15)
                     - `dotnet test --nologo` ✅ (141/141)
                     - `dotnet publish samples/SampleApp/SampleApp.csproj -c Release` ⚠️ fails on pre-existing AVLN2000 errors in theme EditableComboBox AXAML (not introduced by this change)
+                - 2026-07-10: Applied terminology cleanup for page-centric navigation.
+                  - Renamed startup selection API in `MainWindowViewModel` and callers:
+                    - `StartupTabTitle` -> `StartupPageTitle`
+                    - `TryConsumeStartupTabTitle` -> `TryConsumeStartupPageTitle`
+                  - Renamed `PageRegistry` internals from control-centric to page-centric naming:
+                    - `Controls` -> `Pages`
+                    - `ControlsBySection` -> `PagesBySection`
+                    - `CreateControls` -> `CreatePages`
+                    - `CreateControl` -> `CreatePageEntry`
+                  - Updated tests/reflection lookups for renamed internals.
+                  - Verification:
+                    - `dotnet test --nologo --filter "FullyQualifiedName~PageCatalogTests|FullyQualifiedName~MainWindowNavigationTests|FullyQualifiedName~PageDiscoveryTests"` ✅ (15/15)
+                    - `dotnet test --nologo` ✅ (141/141)
 
 ## Principles and Key Decisions
 - One metadata source should define demo entries, applicability indicators, and optional ViewModel wiring.

@@ -77,7 +77,7 @@ public class PageCatalogTests
   }
 
   [Fact]
-  public void PageCatalog_CreateControls_HandlesCaseMismatchedSectionKeys()
+  public void PageCatalog_CreatePages_HandlesCaseMismatchedSectionKeys()
   {
     PageCatalogFile catalog = new()
     {
@@ -97,7 +97,7 @@ public class PageCatalogTests
       },
     };
 
-    MethodInfo method = typeof(PageRegistry).GetMethod("CreateControls", BindingFlags.NonPublic | BindingFlags.Static)!;
+    MethodInfo method = typeof(PageRegistry).GetMethod("CreatePages", BindingFlags.NonPublic | BindingFlags.Static)!;
     IReadOnlyList<PageCatalogEntry> entries = (IReadOnlyList<PageCatalogEntry>)method.Invoke(null, [catalog])!;
 
     PageCatalogEntry entry = Assert.Single(entries);
@@ -106,7 +106,7 @@ public class PageCatalogTests
   }
 
   [Fact]
-  public void PageCatalog_CreateControls_AllowsOmittedCategory()
+  public void PageCatalog_CreatePages_AllowsOmittedCategory()
   {
     PageCatalogFile catalog = new()
     {
@@ -125,7 +125,7 @@ public class PageCatalogTests
       },
     };
 
-    MethodInfo method = typeof(PageRegistry).GetMethod("CreateControls", BindingFlags.NonPublic | BindingFlags.Static)!;
+    MethodInfo method = typeof(PageRegistry).GetMethod("CreatePages", BindingFlags.NonPublic | BindingFlags.Static)!;
     IReadOnlyList<PageCatalogEntry> entries = (IReadOnlyList<PageCatalogEntry>)method.Invoke(null, [catalog])!;
     PageCatalogEntry entry = Assert.Single(entries);
     Assert.Empty(entry.CategoryPath);

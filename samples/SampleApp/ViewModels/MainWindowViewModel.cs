@@ -23,7 +23,7 @@ public record ScaleOption(string Name, double Scale)
 
 public partial class MainWindowViewModel : ObservableObject
 {
-  private bool startupTabSelectionPending = true;
+  private bool startupPageSelectionPending = true;
 
   [ObservableProperty]
   private Theme? currentTheme;
@@ -38,7 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
   private double systemScale;
 
   [ObservableProperty]
-  private string startupTabTitle = "Overview"; // Fallback when catalog startup settings are missing/invalid
+  private string startupPageTitle = "Overview"; // Fallback when catalog startup settings are missing/invalid
 
   public MainWindowViewModel()
   {
@@ -47,16 +47,16 @@ public partial class MainWindowViewModel : ObservableObject
     this.SelectedScale = this.AvailableScales[0]; // 0 = System Default, 10 = 400%
   }
 
-  public bool TryConsumeStartupTabTitle(out string tabTitle)
+  public bool TryConsumeStartupPageTitle(out string pageTitle)
   {
-    tabTitle = this.StartupTabTitle;
+    pageTitle = this.StartupPageTitle;
 
-    if (!this.startupTabSelectionPending)
+    if (!this.startupPageSelectionPending)
     {
       return false;
     }
 
-    this.startupTabSelectionPending = false;
+    this.startupPageSelectionPending = false;
     return true;
   }
 

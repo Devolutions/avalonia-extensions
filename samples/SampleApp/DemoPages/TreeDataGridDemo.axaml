@@ -52,8 +52,13 @@
                     MaxHeight="300">
         <TreeDataGridTextColumn Header="Name" Binding="{Binding Name}" />
         <TreeDataGridTextColumn Header="Type" Binding="{Binding Type}" DevoTreeDataGridExtensions.ToolTip="Explicit consumer tooltip: Type header" />
-        <TreeDataGridTextColumn Header="IP Address (IPv4 or IPv6)" Binding="{Binding IPAddress}" DevoTreeDataGridExtensions.ToolTip="Explicit consumer tooltip: IP Address header" />
-        <TreeDataGridTextColumn Header="Status of the item" Binding="{Binding Status}" />
+        <TreeDataGridTextColumn Header="IP Address (IPv4 or IPv6)" 
+                                Binding="{Binding IPAddress}" 
+                                DevoTreeDataGridExtensions.ToolTip="Explicit consumer tooltip: IP Address header"
+                                Width="90" />
+        <TreeDataGridTextColumn Header="Status of the item" 
+                                Binding="{Binding Status}"
+                                Width="90"/>
         <TreeDataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}" />
         <TreeDataGridTemplateColumn Header="Icon" CellTemplate="{StaticResource IconColumnTemplate}" />
         <TreeDataGridTemplateColumn CellTemplate="{StaticResource CheckBoxColumnTemplate}">

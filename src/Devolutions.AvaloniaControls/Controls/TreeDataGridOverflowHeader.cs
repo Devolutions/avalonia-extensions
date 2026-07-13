@@ -85,21 +85,8 @@ public class TreeDataGridOverflowHeader : Decorator
             LetterSpacingProperty, MaxLinesProperty, FontFeaturesProperty, PaddingProperty, InnerContentMarginProperty);
         AffectsArrange<TreeDataGridOverflowHeader>(InnerContentMarginProperty, ShowToolTipProperty);
 
-        ContentProperty.Changed.Subscribe(args =>
-        {
-            if (args.Sender is TreeDataGridOverflowHeader header)
-            {
-                header.UpdateChild();
-            }
-        });
-
-        ContentTemplateProperty.Changed.Subscribe(args =>
-        {
-            if (args.Sender is TreeDataGridOverflowHeader header)
-            {
-                header.UpdateChild();
-            }
-        });
+        ContentProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
+        ContentTemplateProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
     }
 
     public object? Content

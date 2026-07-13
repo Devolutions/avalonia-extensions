@@ -25,7 +25,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
-    <Setter Property="Padding" Value="0" />
+    <Setter Property="Padding" Value="6 0 0 0" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -53,10 +53,12 @@
                         Height="10" Width="10" />
             </Border>
           </Panel>
+
           <ContentPresenter x:Name="PART_ContentPresenter"
                             Grid.Column="1"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Content="{TemplateBinding Content}"
+                            IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
                             Margin="{TemplateBinding Padding}"
                             RecognizesAccessKey="True"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

@@ -175,15 +175,11 @@
                   <ColumnDefinition Width="Auto" MinWidth="{DynamicResource DataGridSortIconMinWidth}" />
                 </Grid.ColumnDefinitions>
 
-                <ContentPresenter Name="PART_ContentPresenter"
-                                  Content="{TemplateBinding Header}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}">
-                  <ContentPresenter.DataTemplates>
-                    <DataTemplate DataType="x:String">
-                      <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
-                    </DataTemplate>
-                  </ContentPresenter.DataTemplates>
-                </ContentPresenter>
+                <TreeDataGridOverflowHeader Name="HeaderContent"
+                                            Content="{TemplateBinding Header}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            TextTrimming="CharacterEllipsis"
+                                            ShowToolTip="True" />
 
                 <Path Name="SortIcon"
                       IsVisible="False"

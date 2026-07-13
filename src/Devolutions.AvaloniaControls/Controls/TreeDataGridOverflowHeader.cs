@@ -67,6 +67,12 @@ public class TreeDataGridOverflowHeader : Decorator
     public static readonly StyledProperty<bool> ShowToolTipProperty =
         AvaloniaProperty.Register<TreeDataGridOverflowHeader, bool>(nameof(ShowToolTip));
 
+    public static void SetColumnToolTip(TreeDataGridColumn column, object? value) =>
+        DevoTreeDataGridExtensions.SetToolTip(column, value);
+
+    public static object? GetColumnToolTip(TreeDataGridColumn column) =>
+        DevoTreeDataGridExtensions.GetToolTip(column);
+
     static TreeDataGridOverflowHeader()
     {
         AffectsMeasure<TreeDataGridOverflowHeader>(ContentProperty, ContentTemplateProperty, FontFamilyProperty,
@@ -311,7 +317,8 @@ public class TreeDataGridOverflowHeader : Decorator
 
         this.PseudoClasses.Set(":is-overflowing", isOverflowing);
         Control toolTipTarget = this.GetToolTipTarget();
-        ToolTip.SetTip(toolTipTarget, isOverflowing && this.ShowToolTip ? text : null);
+        object? customToolTip = this.GetCustomToolTip();
+        ToolTip.SetTip(toolTipTarget, customToolTip ?? (isOverflowing && this.ShowToolTip ? text : null));
         ToolTip.SetShowDelay(toolTipTarget, 200);
     }
 
@@ -319,5 +326,29 @@ public class TreeDataGridOverflowHeader : Decorator
     {
         TreeDataGridColumnHeader? header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
         return header is not null ? header : this;
+    }
+
+    private object? GetCustomToolTip()
+    {
+        object? columnToolTip = this.GetColumnToolTip();
+        if (columnToolTip is not null)
+        {
+            return columnToolTip;
+        }
+
+        return this.Content is Control control ? ToolTip.GetTip(control) : null;
+    }
+
+    private object? GetColumnToolTip()
+    {
+        TreeDataGridColumnHeader? header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
+        TreeDataGrid? treeDataGrid = header?.FindAncestorOfType<TreeDataGrid>();
+
+        if (header?.ColumnIndex is not int columnIndex || treeDataGrid is null || columnIndex < 0 || columnIndex >= treeDataGrid.Columns.Count)
+        {
+            return null;
+        }
+
+        return DevoTreeDataGridExtensions.GetToolTip(treeDataGrid.Columns[columnIndex]);
     }
 }

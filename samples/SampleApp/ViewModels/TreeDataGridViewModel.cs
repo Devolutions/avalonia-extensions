@@ -131,20 +131,22 @@ public class TreeDataGridViewModel : ObservableObject
     private static void AddSharedColumns(FlatTreeDataGridSource<NetworkNode> source)
     {
         source.WithTextColumn("Name", x => x.Name);
-        source.WithTextColumn(CreateHeaderWithToolTip("Type", "Explicit consumer tooltip: Type header"), x => x.Type);
+        AddTextColumnWithToolTip(source, "Type", x => x.Type, "Explicit consumer tooltip: Type header");
         source.WithTextColumn(
-            CreateHeaderWithToolTip("IP Address (IPv4 or IPv6)", "Explicit consumer tooltip: IP Address header"),
+            "IP Address (IPv4 or IPv6)",
             x => x.IPAddress,
             options =>
             {
                 options.TextTrimming = TextTrimming.CharacterEllipsis;
             });
+        TreeDataGridOverflowHeader.SetColumnToolTip(source.Columns[^1], "Explicit consumer tooltip: IP Address header");
         source.WithTextColumn("Status of the item", x => x.Status);
         source.WithTextColumn("Last Seen", x => x.LastSeen);
         source.WithTemplateColumnFromResourceKeys("Icon", "IconColumnTemplate");
         source.WithTemplateColumnFromResourceKeys(
             new IconColumnHeader("/Assets/Computer.svg", "Icon header template + checkbox cells"),
             "CheckBoxColumnTemplate");
+        TreeDataGridOverflowHeader.SetColumnToolTip(source.Columns[^1], "Icon header template + checkbox cells");
     }
 
     private static void AddTreeSharedColumns(HierarchicalTreeDataGridSource<NetworkNode> source)
@@ -156,12 +158,14 @@ public class TreeDataGridViewModel : ObservableObject
         source.WithTextColumn("Last Seen", x => x.LastSeen);
     }
 
-    private static TextBlock CreateHeaderWithToolTip(string headerText, string tooltipText)
+    private static void AddTextColumnWithToolTip<TValue>(
+        FlatTreeDataGridSource<NetworkNode> source,
+        string headerText,
+        System.Linq.Expressions.Expression<Func<NetworkNode, TValue>> expression,
+        string tooltipText)
     {
-        // var header = new TreeDataGridOverflowHeader() { Content = headerText, ShowToolTip = false };
-        var header = new TextBlock() { Text = headerText, TextTrimming = TextTrimming.CharacterEllipsis };
-        ToolTip.SetTip(header, tooltipText);
-        return header;
+        source.WithTextColumn(headerText, expression);
+        TreeDataGridOverflowHeader.SetColumnToolTip(source.Columns[^1], tooltipText);
     }
 
     public AvaloniaList<NetworkNode> FlatNodes => this.flatNodes;

@@ -87,9 +87,10 @@
     </Setter>
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
+        <Border Name="PART_Background" MaxWidth="{TemplateBinding DropDownMaxWidth}" Padding="{TemplateBinding Padding}">
           <ContentPresenter
             Name="PART_ContentPresenter"
+            MaxWidth="{TemplateBinding DropDownMaxWidth}"
             Content="{TemplateBinding DataContext}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             TextTrimming="CharacterEllipsis"
@@ -326,6 +327,7 @@
                 MaxWidth="{TemplateBinding MaxDropDownWidth}"
                 CornerRadius="{DynamicResource OverlayCornerRadius}">
                 <ScrollViewer
+                  Name="PART_DropDownScrollViewer"
                   HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                   IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">

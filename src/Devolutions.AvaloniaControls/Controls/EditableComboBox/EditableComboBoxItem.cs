@@ -25,6 +25,9 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
     public static readonly StyledProperty<bool> IsCommittedSelectedProperty =
         AvaloniaProperty.Register<EditableComboBoxItem, bool>(nameof(IsCommittedSelected));
 
+    public static readonly StyledProperty<double> DropDownMaxWidthProperty =
+        AvaloniaProperty.Register<EditableComboBoxItem, double>(nameof(DropDownMaxWidth), double.PositiveInfinity);
+
     public static readonly StyledProperty<string> ValueProperty =
         AvaloniaProperty.Register<EditableComboBoxItem, string>(nameof(Value), defaultBindingMode: BindingMode.OneTime);
 
@@ -56,6 +59,12 @@ public class EditableComboBoxItem : TemplatedControl, ISelectable
     {
         get => this.GetValue(IsCommittedSelectedProperty);
         set => this.SetValue(IsCommittedSelectedProperty, value);
+    }
+
+    public double DropDownMaxWidth
+    {
+        get => this.GetValue(DropDownMaxWidthProperty);
+        set => this.SetValue(DropDownMaxWidthProperty, value);
     }
 
     [Content]

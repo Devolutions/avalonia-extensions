@@ -17,8 +17,6 @@ public class SearchHighlightTextBlock : ContentControl
 
   private CompositeDisposable? textBlockBindings;
 
-  private CompositeDisposable? dropDownWidthBindings;
-
   // Tracks whether Content was set by our ValueProperty subscription (not by explicit XAML assignment).
   // Required to correctly handle VSP container recycling: when the container is detached from the
   // visual tree, we must clear Content so that IsSet(ContentProperty) resets to false, allowing
@@ -81,6 +79,10 @@ public class SearchHighlightTextBlock : ContentControl
     {
       this.textBlock.Width = this.Width;
     }
+    if (this.textBlock != null && !double.IsInfinity(this.MaxWidth))
+    {
+      this.textBlock.MaxWidth = this.MaxWidth;
+    }
     this.BindTextBlockBounds();
     this.UpdateInlines();
   }
@@ -105,7 +107,6 @@ public class SearchHighlightTextBlock : ContentControl
           .GetObservable(EditableComboBoxItem.ValueProperty)
           .Subscribe(value => this.Content = value));
       }
-      this.BindDropDownWidth(editableComboBoxItem);
     }
 
     if (this.FindAncestorOfType<MultiComboBoxItem>() is { } multiComboBoxItem)
@@ -123,8 +124,6 @@ public class SearchHighlightTextBlock : ContentControl
     this.bindings = null;
     this.textBlockBindings?.Dispose();
     this.textBlockBindings = null;
-    this.dropDownWidthBindings?.Dispose();
-    this.dropDownWidthBindings = null;
     if (this.contentManagedBySubscription)
     {
       // Clear Content so that IsSet(ContentProperty) resets to false on next OnAttachedToVisualTree.
@@ -215,60 +214,6 @@ public class SearchHighlightTextBlock : ContentControl
     measureBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
     ToolTip.SetTip(this, measureBlock.DesiredSize.Width > this.textBlock.Bounds.Width + 0.5 ? content : null);
-  }
-
-  private void BindDropDownWidth(EditableComboBoxItem editableComboBoxItem)
-  {
-    if (this.dropDownWidthBindings != null || ItemsControl.ItemsControlFromItemContainer(editableComboBoxItem) is not EditableComboBox.InnerComboBox innerComboBox)
-    {
-      return;
-    }
-
-    void UpdateMaxWidth()
-    {
-      double maxDropDownWidth = innerComboBox.MaxDropDownWidth;
-      double itemWidth = editableComboBoxItem.Bounds.Width;
-      double availableWidth = itemWidth > 0 && maxDropDownWidth > 0
-        ? Math.Min(itemWidth, maxDropDownWidth)
-        : Math.Max(itemWidth, maxDropDownWidth);
-
-      if (double.IsNaN(availableWidth) || double.IsInfinity(availableWidth) || availableWidth <= 0)
-      {
-        this.ClearValue(WidthProperty);
-        this.textBlock?.ClearValue(WidthProperty);
-      }
-      else
-      {
-        Thickness padding = editableComboBoxItem.Padding;
-        double textWidth = Math.Max(0, availableWidth - padding.Left - padding.Right);
-        this.Width = textWidth;
-        if (this.textBlock != null)
-        {
-          this.textBlock.Width = textWidth;
-        }
-      }
-
-      this.UpdateToolTip();
-    }
-
-    void OnInnerComboBoxPropertyChanged(object? _, AvaloniaPropertyChangedEventArgs change)
-    {
-      if (change.Property.Name == nameof(EditableComboBox.InnerComboBox.MaxDropDownWidth))
-      {
-        UpdateMaxWidth();
-      }
-    }
-
-    innerComboBox.PropertyChanged += OnInnerComboBoxPropertyChanged;
-
-    this.dropDownWidthBindings = new CompositeDisposable
-    {
-      Disposable.Create(() => innerComboBox.PropertyChanged -= OnInnerComboBoxPropertyChanged),
-      editableComboBoxItem.GetObservable(PaddingProperty).Subscribe(_ => UpdateMaxWidth()),
-      editableComboBoxItem.GetObservable(BoundsProperty).Subscribe(_ => UpdateMaxWidth()),
-    };
-
-    UpdateMaxWidth();
   }
 
   private void BindTextBlockBounds()

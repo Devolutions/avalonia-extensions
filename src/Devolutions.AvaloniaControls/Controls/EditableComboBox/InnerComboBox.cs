@@ -9,6 +9,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 
 // ReSharper disable MemberHidesStaticFromOuterClass
@@ -19,6 +20,7 @@ public partial class EditableComboBox
     [TemplatePart("PART_InnerLeftContent", typeof(ItemsControl), IsRequired = true)]
     [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl), IsRequired = false)]
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
+    [TemplatePart("PART_DropDownScrollViewer", typeof(ScrollViewer), IsRequired = false)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
     [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
     public class InnerComboBox : ComboBox, INavigableContainer
@@ -51,6 +53,11 @@ public partial class EditableComboBox
         public static readonly StyledProperty<bool> ValueFilterDropdownProperty =
             AvaloniaProperty.Register<InnerComboBox, bool>(nameof(ValueFilterDropdown));
 
+        static InnerComboBox()
+        {
+            MaxDropDownWidthProperty.Changed.AddClassHandler<InnerComboBox>((x, _) => x.UpdateRealizedItemMaxWidths());
+        }
+
         private readonly EditableComboBox parent;
 
         private ItemsControl? innerLeftContentControl;
@@ -60,6 +67,8 @@ public partial class EditableComboBox
         private ItemsControl? innerLeftOfDropDownArrowContentControl;
 
         private ContentPresenter? textboxContentPresenter;
+
+        private ScrollViewer? dropDownScrollViewer;
 
         public InnerComboBox(EditableComboBox parent, InnerTextBox innerTextBox)
         {
@@ -113,6 +122,7 @@ public partial class EditableComboBox
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.ValueProperty);
                 editableComboBoxItem.OriginalSourceItem = null;
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.FilterHighlightTextProperty);
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.DropDownMaxWidthProperty);
             }
         }
 
@@ -160,6 +170,17 @@ public partial class EditableComboBox
             this.Popup.Focusable = false;
             this.Popup.IsTabStop = false;
             this.Popup.PlacementTarget = this.parent;
+
+            this.dropDownScrollViewer?.RemoveHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged);
+            this.dropDownScrollViewer = e.NameScope.Find<ScrollViewer>("PART_DropDownScrollViewer");
+            this.dropDownScrollViewer?.AddHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged, RoutingStrategies.Tunnel);
+        }
+
+        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            this.dropDownScrollViewer?.RemoveHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged);
+            this.dropDownScrollViewer = null;
+            base.OnDetachedFromVisualTree(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -233,6 +254,35 @@ public partial class EditableComboBox
             // Pointer interactions handled by EditableComboBox
         }
 
+        private void OnDropDownScrollViewerPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            if (e.Handled || sender is not ScrollViewer scrollViewer || !this.IsDropDownOpen)
+            {
+                return;
+            }
+
+            double delta = Math.Abs(e.Delta.Y) >= Math.Abs(e.Delta.X) ? e.Delta.Y : e.Delta.X;
+            if (delta == 0)
+            {
+                return;
+            }
+
+            double maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
+            if (maxY <= 0)
+            {
+                return;
+            }
+
+            double newY = Math.Clamp(scrollViewer.Offset.Y - delta * 48, 0, maxY);
+            if (Math.Abs(newY - scrollViewer.Offset.Y) < 0.1)
+            {
+                return;
+            }
+
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, newY);
+            e.Handled = true;
+        }
+
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
             base.PrepareContainerForItemOverride(container, item, index);
@@ -245,9 +295,21 @@ public partial class EditableComboBox
             editableComboBoxItem.Value = this.parent.GetValueForItem(item);
             editableComboBoxItem.OriginalSourceItem = item;
             editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+            editableComboBoxItem.DropDownMaxWidth = this.MaxDropDownWidth;
             if (this.parent.ItemTemplate != null)
             {
                 editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
+            }
+        }
+
+        private void UpdateRealizedItemMaxWidths()
+        {
+            for (int i = 0; i < this.ItemsView.Count; i++)
+            {
+                if (this.ContainerFromIndex(i) is EditableComboBoxItem editableComboBoxItem)
+                {
+                    editableComboBoxItem.DropDownMaxWidth = this.MaxDropDownWidth;
+                }
             }
         }
 

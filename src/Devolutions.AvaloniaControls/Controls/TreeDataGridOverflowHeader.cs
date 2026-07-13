@@ -239,7 +239,7 @@ public class TreeDataGridOverflowHeader : Decorator
         double maxWidth = Math.Max(0, this.Bounds.Width - padding.Left - padding.Right - margin.Left - margin.Right);
         double maxHeight = Math.Max(0, this.Bounds.Height - padding.Top - padding.Bottom - margin.Top - margin.Bottom);
 
-        var layout = this.CreateTextLayout(text, maxWidth, maxHeight);
+        TextLayout layout = this.CreateTextLayout(text, maxWidth, maxHeight);
         double x = padding.Left + margin.Left;
         double y = padding.Top + margin.Top + (maxHeight - layout.Height) / 2;
         double scale = LayoutHelper.GetLayoutScale(this);
@@ -294,7 +294,7 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private void UpdateOverflow(Size finalSize)
     {
-        string? text = this.Content as string;
+        var text = this.Content as string;
         Thickness padding = this.Padding;
         Thickness margin = this.InnerContentMargin;
         double availableWidth = finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right;
@@ -311,14 +311,13 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private Control GetToolTipTarget()
     {
-        TreeDataGridColumnHeader? header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
+        var header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
         return header is not null ? header : this;
     }
 
     private object? GetCustomToolTip()
     {
-        object? columnToolTip = this.GetColumnToolTip();
-        if (columnToolTip is not null)
+        if (this.GetColumnToolTip() is {} columnToolTip)
         {
             return columnToolTip;
         }
@@ -328,8 +327,8 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private object? GetColumnToolTip()
     {
-        TreeDataGridColumnHeader? header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
-        TreeDataGrid? treeDataGrid = header?.FindAncestorOfType<TreeDataGrid>();
+        var header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
+        var treeDataGrid = header?.FindAncestorOfType<TreeDataGrid>();
 
         if (header?.ColumnIndex is not int columnIndex || treeDataGrid is null || columnIndex < 0 || columnIndex >= treeDataGrid.Columns.Count)
         {

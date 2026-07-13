@@ -55,12 +55,12 @@
     <!-- <DevolutionsMacOsTheme /> -->
     <!-- <local:MacOsClassicThemeStyle /> -->
     <!-- <local:MacOsLiquidGlassThemeStyle /> -->
-    <!-- <DevolutionsDevExpressTheme /> -->
+    <DevolutionsDevExpressTheme />
     <!-- <DevolutionsWinUiTheme /> -->
     <!-- <DevolutionsLinuxYaruTheme /> -->
     <!-- <local:FluentThemePlusAddOns /> -->
 
     <!-- Dummie style to prevent Rider from deleting the Application.Styles block -->
-    <Style />
+    <!-- <Style /> -->
   </Application.Styles>
 </Application>

@@ -6,9 +6,12 @@ using Avalonia.Controls.Selection;
 namespace SampleApp.ViewModels;
 
 using System.Collections.ObjectModel;
+using Avalonia.Collections;
 using Avalonia.Data;
+using Avalonia.Media;
 using Avalonia.Svg;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Devolutions.AvaloniaControls.Controls;
 
 public class NetworkNode
 {
@@ -18,6 +21,8 @@ public class NetworkNode
     public string IPAddress { get; set; }
     public string Status { get; set; }
     public string LastSeen { get; set; }
+    public bool HasCheckBox => this.Type == "Computer";
+    public bool IsChecked { get; set; }
     public bool HasChildren => this.Children.Count > 0;
 
     public string IconPath => this.Type switch
@@ -38,13 +43,16 @@ public class NetworkNode
         this.IPAddress = ip;
         this.Status = status;
         this.LastSeen = lastSeen;
+        this.IsChecked = status == "Online";
     }
 }
+
+public sealed record IconColumnHeader(string IconPath, string ToolTip);
 
 public class TreeDataGridViewModel : ObservableObject
 {
 #if ENABLE_ACCELERATE
-    private readonly ObservableCollection<NetworkNode> flatNodes =
+    private readonly AvaloniaList<NetworkNode> flatNodes =
     [
         new NetworkNode("DC01", "Computer", "192.168.1.10", "Online", "Just now"),
         new NetworkNode("WEB01", "Computer", "192.168.1.20", "Online", "5 mins ago"),
@@ -57,7 +65,7 @@ public class TreeDataGridViewModel : ObservableObject
         new NetworkNode("Guest", "User", "", "Inactive", "Never"),
     ];
 
-    private readonly ObservableCollection<NetworkNode> treeNodes =
+    private readonly AvaloniaList<NetworkNode> treeNodes =
     [
         new NetworkNode("Data Center", "Folder")
         {
@@ -126,10 +134,17 @@ public class TreeDataGridViewModel : ObservableObject
         source.WithTextColumn(CreateHeaderWithToolTip("Type", "Explicit consumer tooltip: Type header"), x => x.Type);
         source.WithTextColumn(
             CreateHeaderWithToolTip("IP Address (IPv4 or IPv6)", "Explicit consumer tooltip: IP Address header"),
-            x => x.IPAddress);
+            x => x.IPAddress,
+            options =>
+            {
+                options.TextTrimming = TextTrimming.CharacterEllipsis;
+            });
         source.WithTextColumn("Status of the item", x => x.Status);
         source.WithTextColumn("Last Seen", x => x.LastSeen);
         source.WithTemplateColumnFromResourceKeys("Icon", "IconColumnTemplate");
+        source.WithTemplateColumnFromResourceKeys(
+            new IconColumnHeader("/Assets/Computer.svg", "Icon header template + checkbox cells"),
+            "CheckBoxColumnTemplate");
     }
 
     private static void AddTreeSharedColumns(HierarchicalTreeDataGridSource<NetworkNode> source)
@@ -143,11 +158,14 @@ public class TreeDataGridViewModel : ObservableObject
 
     private static TextBlock CreateHeaderWithToolTip(string headerText, string tooltipText)
     {
-        var header = new TextBlock { Text = headerText };
+        // var header = new TreeDataGridOverflowHeader() { Content = headerText, ShowToolTip = false };
+        var header = new TextBlock() { Text = headerText, TextTrimming = TextTrimming.CharacterEllipsis };
         ToolTip.SetTip(header, tooltipText);
         return header;
     }
 
+    public AvaloniaList<NetworkNode> FlatNodes => this.flatNodes;
+    
     public FlatTreeDataGridSource<NetworkNode> CellSelectionSource { get; }
     public FlatTreeDataGridSource<NetworkNode> RowSelectionSource { get; }
 

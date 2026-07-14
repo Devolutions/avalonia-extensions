@@ -6,10 +6,9 @@ using Avalonia.Controls.Selection;
 namespace SampleApp.ViewModels;
 
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using Avalonia.Collections;
-using Avalonia.Data;
 using Avalonia.Media;
-using Avalonia.Svg;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Devolutions.AvaloniaControls.Controls;
 
@@ -161,7 +160,7 @@ public class TreeDataGridViewModel : ObservableObject
     private static void AddTextColumnWithToolTip<TValue>(
         FlatTreeDataGridSource<NetworkNode> source,
         string headerText,
-        System.Linq.Expressions.Expression<Func<NetworkNode, TValue>> expression,
+        Expression<Func<NetworkNode, TValue?>> expression,
         string tooltipText)
     {
         source.WithTextColumn(headerText, expression);

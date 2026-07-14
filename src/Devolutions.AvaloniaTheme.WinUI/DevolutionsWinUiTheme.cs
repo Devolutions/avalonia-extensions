@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaTheme.WinUI;
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using global::Avalonia.Markup.Xaml.Styling;
 using global::Avalonia.Styling;
 using Internal;
@@ -8,6 +9,7 @@ using Internal;
 /// <summary>
 /// Includes Devolutions's WinUI theme in an application.
 /// </summary>
+[RequiresUnreferencedCode("StyleInclude and ResourceInclude use AvaloniaXamlLoader.Load which dynamically loads referenced assembly with Avalonia resources. Note, StyleInclude and ResourceInclude defined in XAML are resolved compile time and are safe with trimming and AOT.")]
 public class DevolutionsWinUiTheme : Styles, ISupportInitialize
 {
     private readonly IServiceProvider? sp;

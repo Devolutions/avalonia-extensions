@@ -160,7 +160,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundBrush}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="MinHeight" Value="{StaticResource TreeDataGridHeaderHeight}" />
-    <Setter Property="Padding" Value="6 0 0 0" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -175,36 +175,37 @@
                   CornerRadius="{TemplateBinding CornerRadius}"
                   ClipToBounds="False"
                   IsHitTestVisible="False">
-            <DockPanel VerticalAlignment="Stretch" ClipToBounds="False">
+            <Panel VerticalAlignment="Stretch" ClipToBounds="False">
               <!-- Sort icon (reusing DataGrid foreground) -->
               <Path Name="SortIcon"
-                    DockPanel.Dock="Right"
                     Fill="{TemplateBinding Foreground}"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Margin="1 0 3 0"
+                    Margin="-6 0 3 0"
                     Stretch="Uniform"
+                    Width="12"
                     Height="7"
-                    TabIndex="1"
-                    IsVisible="False"
+                    TabIndex="-1"
+                    IsTabStop="False"
+                    Opacity="0"
                     Data="{StaticResource TreeDataGridSortIconPath}" />
 
               <!-- Header content -->
-              <ContentPresenter Name="PART_ContentPresenter"
-                                Content="{TemplateBinding Header}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                IsHitTestVisible="False"
-                                TabIndex="0">
-                <ContentPresenter.DataTemplates>
-                  <DataTemplate DataType="x:String">
-                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
-                  </DataTemplate>
-                </ContentPresenter.DataTemplates>
-              </ContentPresenter>
-            </DockPanel>
+              <TreeDataGridOverflowHeader Name="HeaderContent"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          InnerContentMargin="{BindingToggler
+                                            {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
+                                            6 0 12 0,
+                                            6 0 0 0
+                                          }"
+                                          TextTrimming="CharacterEllipsis"
+                                          ShowToolTip="True"
+                                          IsHitTestVisible="False"
+                                          Margin="0 0 6 0"
+                                          TabIndex="0" />
+            </Panel>
           </Border>
           
           <!-- hit-target, for the column itself, offset to the left for the Thumb overflow) -->
@@ -257,11 +258,11 @@
 
     <!-- Sort Adorners -->
     <Style Selector="^[SortDirection=Ascending] /template/ Path#SortIcon">
-      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Opacity" Value="1" />
       <Setter Property="RenderTransform" Value="scaleY(-1)" />
     </Style>
     <Style Selector="^[SortDirection=Descending] /template/ Path#SortIcon">
-      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="Opacity" Value="1" />
     </Style>
   </ControlTheme>
 

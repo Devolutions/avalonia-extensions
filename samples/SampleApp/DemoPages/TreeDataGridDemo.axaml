@@ -14,7 +14,27 @@
         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
       </StackPanel>
     </DataTemplate>
+    <DataTemplate x:Key="IconColumnTemplate" DataType="vm:NetworkNode">
+      <Svg Path="{Binding IconPath}" Width="16" Height="16" Css=".st0 {fill: #3B86EA}" />
+    </DataTemplate>
+    <DataTemplate x:Key="CheckBoxColumnTemplate" DataType="vm:NetworkNode">
+      <CheckBox HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsChecked="{Binding IsChecked}"
+                IsVisible="{Binding HasCheckBox}"
+                IsEnabled="False" />
+    </DataTemplate>
   </UserControl.Resources>
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="vm:IconColumnHeader">
+      <Svg Path="{Binding IconPath}"
+           Width="16"
+           Height="16"
+           Css=".st0 {fill: #3B86EA}"
+           ToolTip.Tip="{Binding ToolTip}" />
+    </DataTemplate>
+  </UserControl.DataTemplates>
 
   <Design.DataContext>
     <vm:TreeDataGridViewModel />
@@ -25,12 +45,35 @@
       <TextBlock Text="Row Selection" Classes="section-title" FontSize="18" />
 
       <TextBlock Text="Flat mode" Classes="section-title" />
-      <TreeDataGrid Source="{Binding RowSelectionSource}"
+      <!-- We demonstrate the AXAML-based usage here -->
+      <TreeDataGrid ItemsSource="{Binding FlatNodes}"
                     CanUserResizeColumns="True"
                     CanUserSortColumns="True"
-                    MaxHeight="300" />
+                    MaxHeight="300">
+        <TreeDataGridTextColumn Header="Name" Binding="{Binding Name}" />
+        <TreeDataGridTextColumn Header="Type" Binding="{Binding Type}" DevoTreeDataGridExtensions.ToolTip="Explicit consumer tooltip: Type header" />
+        <TreeDataGridTextColumn Header="IP Address (IPv4 or IPv6)" 
+                                Binding="{Binding IPAddress}" 
+                                DevoTreeDataGridExtensions.ToolTip="Explicit consumer tooltip: IP Address header"
+                                Width="90" />
+        <TreeDataGridTextColumn Header="Status of the item" 
+                                Binding="{Binding Status}"
+                                Width="90"/>
+        <TreeDataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}" />
+        <TreeDataGridTemplateColumn Header="Icon" CellTemplate="{StaticResource IconColumnTemplate}" />
+        <TreeDataGridTemplateColumn CellTemplate="{StaticResource CheckBoxColumnTemplate}">
+          <TreeDataGridTemplateColumn.Header>
+              <Svg Path="/Assets/Computer.svg"
+                   Width="16"
+                   Height="16"
+                   Css=".st0 {fill: #3B86EA}"
+                   ToolTip.Tip="Icon header template + checkbox cells" />
+          </TreeDataGridTemplateColumn.Header>
+        </TreeDataGridTemplateColumn>
+      </TreeDataGrid>
 
       <TextBlock Text="Tree Mode" Classes="section-title" Margin="0 20 0 0" />
+      <!-- We demonstrate the code-behind source-based usage here -->
       <TreeDataGrid Source="{Binding TreeRowSelectionSource}" />
     </StackPanel>
 

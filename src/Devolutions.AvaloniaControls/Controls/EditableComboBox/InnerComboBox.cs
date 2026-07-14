@@ -9,6 +9,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 
 // ReSharper disable MemberHidesStaticFromOuterClass
@@ -50,6 +51,11 @@ public partial class EditableComboBox
 
         public static readonly StyledProperty<bool> ValueFilterDropdownProperty =
             AvaloniaProperty.Register<InnerComboBox, bool>(nameof(ValueFilterDropdown));
+
+        static InnerComboBox()
+        {
+            MaxDropDownWidthProperty.Changed.AddClassHandler<InnerComboBox>((x, _) => x.UpdateRealizedItemMaxWidths());
+        }
 
         private readonly EditableComboBox parent;
 
@@ -113,6 +119,7 @@ public partial class EditableComboBox
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.ValueProperty);
                 editableComboBoxItem.OriginalSourceItem = null;
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.FilterHighlightTextProperty);
+                editableComboBoxItem.ClearValue(EditableComboBoxItem.DropDownMaxWidthProperty);
             }
         }
 
@@ -245,9 +252,21 @@ public partial class EditableComboBox
             editableComboBoxItem.Value = this.parent.GetValueForItem(item);
             editableComboBoxItem.OriginalSourceItem = item;
             editableComboBoxItem.IsCommittedSelected = Equals(GetSourceKey(item), GetSourceKey(this.parent.SelectedItem));
+            editableComboBoxItem.DropDownMaxWidth = this.MaxDropDownWidth;
             if (this.parent.ItemTemplate != null)
             {
                 editableComboBoxItem.ContentTemplate = this.parent.ItemTemplate;
+            }
+        }
+
+        private void UpdateRealizedItemMaxWidths()
+        {
+            for (int i = 0; i < this.ItemsView.Count; i++)
+            {
+                if (this.ContainerFromIndex(i) is EditableComboBoxItem editableComboBoxItem)
+                {
+                    editableComboBoxItem.DropDownMaxWidth = this.MaxDropDownWidth;
+                }
             }
         }
 

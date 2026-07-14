@@ -107,9 +107,10 @@
     </Setter>
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="PART_Background" Padding="{TemplateBinding Padding}">
-          <StackPanel Orientation="Horizontal" Spacing="4">
+        <Border Name="PART_Background" MaxWidth="{TemplateBinding DropDownMaxWidth}" Padding="{TemplateBinding Padding}">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
             <Path Name="CheckMark"
+                  Grid.Column="0"
                   Width="10"
                   Height="10"
                   HorizontalAlignment="Center"
@@ -120,10 +121,11 @@
                   Stretch="Fill" />
             <ContentPresenter
               Name="PART_ContentPresenter"
+              Grid.Column="1"
               Content="{TemplateBinding DataContext}"
               ContentTemplate="{TemplateBinding ContentTemplate}"
               VerticalAlignment="Center" />
-          </StackPanel>
+          </Grid>
         </Border>
       </ControlTemplate>
     </Setter>
@@ -320,6 +322,7 @@
                   Margin="{DynamicResource PopupMargin}"
                   CornerRadius="{DynamicResource LayoutCornerRadius}">
                   <ScrollViewer
+                    Name="PART_DropDownScrollViewer"
                     CornerRadius="{DynamicResource LayoutCornerRadius}"
                     HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"

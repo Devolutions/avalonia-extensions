@@ -120,12 +120,14 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_Background"
+                MaxWidth="{TemplateBinding DropDownMaxWidth}"
                 MinHeight="{DynamicResource ComboBoxItemMinHeight}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Padding="{DynamicResource ComboBoxItemBorderPadding}">
-          <StackPanel Orientation="Horizontal">
+          <Grid ColumnDefinitions="Auto,*">
             <Border
               Name="SelectionHighlight"
+              Grid.Column="0"
               Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
               Height="{StaticResource ComboBoxItemSelectionHighlightHeight}"
               Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
@@ -135,10 +137,11 @@
               CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
             <ContentPresenter
               Name="PART_ContentPresenter"
+              Grid.Column="1"
               Content="{TemplateBinding DataContext}"
               ContentTemplate="{TemplateBinding ContentTemplate}"
               VerticalAlignment="Center" />
-          </StackPanel>
+          </Grid>
         </Border>
       </ControlTemplate>
     </Setter>
@@ -422,6 +425,7 @@
                 BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
                 Margin="{DynamicResource ComboBoxPopupBorderMargin}">
                 <ScrollViewer
+                  Name="PART_DropDownScrollViewer"
                   HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                   IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">

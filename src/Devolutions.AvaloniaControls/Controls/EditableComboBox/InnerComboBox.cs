@@ -20,7 +20,6 @@ public partial class EditableComboBox
     [TemplatePart("PART_InnerLeftContent", typeof(ItemsControl), IsRequired = true)]
     [TemplatePart("PART_InnerLeftOfDropDownArrowContent", typeof(ItemsControl), IsRequired = false)]
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
-    [TemplatePart("PART_DropDownScrollViewer", typeof(ScrollViewer), IsRequired = false)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
     [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
     public class InnerComboBox : ComboBox, INavigableContainer
@@ -67,8 +66,6 @@ public partial class EditableComboBox
         private ItemsControl? innerLeftOfDropDownArrowContentControl;
 
         private ContentPresenter? textboxContentPresenter;
-
-        private ScrollViewer? dropDownScrollViewer;
 
         public InnerComboBox(EditableComboBox parent, InnerTextBox innerTextBox)
         {
@@ -170,17 +167,6 @@ public partial class EditableComboBox
             this.Popup.Focusable = false;
             this.Popup.IsTabStop = false;
             this.Popup.PlacementTarget = this.parent;
-
-            this.dropDownScrollViewer?.RemoveHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged);
-            this.dropDownScrollViewer = e.NameScope.Find<ScrollViewer>("PART_DropDownScrollViewer");
-            this.dropDownScrollViewer?.AddHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged, RoutingStrategies.Tunnel);
-        }
-
-        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-        {
-            this.dropDownScrollViewer?.RemoveHandler(InputElement.PointerWheelChangedEvent, this.OnDropDownScrollViewerPointerWheelChanged);
-            this.dropDownScrollViewer = null;
-            base.OnDetachedFromVisualTree(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -252,35 +238,6 @@ public partial class EditableComboBox
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             // Pointer interactions handled by EditableComboBox
-        }
-
-        private void OnDropDownScrollViewerPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-        {
-            if (e.Handled || sender is not ScrollViewer scrollViewer || !this.IsDropDownOpen)
-            {
-                return;
-            }
-
-            double delta = Math.Abs(e.Delta.Y) >= Math.Abs(e.Delta.X) ? e.Delta.Y : e.Delta.X;
-            if (delta == 0)
-            {
-                return;
-            }
-
-            double maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
-            if (maxY <= 0)
-            {
-                return;
-            }
-
-            double newY = Math.Clamp(scrollViewer.Offset.Y - delta * 48, 0, maxY);
-            if (Math.Abs(newY - scrollViewer.Offset.Y) < 0.1)
-            {
-                return;
-            }
-
-            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, newY);
-            e.Handled = true;
         }
 
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)

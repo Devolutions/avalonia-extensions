@@ -56,7 +56,7 @@ public partial class EditableComboBox
         public static readonly StyledProperty<bool> ValueFilterDropdownProperty =
             AvaloniaProperty.Register<InnerComboBox, bool>(nameof(ValueFilterDropdown));
 
-        private static readonly object HeaderRecycleKey = typeof(GroupHeader);
+        private static readonly object HeaderRecycleKey = typeof(ComboBoxGroupHeader);
 
         static InnerComboBox()
         {
@@ -165,7 +165,7 @@ public partial class EditableComboBox
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            recycleKey = item is GroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
+            recycleKey = item is ComboBoxGroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
             return true;
         }
 
@@ -261,7 +261,7 @@ public partial class EditableComboBox
 
             if (container is GroupedComboBoxHeaderItem headerContainer)
             {
-                if (item is GroupHeader header)
+                if (item is ComboBoxGroupHeader header)
                 {
                     headerContainer[!GroupedComboBoxHeaderItem.ForegroundProperty] = new MultiBinding
                     {

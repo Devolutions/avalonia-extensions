@@ -64,7 +64,7 @@ public class GroupedComboBox : ComboBox
     public static readonly StyledProperty<string?> EmptyGroupNameProperty =
         AvaloniaProperty.Register<GroupedComboBox, string?>(nameof(EmptyGroupName));
 
-    protected static readonly object HeaderRecycleKey = typeof(GroupHeader);
+    protected static readonly object HeaderRecycleKey = typeof(ComboBoxGroupHeader);
 
     private readonly List<object> sourceItems = [];
 
@@ -174,7 +174,7 @@ public class GroupedComboBox : ComboBox
             return false;
         }
 
-        recycleKey = item is GroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
+        recycleKey = item is ComboBoxGroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
         return true;
     }
 
@@ -184,7 +184,7 @@ public class GroupedComboBox : ComboBox
 
         if (container is not GroupedComboBoxHeaderItem headerContainer) return;
 
-        if (item is GroupHeader header)
+        if (item is ComboBoxGroupHeader header)
         {
             headerContainer[!GroupedComboBoxHeaderItem.ForegroundProperty] = new MultiBinding()
             {
@@ -307,7 +307,7 @@ public class GroupedComboBox : ComboBox
         {
             object? item = this.Items[i];
             GroupedComboBoxItem? groupedComboBoxItem = item as GroupedComboBoxItem;
-            if (item is not GroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
+            if (item is not ComboBoxGroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
             {
                 return i;
             }
@@ -362,7 +362,7 @@ public class GroupedComboBox : ComboBox
         Func<object, string>? selector = this.ResolveGroupSelector();
         if (selector is null) return;
 
-        List<object> displayItems = GroupedItemsBuilder.Build(
+        List<object> displayItems = ComboBoxGroupedItemsBuilder.Build(
             this.sourceItems,
             selector,
             this.ResolveGroupOrderSelector(),

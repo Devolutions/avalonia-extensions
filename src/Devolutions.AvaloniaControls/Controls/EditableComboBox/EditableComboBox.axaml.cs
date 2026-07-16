@@ -783,7 +783,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     /// <summary>
     /// Populates <see cref="filteredItems"/> (the drop-down's item source) from the given base items.
-    /// When a group selector is configured, group headers are interleaved via <see cref="GroupedItemsBuilder"/>;
+    /// When a group selector is configured, group headers are interleaved via <see cref="ComboBoxGroupedItemsBuilder"/>;
     /// otherwise the items are applied as-is (preserving the previous, un-grouped behavior).
     /// </summary>
     private void ApplyDropdownItems(IEnumerable<object?> baseItems)
@@ -798,7 +798,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
 
         this.filteredItems.AddRange(
-            GroupedItemsBuilder.Build(
+            ComboBoxGroupedItemsBuilder.Build(
                 baseItems,
                 groupSelector,
                 this.ResolveGroupOrderSelector(),
@@ -860,7 +860,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         for (int i = 0; i < this.filteredItems.Count; i++)
         {
-            if (this.filteredItems[i] is not GroupHeader)
+            if (this.filteredItems[i] is not ComboBoxGroupHeader)
             {
                 return i;
             }
@@ -872,7 +872,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private string? GetSelectedItemValue()
     {
         object? selected = this.innerComboBox.SelectedItem;
-        if (selected is null || selected is GroupHeader)
+        if (selected is null || selected is ComboBoxGroupHeader)
         {
             return null;
         }
@@ -885,7 +885,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private string GetValueForItem(object? item)
     {
         // Group headers are non-selectable pseudo-items; they never map to a value.
-        if (item is GroupHeader)
+        if (item is ComboBoxGroupHeader)
         {
             return string.Empty;
         }
@@ -1009,7 +1009,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         foreach (object? item in this.innerComboBox.ItemsView)
         {
-            if (item is GroupHeader) continue;
+            if (item is ComboBoxGroupHeader) continue;
 
             if (this.GetValueForItem(item) == this.Value)
             {

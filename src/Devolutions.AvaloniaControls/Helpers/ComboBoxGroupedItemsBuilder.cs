@@ -8,14 +8,14 @@ using Devolutions.AvaloniaControls.Controls;
 
 /// <summary>
 /// Builds a flat display list from source items by grouping them and interleaving
-/// non-selectable <see cref="GroupHeader"/> pseudo-items. Shared by <see cref="GroupedComboBox"/>
+/// non-selectable <see cref="ComboBoxGroupHeader"/> pseudo-items. Shared by <see cref="GroupedComboBox"/>
 /// and <see cref="EditableComboBox"/> so both controls group identically.
 /// </summary>
-internal static class GroupedItemsBuilder
+internal static class ComboBoxGroupedItemsBuilder
 {
     /// <summary>
     /// Groups <paramref name="sourceItems"/> using <paramref name="groupSelector"/>, orders the
-    /// groups, then returns a flat list where each group is preceded by a <see cref="GroupHeader"/>.
+    /// groups, then returns a flat list where each group is preceded by a <see cref="ComboBoxGroupHeader"/>.
     /// Items keep their original relative order within a group.
     /// </summary>
     /// <param name="sourceItems">The raw source items, in their original order. <c>null</c> entries are skipped.</param>
@@ -65,7 +65,7 @@ internal static class GroupedItemsBuilder
             bool isEmptyHeaderless = group.Key.Length == 0 && hasEmptyName;
             if (!isEmptyHeaderless)
             {
-                displayItems.Add(new GroupHeader(group.Key.Length == 0 ? emptyGroupName : group.Key));
+                displayItems.Add(new ComboBoxGroupHeader(group.Key.Length == 0 ? emptyGroupName : group.Key));
             }
 
             foreach ((object item, _, _) in group.OrderBy(static x => x.originalIndex))

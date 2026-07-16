@@ -39,6 +39,7 @@ dotnet add package Devolutions.AvaloniaControls
 ### Controls
 
 - `EditableComboBox`
+  (Supports optional grouping via `GroupBinding`/`GroupSelector`, with customizable group order and an optional headerless empty group)
 - `SearchHighlightTextBlock`
 - `TabPane`
   (Extends `TabControl` for different styling only)

@@ -21,7 +21,7 @@
         </MenuItem>
         <MenuItem Header="Input Gesture" InputGesture="Ctrl+G" />
         <MenuItem Header="Disabled" IsEnabled="False" />
-        <MenuItem Header="-" />
+        <Separator />
         <MenuItem Header="Parent" IsSubMenuOpen="True">
           <MenuItem Header="Child 1" />
           <MenuItem Header="Child 2" />

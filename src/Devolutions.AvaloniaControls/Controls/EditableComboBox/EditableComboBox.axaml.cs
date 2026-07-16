@@ -583,7 +583,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                 else if (this.innerComboBox.SelectedIndex == -1)
                 {
                     // Skip a leading group header so the first arrow-down lands on a selectable item.
-                    this.innerComboBox.SelectedIndex = this.FirstSelectableIndex();
+                    this.innerComboBox.SelectedIndex = this.NextSelectableIndex(-1, 1);
                 }
 
                 e.Handled = true;
@@ -853,17 +853,25 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     }
 
     /// <summary>
-    /// Index of the first drop-down entry that is a real (selectable) item rather than a group header.
-    /// Operates on the data list so it is safe even before containers are realized.
+    /// Finds the next drop-down entry in <paramref name="direction"/> (+1 / -1) that is a real,
+    /// selectable item — skipping group headers (checked against the data list, so it is robust even
+    /// before containers are realized) and any realized-but-disabled item containers. Returns -1 if none.
     /// </summary>
-    private int FirstSelectableIndex()
+    private int NextSelectableIndex(int startIndex, int direction)
     {
-        for (int i = 0; i < this.filteredItems.Count; i++)
+        for (int i = startIndex + direction; i >= 0 && i < this.filteredItems.Count; i += direction)
         {
-            if (this.filteredItems[i] is not ComboBoxGroupHeader)
+            if (this.filteredItems[i] is ComboBoxGroupHeader)
             {
-                return i;
+                continue;
             }
+
+            if (this.innerComboBox.ContainerFromIndex(i) is { IsEffectivelyEnabled: false })
+            {
+                continue;
+            }
+
+            return i;
         }
 
         return -1;
@@ -900,18 +908,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void HighlightNextItem()
     {
-        bool isFirst = true;
-        while (this.innerComboBox.SelectedIndex < this.filteredItems.Count - 1)
+        int next = this.NextSelectableIndex(this.innerComboBox.SelectedIndex, 1);
+        if (next >= 0)
         {
-            // NOTE: Setting SelectedIndex to an out-of-bound value will actually result in Avalonia setting the SelectedIndex
-            //       to -1, which would break this logic (we would always be < Count -1).
-            if (!isFirst && this.innerComboBox.SelectedIndex < 0) return;
-
-            isFirst = false;
-
-            this.innerComboBox.SelectedIndex += 1;
-            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEffectivelyEnabled == true) break;
+            this.innerComboBox.SelectedIndex = next;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -919,11 +919,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void HighlightPreviousItem()
     {
-        while (this.innerComboBox.SelectedIndex > 0)
+        int previous = this.NextSelectableIndex(this.innerComboBox.SelectedIndex, -1);
+        if (previous >= 0)
         {
-            this.innerComboBox.SelectedIndex -= 1;
-            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEffectivelyEnabled == true) break;
+            this.innerComboBox.SelectedIndex = previous;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -1024,10 +1023,18 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void UpdateSelection()
     {
+        object? selected = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
+
+        // Never commit a group header pseudo-item as the selection; leave the prior selection intact.
+        if (selected is ComboBoxGroupHeader)
+        {
+            return;
+        }
+
         this.syncingSelectedItemFromInnerCombo = true;
         try
         {
-            this.SelectedItem = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
+            this.SelectedItem = selected;
             this.SyncCommittedSelectionState();
         }
         finally

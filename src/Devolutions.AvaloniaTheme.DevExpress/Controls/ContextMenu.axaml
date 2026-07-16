@@ -49,7 +49,9 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="WindowManagerAddShadowHint" Value="False" />
     <Setter Property="CornerRadius" Value="{DynamicResource ContextMenuCornerRadius}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DefaultFontWeight}" />
 
     <Setter Property="Template">
       <ControlTemplate>

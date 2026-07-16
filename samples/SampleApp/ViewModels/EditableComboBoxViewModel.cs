@@ -78,8 +78,8 @@ public partial class EditableComboBoxViewModel : ObservableValidator
         new("Pork", "Meats"),
     ];
 
-    // Empty-category items render with no header at the top of the drop-down — this is exactly the
-    // WinForms ConnectionPicker "current vault at the top, System vault under a header" case.
+    // Empty-category items render with no header at the top of the drop-down; the remaining
+    // categories follow under their own headers.
     public IReadOnlyList<FoodItem> EmptyGroupItems { get; } =
     [
         new("Water", ""),

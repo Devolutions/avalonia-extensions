@@ -474,7 +474,7 @@
                 </StackPanel>
               </StackPanel>
               <TextBlock Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-                Empty category has no header and occupies no header space — items start at the top of the popup (the ConnectionPicker "current vault" case).
+                Empty category has no header and occupies no header space — items start at the top of the popup.
               </TextBlock>
 
               <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 0 0">

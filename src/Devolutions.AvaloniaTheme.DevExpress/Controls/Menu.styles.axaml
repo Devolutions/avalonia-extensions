@@ -19,4 +19,9 @@
     <Setter Property="Height" Value="NaN" />
     <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="False" />
   </Style>
+
+  <Style Selector="MenuFlyoutPresenter MenuItem, ContextMenu MenuItem, MenuItem MenuItem">
+    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="Padding" Value="10,2" />
+  </Style>
 </Styles>

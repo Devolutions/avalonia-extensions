@@ -47,6 +47,6 @@
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">
-        <DefaultItemExcludes>$(DefaultItemExcludes);Behaviors/TreeDataGridPseudoTypeBehavior.cs;Behaviors/TreeDataGridAlternatingRowBehavior.cs</DefaultItemExcludes>
+        <DefaultItemExcludes>$(DefaultItemExcludes);Behaviors/TreeDataGridPseudoTypeBehavior.cs;Behaviors/TreeDataGridAlternatingRowBehavior.cs;Controls/DevoTreeDataGridExtensions.cs;Controls/TreeDataGridOverflowHeader.cs</DefaultItemExcludes>
     </PropertyGroup>
 </Project>

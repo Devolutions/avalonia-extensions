@@ -1,0 +1,8 @@
+kind: randy/v1
+
+ai-review-approval:
+  enabled: true
+  authorized-authors: ["Devolutions/devex"]
+  human-review-paths:
+    - ".github/"
+    - "scripts/"

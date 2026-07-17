@@ -33,6 +33,9 @@ public partial class EditableComboBoxViewModel : ObservableValidator
     private FoodItem? selectedGroupedItem;
 
     [ObservableProperty]
+    private FoodItem? selectedBindingOrderedItem;
+
+    [ObservableProperty]
     private FoodItem? selectedEmptyGroupItem;
 
     [ObservableProperty]
@@ -64,18 +67,23 @@ public partial class EditableComboBoxViewModel : ObservableValidator
 
     private int newItemIndex = 1;
 
+    // Shared group objects (name + sort order), reused across the items that belong to them.
+    private static readonly FoodGroup Meats = new("Meats", 0);
+    private static readonly FoodGroup Fruits = new("Fruits", 1);
+    private static readonly FoodGroup Vegetables = new("Vegetables", 2);
+
     public IReadOnlyList<FoodItem> GroupedItems { get; } =
     [
-        new("Apple", "Fruits"),
-        new("Banana", "Fruits"),
-        new("Orange", "Fruits"),
-        new("Strawberry", "Fruits"),
-        new("Carrot", "Vegetables"),
-        new("Broccoli", "Vegetables"),
-        new("Lettuce", "Vegetables"),
-        new("Chicken", "Meats"),
-        new("Beef", "Meats"),
-        new("Pork", "Meats"),
+        new("Apple", Fruits),
+        new("Banana", Fruits),
+        new("Orange", Fruits),
+        new("Strawberry", Fruits),
+        new("Carrot", Vegetables),
+        new("Broccoli", Vegetables),
+        new("Lettuce", Vegetables),
+        new("Chicken", Meats),
+        new("Beef", Meats),
+        new("Pork", Meats),
     ];
 
     // Empty-category items render with no header at the top of the drop-down; the remaining

@@ -416,7 +416,7 @@
 
         <Grid ColumnDefinitions="Auto,220" ColumnSpacing="20">
           <Border Grid.Column="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
-            <Grid ColumnDefinitions="Auto 240 260" RowDefinitions="Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
+            <Grid ColumnDefinitions="Auto 240 260" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
 
               <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 0 0">
                 <Bold>Named groups:</Bold>
@@ -452,9 +452,40 @@
               </TextBlock>
 
               <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 0 0">
-                <Bold>Empty group:</Bold><LineBreak /><TextBlock Classes="code">EmptyGroupName</TextBlock><LineBreak /><Bold>unset</Bold>
+                <Bold>Order via binding:</Bold>
               </TextBlock>
               <StackPanel Grid.Column="1" Grid.Row="1" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding GroupedItems}"
+                                  SelectedItem="{Binding SelectedBindingOrderedItem}"
+                                  PlaceholderText="Choose food"
+                                  AllowCustomValue="False"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderBinding="{Binding Group.SortOrder}">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Category}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                      </StackPanel>
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedBindingOrderedItem.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Same custom order (Meats, Fruits, Vegetables) as above, but expressed with GroupOrderBinding bound to each item's shared Group.SortOrder — no order delegate needed.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Empty group:</Bold><LineBreak /><TextBlock Classes="code">EmptyGroupName</TextBlock><LineBreak /><Bold>unset</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="2" Spacing="8">
                 <EditableComboBox ItemsSource="{Binding EmptyGroupItems}"
                                   SelectedItem="{Binding SelectedEmptyGroupItem}"
                                   PlaceholderText="Choose item"
@@ -473,14 +504,14 @@
                   <TextBlock Text="{Binding SelectedEmptyGroupItem.Name, FallbackValue='(none)'}" />
                 </StackPanel>
               </StackPanel>
-              <TextBlock Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
                 Empty category has no header and occupies no header space — items start at the top of the popup.
               </TextBlock>
 
-              <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 0 0">
+              <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 0 0">
                 <Bold>Empty group:</Bold><LineBreak /><TextBlock Classes="code">EmptyGroupName</TextBlock><LineBreak /><Bold>set</Bold>
               </TextBlock>
-              <StackPanel Grid.Column="1" Grid.Row="2" Spacing="8">
+              <StackPanel Grid.Column="1" Grid.Row="3" Spacing="8">
                 <EditableComboBox ItemsSource="{Binding EmptyGroupItems}"
                                   SelectedItem="{Binding SelectedEmptyGroupItemWithName}"
                                   PlaceholderText="Choose item"
@@ -501,14 +532,14 @@
                   <TextBlock Text="{Binding SelectedEmptyGroupItemWithName.Name, FallbackValue='(none)'}" />
                 </StackPanel>
               </StackPanel>
-              <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              <TextBlock Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
                 Empty category gets a display header via EmptyGroupName and a custom header foreground.
               </TextBlock>
 
-              <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 0 0">
+              <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 0 0">
                 <Bold>Scrolling:</Bold>
               </TextBlock>
-              <StackPanel Grid.Column="1" Grid.Row="3" Spacing="8">
+              <StackPanel Grid.Column="1" Grid.Row="4" Spacing="8">
                 <EditableComboBox ItemsSource="{Binding LargeGroupedItems}"
                                   SelectedItem="{Binding SelectedLargeGroupedItem}"
                                   PlaceholderText="Many items"
@@ -539,14 +570,14 @@
                   <TextBlock Text="{Binding SelectedLargeGroupedItem.Name, FallbackValue='(none)'}" />
                 </StackPanel>
               </StackPanel>
-              <TextBlock Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
                 1500 items across 3 categories with a VirtualizingStackPanel. Type to filter — empty groups drop out and their headers with them.
               </TextBlock>
 
-              <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 0 0">
+              <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 0 0">
                 <Bold>HeaderTemplate:</Bold>
               </TextBlock>
-              <StackPanel Grid.Column="1" Grid.Row="4" Spacing="8">
+              <StackPanel Grid.Column="1" Grid.Row="5" Spacing="8">
                 <EditableComboBox ItemsSource="{Binding GroupedItems}"
                                   PlaceholderText="Custom headers"
                                   AllowCustomValue="False"
@@ -574,14 +605,14 @@
                   </EditableComboBox.ItemTemplate>
                 </EditableComboBox>
               </StackPanel>
-              <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              <TextBlock Grid.Column="2" Grid.Row="5" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
                 HeaderTemplate customizes only the group headers. Selectable rows still use ItemTemplate.
               </TextBlock>
 
-              <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 0 0">
+              <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 0 0">
                 <Bold>Inner slots:</Bold>
               </TextBlock>
-              <EditableComboBox Grid.Column="1" Grid.Row="5"
+              <EditableComboBox Grid.Column="1" Grid.Row="6"
                                 ItemsSource="{Binding GroupedItems}"
                                 PlaceholderText="Same chrome + slots"
                                 AllowCustomValue="False"
@@ -602,7 +633,7 @@
                   <TextBlock Text="kg" Margin="2 0" VerticalAlignment="Center" />
                 </EditableComboBox.InnerRightContent>
               </EditableComboBox>
-              <TextBlock Grid.Column="2" Grid.Row="5" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+              <TextBlock Grid.Column="2" Grid.Row="6" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
                 Grouping composes with the EditableComboBox inner-content slots.
               </TextBlock>
             </Grid>

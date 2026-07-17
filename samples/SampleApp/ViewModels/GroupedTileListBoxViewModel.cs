@@ -6,7 +6,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 // Data model for the demo
-public record FoodItem(string Name, string Category, string? IconName = null);
+public record FoodGroup(string Name, int SortOrder);
+
+public record FoodItem(string Name, FoodGroup Group, string? IconName = null)
+{
+    // Convenience constructor for the many demos that group by name and don't care about group order;
+    // each gets its own (value-equal) FoodGroup with a default sort order.
+    public FoodItem(string name, string category, string? iconName = null)
+        : this(name, new FoodGroup(category, 0), iconName)
+    {
+    }
+
+    // Back-compat for the existing {Binding Category} usages across the demos.
+    public string Category => this.Group.Name;
+}
 
 public partial class GroupedTileListBoxViewModel : ObservableObject
 {

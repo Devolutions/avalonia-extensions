@@ -6,6 +6,8 @@ using System.Linq;
 
 using Devolutions.AvaloniaControls.Controls;
 
+using Extensions;
+
 /// <summary>
 /// Builds a flat display list from source items by grouping them and interleaving
 /// non-selectable <see cref="ComboBoxGroupHeader"/> pseudo-items. Shared by <see cref="GroupedComboBox"/>
@@ -36,6 +38,7 @@ internal static class ComboBoxGroupedItemsBuilder
     {
         // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         IEnumerable<IGrouping<string, (object item, string groupName, int originalIndex)>> grouped = sourceItems
+            .SkipNulls()
             .Select((x, i) => (item: x, groupName: groupSelector(x) ?? string.Empty, originalIndex: i))
             .GroupBy(static x => x.groupName);
         grouped = (orderSelector, orderAlphabetical) switch

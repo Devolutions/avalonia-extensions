@@ -20,45 +20,35 @@ internal static class ComboBoxGroupedItemsBuilder
     /// </summary>
     /// <param name="sourceItems">The raw source items, in their original order. <c>null</c> entries are skipped.</param>
     /// <param name="groupSelector">Produces the group key for an item.</param>
-    /// <param name="orderSelector">Optional custom ordering key for a group name. When <c>null</c>,
-    /// groups keep their first-appearance order (unless <paramref name="orderAlphabetical"/> is set).</param>
+    /// <param name="orderSelector">Optional ordering key for a group, evaluated against a representative item
+    /// of that group. The returned value is compared as-is (keep it a raw comparable such as an <see cref="int"/>
+    /// so numeric orders sort numerically). When <c>null</c>, groups keep their first-appearance order
+    /// (unless <paramref name="orderAlphabetical"/> is set).</param>
     /// <param name="orderAlphabetical">Order groups alphabetically (after <paramref name="orderSelector"/>, if any).</param>
     /// <param name="emptyGroupName">Display name for the empty ("") group key. When <c>null</c>/empty,
     /// items in the empty group render without a header (e.g. the current item shown at the top).</param>
     public static List<object> Build(
         IEnumerable<object?> sourceItems,
         Func<object, string> groupSelector,
-        Func<string, object?>? orderSelector,
+        Func<object, object?>? orderSelector,
         bool orderAlphabetical,
         string? emptyGroupName)
     {
-        List<(object item, string groupName, int originalIndex)> source =
-            sourceItems.TryGetNonEnumeratedCount(out int count) ? new(count) : [];
-        int originalIndex = 0;
-        foreach (object? item in sourceItems)
-        {
-            if (item is not null)
-            {
-                // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-                source.Add((item, groupSelector(item) ?? string.Empty, originalIndex));
-            }
-
-            // Increment for every entry (including nulls) so originalIndex reflects the true
-            // position in the source collection, not the compacted position.
-            ++originalIndex;
-        }
-
-        IEnumerable<IGrouping<string, (object item, string groupName, int originalIndex)>> grouped = source.GroupBy(static x => x.groupName);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        IEnumerable<IGrouping<string, (object item, string groupName, int originalIndex)>> grouped = sourceItems
+            .Select((x, i) => (item: x, groupName: groupSelector(x) ?? string.Empty, originalIndex: i))
+            .GroupBy(static x => x.groupName);
         grouped = (orderSelector, orderAlphabetical) switch
         {
-            ({ } fn, true) => grouped.OrderBy(g => fn(g.Key)).ThenBy(static g => g.Key, StringComparer.Ordinal),
-            ({ } fn, false) => grouped.OrderBy(g => fn(g.Key)),
+            ({ } fn, true) => grouped.OrderBy(g => fn(g.First().item)).ThenBy(static g => g.Key, StringComparer.Ordinal),
+            ({ } fn, false) => grouped.OrderBy(g => fn(g.First().item)),
             (null, true) => grouped.OrderBy(static g => g.Key, StringComparer.Ordinal),
             (null, false) => grouped,
         };
 
+        sourceItems.TryGetNonEnumeratedCount(out var itemsCount);
         grouped.TryGetNonEnumeratedCount(out var groupedCount);
-        List<object> displayItems = new(source.Count + groupedCount);
+        List<object> displayItems = new(itemsCount + groupedCount);
         bool hasEmptyName = string.IsNullOrEmpty(emptyGroupName);
         foreach (IGrouping<string, (object item, string groupName, int originalIndex)> group in grouped)
         {

@@ -357,6 +357,13 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         set => this.SetValue(GroupOrderSelectorProperty, value);
     }
 
+    /// <summary>
+    /// Binding used to order the groups. It is evaluated against a single representative item of each group,
+    /// so the bound value must be consistent for every item in the same group — i.e. a function of the same
+    /// grouping defined by <see cref="GroupBinding"/>/<see cref="GroupSelector"/> (for example, bind to a
+    /// property of the shared group object). The raw value is used for comparison, so a numeric property
+    /// sorts numerically.
+    /// </summary>
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
     public BindingBase? GroupOrderBinding
@@ -801,7 +808,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             ComboBoxGroupedItemsBuilder.Build(
                 baseItems,
                 groupSelector,
-                this.ResolveGroupOrderSelector(),
+                this.ResolveGroupOrderSelector(groupSelector),
                 this.GroupOrderAlphabetical,
                 this.EmptyGroupName));
     }
@@ -817,17 +824,20 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return this.GetValue(GroupSelectorProperty);
     }
 
-    private Func<string, object?>? ResolveGroupOrderSelector()
+    private Func<object, object?>? ResolveGroupOrderSelector(Func<object, string>? groupSelector)
     {
+        // GroupOrderBinding reads the sort order off each item (like GroupBinding reads the group key),
+        // keeping the raw value so numeric orders sort numerically (10 after 2, not lexically).
         if (this.GetValue(GroupOrderBindingProperty) is { } binding)
         {
             this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
-            return this.bindingEvaluator?.BuildFormattedGetter(binding);
+            return this.bindingEvaluator?.BuildRawGetter(binding);
         }
 
-        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        // GroupOrderSelector maps a group key to an order; adapt it to operate on an item.
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn && groupSelector is not null)
         {
-            return str => orderFn(str);
+            return item => orderFn(groupSelector(item));
         }
 
         return null;

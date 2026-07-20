@@ -3,12 +3,14 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <Design.PreviewWith>
-    <StackPanel Height="200">
+    <StackPanel Height="240">
       <MultiComboBoxItem Content="Option 1" />
       <MultiComboBoxItem Content="Option 2" IsEnabled="False" />
       <MultiComboBoxItem Content="Option 3" IsSelected="True" IsEnabled="False" />
       <Separator Margin="0 5" />
       <MultiComboBoxSelectAllItem Content="Option 1" />
+      <Separator Margin="0 5" />
+      <MultiComboBoxGroupHeaderItem Content="Group A" />
     </StackPanel>
   </Design.PreviewWith>
 
@@ -50,6 +52,12 @@
         </Border>
       </ControlTemplate>
     </Setter>
+
+    <!-- Grouped mode: indent items so they read as children of the group header. -->
+    <Style Selector="^:grouped /template/ CheckBox">
+      <Setter Property="Margin" Value="16 0 0 0" />
+    </Style>
+
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource ListBoxItemDisabledForeground}" />
       <Setter Property="Background" Value="{DynamicResource ListBoxItemDisabledBackground}" />
@@ -64,12 +72,75 @@
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
-      <Style Selector="^ /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
-      </Style>
+    <!-- Focused (keyboard) state only — a mouse click doesn't leave a persisting highlight -->
+    <Style Selector="^:focus-visible /template/ Border#RootBorder">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Group header row: accent/semibold label with a leading tri-state check box that selects/deselects the
+    whole group (mixed state = only some selected). Uses the same Padding as MultiComboBoxItem so the row
+    highlight aligns with items. The label is a separate ContentPresenter (not the CheckBox content) so its
+    colour stays constant regardless of check state. Foreground is overridden at runtime from
+    MultiComboBox.HeaderForeground. No persisting selection highlight — the check box conveys state.
+  -->
+  <ControlTheme x:Key="{x:Type MultiComboBoxGroupHeaderItem}" TargetType="MultiComboBoxGroupHeaderItem">
+    <Setter Property="IsTabStop" Value="True" />
+    <Setter Property="Padding" Value="6 0 12 0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          x:Name="RootBorder"
+          Padding="{TemplateBinding Padding}"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="{TemplateBinding CornerRadius}">
+          <Border.Transitions>
+            <Transitions>
+              <BrushTransition Property="Background" Duration="0:0:0.049" />
+            </Transitions>
+          </Border.Transitions>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <CheckBox
+              IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+              IsThreeState="True"
+              IsTabStop="False"
+              Focusable="False"
+              Padding="0"
+              VerticalAlignment="Center" />
+            <ContentPresenter
+              x:Name="PART_ContentPresenter"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
+              Foreground="{TemplateBinding Foreground}"
+              VerticalAlignment="Center"
+              Margin="8 0 0 0" />
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <!--  Hover / keyboard-focus tint (no persisting selection on click — the check box conveys state).  -->
+    <Style Selector="^:pointerover /template/ Border#RootBorder">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#RootBorder">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
     </Style>
   </ControlTheme>
 
@@ -124,12 +195,10 @@
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
-      <Style Selector="^ /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
-      </Style>
+    <!-- Focused (keyboard) state only — a mouse click doesn't leave a persisting highlight -->
+    <Style Selector="^:focus-visible /template/ Border#RootBorder">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

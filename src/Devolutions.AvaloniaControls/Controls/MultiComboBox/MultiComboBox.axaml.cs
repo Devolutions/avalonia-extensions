@@ -21,6 +21,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
+using Helpers;
 using static Extensions.AvaloniaExtensions;
 using AvaloniaPropertyExtension = Irihi.Avalonia.Shared.Helpers.AvaloniaPropertyExtension;
 using ObservableExtension = Irihi.Avalonia.Shared.Helpers.ObservableExtension;
@@ -41,6 +42,8 @@ public enum MultiComboBoxOverflowMode
 [TemplatePart("PART_SelectedItemsList", typeof(ItemsControl), IsRequired = true)]
 [TemplatePart(PART_BackgroundBorder, typeof(Border))]
 [PseudoClasses(PC_DropDownOpen, PC_Empty)]
+[RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public partial class MultiComboBox : SelectingItemsControl
 {
     public const string PART_BackgroundBorder = "PART_BackgroundBorder";
@@ -141,6 +144,34 @@ public partial class MultiComboBox : SelectingItemsControl
         AvaloniaProperty.RegisterDirect<MultiComboBox, bool?>(nameof(IsAllSelected),
             static o => o.IsAllSelected);
 
+    public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
+        AvaloniaProperty.Register<MultiComboBox, Func<object, string>?>("GroupSelector");
+
+    public static readonly StyledProperty<BindingBase?> GroupBindingProperty =
+        AvaloniaProperty.Register<MultiComboBox, BindingBase?>(nameof(GroupBinding));
+
+    public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
+        AvaloniaProperty.Register<MultiComboBox, bool>(nameof(GroupOrderAlphabetical));
+
+    public static readonly StyledProperty<Func<string, int>?> GroupOrderSelectorProperty =
+        AvaloniaProperty.Register<MultiComboBox, Func<string, int>?>("GroupOrderSelector");
+
+    public static readonly StyledProperty<BindingBase?> GroupOrderBindingProperty =
+        AvaloniaProperty.Register<MultiComboBox, BindingBase?>(nameof(GroupOrderBinding));
+
+    public static readonly StyledProperty<IBrush?> HeaderForegroundProperty =
+        AvaloniaProperty.Register<MultiComboBox, IBrush?>(nameof(HeaderForeground));
+
+    public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
+        AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(nameof(HeaderTemplate));
+
+    /// <summary>
+    /// Display name to use for the empty/null group key. When <c>null</c>, items in the empty
+    /// group render without a header (e.g. an "uncategorized" bucket shown at the top of the drop-down).
+    /// </summary>
+    public static readonly StyledProperty<string?> EmptyGroupNameProperty =
+        AvaloniaProperty.Register<MultiComboBox, string?>(nameof(EmptyGroupName));
+
     private static readonly ITemplate<Panel> DefaultSelectedItemsPanel =
         new FuncTemplate<Panel>(static () => new VirtualizingStackPanel { Orientation = Orientation.Horizontal, Background = Brushes.Transparent });
 
@@ -168,7 +199,11 @@ public partial class MultiComboBox : SelectingItemsControl
     private ScrollViewer? selectionScrollViewer;
 
     private bool updateInternal;
-    
+
+    private bool isGrouped;
+
+    private BindingEvaluator? bindingEvaluator;
+
     private System.ComponentModel.INotifyDataErrorInfo? boundDataErrorInfo;
     
     private string? boundPropertyName;
@@ -179,6 +214,13 @@ public partial class MultiComboBox : SelectingItemsControl
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
         AvaloniaPropertyExtension.AffectsPseudoClass<MultiComboBox>(IsDropDownOpenProperty, PC_DropDownOpen);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>(static (box, args) => box.OnSelectedItemsChanged(args));
+
+        GroupSelectorProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
+        GroupBindingProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
+        GroupOrderAlphabeticalProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
+        GroupOrderSelectorProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
+        GroupOrderBindingProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
+        EmptyGroupNameProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
     }
 
     public MultiComboBox()
@@ -220,6 +262,9 @@ public partial class MultiComboBox : SelectingItemsControl
     }
 
     public AvaloniaList<object?> FilteredItems { get; } = [];
+
+    /// <summary>True when a group selector is configured, i.e. the drop-down is showing grouped items with headers.</summary>
+    internal bool IsGrouped => this.isGrouped;
 
     public ITemplate<Panel>? SelectedItemsPanel
     {
@@ -377,6 +422,66 @@ public partial class MultiComboBox : SelectingItemsControl
         }
     }
 
+    [Obsolete("Use GroupBinding instead for XAML-friendly, type-checked group selection.")]
+    public Func<object, string>? GroupSelector
+    {
+        get => this.GetValue(GroupSelectorProperty);
+        set => this.SetValue(GroupSelectorProperty, value);
+    }
+
+    [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public BindingBase? GroupBinding
+    {
+        get => this.GetValue(GroupBindingProperty);
+        set => this.SetValue(GroupBindingProperty, value);
+    }
+
+    public bool GroupOrderAlphabetical
+    {
+        get => this.GetValue(GroupOrderAlphabeticalProperty);
+        set => this.SetValue(GroupOrderAlphabeticalProperty, value);
+    }
+
+    public Func<string, int>? GroupOrderSelector
+    {
+        get => this.GetValue(GroupOrderSelectorProperty);
+        set => this.SetValue(GroupOrderSelectorProperty, value);
+    }
+
+    /// <summary>
+    /// Binding used to order the groups. It is evaluated against a single representative item of each group,
+    /// so the bound value must be consistent for every item in the same group — i.e. a function of the same
+    /// grouping defined by <see cref="GroupBinding"/>/<see cref="GroupSelector"/> (for example, bind to a
+    /// property of the shared group object). The raw value is used for comparison, so a numeric property
+    /// sorts numerically.
+    /// </summary>
+    [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public BindingBase? GroupOrderBinding
+    {
+        get => this.GetValue(GroupOrderBindingProperty);
+        set => this.SetValue(GroupOrderBindingProperty, value);
+    }
+
+    public IBrush? HeaderForeground
+    {
+        get => this.GetValue(HeaderForegroundProperty);
+        set => this.SetValue(HeaderForegroundProperty, value);
+    }
+
+    public IDataTemplate? HeaderTemplate
+    {
+        get => this.GetValue(HeaderTemplateProperty);
+        set => this.SetValue(HeaderTemplateProperty, value);
+    }
+
+    public string? EmptyGroupName
+    {
+        get => this.GetValue(EmptyGroupNameProperty);
+        set => this.SetValue(EmptyGroupNameProperty, value);
+    }
+
     private void OnDropDownOpenChanged((bool oldValue, bool newValue) oldAndNewValue)
     {
         if (oldAndNewValue.oldValue == oldAndNewValue.newValue) return;
@@ -472,6 +577,10 @@ public partial class MultiComboBox : SelectingItemsControl
                 {
                     i.Select();
                 }
+                else if (container is MultiComboBoxGroupHeaderItem h)
+                {
+                    h.UpdateSelection();
+                }
             }
         }
 
@@ -498,6 +607,76 @@ public partial class MultiComboBox : SelectingItemsControl
             // won't fire our `OnSelectedItemsCollectionChanged` event
             this.DoOnSelectedItemsCollectionChanged();
         }
+    }
+
+    /// <summary>
+    /// Adds every item of a group to <see cref="SelectedItems"/> (skipping already-selected ones), then
+    /// refreshes the drop-down once. Batched under <see cref="updateInternal"/> so the per-add collection
+    /// notifications don't re-enter <see cref="ApplyCurrentSelectionState"/> for each item. Used by a group
+    /// header's leading check box; operates on the group's full membership regardless of any active filter.
+    /// </summary>
+    public void SelectGroup(IReadOnlyList<object> items)
+    {
+        if (this.SelectedItems is null || items.Count == 0) return;
+
+        this.updateInternal = true;
+
+        foreach (object item in items)
+        {
+            this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
+        }
+
+        foreach (object item in items)
+        {
+            if (!this.SelectedItems.Contains(item))
+            {
+                this.SelectedItems.Add(item);
+            }
+        }
+
+        foreach (object item in items)
+        {
+            this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
+        }
+
+        this.updateInternal = false;
+
+        this.SyncDisplaySelectedItems();
+        this.ApplyCurrentSelectionState();
+    }
+
+    /// <summary>
+    /// Removes every item of a group from <see cref="SelectedItems"/>, then refreshes the drop-down once.
+    /// Counterpart to <see cref="SelectGroup"/>.
+    /// </summary>
+    public void DeselectGroup(IReadOnlyList<object> items)
+    {
+        if (this.SelectedItems is null || items.Count == 0) return;
+
+        this.updateInternal = true;
+
+        foreach (object item in items)
+        {
+            this.GetMultiComboBoxItemContainer(item)?.BeginUpdate();
+        }
+
+        foreach (object item in items)
+        {
+            while (this.SelectedItems.Contains(item))
+            {
+                this.SelectedItems.Remove(item);
+            }
+        }
+
+        foreach (object item in items)
+        {
+            this.GetMultiComboBoxItemContainer(item)?.EndUpdate();
+        }
+
+        this.updateInternal = false;
+
+        this.SyncDisplaySelectedItems();
+        this.ApplyCurrentSelectionState();
     }
 
     protected override void OnInitialized()
@@ -651,7 +830,59 @@ public partial class MultiComboBox : SelectingItemsControl
 
         // Re-populate filtered items based on current filter
         this.FilteredItems.Clear();
-        this.FilteredItems.AddRange(hasFilterText ? this.ItemsView.Where(item =>  this.ItemMatchesFilter(item, filterText)) :  this.ItemsView);
+
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        this.isGrouped = groupSelector is not null;
+        if (groupSelector is null)
+        {
+            // Un-grouped: preserve the original behavior exactly.
+            this.FilteredItems.AddRange(hasFilterText
+                ? this.ItemsView.Where(item => this.ItemMatchesFilter(item, filterText))
+                : this.ItemsView);
+            return;
+        }
+
+        // Grouped: headers carry each group's full membership so a group's leading check box operates on
+        // the whole group; the itemFilter still hides non-matching rows and drops fully-filtered groups.
+        this.FilteredItems.AddRange(
+            ComboBoxGroupedItemsBuilder.Build(
+                this.ItemsView,
+                groupSelector,
+                this.ResolveGroupOrderSelector(groupSelector),
+                this.GroupOrderAlphabetical,
+                this.EmptyGroupName,
+                headerFactory: static (name, items) => new MultiComboBoxGroupHeader(name, items),
+                itemFilter: hasFilterText ? item => this.ItemMatchesFilter(item, filterText) : null));
+    }
+
+    private Func<object, string>? ResolveGroupSelector()
+    {
+        if (this.GetValue(GroupBindingProperty) is { } binding)
+        {
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
+        }
+
+        return this.GetValue(GroupSelectorProperty);
+    }
+
+    private Func<object, object?>? ResolveGroupOrderSelector(Func<object, string>? groupSelector)
+    {
+        // GroupOrderBinding reads the sort order off each item (like GroupBinding reads the group key),
+        // keeping the raw value so numeric orders sort numerically (10 after 2, not lexically).
+        if (this.GetValue(GroupOrderBindingProperty) is { } binding)
+        {
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildRawGetter(binding);
+        }
+
+        // GroupOrderSelector maps a group key to an order; adapt it to operate on an item.
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn && groupSelector is not null)
+        {
+            return item => orderFn(groupSelector(item));
+        }
+
+        return null;
     }
 
     private bool ItemMatchesFilter(object? item, string? filterText)
@@ -818,6 +1049,10 @@ public partial class MultiComboBox : SelectingItemsControl
                 {
                     i.UpdateSelection();
                 }
+                else if (container is MultiComboBoxGroupHeaderItem h)
+                {
+                    h.UpdateSelection();
+                }
             }
         }
 
@@ -968,6 +1203,12 @@ public partial class MultiComboBox : SelectingItemsControl
             if (dropdownItem is MultiComboBoxItem { IsFocused: true } multiComboBoxItem)
             {
                 multiComboBoxItem.IsSelected = !multiComboBoxItem.IsSelected;
+                break;
+            }
+
+            if (dropdownItem is MultiComboBoxGroupHeaderItem { IsFocused: true } headerItem)
+            {
+                headerItem.IsSelected = headerItem.IsSelected is null or false;
                 break;
             }
         }

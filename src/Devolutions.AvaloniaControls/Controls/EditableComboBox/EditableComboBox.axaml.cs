@@ -545,7 +545,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         if (e.Handled) return;
 
-        if (e.Source is InnerTextBox) this.innerTextBox.Focus();
+        // When the composite control itself receives focus (e.g. tabbed or clicked into, rather than a
+        // specific inner element like a side button), route focus to the text box so the caret lands
+        // there — the text box is the control's entry point.
+        if (ReferenceEquals(e.Source, this)) this.innerTextBox.Focus();
     }
 
     protected override void OnInitialized()
@@ -633,25 +636,87 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                 else if (e.Key == Key.Tab)
                 {
                     NavigationDirection? direction = e.Key.ToNavigationDirection(e.KeyModifiers);
-                    if (direction is NavigationDirection dir && (dir == NavigationDirection.Previous || dir == NavigationDirection.Next))
+                    if (direction is NavigationDirection dir && (dir == NavigationDirection.Previous || dir == NavigationDirection.Next)
+                        && this.TryMoveFocusOutsideOnTab(dir, e.KeyModifiers))
                     {
-                        Visual? containerChild = this;
-                        while (containerChild.FindAncestorOfType<INavigableContainer>() is { } container &&
-                               (containerChild = container as Visual) != null)
-                        {
-                            IInputElement? nextControl = GetNextControl(container, dir, this, false);
-                            if (nextControl is not null)
-                            {
-                                e.Handled = true;
-                                nextControl.Focus(NavigationMethod.Tab, e.KeyModifiers);
-                                return;
-                            }
-                        }
+                        e.Handled = true;
+                        return;
                     }
                 }
             }
 
             this.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Moves keyboard focus to the next (or previous) focusable control that lies outside this
+    /// EditableComboBox, using Avalonia's tree-wide tab traversal. Unlike walking a parent Grid's direct
+    /// children, this works regardless of how the control is nested (e.g. wrapped in a StackPanel). The
+    /// control's own inner content is navigated separately (in InnerComboBox) before this is reached.
+    /// </summary>
+    private bool TryMoveFocusOutsideOnTab(NavigationDirection direction, KeyModifiers keyModifiers)
+    {
+        if (TopLevel.GetTopLevel(this) is not Visual root)
+        {
+            return false;
+        }
+
+        // Single pass over the window's visual tree in document order (the default tab order). Walking the
+        // whole tree (rather than a parent Grid's direct children) means this works no matter how the control
+        // is nested, e.g. wrapped in a StackPanel. This control's own subtree (chrome + inner content) is
+        // contiguous in that order, so we can find the focusable stop just outside it without materializing
+        // the full list. Inner content was already navigated in InnerComboBox.
+        bool forward = direction != NavigationDirection.Previous;
+        InputElement? beforeSelf = null; // last stop before our subtree — the target when tabbing backward
+        bool pastSelf = false;
+
+        foreach (Visual visual in root.GetVisualDescendants())
+        {
+            if (visual is not InputElement { Focusable: true, IsEffectivelyVisible: true, IsEffectivelyEnabled: true } stop)
+            {
+                continue;
+            }
+
+            if (IsSelfOrDescendant(stop))
+            {
+                if (!forward)
+                {
+                    break; // going back: the last stop before our subtree (beforeSelf) is the answer
+                }
+
+                pastSelf = true;
+                continue;
+            }
+
+            if (forward && pastSelf)
+            {
+                stop.Focus(NavigationMethod.Tab, keyModifiers); // first stop after our subtree
+                return true;
+            }
+
+            beforeSelf = stop;
+        }
+
+        if (!forward && beforeSelf is not null)
+        {
+            beforeSelf.Focus(NavigationMethod.Tab, keyModifiers);
+            return true;
+        }
+
+        return false;
+
+        bool IsSelfOrDescendant(Visual v)
+        {
+            for (Visual? p = v; p is not null; p = p.GetVisualParent())
+            {
+                if (ReferenceEquals(p, this))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

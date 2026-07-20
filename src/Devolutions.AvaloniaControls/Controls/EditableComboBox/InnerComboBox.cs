@@ -206,39 +206,12 @@ public partial class EditableComboBox
                     return;
                 }
 
-                Visual? containerChild = this.parent;
-                while (containerChild.FindAncestorOfType<INavigableContainer>() is { } container &&
-                       (containerChild = container as Visual) != null)
+                // Inner content is exhausted; move focus to the next control outside the EditableComboBox.
+                // Delegated to a tree-wide traversal so it works no matter how the control is nested.
+                if (this.parent.TryMoveFocusOutsideOnTab(dir, e.KeyModifiers))
                 {
-                    nextControl = GetNextControl(container, dir, this.parent, false);
-                    if (nextControl is not null)
-                    {
-                        e.Handled = true;
-                        nextControl.Focus(NavigationMethod.Tab, e.KeyModifiers);
-                        return;
-                    }
-                }
-
-                containerChild = this.parent;
-                while (containerChild.FindAncestorOfType<Grid>() is { } grid)
-                {
-                    int index = -1;
-                    if (containerChild is Control control) index = grid.Children.IndexOf(control);
-
-                    int increment = dir == NavigationDirection.Previous ? -1 : 1;
-                    index += increment;
-                    for (; 0 <= index && index < grid.Children.Count; index += increment)
-                    {
-                        nextControl = grid.Children[index];
-                        if (nextControl is { Focusable: true, IsEffectivelyVisible: true, IsEffectivelyEnabled: true })
-                        {
-                            e.Handled = true;
-                            nextControl.Focus(NavigationMethod.Tab, e.KeyModifiers);
-                            return;
-                        }
-                    }
-
-                    containerChild = grid;
+                    e.Handled = true;
+                    return;
                 }
             }
 

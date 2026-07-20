@@ -10,395 +10,698 @@
     <viewModels:EditableComboBoxViewModel />
   </UserControl.DataContext>
 
-  <StackPanel>
-    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
-      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <EditableComboBox Width="200" CaretBrush="Transparent">
-        <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-        <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-      </EditableComboBox>
-    </StackPanel>
-    <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the EditableComboBoxes) at runtime -->
-    <Grid Margin="20" ColumnDefinitions="900 Auto *">
-      <Border Grid.Column="0" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
-      <Grid ColumnDefinitions="Auto * 24 Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
-        <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
-          <Bold>Preferred Usage Pattern: </Bold>
-        </TextBlock>
-        <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Default mode (platform-specific)
-        </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="10 0 20 0">
+  <ScrollViewer>
+    <StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+        <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+        <EditableComboBox Width="200" CaretBrush="Transparent">
           <EditableComboBoxItem>Option 1</EditableComboBoxItem>
           <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3 (Default)</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
         </EditableComboBox>
+      </StackPanel>
+      <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the EditableComboBoxes) at runtime -->
+      <Grid Margin="20" ColumnDefinitions="900 Auto *">
+        <Border Grid.Column="0" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <Grid ColumnDefinitions="Auto * 24 Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+          <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
+            <Bold>Preferred Usage Pattern: </Bold>
+          </TextBlock>
+          <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Default mode (platform-specific)
+          </TextBlock>
+          <EditableComboBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="10 0 20 0">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3 (Default)</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
-          - watermark:
-        </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 10 15">
+            - watermark:
+          </TextBlock>
+          <EditableComboBox Grid.Column="1" Grid.Row="2" PlaceholderText="Chose one" VerticalAlignment="Top" Margin="10 0 20 0">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Disabled
-        </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="3" IsEnabled="False" VerticalAlignment="Top"
-                          Margin="10 0 20 0">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Disabled
+          </TextBlock>
+          <EditableComboBox Grid.Column="1" Grid.Row="3" IsEnabled="False" VerticalAlignment="Top"
+                            Margin="10 0 20 0">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 5 10 15">
-          - Disabled (with selected value)
-        </TextBlock>
-        <EditableComboBox Grid.Column="1" Grid.Row="4" IsEnabled="False" VerticalAlignment="Top"
-                          Value="Option 1"
-                          Margin="10 0 20 0">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 5 10 15">
+            - Disabled (with selected value)
+          </TextBlock>
+          <EditableComboBox Grid.Column="1" Grid.Row="4" IsEnabled="False" VerticalAlignment="Top"
+                            Value="Option 1"
+                            Margin="10 0 20 0">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
-          - MaxDropDownWidth:
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="5"
-          MaxDropDownWidth="280"
-          VerticalAlignment="Top"
-          Margin="10 0 20 20">
-          <EditableComboBoxItem>Short option</EditableComboBoxItem>
-          <EditableComboBoxItem>This is a deliberately very long dropdown entry used to validate MaxDropDownWidth: 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ end</EditableComboBoxItem>
-          <EditableComboBoxItem>Another option</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
+            - MaxDropDownWidth:
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="5"
+            MaxDropDownWidth="280"
+            VerticalAlignment="Top"
+            Margin="10 0 20 20">
+            <EditableComboBoxItem>Short option</EditableComboBoxItem>
+            <EditableComboBoxItem>This is a deliberately very long dropdown entry used to validate MaxDropDownWidth: 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ end</EditableComboBoxItem>
+            <EditableComboBoxItem>Another option</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Scrolling options list
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="6"
-          MaxDropDownWidth=""
-          MaxDropDownHeight="100" VerticalAlignment="Top"
-          Margin="10 0 20 20">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 6</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 7</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 8</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 9</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 10</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 11</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 12</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 13</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 14</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 15</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 16</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 17</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 18</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 19</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Scrolling options list
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="6"
+            MaxDropDownWidth=""
+            MaxDropDownHeight="100" VerticalAlignment="Top"
+            Margin="10 0 20 20">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 6</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 7</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 8</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 9</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 10</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 11</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 12</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 13</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 14</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 15</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 16</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 17</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 18</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 19</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" Margin="0 5 10 15">
-          - "Immediate" mode:<LineBreak />(default in the DevExpress theme)
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="7"
-          VerticalAlignment="Top"
-          Mode="Immediate"
-          Margin="10 0 20 20">
-          <EditableComboBoxItem>gpt-5</EditableComboBoxItem>
-          <EditableComboBoxItem>gpt-5-chat-latest</EditableComboBoxItem>
-          <EditableComboBoxItem>gpt-5-mini</EditableComboBoxItem>
-          <EditableComboBoxItem>gpt-4.1</EditableComboBoxItem>
-          <EditableComboBoxItem>gpt-4.1-mini</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" Margin="0 5 10 15">
+            - "Immediate" mode:<LineBreak />(default in the DevExpress theme)
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="7"
+            VerticalAlignment="Top"
+            Mode="Immediate"
+            Margin="10 0 20 20">
+            <EditableComboBoxItem>gpt-5</EditableComboBoxItem>
+            <EditableComboBoxItem>gpt-5-chat-latest</EditableComboBoxItem>
+            <EditableComboBoxItem>gpt-5-mini</EditableComboBoxItem>
+            <EditableComboBoxItem>gpt-4.1</EditableComboBoxItem>
+            <EditableComboBoxItem>gpt-4.1-mini</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Top" Margin="0 5 10 15">
-          - "Filter" mode:<LineBreak />
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="8"
-          VerticalAlignment="Top"
-          Mode="Filter"
-          Margin="10 0 20 20">
-          <EditableComboBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <VirtualizingStackPanel />
-            </ItemsPanelTemplate>
-          </EditableComboBox.ItemsPanel>
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 6</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 7</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 8</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 9</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 10</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 11</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 12</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 13</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 14</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 15</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 16</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 17</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 18</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 19</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 20</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 21</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 22</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 23</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 24</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 25</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 26</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 27</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 28</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 29</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 31</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 32</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 33</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 34</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 35</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 36</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 37</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 38</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 39</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 40</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 41</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 42</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 43</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 44</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 45</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 46</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 47</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 48</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 49</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 50</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 51</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 52</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 53</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 54</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 55</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 56</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 57</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 58</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 59</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 60</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 61</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 62</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 63</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 64</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 65</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 66</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 67</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 68</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 69</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 70</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 71</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 72</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 73</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 74</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 75</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 76</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 77</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 78</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 79</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 80</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 81</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 82</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 83</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 84</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 85</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 86</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 87</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 88</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 89</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 90</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 91</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 92</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 93</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 94</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 95</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 96</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 97</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 98</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 99</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 100</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 101</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="8" VerticalAlignment="Top" Margin="0 5 10 15">
+            - "Filter" mode:<LineBreak />
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="8"
+            VerticalAlignment="Top"
+            Mode="Filter"
+            Margin="10 0 20 20">
+            <EditableComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </EditableComboBox.ItemsPanel>
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 6</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 7</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 8</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 9</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 10</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 11</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 12</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 13</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 14</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 15</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 16</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 17</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 18</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 19</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 20</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 21</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 22</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 23</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 24</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 25</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 26</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 27</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 28</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 29</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 31</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 32</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 33</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 34</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 35</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 36</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 37</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 38</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 39</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 40</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 41</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 42</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 43</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 44</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 45</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 46</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 47</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 48</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 49</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 50</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 51</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 52</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 53</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 54</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 55</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 56</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 57</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 58</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 59</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 60</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 61</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 62</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 63</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 64</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 65</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 66</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 67</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 68</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 69</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 70</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 71</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 72</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 73</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 74</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 75</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 76</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 77</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 78</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 79</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 80</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 81</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 82</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 83</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 84</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 85</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 86</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 87</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 88</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 89</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 90</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 91</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 92</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 93</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 94</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 95</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 96</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 97</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 98</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 99</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 100</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 101</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Inner left, right, and<LineBreak />left-of-dropdown-arrow content
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="9"
-          VerticalAlignment="Top"
-          Mode="Filter"
-          Margin="10 0 10 20">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+          <TextBlock Grid.Column="0" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Inner left, right, and<LineBreak />left-of-dropdown-arrow content
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="9"
+            VerticalAlignment="Top"
+            Mode="Filter"
+            Margin="10 0 10 20">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
 
-          <EditableComboBox.InnerLeftContent>
-            <Button Command="{Binding GreenCommand}"><Border Width="8" Height="8" Background="Green" /></Button>
-          </EditableComboBox.InnerLeftContent>
-          <EditableComboBox.InnerLeftOfDropDownArrowContent>
-            <Button Command="{Binding OrangeCommand}"><Border Width="8" Height="8" Background="Orange" /></Button>
-          </EditableComboBox.InnerLeftOfDropDownArrowContent>
-          <EditableComboBox.InnerRightContent>
-            <Button Command="{Binding RedCommand}"><Border Width="8" Height="8" Background="Red" /></Button>
-          </EditableComboBox.InnerRightContent>
-        </EditableComboBox>
-        
-        <Border Grid.Column="2" Grid.Row="9" Width="12" Height="12" Margin="0 0 20 20" Background="{Binding SelectedBrush}" />
+            <EditableComboBox.InnerLeftContent>
+              <Button Command="{Binding GreenCommand}"><Border Width="8" Height="8" Background="Green" /></Button>
+            </EditableComboBox.InnerLeftContent>
+            <EditableComboBox.InnerLeftOfDropDownArrowContent>
+              <Button Command="{Binding OrangeCommand}"><Border Width="8" Height="8" Background="Orange" /></Button>
+            </EditableComboBox.InnerLeftOfDropDownArrowContent>
+            <EditableComboBox.InnerRightContent>
+              <Button Command="{Binding RedCommand}"><Border Width="8" Height="8" Background="Red" /></Button>
+            </EditableComboBox.InnerRightContent>
+          </EditableComboBox>
+          
+          <Border Grid.Column="2" Grid.Row="9" Width="12" Height="12" Margin="0 0 20 20" Background="{Binding SelectedBrush}" />
 
-        <TextBlock Grid.Column="0" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Required error:<LineBreak />
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="10"
-          VerticalAlignment="Top"
-          PlaceholderText="Required error"
-          Value="{Binding RequiredTextValue}"
-          Margin="10 0 20 20" />
+          <TextBlock Grid.Column="0" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Required error:<LineBreak />
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="10"
+            VerticalAlignment="Top"
+            PlaceholderText="Required error"
+            Value="{Binding RequiredTextValue}"
+            Margin="10 0 20 20" />
 
-        <TextBlock Grid.Column="0" Grid.Row="11" VerticalAlignment="Top" Margin="0 5 10 15">
-          - Filter + AllowCustomValue=False:<LineBreak />(reverts if nothing selected)
-        </TextBlock>
-        <EditableComboBox
-          Grid.Column="1" Grid.Row="11"
-          VerticalAlignment="Top"
-          Mode="Filter"
-          AllowCustomValue="False"
-          PlaceholderText="Type to filter..."
-          Margin="10 0 20 20">
-          <EditableComboBoxItem>Option 1</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 2</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 3</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 4</EditableComboBoxItem>
-          <EditableComboBoxItem>Option 5</EditableComboBoxItem>
-        </EditableComboBox>
+          <TextBlock Grid.Column="0" Grid.Row="11" VerticalAlignment="Top" Margin="0 5 10 15">
+            - Filter + AllowCustomValue=False:<LineBreak />(reverts if nothing selected)
+          </TextBlock>
+          <EditableComboBox
+            Grid.Column="1" Grid.Row="11"
+            VerticalAlignment="Top"
+            Mode="Filter"
+            AllowCustomValue="False"
+            PlaceholderText="Type to filter..."
+            Margin="10 0 20 20">
+            <EditableComboBoxItem>Option 1</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 2</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 3</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 4</EditableComboBoxItem>
+            <EditableComboBoxItem>Option 5</EditableComboBoxItem>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
-          - SelectedItem binding:
-        </TextBlock>
-        <EditableComboBox Grid.Column="4" Grid.Row="1"
-                          ItemsSource="{Binding Countries}"
-                          SelectedItem="{Binding SelectedCountry}"
-                          Mode="Filter"
-                          AllowCustomValue="False"
-                          PlaceholderText="Choose a country..." 
-                          Margin="10 0 20 0" />
-        <TextBlock Grid.Column="4" Grid.Row="2" Margin="10 0 20 20">
-          <TextBlock.Text>
-            <MultiBinding StringFormat="Selected: {0} ({1})">
-              <Binding Path="SelectedCountry.Name" />
-              <Binding Path="SelectedCountry.Code" />
-            </MultiBinding>
-          </TextBlock.Text>
-        </TextBlock>
-        <TextBlock Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 0">
-          - Dynamic ItemsSource:<LineBreak />(some common, some not)
-        </TextBlock>
-        <EditableComboBox Grid.Column="4" Grid.Row="3"
-          ItemsSource="{Binding DynamicCountries}"
-          SelectedItem="{Binding DynamicSelectedCountry}"
-          Mode="Filter"
-          AllowCustomValue="False"
-          PlaceholderText="Choose a country..."
-          Margin="10 0 20 0" />
-        <TextBlock Grid.Column="4" Grid.Row="4" Margin="10 0 20 0">
-          <TextBlock.Text>
-            <MultiBinding StringFormat="Selected: {0} ({1})">
-              <Binding Path="DynamicSelectedCountry.Name" />
-              <Binding Path="DynamicSelectedCountry.Code" />
-            </MultiBinding>
-          </TextBlock.Text>
-        </TextBlock>
-        <Button Grid.Column="4" Grid.Row="5" 
-                Command="{Binding ToggleCountrySetCommand}"
-                Content="{Binding DynamicSetLabel, StringFormat='Switch to {0}'}"
-                Margin="10 0 20 20" />
+          <TextBlock Grid.Column="3" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 10 15">
+            - SelectedItem binding:
+          </TextBlock>
+          <EditableComboBox Grid.Column="4" Grid.Row="1"
+                            ItemsSource="{Binding Countries}"
+                            SelectedItem="{Binding SelectedCountry}"
+                            Mode="Filter"
+                            AllowCustomValue="False"
+                            PlaceholderText="Choose a country..." 
+                            Margin="10 0 20 0" />
+          <TextBlock Grid.Column="4" Grid.Row="2" Margin="10 0 20 20">
+            <TextBlock.Text>
+              <MultiBinding StringFormat="Selected: {0} ({1})">
+                <Binding Path="SelectedCountry.Name" />
+                <Binding Path="SelectedCountry.Code" />
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+          <TextBlock Grid.Column="3" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 10 0">
+            - Dynamic ItemsSource:<LineBreak />(some common, some not)
+          </TextBlock>
+          <EditableComboBox Grid.Column="4" Grid.Row="3"
+            ItemsSource="{Binding DynamicCountries}"
+            SelectedItem="{Binding DynamicSelectedCountry}"
+            Mode="Filter"
+            AllowCustomValue="False"
+            PlaceholderText="Choose a country..."
+            Margin="10 0 20 0" />
+          <TextBlock Grid.Column="4" Grid.Row="4" Margin="10 0 20 0">
+            <TextBlock.Text>
+              <MultiBinding StringFormat="Selected: {0} ({1})">
+                <Binding Path="DynamicSelectedCountry.Name" />
+                <Binding Path="DynamicSelectedCountry.Code" />
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+          <Button Grid.Column="4" Grid.Row="5" 
+                  Command="{Binding ToggleCountrySetCommand}"
+                  Content="{Binding DynamicSetLabel, StringFormat='Switch to {0}'}"
+                  Margin="10 0 20 20" />
 
-        <TextBlock Grid.Column="3" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 0">
-          - Programmatic SelectedItem:
-        </TextBlock>
-        <EditableComboBox Grid.Column="4" Grid.Row="6"
-          ItemsSource="{Binding Countries}"
-          SelectedItem="{Binding ProgrammaticSelectedCountry}"
-          Mode="Filter"
-          AllowCustomValue="False"
-          PlaceholderText="Choose a country..."
-          Margin="10 0 20 0" />
-        <TextBlock Grid.Column="4" Grid.Row="7" Margin="10 4 20 4">
-          <TextBlock.Text>
-            <MultiBinding StringFormat="Selected: {0} ({1})">
-              <Binding Path="ProgrammaticSelectedCountry.Name" />
-              <Binding Path="ProgrammaticSelectedCountry.Code" />
-            </MultiBinding>
-          </TextBlock.Text>
-        </TextBlock>
-        <StackPanel Grid.Column="4" Grid.Row="8" Orientation="Horizontal" Spacing="4" Margin="10 0 20 20">
-          <Button Command="{Binding SelectFirstCountryCommand}" Content="Select first" />
-          <Button Command="{Binding SelectLastCountryCommand}" Content="Select last" />
-          <Button Command="{Binding ClearCountryCommand}" Content="Clear" />
-        </StackPanel>
-        
-        <TextBlock Grid.Column="3" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
-          - ItemTemplate:
-        </TextBlock>
-        <EditableComboBox Grid.Column="4" Grid.Row="9"
-                          ItemsSource="{Binding Countries2}"
-                          SelectedItem="{Binding SelectedCountry2}"
-                          Mode="Filter"
-                          AllowCustomValue="False"
-                          PlaceholderText="Choose a country..." 
-                          Margin="10 0 20 0">
-          <EditableComboBox.ItemTemplate>
-            <EditableComboBoxDataTemplate x:DataType="viewModels:Country" SelectedItemValue="{Binding Name}">
-              <DockPanel>
-                <Border DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18" Padding="2">
-                  <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Code}" Foreground="White" FontWeight="Bold" FontSize="8" />
-                </Border>
-                <SearchHighlightTextBlock
-                  Content="{Binding Name}"
-                  VerticalAlignment="Center"
-                  Margin="6 0 0 0" />
-              </DockPanel>
-            </EditableComboBoxDataTemplate>
-          </EditableComboBox.ItemTemplate>
-          <EditableComboBox.InnerLeftContent>
-            <Border IsVisible="{Binding SelectedCountry2, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">
-              <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedCountry2.Code, FallbackValue={x:Null}}" Foreground="White" FontWeight="Bold" FontSize="8" />
-            </Border>
-          </EditableComboBox.InnerLeftContent>
-        </EditableComboBox>
+          <TextBlock Grid.Column="3" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 10 0">
+            - Programmatic SelectedItem:
+          </TextBlock>
+          <EditableComboBox Grid.Column="4" Grid.Row="6"
+            ItemsSource="{Binding Countries}"
+            SelectedItem="{Binding ProgrammaticSelectedCountry}"
+            Mode="Filter"
+            AllowCustomValue="False"
+            PlaceholderText="Choose a country..."
+            Margin="10 0 20 0" />
+          <TextBlock Grid.Column="4" Grid.Row="7" Margin="10 4 20 4">
+            <TextBlock.Text>
+              <MultiBinding StringFormat="Selected: {0} ({1})">
+                <Binding Path="ProgrammaticSelectedCountry.Name" />
+                <Binding Path="ProgrammaticSelectedCountry.Code" />
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+          <StackPanel Grid.Column="4" Grid.Row="8" Orientation="Horizontal" Spacing="4" Margin="10 0 20 20">
+            <Button Command="{Binding SelectFirstCountryCommand}" Content="Select first" />
+            <Button Command="{Binding SelectLastCountryCommand}" Content="Select last" />
+            <Button Command="{Binding ClearCountryCommand}" Content="Clear" />
+          </StackPanel>
+          
+          <TextBlock Grid.Column="3" Grid.Row="9" VerticalAlignment="Top" Margin="0 5 10 15">
+            - ItemTemplate:
+          </TextBlock>
+          <EditableComboBox Grid.Column="4" Grid.Row="9"
+                            ItemsSource="{Binding Countries2}"
+                            SelectedItem="{Binding SelectedCountry2}"
+                            Mode="Filter"
+                            AllowCustomValue="False"
+                            PlaceholderText="Choose a country..." 
+                            Margin="10 0 20 0">
+            <EditableComboBox.ItemTemplate>
+              <EditableComboBoxDataTemplate x:DataType="viewModels:Country" SelectedItemValue="{Binding Name}">
+                <DockPanel>
+                  <Border DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18" Padding="2">
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Code}" Foreground="White" FontWeight="Bold" FontSize="8" />
+                  </Border>
+                  <SearchHighlightTextBlock
+                    Content="{Binding Name}"
+                    VerticalAlignment="Center"
+                    Margin="6 0 0 0" />
+                </DockPanel>
+              </EditableComboBoxDataTemplate>
+            </EditableComboBox.ItemTemplate>
+            <EditableComboBox.InnerLeftContent>
+              <Border IsVisible="{Binding SelectedCountry2, Converter={x:Static ObjectConverters.IsNotNull}}" DockPanel.Dock="Left" Background="Gray" CornerRadius="9" Width="18" Height="18">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedCountry2.Code, FallbackValue={x:Null}}" Foreground="White" FontWeight="Bold" FontSize="8" />
+              </Border>
+            </EditableComboBox.InnerLeftContent>
+          </EditableComboBox>
 
-        <TextBlock Grid.Column="3" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 0">
-          - 1000 items (memory leak test):
-        </TextBlock>
-        <EditableComboBox Grid.Column="4" Grid.Row="10"
-                          SelectedItem="{Binding SelectedLargeItem}"
-                          ItemsSource="{Binding LargeItemsList}"
-                          AllowCustomValue="False"
-                          Mode="Filter"
-                          VerticalAlignment="Top"
-                          Margin="10 0 20 0" />
-        <TextBlock Grid.Column="4" Grid.Row="11" Margin="10 4 20 15"
-                   Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
+          <TextBlock Grid.Column="3" Grid.Row="10" VerticalAlignment="Top" Margin="0 5 10 0">
+            - 1000 items (memory leak test):
+          </TextBlock>
+          <EditableComboBox Grid.Column="4" Grid.Row="10"
+                            SelectedItem="{Binding SelectedLargeItem}"
+                            ItemsSource="{Binding LargeItemsList}"
+                            AllowCustomValue="False"
+                            Mode="Filter"
+                            VerticalAlignment="Top"
+                            Margin="10 0 20 0" />
+          <TextBlock Grid.Column="4" Grid.Row="11" Margin="10 4 20 15"
+                     Text="{Binding SelectedLargeItem, StringFormat='{}Selected: {0}'}" />
+        </Grid>
+        </Border>
+        <GridSplitter Grid.Column="1" Width="6" ResizeDirection="Columns"
+                      Background="Gray" />
       </Grid>
-      </Border>
-      <GridSplitter Grid.Column="1" Width="6" ResizeDirection="Columns"
-                    Background="Gray" />
-    </Grid>
-  </StackPanel>
+
+      <!-- Grouping: mirrors the GroupedComboBox demo set. Headers are inserted into the drop-down;
+           the empty group renders without a header. -->
+      <StackPanel Margin="20 0 20 20" Spacing="30" MaxWidth="1080" HorizontalAlignment="Left">
+        <StackPanel Spacing="6">
+          <TextBlock FontWeight="Bold" FontSize="18">Grouping</TextBlock>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Same feature set as GroupedComboBox, on the editable control: set a group selector and headers are
+            interleaved into the drop-down. Grouping is data-driven (GroupBinding/GroupSelector), so unlike
+            GroupedComboBox there is no inline pure-XAML header form.
+          </TextBlock>
+        </StackPanel>
+
+        <Grid ColumnDefinitions="Auto,220" ColumnSpacing="20">
+          <Border Grid.Column="0" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+            <Grid ColumnDefinitions="Auto 240 260" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto" RowSpacing="18" ColumnSpacing="16">
+
+              <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Named groups:</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="0" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding GroupedItems}"
+                                  SelectedItem="{Binding SelectedGroupedItem}"
+                                  PlaceholderText="Choose food"
+                                  AllowCustomValue="False"
+                                  HeaderMargin="{Binding HeaderMargin}"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                                  GroupOrderAlphabetical="True">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Category}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                      </StackPanel>
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedGroupedItem.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="0" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Ordered as Meats, Fruits, Vegetables. Edit HeaderMargin (right) while the popup is open to verify inherited dynamic updates.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Order via binding:</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="1" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding GroupedItems}"
+                                  SelectedItem="{Binding SelectedBindingOrderedItem}"
+                                  PlaceholderText="Choose food"
+                                  AllowCustomValue="False"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderBinding="{Binding Group.SortOrder}">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Category}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                      </StackPanel>
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedBindingOrderedItem.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Same custom order (Meats, Fruits, Vegetables) as above, but expressed with GroupOrderBinding bound to each item's shared Group.SortOrder — no order delegate needed.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Empty group:</Bold><LineBreak /><TextBlock Classes="code">EmptyGroupName</TextBlock><LineBreak /><Bold>unset</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="2" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding EmptyGroupItems}"
+                                  SelectedItem="{Binding SelectedEmptyGroupItem}"
+                                  PlaceholderText="Choose item"
+                                  AllowCustomValue="False"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                                  MaxDropDownHeight="220">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <TextBlock Text="{Binding Name}" />
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedEmptyGroupItem.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Empty category has no header and occupies no header space — items start at the top of the popup.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Empty group:</Bold><LineBreak /><TextBlock Classes="code">EmptyGroupName</TextBlock><LineBreak /><Bold>set</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="3" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding EmptyGroupItems}"
+                                  SelectedItem="{Binding SelectedEmptyGroupItemWithName}"
+                                  PlaceholderText="Choose item"
+                                  AllowCustomValue="False"
+                                  HeaderForeground="#266fd2"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+                                  EmptyGroupName="NO GROUP"
+                                  MaxDropDownHeight="220">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <TextBlock Text="{Binding Name}" />
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedEmptyGroupItemWithName.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Empty category gets a display header via EmptyGroupName and a custom header foreground.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Scrolling:</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="4" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding LargeGroupedItems}"
+                                  SelectedItem="{Binding SelectedLargeGroupedItem}"
+                                  PlaceholderText="Many items"
+                                  AllowCustomValue="False"
+                                  Mode="Filter"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderAlphabetical="True"
+                                  MaxDropDownHeight="200">
+                  <EditableComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                  </EditableComboBox.ItemsPanel>
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <SearchHighlightTextBlock Content="{Binding Name}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Category}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                      </StackPanel>
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding SelectedLargeGroupedItem.Name, FallbackValue='(none)'}" />
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="4" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                1500 items across 3 categories with a VirtualizingStackPanel. Type to filter — empty groups drop out and their headers with them.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>HeaderTemplate:</Bold>
+              </TextBlock>
+              <StackPanel Grid.Column="1" Grid.Row="5" Spacing="8">
+                <EditableComboBox ItemsSource="{Binding GroupedItems}"
+                                  PlaceholderText="Custom headers"
+                                  AllowCustomValue="False"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                                  GroupOrderAlphabetical="True"
+                                  HeaderMargin="2 8 8 4">
+                  <EditableComboBox.HeaderTemplate>
+                    <DataTemplate>
+                      <Border Background="{DynamicResource SystemControlForegroundAccentBrush}"
+                              CornerRadius="3"
+                              Padding="6 2"
+                              HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding}"
+                                   Foreground="White"
+                                   FontWeight="Bold"
+                                   FontSize="11" />
+                      </Border>
+                    </DataTemplate>
+                  </EditableComboBox.HeaderTemplate>
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                      <TextBlock Text="{Binding Name}" />
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+              </StackPanel>
+              <TextBlock Grid.Column="2" Grid.Row="5" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                HeaderTemplate customizes only the group headers. Selectable rows still use ItemTemplate.
+              </TextBlock>
+
+              <TextBlock Grid.Column="0" Grid.Row="6" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Bold>Inner slots:</Bold>
+              </TextBlock>
+              <EditableComboBox Grid.Column="1" Grid.Row="6"
+                                ItemsSource="{Binding GroupedItems}"
+                                PlaceholderText="Same chrome + slots"
+                                AllowCustomValue="False"
+                                GroupBinding="{Binding Category}"
+                                GroupOrderAlphabetical="True">
+                <EditableComboBox.ItemTemplate>
+                  <EditableComboBoxDataTemplate x:DataType="viewModels:FoodItem" SelectedItemValue="{Binding Name}">
+                    <TextBlock Text="{Binding Name}" />
+                  </EditableComboBoxDataTemplate>
+                </EditableComboBox.ItemTemplate>
+                <EditableComboBox.InnerLeftContent>
+                  <Border Width="16" Height="16" Background="Green" CornerRadius="8" VerticalAlignment="Center" />
+                </EditableComboBox.InnerLeftContent>
+                <EditableComboBox.InnerLeftOfDropDownArrowContent>
+                  <Border Width="16" Height="16" Background="Orange" CornerRadius="8" VerticalAlignment="Center" />
+                </EditableComboBox.InnerLeftOfDropDownArrowContent>
+                <EditableComboBox.InnerRightContent>
+                  <TextBlock Text="kg" Margin="2 0" VerticalAlignment="Center" />
+                </EditableComboBox.InnerRightContent>
+              </EditableComboBox>
+              <TextBlock Grid.Column="2" Grid.Row="6" TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                Grouping composes with the EditableComboBox inner-content slots.
+              </TextBlock>
+            </Grid>
+          </Border>
+
+          <Border Grid.Column="1" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}" VerticalAlignment="Top">
+            <StackPanel Spacing="16">
+              <StackPanel Spacing="6">
+                <TextBlock FontWeight="Bold" FontSize="16">Live tests</TextBlock>
+                <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+                  Keep a dropdown open on the left, then edit these values to validate dynamic updates.
+                </TextBlock>
+              </StackPanel>
+
+              <StackPanel Spacing="6">
+                <TextBlock Text="HeaderMargin" FontWeight="SemiBold" />
+                <TextBox Text="{Binding HeaderMarginText}" PlaceholderText="4 6 8 4" />
+                <TextBlock Text="Applied to the Named groups combo." TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+              </StackPanel>
+
+              <Separator />
+
+              <StackPanel Spacing="8">
+                <TextBlock Text="Dynamic items" FontWeight="SemiBold" />
+                <EditableComboBox ItemsSource="{Binding DynamicItems}"
+                                  SelectedItem="{Binding SelectedDynamicItem}"
+                                  PlaceholderText="Edit this list live"
+                                  AllowCustomValue="False"
+                                  HeaderMargin="{Binding HeaderMargin}"
+                                  GroupBinding="{Binding Category}"
+                                  GroupOrderAlphabetical="True"
+                                  MaxDropDownHeight="260">
+                  <EditableComboBox.ItemTemplate>
+                    <EditableComboBoxDataTemplate x:DataType="viewModels:DynamicFoodItem" SelectedItemValue="{Binding Name}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Category}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}" />
+                      </StackPanel>
+                    </EditableComboBoxDataTemplate>
+                  </EditableComboBox.ItemTemplate>
+                </EditableComboBox>
+                <TextBlock Text="Selected:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding SelectedDynamicItem.Name, FallbackValue='(none)'}" />
+              </StackPanel>
+
+              <StackPanel Spacing="8">
+                <TextBlock Text="Add" FontWeight="SemiBold" />
+                <TextBox Text="{Binding NewItemName}" PlaceholderText="Name" />
+                <TextBox Text="{Binding NewItemCategory}" PlaceholderText="Category" />
+                <Button Content="Add item" Command="{Binding AddDynamicItemCommand}" />
+              </StackPanel>
+
+              <StackPanel Spacing="8">
+                <TextBlock Text="Edit selected" FontWeight="SemiBold" />
+                <TextBox Text="{Binding EditItemName}" PlaceholderText="Name" />
+                <TextBox Text="{Binding EditItemCategory}" PlaceholderText="Category" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Button Content="Apply edit" Command="{Binding ApplyDynamicItemEditCommand}" />
+                  <Button Content="Remove" Command="{Binding RemoveSelectedDynamicItemCommand}" />
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

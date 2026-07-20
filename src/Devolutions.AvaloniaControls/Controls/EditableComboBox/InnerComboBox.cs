@@ -8,9 +8,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.VisualTree;
+using Converters;
 
 // ReSharper disable MemberHidesStaticFromOuterClass
 public partial class EditableComboBox
@@ -22,6 +25,7 @@ public partial class EditableComboBox
     [TemplatePart("PART_InnerRightContent", typeof(ItemsControl), IsRequired = true)]
     [PseudoClasses(":dropdown-open-from-top", ":dropdown-overflow-left", ":dropdown-overflow-right", ":is-split-between-screens", ":is-outside-screens-boundaries")]
     [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+    [RequiresDynamicCode("BindingEvaluator require preserved types")]
     public class InnerComboBox : ComboBox, INavigableContainer
     {
         public static readonly StyledProperty<Thickness> FocusedBorderThicknessProperty = AvaloniaProperty.Register<InnerComboBox, Thickness>(
@@ -51,6 +55,8 @@ public partial class EditableComboBox
 
         public static readonly StyledProperty<bool> ValueFilterDropdownProperty =
             AvaloniaProperty.Register<InnerComboBox, bool>(nameof(ValueFilterDropdown));
+
+        private static readonly object HeaderRecycleKey = typeof(ComboBoxGroupHeader);
 
         static InnerComboBox()
         {
@@ -114,7 +120,14 @@ public partial class EditableComboBox
         protected override void ClearContainerForItemOverride(Control element)
         {
             base.ClearContainerForItemOverride(element);
-            if (element is EditableComboBoxItem editableComboBoxItem)
+            if (element is GroupedComboBoxHeaderItem headerContainer)
+            {
+                headerContainer.ClearValue(GroupedComboBoxHeaderItem.ForegroundProperty);
+                headerContainer.ClearValue(GroupedComboBoxHeaderItem.MarginProperty);
+                headerContainer.ClearValue(GroupedComboBoxHeaderItem.ContentTemplateProperty);
+                headerContainer.Content = null;
+            }
+            else if (element is EditableComboBoxItem editableComboBoxItem)
             {
                 editableComboBoxItem.ClearValue(EditableComboBoxItem.ValueProperty);
                 editableComboBoxItem.OriginalSourceItem = null;
@@ -142,15 +155,17 @@ public partial class EditableComboBox
         }
 
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
-            new EditableComboBoxItem
-            {
-                // No reason to set it here, this will be set in PrepareContainerForItemOverride
-                Value = string.Empty,
-            };
+            recycleKey == HeaderRecycleKey
+                ? new GroupedComboBoxHeaderItem()
+                : new EditableComboBoxItem
+                {
+                    // No reason to set it here, this will be set in PrepareContainerForItemOverride
+                    Value = string.Empty,
+                };
 
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            recycleKey = DefaultRecycleKey;
+            recycleKey = item is ComboBoxGroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
             return true;
         }
 
@@ -243,6 +258,27 @@ public partial class EditableComboBox
         protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
         {
             base.PrepareContainerForItemOverride(container, item, index);
+
+            if (container is GroupedComboBoxHeaderItem headerContainer)
+            {
+                if (item is ComboBoxGroupHeader header)
+                {
+                    headerContainer[!GroupedComboBoxHeaderItem.ForegroundProperty] = new MultiBinding
+                    {
+                        Converter = new FirstNonNullValueMultiConverter(),
+                        Bindings =
+                        [
+                            this.parent[!EditableComboBox.HeaderForegroundProperty],
+                            new DynamicResourceExtension("SystemControlForegroundAccentBrush"),
+                        ],
+                    };
+                    headerContainer[!GroupedComboBoxHeaderItem.MarginProperty] = this.parent[!EditableComboBox.HeaderMarginProperty];
+                    headerContainer.Content = header;
+                }
+
+                headerContainer.ContentTemplate = this.parent.HeaderTemplate;
+                return;
+            }
 
             if (container is not EditableComboBoxItem editableComboBoxItem)
             {

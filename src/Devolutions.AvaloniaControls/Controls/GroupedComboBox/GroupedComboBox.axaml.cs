@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -65,7 +64,7 @@ public class GroupedComboBox : ComboBox
     public static readonly StyledProperty<string?> EmptyGroupNameProperty =
         AvaloniaProperty.Register<GroupedComboBox, string?>(nameof(EmptyGroupName));
 
-    protected static readonly object HeaderRecycleKey = typeof(GroupHeader);
+    protected static readonly object HeaderRecycleKey = typeof(ComboBoxGroupHeader);
 
     private readonly List<object> sourceItems = [];
 
@@ -124,6 +123,13 @@ public class GroupedComboBox : ComboBox
         set => this.SetValue(GroupOrderSelectorProperty, value);
     }
 
+    /// <summary>
+    /// Binding used to order the groups. It is evaluated against a single representative item of each group,
+    /// so the bound value must be consistent for every item in the same group — i.e. a function of the same
+    /// grouping defined by <see cref="GroupBinding"/>/<see cref="GroupSelector"/> (for example, bind to a
+    /// property of the shared group object). The raw value is used for comparison, so a numeric property
+    /// sorts numerically.
+    /// </summary>
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(ItemsSource))]
     public BindingBase? GroupOrderBinding
@@ -175,7 +181,7 @@ public class GroupedComboBox : ComboBox
             return false;
         }
 
-        recycleKey = item is GroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
+        recycleKey = item is ComboBoxGroupHeader ? HeaderRecycleKey : DefaultRecycleKey;
         return true;
     }
 
@@ -185,7 +191,7 @@ public class GroupedComboBox : ComboBox
 
         if (container is not GroupedComboBoxHeaderItem headerContainer) return;
 
-        if (item is GroupHeader header)
+        if (item is ComboBoxGroupHeader header)
         {
             headerContainer[!GroupedComboBoxHeaderItem.ForegroundProperty] = new MultiBinding()
             {
@@ -308,7 +314,7 @@ public class GroupedComboBox : ComboBox
         {
             object? item = this.Items[i];
             GroupedComboBoxItem? groupedComboBoxItem = item as GroupedComboBoxItem;
-            if (item is not GroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
+            if (item is not ComboBoxGroupHeader && (groupedComboBoxItem is null || groupedComboBoxItem.IsEnabled))
             {
                 return i;
             }
@@ -363,41 +369,12 @@ public class GroupedComboBox : ComboBox
         Func<object, string>? selector = this.ResolveGroupSelector();
         if (selector is null) return;
 
-        List<(object item, string groupName, int originalIndex)> source = new(this.sourceItems.Count);
-        for (int i = 0; i < this.sourceItems.Count; ++i)
-        {
-            object item = this.sourceItems[i];
-            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-            source.Add((item, selector(item) ?? string.Empty, i));
-        }
-
-        IEnumerable<IGrouping<string, (object item, string groupName, int originalIndex)>> grouped = source.GroupBy(static x => x.groupName);
-        Func<string, object?>? orderFn = this.ResolveGroupOrderSelector();
-        grouped = (orderFn, this.GroupOrderAlphabetical) switch
-        {
-            ({ } fn, true) => grouped.OrderBy(g => fn(g.Key)).ThenBy(static g => g.Key, StringComparer.Ordinal),
-            ({ } fn, false) => grouped.OrderBy(g => fn(g.Key)),
-            (null, true) => grouped.OrderBy(static g => g.Key, StringComparer.Ordinal),
-            (null, false) => grouped,
-        };
-
-        grouped.TryGetNonEnumeratedCount(out var groupedCount);
-        List<object> displayItems = new(source.Count + groupedCount);
-        string? emptyName = this.EmptyGroupName;
-        bool hasEmptyName = string.IsNullOrEmpty(emptyName);
-        foreach (IGrouping<string, (object item, string groupName, int originalIndex)> group in grouped)
-        {
-            bool isEmptyHeaderless = group.Key.Length == 0 && hasEmptyName;
-            if (!isEmptyHeaderless)
-            {
-                displayItems.Add(new GroupHeader(group.Key.Length == 0 ? emptyName : group.Key));
-            }
-
-            foreach ((object item, _, _) in group.OrderBy(static x => x.originalIndex))
-            {
-                displayItems.Add(item);
-            }
-        }
+        List<object> displayItems = ComboBoxGroupedItemsBuilder.Build(
+            this.sourceItems,
+            selector,
+            this.ResolveGroupOrderSelector(selector),
+            this.GroupOrderAlphabetical,
+            this.EmptyGroupName);
 
         this.applyingDisplayItems = true;
         try
@@ -421,25 +398,22 @@ public class GroupedComboBox : ComboBox
         return this.GetValue(GroupSelectorProperty);
     }
 
-    private Func<string, object?>? ResolveGroupOrderSelector()
+    private Func<object, object?>? ResolveGroupOrderSelector(Func<object, string>? groupSelector)
     {
+        // GroupOrderBinding reads the sort order off each item (like GroupBinding reads the group key),
+        // keeping the raw value so numeric orders sort numerically (10 after 2, not lexically).
         if (this.GetValue(GroupOrderBindingProperty) is { } binding)
         {
             this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
-            return this.bindingEvaluator?.BuildFormattedGetter(binding);
+            return this.bindingEvaluator?.BuildRawGetter(binding);
         }
 
-        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn)
+        // GroupOrderSelector maps a group key to an order; adapt it to operate on an item.
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn && groupSelector is not null)
         {
-            return str => orderFn(str);
+            return item => orderFn(groupSelector(item));
         }
 
         return null;
-    }
-
-    private readonly struct GroupHeader(string? text)
-    {
-        public readonly string? text = text;
-        public override string ToString() => this.text ?? string.Empty;
     }
 }

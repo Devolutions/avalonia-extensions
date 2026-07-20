@@ -48,18 +48,23 @@ public partial class GroupedComboBoxViewModel : ObservableObject
 
     private int newItemIndex = 1;
 
+    // Shared group objects (name + sort order), reused across the items that belong to them.
+    private static readonly FoodGroup Meats = new("Meats", 0);
+    private static readonly FoodGroup Fruits = new("Fruits", 1);
+    private static readonly FoodGroup Vegetables = new("Vegetables", 2);
+
     public List<FoodItem> GroupedItems { get; } = new()
     {
-        new FoodItem("Apple", "Fruits", "Folder"),
-        new FoodItem("Banana", "Fruits", "Folder"),
-        new FoodItem("Orange", "Fruits", "Folder"),
-        new FoodItem("Strawberry", "Fruits", "Folder"),
-        new FoodItem("Carrot", "Vegetables", "User"),
-        new FoodItem("Broccoli", "Vegetables", "User"),
-        new FoodItem("Lettuce", "Vegetables", "User"),
-        new FoodItem("Chicken", "Meats", "Computer"),
-        new FoodItem("Beef", "Meats", "Computer"),
-        new FoodItem("Pork", "Meats", "Computer"),
+        new FoodItem("Apple", Fruits, "Folder"),
+        new FoodItem("Banana", Fruits, "Folder"),
+        new FoodItem("Orange", Fruits, "Folder"),
+        new FoodItem("Strawberry", Fruits, "Folder"),
+        new FoodItem("Carrot", Vegetables, "User"),
+        new FoodItem("Broccoli", Vegetables, "User"),
+        new FoodItem("Lettuce", Vegetables, "User"),
+        new FoodItem("Chicken", Meats, "Computer"),
+        new FoodItem("Beef", Meats, "Computer"),
+        new FoodItem("Pork", Meats, "Computer"),
     };
 
     public List<FoodItem> EmptyGroupItems { get; } = new()

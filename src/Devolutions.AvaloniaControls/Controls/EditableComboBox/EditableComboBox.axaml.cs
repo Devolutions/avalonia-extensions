@@ -15,6 +15,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Metadata;
 using Avalonia.VisualTree;
 using Helpers;
 
@@ -22,6 +23,7 @@ using Helpers;
 [TemplatePart("PART_InnerComboBox", typeof(InnerComboBox), IsRequired = true)]
 [PseudoClasses(PC_DROPDOWN_OPEN, PC_PRESSED)]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public partial class EditableComboBox : SelectingItemsControl, IInputElement
 {
     public const string PC_DROPDOWN_OPEN = ":dropdownopen";
@@ -108,6 +110,37 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     public static readonly StyledProperty<bool> AllowCustomValueProperty =
         AvaloniaProperty.Register<EditableComboBox, bool>(nameof(AllowCustomValue), true);
 
+    public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
+        AvaloniaProperty.Register<EditableComboBox, Func<object, string>?>("GroupSelector");
+
+    public static readonly StyledProperty<BindingBase?> GroupBindingProperty =
+        AvaloniaProperty.Register<EditableComboBox, BindingBase?>(nameof(GroupBinding));
+
+    public static readonly StyledProperty<bool> GroupOrderAlphabeticalProperty =
+        AvaloniaProperty.Register<EditableComboBox, bool>(nameof(GroupOrderAlphabetical));
+
+    public static readonly StyledProperty<Func<string, int>?> GroupOrderSelectorProperty =
+        AvaloniaProperty.Register<EditableComboBox, Func<string, int>?>("GroupOrderSelector");
+
+    public static readonly StyledProperty<BindingBase?> GroupOrderBindingProperty =
+        AvaloniaProperty.Register<EditableComboBox, BindingBase?>(nameof(GroupOrderBinding));
+
+    public static readonly StyledProperty<IBrush?> HeaderForegroundProperty =
+        AvaloniaProperty.Register<EditableComboBox, IBrush?>(nameof(HeaderForeground));
+
+    public static readonly StyledProperty<Thickness> HeaderMarginProperty =
+        AvaloniaProperty.Register<EditableComboBox, Thickness>(nameof(HeaderMargin), new Thickness(4, 6, 8, 4));
+
+    public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
+        AvaloniaProperty.Register<EditableComboBox, IDataTemplate?>(nameof(HeaderTemplate));
+
+    /// <summary>
+    /// Display name to use for the empty/null group key. When <c>null</c>, items in the empty
+    /// group render without a header (e.g. a "current" item shown at the top of the drop-down).
+    /// </summary>
+    public static readonly StyledProperty<string?> EmptyGroupNameProperty =
+        AvaloniaProperty.Register<EditableComboBox, string?>(nameof(EmptyGroupName));
+
     private CompositeDisposable? compositeDisposable;
 
     private readonly AvaloniaList<object?> filteredItems = new();
@@ -132,6 +165,13 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         ItemsControl.IsTabStopProperty.Unregister(typeof(EditableComboBox));
 
         InputElement.FocusableProperty.OverrideDefaultValue<EditableComboBox>(true);
+
+        GroupSelectorProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
+        GroupBindingProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
+        GroupOrderAlphabeticalProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
+        GroupOrderSelectorProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
+        GroupOrderBindingProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
+        EmptyGroupNameProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
     }
 
     public EditableComboBox()
@@ -288,6 +328,72 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         get => this.GetValue(AllowCustomValueProperty);
         set => this.SetValue(AllowCustomValueProperty, value);
+    }
+
+    [Obsolete("Use GroupBinding instead for XAML-friendly, type-checked group selection.")]
+    public Func<object, string>? GroupSelector
+    {
+        get => this.GetValue(GroupSelectorProperty);
+        set => this.SetValue(GroupSelectorProperty, value);
+    }
+
+    [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public BindingBase? GroupBinding
+    {
+        get => this.GetValue(GroupBindingProperty);
+        set => this.SetValue(GroupBindingProperty, value);
+    }
+
+    public bool GroupOrderAlphabetical
+    {
+        get => this.GetValue(GroupOrderAlphabeticalProperty);
+        set => this.SetValue(GroupOrderAlphabeticalProperty, value);
+    }
+
+    public Func<string, int>? GroupOrderSelector
+    {
+        get => this.GetValue(GroupOrderSelectorProperty);
+        set => this.SetValue(GroupOrderSelectorProperty, value);
+    }
+
+    /// <summary>
+    /// Binding used to order the groups. It is evaluated against a single representative item of each group,
+    /// so the bound value must be consistent for every item in the same group — i.e. a function of the same
+    /// grouping defined by <see cref="GroupBinding"/>/<see cref="GroupSelector"/> (for example, bind to a
+    /// property of the shared group object). The raw value is used for comparison, so a numeric property
+    /// sorts numerically.
+    /// </summary>
+    [AssignBinding]
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public BindingBase? GroupOrderBinding
+    {
+        get => this.GetValue(GroupOrderBindingProperty);
+        set => this.SetValue(GroupOrderBindingProperty, value);
+    }
+
+    public IBrush? HeaderForeground
+    {
+        get => this.GetValue(HeaderForegroundProperty);
+        set => this.SetValue(HeaderForegroundProperty, value);
+    }
+
+    public Thickness HeaderMargin
+    {
+        get => this.GetValue(HeaderMarginProperty);
+        set => this.SetValue(HeaderMarginProperty, value);
+    }
+
+    public IDataTemplate? HeaderTemplate
+    {
+        get => this.GetValue(HeaderTemplateProperty);
+        set => this.SetValue(HeaderTemplateProperty, value);
+    }
+
+    public string? EmptyGroupName
+    {
+        get => this.GetValue(EmptyGroupNameProperty);
+        set => this.SetValue(EmptyGroupNameProperty, value);
     }
 
     public IBrush? SelectionBrush
@@ -483,7 +589,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                 }
                 else if (this.innerComboBox.SelectedIndex == -1)
                 {
-                    this.innerComboBox.SelectedIndex = 0;
+                    // Skip a leading group header so the first arrow-down lands on a selectable item.
+                    this.innerComboBox.SelectedIndex = this.NextSelectableIndex(-1, 1);
                 }
 
                 e.Handled = true;
@@ -579,7 +686,15 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         {
             if (this.innerComboBox.Popup?.IsInsidePopup(source) == true)
             {
-                this.innerComboBox.Popup.Close();
+                // A release on a non-selectable group header is a no-op: swallow it but keep the
+                // drop-down open (matches GroupedComboBox). A release on a real item closes as usual.
+                // Headers are disabled and therefore transparent to hit-testing, so we can't rely on
+                // e.Source — test the realized header containers' bounds against the pointer instead.
+                if (!this.IsPointerOverHeader(e))
+                {
+                    this.innerComboBox.Popup.Close();
+                }
+
                 e.Handled = true;
             }
             else if (this.PseudoClasses.Contains(PC_PRESSED))
@@ -653,8 +768,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         }
         else
         {
-            this.filteredItems.Clear();
-            this.filteredItems.AddRange(this.ItemsView);
+            this.ApplyDropdownItems(this.ItemsView);
         }
 
         this.SyncCommittedSelectionState();
@@ -665,8 +779,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (this.Mode != EditableComboBoxMode.Filter) return;
 
         string trimmedSearch = this.Value?.Trim() ?? string.Empty;
-        this.filteredItems.Clear();
-        this.filteredItems.AddRange(
+        this.ApplyDropdownItems(
             this.ItemsView
                 .Where(item =>
                 {
@@ -675,10 +788,109 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
                 }));
     }
 
+    /// <summary>
+    /// Populates <see cref="filteredItems"/> (the drop-down's item source) from the given base items.
+    /// When a group selector is configured, group headers are interleaved via <see cref="ComboBoxGroupedItemsBuilder"/>;
+    /// otherwise the items are applied as-is (preserving the previous, un-grouped behavior).
+    /// </summary>
+    private void ApplyDropdownItems(IEnumerable<object?> baseItems)
+    {
+        this.filteredItems.Clear();
+
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+        if (groupSelector is null)
+        {
+            this.filteredItems.AddRange(baseItems);
+            return;
+        }
+
+        this.filteredItems.AddRange(
+            ComboBoxGroupedItemsBuilder.Build(
+                baseItems,
+                groupSelector,
+                this.ResolveGroupOrderSelector(groupSelector),
+                this.GroupOrderAlphabetical,
+                this.EmptyGroupName));
+    }
+
+    private Func<object, string>? ResolveGroupSelector()
+    {
+        if (this.GetValue(GroupBindingProperty) is { } binding)
+        {
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildFormattedGetter(binding);
+        }
+
+        return this.GetValue(GroupSelectorProperty);
+    }
+
+    private Func<object, object?>? ResolveGroupOrderSelector(Func<object, string>? groupSelector)
+    {
+        // GroupOrderBinding reads the sort order off each item (like GroupBinding reads the group key),
+        // keeping the raw value so numeric orders sort numerically (10 after 2, not lexically).
+        if (this.GetValue(GroupOrderBindingProperty) is { } binding)
+        {
+            this.bindingEvaluator ??= BindingEvaluator.FromItemsControl(this);
+            return this.bindingEvaluator?.BuildRawGetter(binding);
+        }
+
+        // GroupOrderSelector maps a group key to an order; adapt it to operate on an item.
+        if (this.GetValue(GroupOrderSelectorProperty) is { } orderFn && groupSelector is not null)
+        {
+            return item => orderFn(groupSelector(item));
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// True when the pointer is over a realized group-header container. Group headers are disabled
+    /// (so they're transparent to hit-testing and never become <c>e.Source</c>); we test their bounds
+    /// directly so a click on a header can be treated as a no-op that keeps the drop-down open.
+    /// </summary>
+    private bool IsPointerOverHeader(PointerEventArgs e)
+    {
+        foreach (Control container in this.innerComboBox.GetRealizedContainers())
+        {
+            if (container is GroupedComboBoxHeaderItem { IsVisible: true } header &&
+                new Rect(header.Bounds.Size).Contains(e.GetPosition(header)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Finds the next drop-down entry in <paramref name="direction"/> (+1 / -1) that is a real,
+    /// selectable item — skipping group headers (checked against the data list, so it is robust even
+    /// before containers are realized) and any realized-but-disabled item containers. Returns -1 if none.
+    /// </summary>
+    private int NextSelectableIndex(int startIndex, int direction)
+    {
+        for (int i = startIndex + direction; i >= 0 && i < this.filteredItems.Count; i += direction)
+        {
+            if (this.filteredItems[i] is ComboBoxGroupHeader)
+            {
+                continue;
+            }
+
+            if (this.innerComboBox.ContainerFromIndex(i) is { IsEffectivelyEnabled: false })
+            {
+                continue;
+            }
+
+            return i;
+        }
+
+        return -1;
+    }
+
     private string? GetSelectedItemValue()
     {
         object? selected = this.innerComboBox.SelectedItem;
-        if (selected is null)
+        if (selected is null || selected is ComboBoxGroupHeader)
         {
             return null;
         }
@@ -690,6 +902,12 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private string GetValueForItem(object? item)
     {
+        // Group headers are non-selectable pseudo-items; they never map to a value.
+        if (item is ComboBoxGroupHeader)
+        {
+            return string.Empty;
+        }
+
         if (item is EditableComboBoxItem comboBoxItem)
         {
             return comboBoxItem.Value;
@@ -700,18 +918,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void HighlightNextItem()
     {
-        bool isFirst = true;
-        while (this.innerComboBox.SelectedIndex < this.filteredItems.Count - 1)
+        int next = this.NextSelectableIndex(this.innerComboBox.SelectedIndex, 1);
+        if (next >= 0)
         {
-            // NOTE: Setting SelectedIndex to an out-of-bound value will actually result in Avalonia setting the SelectedIndex
-            //       to -1, which would break this logic (we would always be < Count -1).
-            if (!isFirst && this.innerComboBox.SelectedIndex < 0) return;
-
-            isFirst = false;
-
-            this.innerComboBox.SelectedIndex += 1;
-            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEffectivelyEnabled == true) break;
+            this.innerComboBox.SelectedIndex = next;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -719,11 +929,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void HighlightPreviousItem()
     {
-        while (this.innerComboBox.SelectedIndex > 0)
+        int previous = this.NextSelectableIndex(this.innerComboBox.SelectedIndex, -1);
+        if (previous >= 0)
         {
-            this.innerComboBox.SelectedIndex -= 1;
-            Control? container = this.innerComboBox.ContainerFromIndex(this.innerComboBox.SelectedIndex);
-            if (container?.IsEffectivelyEnabled == true) break;
+            this.innerComboBox.SelectedIndex = previous;
         }
 
         if (this.Mode == EditableComboBoxMode.Immediate) this.innerTextBox.SelectAll();
@@ -809,6 +1018,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         foreach (object? item in this.innerComboBox.ItemsView)
         {
+            if (item is ComboBoxGroupHeader) continue;
+
             if (this.GetValueForItem(item) == this.Value)
             {
                 this.innerComboBox.SelectedItem = item;
@@ -822,10 +1033,18 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private void UpdateSelection()
     {
+        object? selected = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
+
+        // Never commit a group header pseudo-item as the selection; leave the prior selection intact.
+        if (selected is ComboBoxGroupHeader)
+        {
+            return;
+        }
+
         this.syncingSelectedItemFromInnerCombo = true;
         try
         {
-            this.SelectedItem = this.innerComboBox.SelectedIndex >= 0 ? this.innerComboBox.SelectedItem : null;
+            this.SelectedItem = selected;
             this.SyncCommittedSelectionState();
         }
         finally

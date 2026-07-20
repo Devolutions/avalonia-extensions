@@ -673,7 +673,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         foreach (Visual visual in root.GetVisualDescendants())
         {
-            if (visual is not InputElement { Focusable: true, IsEffectivelyVisible: true, IsEffectivelyEnabled: true } stop)
+            if (visual is not InputElement { Focusable: true, IsTabStop: true, IsEffectivelyVisible: true, IsEffectivelyEnabled: true } stop)
             {
                 continue;
             }

@@ -38,14 +38,11 @@ public class PageDiscoveryTests
     Assert.NotEmpty(discoveredCases);
     Assert.Equal(expectedCases, discoveredCases);
 
-    Assert.Contains(
-      discoveredCases,
-      static key => key.Contains("ControlAlignment", StringComparison.Ordinal) &&
-                    key.Contains("|MacClassic|", StringComparison.Ordinal));
-    Assert.Contains(
-      discoveredCases,
-      static key => key.Contains("ToggleButtonExperiments", StringComparison.Ordinal) &&
-                    key.Contains("|LiquidGlass|", StringComparison.Ordinal));
+    foreach (ThemeId themeId in VisualDiscoveryThemes)
+    {
+      string marker = $"|{themeId}|";
+      Assert.Contains(discoveredCases, key => key.Contains(marker, StringComparison.Ordinal));
+    }
   }
 
   private static string BuildCaseKey(Type pageType, ThemeId themeId, Type? viewModelType) =>

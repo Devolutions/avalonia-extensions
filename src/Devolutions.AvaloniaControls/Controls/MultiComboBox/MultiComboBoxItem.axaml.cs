@@ -229,6 +229,12 @@ public class MultiComboBoxSelectAllItem : ContentControl
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
+        base.OnPointerPressed(e);
+        if (e.Handled || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
         this.IsSelected = this.IsSelected is null or false;
     }
 
@@ -344,7 +350,14 @@ public class MultiComboBoxGroupHeaderItem : ContentControl
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
+        base.OnPointerPressed(e);
+        if (e.Handled || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
         this.IsSelected = this.IsSelected is null or false;
+        e.Handled = true;
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() =>

@@ -1,9 +1,10 @@
 namespace Devolutions.AvaloniaControls.Behaviors;
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -17,17 +18,19 @@ using Avalonia.VisualTree;
 /// Menu item templates align their leading toggle (check/radio) and icon columns across
 /// sibling items using <c>Grid.IsSharedSizeScope</c> + <c>SharedSizeGroup</c>. When the set of
 /// occupied leading columns shrinks — the last checked item is unchecked, the last item with an
-/// icon is removed, or the <c>single-icon-slot</c> class is toggled off/on — the vacated column
-/// keeps its previously measured width, leaving a phantom empty column that pushes the header
-/// text across.
+/// icon is removed or hidden, or the <c>single-icon-slot</c> class is toggled off/on — the vacated
+/// column keeps its previously measured width, leaving a phantom empty column that pushes the
+/// header text across.
 /// </para>
 ///
 /// <para>
 /// This behavior is attached to every <see cref="MenuItem"/> (via the control theme). All items
 /// that live under the same shared-size scope share a single <see cref="ScopeState"/>, which
-/// watches the scope for layout changes and, whenever the "occupied columns" signature changes,
-/// rebuilds the scope by toggling <c>Grid.IsSharedSizeScope</c> off and back on. Rebuilding forces
-/// a fresh measurement pass so columns that are no longer needed collapse to zero.
+/// observes the inputs that decide the occupied leading columns — each item's <c>Icon</c>,
+/// <c>IsChecked</c> and <c>IsVisible</c>, the item collection, and the owner's <c>single-icon-slot</c>
+/// class — and, whenever that "needed columns" signature changes, rebuilds the scope by toggling
+/// <c>Grid.IsSharedSizeScope</c> off and back on. Rebuilding forces a fresh measurement pass so
+/// columns that are no longer needed collapse to zero.
 /// </para>
 /// </summary>
 public static class MenuSharedSizeRefreshBehavior
@@ -103,71 +106,150 @@ public static class MenuSharedSizeRefreshBehavior
         return null;
     }
 
+    /// <summary>The leading columns/modes a shared-size scope currently needs to reserve.</summary>
+    [Flags]
+    private enum LeadingColumns
+    {
+        None = 0,
+        SingleIconSlot = 1 << 0,
+        Icon = 1 << 1,
+        Check = 1 << 2,
+    }
+
     private sealed class ScopeState
     {
         private readonly Control scopeOwner;
-        private string lastSignature = string.Empty;
+        private readonly ItemsControl? owner;
+        private readonly Dictionary<MenuItem, IDisposable[]> itemSubscriptions = new();
+        private LeadingColumns? lastColumns;
         private DispatcherOperation? scheduled;
         private bool rescoping;
+        private bool disposed;
 
         public ScopeState(Control scopeOwner)
         {
             this.scopeOwner = scopeOwner;
-            this.scopeOwner.LayoutUpdated += this.OnLayoutUpdated;
-            this.scopeOwner.DetachedFromVisualTree += this.OnDetached;
+            this.owner = scopeOwner.TemplatedParent as ItemsControl ?? scopeOwner.FindAncestorOfType<ItemsControl>();
+
+            this.scopeOwner.DetachedFromVisualTree += this.OnScopeOwnerDetached;
+
+            if (this.owner is not null)
+            {
+                this.owner.ContainerPrepared += this.OnContainerPrepared;
+                this.owner.ContainerClearing += this.OnContainerClearing;
+                ((INotifyCollectionChanged)this.owner.Classes).CollectionChanged += this.OnClassesChanged;
+
+                foreach (Control container in this.owner.GetRealizedContainers())
+                {
+                    this.Observe(container);
+                }
+            }
+
+            this.Evaluate();
         }
 
-        private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e)
+        private void OnContainerPrepared(object? sender, ContainerPreparedEventArgs e)
         {
-            this.scopeOwner.LayoutUpdated -= this.OnLayoutUpdated;
-            this.scopeOwner.DetachedFromVisualTree -= this.OnDetached;
-            this.scheduled?.Abort();
-            states.Remove(this.scopeOwner);
+            this.Observe(e.Container);
+            this.Evaluate();
         }
 
-        private void OnLayoutUpdated(object? sender, EventArgs e)
+        private void OnContainerClearing(object? sender, ContainerClearingEventArgs e)
         {
-            if (this.rescoping)
+            this.Unobserve(e.Container);
+            this.Evaluate();
+        }
+
+        private void OnClassesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            // The Classes collection also churns for pseudo-classes (:pointerover, :selected, ...);
+            // only react when the single-icon-slot class itself is added or removed.
+            if (e.Action == NotifyCollectionChangedAction.Reset
+                || e.NewItems?.OfType<string>().Contains(SingleIconSlotClass) == true
+                || e.OldItems?.OfType<string>().Contains(SingleIconSlotClass) == true)
+            {
+                this.Evaluate();
+            }
+        }
+
+        private void Observe(Control container)
+        {
+            if (container is not MenuItem menuItem || this.itemSubscriptions.ContainsKey(menuItem))
             {
                 return;
             }
 
-            string signature = this.ComputeSignature();
-            if (signature == this.lastSignature)
+            // Anything that changes which leading columns an item occupies.
+            this.itemSubscriptions[menuItem] = new[]
+            {
+                menuItem.GetObservable(Visual.IsVisibleProperty).Subscribe(_ => this.Evaluate()),
+                menuItem.GetObservable(MenuItem.IconProperty).Subscribe(_ => this.Evaluate()),
+                menuItem.GetObservable(MenuItem.IsCheckedProperty).Subscribe(_ => this.Evaluate()),
+            };
+        }
+
+        private void Unobserve(Control container)
+        {
+            if (container is MenuItem menuItem && this.itemSubscriptions.Remove(menuItem, out IDisposable[]? subscriptions))
+            {
+                foreach (IDisposable subscription in subscriptions)
+                {
+                    subscription.Dispose();
+                }
+            }
+        }
+
+        private void Evaluate()
+        {
+            if (this.disposed || this.rescoping)
             {
                 return;
             }
 
-            this.lastSignature = signature;
+            LeadingColumns columns = this.ComputeColumns();
+            if (columns == this.lastColumns)
+            {
+                return;
+            }
+
+            this.lastColumns = columns;
             this.ScheduleRescope();
         }
 
-        private string ComputeSignature()
+        private LeadingColumns ComputeColumns()
         {
-            var builder = new StringBuilder();
+            LeadingColumns columns = LeadingColumns.None;
 
             // Whether the single-icon-slot mode is active for this scope (class typically sits on
-            // the menu container that is templated with this shared-size scope, or an ancestor).
+            // the menu container that owns these items, or an ancestor menu).
             bool singleIconSlot = this.scopeOwner.GetVisualAncestors()
                 .Prepend(this.scopeOwner)
-                .Any(v => v is StyledElement styled and (ContextMenu or Menu or MenuFlyoutPresenter or MenuItem) 
+                .Any(v => v is StyledElement styled and (ContextMenu or Menu or MenuFlyoutPresenter or MenuItem)
                           && styled.Classes.Contains(SingleIconSlotClass));
-            builder.Append(singleIconSlot ? 'S' : '-').Append('|');
-
-            foreach (MenuItem item in this.scopeOwner.GetVisualDescendants().OfType<MenuItem>())
+            if (singleIconSlot)
             {
-                // Only consider items that belong directly to this scope, not items nested in a
-                // deeper scope (their own submenu popup).
-                if (FindScopeOwner(item) != this.scopeOwner)
+                columns |= LeadingColumns.SingleIconSlot;
+            }
+
+            foreach (MenuItem item in this.itemSubscriptions.Keys)
+            {
+                if (!item.IsVisible)
                 {
                     continue;
                 }
 
-                builder.Append(item.Icon is not null ? 'I' : '-');
-                builder.Append(item.IsChecked ? 'C' : '-');
+                if (item.Icon is not null)
+                {
+                    columns |= LeadingColumns.Icon;
+                }
+
+                if (item.IsChecked)
+                {
+                    columns |= LeadingColumns.Check;
+                }
             }
 
-            return builder.ToString();
+            return columns;
         }
 
         private void ScheduleRescope()
@@ -180,7 +262,7 @@ public static class MenuSharedSizeRefreshBehavior
         {
             this.scheduled = null;
 
-            if (!Grid.GetIsSharedSizeScope(this.scopeOwner))
+            if (this.disposed || !Grid.GetIsSharedSizeScope(this.scopeOwner))
             {
                 return;
             }
@@ -192,10 +274,52 @@ public static class MenuSharedSizeRefreshBehavior
             Dispatcher.UIThread.Post(
                 () =>
                 {
-                    Grid.SetIsSharedSizeScope(this.scopeOwner, true);
+                    if (!this.disposed)
+                    {
+                        Grid.SetIsSharedSizeScope(this.scopeOwner, true);
+                    }
+
                     this.rescoping = false;
                 },
                 DispatcherPriority.Background);
+        }
+
+        private void OnScopeOwnerDetached(object? sender, VisualTreeAttachmentEventArgs e) => this.Dispose();
+
+        private void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            this.scheduled?.Abort();
+            this.scopeOwner.DetachedFromVisualTree -= this.OnScopeOwnerDetached;
+
+            if (this.owner is not null)
+            {
+                this.owner.ContainerPrepared -= this.OnContainerPrepared;
+                this.owner.ContainerClearing -= this.OnContainerClearing;
+                ((INotifyCollectionChanged)this.owner.Classes).CollectionChanged -= this.OnClassesChanged;
+            }
+
+            foreach (IDisposable[] subscriptions in this.itemSubscriptions.Values)
+            {
+                foreach (IDisposable subscription in subscriptions)
+                {
+                    subscription.Dispose();
+                }
+            }
+
+            this.itemSubscriptions.Clear();
+
+            // Register keeps a single state per scope owner, so this is the only entry; drop it only
+            // if it is still ours (never clobber a newer state registered after a detach/re-attach).
+            if (states.TryGetValue(this.scopeOwner, out ScopeState? current) && current == this)
+            {
+                states.Remove(this.scopeOwner);
+            }
         }
     }
 }

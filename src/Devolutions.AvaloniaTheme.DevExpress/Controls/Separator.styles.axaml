@@ -20,12 +20,14 @@
 
     <Style Selector="ContextMenu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
                      Menu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                     MenuFlyoutPresenter.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
                      MenuItem.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter">
         <Setter Property="Grid.Column" Value="0" />
     </Style>
 
     <Style Selector="ContextMenu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
                      Menu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                     MenuFlyoutPresenter.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
                      MenuItem.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter">
         <Setter Property="IsVisible" Value="False" />
     </Style>

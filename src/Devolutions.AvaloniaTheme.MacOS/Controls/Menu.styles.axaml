@@ -24,4 +24,24 @@
       <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
   </Style>
+
+  <!--
+    Opt-in "single-icon-slot" mode: the check/radio indicator and the icon share a single
+    leading column instead of reserving one column each. The icon moves into the toggle column,
+    and is hidden while the item is checked so the check/bullet takes the shared slot (only one
+    is ever visible, which keeps the column width stable).
+  -->
+  <Style Selector="ContextMenu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                   Menu.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                   MenuFlyoutPresenter.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter,
+                   MenuItem.single-icon-slot MenuItem /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="Grid.Column" Value="0" />
+  </Style>
+
+  <Style Selector="ContextMenu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                   Menu.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                   MenuFlyoutPresenter.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter,
+                   MenuItem.single-icon-slot MenuItem:checked /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
 </Styles>

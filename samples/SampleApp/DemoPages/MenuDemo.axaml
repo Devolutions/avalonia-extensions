@@ -231,32 +231,107 @@
                 • <TextBlock Classes="code" Text="ContentPresenter#PART_HeaderPresenter" /> of the top-level menu items has a class
                 <TextBlock Classes="code" Text="TopLevelMenuItem" /> attached that allows easier styling without affecting sub-menu items. E.g. setting MaxWidth to force long names to wrap
               </TextBlock>
-              <TextBlock Classes="section-title">Open Menu example for Visual Regression testing</TextBlock>
-              <Border HorizontalAlignment="Left">
-                <MenuFlyoutPresenter>
-                  <MenuItem Header="Open session" InputGesture="&#x2318;+O" />
-                  <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
-                    <MenuItem Header="Open (embedded/tabbed)" />
-                    <MenuItem Header="Open embedded SFTP connection" />
-                    <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
-                    <MenuItem Header="-" />
-                    <MenuItem Header="Open (select credentials)..." />
-                  </MenuItem>
-                  <MenuItem Header="View password" />
-                  <MenuItem Header="Copy name" />
-                  <MenuItem Header="Copy password" />
-                  <Separator />
-                  <MenuItem Header="Focus session" />
-                  <MenuItem Header="Edit" IsEnabled="False">
-                    <MenuItem Header="Dummy1" />
-                    <MenuItem Header="Dummy2" />
-                  </MenuItem>
-                  <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
-                    <MenuItem Header="Option 1" ToggleType="CheckBox" />
-                    <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
-                  </MenuItem>
-                </MenuFlyoutPresenter>
-              </Border>
+              <StackPanel Orientation="Horizontal" Spacing="40" HorizontalAlignment="Left">
+                <StackPanel Spacing="20">
+                  <TextBlock Classes="section-title">Open Menu example for Visual Regression testing</TextBlock>
+                  <Border HorizontalAlignment="Left">
+                    <MenuFlyoutPresenter>
+                      <MenuItem Header="Open session" InputGesture="&#x2318;+O" />
+                      <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
+                        <MenuItem Header="Open (embedded/tabbed)" />
+                        <MenuItem Header="Open embedded SFTP connection" />
+                        <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
+                        <MenuItem Header="-" />
+                        <MenuItem Header="Open (select credentials)..." />
+                      </MenuItem>
+                      <MenuItem Header="View password" />
+                      <MenuItem Header="Copy name" />
+                      <MenuItem Header="Copy password" />
+                      <Separator />
+                      <MenuItem Header="Focus session" />
+                      <MenuItem Header="Edit" IsEnabled="False">
+                        <MenuItem Header="Dummy1" />
+                        <MenuItem Header="Dummy2" />
+                      </MenuItem>
+                      <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
+                        <MenuItem Header="Option 1" ToggleType="CheckBox" />
+                        <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
+                      </MenuItem>
+                    </MenuFlyoutPresenter>
+                  </Border>
+                </StackPanel>
+
+                <StackPanel Spacing="10" MaxWidth="560">
+                  <TextBlock Classes="section-title">Icon &amp; check/radio column merging (single-icon-slot)</TextBlock>
+                  <TextBlock FontSize="12" LineSpacing="2" TextWrapping="Wrap" HorizontalAlignment="Left">
+                    Add the <TextBlock Classes="code" Text="single-icon-slot" /> class to a Menu, ContextMenu,
+                    MenuFlyoutPresenter or parent MenuItem so the check/radio indicator shares the same leading
+                    column as item icons, instead of reserving a separate column for each. Flip the switch to
+                    compare — the right-hand menu always stays in the default (separate-column) mode.
+                  </TextBlock>
+                  <ToggleSwitch x:Name="SingleIconSlotToggle" IsChecked="True"
+                                OnContent="single-icon-slot: ON" OffContent="single-icon-slot: OFF"
+                                HorizontalAlignment="Left" />
+                  <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Left">
+                    <StackPanel Spacing="6">
+                      <TextBlock FontSize="12" Text="Bound to toggle (ON by default)" />
+                      <Border HorizontalAlignment="Left">
+                        <MenuFlyoutPresenter Classes.single-icon-slot="{Binding #SingleIconSlotToggle.IsChecked}">
+                          <MenuItem Header="Normal item" />
+                          <MenuItem Header="Normal item with icon">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/Folder.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                          <Separator />
+                          <MenuItem Header="Checkbox off" ToggleType="CheckBox" />
+                          <MenuItem Header="Checkbox on" ToggleType="CheckBox" IsChecked="True" />
+                          <MenuItem Header="Checkbox on, with icon" ToggleType="CheckBox" IsChecked="True">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/User.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                          <Separator />
+                          <MenuItem Header="Radio on" ToggleType="Radio" IsChecked="True" />
+                          <MenuItem Header="Radio off, with icon" ToggleType="Radio">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/Properties.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                        </MenuFlyoutPresenter>
+                      </Border>
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                      <TextBlock FontSize="12" Text="Default (always separate columns)" />
+                      <Border HorizontalAlignment="Left">
+                        <MenuFlyoutPresenter>
+                          <MenuItem Header="Normal item" />
+                          <MenuItem Header="Normal item with icon">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/Folder.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                          <Separator />
+                          <MenuItem Header="Checkbox off" ToggleType="CheckBox" />
+                          <MenuItem Header="Checkbox on" ToggleType="CheckBox" IsChecked="True" />
+                          <MenuItem Header="Checkbox on, with icon" ToggleType="CheckBox" IsChecked="True">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/User.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                          <Separator />
+                          <MenuItem Header="Radio on" ToggleType="Radio" IsChecked="True" />
+                          <MenuItem Header="Radio off, with icon" ToggleType="Radio">
+                            <MenuItem.Icon>
+                              <Svg Path="/Assets/Properties.svg" />
+                            </MenuItem.Icon>
+                          </MenuItem>
+                        </MenuFlyoutPresenter>
+                      </Border>
+                    </StackPanel>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
             </StackPanel>
           </Border>
         </DockPanel>

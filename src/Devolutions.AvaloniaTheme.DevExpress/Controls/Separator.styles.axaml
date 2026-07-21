@@ -13,7 +13,8 @@
       </design:ThemePreviewer>
     </Design.PreviewWith>
 
-    <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator">
+    <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator, MenuItem Separator">
+        <Setter Property="Background" Value="{DynamicResource MenuSeparatorBrush}" />
         <Setter Property="Margin" Value="{DynamicResource SeparatorContextMenuMargin}" />
         <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="True" />
     </Style>

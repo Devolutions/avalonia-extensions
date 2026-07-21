@@ -67,7 +67,7 @@
 
           <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
             <Run FontWeight="Bold">Note:</Run>
-            It is possible to create a separator using <TextBlock Classes="code" Text="&lt;MenuItem Header=&quot;-&quot; /&gt;" />. However, this will be rendered inside the header content area, so alignment and styling may differ from using an explicit
+            It is possible, but not recommended, to create a separator using <TextBlock Classes="code" Text="&lt;MenuItem Header=&quot;-&quot; /&gt;" /> (the second separator here). However, this will be rendered inside the header content area, so alignment and styling may differ from using an explicit
             <TextBlock Classes="code" Text="&lt;Separator /&gt;" />.
           </TextBlock>
 

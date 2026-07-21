@@ -71,6 +71,7 @@
       <Color x:Key='SecondarySearchHighlightForeground'>#ee000000</Color>
 
       <Color x:Key='MenuItemBackgroundPointerOverColor'>#eaeaea</Color>
+      <Color x:Key='MenuSeparatorColor'>#DADADA</Color>
 
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
       <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
@@ -170,6 +171,7 @@
       <Color x:Key='SecondarySearchHighlightForeground'>#ee202020</Color>
 
       <Color x:Key='MenuItemBackgroundPointerOverColor'>#3c3c3c</Color>
+      <Color x:Key='MenuSeparatorColor'>#404040</Color>
 
       <FontWeight x:Key="DefaultFontWeight">Normal</FontWeight>
       <FontWeight x:Key="DemiBoldWeight">DemiBold</FontWeight>
@@ -333,6 +335,7 @@
   <SolidColorBrush x:Key="MenuItemBackgroundPointerOver" Color="{DynamicResource MenuItemBackgroundPointerOverColor}" />
 
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
+  <SolidColorBrush x:Key="MenuSeparatorBrush" Color="{DynamicResource MenuSeparatorColor}" />
   <Thickness x:Key="SeparatorMargin">0 2</Thickness>
   <Thickness x:Key="SeparatorContextMenuMargin">7 1 0 1</Thickness>
   <x:Double x:Key="SeparatorContextMenuIconColumnWidth">30</x:Double>

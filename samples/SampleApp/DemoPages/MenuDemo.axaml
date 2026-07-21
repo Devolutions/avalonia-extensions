@@ -56,13 +56,13 @@
             <MenuItem Header="Open (embedded/tabbed)" />
             <MenuItem Header="Open embedded SFTP connection" />
             <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="Open (select credentials)..." />
           </MenuItem>
           <MenuItem Header="View password" />
           <MenuItem Header="Copy name" />
           <MenuItem Header="Copy password" />
-          <MenuItem Header="-" />
+          <Separator />
           <MenuItem Header="Focus session" />
           <MenuItem Header="Edit" IsEnabled="False">
             <MenuItem Header="Dummy1" />
@@ -84,7 +84,7 @@
           <Separator />
           <MenuItem Header="Menu Item" />
         </MenuItem>
-        <MenuItem Header="-" />
+        <Separator />
         <MenuItem Header="Tools" />
         <Separator />
         <MenuItem Header="Help">
@@ -93,7 +93,7 @@
           </MenuItem.Icon>
           <MenuItem Header="Menu Item" />
           <MenuItem Header="Menu Item" />
-          <MenuItem Header="-" />
+          <Separator />
           <MenuItem Header="Menu Item" />
           <Separator />
           <MenuItem Header="Menu Item" />
@@ -114,7 +114,7 @@
                 <MenuItem Header="Menu Item 1" />
                 <MenuItem Header="Menu Item" />
               </MenuItem>
-              <MenuItem Header="-" />
+              <Separator />
               <MenuItem Header="Copy name">
                 <MenuItem.Icon>
                   <Svg Path="/Assets/CopyName.svg" />
@@ -183,25 +183,25 @@
               <MenuItem Header="Menu Item" />
               <MenuItem Header="Menu Item" />
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="Enable User" IsEnabled="False">
               <MenuItem.Icon>
                 <Svg Path="/Assets/EnableUser.svg" />
               </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="Disable User">
               <MenuItem.Icon>
                 <Svg Path="/Assets/DisableUser.svg" />
               </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="Unlock User">
               <MenuItem.Icon>
                 <Svg Path="/Assets/UnlockUser.svg" />
               </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="More">
               <MenuItem.Icon>
                 <Svg Path="/Assets/More.svg" />
@@ -209,13 +209,13 @@
               <MenuItem Header="Menu Item" />
               <MenuItem Header="Menu Item" />
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <MenuItem Header="Private Key">
               <MenuItem.Icon>
                 <Svg Path="/Assets/PrivateKey.svg" />
               </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
           </Menu>
           <Border Background="{DynamicResource SystemRegionColor}" Padding="15">
             <StackPanel Spacing="20">
@@ -239,7 +239,7 @@
                     <MenuItem Header="Open (embedded/tabbed)" />
                     <MenuItem Header="Open embedded SFTP connection" />
                     <MenuItem Header="Open embedded SCP connection" InputGesture="&#x2318;+S" IsEnabled="False" />
-                    <MenuItem Header="-" />
+                    <Separator />
                     <MenuItem Header="Open (select credentials)..." />
                   </MenuItem>
                   <MenuItem Header="View password" />

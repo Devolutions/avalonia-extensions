@@ -16,7 +16,7 @@
             <MenuItem Header="User" />
             <MenuItem Header="Group" />
           </MenuItem>
-          <MenuItem Header="-" />
+          <Separator />
           <MenuItem Header="Test">
             <MenuItem.Icon>
               <Svg Path="/Accents/Assets/TestIconForDesignPreview.svg" />
@@ -37,7 +37,7 @@
             <MenuItem Header="_Standard" />
             <MenuItem Header="_Standard" />
           </MenuItem>
-          <MenuItem Header="-" />
+          <Separator />
           <MenuItem Header="Focus session" IsSelected="True">
             <MenuItem.Icon>
               <Svg Path="/Accents/Assets/TestIconForDesignPreview.svg" />

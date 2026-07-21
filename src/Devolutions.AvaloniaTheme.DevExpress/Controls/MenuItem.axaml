@@ -21,7 +21,7 @@
         </MenuItem>
         <MenuItem Header="Input Gesture" InputGesture="Ctrl+G" />
         <MenuItem Header="Disabled" IsEnabled="False" />
-        <MenuItem Header="-" />
+        <Separator />
         <MenuItem Header="Parent" IsSubMenuOpen="True">
           <MenuItem Header="Child 1" />
           <MenuItem Header="Child 2" />
@@ -144,6 +144,9 @@
                     BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
                     BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
+                    TextElement.FontFamily="{DynamicResource DefaultFontFamily}"
+                    TextElement.FontSize="{DynamicResource ControlFontSize}"
+                    TextElement.FontWeight="{DynamicResource DefaultFontWeight}"
                     Padding="{DynamicResource ContextMenuBorderPadding}"
                     MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                     MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"

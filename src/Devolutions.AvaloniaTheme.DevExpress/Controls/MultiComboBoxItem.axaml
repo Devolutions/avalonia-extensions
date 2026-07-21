@@ -61,6 +61,11 @@
       </ControlTemplate>
     </Setter>
 
+    <!-- Grouped mode: indent items so they read as children of the group header. -->
+    <Style Selector="^:grouped /template/ CheckBox">
+      <Setter Property="Margin" Value="16 0 0 0" />
+    </Style>
+
     <!--  Selected state  -->
     <Style Selector="^:selected">
       <Style Selector="^ /template/ Border#LayoutRoot">
@@ -84,8 +89,8 @@
       </Style>
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
+    <!-- Focused (keyboard) state only — a mouse click doesn't leave a persisting highlight -->
+    <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">
@@ -170,8 +175,8 @@
       </Style>
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
+    <!-- Focused (keyboard) state only — a mouse click doesn't leave a persisting highlight -->
+    <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#LayoutRoot">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
         <Style Selector="^ ContentPresenter#PART_ContentPresenter">
@@ -188,6 +193,78 @@
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundDisabled}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushDisabled}" />
       <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}" />
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Group header row: accent/semibold label with a leading tri-state check box that selects/deselects the
+    whole group. A transparent spacer matches the item's selection-highlight column so the row aligns. The
+    label is a separate ContentPresenter (not the CheckBox content) so its colour stays constant regardless
+    of check state. Foreground is overridden at runtime from MultiComboBox.HeaderForeground. No persisting
+    selection highlight — the check box conveys state.
+  -->
+  <ControlTheme x:Key="{x:Type MultiComboBoxGroupHeaderItem}" TargetType="MultiComboBoxGroupHeaderItem">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border
+          Name="LayoutRoot"
+          Background="Transparent"
+          MinHeight="{DynamicResource ComboBoxItemMinHeight}"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          Padding="0 0 8 0">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border
+              Name="SelectionHighlight"
+              Width="{DynamicResource ComboBoxSelectionHighlightWidth}"
+              Height="{StaticResource ComboBoxItemSelectionHighlightHeight}"
+              Margin="{DynamicResource ComboBoxSelectionHighlightMargin}"
+              VerticalAlignment="Stretch"
+              Background="Transparent"
+              CornerRadius="{DynamicResource ComboBoxSelectionHighlightRadius}" />
+
+            <CheckBox
+              IsThreeState="True"
+              IsTabStop="False"
+              Focusable="False"
+              Padding="0"
+              IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+              VerticalAlignment="Center" />
+            <ContentPresenter
+              x:Name="PART_ContentPresenter"
+              Content="{TemplateBinding Content}"
+              ContentTemplate="{TemplateBinding ContentTemplate}"
+              Foreground="{TemplateBinding Foreground}"
+              VerticalAlignment="Center"
+              Margin="6 0 0 0" />
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <!--
+      Show the accent selection bar + row tint on hover and keyboard focus, matching items. A mouse click
+      does not leave a persisting highlight (focus-visible only) — the check box conveys the selection state.
+    -->
+    <Style Selector="^:pointerover /template/ Border#LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+    </Style>
+    <Style Selector="^:pointerover /template/ Border#SelectionHighlight">
+      <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#SelectionHighlight">
+      <Setter Property="Background" Value="{DynamicResource ControlBorderSelectedBrush}" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

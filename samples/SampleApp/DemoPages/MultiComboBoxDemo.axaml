@@ -301,6 +301,144 @@
         </MultiComboBox>
         <TextBlock Text="{Binding LotOfItemsSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding LotOfItemsSelectedItemsText}" />
       </StackPanel>
+
+      <StackPanel Width="240" HorizontalAlignment="Left" Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Grouping</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          Items are grouped under headers. Each header has a leading tri-state check box that
+          selects/deselects the whole group (mixed = only some selected). Grouping is data-driven
+          via GroupBinding/GroupSelector.
+        </TextBlock>
+
+        <TextBlock>Named groups + Select All</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="Grouped"
+          SelectAllText="Select All"
+          ItemsSource="{Binding GroupedItems}"
+          SelectedItems="{Binding GroupedSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+          GroupOrderAlphabetical="True">
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+        <TextBlock Text="{Binding GroupedSelectedText, StringFormat='Selected: {0}'}" TextWrapping="Wrap" />
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>GroupOrderBinding (Group.SortOrder)</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="Ordered by SortOrder"
+          SelectAllText="Select All"
+          ItemsSource="{Binding GroupedItems}"
+          SelectedItems="{Binding GroupedOrderBindingSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderBinding="{Binding Group.SortOrder}">
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>Empty group (headerless)</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="Empty group unset"
+          SelectAllText="Select All"
+          ItemsSource="{Binding EmptyGroupItems}"
+          SelectedItems="{Binding EmptyGroupSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderSelector="{Binding EmptyGroupFirstSelector}">
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>Empty group named + HeaderForeground</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="Empty group named"
+          SelectAllText="Select All"
+          ItemsSource="{Binding EmptyGroupItems}"
+          SelectedItems="{Binding EmptyGroupNamedSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+          EmptyGroupName="NO GROUP"
+          HeaderForeground="#266FD2">
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>Large grouped (virtualization + filter)</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="1500 grouped items"
+          SelectAllText="Select All"
+          ShowFilter="True"
+          FilterText="Find an option..."
+          ItemsSource="{Binding LargeGroupedItems}"
+          SelectedItems="{Binding LargeGroupedSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderAlphabetical="True">
+          <MultiComboBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+          </MultiComboBox.ItemsPanel>
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>Custom HeaderTemplate</TextBlock>
+        <MultiComboBox
+          HorizontalAlignment="Left"
+          PlaceholderText="Custom headers"
+          SelectAllText="Select All"
+          ItemsSource="{Binding GroupedItems}"
+          SelectedItems="{Binding HeaderTemplateSelectedItems}"
+          GroupBinding="{Binding Category}"
+          GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+          GroupOrderAlphabetical="True">
+          <MultiComboBox.HeaderTemplate>
+            <DataTemplate>
+              <Border
+                Background="{DynamicResource SystemControlForegroundAccentBrush}"
+                CornerRadius="3"
+                Padding="6 2"
+                HorizontalAlignment="Left">
+                <TextBlock Text="{Binding}" Foreground="White" FontWeight="Bold" FontSize="11" />
+              </Border>
+            </DataTemplate>
+          </MultiComboBox.HeaderTemplate>
+          <MultiComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:FoodItem">
+              <SearchHighlightTextBlock Content="{Binding Name}" />
+            </DataTemplate>
+          </MultiComboBox.ItemTemplate>
+        </MultiComboBox>
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

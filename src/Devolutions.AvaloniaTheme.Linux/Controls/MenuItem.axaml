@@ -5,6 +5,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="using:Avalonia.Controls.Converters"
+                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaControls.Behaviors;assembly=Devolutions.AvaloniaControls"
                     x:ClassModifier="internal">
   <Design.PreviewWith>
     <Border Padding="20" Width="320">
@@ -67,6 +68,8 @@
     <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
     <Setter Property="Padding" Value="{DynamicResource MenuFlyoutItemThemePadding}" />
     <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutItemMinHeight}" />
+    <!-- Collapse vacated leading columns when icons/checks change (see MenuSharedSizeRefreshBehavior) -->
+    <Setter Property="behaviors:MenuSharedSizeRefreshBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
@@ -89,18 +92,25 @@
                                   SharedSizeGroup="MenuItemChevron" />
               </Grid.ColumnDefinitions>
 
+              <!--
+                Toggle (check/radio) and icon live in separate columns by default so that toggling a
+                check does not resize a shared column and shift sibling icons. The leading gutter is
+                preserved via the toggle column's MinWidth. Opt into "single-icon-slot" (see
+                Separator.styles.axaml) to collapse them into one shared leading column.
+              -->
               <StackPanel Grid.Column="0" Orientation="Horizontal" MinWidth="25">
                 <ContentControl Name="PART_ToggleIconPresenter"
                                 IsVisible="False"
                                 Theme="{StaticResource FluentMenuItemIconTheme}"
                                 Margin="{StaticResource MenuIconPresenterMargin}" />
-
-                <ContentControl Name="PART_IconPresenter"
-                                IsVisible="False"
-                                Theme="{StaticResource FluentMenuItemIconTheme}"
-                                Content="{TemplateBinding Icon}"
-                                Margin="{StaticResource MenuIconPresenterMargin}" />
               </StackPanel>
+
+              <ContentControl Name="PART_IconPresenter"
+                              Grid.Column="1"
+                              IsVisible="False"
+                              Theme="{StaticResource FluentMenuItemIconTheme}"
+                              Content="{TemplateBinding Icon}"
+                              Margin="{StaticResource MenuIconPresenterMargin}" />
 
               <ContentPresenter Name="PART_HeaderPresenter"
                                 Content="{TemplateBinding Header}"

@@ -236,6 +236,7 @@ public class MultiComboBoxSelectAllItem : ContentControl
         }
 
         this.IsSelected = this.IsSelected is null or false;
+        e.Handled = true;
     }
 
     internal void BeginUpdate()

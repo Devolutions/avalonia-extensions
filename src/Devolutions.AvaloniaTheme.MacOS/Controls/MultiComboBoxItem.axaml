@@ -64,12 +64,12 @@
       </Style>
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
-      <Style Selector="^:selected /template/ Path#CheckMark">
-        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+    <!-- Keyboard focus: tint the row like hover so arrow-key navigation is visible (no persisting selection on click). -->
+    <Style Selector="^:focus-visible">
+      <Style Selector="^ /template/ Border#RootPanel">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Style Selector="^ /template/ CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>
@@ -127,15 +127,12 @@
       </Style>
     </Style>
 
-    <!-- Focused state -->
-    <Style Selector="^:focus, ^[IsFocused=True]">
+    <!-- Keyboard focus: tint the row like hover so arrow-key navigation is visible (no persisting selection on click). -->
+    <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundAccentRaisedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
       </Style>
-      <Style Selector="^:selected /template/ Path#CheckMark">
-        <Setter Property="Fill" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
-      </Style>
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Style Selector="^ /template/ CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
       </Style>
     </Style>
@@ -190,11 +187,15 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- PointerOver: tint the row and brighten the label so it stays readable on the highlight. -->
-    <Style Selector="^:pointerover /template/ Border#RootPanel">
+    <!--
+      Hover and keyboard focus: tint the row and brighten the label so it stays readable on the highlight.
+      Keyboard focus (:focus-visible) mirrors hover so arrow-key navigation is visible; a mouse click leaves
+      no persisting selection — the check box conveys the group's state.
+    -->
+    <Style Selector="^:pointerover /template/ Border#RootPanel, ^:focus-visible /template/ Border#RootPanel">
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
     </Style>
-    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter, ^:focus-visible /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
     </Style>
   </ControlTheme>

@@ -1170,7 +1170,9 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         if (this.selectAllItem is not null && CanFocus(this.selectAllItem))
         {
-            return this.selectAllItem.Focus();
+            // Directional (like FocusFirstItem) so the :focus-visible keyboard-focus styles activate —
+            // Focus() alone reports an unspecified navigation method and leaves the row without focus feedback.
+            return this.selectAllItem.Focus(NavigationMethod.Directional);
         }
 
         return false;

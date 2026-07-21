@@ -24,4 +24,10 @@
       <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
   </Style>
+
+  <Style Selector="MenuFlyoutPresenter > MenuItem:separator, ContextMenu > MenuItem:separator">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="0" />
+  </Style>
 </Styles>

@@ -88,6 +88,32 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 **Note:** Some global Styles will also be loaded by default, you can opt out by setting `GlobalStyles` to false (`<DevolutionsDevExpressTheme GlobalStyles="False" />`). GlobalStyles are also available as a separate tag `<DevolutionsDevExpressThemeGlobalStyles />` to cover scenarios where consumers would like to scope them to some control instead of including them globally. This is may be necessary to prevent styles from "bleeding out" in cases where that might be undesirable.
 
+### Menu pack (menu controls only)
+
+Use the menu pack when you only want DevExpress menu styling without importing the full `<DevolutionsDevExpressTheme />`.
+
+```xaml
+<Application ...>
+  <Application.Styles>
+    <!-- Required prerequisite -->
+    <FluentTheme />
+
+    <!-- DevExpress menu pack -->
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+  </Application.Styles>
+</Application>
+```
+
+Exact menu pack URI:
+
+`avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml`
+
+Prerequisites and caveats:
+
+- `FluentTheme` must be loaded first (the pack depends on Fluent menu resource keys).
+- This pack includes styling for `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, `Separator`, and menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`, and `MenuItem Svg` global icon CSS styles).
+- If you need full control coverage, use `<DevolutionsDevExpressTheme />` instead.
+
 ## Styled Controls
 
 Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.

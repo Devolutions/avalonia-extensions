@@ -298,6 +298,86 @@
         </Grid>
       </StackPanel>
 
+      <!-- Scenario 5: Multiple Selection -->
+      <StackPanel Spacing="10">
+        <TextBlock FontWeight="Bold" FontSize="16">Scenario 5: Multiple Selection</TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+          SelectionMode="Multiple" with SelectedItems bound two-way.
+          Pointer: click replaces, Ctrl/Cmd+click toggles, Shift+click selects a range.
+          Keyboard: arrows move, Shift+arrows extend the range, Ctrl/Cmd+Space toggles the current tile, Ctrl/Cmd+A selects all.
+        </TextBlock>
+
+        <!-- Selected items display -->
+        <Border BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Padding="8"
+                CornerRadius="4"
+                Background="{DynamicResource LayoutBackgroundLowBrush}">
+          <StackPanel Spacing="6">
+            <TextBlock FontWeight="SemiBold"
+                       Text="{Binding MultiSelectedItems.Count, StringFormat='Selected ({0}):'}"/>
+            <TextBlock Text="(none)"
+                       Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                       IsVisible="{Binding !MultiSelectedItems.Count}"/>
+            <ItemsControl ItemsSource="{Binding MultiSelectedItems}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:FoodItem">
+                  <Border Margin="0,0,6,6"
+                          Padding="8,3"
+                          CornerRadius="10"
+                          Background="{DynamicResource LayoutBackgroundLowBrush}"
+                          BorderBrush="{DynamicResource BorderBrush}"
+                          BorderThickness="1">
+                    <TextBlock Text="{Binding Name}" FontSize="12"/>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+
+        <!-- Resizable Grid -->
+        <Grid Height="400" ColumnDefinitions="2*,Auto,*">
+          <GroupedTileListBox Grid.Column="0"
+                              ItemsSource="{Binding GroupedItems}"
+                              SelectionMode="Multiple"
+                              SelectedItems="{Binding MultiSelectedItems}"
+                              GroupSelector="{Binding CategoryGroupSelector}"
+                              GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+                              GroupOrderAlphabetical="True"
+                              ItemWidth="120"
+                              ItemHeight="100"
+                              CornerRadius="10">
+            <GroupedTileListBox.ItemTemplate>
+              <DataTemplate DataType="vm:FoodItem">
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Name}"
+                             FontWeight="SemiBold"
+                             TextAlignment="Center"
+                             TextWrapping="Wrap"/>
+                  <TextBlock Text="{Binding Category}"
+                             FontSize="11"
+                             TextAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </GroupedTileListBox.ItemTemplate>
+          </GroupedTileListBox>
+
+          <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource BorderBrush}"/>
+
+          <TextBlock Grid.Column="2"
+                     Text="← Drag splitter to resize"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Foreground="{DynamicResource TextControlPlaceholderForeground}"/>
+        </Grid>
+      </StackPanel>
+
     </StackPanel>
   </ScrollViewer>
 

@@ -110,8 +110,9 @@ public class GroupedTileListBox : TemplatedControl
     private int selectedIndex = -1;
     private object? selectedItem;
 
-    // Visual-order index of the range-selection anchor (Shift-based selection extends from here).
-    private int anchorVisualIndex = -1;
+    // The range-selection anchor item (Shift-based selection extends from here). Stored by reference
+    // rather than as a visual index so it stays valid when grouping/ordering rebuilds the visual map.
+    private object? anchorItem;
 
     // Guards against re-entrancy when internal selection updates mutate SelectedItem/SelectedIndex/SelectedItems.
     private bool suppressSelectionSync;
@@ -382,31 +383,66 @@ public class GroupedTileListBox : TemplatedControl
         // Invalidate cached index mappings - they'll rebuild on next access
         this.InvalidateIndexMappings();
 
-        // Preserve selection by item reference if possible
-        object? previouslySelectedItem = this.selectedItem;
-
         // Rebuild UI (grouped mode needs full rebuild, non-grouped mode ItemsRepeater handles it automatically)
         if (this.useGrouping)
         {
             this.UpdateItemsRepeater();
         }
 
-        // Restore selection if item still exists in the collection
-        if (previouslySelectedItem is not null && this.ItemsSource is not null)
+        // Reconcile the (possibly multiple) selection against the new contents.
+        this.ReconcileSelectionWithItemsSource();
+    }
+
+    /// <summary>
+    /// Reconciles the selection after <see cref="ItemsSource"/> content changes: drops selected items
+    /// that are no longer present (by reference, preserving any that remain), enforces
+    /// <see cref="SelectionMode.AlwaysSelected"/>, and re-derives the primary item.
+    /// </summary>
+    private void ReconcileSelectionWithItemsSource() => this.BeginSelectionUpdate(() =>
+    {
+        if (this.SelectedItems is not { } selectedItems)
         {
-            bool itemStillExists = this.ItemsSource.Cast<object>().Contains(previouslySelectedItem);
-            if (itemStillExists)
+            return;
+        }
+
+        if (this.ItemsSource is null)
+        {
+            selectedItems.Clear();
+        }
+        else
+        {
+            HashSet<object> present = new(this.ItemsSource.Cast<object>(), ReferenceEqualityComparer.Instance);
+            for (int i = selectedItems.Count - 1; i >= 0; i--)
             {
-                this.SelectItem(previouslySelectedItem);
-            }
-            else
-            {
-                // Selected item was removed
-                // Setting SelectedItem to null will update SelectedIndex to -1 as well
-                this.SelectedItem = null;
+                if (selectedItems[i] is not { } selected || !present.Contains(selected))
+                {
+                    selectedItems.RemoveAt(i);
+                }
             }
         }
-    }
+
+        // AlwaysSelected: never leave the control empty while items exist.
+        this.EnsureAlwaysSelectedInvariant();
+
+        // Re-derive the primary (and anchor) from what survived.
+        if (this.selectedItem is null || !this.IsItemSelected(this.selectedItem))
+        {
+            object? primary = this.GetLastSelectedItem();
+            this.selectedItem = primary;
+            this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
+            this.anchorItem = primary;
+        }
+        else
+        {
+            // Primary survived but its source index may have shifted.
+            this.selectedIndex = this.GetIndexOfItem(this.selectedItem);
+        }
+
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+        this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+
+        this.UpdateRealizedContainerSelection();
+    });
 
     private void OnLayoutPropertyChanged(AvaloniaPropertyChangedEventArgs _)
     {
@@ -701,10 +737,24 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        // External change to SelectedItem property
-        if (!this.IsItemSelected(e.NewValue))
+        // External change to SelectedItem property.
+        object? newValue = e.NewValue;
+
+        // Already the primary: nothing to reconcile.
+        if (ReferenceEquals(newValue, this.selectedItem))
         {
-            this.SelectItem(e.NewValue);
+            return;
+        }
+
+        if (newValue is not null && this.IsItemSelected(newValue))
+        {
+            // Already part of a multi-selection: promote it to primary without clearing the rest.
+            this.PromotePrimary(newValue);
+        }
+        else
+        {
+            // Not selected: replace the selection with this single item.
+            this.SelectItem(newValue);
         }
     }
 
@@ -716,34 +766,75 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        // External change to SelectedIndex property
+        // External change to SelectedIndex property.
         int newIndex = (int)e.NewValue!;
-        if (!this.IsIndexSelected(newIndex))
+
+        // Already the primary index: nothing to reconcile.
+        if (newIndex == this.selectedIndex)
+        {
+            return;
+        }
+
+        object? item = this.GetItemAtIndex(newIndex);
+        if (item is not null && this.IsItemSelected(item))
+        {
+            // Already selected: promote to primary without disturbing the rest of the selection.
+            this.PromotePrimary(item);
+        }
+        else
         {
             this.SelectItemAtIndex(newIndex);
         }
     }
 
-    private void OnSelectionModeChanged(AvaloniaPropertyChangedEventArgs _)
+    /// <summary>
+    /// Makes an already-selected item the primary (keyboard/scroll focus and anchor) without changing
+    /// which items are selected. Used when SelectedItem/SelectedIndex is set externally to an item that
+    /// is already part of a multiple selection.
+    /// </summary>
+    private void PromotePrimary(object item) => this.BeginSelectionUpdate(() =>
+    {
+        this.selectedItem = item;
+        this.selectedIndex = this.GetIndexOfItem(item);
+        this.anchorItem = item;
+
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+        this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+
+        this.AutoScrollToSelectionIfEnabled();
+    });
+
+    private void OnSelectionModeChanged(AvaloniaPropertyChangedEventArgs _) => this.BeginSelectionUpdate(() =>
     {
         // Leaving multiple selection: collapse down to the primary item only.
         if (!this.SelectionMode.HasFlag(SelectionMode.Multiple) && (this.SelectedItems?.Count ?? 0) > 1)
         {
-            this.BeginSelectionUpdate(() =>
+            if (this.selectedItem is { } primary)
             {
-                if (this.selectedItem is { } primary)
-                {
-                    this.SetSelectedItemsTo(primary);
-                }
-                else
-                {
-                    this.SelectedItems?.Clear();
-                }
-
-                this.UpdateRealizedContainerSelection();
-            });
+                this.SetSelectedItemsTo(primary);
+            }
+            else
+            {
+                this.SelectedItems?.Clear();
+            }
         }
-    }
+
+        // AlwaysSelected may have just been enabled on an empty selection.
+        this.EnsureAlwaysSelectedInvariant();
+
+        // Re-derive the primary in case the collapse/enforcement changed the selection.
+        if (this.selectedItem is null || !this.IsItemSelected(this.selectedItem))
+        {
+            object? newPrimary = this.GetLastSelectedItem();
+            this.selectedItem = newPrimary;
+            this.selectedIndex = newPrimary is null ? -1 : this.GetIndexOfItem(newPrimary);
+            this.anchorItem = newPrimary;
+            this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+            this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+        }
+
+        this.UpdateRealizedContainerSelection();
+    });
 
     private void OnSelectedItemsPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {
@@ -1296,7 +1387,10 @@ public class GroupedTileListBox : TemplatedControl
 
         _ = items.TryGetNonEnumeratedCount(out int estimatedCount);
         this.visualToSourceMap = new List<object>(estimatedCount);
-        this.sourceToVisualMap = new Dictionary<object, int>(estimatedCount);
+
+        // Reference-equality keys so value-equal items (e.g. records) map to distinct visual indices
+        // instead of collapsing onto the first occurrence via TryAdd.
+        this.sourceToVisualMap = new Dictionary<object, int>(estimatedCount, ReferenceEqualityComparer.Instance);
 
         if (this.useGrouping && this.ResolveGroupSelector() is { } groupSelector)
         {
@@ -1617,7 +1711,7 @@ public class GroupedTileListBox : TemplatedControl
 
         this.selectedItem = item;
         this.selectedIndex = index;
-        this.anchorVisualIndex = this.GetVisualIndexFromItem(item);
+        this.anchorItem = item;
 
         this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     });
@@ -1641,7 +1735,7 @@ public class GroupedTileListBox : TemplatedControl
 
         this.selectedItem = item;
         this.selectedIndex = index;
-        this.anchorVisualIndex = this.GetVisualIndexFromItem(item);
+        this.anchorItem = item;
 
         this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     });
@@ -1657,7 +1751,17 @@ public class GroupedTileListBox : TemplatedControl
 
         this.selectedItem = null;
         this.selectedIndex = -1;
-        this.anchorVisualIndex = -1;
+        this.anchorItem = null;
+
+        // AlwaysSelected: never leave the control empty while items exist.
+        this.EnsureAlwaysSelectedInvariant();
+        if (this.SelectedItems is { Count: > 0 })
+        {
+            object? primary = this.GetLastSelectedItem();
+            this.selectedItem = primary;
+            this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
+            this.anchorItem = primary;
+        }
 
         this.OnSelectionChanged(this.selectedItem, this.selectedIndex);
     }
@@ -1708,7 +1812,7 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        this.anchorVisualIndex = this.GetVisualIndexFromItem(item);
+        this.anchorItem = item;
 
         if (this.IsItemSelected(item))
         {
@@ -1750,7 +1854,10 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        int anchor = this.anchorVisualIndex >= 0 ? this.anchorVisualIndex : targetVisualIndex;
+        // Resolve the anchor's current visual index on demand (the map may have been rebuilt since
+        // the anchor was set); fall back to the target so a lone Shift gesture selects just the target.
+        int anchorVisualIndex = this.anchorItem is null ? -1 : this.GetVisualIndexFromItem(this.anchorItem);
+        int anchor = anchorVisualIndex >= 0 ? anchorVisualIndex : targetVisualIndex;
         int lo = Math.Min(anchor, targetVisualIndex);
         int hi = Math.Max(anchor, targetVisualIndex);
 
@@ -1758,6 +1865,9 @@ public class GroupedTileListBox : TemplatedControl
         {
             selectedItems.Clear();
         }
+
+        // O(1) membership so a k-item range stays O(k) instead of O(k²).
+        HashSet<object> seen = new(selectedItems.Cast<object>(), ReferenceEqualityComparer.Instance);
 
         object? targetItem = null;
         for (int visualIndex = lo; visualIndex <= hi; visualIndex++)
@@ -1768,7 +1878,7 @@ public class GroupedTileListBox : TemplatedControl
                 continue;
             }
 
-            if (!ContainsByReference(selectedItems, item))
+            if (seen.Add(item))
             {
                 selectedItems.Add(item);
             }
@@ -1819,17 +1929,64 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private void SyncFromSelectedItems() => this.BeginSelectionUpdate(() =>
     {
+        // Enforce the Single-mode 0/1 invariant on an externally-provided selection: if more than one
+        // item was supplied, keep the current primary (if still present) or the last item.
+        if (!this.SelectionMode.HasFlag(SelectionMode.Multiple) && (this.SelectedItems?.Count ?? 0) > 1)
+        {
+            object? keep = this.selectedItem is not null && this.IsItemSelected(this.selectedItem)
+                ? this.selectedItem
+                : this.GetLastSelectedItem();
+
+            if (keep is not null)
+            {
+                this.SetSelectedItemsTo(keep);
+            }
+        }
+
+        // AlwaysSelected: never leave the control empty while items exist.
+        this.EnsureAlwaysSelectedInvariant();
+
+        // Re-derive the primary (and anchor) from the resulting selection.
         if (this.selectedItem is null || !this.IsItemSelected(this.selectedItem))
         {
             object? newPrimary = this.GetLastSelectedItem();
             this.selectedItem = newPrimary;
             this.selectedIndex = newPrimary is null ? -1 : this.GetIndexOfItem(newPrimary);
-            this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
-            this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+            this.anchorItem = newPrimary;
         }
+        else
+        {
+            // Primary is still selected but its source index may have shifted.
+            this.selectedIndex = this.GetIndexOfItem(this.selectedItem);
+        }
+
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+        this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
 
         this.UpdateRealizedContainerSelection();
     });
+
+    /// <summary>
+    /// When <see cref="SelectionMode.AlwaysSelected"/> is set and the source is non-empty, guarantees at
+    /// least one item stays selected by selecting the first item if the selection is otherwise empty.
+    /// </summary>
+    private void EnsureAlwaysSelectedInvariant()
+    {
+        if (!this.SelectionMode.HasFlag(SelectionMode.AlwaysSelected))
+        {
+            return;
+        }
+
+        if (this.SelectedItems is not { Count: 0 } || this.ItemsSource is null)
+        {
+            return;
+        }
+
+        if (this.GetItemAtIndex(0) is { } first)
+        {
+            this.AddToSelection(first);
+        }
+    }
 
     /// <summary>
     /// Runs a selection mutation with re-entrancy suppressed so the resulting property/collection
@@ -1915,9 +2072,6 @@ public class GroupedTileListBox : TemplatedControl
     private static bool HasToggleModifier(KeyModifiers modifiers) =>
         modifiers.HasFlag(KeyModifiers.Control) || modifiers.HasFlag(KeyModifiers.Meta);
 
-    private bool IsIndexSelected(int index) =>
-        index >= 0 && index == this.selectedIndex;
-
     private object? GetItemAtIndex(int index)
     {
         if (this.ItemsSource is null || index < 0)
@@ -1935,15 +2089,20 @@ public class GroupedTileListBox : TemplatedControl
             return -1;
         }
 
-        if (this.ItemsSource is IList list)
+        // Reference-based scan (not IList.IndexOf) so the identity-based selection semantics hold
+        // even when items use value equality (e.g. records with equal values but distinct instances).
+        int index = 0;
+        foreach (object? candidate in this.ItemsSource)
         {
-            return list.IndexOf(item);
+            if (ReferenceEquals(candidate, item))
+            {
+                return index;
+            }
+
+            index++;
         }
 
-        (int index, object? indexedItem) = this.ItemsSource.Cast<object?>()
-            .Index()
-            .FirstOrDefault(x => ReferenceEquals(x.Item, item));
-        return indexedItem is null ? -1 : index;
+        return -1;
     }
 
     /// <summary>

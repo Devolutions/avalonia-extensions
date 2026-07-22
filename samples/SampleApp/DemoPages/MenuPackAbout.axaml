@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="SampleApp.DemoPages.MenuPackAbout">
+
+  <StackPanel Margin="10" Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
+    <TextBlock Classes="h1">About DevExpress Menu Pack</TextBlock>
+
+    <TextBlock FontSize="15" TextWrapping="Wrap">
+      The DevExpress Menu Pack is an externally consumable style pack for menu-related controls. It lets apps import menu styling without importing the full theme object.
+    </TextBlock>
+
+    <TextBlock FontSize="15" TextWrapping="Wrap">
+      The pages in this section load the MenuPack on top of the currently selected theme. It can be used as a drop-in replacement for the default menu styles where a consistent look across all platforms is required.
+    </TextBlock>
+
+    <TextBlock Classes="section-title">Menu pack URI</TextBlock>
+    <TextBlock FontFamily="{DynamicResource CodeFontFamily}"
+               Text="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml"
+               TextWrapping="Wrap" />
+
+    <TextBlock Classes="section-title">Minimal usage</TextBlock>
+    <TextBlock Classes="code"
+               HorizontalAlignment="Left"
+               LineHeight="18"
+               Margin="5 -5 0 0"
+               Padding="5 8 6 8">
+      <TextBlock.Inlines>
+        <Run Text="&lt;Application ...&gt;&#x0a;" />
+        <Run Text="  &lt;Application.Styles&gt;&#x0a;" />
+        <Run Text="    &lt;FluentTheme /&gt;&#x0a;" />
+        <Run Text="    &lt;StyleInclude Source=&quot;avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml&quot; /&gt;&#x0a;" />
+        <Run Text="  &lt;/Application.Styles&gt;&#x0a;" />
+        <Run Text="&lt;/Application&gt;" />
+      </TextBlock.Inlines>
+    </TextBlock>
+  </StackPanel>
+</UserControl>

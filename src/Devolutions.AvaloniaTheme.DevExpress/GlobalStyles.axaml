@@ -23,13 +23,7 @@
     - sbergerondrouin 2025-06-09
   -->
 
-  <Style Selector="MenuItem Svg">
-    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDefaultCss}" />
-  </Style>
-
-  <Style Selector="MenuItem Svg:disabled">
-    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDisabledCss}" />
-  </Style>
+  <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
 
   <StyleInclude Source="/Controls/TextBox.styles.axaml" />
 

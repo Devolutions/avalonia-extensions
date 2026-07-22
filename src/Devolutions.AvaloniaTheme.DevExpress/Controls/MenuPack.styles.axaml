@@ -1,0 +1,21 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Accents/Icons.axaml" />
+        <MergeResourceInclude Source="/Accents/ThemeResources.axaml" />
+        <MergeResourceInclude Source="/Controls/ContextMenu.axaml" />
+        <MergeResourceInclude Source="/Controls/MenuFlyoutPresenter.axaml" />
+        <MergeResourceInclude Source="/Controls/Menu.axaml" />
+        <MergeResourceInclude Source="/Controls/MenuItem.axaml" />
+        <MergeResourceInclude Source="/Controls/Separator.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
+  <StyleInclude Source="/Controls/Separator.styles.axaml" />
+  <StyleInclude Source="/Controls/Menu.styles.axaml" />
+</Styles>

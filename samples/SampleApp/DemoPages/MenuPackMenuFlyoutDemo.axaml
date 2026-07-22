@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MenuPackMenuFlyoutDemo">
 
@@ -9,37 +10,5 @@
     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
-  <StackPanel Margin="20" Spacing="16">
-    <TextBlock Classes="section-title">Menu Pack proof: MenuFlyoutPresenter</TextBlock>
-
-    <Border HorizontalAlignment="Left"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}">
-      <MenuFlyoutPresenter>
-        <MenuItem Header="Open session" InputGesture="Ctrl+O">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/Computer.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Open with parameters">
-          <MenuItem Header="Embedded" />
-          <MenuItem Header="External" />
-          <Separator />
-          <MenuItem Header="Select credentials..." />
-        </MenuItem>
-        <Separator />
-        <MenuItem Header="Copy username">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyUserName.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Copy password" IsEnabled="False">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyPassword.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-      </MenuFlyoutPresenter>
-    </Border>
-  </StackPanel>
+  <demo:MenuFlyoutDemo />
 </UserControl>

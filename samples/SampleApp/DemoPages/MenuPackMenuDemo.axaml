@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MenuPackMenuDemo">
 
@@ -9,49 +10,5 @@
     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
-  <StackPanel Margin="20" Spacing="16">
-    <TextBlock Classes="section-title">Menu Pack proof: Menu</TextBlock>
-    <TextBlock TextWrapping="Wrap">
-      This page imports the DevExpress MenuPack via avares URI. Use the Fluent theme for intended rendering.
-    </TextBlock>
-
-    <Border BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}">
-      <DockPanel>
-        <Menu DockPanel.Dock="Top">
-          <MenuItem Header="File">
-            <MenuItem Header="Open" InputGesture="Ctrl+O" />
-            <MenuItem Header="Open Recent">
-              <MenuItem Header="Session 1" />
-              <MenuItem Header="Session 2" />
-              <Separator />
-              <MenuItem Header="Clear Recent" />
-            </MenuItem>
-            <Separator />
-            <MenuItem Header="Exit" />
-          </MenuItem>
-          <MenuItem Header="Edit">
-            <MenuItem Header="Copy">
-              <MenuItem.Icon>
-                <Svg Path="/Assets/CopyName.svg" />
-              </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Paste" IsEnabled="False" />
-          </MenuItem>
-          <Separator />
-          <MenuItem Header="View">
-            <MenuItem Header="Toolbar" ToggleType="CheckBox" IsChecked="True" />
-            <MenuItem Header="Status Bar" ToggleType="CheckBox" />
-          </MenuItem>
-        </Menu>
-
-        <Border Padding="16" Background="{DynamicResource LayoutBackgroundLowBrush}">
-          <TextBlock TextWrapping="Wrap">
-            Top-level menu and submenus above are styled only through the imported MenuPack.
-          </TextBlock>
-        </Border>
-      </DockPanel>
-    </Border>
-  </StackPanel>
+  <demo:MenuDemo />
 </UserControl>

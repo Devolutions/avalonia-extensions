@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MenuPackContextMenuDemo">
 
@@ -9,63 +10,5 @@
     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
-  <StackPanel Margin="20" Spacing="16">
-    <TextBlock Classes="section-title">Menu Pack proof: ContextMenu</TextBlock>
-
-    <Border Padding="12"
-            HorizontalAlignment="Left"
-            Background="{DynamicResource LayoutBackgroundLowBrush}"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}">
-      <ContextMenu>
-        <MenuItem Header="Connect">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/Computer.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Copy Username" InputGesture="Ctrl+U">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyUserName.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="Copy Password" InputGesture="Ctrl+Shift+U" IsEnabled="False">
-          <MenuItem.Icon>
-            <Svg Path="/Assets/CopyPassword.svg" />
-          </MenuItem.Icon>
-        </MenuItem>
-        <Separator />
-        <MenuItem Header="Options">
-          <MenuItem Header="Auto Type" ToggleType="CheckBox" IsChecked="True" />
-          <MenuItem Header="Prompt for MFA" ToggleType="CheckBox" />
-        </MenuItem>
-      </ContextMenu>
-    </Border>
-
-    <Border Padding="16"
-            Background="{DynamicResource LayoutBackgroundLowBrush}"
-            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
-            BorderThickness="{DynamicResource BorderThickness}"
-            CornerRadius="{DynamicResource LayoutCornerRadius}">
-      <StackPanel>
-        <TextBlock TextWrapping="Wrap">
-          Right-click this panel for a regular attached ContextMenu:
-        </TextBlock>
-        <Border Margin="0,12,0,0"
-                Height="180"
-                Background="Transparent"
-                BorderBrush="{DynamicResource SeparatorBrush}"
-                BorderThickness="1">
-          <Border.ContextMenu>
-            <ContextMenu>
-              <MenuItem Header="Action 1" />
-              <MenuItem Header="Action 2" />
-              <Separator />
-              <MenuItem Header="Disabled Action" IsEnabled="False" />
-            </ContextMenu>
-          </Border.ContextMenu>
-        </Border>
-      </StackPanel>
-    </Border>
-  </StackPanel>
+  <demo:ContextMenuDemo />
 </UserControl>

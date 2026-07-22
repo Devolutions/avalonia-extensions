@@ -27,7 +27,7 @@
     "Overview",
     "Control Demos",
     "Control Alignment",
-    "Menu Pack",
+    "DevExpress Menu Pack",
     "Experiments"
   ],
   "pages": {
@@ -433,33 +433,28 @@
         }
       }
     ],
-    "Menu Pack": [
+    "DevExpress Menu Pack": [
       {
-        "uniqueTitle": "MenuPack: Menu",
-        "source": "Avalonia",
-        "category": "Navigation",
-        "demo": "MenuPackMenuDemo.axaml",
-        "status": {
-          "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        }
+        "uniqueTitle": "About",
+        "demo": "MenuPackAbout.axaml"
       },
       {
-        "uniqueTitle": "MenuPack: ContextMenu",
+        "uniqueTitle": "📦 Menu",
         "source": "Avalonia",
         "category": "Navigation",
-        "demo": "MenuPackContextMenuDemo.axaml",
-        "status": {
-          "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        }
+        "demo": "MenuPackMenuDemo.axaml"
       },
       {
-        "uniqueTitle": "MenuPack: MenuFlyoutPresenter",
+        "uniqueTitle": "📦 ContextMenu",
         "source": "Avalonia",
         "category": "Navigation",
-        "demo": "MenuPackMenuFlyoutDemo.axaml",
-        "status": {
-          "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        }
+        "demo": "MenuPackContextMenuDemo.axaml"
+      },
+      {
+        "uniqueTitle": "📦 MenuFlyoutPresenter",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "MenuPackMenuFlyoutDemo.axaml"
       }
     ],
     "Experiments": [

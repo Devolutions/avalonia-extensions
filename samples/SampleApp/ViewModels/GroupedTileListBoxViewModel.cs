@@ -2,6 +2,7 @@ namespace SampleApp.ViewModels;
 
 using System;
 using System.Collections.Generic;
+using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -72,6 +73,10 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
             this.SelectedLargeItem = this.LargeItems[this.LargeScrollTargetIndex];
         }
     }
+
+    // Scenario 5: Multiple selection. Two-way bound to GroupedTileListBox.SelectedItems;
+    // the control mutates this collection directly and the demo observes it live.
+    public AvaloniaList<FoodItem> MultiSelectedItems { get; } = new();
 
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()

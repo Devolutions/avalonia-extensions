@@ -441,9 +441,6 @@
         "demo": "MenuPackMenuDemo.axaml",
         "status": {
           "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        },
-        "excludeFromTests": {
-          "Fluent": true
         }
       },
       {
@@ -453,9 +450,6 @@
         "demo": "MenuPackContextMenuDemo.axaml",
         "status": {
           "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        },
-        "excludeFromTests": {
-          "Fluent": true
         }
       },
       {
@@ -465,9 +459,6 @@
         "demo": "MenuPackMenuFlyoutDemo.axaml",
         "status": {
           "Simple": "❌", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
-        },
-        "excludeFromTests": {
-          "Fluent": true
         }
       }
     ],

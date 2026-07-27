@@ -43,6 +43,7 @@ To view and test Accelerate-licensed controls in the SampleApp:
 ## Testing
 
 There is limited visual regression testing available. DemoPages are compared against baseline screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline`. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`. 
+Screenshots are captured at a fixed width (`1200`) with auto-calculated content height (capped at `3000`) to cover below-the-fold examples without requiring manual page-by-page configuration.
 
 ### Limitations
 - Interactive behaviours (e.g. pointerOver, popUpOpen, focus, etc.) are not tested

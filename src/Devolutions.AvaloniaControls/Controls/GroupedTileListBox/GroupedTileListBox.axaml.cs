@@ -1798,6 +1798,15 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
+        // Avalonia raises PointerMoved (not PointerReleased) with LeftButtonReleased when the left
+        // button is released while another button stays held; PointerReleased is deferred to the last
+        // button. Finish the gesture here so it still ends on the initiating button's release.
+        if (e.GetCurrentPoint(this.scrollViewer).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+        {
+            this.CompletePointerGesture(e);
+            return;
+        }
+
         Point viewportPoint = e.GetPosition(this.scrollViewer);
         this.marqueeViewportLastPoint = viewportPoint;
 
@@ -1831,6 +1840,17 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
+        this.CompletePointerGesture(e);
+    }
+
+    /// <summary>
+    /// Finishes a marquee gesture: commits an active marquee (or clears the selection on a plain
+    /// empty-space click), clears the pending flag, and releases pointer capture. Invoked from
+    /// <see cref="OnPointerReleased"/> and from <see cref="OnPointerMoved"/> when Avalonia signals the
+    /// left-button release via a move event (left released while another button is still held).
+    /// </summary>
+    private void CompletePointerGesture(PointerEventArgs e)
+    {
         if (this.marqueeActive)
         {
             // Commit the marquee selection.
@@ -2026,11 +2046,18 @@ public class GroupedTileListBox : TemplatedControl
             }
         }
 
-        object? primary = hitItems.Count > 0
-            ? hitItems[^1]
-            : target.Count > 0 ? target[^1] : null;
+        if (hitItems.Count == 0 && this.marqueeCtrlHeld)
+        {
+            // Union (Ctrl/Cmd) drag with nothing under the rectangle is a no-op over the baseline: keep
+            // the pre-drag primary and range anchor rather than promoting the last baseline item.
+            this.ApplySelectionSet(target, this.marqueeOriginalPrimary, this.marqueeOriginalAnchor);
+            return;
+        }
 
-        this.ApplySelectionSet(target, primary);
+        // Has hits → last hit is primary/anchor; a replace drag with no hits clears to null.
+        object? primary = hitItems.Count > 0 ? hitItems[^1] : null;
+
+        this.ApplySelectionSet(target, primary, primary);
     }
 
     /// <summary>
@@ -2040,7 +2067,7 @@ public class GroupedTileListBox : TemplatedControl
     /// current relative order (use <see cref="RestoreSelectionExactly"/> when exact order matters). Does
     /// not auto-scroll (the marquee drives scrolling itself).
     /// </summary>
-    private void ApplySelectionSet(IReadOnlyList<object> orderedTarget, object? primary) => this.BeginSelectionUpdate(() =>
+    private void ApplySelectionSet(IReadOnlyList<object> orderedTarget, object? primary, object? anchor) => this.BeginSelectionUpdate(() =>
     {
         if (this.SelectedItems is not { } selectedItems)
         {
@@ -2071,7 +2098,7 @@ public class GroupedTileListBox : TemplatedControl
 
         this.selectedItem = primary;
         this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
-        this.anchorItem = primary;
+        this.anchorItem = anchor;
 
         this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);

@@ -304,6 +304,7 @@
         <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
           SelectionMode="Multiple" with SelectedItems bound two-way.
           Pointer: click replaces, Ctrl/Cmd+click toggles, Shift+click selects a range.
+          Drag on empty space to marquee-select (Ctrl/Cmd+drag adds to the selection); drag past the top/bottom edge to auto-scroll.
           Keyboard: arrows move, Shift+arrows extend the range, Ctrl/Cmd+Space toggles the current tile, Ctrl/Cmd+A selects all.
         </TextBlock>
 
@@ -344,11 +345,10 @@
         <!-- Resizable Grid -->
         <Grid Height="400" ColumnDefinitions="2*,Auto,*">
           <GroupedTileListBox Grid.Column="0"
-                              ItemsSource="{Binding GroupedItems}"
+                              ItemsSource="{Binding MultiSelectGroupedItems}"
                               SelectionMode="Multiple"
                               SelectedItems="{Binding MultiSelectedItems}"
                               GroupSelector="{Binding CategoryGroupSelector}"
-                              GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
                               GroupOrderAlphabetical="True"
                               ItemWidth="120"
                               ItemHeight="100"

@@ -21,6 +21,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// Items are displayed in a wrapping grid with uniform tile sizes.
 /// </summary>
 [TemplatePart("PART_ScrollViewer", typeof(ScrollViewer), IsRequired = true)]
+[TemplatePart("PART_SelectionRectangle", typeof(Border))]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public class GroupedTileListBox : TemplatedControl
 {
@@ -73,6 +74,11 @@ public class GroupedTileListBox : TemplatedControl
             nameof(AutoScrollToSelectedItem),
             defaultValue: true);
 
+    public static readonly StyledProperty<bool> EnableRectangleSelectionProperty =
+        AvaloniaProperty.Register<GroupedTileListBox, bool>(
+            nameof(EnableRectangleSelection),
+            defaultValue: true);
+
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<GroupedTileListBox, Func<object, string>?>(
             "GroupSelector");
@@ -106,6 +112,29 @@ public class GroupedTileListBox : TemplatedControl
     private ItemsRepeater? itemsRepeater;
     private ScrollViewer? scrollViewer;
     private Control? content;
+    private Border? selectionRectangle;
+
+    // --- Marquee (drag-to-select rectangle) state ---
+    // Pixels the pointer must travel from the press point before a press becomes a marquee drag
+    // (so a plain click on empty space doesn't start one).
+    private const double MarqueeDragThreshold = 4.0;
+
+    // Distance from the top/bottom viewport edge that triggers auto-scroll, and the largest scroll
+    // step applied per timer tick at maximum edge depth.
+    private const double MarqueeAutoScrollEdge = 24.0;
+    private const double MarqueeAutoScrollMaxStep = 20.0;
+
+    private bool marqueePending;
+    private bool marqueeActive;
+    private bool marqueeCtrlHeld;
+    private Point marqueeViewportPress;
+    private Point marqueeViewportLastPoint;
+    private Point marqueeContentAnchor;
+    private List<object> marqueeBaseline = new();
+    private List<object> marqueeOriginal = new();
+    private object? marqueeOriginalPrimary;
+    private object? marqueeOriginalAnchor;
+    private DispatcherTimer? marqueeScrollTimer;
     
     private int selectedIndex = -1;
     private object? selectedItem;
@@ -255,6 +284,18 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
+    /// Gets or sets whether dragging a rectangle over empty space selects the tiles it covers
+    /// (Windows Explorer-style marquee selection). Defaults to <c>true</c>. Only has an effect when
+    /// <see cref="SelectionMode"/> includes <see cref="SelectionMode.Multiple"/>; set to <c>false</c>
+    /// to opt out while still allowing multi-selection via click/keyboard.
+    /// </summary>
+    public bool EnableRectangleSelection
+    {
+        get => this.GetValue(EnableRectangleSelectionProperty);
+        set => this.SetValue(EnableRectangleSelectionProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the function used to determine the group for each item.
     /// </summary>
     // TODO: Once [AssignBinding] and [InheritDataTypeFromItems] are properly supported by
@@ -320,6 +361,9 @@ public class GroupedTileListBox : TemplatedControl
 
         this.scrollViewer = e.NameScope.Get<ScrollViewer>("PART_ScrollViewer");
 
+        // Optional: templates that omit the marquee overlay simply have no rubber-band visual.
+        this.selectionRectangle = e.NameScope.Find<Border>("PART_SelectionRectangle");
+
         // Always create ItemsRepeater(s) dynamically in UpdateItemsRepeater
         this.UpdateItemsRepeater();
 
@@ -344,6 +388,9 @@ public class GroupedTileListBox : TemplatedControl
     {
         base.OnDetachedFromVisualTree(e);
 
+        // Tear down any in-progress marquee (selection is reconciled elsewhere).
+        this.AbortMarquee();
+
         // Unsubscribe from collection changes to prevent memory leaks
         if (this.collectionChangedSource is not null)
         {
@@ -354,6 +401,9 @@ public class GroupedTileListBox : TemplatedControl
 
     private void OnItemsSourceChanged(AvaloniaPropertyChangedEventArgs _)
     {
+        // Item geometry is about to change; drop any in-progress marquee.
+        this.AbortMarquee();
+
         // Unsubscribe from old collection
         if (this.collectionChangedSource is not null)
         {
@@ -806,6 +856,9 @@ public class GroupedTileListBox : TemplatedControl
 
     private void OnSelectionModeChanged(AvaloniaPropertyChangedEventArgs _) => this.BeginSelectionUpdate(() =>
     {
+        // A mode switch mid-drag invalidates the marquee (e.g. Multiple was just cleared).
+        this.AbortMarquee();
+
         // Leaving multiple selection: collapse down to the primary item only.
         if (!this.SelectionMode.HasFlag(SelectionMode.Multiple) && (this.SelectedItems?.Count ?? 0) > 1)
         {
@@ -958,6 +1011,14 @@ public class GroupedTileListBox : TemplatedControl
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+
+        // Escape aborts an in-progress marquee, restoring the pre-drag selection.
+        if (this.marqueeActive && e.Key == Key.Escape)
+        {
+            this.CancelMarquee();
+            e.Handled = true;
+            return;
+        }
 
         if (e.Handled || this.ItemsSource is null)
         {
@@ -1509,61 +1570,18 @@ public class GroupedTileListBox : TemplatedControl
             return 0;
         }
 
-        int visualIndex = this.GetVisualIndexFromItem(item);
-        if (visualIndex < 0)
+        // Reuse the shared layout walk so scroll positioning and marquee hit-testing can never
+        // disagree about where a tile sits vertically. rowTop is in the same padding-excluded
+        // "offset space" this method has always returned.
+        foreach ((object candidate, _, double rowTop) in this.EnumerateItemLayout())
         {
-            return 0;
-        }
-
-        int itemsPerRow = this.CalculateItemsPerRow();
-        if (itemsPerRow <= 0)
-        {
-            return 0;
-        }
-
-        Func<object, string>? groupSelector = this.ResolveGroupSelector();
-        if (!this.useGrouping || groupSelector is null)
-        {
-            // Simple calculation for non-grouped mode
-            int row = visualIndex / itemsPerRow;
-            return row * (this.ItemHeight + this.ItemSpacing);
-        }
-
-        IEnumerable<IGrouping<string, object>> orderedGroups = this.GetOrderedGroups(this.ItemsSource.Cast<object>().GroupBy(groupSelector));
-
-        double offset = 0;
-        int itemsSoFar = 0;
-
-        foreach (IGrouping<string, object> group in orderedGroups)
-        {
-            int groupItemCount = group.Count();
-            bool hasHeader = group.Key is string groupName && !string.IsNullOrEmpty(groupName);
-
-            // Add header height for this group (only if it has a visible header)
-            if (hasHeader)
+            if (ReferenceEquals(candidate, item))
             {
-                offset += (this.cachedHeaderHeight ?? 0) + this.ItemSpacing;
+                return rowTop;
             }
-
-            if (itemsSoFar + groupItemCount > visualIndex)
-            {
-                // Target item is in this group - calculate position within this group
-                int itemIndexInGroup = visualIndex - itemsSoFar;
-                int rowInGroup = itemIndexInGroup / itemsPerRow;
-                offset += rowInGroup * (this.ItemHeight + this.ItemSpacing);
-
-                break;
-            }
-
-            // Add remaining group height (items + spacing)
-            int rowsInGroup = (int)Math.Ceiling((double)groupItemCount / itemsPerRow);
-            offset += rowsInGroup * (this.ItemHeight + this.ItemSpacing);
-            offset += this.ItemSpacing; // Group spacing
-
-            itemsSoFar += groupItemCount;
         }
 
-        return offset;
+        return 0;
     }
 
     /// <summary>
@@ -1690,6 +1708,483 @@ public class GroupedTileListBox : TemplatedControl
         {
             this.scrollViewer.Offset = new Vector(currentOffset.X, newY);
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Marquee (drag-to-select rectangle) — Windows Explorer-style rubber-band selection.
+    // Active only when EnableRectangleSelection && SelectionMode includes Multiple.
+    // ---------------------------------------------------------------------------------------------
+
+    private bool IsRectangleSelectionEnabled() =>
+        this.EnableRectangleSelection
+        && this.SelectionMode.HasFlag(SelectionMode.Multiple)
+        && this.scrollViewer is not null;
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        // A press that reaches the control (rather than being handled by a tile's
+        // OnContainerPointerPressed) landed on empty space — the natural marquee origin.
+        if (e.Handled || !this.IsRectangleSelectionEnabled() || this.scrollViewer is null)
+        {
+            return;
+        }
+
+        PointerPoint point = e.GetCurrentPoint(this.scrollViewer);
+        if (!point.Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
+        this.marqueePending = true;
+        this.marqueeActive = false;
+        this.marqueeCtrlHeld = HasToggleModifier(e.KeyModifiers);
+        this.marqueeViewportPress = point.Position;
+        this.marqueeViewportLastPoint = point.Position;
+
+        // Capture the pointer so the whole press -> move -> release sequence is delivered to this
+        // control even when the drag runs over tiles or past the control's edge (which it must, to
+        // reach the auto-scroll edge zone). Released on pointer-up; OnPointerCaptureLost cancels the
+        // marquee if the OS revokes capture mid-drag.
+        e.Pointer.Capture(this);
+        e.Handled = true;
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+
+        if ((!this.marqueePending && !this.marqueeActive) || this.scrollViewer is null)
+        {
+            return;
+        }
+
+        Point viewportPoint = e.GetPosition(this.scrollViewer);
+        this.marqueeViewportLastPoint = viewportPoint;
+
+        // Only promote a pending press to an actual marquee once the pointer moves far enough,
+        // so a plain click on empty space stays a click.
+        if (this.marqueePending && !this.marqueeActive)
+        {
+            Vector delta = viewportPoint - this.marqueeViewportPress;
+            if (Math.Abs(delta.X) >= MarqueeDragThreshold || Math.Abs(delta.Y) >= MarqueeDragThreshold)
+            {
+                this.BeginMarquee();
+            }
+        }
+
+        if (this.marqueeActive)
+        {
+            this.UpdateMarquee(viewportPoint);
+        }
+
+        e.Handled = true;
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+
+        if (this.marqueeActive)
+        {
+            // Commit the marquee selection.
+            this.EndMarquee();
+            e.Handled = true;
+        }
+        else if (this.marqueePending)
+        {
+            // Plain click on empty space clears the selection (Explorer); Ctrl/Cmd click leaves it.
+            if (!this.marqueeCtrlHeld)
+            {
+                this.ClearSelection();
+            }
+
+            e.Handled = true;
+        }
+
+        this.marqueePending = false;
+
+        if (ReferenceEquals(e.Pointer.Captured, this))
+        {
+            e.Pointer.Capture(null);
+        }
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+
+        // Genuine interruption (not our own release, which clears marqueeActive first): revert.
+        this.CancelMarquee();
+        this.marqueePending = false;
+    }
+
+    private void BeginMarquee()
+    {
+        if (this.scrollViewer is null)
+        {
+            return;
+        }
+
+        this.marqueePending = false;
+        this.marqueeActive = true;
+
+        // Snapshot the pre-drag selection so Escape / lost-capture can restore it exactly: the whole
+        // collection plus the primary and range anchor (neither is necessarily the last item).
+        this.marqueeOriginal = this.SelectedItems is { } current
+            ? [..current.Cast<object>()]
+            : [];
+        this.marqueeOriginalPrimary = this.selectedItem;
+        this.marqueeOriginalAnchor = this.anchorItem;
+
+        // Baseline the marquee builds upon: Ctrl/Cmd adds to the existing selection (union);
+        // a plain drag replaces it (empty baseline).
+        this.marqueeBaseline = this.marqueeCtrlHeld
+            ? [..this.marqueeOriginal]
+            : [];
+
+        // Anchor is fixed in content space so auto-scroll keeps extending the rectangle correctly.
+        this.marqueeContentAnchor = this.marqueeViewportPress + this.scrollViewer.Offset;
+
+        // Take focus so Escape reaches OnKeyDown during the drag.
+        this.Focus();
+
+        this.StartMarqueeAutoScroll();
+        this.UpdateMarquee(this.marqueeViewportLastPoint);
+    }
+
+    private void UpdateMarquee(Point currentViewport)
+    {
+        if (this.scrollViewer is null)
+        {
+            return;
+        }
+
+        Vector offset = this.scrollViewer.Offset;
+        Point currentContent = currentViewport + offset;
+
+        double x1 = Math.Min(this.marqueeContentAnchor.X, currentContent.X);
+        double y1 = Math.Min(this.marqueeContentAnchor.Y, currentContent.Y);
+        double x2 = Math.Max(this.marqueeContentAnchor.X, currentContent.X);
+        double y2 = Math.Max(this.marqueeContentAnchor.Y, currentContent.Y);
+
+        Rect contentMarquee = new(x1, y1, x2 - x1, y2 - y1);
+
+        // The overlay is drawn in viewport space: the same rectangle translated back by the scroll offset.
+        this.ShowSelectionRectangle(new Rect(contentMarquee.Position - offset, contentMarquee.Size));
+
+        this.ApplyMarqueeSelection(this.HitTestItems(contentMarquee));
+    }
+
+    private void EndMarquee()
+    {
+        this.StopMarqueeAutoScroll();
+        this.HideSelectionRectangle();
+        this.marqueeActive = false;
+        this.marqueePending = false;
+
+        // A plain drag that ended up empty must still honor AlwaysSelected.
+        this.BeginSelectionUpdate(this.EnsureAlwaysSelectedInvariant);
+
+        this.marqueeBaseline = [];
+        this.marqueeOriginal = [];
+        this.marqueeOriginalPrimary = null;
+        this.marqueeOriginalAnchor = null;
+    }
+
+    private void CancelMarquee()
+    {
+        if (!this.marqueeActive)
+        {
+            return;
+        }
+
+        this.marqueeActive = false;
+        this.marqueePending = false;
+        this.StopMarqueeAutoScroll();
+        this.HideSelectionRectangle();
+
+        // Restore exactly the pre-drag selection, including the original primary and range anchor.
+        this.ApplySelectionSet(this.marqueeOriginal, this.marqueeOriginalPrimary);
+        this.anchorItem = this.marqueeOriginalAnchor;
+
+        this.marqueeBaseline = [];
+        this.marqueeOriginal = [];
+        this.marqueeOriginalPrimary = null;
+        this.marqueeOriginalAnchor = null;
+    }
+
+    /// <summary>
+    /// Aborts an in-progress marquee without restoring the pre-drag selection. Used when the underlying
+    /// data or attachment changes and the surrounding code already reconciles the selection.
+    /// </summary>
+    private void AbortMarquee()
+    {
+        this.StopMarqueeAutoScroll();
+        this.HideSelectionRectangle();
+        this.marqueeActive = false;
+        this.marqueePending = false;
+        this.marqueeBaseline = [];
+        this.marqueeOriginal = [];
+        this.marqueeOriginalPrimary = null;
+        this.marqueeOriginalAnchor = null;
+    }
+
+    /// <summary>
+    /// Applies the marquee's target selection: <c>baseline ∪ hitItems</c>, with the last hit item as the
+    /// primary. Recomputed from scratch on every pointer move / auto-scroll tick.
+    /// </summary>
+    private void ApplyMarqueeSelection(List<object> hitItems)
+    {
+        List<object> target = new(this.marqueeBaseline.Count + hitItems.Count);
+        HashSet<object> seen = new(ReferenceEqualityComparer.Instance);
+
+        foreach (object item in this.marqueeBaseline)
+        {
+            if (seen.Add(item))
+            {
+                target.Add(item);
+            }
+        }
+
+        foreach (object item in hitItems)
+        {
+            if (seen.Add(item))
+            {
+                target.Add(item);
+            }
+        }
+
+        object? primary = hitItems.Count > 0
+            ? hitItems[^1]
+            : target.Count > 0 ? target[^1] : null;
+
+        this.ApplySelectionSet(target, primary);
+    }
+
+    /// <summary>
+    /// Reconciles <see cref="SelectedItems"/> to exactly <paramref name="orderedTarget"/> (reference
+    /// equality), preserving order and minimizing collection churn, then sets the primary item. Does not
+    /// auto-scroll (the marquee drives scrolling itself).
+    /// </summary>
+    private void ApplySelectionSet(IReadOnlyList<object> orderedTarget, object? primary) => this.BeginSelectionUpdate(() =>
+    {
+        if (this.SelectedItems is not { } selectedItems)
+        {
+            return;
+        }
+
+        HashSet<object> targetSet = new(orderedTarget, ReferenceEqualityComparer.Instance);
+
+        // Drop items no longer in the target.
+        for (int i = selectedItems.Count - 1; i >= 0; i--)
+        {
+            if (selectedItems[i] is not { } existing || !targetSet.Contains(existing))
+            {
+                selectedItems.RemoveAt(i);
+            }
+        }
+
+        // Add newcomers, preserving target order.
+        foreach (object item in orderedTarget)
+        {
+            if (!ContainsByReference(selectedItems, item))
+            {
+                selectedItems.Add(item);
+            }
+        }
+
+        this.selectedItem = primary;
+        this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
+        this.anchorItem = primary;
+
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+        this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+
+        this.UpdateRealizedContainerSelection();
+    });
+
+    /// <summary>
+    /// Returns every item whose content-space rectangle intersects <paramref name="contentMarquee"/>.
+    /// Works on virtualized (non-realized) items because rectangles are computed analytically.
+    /// </summary>
+    private List<object> HitTestItems(Rect contentMarquee)
+    {
+        List<object> hits = new();
+        foreach ((object item, Rect rect) in this.EnumerateItemContentRects())
+        {
+            if (contentMarquee.Intersects(rect))
+            {
+                hits.Add(item);
+            }
+        }
+
+        return hits;
+    }
+
+    /// <summary>
+    /// Walks every item in visual order and yields its column plus the Y offset of the top of its row,
+    /// in padding-excluded "offset space": zero for the first row, then accumulating group-header
+    /// heights, row heights, and inter-group spacing exactly as the WrapLayout(s) arrange the tiles.
+    /// This is the single source of truth for the control's vertical tile geometry — both scroll
+    /// positioning (<see cref="CalculateScrollOffsetForItem"/>) and marquee hit-testing
+    /// (<see cref="EnumerateItemContentRects"/>) consume it, so the two cannot drift apart.
+    /// </summary>
+    private IEnumerable<(object item, int column, double rowTop)> EnumerateItemLayout()
+    {
+        if (this.ItemsSource is null)
+        {
+            yield break;
+        }
+
+        int itemsPerRow = this.CalculateItemsPerRow();
+        if (itemsPerRow <= 0)
+        {
+            yield break;
+        }
+
+        double stepY = this.ItemHeight + this.ItemSpacing;
+        Func<object, string>? groupSelector = this.ResolveGroupSelector();
+
+        if (!this.useGrouping || groupSelector is null)
+        {
+            int i = 0;
+            foreach (object item in this.ItemsSource)
+            {
+                if (item is not null)
+                {
+                    yield return (item, i % itemsPerRow, (i / itemsPerRow) * stepY);
+                }
+
+                i++;
+            }
+
+            yield break;
+        }
+
+        double baseY = 0;
+        foreach (IGrouping<string, object> group in this.GetOrderedGroups(this.ItemsSource.Cast<object>().GroupBy(groupSelector)))
+        {
+            List<object> groupItems = group.ToList();
+            bool hasHeader = !string.IsNullOrEmpty(group.Key);
+
+            if (hasHeader)
+            {
+                baseY += (this.cachedHeaderHeight ?? 0) + this.ItemSpacing;
+            }
+
+            // Columns restart per group (each group has its own WrapLayout).
+            for (int i = 0; i < groupItems.Count; i++)
+            {
+                yield return (groupItems[i], i % itemsPerRow, baseY + ((i / itemsPerRow) * stepY));
+            }
+
+            int rowsInGroup = (int)Math.Ceiling((double)groupItems.Count / itemsPerRow);
+            baseY += (rowsInGroup * stepY) + this.ItemSpacing;
+        }
+    }
+
+    /// <summary>
+    /// Returns every item together with its rectangle in content-space coordinates (i.e. including the
+    /// control Padding), derived from the shared <see cref="EnumerateItemLayout"/> walk. Works on
+    /// virtualized (non-realized) items because rectangles are computed analytically.
+    /// </summary>
+    private IEnumerable<(object item, Rect contentRect)> EnumerateItemContentRects()
+    {
+        double stepX = this.ItemWidth + this.ItemSpacing;
+        double padLeft = this.Padding.Left;
+        double padTop = this.Padding.Top;
+        double width = this.ItemWidth;
+        double height = this.ItemHeight;
+
+        foreach ((object item, int column, double rowTop) in this.EnumerateItemLayout())
+        {
+            double x = padLeft + (column * stepX);
+            double y = padTop + rowTop;
+            yield return (item, new Rect(x, y, width, height));
+        }
+    }
+
+    private void ShowSelectionRectangle(Rect viewportRect)
+    {
+        if (this.selectionRectangle is null)
+        {
+            return;
+        }
+
+        Canvas.SetLeft(this.selectionRectangle, viewportRect.X);
+        Canvas.SetTop(this.selectionRectangle, viewportRect.Y);
+        this.selectionRectangle.Width = viewportRect.Width;
+        this.selectionRectangle.Height = viewportRect.Height;
+        this.selectionRectangle.IsVisible = true;
+    }
+
+    private void HideSelectionRectangle()
+    {
+        if (this.selectionRectangle is not null)
+        {
+            this.selectionRectangle.IsVisible = false;
+        }
+    }
+
+    private void StartMarqueeAutoScroll()
+    {
+        if (this.marqueeScrollTimer is null)
+        {
+            this.marqueeScrollTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(16),
+            };
+            this.marqueeScrollTimer.Tick += this.OnMarqueeAutoScrollTick;
+        }
+
+        this.marqueeScrollTimer.Start();
+    }
+
+    private void StopMarqueeAutoScroll() => this.marqueeScrollTimer?.Stop();
+
+    private void OnMarqueeAutoScrollTick(object? sender, EventArgs e)
+    {
+        if (!this.marqueeActive || this.scrollViewer is null)
+        {
+            this.StopMarqueeAutoScroll();
+            return;
+        }
+
+        double viewportHeight = this.scrollViewer.Viewport.Height;
+        double y = this.marqueeViewportLastPoint.Y;
+
+        // Ramp the step by how deep into the edge zone the pointer is (natural acceleration).
+        double delta = 0;
+        if (y < MarqueeAutoScrollEdge)
+        {
+            double depth = Math.Min(MarqueeAutoScrollEdge, MarqueeAutoScrollEdge - y);
+            delta = -(depth / MarqueeAutoScrollEdge) * MarqueeAutoScrollMaxStep;
+        }
+        else if (y > viewportHeight - MarqueeAutoScrollEdge)
+        {
+            double depth = Math.Min(MarqueeAutoScrollEdge, y - (viewportHeight - MarqueeAutoScrollEdge));
+            delta = (depth / MarqueeAutoScrollEdge) * MarqueeAutoScrollMaxStep;
+        }
+
+        if (delta == 0)
+        {
+            return;
+        }
+
+        double maxOffset = Math.Max(0, this.scrollViewer.Extent.Height - viewportHeight);
+        double newY = Math.Clamp(this.scrollViewer.Offset.Y + delta, 0, maxOffset);
+
+        if (Math.Abs(newY - this.scrollViewer.Offset.Y) < 0.01)
+        {
+            return; // Already pinned at the extent.
+        }
+
+        this.scrollViewer.Offset = new Vector(this.scrollViewer.Offset.X, newY);
+
+        // Re-run the hit test so items revealed by the scroll get selected/deselected.
+        this.UpdateMarquee(this.marqueeViewportLastPoint);
     }
 
     private void SelectItem(object? item) => this.BeginSelectionUpdate(() =>

@@ -430,6 +430,11 @@ public class GroupedTileListBox : TemplatedControl
     /// </summary>
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // Item geometry and membership are about to change; drop any in-progress marquee so its stale
+        // baseline/anchor can't re-add a removed item on the next move or on Escape. Runs before the
+        // reconcile below, which then drops vanished items from SelectedItems cleanly.
+        this.AbortMarquee();
+
         // Invalidate cached index mappings - they'll rebuild on next access
         this.InvalidateIndexMappings();
 
@@ -1732,7 +1737,13 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         PointerPoint point = e.GetCurrentPoint(this.scrollViewer);
-        if (!point.Properties.IsLeftButtonPressed)
+
+        // Start only on the left-button press that begins the gesture. Ignore secondary-button presses
+        // arriving while the left button is already held (or while a marquee is already in progress),
+        // so they can't reset an in-progress drag.
+        if (point.Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed
+            || this.marqueePending
+            || this.marqueeActive)
         {
             return;
         }
@@ -1785,6 +1796,13 @@ public class GroupedTileListBox : TemplatedControl
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
+
+        // Only the release of the initiating left button ends the gesture; a secondary button released
+        // while the left button is still held must not commit or cancel an in-progress marquee.
+        if (e.InitialPressMouseButton != MouseButton.Left)
+        {
+            return;
+        }
 
         if (this.marqueeActive)
         {
@@ -1905,9 +1923,10 @@ public class GroupedTileListBox : TemplatedControl
         this.StopMarqueeAutoScroll();
         this.HideSelectionRectangle();
 
-        // Restore exactly the pre-drag selection, including the original primary and range anchor.
-        this.ApplySelectionSet(this.marqueeOriginal, this.marqueeOriginalPrimary);
-        this.anchorItem = this.marqueeOriginalAnchor;
+        // Restore exactly the pre-drag selection — membership AND order, plus primary and range anchor.
+        // A remove+append reconcile (ApplySelectionSet) can leave surviving items out of their original
+        // order, so rebuild the collection from the snapshot instead.
+        this.RestoreSelectionExactly(this.marqueeOriginal, this.marqueeOriginalPrimary, this.marqueeOriginalAnchor);
 
         this.marqueeBaseline = [];
         this.marqueeOriginal = [];
@@ -1964,9 +1983,11 @@ public class GroupedTileListBox : TemplatedControl
     }
 
     /// <summary>
-    /// Reconciles <see cref="SelectedItems"/> to exactly <paramref name="orderedTarget"/> (reference
-    /// equality), preserving order and minimizing collection churn, then sets the primary item. Does not
-    /// auto-scroll (the marquee drives scrolling itself).
+    /// Reconciles <see cref="SelectedItems"/> to the membership of <paramref name="orderedTarget"/>
+    /// (reference equality) by dropping obsolete entries and appending newcomers in target order, then
+    /// sets the primary item. Minimizes collection churn for the live drag; surviving items keep their
+    /// current relative order (use <see cref="RestoreSelectionExactly"/> when exact order matters). Does
+    /// not auto-scroll (the marquee drives scrolling itself).
     /// </summary>
     private void ApplySelectionSet(IReadOnlyList<object> orderedTarget, object? primary) => this.BeginSelectionUpdate(() =>
     {
@@ -1998,6 +2019,34 @@ public class GroupedTileListBox : TemplatedControl
         this.selectedItem = primary;
         this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
         this.anchorItem = primary;
+
+        this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+        this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+
+        this.UpdateRealizedContainerSelection();
+    });
+
+    /// <summary>
+    /// Restores <see cref="SelectedItems"/> to exactly <paramref name="original"/> (same items, same
+    /// order) and sets the given primary and range anchor. Used to revert a cancelled marquee; rebuilds
+    /// the collection so surviving items can't be left out of their original order.
+    /// </summary>
+    private void RestoreSelectionExactly(IReadOnlyList<object> original, object? primary, object? anchor) => this.BeginSelectionUpdate(() =>
+    {
+        if (this.SelectedItems is not { } selectedItems)
+        {
+            return;
+        }
+
+        selectedItems.Clear();
+        foreach (object item in original)
+        {
+            selectedItems.Add(item);
+        }
+
+        this.selectedItem = primary;
+        this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
+        this.anchorItem = anchor;
 
         this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);

@@ -19,6 +19,10 @@ using SampleApp.PageCatalog;
 [Collection("VisualTests")]
 public class VisualRegressionTests
 {
+  private const double DefaultCaptureWidth = 1200;
+  private const double MaxCaptureHeight = 3000;
+  private const double CaptureHeightSlack = 1;
+  private const double ResizeEpsilon = 0.5;
   private const string TestResultsDirectory = "../../../Screenshots/Test";
   private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
@@ -106,8 +110,8 @@ public class VisualRegressionTests
     // 3. Create a window to host it
     var window = new Window
     {
-      Width = 1200,
-      Height = 920,
+      Width = DefaultCaptureWidth,
+      Height = MaxCaptureHeight,
       Content = content
     };
 
@@ -147,6 +151,7 @@ public class VisualRegressionTests
 
     // Wait for layout and theme application
     Dispatcher.UIThread.RunJobs();
+    double? cappedDesiredHeight = ResizeWindowForContentHeight(window);
 
     using WriteableBitmap bitmap = CaptureStableFrame(window, variant);
 
@@ -172,13 +177,43 @@ public class VisualRegressionTests
       bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
       if (!passed)
       {
-        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}. Diff saved to {Path.GetDirectoryName(diffPath)}");
+        string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
+        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Diff saved to {Path.GetDirectoryName(diffPath)}");
       }
     }
     else
     {
-      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}. Saved screenshot to {testPath}");
+      string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
+      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Saved screenshot to {testPath}");
     }
+  }
+
+  private static double? ResizeWindowForContentHeight(Window window)
+  {
+    if (window.Content is not Control content)
+    {
+      throw new InvalidOperationException("Visual regression host window content must be a Control.");
+    }
+
+    content.Measure(new Size(DefaultCaptureWidth, double.PositiveInfinity));
+    double desiredHeight = content.DesiredSize.Height;
+    if (desiredHeight <= 0 || double.IsNaN(desiredHeight) || double.IsInfinity(desiredHeight))
+    {
+      throw new InvalidOperationException($"Unable to determine content height for {content.GetType().Name}.");
+    }
+
+    double unclampedHeight = Math.Ceiling(desiredHeight + CaptureHeightSlack);
+    double targetHeight = Math.Min(unclampedHeight, MaxCaptureHeight);
+    double? cappedDesiredHeight = unclampedHeight > MaxCaptureHeight ? unclampedHeight : null;
+
+    if (Math.Abs(window.Height - targetHeight) <= ResizeEpsilon)
+    {
+      return cappedDesiredHeight;
+    }
+
+    window.Height = targetHeight;
+    Dispatcher.UIThread.RunJobs();
+    return cappedDesiredHeight;
   }
 
   private static WriteableBitmap CaptureStableFrame(Window window, ThemeVariant variant)

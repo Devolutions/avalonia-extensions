@@ -21,22 +21,26 @@ public static class ImageComparer
         using var baseline = SKBitmap.Decode(baselinePath);
         using var screenshot = SKBitmap.Decode(testPath);
 
-        if (baseline.Width != screenshot.Width || baseline.Height != screenshot.Height)
+        bool hasDimensionMismatch = baseline.Width != screenshot.Width || baseline.Height != screenshot.Height;
+        if (hasDimensionMismatch)
         {
             Console.WriteLine($"Dimension mismatch: Baseline {baseline.Width}x{baseline.Height} vs Screenshot {screenshot.Width}x{screenshot.Height}");
-            return false;
         }
 
         bool areEqual = true;
-        using var diff = new SKBitmap(baseline.Width, baseline.Height);
+        int diffWidth = Math.Max(baseline.Width, screenshot.Width);
+        int diffHeight = Math.Max(baseline.Height, screenshot.Height);
+        using var diff = new SKBitmap(diffWidth, diffHeight);
         
-        // Simple pixel comparison
-        for (int y = 0; y < baseline.Height; y++)
+        // Compare all pixels, treating missing regions as transparent.
+        for (int y = 0; y < diffHeight; y++)
         {
-            for (int x = 0; x < baseline.Width; x++)
+            for (int x = 0; x < diffWidth; x++)
             {
-                var p1 = baseline.GetPixel(x, y);
-                var p2 = screenshot.GetPixel(x, y);
+                bool baselineHasPixel = x < baseline.Width && y < baseline.Height;
+                bool screenshotHasPixel = x < screenshot.Width && y < screenshot.Height;
+                SKColor p1 = baselineHasPixel ? baseline.GetPixel(x, y) : SKColors.Transparent;
+                SKColor p2 = screenshotHasPixel ? screenshot.GetPixel(x, y) : SKColors.Transparent;
 
                 if (p1 != p2)
                 {
@@ -53,6 +57,11 @@ public static class ImageComparer
             }
         }
 
+        if (hasDimensionMismatch)
+        {
+            areEqual = false;
+        }
+
         if (!areEqual)
         {
             var dir = Path.GetDirectoryName(diffPath);
@@ -63,7 +72,7 @@ public static class ImageComparer
 
             using var image = SKImage.FromBitmap(diff);
             using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-            using var stream = File.OpenWrite(diffPath);
+            using var stream = File.Create(diffPath);
             data.SaveTo(stream);
             Console.WriteLine($"Diff saved to {diffPath}");
         }

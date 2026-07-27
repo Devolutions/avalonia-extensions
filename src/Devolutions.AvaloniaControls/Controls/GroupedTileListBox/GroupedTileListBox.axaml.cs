@@ -430,6 +430,11 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         this.UpdateItemsRepeater();
+
+        // Match OnCollectionChanged: the new source may not contain the previously selected items (and
+        // a marquee we just aborted leaves its transient selection behind), so drop selected items that
+        // are absent from the new source and re-derive the primary.
+        this.ReconcileSelectionWithItemsSource();
     }
 
     /// <summary>
@@ -2053,10 +2058,12 @@ public class GroupedTileListBox : TemplatedControl
             }
         }
 
-        // Add newcomers, preserving target order.
+        // Append newcomers in target order. Membership is tracked in a set updated as we go, so this
+        // stays O(N) instead of rescanning the growing collection for each item (O(N^2) per move/tick).
+        HashSet<object> present = new(selectedItems.Cast<object>(), ReferenceEqualityComparer.Instance);
         foreach (object item in orderedTarget)
         {
-            if (!ContainsByReference(selectedItems, item))
+            if (present.Add(item))
             {
                 selectedItems.Add(item);
             }

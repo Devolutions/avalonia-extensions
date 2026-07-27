@@ -744,6 +744,19 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
+        // Right-click preserves an existing multi-selection so a context menu can act on every selected
+        // item; it only selects (replacing) when the target isn't already part of the selection. Left
+        // unhandled so the context menu can still open.
+        if (e.GetCurrentPoint(container).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+        {
+            if (!this.IsItemSelected(item))
+            {
+                this.SelectItem(item);
+            }
+
+            return;
+        }
+
         if (this.SelectionMode.HasFlag(SelectionMode.Multiple))
         {
             bool toggle = HasToggleModifier(e.KeyModifiers) || this.SelectionMode.HasFlag(SelectionMode.Toggle);

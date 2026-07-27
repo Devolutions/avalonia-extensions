@@ -388,8 +388,17 @@ public class GroupedTileListBox : TemplatedControl
     {
         base.OnDetachedFromVisualTree(e);
 
-        // Tear down any in-progress marquee (selection is reconciled elsewhere).
-        this.AbortMarquee();
+        // Detaching interrupts an active drag (it revokes pointer capture), so honor the cancellation
+        // contract and revert to the pre-drag selection — nothing reconciles it afterward the way a
+        // source change would. A merely-pending press has no selection change to revert.
+        if (this.marqueeActive)
+        {
+            this.CancelMarquee();
+        }
+        else
+        {
+            this.AbortMarquee();
+        }
 
         // Unsubscribe from collection changes to prevent memory leaks
         if (this.collectionChangedSource is not null)
@@ -1893,7 +1902,15 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         Vector offset = this.scrollViewer.Offset;
-        Point currentContent = currentViewport + offset;
+
+        // Clamp the selection endpoint to the viewport: while the pointer is captured it can sit far
+        // outside the control, and feeding that out-of-bounds distance into the content rect would select
+        // rows well past the visible edge instead of letting auto-scroll reveal (and select) them
+        // progressively. marqueeViewportLastPoint stays raw so it still drives the auto-scroll speed.
+        Point clampedViewport = new(
+            Math.Clamp(currentViewport.X, 0, this.scrollViewer.Viewport.Width),
+            Math.Clamp(currentViewport.Y, 0, this.scrollViewer.Viewport.Height));
+        Point currentContent = clampedViewport + offset;
 
         double x1 = Math.Min(this.marqueeContentAnchor.X, currentContent.X);
         double y1 = Math.Min(this.marqueeContentAnchor.Y, currentContent.Y);
@@ -1915,8 +1932,24 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeActive = false;
         this.marqueePending = false;
 
-        // A plain drag that ended up empty must still honor AlwaysSelected.
-        this.BeginSelectionUpdate(this.EnsureAlwaysSelectedInvariant);
+        // A plain drag that ended up empty must still honor AlwaysSelected. If the invariant re-adds an
+        // item, re-derive the primary/anchor and refresh visuals so we don't finish with SelectedItems
+        // holding an item while SelectedItem/SelectedIndex are still null/-1.
+        this.BeginSelectionUpdate(() =>
+        {
+            this.EnsureAlwaysSelectedInvariant();
+
+            if (this.selectedItem is null || !this.IsItemSelected(this.selectedItem))
+            {
+                object? primary = this.GetLastSelectedItem();
+                this.selectedItem = primary;
+                this.selectedIndex = primary is null ? -1 : this.GetIndexOfItem(primary);
+                this.anchorItem = primary;
+                this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
+                this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
+                this.UpdateRealizedContainerSelection();
+            }
+        });
 
         this.marqueeBaseline = [];
         this.marqueeOriginal = [];

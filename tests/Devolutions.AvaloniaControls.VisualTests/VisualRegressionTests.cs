@@ -177,13 +177,13 @@ public class VisualRegressionTests
       bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
       if (!passed)
       {
-        string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" CapH={cappedDesiredHeight.Value}." : string.Empty;
+        string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
         Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Diff saved to {Path.GetDirectoryName(diffPath)}");
       }
     }
     else
     {
-      string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" CapH={cappedDesiredHeight.Value}." : string.Empty;
+      string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
       Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Saved screenshot to {testPath}");
     }
   }

@@ -16,6 +16,7 @@ function Normalize-FilterExpression {
 }
 
 $dotnetArgs = [System.Collections.Generic.List[string]]::new()
+$hasLoggerArg = $false
 for ($index = 0; $index -lt $args.Count; ) {
     $current = $args[$index]
 
@@ -38,14 +39,48 @@ for ($index = 0; $index -lt $args.Count; ) {
         continue
     }
 
+    if ($current -eq "--logger" -or $current -eq "-l") {
+        $hasLoggerArg = $true
+        $dotnetArgs.Add($current)
+
+        if ($index + 1 -lt $args.Count) {
+            $dotnetArgs.Add($args[$index + 1])
+            $index += 2
+        }
+        else {
+            $index += 1
+        }
+
+        continue
+    }
+
+    if ($current.StartsWith("--logger=") -or $current.StartsWith("-l:")) {
+        $hasLoggerArg = $true
+        $dotnetArgs.Add($current)
+        $index += 1
+        continue
+    }
+
     $dotnetArgs.Add($current)
     $index += 1
+}
+
+if (-not $hasLoggerArg) {
+    $dotnetArgs.Add("--logger")
+    $dotnetArgs.Add("console;verbosity=normal")
 }
 
 $summaryRows = [System.Collections.Generic.HashSet[string]]::new()
 $fallbackLines = [System.Collections.Generic.List[string]]::new()
 $resultLine = ""
 $progressSeen = $false
+$testRunTarget = ""
+$testRunStatus = ""
+$totalTests = 0
+$passedTests = 0
+$failedTests = 0
+$skippedTests = 0
+$totalDuration = ""
 
 & dotnet test @dotnetArgs 2>&1 | ForEach-Object {
     $line = "$_"
@@ -71,13 +106,31 @@ $progressSeen = $false
         return
     }
 
+    if ($normalized -match '^(Passed|Failed|Skipped)\s+.*\[[^\]]+\]$') {
+        if (-not $progressSeen) {
+            Write-Host -NoNewline "Progress: "
+            $progressSeen = $true
+        }
+
+        switch ($Matches[1]) {
+            "Passed" { Write-Host -NoNewline "✅" }
+            "Failed" { Write-Host -NoNewline "❌" }
+            "Skipped" { Write-Host -NoNewline "s" }
+        }
+        return
+    }
+
     if ($normalized -match '\[(FAIL|PASS|SKIP)\]$') {
         if (-not $progressSeen) {
             Write-Host -NoNewline "Progress: "
             $progressSeen = $true
         }
 
-        Write-Host -NoNewline ">"
+        switch ($Matches[1]) {
+            "PASS" { Write-Host -NoNewline "✅" }
+            "FAIL" { Write-Host -NoNewline "❌" }
+            "SKIP" { Write-Host -NoNewline "s" }
+        }
         return
     }
 
@@ -86,11 +139,50 @@ $progressSeen = $false
         return
     }
 
+    if ($normalized -match '^Test run for (.+) \((.+)\)$') {
+        $testRunTarget = "$($Matches[1]) $($Matches[2])"
+        return
+    }
+
+    if ($normalized -match '^Test Run (Successful|Failed)\.$') {
+        $testRunStatus = $Matches[1]
+        return
+    }
+
+    if ($normalized -match '^Total tests:\s+(\d+)$') {
+        $totalTests = [int]$Matches[1]
+        return
+    }
+
+    if ($normalized -match '^Passed:\s+(\d+)$') {
+        $passedTests = [int]$Matches[1]
+        return
+    }
+
+    if ($normalized -match '^Failed:\s+(\d+)$') {
+        $failedTests = [int]$Matches[1]
+        return
+    }
+
+    if ($normalized -match '^Skipped:\s+(\d+)$') {
+        $skippedTests = [int]$Matches[1]
+        return
+    }
+
+    if ($normalized -match '^Total time:\s+(.+)$') {
+        $totalDuration = $Matches[1]
+        return
+    }
+
     if ([string]::IsNullOrWhiteSpace($normalized)) {
         return
     }
 
     if ($normalized -match '^(Determining projects to restore|All projects are up-to-date for restore|Test run for |VSTest version|Starting test execution, please wait|A total of \d+ test files matched the specified pattern\.)') {
+        return
+    }
+
+    if ($normalized -match '^\[xUnit\.net\s+') {
         return
     }
 
@@ -106,7 +198,7 @@ $progressSeen = $false
         return
     }
 
-    if ($normalized -match '^/.*:\d+:\d+:\s+warning\s+') {
+    if ($normalized -match 'warning\s+[A-Z]{2,}\d+:') {
         return
     }
 
@@ -121,6 +213,11 @@ if ($progressSeen) {
 
 if (-not [string]::IsNullOrWhiteSpace($resultLine)) {
     Write-Host $resultLine
+}
+elseif (-not [string]::IsNullOrWhiteSpace($testRunStatus) -and -not [string]::IsNullOrWhiteSpace($totalDuration)) {
+    $statusLabel = if ($testRunStatus -eq "Successful") { "Passed!" } else { "Failed!" }
+    $target = if (-not [string]::IsNullOrWhiteSpace($testRunTarget)) { $testRunTarget } else { "dotnet test" }
+    Write-Host ("{0}  - Failed: {1,5}, Passed: {2,5}, Skipped: {3,5}, Total: {4,5}, Duration: {5} - {6}" -f $statusLabel, $failedTests, $passedTests, $skippedTests, $totalTests, $totalDuration, $target)
 }
 elseif ($fallbackLines.Count -gt 0) {
     $fallbackLines | ForEach-Object { Write-Host $_ }

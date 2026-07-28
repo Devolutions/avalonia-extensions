@@ -21,6 +21,7 @@ normalize_filter_expression() {
 }
 
 dotnet_args=()
+has_logger_arg=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --filter)
@@ -36,6 +37,21 @@ while [[ $# -gt 0 ]]; do
       dotnet_args+=("--filter=$(normalize_filter_expression "${1#--filter=}")")
       shift
       ;;
+    --logger|-l)
+      has_logger_arg=1
+      dotnet_args+=("$1")
+      if [[ $# -ge 2 ]]; then
+        dotnet_args+=("$2")
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --logger=*|-l:*)
+      has_logger_arg=1
+      dotnet_args+=("$1")
+      shift
+      ;;
     *)
       dotnet_args+=("$1")
       shift
@@ -43,18 +59,25 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$has_logger_arg" -eq 0 ]]; then
+  dotnet_args+=("--logger" "console;verbosity=normal")
+fi
+
 summary_file="$(mktemp -t visual-regression-summary.XXXXXX)"
 result_line_file="$(mktemp -t visual-regression-result.XXXXXX)"
 progress_seen_file="$(mktemp -t visual-regression-progress.XXXXXX)"
 fallback_file="$(mktemp -t visual-regression-fallback.XXXXXX)"
+totals_file="$(mktemp -t visual-regression-totals.XXXXXX)"
 cleanup() {
   rm -f "$summary_file"
   rm -f "$result_line_file"
   rm -f "$progress_seen_file"
   rm -f "$fallback_file"
+  rm -f "$totals_file"
 }
 trap cleanup EXIT
 
+test_run_target=""
 dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line; do
   normalized="$line"
 
@@ -78,12 +101,29 @@ dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line
     continue
   fi
 
+  if [[ "$normalized" =~ ^(Passed|Failed|Skipped)[[:space:]]+.*\[[^]]+\]$ ]]; then
+    if [[ ! -s "$progress_seen_file" ]]; then
+      printf 'Progress: '
+      printf '1' > "$progress_seen_file"
+    fi
+    case "${BASH_REMATCH[1]}" in
+      Passed) printf '✅' ;;
+      Failed) printf '❌' ;;
+      Skipped) printf 's' ;;
+    esac
+    continue
+  fi
+
   if [[ "$normalized" =~ \[(FAIL|PASS|SKIP)\]$ ]]; then
     if [[ ! -s "$progress_seen_file" ]]; then
       printf 'Progress: '
       printf '1' > "$progress_seen_file"
     fi
-    printf '>'
+    case "${BASH_REMATCH[1]}" in
+      PASS) printf '✅' ;;
+      FAIL) printf '❌' ;;
+      SKIP) printf 's' ;;
+    esac
     continue
   fi
 
@@ -92,11 +132,51 @@ dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line
     continue
   fi
 
+  if [[ "$normalized" =~ ^Test\ run\ for\ (.+)\ \((.+)\)$ ]]; then
+    test_run_target="${BASH_REMATCH[1]} ${BASH_REMATCH[2]}"
+    printf 'target=%s\n' "$test_run_target" > "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Test\ Run\ (Successful|Failed)\.$ ]]; then
+    printf 'status=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Total\ tests:[[:space:]]+([0-9]+)$ ]]; then
+    printf 'total=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Passed:[[:space:]]+([0-9]+)$ ]]; then
+    printf 'passed=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Failed:[[:space:]]+([0-9]+)$ ]]; then
+    printf 'failed=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Skipped:[[:space:]]+([0-9]+)$ ]]; then
+    printf 'skipped=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Total\ time:[[:space:]]+(.+)$ ]]; then
+    printf 'duration=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
+    continue
+  fi
+
   if [[ -z "$normalized" ]]; then
     continue
   fi
 
   if [[ "$normalized" =~ ^(Determining\ projects\ to\ restore|All\ projects\ are\ up-to-date\ for\ restore|Test\ run\ for\ |VSTest\ version|Starting\ test\ execution,\ please\ wait|A\ total\ of\ [0-9]+\ test\ files\ matched\ the\ specified\ pattern\.) ]]; then
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]] ]]; then
     continue
   fi
 
@@ -112,7 +192,7 @@ dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line
     continue
   fi
 
-  if [[ "$normalized" =~ ^/.*:[[:digit:]]+:[[:digit:]]+:[[:space:]]warning[[:space:]] ]]; then
+  if [[ "$normalized" =~ warning[[:space:]]+[A-Z]{2,}[0-9]+: ]]; then
     continue
   fi
 
@@ -127,6 +207,28 @@ fi
 
 if [[ -s "$result_line_file" ]]; then
   cat "$result_line_file"
+elif [[ -s "$totals_file" ]]; then
+  status_value="$(awk -F= '/^status=/{v=$2} END{print v}' "$totals_file")"
+  total_value="$(awk -F= '/^total=/{v=$2} END{print v}' "$totals_file")"
+  passed_value="$(awk -F= '/^passed=/{v=$2} END{print v}' "$totals_file")"
+  failed_value="$(awk -F= '/^failed=/{v=$2} END{print v}' "$totals_file")"
+  skipped_value="$(awk -F= '/^skipped=/{v=$2} END{print v}' "$totals_file")"
+  duration_value="$(awk -F= '/^duration=/{v=$2} END{print v}' "$totals_file")"
+  target_value="$(awk -F= '/^target=/{v=substr($0,8)} END{print v}' "$totals_file")"
+
+  [[ -z "$failed_value" ]] && failed_value=0
+  [[ -z "$passed_value" ]] && passed_value=0
+  [[ -z "$skipped_value" ]] && skipped_value=0
+  [[ -z "$total_value" ]] && total_value=0
+
+  if [[ "$status_value" == "Successful" ]]; then
+    status_label="Passed!"
+  else
+    status_label="Failed!"
+  fi
+
+  printf "%s  - Failed: %5s, Passed: %5s, Skipped: %5s, Total: %5s, Duration: %s - %s\n" \
+    "$status_label" "$failed_value" "$passed_value" "$skipped_value" "$total_value" "${duration_value:-unknown}" "${target_value:-dotnet test}"
 elif [[ -s "$fallback_file" ]]; then
   cat "$fallback_file"
 fi

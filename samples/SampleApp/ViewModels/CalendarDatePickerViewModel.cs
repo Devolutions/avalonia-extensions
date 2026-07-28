@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -15,4 +16,16 @@ public partial class CalendarDatePickerViewModel : ObservableObject
     {
         this.SelectedDate = DateTime.Today;
     }
+
+    [ObservableProperty]
+    private IBrush selectedBrush = Brushes.Transparent;
+
+    [RelayCommand]
+    private void Green() => this.SelectedBrush = Brushes.Green;
+
+    [RelayCommand]
+    private void Orange() => this.SelectedBrush = Brushes.Orange;
+
+    [RelayCommand]
+    private void Red() => this.SelectedBrush = Brushes.Red;
 }

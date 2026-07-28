@@ -70,14 +70,72 @@
                        VerticalAlignment="Stretch"
                        HorizontalContentAlignment="Center" />
               <Button Name="PART_Button"
-                      Foreground="{Binding Path=#PART_TextBox.Foreground}">
-                <Button.Content>
-                  <MultiBinding Converter="{x:Static DevoMultiConverters.FirstNonEmptyStringMultiConverter}">
-                    <Binding Path="#PART_TextBox.Text" />
-                    <Binding Path="#PART_TextBox.PlaceholderText" />
-                  </MultiBinding>
-                </Button.Content>
-              </Button>
+                      Foreground="{Binding Path=#PART_TextBox.Foreground}"
+                      MinWidth="{Binding #SlotOverlay.Bounds.Width}"
+                      MinHeight="{Binding #SlotOverlay.Bounds.Height}" />
+              <!-- The date and the inner-content slots are overlaid ON TOP of PART_Button as siblings
+                   (not children), laid out in-flow so they never overlap. The date is hit-transparent and
+                   empty areas have no Background, so clicks on the date / empty space fall through to
+                   PART_Button and open the calendar; a click on a slot control bubbles up this Grid,
+                   not through PART_Button, so it does not open the calendar.
+                   PART_Button's Min size is bound to this overlay's bounds so the button always grows to
+                   cover the slots (they are siblings, so they cannot drive its size on their own). The
+                   overlay carries the normal input MinHeight floor so the button keeps its usual height
+                   when slots are small, and only grows when a slot is taller. -->
+              <Grid Name="SlotOverlay"
+                    MinHeight="{DynamicResource InputDefaultHeight}"
+                    ColumnDefinitions="Auto,*,Auto,Auto">
+                <ItemsControl
+                  Grid.Column="0"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  Margin="6 0 0 0"
+                  ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <TextBlock Grid.Column="1"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="6 0"
+                           Foreground="{Binding Path=#PART_TextBox.Foreground}">
+                  <TextBlock.Text>
+                    <MultiBinding Converter="{x:Static DevoMultiConverters.FirstNonEmptyStringMultiConverter}">
+                      <Binding Path="#PART_TextBox.Text" />
+                      <Binding Path="#PART_TextBox.PlaceholderText" />
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <ItemsControl
+                  Grid.Column="2"
+                  VerticalAlignment="Center"
+                  ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <ItemsControl
+                  Grid.Column="3"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Right"
+                  Margin="4 0 6 0"
+                  ItemsSource="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}}"
+                  IsVisible="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="2" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+              </Grid>
               <Border Name="ErrorBorderElement"
                       IsVisible="False"
                       BorderThickness="1"

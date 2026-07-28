@@ -31,6 +31,7 @@
 
   <x:Double x:Key="CalendarDatePickerCurrentDayFontSize">12</x:Double>
   <x:Double x:Key="CalendarDatePickerMinHeight">32</x:Double>
+  <SolidColorBrush x:Key="CalendarDatePickerGlyphOpenBrush" Color="#939393" />
 
   <ControlTheme x:Key="DatePickerButton"
                 TargetType="Button">
@@ -64,9 +65,6 @@
         <DataValidationErrors>
           <Panel x:Name="LayoutRoot"
                  HorizontalAlignment="Stretch">
-            <!-- Brittle Button placement! Placing the Button as TextBox.InnerRightContent breaks functionality,
-                       But this placement breaks if ValidationError text is positioned _above_ the TextBox 
-                       Also: centering the button via setting a top margin gives inconsistent results on different monitors -->
             <Panel>
               <TextBox Name="PART_TextBox"
                        PlaceholderText="{TemplateBinding PlaceholderText}"
@@ -76,8 +74,86 @@
                        BorderThickness="{TemplateBinding BorderThickness}"
                        CornerRadius="{TemplateBinding CornerRadius}"
                        Padding="{TemplateBinding Padding}">
+                <TextBox.InnerLeftContent>
+                  <ItemsControl
+                    VerticalAlignment="Center"
+                    Margin="4 2 0 2"
+                    ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                    IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="2" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                  </ItemsControl>
+                </TextBox.InnerLeftContent>
                 <TextBox.InnerRightContent>
-                  <Rectangle Width="22" Fill="Transparent" />
+                  <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                    <ItemsControl
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                      IsVisible="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel Orientation="Horizontal" Spacing="2" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <Button Name="PART_Button"
+                            Theme="{StaticResource DatePickerButton}"
+                            Focusable="False"
+                            VerticalAlignment="Center">
+                      <!-- DropDownGlyphBackground / DropDownGlyph live inside PART_TextBox.InnerRightContent,
+                           i.e. outside the CalendarDatePicker template namescope, so styles / TemplateBinding
+                           cannot reach them. Their state colours are bound to the parent via
+                           $parent[CalendarDatePicker] (open / disabled) and to the border's own IsPointerOver
+                           (hover), replacing the pointerover / flyout-open / disabled styles. -->
+                      <Border Name="DropDownGlyphBackground"
+                              Classes.dropdownOpen="{Binding $parent[CalendarDatePicker].IsDropDownOpen}"
+                              Margin="{DynamicResource DropdownButtonMargin}"
+                              Width="{DynamicResource DropdownButtonWidth}"
+                              Height="{DynamicResource DropdownButtonHeight}"
+                              CornerRadius="{DynamicResource ControlCornerRadius}"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center">
+                        <!-- Hover (the border's own :pointerover) and open (a class bound to the parent's
+                             IsDropDownOpen) are styled locally on the Border, because a "/template/" style
+                             from the CalendarDatePicker cannot reach it inside PART_TextBox content. -->
+                        <Border.Styles>
+                          <Style Selector="Border#DropDownGlyphBackground">
+                            <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+                          </Style>
+                          <Style Selector="Border#DropDownGlyphBackground:pointerover">
+                            <Setter Property="Background" Value="{DynamicResource ControlBackgroundPointerOverBrush}" />
+                          </Style>
+                          <Style Selector="Border#DropDownGlyphBackground.dropdownOpen">
+                            <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
+                          </Style>
+                        </Border.Styles>
+                        <PathIcon Name="DropDownGlyph"
+                                  UseLayoutRounding="False"
+                                  IsHitTestVisible="False"
+                                  Width="{DynamicResource DropdownButtonIconWidth}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Foreground="{BindingToggler {Binding $parent[CalendarDatePicker].IsDropDownOpen},
+                                    {DynamicResource CalendarDatePickerGlyphOpenBrush},
+                                    {DynamicResourceToggler {Binding $parent[CalendarDatePicker].IsEnabled}, ForegroundHighBrush, CalendarDatePickerCalendarGlyphForegroundDisabled}}"
+                                  Data="{StaticResource ChevronPath}" />
+                      </Border>
+                    </Button>
+                    <ItemsControl
+                      VerticalAlignment="Center"
+                      Margin="0 0 4 0"
+                      ItemsSource="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                      IsVisible="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel Orientation="Horizontal" Spacing="2" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                  </StackPanel>
                 </TextBox.InnerRightContent>
               </TextBox>
               <Border
@@ -86,30 +162,7 @@
                 BorderThickness="1"
                 CornerRadius="{DynamicResource ControlCornerRadius}"
                 IsVisible="False" />
-              <Panel Height="{DynamicResource TextBasedInputMinHeight}" VerticalAlignment="Top">
-                <Button Name="PART_Button"
-                        Theme="{StaticResource DatePickerButton}"
-                        Focusable="False">
-                  <Border Name="DropDownGlyphBackground"
-                          DockPanel.Dock="Right"
-                          Background="Transparent"
-                          Margin="{DynamicResource DropdownButtonMargin}"
-                          Width="{DynamicResource DropdownButtonWidth}"
-                          Height="{DynamicResource DropdownButtonHeight}"
-                          CornerRadius="{DynamicResource ControlCornerRadius}"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Center">
-                    <PathIcon Name="DropDownGlyph"
-                              UseLayoutRounding="False"
-                              IsHitTestVisible="False"
-                              Width="{DynamicResource DropdownButtonIconWidth}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              Foreground="{TemplateBinding Foreground}"
-                              Data="{StaticResource ChevronPath}" />
-                  </Border>
-                </Button>
-              </Panel>
+
               <Popup Name="PART_Popup"
                      PlacementTarget="{TemplateBinding}"
                      Placement="BottomEdgeAlignedLeft"
@@ -139,25 +192,9 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- Disabled State -->
-    <Style Selector="^:disabled">
-      <Style Selector="^ /template/ Button#PART_Button PathIcon">
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForegroundDisabled}" />
-      </Style>
-    </Style>
-
-    <Style Selector="^ /template/ Border#DropDownGlyphBackground:pointerover">
-      <Setter Property="Background" Value="{DynamicResource ControlBackgroundPointerOverBrush}" />
-    </Style>
-
-    <Style Selector="^:flyout-open">
-      <Style Selector="^ /template/ Border#DropDownGlyphBackground">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundSelectedBrush}" />
-      </Style>
-      <Style Selector="^ /template/ PathIcon#DropDownGlyph">
-        <Setter Property="Foreground" Value="#939393" />
-      </Style>
-    </Style>
+    <!-- Chevron hover / open / disabled colours are handled by bindings on DropDownGlyphBackground and
+         DropDownGlyph in the template (see comment there); a "/template/" style cannot reach them because
+         they sit inside PART_TextBox.InnerRightContent. -->
 
     <!-- Focused State -->
     <Style Selector="^:focus-within:not(CalendarDatePicker:focus) /template/ Border#Background">

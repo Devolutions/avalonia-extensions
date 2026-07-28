@@ -1,0 +1,111 @@
+<!--
+  DevExpress menu token contract — the single source of truth for menu visuals.
+
+  Included by BOTH:
+    - ThemeRoot.axaml            (full DevolutionsDevExpressTheme)
+    - Controls/MenuPack.styles.axaml (externally consumable menu pack)
+
+  so the two can never drift apart.
+
+  Rules for this file:
+    1. Every key is prefixed "DevExMenu" so it can never collide with, or be
+       silently overridden by, a host theme when the pack is layered on top.
+    2. Values are pinned literals. Do NOT use StaticResource/DynamicResource to
+       point at theme-wide or Fluent-owned keys: when the pack is consumed over a
+       foreign host theme those keys resolve to the host's values and the menus
+       drift. Everything the menus depend on visually lives here.
+    3. Keys deliberately NOT owned here are intentionally inherited from the host.
+       At this point that list is only FluentMenuScrollViewer (a ControlTheme).
+       See README for the full prerequisite contract.
+
+  Typography is PINNED here, not inherited. The pack exists so that menus in a
+  branded/opted-out section still match the platform-themed menus elsewhere in the
+  same app. Inheriting DefaultFontFamily / ControlFontSize from the host defeated
+  that: a branded section rendered its menus in the branded font and size, which is
+  precisely the inconsistency the pack is meant to remove. Pinning also makes menu
+  geometry host-invariant, which is what lets the visual tests compare captures
+  across hosts directly instead of storing a baseline per host.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="DevExMenuBackgroundBrush" Color="#f0f0f0" />
+      <SolidColorBrush x:Key="DevExMenuPopupBorderBrush" Color="#c3c3c3" />
+      <SolidColorBrush x:Key="DevExMenuItemBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="DevExMenuItemForeground" Color="#000000" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForeground" Color="#99000000" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundPointerOver" Color="#000000" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundPointerOver" Color="#99000000" />
+      <SolidColorBrush x:Key="DevExMenuItemBackgroundPressed" Color="#33000000" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundPressed" Color="#000000" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundPressed" Color="#99000000" />
+      <SolidColorBrush x:Key="DevExMenuItemBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundDisabled" Color="#66000000" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundDisabled" Color="#66000000" />
+      <SolidColorBrush x:Key="DevExMenuItemPointerOverBackground" Color="#eaeaea" />
+      <SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#dadada" />
+      <SolidColorBrush x:Key="DevExMenuItemChevronBrush" Color="#000000" />
+      <x:String x:Key="DevExMenuSvgItemDefaultCss">.st0{fill:#010101;}</x:String>
+      <x:String x:Key="DevExMenuSvgItemDisabledCss">.st0,.st1,.st2,.st3{fill:#bdbdbd;}</x:String>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="DevExMenuBackgroundBrush" Color="#202020" />
+      <SolidColorBrush x:Key="DevExMenuPopupBorderBrush" Color="#414141" />
+      <SolidColorBrush x:Key="DevExMenuItemBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="DevExMenuItemForeground" Color="#ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForeground" Color="#99ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundPointerOver" Color="#ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundPointerOver" Color="#99ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemBackgroundPressed" Color="#33ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundPressed" Color="#ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundPressed" Color="#99ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="DevExMenuItemForegroundDisabled" Color="#66ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemKeyboardAcceleratorTextForegroundDisabled" Color="#66ffffff" />
+      <SolidColorBrush x:Key="DevExMenuItemPointerOverBackground" Color="#3c3c3c" />
+      <SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#404040" />
+      <SolidColorBrush x:Key="DevExMenuItemChevronBrush" Color="#f5f5f5" />
+      <x:String x:Key="DevExMenuSvgItemDefaultCss">.st0{fill:#f5f5f5;}</x:String>
+      <x:String x:Key="DevExMenuSvgItemDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- Typography (pinned — see header) -->
+  <FontFamily x:Key="DevExMenuFontFamily">Segoe UI, Tahoma, sans-serif</FontFamily>
+  <x:Double x:Key="DevExMenuFontSize">12</x:Double>
+  <FontWeight x:Key="DevExMenuFontWeight">Normal</FontWeight>
+
+  <!-- Menu bar -->
+  <x:Double x:Key="DevExMenuBarHeight">32</x:Double>
+
+  <!-- Popup surfaces -->
+  <Thickness x:Key="DevExMenuPopupBorderThickness">1</Thickness>
+  <Thickness x:Key="DevExMenuPopupPadding">1</Thickness>
+  <Thickness x:Key="DevExMenuFlyoutPresenterPadding">0</Thickness>
+  <Thickness x:Key="DevExMenuTopLevelPopupPadding">0</Thickness>
+  <Thickness x:Key="DevExMenuPopupMargin">0 0 0 10</Thickness>
+  <CornerRadius x:Key="DevExMenuPopupCornerRadius">4</CornerRadius>
+  <CornerRadius x:Key="DevExMenuTopLevelPopupCornerRadius">4</CornerRadius>
+  <BoxShadows x:Key="DevExMenuPopupShadow">0 3 7 0 #30000000</BoxShadows>
+  <x:Double x:Key="DevExMenuPopupMaxWidth">456</x:Double>
+  <x:Double x:Key="DevExMenuPopupMinHeight">32</x:Double>
+  <x:Double x:Key="DevExMenuHorizontalFlyoutMinWidth">32</x:Double>
+  <x:Double x:Key="DevExMenuSubMenuPopupHorizontalOffset">5</x:Double>
+
+  <!-- Separators -->
+  <Thickness x:Key="DevExMenuSeparatorMargin">7 1 0 1</Thickness>
+  <x:Double x:Key="DevExMenuSeparatorHeight">1</x:Double>
+  <x:Double x:Key="DevExMenuSeparatorIconColumnWidth">30</x:Double>
+  <Thickness x:Key="DevExMenuBarSeparatorMargin">0 4</Thickness>
+  <x:Double x:Key="DevExMenuBarSeparatorWidth">1</x:Double>
+
+  <!-- Menu items -->
+  <x:Double x:Key="DevExMenuNestedItemMinHeight">26</x:Double>
+  <Thickness x:Key="DevExMenuNestedItemPadding">10,2</Thickness>
+  <Thickness x:Key="DevExMenuIconPresenterMargin">4 0 10 0</Thickness>
+  <Thickness x:Key="DevExMenuInputGestureTextMargin">15,0,0,0</Thickness>
+
+</ResourceDictionary>

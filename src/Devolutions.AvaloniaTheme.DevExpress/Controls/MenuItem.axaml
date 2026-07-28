@@ -51,20 +51,19 @@
     </Border>
   </Design.PreviewWith>
 
-  <conv:PlatformKeyGestureConverter x:Key="KeyGestureConverter" />
-  <x:Double x:Key="SubMenuPopupHorizontalOffset">5</x:Double>
-  <Thickness x:Key="MenuIconPresenterMargin">4 0 10 0</Thickness>
-  <Thickness x:Key="MenuInputGestureTextMargin">15,0,0,0</Thickness>
-  <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
-  <StreamGeometry x:Key="MenuItemCheckMarkPathData">M 0.5,4.5 L 3.5,7.5 L 10.5,0.5</StreamGeometry>
+  <conv:PlatformKeyGestureConverter x:Key="DevExMenuKeyGestureConverter" />
+  <StreamGeometry x:Key="DevExMenuItemChevronPathData">M1881.76,1.56l-876.76,876.76L126.68,0C82.97,0,0,158.32,0,158.32l1005,1005L2010,158.32,1881.76,1.56Z</StreamGeometry>
+  <StreamGeometry x:Key="DevExMenuItemCheckMarkPathData">M 0.5,4.5 L 3.5,7.5 L 10.5,0.5</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForeground}" />
+    <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
     <Setter Property="Padding" Value="4 1" />
     <Setter Property="Margin" Value="3" />
     <Setter Property="CornerRadius" Value="4" />
-    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
     <!-- Block inheritance of LineHeight from parent controls -->
     <Setter Property="TextBlock.LineHeight" Value="NaN" />
     
@@ -93,15 +92,15 @@
               <ContentControl Grid.Column="0"
                               x:Name="PART_ToggleIconPresenter"
                               IsVisible="False"
-                              Theme="{StaticResource FluentMenuItemIconTheme}"
-                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+                              Theme="{StaticResource DevExMenuItemIconTheme}"
+                              Margin="{DynamicResource DevExMenuIconPresenterMargin}" />
 
               <ContentControl Grid.Column="1"
                               x:Name="PART_IconPresenter"
                               IsVisible="False"
-                              Theme="{StaticResource FluentMenuItemIconTheme}"
+                              Theme="{StaticResource DevExMenuItemIconTheme}"
                               Content="{TemplateBinding Icon}"
-                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+                              Margin="{DynamicResource DevExMenuIconPresenterMargin}" />
 
               <ContentPresenter Name="PART_HeaderPresenter"
                                 Content="{TemplateBinding Header}"
@@ -112,11 +111,11 @@
                                 Grid.Column="2" />
               <TextBlock x:Name="PART_InputGestureText"
                          Grid.Column="3"
-                         Margin="{DynamicResource MenuInputGestureTextMargin}"
-                         Text="{TemplateBinding InputGesture, Converter={StaticResource KeyGestureConverter}}"
+                         Margin="{DynamicResource DevExMenuInputGestureTextMargin}"
+                         Text="{TemplateBinding InputGesture, Converter={StaticResource DevExMenuKeyGestureConverter}}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center"
-                         Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}" />
+                         Foreground="{DynamicResource DevExMenuItemKeyboardAcceleratorTextForeground}" />
               <PathIcon Name="PART_ChevronPath"
                         Grid.Column="4"
                         Margin="8 0 0 0"
@@ -125,8 +124,8 @@
                         Width="9"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Foreground="{DynamicResource ForegroundHighBrush}"
-                        Data="{StaticResource ChevronPath}">
+                        Foreground="{DynamicResource DevExMenuItemChevronBrush}"
+                        Data="{StaticResource DevExMenuItemChevronPathData}">
                 <PathIcon.RenderTransform>
                   <RotateTransform Angle="-90" />
                 </PathIcon.RenderTransform>
@@ -136,22 +135,22 @@
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  Placement="RightEdgeAlignedTop"
-                 HorizontalOffset="{DynamicResource SubMenuPopupHorizontalOffset}"
+                 HorizontalOffset="{DynamicResource DevExMenuSubMenuPopupHorizontalOffset}"
                  VerticalOffset="-7"
                  IsLightDismissEnabled="False"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
-            <Border Background="{DynamicResource MenuBackground}"
-                    BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                    BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
-                    BoxShadow="{DynamicResource ComboBoxDropDownShadow}"
-                    TextElement.FontFamily="{DynamicResource DefaultFontFamily}"
-                    TextElement.FontSize="{DynamicResource ControlFontSize}"
-                    TextElement.FontWeight="{DynamicResource DefaultFontWeight}"
-                    Padding="{DynamicResource ContextMenuBorderPadding}"
-                    MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
-                    MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+            <Border Background="{DynamicResource DevExMenuBackgroundBrush}"
+                    BorderBrush="{DynamicResource DevExMenuPopupBorderBrush}"
+                    BorderThickness="{DynamicResource DevExMenuPopupBorderThickness}"
+                    BoxShadow="{DynamicResource DevExMenuPopupShadow}"
+                    TextElement.FontFamily="{DynamicResource DevExMenuFontFamily}"
+                    TextElement.FontSize="{DynamicResource DevExMenuFontSize}"
+                    TextElement.FontWeight="{DynamicResource DevExMenuFontWeight}"
+                    Padding="{DynamicResource DevExMenuPopupPadding}"
+                    MaxWidth="{DynamicResource DevExMenuPopupMaxWidth}"
+                    MinHeight="{DynamicResource DevExMenuPopupMinHeight}"
                     HorizontalAlignment="Stretch"
-                    CornerRadius="{DynamicResource ContextMenuCornerRadius}">
+                    CornerRadius="{DynamicResource DevExMenuPopupCornerRadius}">
               <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
                 <ItemsPresenter Name="PART_ItemsPresenter"
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
@@ -172,42 +171,42 @@
     </Style>
     <Style Selector="^:selected">
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource MenuItemBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource DevExMenuItemPointerOverBackground}" />
       </Style>
       <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundPointerOver}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForegroundPointerOver}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemKeyboardAcceleratorTextForegroundPointerOver}" />
       </Style>
     </Style>
 
     <!--  Listen for PART_LayoutRoot:pointerover, so it will not be triggered when subitem is pressed  -->
     <Style Selector="^:pressed /template/ Border#PART_LayoutRoot:pointerover">
-      <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackgroundPressed}" />
+      <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackgroundPressed}" />
       <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundPressed}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForegroundPressed}" />
       </Style>
       <Style Selector="^ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemKeyboardAcceleratorTextForegroundPressed}" />
       </Style>
     </Style>
 
     <Style Selector="^:disabled">
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackgroundDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackgroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemKeyboardAcceleratorTextForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ PathIcon#PART_ChevronPath">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForegroundDisabled}" />
       </Style>
       <Style Selector="^ /template/ ContentControl#PART_IconPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundDisabled}" />
+        <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForegroundDisabled}" />
       </Style>
     </Style>
 
@@ -242,7 +241,7 @@
                 Stretch="None"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Data="{StaticResource MenuItemCheckMarkPathData}" />
+                Data="{StaticResource DevExMenuItemCheckMarkPathData}" />
         </Template>
       </Setter>
     </Style>
@@ -257,7 +256,7 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="FluentMenuItemIconTheme" TargetType="ContentControl">
+  <ControlTheme x:Key="DevExMenuItemIconTheme" TargetType="ContentControl">
     <Setter Property="Width"
             Value="16" />
     <Setter Property="Height"

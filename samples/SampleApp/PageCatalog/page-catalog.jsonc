@@ -434,6 +434,8 @@
       }
     ],
     "DevExpress Menu Pack": [
+      // No visual regression tests required for these pages.
+      // They are tested in MenuPackContractTests.cs
       {
         "uniqueTitle": "About",
         "demo": "MenuPackAbout.axaml"
@@ -451,7 +453,7 @@
         "demo": "MenuPackContextMenuDemo.axaml"
       },
       {
-        "uniqueTitle": "📦 MenuFlyoutPresenter",
+        "uniqueTitle": "📦 MenuFlyout",
         "source": "Avalonia",
         "category": "Navigation",
         "demo": "MenuPackMenuFlyoutDemo.axaml"

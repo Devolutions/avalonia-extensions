@@ -51,8 +51,8 @@ internal static class MenuSeparatorAlignmentBehavior
 
     private static void UpdateMargin(Separator separator)
     {
-        Thickness baseMargin = GetResource(separator, "SeparatorContextMenuMargin", defaultMargin);
-        double iconColumnWidth = GetResource(separator, "SeparatorContextMenuIconColumnWidth", DefaultIconColumnWidth);
+        Thickness baseMargin = GetResource(separator, "DevExMenuSeparatorMargin", defaultMargin);
+        double iconColumnWidth = GetResource(separator, "DevExMenuSeparatorIconColumnWidth", DefaultIconColumnWidth);
         int iconColumnCount = GetIconColumnCount(separator);
 
         separator.Margin = new Thickness(

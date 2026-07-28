@@ -14,14 +14,14 @@
   </Design.PreviewWith>
 
   <Style Selector="Menu > Separator, Menu > MenuItem:separator > Separator">
-    <Setter Property="Margin" Value="0 4" />
-    <Setter Property="Width" Value="1" />
+    <Setter Property="Margin" Value="{DynamicResource DevExMenuBarSeparatorMargin}" />
+    <Setter Property="Width" Value="{DynamicResource DevExMenuBarSeparatorWidth}" />
     <Setter Property="Height" Value="NaN" />
     <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="False" />
   </Style>
 
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
-    <Setter Property="MinHeight" Value="26" />
-    <Setter Property="Padding" Value="10,2" />
+    <Setter Property="MinHeight" Value="{DynamicResource DevExMenuNestedItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource DevExMenuNestedItemPadding}" />
   </Style>
 </Styles>

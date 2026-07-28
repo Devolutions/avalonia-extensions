@@ -78,6 +78,38 @@ public partial class GroupedTileListBoxViewModel : ObservableObject
     // the control mutates this collection directly and the demo observes it live.
     public AvaloniaList<FoodItem> MultiSelectedItems { get; } = new();
 
+    // Scenario 5 source. Deliberately large and multi-grouped (many groups, many items per group,
+    // uneven counts so last rows are partial) so marquee drag-selection, cross-group rectangles, and
+    // edge auto-scroll can all be exercised. Kept separate from GroupedItems so Scenario 1 is unaffected.
+    public List<FoodItem> MultiSelectGroupedItems { get; } = GenerateMultiSelectItems();
+
+    private static List<FoodItem> GenerateMultiSelectItems()
+    {
+        // (group label, item count) — varied counts on purpose to produce partial last rows.
+        (string Group, int Count)[] groups =
+        {
+            ("Group A", 42),
+            ("Group B", 55),
+            ("Group C", 63),
+            ("Group D", 48),
+            ("Group E", 70),
+            ("Group F", 39),
+            ("Group G", 58),
+            ("Group H", 51),
+        };
+
+        var items = new List<FoodItem>();
+        foreach ((string group, int count) in groups)
+        {
+            for (int i = 1; i <= count; i++)
+            {
+                items.Add(new FoodItem($"{group} · {i:D2}", group));
+            }
+        }
+
+        return items;
+    }
+
     // Scenario 1: Named groups
     public List<FoodItem> GroupedItems { get; } = new()
     {

@@ -94,5 +94,12 @@
 
   <!-- DEVELOPMENT ONLY -->
   <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemAltHighColor}" />
+
+
+  <!-- RectangleSelectionMarquee colors -->
+  <SolidColorBrush x:Key="RectangleSelectionMarqueeFill"
+                   Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
+  <SolidColorBrush x:Key="RectangleSelectionMarqueeBorderBrush"
+                   Color="{DynamicResource SystemAccentColor}" Opacity="0.8" />
   
 </ResourceDictionary>

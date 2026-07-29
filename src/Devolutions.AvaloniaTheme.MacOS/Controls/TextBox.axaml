@@ -174,7 +174,6 @@
                 <ContentPresenter Name="PrefixContent"
                                   Grid.Column="0"
                                   Content="{TemplateBinding InnerLeftContent}"
-                                  Padding="3 2 3 1"
                                   VerticalAlignment="Center">
                   <ContentPresenter.IsVisible>
                     <Binding RelativeSource="{RelativeSource Self}" Path="Content"
@@ -241,7 +240,6 @@
                 </DockPanel>
                 <ContentPresenter Name="SuffixContent"
                                   Grid.Column="2"
-                                  Padding="3 2 3 1"
                                   Content="{TemplateBinding InnerRightContent}"
                                   VerticalAlignment="Center">
                   <ContentPresenter.IsVisible>
@@ -266,6 +264,16 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <!-- Inner-content (Prefix/Suffix) padding is applied via style rather than a direct attribute on the
+         presenters so that an instance can override it locally (e.g. CalendarDatePicker zeroes it because
+         it always assigns inner content and would otherwise get padding even when a slot is empty). -->
+    <Style Selector="^ /template/ ContentPresenter#PrefixContent">
+      <Setter Property="Padding" Value="3 2 3 1" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#SuffixContent">
+      <Setter Property="Padding" Value="3 2 3 1" />
+    </Style>
 
     <!-- These properties are defined as Styles so they can be overridden by derived ControlThemes (e.g. ComboBoxEditableTextBox) -->
     <Style Selector="^ /template/ Border#PART_BorderElement">

@@ -70,10 +70,22 @@
                        BorderBrush="{TemplateBinding BorderBrush}"
                        BorderThickness="{TemplateBinding BorderThickness}"
                        CornerRadius="{TemplateBinding CornerRadius}">
+                <TextBox.Styles>
+                  <!-- The slots always assign content to Inner*Content, so these presenters are always
+                       visible and would apply their own padding even when a slot is empty, shifting the
+                       layout vs. a plain picker. Zero it here (an instance Styles collection allows a single
+                       /template/ selector, unlike a ControlTheme); slot spacing comes from the ItemsControls' margins. -->
+                  <Style Selector="TextBox /template/ ContentPresenter#PrefixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                  <Style Selector="TextBox /template/ ContentPresenter#SuffixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                </TextBox.Styles>
                 <TextBox.InnerLeftContent>
                   <ItemsControl
                     VerticalAlignment="Center"
-                    Margin="8 2 0 2"
+                    Margin="3 2 3 1"
                     ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
                     IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                     <ItemsControl.ItemsPanel>
@@ -84,7 +96,7 @@
                   </ItemsControl>
                 </TextBox.InnerLeftContent>
                 <TextBox.InnerRightContent>
-                  <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                  <StackPanel Margin="3 2 3 1" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
                     <ItemsControl
                       VerticalAlignment="Center"
                       ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
@@ -97,8 +109,7 @@
                     </ItemsControl>
                     <Button Name="PART_Button"
                             Theme="{StaticResource DatePickerButton}"
-                            VerticalAlignment="Center"
-                            Margin="2 0 6 0">
+                            VerticalAlignment="Center">
                       <Panel>
                         <!-- The icon lives inside PART_TextBox.InnerRightContent, so it is outside the
                              CalendarDatePicker template namescope: styles / TemplateBinding cannot reach it.
@@ -113,7 +124,6 @@
                     </Button>
                     <ItemsControl
                       VerticalAlignment="Center"
-                      Margin="0 0 4 0"
                       ItemsSource="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
                       IsVisible="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                       <ItemsControl.ItemsPanel>

@@ -317,6 +317,13 @@
   <converters:CornerRadiusToDoubleConverter x:Key="BottomRightCornerRadiusConverter" Corner="BottomRight" />
 
 
+  <!-- RectangleSelectionMarquee colors -->
+  <SolidColorBrush x:Key="RectangleSelectionMarqueeFill"
+                   Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
+  <SolidColorBrush x:Key="RectangleSelectionMarqueeBorderBrush"
+                   Color="{DynamicResource SystemAccentColor}" Opacity="0.8" />
+
+
   <!--
     TextBox context menu strings. Cut/Copy/Paste come from Avalonia.Themes.Fluent's
     InvariantResources.xaml, which also is English-only with no per-culture

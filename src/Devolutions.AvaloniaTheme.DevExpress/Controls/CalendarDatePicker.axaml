@@ -85,6 +85,9 @@
                   <Style Selector="TextBox /template/ ContentPresenter#SufixContent">
                     <Setter Property="Padding" Value="0" />
                   </Style>
+                  <Style Selector="TextBox /template/ ContentPresenter Button">
+                    <Setter Property="MinHeight" Value="18" />
+                  </Style>
                 </TextBox.Styles>
                 <TextBox.InnerLeftContent>
                   <ItemsControl

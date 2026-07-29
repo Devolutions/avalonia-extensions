@@ -86,6 +86,11 @@
                     MinHeight="{DynamicResource InputDefaultHeight}"
                     ColumnDefinitions="Auto,*,Auto,Auto"
                     Margin="6 0">
+                <Grid.Styles>
+                  <Style Selector="ItemsControl Button">
+                    <Setter Property="MinHeight" Value="28" />
+                  </Style>
+                </Grid.Styles>
                 <ItemsControl
                   Grid.Column="0"
                   VerticalAlignment="Center"

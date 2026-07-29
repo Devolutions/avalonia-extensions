@@ -23,6 +23,7 @@
   </Design.PreviewWith>
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+    <Setter Property="MinHeight" Value="{DynamicResource ButtonMinHeight}" />
     <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
@@ -40,7 +41,7 @@
       <ControlTemplate>
         <Panel>
           <Border Name="BackgroundElement"
-                  MinHeight="{DynamicResource ButtonMinHeight}"
+                  MinHeight="{TemplateBinding MinHeight}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"

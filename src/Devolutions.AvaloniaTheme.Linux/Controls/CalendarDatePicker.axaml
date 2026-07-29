@@ -84,12 +84,12 @@
                    when slots are small, and only grows when a slot is taller. -->
               <Grid Name="SlotOverlay"
                     MinHeight="{DynamicResource InputDefaultHeight}"
-                    ColumnDefinitions="Auto,*,Auto,Auto">
+                    ColumnDefinitions="Auto,*,Auto,Auto"
+                    Margin="6 0">
                 <ItemsControl
                   Grid.Column="0"
                   VerticalAlignment="Center"
                   HorizontalAlignment="Left"
-                  Margin="6 0 0 0"
                   ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}}"
                   IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>
@@ -126,7 +126,7 @@
                   Grid.Column="3"
                   VerticalAlignment="Center"
                   HorizontalAlignment="Right"
-                  Margin="4 0 6 0"
+                  Margin="4 0 0 0"
                   ItemsSource="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}}"
                   IsVisible="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                   <ItemsControl.ItemsPanel>

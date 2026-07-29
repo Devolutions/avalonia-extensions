@@ -154,6 +154,7 @@
                         Padding="{DynamicResource PopupPadding}"
                         BoxShadow="{DynamicResource PopupShadow}">
                   <Calendar Name="PART_Calendar"
+                            Focusable="True"
                             FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
                             IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
                             SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"

@@ -165,6 +165,7 @@
                   BoxShadow="0 1 1 1 #33000000">
                   <Calendar
                     Name="PART_Calendar"
+                    Focusable="True"
                     Margin="0"
                     BorderBrush="{DynamicResource InputBorder}"
                     BorderThickness="1 "

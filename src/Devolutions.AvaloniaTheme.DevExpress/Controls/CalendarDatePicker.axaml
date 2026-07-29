@@ -193,6 +193,7 @@
                         Margin="{DynamicResource ComboBoxPopupBorderMargin}"
                         BoxShadow="{DynamicResource ComboBoxDropDownShadow}">
                   <Calendar Name="PART_Calendar"
+                            Focusable="True"
                             FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
                             IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
                             SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"

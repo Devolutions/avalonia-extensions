@@ -191,6 +191,10 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+    
+    <Style Selector="^:disabled /template/ TextBox#PART_TextBox">
+      <Setter Property="Foreground" Value="{DynamicResource InputDisabledForeground}" />
+    </Style>
 
     <Style Selector="^:flyout-open /template/ Button#PART_Button">
       <Setter Property="Tag" Value="noFocus" />

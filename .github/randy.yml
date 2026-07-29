@@ -2,6 +2,6 @@ kind: randy/v1
 
 ai-review-approval:
   enabled: true
-  authorized-authors: ["Samuel-B-D", "xfortin-devolutions"]
+  authorized-authors: ["apman", "Samuel-B-D", "xfortin-devolutions"]
   human-review-paths:
     - ".github/"

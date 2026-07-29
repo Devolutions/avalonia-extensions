@@ -74,10 +74,22 @@
                        BorderThickness="{TemplateBinding BorderThickness}"
                        CornerRadius="{TemplateBinding CornerRadius}"
                        Padding="{TemplateBinding Padding}">
+                <TextBox.Styles>
+                  <!-- The slots always assign content to Inner*Content, so these presenters are always
+                       visible and would apply their own padding even when a slot is empty, shifting the
+                       layout vs. a plain picker. Zero it here (an instance Styles collection allows a single
+                       /template/ selector, unlike a ControlTheme); slot spacing comes from the ItemsControls' margins. -->
+                  <Style Selector="TextBox /template/ ContentPresenter#PrefixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                  <Style Selector="TextBox /template/ ContentPresenter#SufixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                </TextBox.Styles>
                 <TextBox.InnerLeftContent>
                   <ItemsControl
                     VerticalAlignment="Center"
-                    Margin="4 2 0 2"
+                    Margin="4 0 0 0"
                     ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
                     IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
                     <ItemsControl.ItemsPanel>
@@ -88,7 +100,7 @@
                   </ItemsControl>
                 </TextBox.InnerLeftContent>
                 <TextBox.InnerRightContent>
-                  <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                  <StackPanel Margin="4 0 0 0" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
                     <ItemsControl
                       VerticalAlignment="Center"
                       ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
@@ -195,7 +207,7 @@
     <!-- Chevron hover / open / disabled colours are handled by bindings on DropDownGlyphBackground and
          DropDownGlyph in the template (see comment there); a "/template/" style cannot reach them because
          they sit inside PART_TextBox.InnerRightContent. -->
-
+    
     <!-- Focused State -->
     <Style Selector="^:focus-within:not(CalendarDatePicker:focus) /template/ Border#Background">
       <Setter Property="Background" Value="{DynamicResource TextControlBackgroundFocused}" />

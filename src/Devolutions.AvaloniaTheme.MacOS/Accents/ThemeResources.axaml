@@ -231,6 +231,12 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <!-- RectangleSelectionMarquee colors -->
+      <SolidColorBrush x:Key="RectangleSelectionMarqueeFill"
+                       Color="Black" Opacity="0.1" />
+      <SolidColorBrush x:Key="RectangleSelectionMarqueeBorderBrush"
+                       Color="Black" Opacity="0.3" />
 
     </ResourceDictionary>
 
@@ -461,6 +467,12 @@
       <SolidColorBrush x:Key="HyperlinkButtonBorderPointerOverBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderPressedBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderDisabledBrush" Color="Transparent" />
+      
+      <!-- RectangleSelectionMarquee colors -->
+      <SolidColorBrush x:Key="RectangleSelectionMarqueeFill"
+                       Color="White" Opacity="0.1" />
+      <SolidColorBrush x:Key="RectangleSelectionMarqueeBorderBrush"
+                       Color="White" Opacity="0.3" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

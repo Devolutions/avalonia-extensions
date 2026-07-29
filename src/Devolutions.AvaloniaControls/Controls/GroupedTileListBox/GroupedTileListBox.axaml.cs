@@ -21,7 +21,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// Items are displayed in a wrapping grid with uniform tile sizes.
 /// </summary>
 [TemplatePart("PART_ScrollViewer", typeof(ScrollViewer), IsRequired = true)]
-[TemplatePart("PART_SelectionRectangle", typeof(Border))]
+[TemplatePart("PART_SelectionRectangle", typeof(RectangleSelectionMarquee))]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 public class GroupedTileListBox : TemplatedControl
 {
@@ -112,7 +112,7 @@ public class GroupedTileListBox : TemplatedControl
     private ItemsRepeater? itemsRepeater;
     private ScrollViewer? scrollViewer;
     private Control? content;
-    private Border? selectionRectangle;
+    private RectangleSelectionMarquee? selectionRectangle;
 
     // --- Marquee (drag-to-select rectangle) state ---
     // Pixels the pointer must travel from the press point before a press becomes a marquee drag
@@ -362,7 +362,7 @@ public class GroupedTileListBox : TemplatedControl
         this.scrollViewer = e.NameScope.Get<ScrollViewer>("PART_ScrollViewer");
 
         // Optional: templates that omit the marquee overlay simply have no rubber-band visual.
-        this.selectionRectangle = e.NameScope.Find<Border>("PART_SelectionRectangle");
+        this.selectionRectangle = e.NameScope.Find<RectangleSelectionMarquee>("PART_SelectionRectangle");
 
         // Always create ItemsRepeater(s) dynamically in UpdateItemsRepeater
         this.UpdateItemsRepeater();

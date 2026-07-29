@@ -2,13 +2,6 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Marquee (drag-to-select rectangle) brushes. Accent-tinted to match the Explorer-style
-         rubber-band; theme-aware via SystemAccentColor, so no per-theme override is required. -->
-    <SolidColorBrush x:Key="GroupedTileListBoxSelectionRectangleFill"
-                     Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
-    <SolidColorBrush x:Key="GroupedTileListBoxSelectionRectangleBorderBrush"
-                     Color="{DynamicResource SystemAccentColor}" Opacity="0.8" />
-
     <ControlTheme x:Key="{x:Type GroupedTileListBox}" TargetType="GroupedTileListBox">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="4" />
@@ -48,11 +41,7 @@
                                 scrolls with content and never intercepts pointer input.
                             -->
                             <Canvas Name="PART_SelectionLayer" IsHitTestVisible="False">
-                                <Border Name="PART_SelectionRectangle"
-                                        IsVisible="False"
-                                        BorderThickness="1"
-                                        Background="{DynamicResource GroupedTileListBoxSelectionRectangleFill}"
-                                        BorderBrush="{DynamicResource GroupedTileListBoxSelectionRectangleBorderBrush}" />
+                              <RectangleSelectionMarquee Name="PART_SelectionRectangle" IsVisible="False" />
                             </Canvas>
                         </Panel>
                     </Border>

@@ -70,27 +70,74 @@
                        BorderBrush="{TemplateBinding BorderBrush}"
                        BorderThickness="{TemplateBinding BorderThickness}"
                        CornerRadius="{TemplateBinding CornerRadius}">
+                <TextBox.Styles>
+                  <!-- The slots always assign content to Inner*Content, so these presenters are always
+                       visible and would apply their own padding even when a slot is empty, shifting the
+                       layout vs. a plain picker. Zero it here (an instance Styles collection allows a single
+                       /template/ selector, unlike a ControlTheme); slot spacing comes from the ItemsControls' margins. -->
+                  <Style Selector="TextBox /template/ ContentPresenter#PrefixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                  <Style Selector="TextBox /template/ ContentPresenter#SuffixContent">
+                    <Setter Property="Padding" Value="0" />
+                  </Style>
+                  <Style Selector="TextBox /template/ ContentPresenter Button">
+                    <Setter Property="MinHeight" Value="20" />
+                  </Style>
+                </TextBox.Styles>
+                <TextBox.InnerLeftContent>
+                  <ItemsControl
+                    VerticalAlignment="Center"
+                    Margin="3 2 3 1"
+                    ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                    IsVisible="{Binding (CalendarDatePickerContent.InnerLeftContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="2" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                  </ItemsControl>
+                </TextBox.InnerLeftContent>
                 <TextBox.InnerRightContent>
-                  <Rectangle Width="20" Fill="Transparent" />
+                  <StackPanel Margin="3 2 3 1" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                    <ItemsControl
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                      IsVisible="{Binding (CalendarDatePickerContent.InnerLeftOfCalendarButtonContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel Orientation="Horizontal" Spacing="2" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <Button Name="PART_Button"
+                            Theme="{StaticResource DatePickerButton}"
+                            VerticalAlignment="Center">
+                      <Panel>
+                        <!-- The icon lives inside PART_TextBox.InnerRightContent, so it is outside the
+                             CalendarDatePicker template namescope: styles / TemplateBinding cannot reach it.
+                             Drive its colour by binding to the parent via $parent[CalendarDatePicker]
+                             (open -> accent; otherwise enabled -> icon brush, disabled -> low). -->
+                        <PathIcon Data="{StaticResource CalendarIconPath}"
+                                  Height="13"
+                                  Foreground="{BindingToggler {Binding $parent[CalendarDatePicker].IsDropDownOpen},
+                                    {DynamicResource AccentButtonBackground},
+                                    {DynamicResourceToggler {Binding $parent[CalendarDatePicker].IsEnabled}, CalendarIconBrush, ForegroundLowBrush}}" />
+                      </Panel>
+                    </Button>
+                    <ItemsControl
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}}"
+                      IsVisible="{Binding (CalendarDatePickerContent.InnerRightContent), RelativeSource={RelativeSource AncestorType=CalendarDatePicker}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel Orientation="Horizontal" Spacing="2" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                  </StackPanel>
                 </TextBox.InnerRightContent>
               </TextBox>
-              <!-- Brittle Button placement! Placing the Button as TextBox.InnerRightContent breaks functionality,
-                       But this placement breaks if ValidationError text is positioned _above_ the TextBox 
-                       Also: centering the button via setting a top margin gives inconsistent results on different monitors -->
-              <Panel Height="{TemplateBinding Height}"
-                     MinHeight="{DynamicResource CalendarControlHeight}" VerticalAlignment="Top">
-                <Button Name="PART_Button"
-                        Theme="{StaticResource DatePickerButton}"
-                        ClipToBounds="False"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Margin="0 0 8 0">
-                  <Panel>
-                    <PathIcon Data="{StaticResource CalendarIconPath}"
-                              Height="13" />
-                  </Panel>
-                </Button>
-              </Panel>
 
               <Popup Name="PART_Popup"
                      PlacementTarget="{Binding ElementName=PART_TextBox}"
@@ -107,6 +154,7 @@
                         Padding="{DynamicResource PopupPadding}"
                         BoxShadow="{DynamicResource PopupShadow}">
                   <Calendar Name="PART_Calendar"
+                            Focusable="True"
                             FirstDayOfWeek="{TemplateBinding FirstDayOfWeek}"
                             IsTodayHighlighted="{TemplateBinding IsTodayHighlighted}"
                             SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
@@ -120,20 +168,6 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
-
-    <Style Selector="^ /template/ Button#PART_Button PathIcon">
-      <Setter Property="Foreground"
-              Value="{DynamicResourceToggler 
-                                  {Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=CalendarDatePicker}
-                                  }, 
-                                  CalendarIconBrush,
-                                  ForegroundLowBrush
-                                }" />
-    </Style>
-
-    <Style Selector="^:flyout-open /template/ Button#PART_Button PathIcon">
-      <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackground}" />
-    </Style>
 
     <!-- Error State -->
     <Style Selector="^:error /template/ TextBox#PART_TextBox">

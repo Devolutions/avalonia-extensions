@@ -27,7 +27,7 @@
           RowSpacing="30">
       <Grid Grid.Column="0" Grid.Row="0"
             ColumnDefinitions="Auto, 250"
-            RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+            RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
             ColumnSpacing="15"
             RowSpacing="14">
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Placeholder"   VerticalAlignment="Center" />
@@ -37,6 +37,7 @@
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Custom Format" VerticalAlignment="Center" />
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Reset"         VerticalAlignment="Center" />
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Error"         VerticalAlignment="Center" />
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Inner slots"   VerticalAlignment="Center" />
 
         <CalendarDatePicker Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" />
         <CalendarDatePicker Grid.Row="1" Grid.Column="1" Name="DatePicker"  HorizontalAlignment="Left" />
@@ -58,6 +59,20 @@
             </system:Exception>
           </DataValidationErrors.Error>
         </CalendarDatePicker>
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+          <CalendarDatePicker HorizontalAlignment="Left">
+            <CalendarDatePickerContent.InnerLeftContent>
+              <Button Command="{Binding GreenCommand}"><Border Width="8" Height="8" Background="Green" /></Button>
+            </CalendarDatePickerContent.InnerLeftContent>
+            <CalendarDatePickerContent.InnerLeftOfCalendarButtonContent>
+              <Button Command="{Binding OrangeCommand}"><Border Width="8" Height="8" Background="Orange" /></Button>
+            </CalendarDatePickerContent.InnerLeftOfCalendarButtonContent>
+            <CalendarDatePickerContent.InnerRightContent>
+              <Button Command="{Binding RedCommand}"><Border Width="8" Height="8" Background="Red" /></Button>
+            </CalendarDatePickerContent.InnerRightContent>
+          </CalendarDatePicker>
+          <Border Width="12" Height="12" VerticalAlignment="Center" Background="{Binding SelectedBrush}" />
+        </StackPanel>
       </Grid>
 
       <StackPanel Grid.Row="0" Grid.Column="1"

@@ -210,12 +210,6 @@
                                 Grid.Column="0"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Content="{TemplateBinding InnerLeftContent}"
-                                Padding="{Binding 
-                                    Padding, 
-                                    RelativeSource={RelativeSource TemplatedParent}, 
-                                    Converter={x:Static  DevoConverters.ThicknessExtractor},
-                                    ConverterParameter={x:Static ThicknessSubset.Left}
-                                  }"
                                 IsVisible="{Binding Content, RelativeSource={RelativeSource Self}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
               <ScrollViewer Name="PART_ScrollViewer"
                             Grid.Column="1"
@@ -277,11 +271,6 @@
               <ContentPresenter Name="SufixContent"
                                 Grid.Column="2"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                Padding="{Binding 
-                                            Padding, 
-                                            RelativeSource={RelativeSource TemplatedParent}, 
-                                            Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter},
-                                            ConverterParameter={StaticResource TextBoxSufixPaddingFactors}}"
                                 Content="{TemplateBinding InnerRightContent}"
                                 IsVisible="{Binding Content, RelativeSource={RelativeSource Self}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             </Grid>
@@ -289,6 +278,18 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <!-- Inner-content (Prefix/Sufix) padding is applied via style rather than a direct attribute on the
+         presenters so that an instance can override it locally (e.g. CalendarDatePicker zeroes it because
+         it always assigns inner content and would otherwise get padding even when a slot is empty). -->
+    <Style Selector="^ /template/ ContentPresenter#PrefixContent">
+      <Setter Property="Padding"
+              Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.ThicknessExtractor}, ConverterParameter={x:Static ThicknessSubset.Left}}" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#SufixContent">
+      <Setter Property="Padding"
+              Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.ThicknessToSelectiveThicknessConverter}, ConverterParameter={StaticResource TextBoxSufixPaddingFactors}}" />
+    </Style>
 
     <Style Selector="^.borderless">
       <Setter Property="BorderThickness" Value="0" />

@@ -162,7 +162,7 @@ public class GroupedComboBox : ComboBox
         set => this.SetValue(EmptyGroupNameProperty, value);
     }
 
-    protected override Type StyleKeyOverride => typeof(ComboBox);
+    protected override Type StyleKeyOverride => typeof(GroupedComboBox);
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {

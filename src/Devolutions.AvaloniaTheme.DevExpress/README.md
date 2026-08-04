@@ -88,6 +88,86 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 **Note:** Some global Styles will also be loaded by default, you can opt out by setting `GlobalStyles` to false (`<DevolutionsDevExpressTheme GlobalStyles="False" />`). GlobalStyles are also available as a separate tag `<DevolutionsDevExpressThemeGlobalStyles />` to cover scenarios where consumers would like to scope them to some control instead of including them globally. This is may be necessary to prevent styles from "bleeding out" in cases where that might be undesirable.
 
+### Menu pack (menu controls only)
+
+Use the menu pack when you only want DevExpress menu styling without importing the full `<DevolutionsDevExpressTheme />`.
+
+```xaml
+<Application ...>
+  <Application.Styles>
+    <!-- Required prerequisite: must be application-wide, not scoped to a subtree -->
+    <FluentTheme />
+
+    <!-- DevExpress menu pack -->
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+  </Application.Styles>
+</Application>
+```
+
+Exact menu pack URI:
+
+`avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml`
+
+Prerequisites and caveats:
+
+- **`FluentTheme` must be loaded application-wide, in `Application.Styles` — not scoped to a subtree.** Adding
+  `<FluentTheme />` to the `Styles` of a `Window`, `UserControl`, or other container is *not* sufficient, even though
+  the resource appears reachable from that subtree. The pack reuses Fluent's `MenuScrollViewer` control theme, which is
+  resolved when the menu template is built; if `FluentTheme` is not application-wide this fails with an
+  `InvalidCastException` during template construction. The exception surfaces on any menu — including a single-item
+  menu that never needs to scroll — and its message does not mention scrolling, so it is easy to misdiagnose. If you
+  see an unexplained `InvalidCastException` when a menu first opens, check this first.
+- The pack reuses the Fluent base control templates and deliberately inherits a small set of keys from the host so
+  menus still feel native to the surrounding app (see "Inherited from the host" below).
+- This pack includes styling for `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, `Separator`, and
+  menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`, and the `MenuItem` Svg icon CSS styles).
+- If you need full control coverage, use `<DevolutionsDevExpressTheme />` instead.
+
+#### Resource contract
+
+All menu tokens live in a single shared file, `Accents/MenuResources.axaml`, which is included by **both** the full
+theme and the menu pack. There is one source of truth, so the pack can never drift from the full theme.
+
+Two rules make the pack safe to layer over a host theme you do not control:
+
+1. **Every key the pack owns is prefixed `DevExMenu`** — it cannot collide with, or be silently overridden by, the host
+   theme's keys.
+2. **Values are pinned literals, never aliases.** Menu tokens do not resolve through generic theme-wide or Fluent-owned
+   keys. A host theme that redefines e.g. `MenuFlyoutPresenterBorderThemeThickness` or `FlyoutThemeMaxWidth` cannot move
+   menu visuals.
+
+**Inherited from the host (by design):**
+
+| Key | Why |
+|-----|-----|
+| `FluentMenuScrollViewer` | Fluent's scroll viewer theme, reused rather than duplicated. This is the one remaining hard dependency on Fluent — see the prerequisite note above. |
+
+**Typography is pinned, not inherited.** `DevExMenuFontFamily` / `DevExMenuFontSize` /
+`DevExMenuFontWeight` are owned by the pack. The point of the pack is that menus in a branded or
+opted-out section still match the platform-themed menus elsewhere in the same app; inheriting the
+host's font defeated that, because the branded section rendered its menus in the branded font and
+size. Pinning also keeps menu geometry identical across hosts.
+
+**The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`:
+that resource is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your
+app rather than just menu ones. Menu separators instead reuse the host's separator template — which
+is identical across Fluent, MacOS, Linux and DevExpress — with every template-bound property pinned
+inside the menu-scoped selector. A guard test asserts that adding the pack leaves non-menu
+separators byte-identical.
+
+**Overriding a token.** Because tokens are prefixed, you can retarget any single value without affecting the rest of
+your app:
+
+```xaml
+<StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+<!-- ... later in your own resources ... -->
+<SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#ff0000" />
+```
+
+Both rules are enforced by `MenuPackContractTests` in the visual test project, which asserts that every `DevExMenu*`
+token resolves identically under the full theme and under "pack over a foreign host", and that a hostile host theme
+cannot leak into any of them.
+
 ## Styled Controls
 
 Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.

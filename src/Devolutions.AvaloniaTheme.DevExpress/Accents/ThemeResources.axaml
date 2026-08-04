@@ -99,8 +99,6 @@
     
       <SolidColorBrush x:Key="DefaultFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.6" />
 
-      <x:String x:Key="SvgMenuItemDefaultCss">.st0{fill:#010101;}</x:String>
-      <x:String x:Key="SvgMenuItemDisabledCss">.st0,.st1,.st2,.st3{fill:#bdbdbd;}</x:String>
     </ResourceDictionary>
 
     <!-- MARK: Dark Mode -->
@@ -197,8 +195,6 @@
     
       <SolidColorBrush x:Key="DefaultFocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
 
-      <x:String x:Key="SvgMenuItemDefaultCss">.st0{fill:#f5f5f5;}</x:String>
-      <x:String x:Key="SvgMenuItemDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -334,11 +330,11 @@
   <StaticResource x:Key="DefaultFontFamily" ResourceKey="DevExpressThemeFontFamily" />
   <SolidColorBrush x:Key="MenuItemBackgroundPointerOver" Color="{DynamicResource MenuItemBackgroundPointerOverColor}" />
 
+  <!-- Menu tokens live in Accents/MenuResources.axaml (shared with the menu pack). -->
+
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <SolidColorBrush x:Key="MenuSeparatorBrush" Color="{DynamicResource MenuSeparatorColor}" />
   <Thickness x:Key="SeparatorMargin">0 2</Thickness>
-  <Thickness x:Key="SeparatorContextMenuMargin">7 1 0 1</Thickness>
-  <x:Double x:Key="SeparatorContextMenuIconColumnWidth">30</x:Double>
 
   <x:Double x:Key="OpacityVisible">1</x:Double>
   <x:Double x:Key="OpacityHidden">0</x:Double>

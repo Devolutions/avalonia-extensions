@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
+             x:Class="SampleApp.DemoPages.MenuPackAbout">
+
+  <UserControl.Styles>
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+  </UserControl.Styles>
+
+  <StackPanel Margin="10" Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
+    <TextBlock Classes="h1">About DevExpress Menu Pack</TextBlock>
+
+    <TextBlock FontSize="15" TextWrapping="Wrap">
+      The DevExpress Menu Pack is an externally consumable style pack for menu-related controls. It lets apps import menu styling without importing the full theme object.
+    </TextBlock>
+
+    <TextBlock FontSize="15" TextWrapping="Wrap">
+      The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent). It can be used as a drop-in replacement for the default menu styles where a consistent look across all platforms is required.
+    </TextBlock>
+
+    <TextBlock Classes="section-title">Menu pack URI</TextBlock>
+    <TextBlock FontFamily="{DynamicResource CodeFontFamily}"
+               Text="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml"
+               TextWrapping="Wrap" />
+
+    <TextBlock Classes="section-title">Minimal usage</TextBlock>
+    <TextBlock Classes="code"
+               HorizontalAlignment="Left"
+               LineHeight="18"
+               Margin="5 -5 0 0"
+               Padding="5 8 6 8">
+      <TextBlock.Inlines>
+        <Run Text="&lt;Application ...&gt;&#x0a;" />
+        <Run Text="  &lt;Application.Styles&gt;&#x0a;" />
+        <Run Text="    &lt;FluentTheme /&gt;&#x0a;" />
+        <Run Text="    &lt;StyleInclude Source=&quot;avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml&quot; /&gt;&#x0a;" />
+        <Run Text="  &lt;/Application.Styles&gt;&#x0a;" />
+        <Run Text="&lt;/Application&gt;" />
+      </TextBlock.Inlines>
+    </TextBlock>
+
+    <TextBlock Classes="h1">Isolation Demo</TextBlock>
+
+    <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+      <StackPanel Spacing="10">
+        <TextBlock Classes="section-title">Non-menu controls stay host-themed</TextBlock>
+        <TextBlock TextWrapping="Wrap">
+          These controls are outside any menu scope and remain styled by the selected host theme.
+        </TextBlock>
+
+        <Separator />
+
+        <WrapPanel ItemWidth="180" Orientation="Horizontal">
+          <Button Margin="0 0 10 10" Content="Button" />
+
+          <ComboBox Margin="0 0 10 10" SelectedIndex="2" Width="170">
+            <ComboBoxItem>Option 1</ComboBoxItem>
+            <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
+            <ComboBoxItem>ComobBox</ComboBoxItem>
+            <ComboBoxItem>Option 4</ComboBoxItem>
+          </ComboBox>
+
+          <TextBox Margin="0 0 10 10" Width="170" Watermark="TextBox" />
+
+          <CheckBox Margin="0 0 10 10" Content="CheckBox" IsChecked="True" />
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+
+    <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+      <StackPanel Spacing="10">
+        <TextBlock Classes="section-title">Menus get the DevExpress theme from the MenuPack</TextBlock>
+
+        <StackPanel Orientation="Horizontal" Spacing="30">
+
+          <StackPanel Spacing="10" VerticalAlignment="Top">
+            <Button Content="Right-click for ContextMenu">
+              <Button.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Refresh" />
+                  <MenuItem Header="Rename" />
+                  <Separator />
+                  <MenuItem Header="Delete" />
+                </ContextMenu>
+              </Button.ContextMenu>
+            </Button>
+
+            <Button Content="Click for MenuFlyout">
+              <Button.Flyout>
+                <MenuFlyout>
+                  <MenuItem Header="Settings" />
+                  <MenuItem Header="Profile" />
+                  <Separator />
+                  <MenuItem Header="Sign out" />
+                </MenuFlyout>
+              </Button.Flyout>
+            </Button>
+          </StackPanel>
+
+            <MenuFlyoutPresenter>
+              <MenuItem Header="Open session" />
+              <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
+                <MenuItem Header="Embedded/tabbed" />
+                <MenuItem Header="Embedded SFTP connection" />
+                <MenuItem Header="Embedded SCP connection" IsEnabled="False" />
+              </MenuItem>
+              <MenuItem Header="Copy name" />
+              <Separator />
+              <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
+                <MenuItem Header="Option 1" ToggleType="CheckBox" />
+                <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
+              </MenuItem>
+            </MenuFlyoutPresenter>
+
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

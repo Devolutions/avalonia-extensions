@@ -13,9 +13,27 @@
       </design:ThemePreviewer>
     </Design.PreviewWith>
 
+    <!--
+      Menu separators are sealed against the host theme.
+
+      The pack deliberately does NOT ship a Separator ControlTheme: doing so would
+      install an implicit `{x:Type Separator}` theme and restyle every separator in
+      the consuming app, not just menu ones. Instead we rely on the host's template
+      (Fluent's, which MacOS/Linux/DevExpress all copy verbatim) and pin every
+      property that template binds, so a host override cannot reach our menus.
+
+      If you add a TemplateBinding-visible property to Separator.axaml's template,
+      pin it here too.
+    -->
     <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator, MenuItem Separator">
-        <Setter Property="Background" Value="{DynamicResource MenuSeparatorBrush}" />
-        <Setter Property="Margin" Value="{DynamicResource SeparatorContextMenuMargin}" />
+        <Setter Property="Background" Value="{DynamicResource DevExMenuSeparatorBrush}" />
+        <Setter Property="Margin" Value="{DynamicResource DevExMenuSeparatorMargin}" />
+        <Setter Property="Height" Value="{DynamicResource DevExMenuSeparatorHeight}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="True" />
     </Style>
 

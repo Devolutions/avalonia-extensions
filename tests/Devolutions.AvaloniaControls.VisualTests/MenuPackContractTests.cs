@@ -329,6 +329,14 @@ public class MenuPackContractTests
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
+
+            var note = content.FindControl<Control>("SimpleThemePrerequisiteNote");
+            var supportedContent = content.FindControl<Control>("SupportedDemoRoot");
+
+            Assert.NotNull(note);
+            Assert.NotNull(supportedContent);
+            Assert.True(note.IsVisible, $"{pageType.Name}: Simple prerequisite note should be visible.");
+            Assert.False(supportedContent.IsVisible, $"{pageType.Name}: MenuPack demo content should be hidden on Simple.");
         }
         finally
         {

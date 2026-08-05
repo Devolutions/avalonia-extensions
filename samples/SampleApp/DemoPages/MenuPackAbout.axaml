@@ -44,7 +44,8 @@
 
     <TextBlock Classes="h1">Isolation Demo</TextBlock>
 
-    <Border IsVisible="{ext:ThemeIsOneOf 'Simple'}"
+    <Border x:Name="SimpleThemePrerequisiteNote"
+            IsVisible="{ext:ThemeIsOneOf 'Simple'}"
             Padding="12"
             CornerRadius="6"
             BorderBrush="{DynamicResource LayoutBorderMidBrush}"
@@ -55,81 +56,83 @@
       </TextBlock>
     </Border>
 
-    <Border IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}"
-            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
-      <StackPanel Spacing="10">
-        <TextBlock Classes="section-title">Non-menu controls stay host-themed</TextBlock>
-        <TextBlock TextWrapping="Wrap">
-          These controls are outside any menu scope and remain styled by the selected host theme.
-        </TextBlock>
+    <StackPanel x:Name="SupportedDemoRoot"
+                IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}"
+                Spacing="14">
+      <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+        <StackPanel Spacing="10">
+          <TextBlock Classes="section-title">Non-menu controls stay host-themed</TextBlock>
+          <TextBlock TextWrapping="Wrap">
+            These controls are outside any menu scope and remain styled by the selected host theme.
+          </TextBlock>
 
-        <Separator />
+          <Separator />
 
-        <WrapPanel ItemWidth="180" Orientation="Horizontal">
-          <Button Margin="0 0 10 10" Content="Button" />
+          <WrapPanel ItemWidth="180" Orientation="Horizontal">
+            <Button Margin="0 0 10 10" Content="Button" />
 
-          <ComboBox Margin="0 0 10 10" SelectedIndex="2" Width="170">
-            <ComboBoxItem>Option 1</ComboBoxItem>
-            <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
-            <ComboBoxItem>ComobBox</ComboBoxItem>
-            <ComboBoxItem>Option 4</ComboBoxItem>
-          </ComboBox>
+            <ComboBox Margin="0 0 10 10" SelectedIndex="2" Width="170">
+              <ComboBoxItem>Option 1</ComboBoxItem>
+              <ComboBoxItem IsEnabled="False">Option 2</ComboBoxItem>
+              <ComboBoxItem>ComobBox</ComboBoxItem>
+              <ComboBoxItem>Option 4</ComboBoxItem>
+            </ComboBox>
 
-          <TextBox Margin="0 0 10 10" Width="170" Watermark="TextBox" />
+            <TextBox Margin="0 0 10 10" Width="170" Watermark="TextBox" />
 
-          <CheckBox Margin="0 0 10 10" Content="CheckBox" IsChecked="True" />
-        </WrapPanel>
-      </StackPanel>
-    </Border>
-
-    <Border IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}"
-            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
-      <StackPanel Spacing="10">
-        <TextBlock Classes="section-title">Menus get the DevExpress theme from the MenuPack</TextBlock>
-
-        <StackPanel Orientation="Horizontal" Spacing="30">
-
-          <StackPanel Spacing="10" VerticalAlignment="Top">
-            <Button Content="Right-click for ContextMenu">
-              <Button.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Header="Refresh" />
-                  <MenuItem Header="Rename" />
-                  <Separator />
-                  <MenuItem Header="Delete" />
-                </ContextMenu>
-              </Button.ContextMenu>
-            </Button>
-
-            <Button Content="Click for MenuFlyout">
-              <Button.Flyout>
-                <MenuFlyout>
-                  <MenuItem Header="Settings" />
-                  <MenuItem Header="Profile" />
-                  <Separator />
-                  <MenuItem Header="Sign out" />
-                </MenuFlyout>
-              </Button.Flyout>
-            </Button>
-          </StackPanel>
-
-            <MenuFlyoutPresenter>
-              <MenuItem Header="Open session" />
-              <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
-                <MenuItem Header="Embedded/tabbed" />
-                <MenuItem Header="Embedded SFTP connection" />
-                <MenuItem Header="Embedded SCP connection" IsEnabled="False" />
-              </MenuItem>
-              <MenuItem Header="Copy name" />
-              <Separator />
-              <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
-                <MenuItem Header="Option 1" ToggleType="CheckBox" />
-                <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
-              </MenuItem>
-            </MenuFlyoutPresenter>
-
+            <CheckBox Margin="0 0 10 10" Content="CheckBox" IsChecked="True" />
+          </WrapPanel>
         </StackPanel>
-      </StackPanel>
-    </Border>
+      </Border>
+
+      <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+        <StackPanel Spacing="10">
+          <TextBlock Classes="section-title">Menus get the DevExpress theme from the MenuPack</TextBlock>
+
+          <StackPanel Orientation="Horizontal" Spacing="30">
+
+            <StackPanel Spacing="10" VerticalAlignment="Top">
+              <Button Content="Right-click for ContextMenu">
+                <Button.ContextMenu>
+                  <ContextMenu>
+                    <MenuItem Header="Refresh" />
+                    <MenuItem Header="Rename" />
+                    <Separator />
+                    <MenuItem Header="Delete" />
+                  </ContextMenu>
+                </Button.ContextMenu>
+              </Button>
+
+              <Button Content="Click for MenuFlyout">
+                <Button.Flyout>
+                  <MenuFlyout>
+                    <MenuItem Header="Settings" />
+                    <MenuItem Header="Profile" />
+                    <Separator />
+                    <MenuItem Header="Sign out" />
+                  </MenuFlyout>
+                </Button.Flyout>
+              </Button>
+            </StackPanel>
+
+              <MenuFlyoutPresenter>
+                <MenuItem Header="Open session" />
+                <MenuItem Header="Open with parameters" IsSubMenuOpen="True">
+                  <MenuItem Header="Embedded/tabbed" />
+                  <MenuItem Header="Embedded SFTP connection" />
+                  <MenuItem Header="Embedded SCP connection" IsEnabled="False" />
+                </MenuItem>
+                <MenuItem Header="Copy name" />
+                <Separator />
+                <MenuItem Header="Toggle Options" IsSubMenuOpen="True">
+                  <MenuItem Header="Option 1" ToggleType="CheckBox" />
+                  <MenuItem Header="Option 2" ToggleType="CheckBox" IsChecked="True" />
+                </MenuItem>
+              </MenuFlyoutPresenter>
+
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
   </StackPanel>
 </UserControl>

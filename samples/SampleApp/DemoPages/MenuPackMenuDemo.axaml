@@ -12,7 +12,8 @@
   </UserControl.Styles>
 
   <StackPanel>
-    <Border IsVisible="{ext:ThemeIsOneOf 'Simple'}"
+    <Border x:Name="SimpleThemePrerequisiteNote"
+            IsVisible="{ext:ThemeIsOneOf 'Simple'}"
             Margin="20"
             Padding="12"
             CornerRadius="6"
@@ -24,6 +25,7 @@
       </TextBlock>
     </Border>
 
-    <demo:MenuDemo IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
+    <demo:MenuDemo x:Name="SupportedDemoRoot"
+                   IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
   </StackPanel>
 </UserControl>

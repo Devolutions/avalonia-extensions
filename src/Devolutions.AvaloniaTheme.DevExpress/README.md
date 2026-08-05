@@ -90,7 +90,7 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 ### Menu pack (menu controls only)
 
-Use the menu pack when you only want DevExpress menu styling without importing the full `<DevolutionsDevExpressTheme />`.
+Use the menu pack when you only want DevExpress menu styling but not the full `<DevolutionsDevExpressTheme />` (e.g. to give consistent Menu chrome to custom-branded sections of your app).
 
 ```xaml
 <Application ...>

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MenuPackMenuFlyoutDemo">
@@ -10,5 +11,21 @@
     <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
-  <demo:MenuFlyoutDemo />
+  <StackPanel>
+    <Border x:Name="SimpleThemePrerequisiteNote"
+            IsVisible="{ext:ThemeIsOneOf 'Simple'}"
+            Margin="20"
+            Padding="12"
+            CornerRadius="6"
+            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <TextBlock TextWrapping="Wrap">
+        MenuPack demos require Fluent or a Fluent-based theme. The Simple theme is not supported because MenuPack depends on Fluent menu infrastructure.
+      </TextBlock>
+    </Border>
+
+    <demo:MenuFlyoutDemo x:Name="SupportedDemoRoot"
+                         IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
+  </StackPanel>
 </UserControl>

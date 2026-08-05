@@ -311,6 +311,33 @@ public class MenuPackContractTests
             $"  host + menu pack : {withPack}");
     }
 
+    /// <summary>
+    /// MenuPack demo pages should stay navigable under SimpleTheme and show
+    /// prerequisite guidance instead of crashing.
+    /// </summary>
+    [AvaloniaTheory]
+    [MemberData(nameof(SimplePackPageCases))]
+    public void MenuPack_demo_pages_do_not_crash_on_simple_theme(Type pageType)
+    {
+        App.CurrentTheme = null;
+        App.SetTheme(new SimpleTheme());
+
+        var content = (Control)Activator.CreateInstance(pageType)!;
+        var window = new Window { Width = 1200, Height = 920, Content = content };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
     public static IEnumerable<object[]> PackPageCases()
     {
         Type[] pages =
@@ -333,5 +360,13 @@ public class MenuPackContractTests
                 yield return [page, host];
             }
         }
+    }
+
+    public static IEnumerable<object[]> SimplePackPageCases()
+    {
+        yield return [typeof(MenuPackAbout)];
+        yield return [typeof(MenuPackMenuDemo)];
+        yield return [typeof(MenuPackContextMenuDemo)];
+        yield return [typeof(MenuPackMenuFlyoutDemo)];
     }
 }

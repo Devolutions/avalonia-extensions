@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MenuPackAbout">
 
@@ -43,7 +44,19 @@
 
     <TextBlock Classes="h1">Isolation Demo</TextBlock>
 
-    <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+    <Border IsVisible="{ext:ThemeIsOneOf 'Simple'}"
+            Padding="12"
+            CornerRadius="6"
+            BorderBrush="{DynamicResource LayoutBorderMidBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <TextBlock TextWrapping="Wrap">
+        MenuPack demos require Fluent or a Fluent-based theme. The Simple theme is not supported because MenuPack depends on Fluent menu infrastructure.
+      </TextBlock>
+    </Border>
+
+    <Border IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
       <StackPanel Spacing="10">
         <TextBlock Classes="section-title">Non-menu controls stay host-themed</TextBlock>
         <TextBlock TextWrapping="Wrap">
@@ -69,7 +82,8 @@
       </StackPanel>
     </Border>
 
-    <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
+    <Border IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1" CornerRadius="6" Padding="10">
       <StackPanel Spacing="10">
         <TextBlock Classes="section-title">Menus get the DevExpress theme from the MenuPack</TextBlock>
 

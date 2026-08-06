@@ -88,8 +88,8 @@
         <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                       ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
           <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-          <Binding Source="{StaticResource MenuHeaderFontSizeSmall}" />
-          <Binding Source="{StaticResource ControlFontSize}" />
+          <Binding Source="{StaticResource MacOsMenuHeaderFontSizeSmall}" />
+          <Binding Source="{StaticResource MacOsMenuFontSize}" />
         </MultiBinding>
       </Setter.Value>
     </Setter>
@@ -104,7 +104,7 @@
       </Setter.Value>
     </Setter>
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuItemForegroundBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_LayoutRoot"
@@ -116,8 +116,8 @@
           <Panel>
             <Border Name="MenuItemActiveBackground"
                     Background="Transparent"
-                    CornerRadius="{StaticResource SelectionCornerRadius}"
-                    Margin="{DynamicResource MenuItemActiveBackgroundMargin}">
+                    CornerRadius="{StaticResource MacOsMenuSelectionCornerRadius}"
+                    Margin="{DynamicResource MacOsMenuItemActiveBackgroundMargin}">
               <Border.IsVisible>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                               ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
@@ -150,8 +150,8 @@
                 <Panel>
                   <Border Name="ToolBarItemActiveBackground"
                           Background="Transparent"
-                          CornerRadius="{StaticResource SelectionCornerRadius}"
-                          Margin="{DynamicResource MenuToolBarItemActiveBackgroundMargin}">
+                          CornerRadius="{StaticResource MacOsMenuSelectionCornerRadius}"
+                          Margin="{DynamicResource MacOsMenuToolBarItemActiveBackgroundMargin}">
                     <Border.IsVisible>
                       <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                     ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
@@ -183,9 +183,9 @@
                     <Panel Name="PART_ChevronPanel">
                       <Border Name="PART_ChevronBorder" Margin="3 0 0 0 ">
                         <Path Name="PART_ChevronPath"
-                              Data="{StaticResource ChevronPath}"
-                              Width="{StaticResource TreeViewItemChevronSize}"
-                              Height="{StaticResource TreeViewItemChevronSize}"
+                              Data="{StaticResource MacOsMenuChevronPath}"
+                              Width="{StaticResource MacOsMenuChevronSize}"
+                              Height="{StaticResource MacOsMenuChevronSize}"
                               Fill="{TemplateBinding Foreground}"
                               Stretch="Uniform"
                               HorizontalAlignment="Center"
@@ -238,34 +238,34 @@
                    IsLightDismissEnabled="True"
                    IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
                    Placement="BottomEdgeAlignedLeft"
-                   HorizontalOffset="{DynamicResource MenuPopupHorizontalOffset}"
+                   HorizontalOffset="{DynamicResource MacOsMenuPopupHorizontalOffset}"
                    OverlayInputPassThroughElement="{Binding $parent[Menu]}">
               <Popup.VerticalOffset>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                               ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
                   <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                  <Binding Source="{StaticResource MenuToolBarPopupVerticalOffset}" />
-                  <Binding Source="{StaticResource MenuPopupVerticalOffset}" />
+                  <Binding Source="{StaticResource MacOsMenuToolBarPopupVerticalOffset}" />
+                  <Binding Source="{StaticResource MacOsMenuPopupVerticalOffset}" />
                 </MultiBinding>
               </Popup.VerticalOffset>
-              <Border Margin="{StaticResource PopupMargin} "
-                      BorderBrush="{DynamicResource PopupBorderBrush}"
-                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
-                      MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+              <Border Margin="{DynamicResource MacOsMenuPopupMargin} "
+                      BorderBrush="{DynamicResource MacOsMenuPopupBorderBrush}"
+                      BorderThickness="{DynamicResource MacOsMenuPopupBorderThickness}"
+                      MaxWidth="{DynamicResource MacOsMenuPopupMaxWidth}"
+                      MinHeight="{DynamicResource MacOsMenuPopupMinHeight}"
                       HorizontalAlignment="Stretch"
-                      BoxShadow="{DynamicResource PopupShadow}"
-                      CornerRadius="{DynamicResource PopupCornerRadius}">
+                      BoxShadow="{DynamicResource MacOsMenuPopupShadow}"
+                      CornerRadius="{DynamicResource MacOsMenuPopupCornerRadius}">
                 <Border Name="InnerBorderHighlight"
-                        Background="{DynamicResource PopupBackgroundBrush}"
-                        BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
-                        BorderThickness="{DynamicResource PopupInnerBorderThickness}"
-                        CornerRadius="{DynamicResource PopupCornerRadius}"
-                        Padding="{DynamicResource MenuFlyoutPadding}">
+                        Background="{DynamicResource MacOsMenuPopupBackgroundBrush}"
+                        BorderBrush="{DynamicResource MacOsMenuPopupInnerBorderHighlightBrush}"
+                        BorderThickness="{DynamicResource MacOsMenuPopupInnerBorderThickness}"
+                        CornerRadius="{DynamicResource MacOsMenuPopupCornerRadius}"
+                        Padding="{DynamicResource MacOsMenuPopupPadding}">
                   <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
                     <ItemsPresenter Name="PART_ItemsPresenter"
                                     ItemsPanel="{TemplateBinding ItemsPanel}"
-                                    Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                    Margin="{DynamicResource MacOsMenuFlyoutScrollerMargin}"
                                     Grid.IsSharedSizeScope="True" />
                   </ScrollViewer>
                 </Border>
@@ -291,7 +291,7 @@
         <ControlTemplate>
           <Separator
             Height="{x:Static sys:Double.NaN}"
-            Width="{DynamicResource MenuFlyoutSeparatorThemeHeight}"
+            Width="{DynamicResource MacOsMenuSeparatorHeight}"
             HorizontalAlignment="Center"
             VerticalAlignment="Stretch"
             Margin="4 1 4 1" />
@@ -301,25 +301,25 @@
 
     <Style Selector="^:open, ^:pointerover, ^:focus-visible">
       <Style Selector="^ /template/ Border#MenuItemActiveBackground">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuSelectedBackgroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^:pressed">
       <Style Selector="^ /template/ Border#MenuItemActiveBackground">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundHighBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuPressedBackgroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^:open, ^:pointerover, ^:focus-visible">
       <Style Selector="^ /template/ Border#ToolBarItemActiveBackground">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuSelectedBackgroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^:pressed">
       <Style Selector="^ /template/ Border#ToolBarItemActiveBackground">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundHighBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuPressedBackgroundBrush}" />
       </Style>
     </Style>
 
@@ -333,10 +333,10 @@
 
     <Style Selector="^:disabled">
       <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
       </Style>
       <Style Selector="^ /template/ Path#PART_ChevronPath">
-        <Setter Property="Fill" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Fill" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
       </Style>
       <!-- Not working -> handled in Styles.axaml -->
       <!-- <Style Selector="^ /template/ ContentPresenter#PART_IconPresenter Svg:disabled"> -->
@@ -348,7 +348,7 @@
   <ControlTheme x:Key="{x:Type Menu}" TargetType="Menu">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="ItemContainerTheme" Value="{StaticResource DevolutionsMacOsTopLevelMenuItem}" />
-    <Setter Property="Padding" Value="{DynamicResource MenuBarPadding}" />
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuBarPadding}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"

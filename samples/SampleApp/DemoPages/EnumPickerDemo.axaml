@@ -11,12 +11,14 @@
     <x:String x:Key="HighPriorityLabel">High !</x:String>
   </UserControl.Resources>
 
-  <StackPanel>
-    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
-      <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
-      <EnumPicker x:TypeArguments="vm:DemoPriority" />
-    </StackPanel>
-    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+  <TabControl SelectionChanged="EnumPickerDemoTabs_OnSelectionChanged">
+    <TabItem Header="Examples">
+      <StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="20 20 20 0">
+          <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
+          <EnumPicker x:TypeArguments="vm:DemoPriority" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
     <Border Margin="20 20 10 20" Padding="20" VerticalAlignment="Top" Background="{DynamicResource LayoutBackgroundLowBrush}">
       <Grid ColumnDefinitions="220 200" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
         <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 15">
@@ -231,6 +233,26 @@
         <TextBox Text="{Binding HighOverrideText}" />
       </StackPanel>
     </Border>
-    </StackPanel>
-  </StackPanel>
+        </StackPanel>
+      </StackPanel>
+    </TabItem>
+
+    <TabItem Header="Excluded TextProvider">
+      <Border Margin="20" Padding="20" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Spacing="10" Width="420">
+          <TextBlock TextWrapping="Wrap">
+            This picker excludes Blocker. Its TextProvider throws if called for Blocker. Switch away from this tab to simulate the bound ViewModel ExcludedValues becoming null during tab swap.
+          </TextBlock>
+
+          <StackPanel x:Name="ThrowingTextProviderHost">
+            <EnumPicker x:TypeArguments="vm:DemoPriority"
+                        ExcludedValues="{Binding ThrowingTextProviderExcludedValues}"
+                        TextProvider="{Binding ThrowingTextProvider}"
+                        SelectedValue="{Binding SelectedThrowingTextProvider}" />
+          </StackPanel>
+          <TextBlock Text="{Binding SelectedThrowingTextProvider, StringFormat='Selection: {0}'}" />
+        </StackPanel>
+      </Border>
+    </TabItem>
+  </TabControl>
 </UserControl>

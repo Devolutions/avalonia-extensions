@@ -131,8 +131,10 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private bool textOverridesDirty = true;
     private HashSet<T>? includedSet = null;
     private bool includedSetDirty = true;
+    private bool includedValuesValid = true;
     private HashSet<T>? excludedSet = null;
     private bool excludedSetDirty = true;
+    private bool excludedValuesValid = true;
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
@@ -218,6 +220,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             }
 
             this.excludedSetDirty = true;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            this.excludedValuesValid = value is not null;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             this.SetAndRaise(ExcludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
@@ -242,6 +246,8 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             }
 
             this.includedSetDirty = true;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            this.includedValuesValid = value is not null;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             this.SetAndRaise(IncludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
@@ -374,6 +380,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private void UpdateValues()
     {
         if (!this.initialized || !this.isTemplateSet)
+        {
+            return;
+        }
+
+        if (!this.includedValuesValid || !this.excludedValuesValid)
         {
             return;
         }

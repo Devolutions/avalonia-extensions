@@ -40,26 +40,39 @@
     <Setter Property="Template">
       <ControlTemplate TargetType="RadioButton">
         <Grid ColumnDefinitions="Auto,5,*">
-          <Border
-            Name="ControlBorder"
-            Width="{DynamicResource RadioButtonSize}"
-            Height="{DynamicResource RadioButtonSize}"
-            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-            Background="{TemplateBinding Background}"
-            BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="{TemplateBinding BorderThickness}"
-            CornerRadius="{TemplateBinding CornerRadius}"
-            BoxShadow="{DynamicResource RadioButtonBoxShadow}">
-            <Ellipse
-              Name="CheckGlyph"
-              IsVisible="False"
-              Width="{DynamicResource RadioButtonCheckMarkSize}"
-              Height="{DynamicResource RadioButtonCheckMarkSize}"
-              Fill="{WindowActiveBindingToggler
-                    {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonCheckMarkBrush, RadioButtonDisabledCheckMarkBrush},
-                    {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonInactiveCheckMarkBrush, RadioButtonDisabledInactiveCheckMarkBrush}}"
-              UseLayoutRounding="False" />
-          </Border>
+          <!-- Wrapper sizes to the radio button so the focus ring (overlay sibling) hugs the circle,
+               not the whole control, while being clipped by ancestor scroll viewers. -->
+          <Panel Grid.Column="0"
+                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                 ClipToBounds="False">
+            <Border
+              Name="ControlBorder"
+              Width="{DynamicResource RadioButtonSize}"
+              Height="{DynamicResource RadioButtonSize}"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              BoxShadow="{DynamicResource RadioButtonBoxShadow}">
+              <Ellipse
+                Name="CheckGlyph"
+                IsVisible="False"
+                Width="{DynamicResource RadioButtonCheckMarkSize}"
+                Height="{DynamicResource RadioButtonCheckMarkSize}"
+                Fill="{WindowActiveBindingToggler
+                      {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonCheckMarkBrush, RadioButtonDisabledCheckMarkBrush},
+                      {DynamicResourceToggler {Binding $parent[RadioButton].IsEnabled}, RadioButtonInactiveCheckMarkBrush, RadioButtonDisabledInactiveCheckMarkBrush}}"
+                UseLayoutRounding="False" />
+            </Border>
+            <!-- In-template focus ring (see TextBox.axaml). -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="10" />
+          </Panel>
 
           <ContentPresenter
             Name="PART_ContentPresenter"
@@ -79,16 +92,8 @@
     </Setter>
 
     <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible /template/ Border#ControlBorder">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="10" />
-        </Template>
-      </Setter>
+    <Style Selector="^:focus-visible /template/ Border#FocusRing">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <!--  Checked State  -->

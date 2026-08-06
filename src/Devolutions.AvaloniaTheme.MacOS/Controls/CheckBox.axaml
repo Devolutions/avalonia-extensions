@@ -36,44 +36,57 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid ColumnDefinitions="Auto,5,*" MinHeight="20" ClipToBounds="False">
-          <Border
-            Name="ControlBorder"
-            Width="{DynamicResource CheckBoxSize}"
-            Height="{DynamicResource CheckBoxSize}"
-            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-            Background="{TemplateBinding Background}"
-            BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="{TemplateBinding BorderThickness}"
-            CornerRadius="{TemplateBinding CornerRadius}"
-            BoxShadow="{DynamicResource CheckBoxBoxShadow}">
-            <Panel>
-              <Path
-                Name="CheckMark"
-                IsVisible="False"
-                Width="{DynamicResource CheckBoxCheckMarkSize}"
-                Height="{DynamicResource CheckBoxCheckMarkSize}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Data="{DynamicResource CheckMarkPath}"
-                FlowDirection="LeftToRight"
-                Stretch="Fill"
-                Fill="{WindowActiveBindingToggler
-                    {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush},
-                    {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
+          <!-- Wrapper sizes to the check box so the focus ring (overlay sibling) hugs the box,
+               not the whole control, while being clipped by ancestor scroll viewers. -->
+          <Panel Grid.Column="0"
+                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                 ClipToBounds="False">
+            <Border
+              Name="ControlBorder"
+              Width="{DynamicResource CheckBoxSize}"
+              Height="{DynamicResource CheckBoxSize}"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              BoxShadow="{DynamicResource CheckBoxBoxShadow}">
+              <Panel>
+                <Path
+                  Name="CheckMark"
+                  IsVisible="False"
+                  Width="{DynamicResource CheckBoxCheckMarkSize}"
+                  Height="{DynamicResource CheckBoxCheckMarkSize}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="{DynamicResource CheckMarkPath}"
+                  FlowDirection="LeftToRight"
+                  Stretch="Fill"
+                  Fill="{WindowActiveBindingToggler
+                      {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush},
+                      {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
 
-              <Rectangle
-                Name="IndeterminateMark"
-                IsVisible="False"
-                Width="{DynamicResource CheckBoxIndeterminateMarkWidth}"
-                Height="{DynamicResource CheckBoxIndeterminateMarkHeight}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Stretch="Uniform"
-                Fill="{WindowActiveBindingToggler
-                    {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush},
-                    {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
-            </Panel>
-          </Border>
+                <Rectangle
+                  Name="IndeterminateMark"
+                  IsVisible="False"
+                  Width="{DynamicResource CheckBoxIndeterminateMarkWidth}"
+                  Height="{DynamicResource CheckBoxIndeterminateMarkHeight}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Stretch="Uniform"
+                  Fill="{WindowActiveBindingToggler
+                      {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxCheckMarkBrush, CheckBoxDisabledCheckMarkBrush},
+                      {DynamicResourceToggler {Binding $parent[CheckBox].IsEnabled}, CheckBoxInactiveCheckMarkBrush, CheckBoxDisabledInactiveCheckMarkBrush}}" />
+              </Panel>
+            </Border>
+            <!-- In-template focus ring (see TextBox.axaml). -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="5" />
+          </Panel>
           <ContentPresenter
             Name="PART_ContentPresenter"
             Grid.Column="2"
@@ -91,16 +104,8 @@
     </Setter>
 
     <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible /template/ Border#ControlBorder">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="5" />
-        </Template>
-      </Setter>
+    <Style Selector="^:focus-visible /template/ Border#FocusRing">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <!--  Checked State  -->

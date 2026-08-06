@@ -158,6 +158,16 @@
                   </PathIcon>
                 </Border>
               </Grid>
+              <!-- In-template focus ring (see TextBox.axaml). The ValuePicker variant supplies its
+                   own template, so it needs its own ring; the ^:focus-visible toggle below matches
+                   any FocusRing in the active template. -->
+              <Border Name="FocusRing"
+                      IsVisible="False"
+                      IsHitTestVisible="False"
+                      Margin="{StaticResource FocusBorderMargin}"
+                      BorderThickness="{StaticResource FocusBorderThickness}"
+                      BorderBrush="{DynamicResource FocusBorderBrush}"
+                      CornerRadius="7" />
             </Panel>
           </ControlTemplate>
         </Setter.Value>

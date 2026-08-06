@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Thickness x:Key="MacOsMenuPopupMargin">12 4 12 29</Thickness>
+  <Thickness x:Key="MacOsMenuItemPadding">9 4 7 4</Thickness>
+</ResourceDictionary>

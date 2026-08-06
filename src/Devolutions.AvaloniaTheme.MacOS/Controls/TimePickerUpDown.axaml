@@ -190,6 +190,15 @@
                       BoxShadow="{DynamicResource TextBoxBorderShadows}"
                       Margin="0.6 0 0.6 -0.6"
                       IsHitTestVisible="False" />
+              <!-- In-template focus ring (see TextBox.axaml). Lives in the normal visual tree so it is
+                   clipped by an ancestor ScrollViewer instead of bleeding via the AdornerLayer. -->
+              <Border Name="FocusRing"
+                      IsVisible="False"
+                      IsHitTestVisible="False"
+                      Margin="{StaticResource FocusBorderMargin}"
+                      BorderThickness="{StaticResource FocusBorderThickness}"
+                      BorderBrush="{DynamicResource FocusBorderBrush}"
+                      CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
             </Grid>
           </ButtonSpinner>
         </DataValidationErrors>
@@ -238,17 +247,8 @@
     </Style>
 
     <Style Selector="^:focus-within">
-      <Style Selector="^ /template/ Grid#PART_InputChrome">
-        <Setter Property="AdornerLayer.Adorner">
-          <Template>
-            <Border AdornerLayer.IsClipEnabled="False"
-                    IsHitTestVisible="False"
-                    Margin="{StaticResource FocusBorderMargin}"
-                    BorderThickness="{StaticResource FocusBorderThickness}"
-                    BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
-          </Template>
-        </Setter>
+      <Style Selector="^ /template/ Border#FocusRing">
+        <Setter Property="IsVisible" Value="True" />
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />

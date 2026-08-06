@@ -260,6 +260,17 @@
                     CornerRadius="{TemplateBinding CornerRadius}"
                     BoxShadow="{DynamicResource TextBoxBorderShadows}"
                     Margin="0.6 0 0.6 -0.6 " />
+            <!-- In-template focus ring (Option B). Drawn last so it paints on top of the borders.
+                 Unlike the AdornerLayer approach, this lives in the normal visual tree, so it is
+                 clipped by an ancestor ScrollViewer instead of bleeding over content above it.
+                 Relies on ClipToBounds="False" on the control/template to allow the -3 overflow. -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>
@@ -312,30 +323,18 @@
 
     <!-- Focused State -->
     <Style Selector="^[IsReadOnly=False]:focus:not(.no-focus-border)">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
-        </Template>
-      </Setter>
+      <Style Selector="^ /template/ Border#FocusRing">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
       </Style>
 
       <Style Selector="^[AcceptsReturn=True]">
         <!-- Revert to default focus radius (2) for square multiline textboxes -->
-        <Setter Property="AdornerLayer.Adorner">
-          <Template>
-            <Border AdornerLayer.IsClipEnabled="False"
-                    Margin="{StaticResource FocusBorderMargin}"
-                    BorderThickness="{StaticResource FocusBorderThickness}"
-                    BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="2" />
-          </Template>
-        </Setter>
+        <Style Selector="^ /template/ Border#FocusRing">
+          <Setter Property="CornerRadius" Value="2" />
+        </Style>
       </Style>
     </Style>
 

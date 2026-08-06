@@ -103,6 +103,15 @@
                     CornerRadius="{TemplateBinding CornerRadius}"
                     BoxShadow="{DynamicResource TextBoxBorderShadows}"
                     Margin="0.6 0 0.6 -0.6 " />
+            <!-- In-template focus ring (see TextBox.axaml). Lives in the normal visual tree so it is
+                 clipped by an ancestor ScrollViewer instead of bleeding via the AdornerLayer. -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="2" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>
@@ -115,15 +124,9 @@
 
     <!-- Focus state -->
     <Style Selector="^:focus-within">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="2" />
-        </Template>
-      </Setter>
+      <Style Selector="^ /template/ Border#FocusRing">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
       </Style>

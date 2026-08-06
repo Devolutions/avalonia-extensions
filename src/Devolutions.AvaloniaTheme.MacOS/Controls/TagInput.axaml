@@ -111,7 +111,7 @@
                     Margin="{StaticResource FocusBorderMargin}"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="2" />
+                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>

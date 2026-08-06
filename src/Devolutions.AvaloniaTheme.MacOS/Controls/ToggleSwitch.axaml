@@ -22,6 +22,7 @@
     <Setter Property="VerticalContentAlignment" Value="Center" />
 
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="KnobTransitions">
       <Transitions>
         <DoubleTransition
@@ -32,71 +33,81 @@
     </Setter>
     <Setter Property="Template">
       <ControlTemplate TargetType="ToggleSwitch">
-        <DockPanel HorizontalAlignment="Stretch">
-          <!-- Dock switch on right first -->
-          <Border
-            Name="SwitchBackgroundBorder"
-            DockPanel.Dock="Right"
-            TemplatedControl.IsTemplateFocusTarget="True"
-            Width="{DynamicResource ToggleSwitchDefaultWidth}"
-            Height="{DynamicResource ToggleSwitchDefaultHeight}"
-            BorderBrush="{DynamicResource ToggleSwitchDefaultBorderBrush}"
-            BorderThickness="1"
-            CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}">
-            <Border.Transitions>
-              <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2" />
-              </Transitions>
-            </Border.Transitions>
-            <Canvas
-              Name="PART_SwitchKnob"
-              Width="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
-              Height="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
-              HorizontalAlignment="Left">
-              <Grid
-                Name="PART_MovingKnobs"
+        <DockPanel HorizontalAlignment="Stretch" ClipToBounds="False">
+          <!-- Dock switch on right first. Wrapper sizes to the switch so the focus ring (overlay
+               sibling) hugs the track while being clipped by ancestor scroll viewers. -->
+          <Panel DockPanel.Dock="Right" VerticalAlignment="Center" ClipToBounds="False">
+            <Border
+              Name="SwitchBackgroundBorder"
+              TemplatedControl.IsTemplateFocusTarget="True"
+              Width="{DynamicResource ToggleSwitchDefaultWidth}"
+              Height="{DynamicResource ToggleSwitchDefaultHeight}"
+              BorderBrush="{DynamicResource ToggleSwitchDefaultBorderBrush}"
+              BorderThickness="1"
+              CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="Background" Duration="0:0:0.2" />
+                </Transitions>
+              </Border.Transitions>
+              <Canvas
+                Name="PART_SwitchKnob"
                 Width="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
                 Height="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
-                Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
-                <Border
-                  Name="SwitchKnobIndicator"
-                  Background="{DynamicResource ToggleSwitchKnobBackground}"
-                  BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
-                  CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
-                <Arc
-                  Name="SwitchKnobLoadingIndicator"
-                  IsVisible="False"
-                  StrokeThickness="2"
-                  StartAngle="0"
-                  SweepAngle="140"
-                  StrokeJoin="Round"
-                  StrokeLineCap="Round">
-                  <Arc.Stroke>
-                    <ConicGradientBrush>
-                      <GradientStops>
-                        <GradientStop Offset="0.1" Color="Transparent" />
-                        <GradientStop Offset="0.7" Color="White" />
-                      </GradientStops>
-                    </ConicGradientBrush>
-                  </Arc.Stroke>
-                  <Arc.Styles>
-                    <Style Selector="Arc[IsVisible=True]">
-                      <Style.Animations>
-                        <Animation IterationCount="Infinite" Duration="0:0:0.6">
-                          <KeyFrame Cue="0%">
-                            <Setter Property="RotateTransform.Angle" Value="0.0" />
-                          </KeyFrame>
-                          <KeyFrame Cue="100%">
-                            <Setter Property="RotateTransform.Angle" Value="360.0" />
-                          </KeyFrame>
-                        </Animation>
-                      </Style.Animations>
-                    </Style>
-                  </Arc.Styles>
-                </Arc>
-              </Grid>
-            </Canvas>
-          </Border>
+                HorizontalAlignment="Left">
+                <Grid
+                  Name="PART_MovingKnobs"
+                  Width="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                  Height="{DynamicResource ToggleSwitchIndicatorDefaultWidth}"
+                  Margin="{DynamicResource ToggleSwitchIndicatorDefaultMargin}">
+                  <Border
+                    Name="SwitchKnobIndicator"
+                    Background="{DynamicResource ToggleSwitchKnobBackground}"
+                    BoxShadow="{DynamicResource ToggleSwitchIndicatorBoxShadow}"
+                    CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
+                  <Arc
+                    Name="SwitchKnobLoadingIndicator"
+                    IsVisible="False"
+                    StrokeThickness="2"
+                    StartAngle="0"
+                    SweepAngle="140"
+                    StrokeJoin="Round"
+                    StrokeLineCap="Round">
+                    <Arc.Stroke>
+                      <ConicGradientBrush>
+                        <GradientStops>
+                          <GradientStop Offset="0.1" Color="Transparent" />
+                          <GradientStop Offset="0.7" Color="White" />
+                        </GradientStops>
+                      </ConicGradientBrush>
+                    </Arc.Stroke>
+                    <Arc.Styles>
+                      <Style Selector="Arc[IsVisible=True]">
+                        <Style.Animations>
+                          <Animation IterationCount="Infinite" Duration="0:0:0.6">
+                            <KeyFrame Cue="0%">
+                              <Setter Property="RotateTransform.Angle" Value="0.0" />
+                            </KeyFrame>
+                            <KeyFrame Cue="100%">
+                              <Setter Property="RotateTransform.Angle" Value="360.0" />
+                            </KeyFrame>
+                          </Animation>
+                        </Style.Animations>
+                      </Style>
+                    </Arc.Styles>
+                  </Arc>
+                </Grid>
+              </Canvas>
+            </Border>
+            <!-- In-template focus ring (see TextBox.axaml). -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
+          </Panel>
 
           <!-- Content fills remaining space on left -->
           <ContentPresenter
@@ -168,16 +179,8 @@
     </Style>
 
     <!-- Tabbing focus -->
-    <Style Selector="^:focus-visible /template/ Border#SwitchBackgroundBorder">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="{DynamicResource ToggleSwitchIndicatorCornerRadius}" />
-        </Template>
-      </Setter>
+    <Style Selector="^:focus-visible /template/ Border#FocusRing">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <Style Selector="^.Loading">

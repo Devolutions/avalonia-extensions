@@ -109,7 +109,8 @@
         </ControlTemplate>
       </Setter>
 
-      <!-- Tabbing focus -->
+      <!-- Tabbing focus. Kept on the AdornerLayer: the tab header's own horizontal ScrollViewer
+           clips its viewport to the tab height, which would crop an in-template ring top/bottom. -->
       <Style Selector="^:focus-visible">
         <Setter Property="AdornerLayer.Adorner">
           <Template>
@@ -161,7 +162,8 @@
         </ControlTemplate>
       </Setter>
 
-      <!-- Tabbing focus -->
+      <!-- Tabbing focus. Kept on the AdornerLayer: the tab header's own horizontal ScrollViewer
+           clips its viewport to the tab height, which would crop an in-template ring top/bottom. -->
       <Style Selector="^:focus-visible">
         <Setter Property="AdornerLayer.Adorner">
           <Template>

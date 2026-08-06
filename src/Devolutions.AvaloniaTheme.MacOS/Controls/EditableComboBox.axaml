@@ -340,6 +340,17 @@
                 </Border>
               </Popup>
             </Grid>
+            <!-- In-template focus ring (see TextBox.axaml). Lives in the normal visual tree so it is
+                 clipped by an ancestor ScrollViewer instead of bleeding via the AdornerLayer.
+                 ZIndex 2 keeps it above BorderHighlightElement (ZIndex 1). -->
+            <Border Name="FocusRing"
+                    ZIndex="2"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="7" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>
@@ -357,16 +368,8 @@
     </Style>
 
     <!--  Focused State  -->
-    <Style Selector="^:focus-within, ^:focus-visible">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Border AdornerLayer.IsClipEnabled="False"
-                  Margin="{StaticResource FocusBorderMargin}"
-                  BorderThickness="{StaticResource FocusBorderThickness}"
-                  BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="7" />
-        </Template>
-      </Setter>
+    <Style Selector="^:focus-within /template/ Border#FocusRing, ^:focus-visible /template/ Border#FocusRing">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
 
     <Style Selector="^ /template/ Border#DropDownGlyphBackground:pointerover">

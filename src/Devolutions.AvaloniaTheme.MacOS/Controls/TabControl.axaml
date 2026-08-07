@@ -79,16 +79,15 @@
                         Padding="2 0 0 0">
                   <Grid ColumnDefinitions="*,Auto,Auto"
                         ClipToBounds="False">
-                    <!-- The header viewport otherwise clips to the tab height/width, which would
-                         crop an in-template TabItem focus ring. This negative margin enlarges the
-                         viewport by 6px on the left/top/bottom; TabControlTopItemsPresenterMargin
-                         re-insets the tabs by the same amounts so they stay in place, leaving
-                         transparent slack inside the viewport where the ring can draw. The right
-                         side is left at 0 so the viewport does not overlap the overflow scroll
-                         buttons in Column 1. Keep the two amounts in sync. -->
+                    <!-- The header viewport otherwise clips to the tab bounds, cropping an
+                         in-template TabItem focus ring. Enlarge it 6px so the ring has slack;
+                         TabControlTopItemsPresenterMargin re-insets the tabs by the same 6px so
+                         they stay put. The right slack is kept only while the overflow scroll
+                         buttons are hidden; once they appear (Column 1), drop the right side to 0
+                         so the viewport does not overlap them. Keep these amounts in sync. -->
                     <ScrollViewer Name="PART_TabHeaderScrollViewer"
                                   Grid.Column="0"
-                                  Margin="-6 -6 0 -6"
+                                  Margin="{BindingToggler {Binding IsVisible, ElementName=PART_TabScrollLeftButton}, '-6 -6 0 -6', '-6'}"
                                   ClipToBounds="False"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Hidden">

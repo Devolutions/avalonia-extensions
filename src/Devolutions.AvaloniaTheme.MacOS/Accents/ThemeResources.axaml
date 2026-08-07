@@ -621,10 +621,10 @@
 
   <!-- TabControl & TabItem Resources -->
   <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 2</Thickness>
-  <!-- Re-insets tabs against PART_TabHeaderScrollViewer's "-6 -6 0 -6" margin so the in-template
-       TabItem focus ring has viewport slack (base positioning value is 0; right stays 0 to avoid
-       the overflow scroll buttons). -->
-  <Thickness x:Key="TabControlTopItemsPresenterMargin">6 6 0 6</Thickness>
+  <!-- 6px all round re-insets tabs against PART_TabHeaderScrollViewer's -6 margin so the
+       in-template TabItem focus ring has viewport slack (base positioning value is 0; the scroll
+       viewer drops its own right slack when the overflow buttons show). -->
+  <Thickness x:Key="TabControlTopItemsPresenterMargin">6</Thickness>
   <BoxShadows x:Key="TabControlScrollButtonBoxShadow">-2 0 4 0 #40000000</BoxShadows>
   <Thickness x:Key="TabControlTabStripBorderThickness">0.5 0.5 0.5 0.6</Thickness>
   <x:Double x:Key="TabItemDividerHeight">12</x:Double>

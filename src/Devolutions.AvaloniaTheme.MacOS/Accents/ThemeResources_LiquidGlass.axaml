@@ -317,9 +317,10 @@
   <!-- TabControl & TabItem -->
   <Thickness x:Key="TabControlBorderThickness">0</Thickness>
   <Thickness x:Key="TabControlTabStripBorderThickness">0</Thickness>
-  <!-- Base positioning is "2 0 0 0"; +6 all round re-insets tabs against
-       PART_TabHeaderScrollViewer's -6 margin so the in-template TabItem focus ring has slack. -->
-  <Thickness x:Key="TabControlTopItemsPresenterMargin">8 6 6 6</Thickness>
+  <!-- Base positioning is "2 0 0 0"; re-insets tabs against PART_TabHeaderScrollViewer's
+       "-6 -6 0 -6" margin so the in-template TabItem focus ring has slack (right stays 0 to
+       avoid the overflow scroll buttons). -->
+  <Thickness x:Key="TabControlTopItemsPresenterMargin">8 6 0 6</Thickness>
   <BoxShadows x:Key="TabControlScrollButtonBoxShadow">-1 0 4 0 #40000000</BoxShadows>
   <StaticResource x:Key="TabItemDividerBorderBrush" ResourceKey="SurfaceT10" />
   <Thickness x:Key="TabItemPadding">16 4</Thickness>

@@ -564,6 +564,10 @@
   <SolidColorBrush x:Key="FocusBorderBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.5" />
   <Thickness x:Key="FocusBorderThickness">3.5</Thickness>
   <Thickness x:Key="FocusBorderMargin">-3</Thickness>
+  <!-- Px added to a control's own corner radius to get its focus-ring radius (via
+       DevoConverters.InflateCornerRadius). Optical, not geometric: a mathematically-parallel ring
+       (= |FocusBorderMargin|) reads too round on high-contrast fills, so it's tuned a touch tighter. -->
+  <x:Double x:Key="FocusRingRadiusOffset">2</x:Double>
 
   <!-- TODO: Button Resources -->
 

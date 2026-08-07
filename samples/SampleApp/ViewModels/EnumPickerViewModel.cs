@@ -121,6 +121,9 @@ public partial class EnumPickerViewModel : ObservableObject
     private DemoPriority selectedInlineOverrides = DemoPriority.Low;
 
     [ObservableProperty]
+    private DemoPriority selectedThrowingTextProvider = DemoPriority.Low;
+
+    [ObservableProperty]
     private DemoConnectionQuality selectedProxiedOverrides = DemoConnectionQuality.Default;
 
     [ObservableProperty]
@@ -134,6 +137,9 @@ public partial class EnumPickerViewModel : ObservableObject
 
     [ObservableProperty]
     private DemoPriority selectedWithProvider = DemoPriority.Low;
+
+    [ObservableProperty]
+    private AvaloniaList<DemoPriority>? throwingTextProviderExcludedValues = [DemoPriority.Blocker];
 
     // === Bound TextOverride Demo ===
 
@@ -188,6 +194,12 @@ public partial class EnumPickerViewModel : ObservableObject
 
     public AvaloniaList<DemoPriority> IncludedValues { get; } = [DemoPriority.Low, DemoPriority.Normal, DemoPriority.High];
 
+    public Func<Enum, string> ThrowingTextProvider { get; } = priority => priority switch
+    {
+        DemoPriority.Blocker => throw new InvalidOperationException("Blocker is intentionally invalid for this TextProvider."),
+        _ => priority.ToString()
+    };
+
     public IReadOnlyCollection<EnumPicker.SortOrder> SortOrderValues { get; } = Enum.GetValues<EnumPicker.SortOrder>();
 
     public Func<Enum, string>? DynamicTextProvider => this.DynamicUseTextProvider ? this.TextProvider : null;
@@ -211,6 +223,11 @@ public partial class EnumPickerViewModel : ObservableObject
 
     [RelayCommand]
     private void SetDynamicSelectedToCritical() => this.DynamicSelected = DemoPriority.Critical;
+
+    public void ResetThrowingTextProviderExcludedValues()
+    {
+        this.ThrowingTextProviderExcludedValues = [DemoPriority.Blocker];
+    }
 
     partial void OnDynamicEnableIncludeFilterChanged(bool value)
     {

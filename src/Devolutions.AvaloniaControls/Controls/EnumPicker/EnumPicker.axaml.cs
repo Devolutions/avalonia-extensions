@@ -131,8 +131,10 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private bool textOverridesDirty = true;
     private HashSet<T>? includedSet = null;
     private bool includedSetDirty = true;
+    private bool includedValuesValid = true;
     private HashSet<T>? excludedSet = null;
     private bool excludedSetDirty = true;
+    private bool excludedValuesValid = true;
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
@@ -218,12 +220,22 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             }
 
             this.excludedSetDirty = true;
+            bool wasValid = this.excludedValuesValid;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            this.excludedValuesValid = value is not null;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-            this.SetAndRaise(ExcludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
+            bool raised = this.SetAndRaise(ExcludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
             if (field is INotifyCollectionChanged afterCollection)
             {
                 afterCollection.CollectionChanged += this.UpdateExcludedValues;
+            }
+
+            // Restoring a valid value must resume updates even when no property change is raised, which
+            // happens when the caller assigns back the very fallback list the getter exposed while null.
+            if (!wasValid && this.excludedValuesValid && !raised)
+            {
+                this.UpdateValues();
             }
         }
     } = new AvaloniaList<T>();
@@ -242,12 +254,22 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             }
 
             this.includedSetDirty = true;
+            bool wasValid = this.includedValuesValid;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            this.includedValuesValid = value is not null;
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-            this.SetAndRaise(IncludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
+            bool raised = this.SetAndRaise(IncludedValuesProperty, ref field, value ?? new AvaloniaList<T>());
 
             if (field is INotifyCollectionChanged afterCollection)
             {
                 afterCollection.CollectionChanged += this.UpdateIncludedValues;
+            }
+
+            // Restoring a valid value must resume updates even when no property change is raised, which
+            // happens when the caller assigns back the very fallback list the getter exposed while null.
+            if (!wasValid && this.includedValuesValid && !raised)
+            {
+                this.UpdateValues();
             }
         }
     } = new AvaloniaList<T>();
@@ -374,6 +396,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private void UpdateValues()
     {
         if (!this.initialized || !this.isTemplateSet)
+        {
+            return;
+        }
+
+        if (!this.includedValuesValid || !this.excludedValuesValid)
         {
             return;
         }

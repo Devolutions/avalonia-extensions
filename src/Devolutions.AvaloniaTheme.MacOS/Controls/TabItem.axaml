@@ -105,22 +105,22 @@
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 RecognizesAccessKey="True" />
             </Border>
+            <!-- In-template focus ring (see TextBox.axaml). The Top/Bottom header ScrollViewer
+                 provides viewport slack (see TabControl.axaml) so this is not clipped. -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    Margin="{StaticResource FocusBorderMargin}"
+                    BorderThickness="{StaticResource FocusBorderThickness}"
+                    BorderBrush="{DynamicResource FocusBorderBrush}"
+                    CornerRadius="7" />
           </Panel>
         </ControlTemplate>
       </Setter>
 
-      <!-- Tabbing focus. Kept on the AdornerLayer: the tab header's own horizontal ScrollViewer
-           clips its viewport to the tab height, which would crop an in-template ring top/bottom. -->
-      <Style Selector="^:focus-visible">
-        <Setter Property="AdornerLayer.Adorner">
-          <Template>
-            <Border AdornerLayer.IsClipEnabled="False"
-                    Margin="-3"
-                    BorderThickness="{StaticResource FocusBorderThickness}"
-                    BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="7" />
-          </Template>
-        </Setter>
+      <!-- Tabbing focus -->
+      <Style Selector="^:focus-visible /template/ Border#FocusRing">
+        <Setter Property="IsVisible" Value="True" />
       </Style>
 
       <Style Selector="^:nth-last-child(1) /template/ Border#TabDivider">
@@ -150,30 +150,32 @@
       <Setter Property="Padding" Value="8 4" />
       <Setter Property="Template">
         <ControlTemplate>
-          <ContentPresenter Name="PART_ContentPresenter"
-                            Padding="{TemplateBinding Padding}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{TemplateBinding Background}"
-                            Content="{TemplateBinding Header}"
-                            ContentTemplate="{TemplateBinding HeaderTemplate}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            RecognizesAccessKey="True" />
-        </ControlTemplate>
-      </Setter>
-
-      <!-- Tabbing focus. Kept on the AdornerLayer: the tab header's own horizontal ScrollViewer
-           clips its viewport to the tab height, which would crop an in-template ring top/bottom. -->
-      <Style Selector="^:focus-visible">
-        <Setter Property="AdornerLayer.Adorner">
-          <Template>
-            <Border AdornerLayer.IsClipEnabled="False"
+          <Panel ClipToBounds="False">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Padding="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Background="{TemplateBinding Background}"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                              CornerRadius="{TemplateBinding CornerRadius}"
+                              RecognizesAccessKey="True" />
+            <!-- In-template focus ring (see TextBox.axaml). The Top/Bottom header ScrollViewer
+                 provides viewport slack (see TabControl.axaml) so this is not clipped. -->
+            <Border Name="FocusRing"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
                     Margin="{StaticResource FocusBorderMargin}"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{DynamicResource FocusBorderBrush}"
                     CornerRadius="7" />
-          </Template>
-        </Setter>
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+
+      <!-- Tabbing focus -->
+      <Style Selector="^:focus-visible /template/ Border#FocusRing">
+        <Setter Property="IsVisible" Value="True" />
       </Style>
 
       <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">

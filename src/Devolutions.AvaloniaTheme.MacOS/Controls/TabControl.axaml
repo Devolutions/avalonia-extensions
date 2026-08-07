@@ -79,8 +79,14 @@
                         Padding="2 0 0 0">
                   <Grid ColumnDefinitions="*,Auto,Auto"
                         ClipToBounds="False">
+                    <!-- The header viewport otherwise clips to the tab height/width, which would
+                         crop an in-template TabItem focus ring. This negative margin enlarges the
+                         viewport by 6px each side; TabControlTopItemsPresenterMargin re-insets the
+                         tabs by the same 6px so they stay in place, leaving transparent slack
+                         inside the viewport where the ring can draw. Keep the two amounts in sync. -->
                     <ScrollViewer Name="PART_TabHeaderScrollViewer"
                                   Grid.Column="0"
+                                  Margin="-6"
                                   ClipToBounds="False"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Hidden">
@@ -185,6 +191,8 @@
         </ControlTemplate>
       </Setter>
       <Style Selector="^/template/ ItemsPresenter#PART_ItemsPresenter">
+        <!-- Includes +6px on every side to re-inset the tabs against PART_TabHeaderScrollViewer's
+             -6 margin (see there), which keeps them in place while the ring gets viewport slack. -->
         <Setter Property="Margin" Value="{DynamicResource TabControlTopItemsPresenterMargin}" />
       </Style>
       <Style Selector="^/template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">

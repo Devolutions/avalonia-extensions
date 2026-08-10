@@ -270,7 +270,7 @@
                     Margin="{StaticResource FocusBorderMargin}"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
+                    CornerRadius="{TemplateBinding CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>
@@ -328,13 +328,6 @@
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
-      </Style>
-
-      <Style Selector="^[AcceptsReturn=True]">
-        <!-- Revert to default focus radius (2) for square multiline textboxes -->
-        <Style Selector="^ /template/ Border#FocusRing">
-          <Setter Property="CornerRadius" Value="2" />
-        </Style>
       </Style>
     </Style>
 

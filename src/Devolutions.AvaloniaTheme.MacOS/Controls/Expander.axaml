@@ -166,7 +166,7 @@
                   Margin="{StaticResource FocusBorderMargin}"
                   BorderThickness="{StaticResource FocusBorderThickness}"
                   BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="{Binding $parent[ToggleButton].CornerRadius}" />
+                  CornerRadius="{Binding $parent[ToggleButton].CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
         </Panel>
       </ControlTemplate>
     </Setter>
@@ -251,7 +251,11 @@
       <ControlTemplate>
         <DockPanel MinWidth="{TemplateBinding MinWidth}"
                    MaxWidth="{TemplateBinding MaxWidth}">
+          <!-- ZIndex keeps the header (and its focus ring) above the content tray so the ring's
+               outward overhang is not occluded by the expanded content's background (see the -3
+               FocusBorderMargin on the ring inside ExpanderToggleButtonTheme). -->
           <ToggleButton x:Name="ExpanderHeader"
+                        ZIndex="1"
                         MinHeight="{TemplateBinding MinHeight}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         IsEnabled="{TemplateBinding IsEnabled}"

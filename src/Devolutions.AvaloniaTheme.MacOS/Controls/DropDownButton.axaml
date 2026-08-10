@@ -77,7 +77,7 @@
                   Margin="{StaticResource FocusBorderMargin}"
                   BorderThickness="{StaticResource FocusBorderThickness}"
                   BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="7" />
+                  CornerRadius="{TemplateBinding CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
         </Panel>
       </ControlTemplate>
     </Setter>
@@ -167,7 +167,7 @@
                       Margin="{StaticResource FocusBorderMargin}"
                       BorderThickness="{StaticResource FocusBorderThickness}"
                       BorderBrush="{DynamicResource FocusBorderBrush}"
-                      CornerRadius="7" />
+                      CornerRadius="{TemplateBinding CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
             </Panel>
           </ControlTemplate>
         </Setter.Value>

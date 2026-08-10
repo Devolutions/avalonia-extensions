@@ -329,13 +329,6 @@
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
       </Style>
-
-      <Style Selector="^[AcceptsReturn=True]">
-        <!-- Revert to default focus radius (2) for square multiline textboxes -->
-        <Style Selector="^ /template/ Border#FocusRing">
-          <Setter Property="CornerRadius" Value="2" />
-        </Style>
-      </Style>
     </Style>
 
     <!-- Read-only State -->

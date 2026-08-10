@@ -2,7 +2,8 @@
 
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:conv="using:Avalonia.Controls.Converters">
+                    xmlns:conv="using:Avalonia.Controls.Converters"
+                    xmlns:behaviors="using:Devolutions.AvaloniaTheme.DevExpress.Behaviors">
 
   <Design.PreviewWith>
     <Border Padding="20" Width="320">
@@ -66,6 +67,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
     <!-- Block inheritance of LineHeight from parent controls -->
     <Setter Property="TextBlock.LineHeight" Value="NaN" />
+    <Setter Property="behaviors:MenuItemSubmenuPointerExitBehavior.Enable" Value="True" />
     
     <Setter Property="Template">
       <ControlTemplate>

@@ -1,6 +1,5 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -65,11 +64,11 @@
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                         BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
                         HorizontalScrollBarVisibility="{BindingToggler
-                              {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {Binding $parent[ListBox], Converter={x:Static MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
                               {DynamicResource ScrollBarVisibilityAuto},
                               {DynamicResource ScrollBarVisibilityDisabled}}"
                         VerticalScrollBarVisibility="{BindingToggler
-                              {Binding $parent[ListBox], Converter={x:Static converters:MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
+                              {Binding $parent[ListBox], Converter={x:Static MacOSConverters.IsVerticalMultiColumnListBoxConverter}},
                               {DynamicResource ScrollBarVisibilityDisabled},
                               {DynamicResource ScrollBarVisibilityAuto}}">
             <ItemsPresenter Name="PART_ItemsPresenter"

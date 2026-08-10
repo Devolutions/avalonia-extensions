@@ -270,7 +270,7 @@
                     Margin="{StaticResource FocusBorderMargin}"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="{DynamicResource TextBoxFocusCornerRadius}" />
+                    CornerRadius="{TemplateBinding CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
           </Panel>
         </DataValidationErrors>
       </ControlTemplate>

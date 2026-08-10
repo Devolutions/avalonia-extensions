@@ -71,7 +71,7 @@
                     Margin="{StaticResource FocusBorderMargin}"
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{DynamicResource FocusBorderBrush}"
-                    CornerRadius="10" />
+                    CornerRadius="{TemplateBinding CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
           </Panel>
 
           <ContentPresenter

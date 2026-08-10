@@ -166,7 +166,7 @@
                   Margin="{StaticResource FocusBorderMargin}"
                   BorderThickness="{StaticResource FocusBorderThickness}"
                   BorderBrush="{DynamicResource FocusBorderBrush}"
-                  CornerRadius="{Binding $parent[ToggleButton].CornerRadius}" />
+                  CornerRadius="{Binding $parent[ToggleButton].CornerRadius, Converter={x:Static DevoConverters.InflateCornerRadius}, ConverterParameter={StaticResource FocusRingRadiusOffset}}" />
         </Panel>
       </ControlTemplate>
     </Setter>

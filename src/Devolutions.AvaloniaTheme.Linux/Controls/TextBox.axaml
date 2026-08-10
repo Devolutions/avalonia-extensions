@@ -167,7 +167,6 @@
     <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
     <Setter Property="MinWidth" Value="{DynamicResource TextControlThemeMinWidth}" />
     <Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
     <Setter Property="ContextFlyout" Value="{OnFormFactor Desktop={StaticResource DefaultTextBoxContextFlyout}, Mobile={StaticResource HorizontalTextBoxContextFlyout}}" />
@@ -258,6 +257,10 @@
       <Setter Property="BorderThickness" Value="0" />
     </Style>
 
+    <Style Selector="^[AcceptsReturn=False]">
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    
     <!-- Disabled State -->
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />

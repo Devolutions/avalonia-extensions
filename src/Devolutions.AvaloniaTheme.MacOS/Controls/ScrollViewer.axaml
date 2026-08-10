@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <Design.PreviewWith>
     <ScrollViewer Width="200" Height="200"
@@ -62,7 +61,7 @@
                   Background="{DynamicResource ScrollBarTrackSeparatorBrush}"
                   BorderBrush="{DynamicResource ScrollBarTrackBorderBrush}">
             <Border.Opacity>
-              <MultiBinding Converter="{x:Static converters:MacOSConverters.AndToOpacityConverter}">
+              <MultiBinding Converter="{x:Static MacOSConverters.AndToOpacityConverter}">
                 <Binding ElementName="PART_HorizontalScrollBar" Path="IsVisible" />
                 <Binding ElementName="PART_VerticalScrollBar" Path="IsVisible" />
                 <Binding ElementName="PART_HorizontalScrollBar" Path="IsExpanded" />

@@ -1,6 +1,5 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters;assembly=Devolutions.AvaloniaTheme.MacOS">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -15,14 +14,14 @@
   <Color x:Key="AccentForegroundColor">#ffffff</Color>
 
   <!-- MARK: Converters -->
-  <converters:OklchAdjustmentConverter x:Key="LightModeFocusColorConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
-  <converters:OklchAdjustmentConverter x:Key="DarkModeFocusColorConverter" LightnessAdjustment="0.15" ChromaAdjustment="0" HueAdjustment="3" />
+  <OklchAdjustmentConverter x:Key="LightModeFocusColorConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
+  <OklchAdjustmentConverter x:Key="DarkModeFocusColorConverter" LightnessAdjustment="0.15" ChromaAdjustment="0" HueAdjustment="3" />
 
-  <converters:OklchAdjustmentConverter x:Key="LightModeAccentBackgroundWashConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" />
-  <converters:OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
+  <OklchAdjustmentConverter x:Key="LightModeAccentBackgroundWashConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" />
+  <OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
-  <converters:OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
-  <converters:OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="0.04" ChromaAdjustment="-0.02" HueAdjustment="-4.4" />
+  <OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
+  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="0.04" ChromaAdjustment="-0.02" HueAdjustment="-4.4" />
 
   <!-- MARK: Brushes -->
 

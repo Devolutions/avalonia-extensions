@@ -190,12 +190,15 @@
                         Stretch="Uniform" />
                 </Panel>
 
+                <!-- The reserve below is 24 = 5 gap to the separator + 7 chevron + 12 gap before the
+                     caption. macOS keeps a clear gap between caption and chevron; reserving only the
+                     chevron's own footprint would let the text run up against it before trimming. -->
                 <TreeDataGridOverflowHeader Name="HeaderContent"
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
                                             InnerContentMargin="{BindingToggler
                                               {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
-                                              0 0 12 0,
+                                              0 0 24 0,
                                               0 0 0 0
                                             }"
                                             TextTrimming="CharacterEllipsis"

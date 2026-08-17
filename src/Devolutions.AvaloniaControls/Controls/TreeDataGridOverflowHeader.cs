@@ -67,6 +67,17 @@ public class TreeDataGridOverflowHeader : Decorator
     public static readonly StyledProperty<bool> ShowToolTipProperty =
         AvaloniaProperty.Register<TreeDataGridOverflowHeader, bool>(nameof(ShowToolTip));
 
+    public static readonly DirectProperty<TreeDataGridOverflowHeader, double> AdornmentWidthProperty =
+        AvaloniaProperty.RegisterDirect<TreeDataGridOverflowHeader, double>(
+            nameof(AdornmentWidth),
+            static o => o.AdornmentWidth);
+
+    private Control? adornment;
+
+    private object? adornmentSource;
+
+    private double adornmentWidth;
+
     public static void SetColumnToolTip(TreeDataGridColumn column, object? value) =>
         DevoTreeDataGridExtensions.SetToolTip(column, value);
 
@@ -197,8 +208,31 @@ public class TreeDataGridOverflowHeader : Decorator
         set => this.SetValue(ShowToolTipProperty, value);
     }
 
+    /// <summary>
+    /// Width the right-hand adornment occupies, or 0 when there is none. Themes bind this to offset the
+    /// sort indicator so the adornment sits to its right.
+    /// </summary>
+    public double AdornmentWidth => this.adornmentWidth;
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        this.UpdateAdornment();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        // Column headers are recycled, so release the adornment: a Control can only have one parent,
+        // and the next column this header serves may supply a different one.
+        this.DetachAdornment();
+    }
+
     protected override Size MeasureOverride(Size availableSize)
     {
+        this.MeasureAdornment();
+
         if (this.Content is string text)
         {
             Thickness padding = this.Padding;
@@ -212,19 +246,55 @@ public class TreeDataGridOverflowHeader : Decorator
 
     protected override Size ArrangeOverride(Size finalSize)
     {
+        double adornmentWidth = this.ArrangeAdornment(finalSize);
+
         if (this.Content is not string && this.Child is { } child)
         {
             Thickness margin = this.InnerContentMargin;
             var rect = new Rect(
                 margin.Left,
                 margin.Top,
-                Math.Max(0, finalSize.Width - margin.Left - margin.Right),
+                Math.Max(0, finalSize.Width - margin.Left - margin.Right - adornmentWidth),
                 Math.Max(0, finalSize.Height - margin.Top - margin.Bottom));
             child.Arrange(rect);
         }
 
         this.UpdateOverflow(finalSize);
         return finalSize;
+    }
+
+    // Measured at its natural size but NEVER folded into this control's desired size. That is what keeps
+    // a variable-width adornment from resizing an Auto-width column when it appears or changes.
+    private void MeasureAdornment()
+    {
+        double width = 0;
+
+        if (this.adornment is { } adorn)
+        {
+            adorn.Measure(Size.Infinity);
+            width = adorn.DesiredSize.Width;
+        }
+
+        this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, width);
+    }
+
+    private double ArrangeAdornment(Size finalSize)
+    {
+        if (this.adornment is not { } adorn)
+        {
+            return 0;
+        }
+
+        // InnerContentMargin.Right is the theme's reservation for the sort indicator, so sit inside it
+        // rather than on top of it. Themes that keep the sort icon outside this control (a separate Grid
+        // column) leave the margin at 0 and the adornment lands flush right, which is equivalent.
+        double reserved = this.InnerContentMargin.Right;
+        double available = Math.Max(0, finalSize.Width - reserved);
+        double width = Math.Min(adorn.DesiredSize.Width, available);
+
+        adorn.Arrange(new Rect(Math.Max(0, finalSize.Width - reserved - width), 0, width, finalSize.Height));
+
+        return width;
     }
 
     public override void Render(DrawingContext context)
@@ -236,7 +306,7 @@ public class TreeDataGridOverflowHeader : Decorator
 
         Thickness padding = this.Padding;
         Thickness margin = this.InnerContentMargin;
-        double maxWidth = Math.Max(0, this.Bounds.Width - padding.Left - padding.Right - margin.Left - margin.Right);
+        double maxWidth = Math.Max(0, this.Bounds.Width - padding.Left - padding.Right - margin.Left - margin.Right - this.adornmentWidth);
         double maxHeight = Math.Max(0, this.Bounds.Height - padding.Top - padding.Bottom - margin.Top - margin.Bottom);
 
         TextLayout layout = this.CreateTextLayout(text, maxWidth, maxHeight);
@@ -269,6 +339,68 @@ public class TreeDataGridOverflowHeader : Decorator
                 ContentTemplate = this.ContentTemplate,
             };
         }
+
+        // Setting Child clears LogicalChildren, and a new Content may mean a new column, so re-resolve.
+        this.UpdateAdornment();
+    }
+
+    private void UpdateAdornment()
+    {
+        object? source = this.TryGetOwningColumn() is { } column
+            ? DevoTreeDataGridExtensions.GetHeaderRightAdornment(column)
+            : null;
+
+        if (!ReferenceEquals(source, this.adornmentSource))
+        {
+            this.DetachAdornment();
+
+            this.adornmentSource = source;
+            this.adornment = source switch
+            {
+                null => null,
+                Control control => control,
+                _ => new ContentPresenter { Content = source },
+            };
+        }
+
+        this.EnsureAdornmentAttached();
+    }
+
+    private void EnsureAdornmentAttached()
+    {
+        if (this.adornment is not { } adorn)
+        {
+            return;
+        }
+
+        if (!this.LogicalChildren.Contains(adorn))
+        {
+            ((ISetLogicalParent)adorn).SetParent(this);
+            this.LogicalChildren.Add(adorn);
+        }
+
+        if (!this.VisualChildren.Contains(adorn))
+        {
+            this.VisualChildren.Add(adorn);
+        }
+
+        this.InvalidateMeasure();
+    }
+
+    private void DetachAdornment()
+    {
+        if (this.adornment is not { } adorn)
+        {
+            return;
+        }
+
+        this.VisualChildren.Remove(adorn);
+        this.LogicalChildren.Remove(adorn);
+        ((ISetLogicalParent)adorn).SetParent(null);
+
+        this.adornment = null;
+        this.adornmentSource = null;
+        this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
     }
 
     private TextLayout CreateTextLayout(string text, double maxWidth, double maxHeight)
@@ -297,7 +429,7 @@ public class TreeDataGridOverflowHeader : Decorator
         var text = this.Content as string;
         Thickness padding = this.Padding;
         Thickness margin = this.InnerContentMargin;
-        double availableWidth = finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right;
+        double availableWidth = finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right - this.adornmentWidth;
         bool isOverflowing = !string.IsNullOrEmpty(text)
                              && availableWidth > 0
                              && this.CreateTextLayout(text, double.PositiveInfinity, double.PositiveInfinity).Width > availableWidth + 0.5;
@@ -325,7 +457,10 @@ public class TreeDataGridOverflowHeader : Decorator
         return this.Content is Control control ? ToolTip.GetTip(control) : null;
     }
 
-    private object? GetColumnToolTip()
+    private object? GetColumnToolTip() =>
+        this.TryGetOwningColumn() is { } column ? DevoTreeDataGridExtensions.GetToolTip(column) : null;
+
+    private TreeDataGridColumn? TryGetOwningColumn()
     {
         var header = this.FindAncestorOfType<TreeDataGridColumnHeader>();
         var treeDataGrid = header?.FindAncestorOfType<TreeDataGrid>();
@@ -335,6 +470,6 @@ public class TreeDataGridOverflowHeader : Decorator
             return null;
         }
 
-        return DevoTreeDataGridExtensions.GetToolTip(treeDataGrid.Columns[columnIndex]);
+        return treeDataGrid.Columns[columnIndex];
     }
 }

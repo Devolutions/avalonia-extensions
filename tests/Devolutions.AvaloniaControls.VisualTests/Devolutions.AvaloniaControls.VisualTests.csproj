@@ -9,6 +9,15 @@
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
 
+    <!-- Mirrors SampleApp: Accelerate-dependent tests only compile when a licence key is present.
+         TreeDataGrid itself arrives transitively through the SampleApp project reference. -->
+    <PropertyGroup>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == '' and '$(AVALONIA_LICENSE_KEY)' != ''">true</EnableAccelerate>
+        <EnableAccelerate Condition="'$(EnableAccelerate)' == ''">false</EnableAccelerate>
+        <DefineConstants Condition="'$(EnableAccelerate)' == 'true'">$(DefineConstants);ENABLE_ACCELERATE</DefineConstants>
+        <DefaultItemExcludes Condition="'$(EnableAccelerate)' != 'true'">$(DefaultItemExcludes);**\ColumnHeaderAdornmentTests.cs</DefaultItemExcludes>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />

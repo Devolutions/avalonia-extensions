@@ -137,19 +137,26 @@
                 BorderThickness="0"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Panel VerticalAlignment="Stretch">
-            <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. -->
-            <Path Name="SortIcon"
-                  Fill="{TemplateBinding Foreground}"
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center"
-                  Stretch="Uniform"
-                  Width="12"
-                  Height="7"
-                  TabIndex="-1"
-                  IsTabStop="False"
-                  IsHitTestVisible="False"
-                  Opacity="0"
-                  Data="{StaticResource DevoDataGridSortIconPath}" />
+            <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. Shifted
+                 left by the header adornment's width so a committed column-search indicator sits to its
+                 right. -->
+            <Panel HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False">
+              <Panel.RenderTransform>
+                <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+              </Panel.RenderTransform>
+              <Path Name="SortIcon"
+                    Fill="{TemplateBinding Foreground}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Stretch="Uniform"
+                    Width="12"
+                    Height="7"
+                    TabIndex="-1"
+                    IsTabStop="False"
+                    IsHitTestVisible="False"
+                    Opacity="0"
+                    Data="{StaticResource DevoDataGridSortIconPath}" />
+            </Panel>
 
             <!-- Header content -->
             <TreeDataGridOverflowHeader Name="HeaderContent"

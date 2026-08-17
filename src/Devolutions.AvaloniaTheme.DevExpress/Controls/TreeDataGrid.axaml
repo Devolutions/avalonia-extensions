@@ -176,19 +176,25 @@
                   ClipToBounds="False"
                   IsHitTestVisible="False">
             <Panel VerticalAlignment="Stretch" ClipToBounds="False">
-              <!-- Sort icon (reusing DataGrid foreground) -->
-              <Path Name="SortIcon"
-                    Fill="{TemplateBinding Foreground}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Margin="-6 0 3 0"
-                    Stretch="Uniform"
-                    Width="12"
-                    Height="7"
-                    TabIndex="-1"
-                    IsTabStop="False"
-                    Opacity="0"
-                    Data="{StaticResource TreeDataGridSortIconPath}" />
+              <!-- Sort icon (reusing DataGrid foreground). Shifted left by the header adornment's width so
+                   a committed column-search indicator sits to its right. -->
+              <Panel HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                <Panel.RenderTransform>
+                  <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+                </Panel.RenderTransform>
+                <Path Name="SortIcon"
+                      Fill="{TemplateBinding Foreground}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="-6 0 3 0"
+                      Stretch="Uniform"
+                      Width="12"
+                      Height="7"
+                      TabIndex="-1"
+                      IsTabStop="False"
+                      Opacity="0"
+                      Data="{StaticResource TreeDataGridSortIconPath}" />
+              </Panel>
 
               <!-- Header content -->
               <TreeDataGridOverflowHeader Name="HeaderContent"

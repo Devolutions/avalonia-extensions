@@ -98,14 +98,18 @@ public class ColumnHeaderAdornmentTests
         bool overflowingAfter = IsOverflowing(grid);
 
         TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
-        double adornmentRight = adornment.Bounds.Right;
+
+        // The adornment is hosted in an internal clipping border, so its own Bounds are relative to that
+        // wrapper; translate into the header's space to check it really is flush right.
+        Point? adornmentRight = adornment.TranslatePoint(new Point(adornment.Bounds.Width, 0), overflowHeader);
         double headerRight = overflowHeader.Bounds.Width;
 
         window.Close();
 
         Assert.False(overflowingBefore);
         Assert.True(overflowingAfter);
-        Assert.Equal(headerRight, adornmentRight, Tolerance);
+        Assert.NotNull(adornmentRight);
+        Assert.Equal(headerRight, adornmentRight!.Value.X, Tolerance);
     }
 
     [AvaloniaTheory]
@@ -131,6 +135,43 @@ public class ColumnHeaderAdornmentTests
         longWindow.Close();
 
         Assert.True(longWidth > shortWidth + 50, $"expected the caption to widen the column, got {shortWidth} -> {longWidth}");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void Adornment_IsClampedToTheHeaderWidth(string themeName)
+    {
+        SetTheme(themeName);
+
+        // Width comes from the text, as a real committed-search chip's does, and far exceeds the column.
+        // An explicitly-sized control would keep its Width regardless of the arrange slot and only be
+        // visually clipped, which would not tell us whether the clamp works.
+        TextBlock term = new()
+        {
+            Text = "a deliberately long committed search term that cannot possibly fit",
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+
+        Border adornment = new() { Background = Brushes.Red, Child = term };
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(200), adornment);
+        Window window = Show(grid);
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        double headerWidth = overflowHeader.Bounds.Width;
+        double reportedWidth = overflowHeader.AdornmentWidth;
+        double arrangedWidth = adornment.Bounds.Width;
+
+        window.Close();
+
+        Assert.True(headerWidth > 0, "the header should have been laid out");
+        Assert.True(
+            reportedWidth <= headerWidth + Tolerance,
+            $"AdornmentWidth {reportedWidth} should be clamped to the header width {headerWidth}");
+        Assert.True(
+            arrangedWidth <= headerWidth + Tolerance,
+            $"arranged width {arrangedWidth} should be clamped to the header width {headerWidth}");
     }
 
     [AvaloniaTheory]

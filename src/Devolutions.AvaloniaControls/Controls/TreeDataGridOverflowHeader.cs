@@ -78,6 +78,8 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private double adornmentWidth;
 
+    private double adornmentNaturalWidth;
+
     public static void SetColumnToolTip(TreeDataGridColumn column, object? value) =>
         DevoTreeDataGridExtensions.SetToolTip(column, value);
 
@@ -267,32 +269,39 @@ public class TreeDataGridOverflowHeader : Decorator
     // a variable-width adornment from resizing an Auto-width column when it appears or changes.
     private void MeasureAdornment()
     {
-        double width = 0;
-
-        if (this.adornment is { } adorn)
+        if (this.adornment is not { } adorn)
         {
-            adorn.Measure(Size.Infinity);
-            width = adorn.DesiredSize.Width;
+            this.adornmentNaturalWidth = 0;
+            return;
         }
 
-        this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, width);
+        adorn.Measure(Size.Infinity);
+        this.adornmentNaturalWidth = adorn.DesiredSize.Width;
     }
 
+    // Sits flush right, so the sort indicator (which themes shift left by AdornmentWidth) lands to its
+    // left. Never wider than the header: a long term is re-measured against what is actually available so
+    // its content can trim, instead of spilling over neighbouring columns.
     private double ArrangeAdornment(Size finalSize)
     {
         if (this.adornment is not { } adorn)
         {
+            this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
             return 0;
         }
 
-        // InnerContentMargin.Right is the theme's reservation for the sort indicator, so sit inside it
-        // rather than on top of it. Themes that keep the sort icon outside this control (a separate Grid
-        // column) leave the margin at 0 and the adornment lands flush right, which is equivalent.
-        double reserved = this.InnerContentMargin.Right;
-        double available = Math.Max(0, finalSize.Width - reserved);
-        double width = Math.Min(adorn.DesiredSize.Width, available);
+        double width = Math.Min(this.adornmentNaturalWidth, finalSize.Width);
 
-        adorn.Arrange(new Rect(Math.Max(0, finalSize.Width - reserved - width), 0, width, finalSize.Height));
+        if (width < this.adornmentNaturalWidth)
+        {
+            adorn.Measure(new Size(width, finalSize.Height));
+        }
+
+        adorn.Arrange(new Rect(Math.Max(0, finalSize.Width - width), 0, width, finalSize.Height));
+
+        // Report the effective width, not the natural one, so a clamped adornment cannot push a theme's
+        // sort indicator off the left edge of the header.
+        this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, width);
 
         return width;
     }
@@ -355,11 +364,15 @@ public class TreeDataGridOverflowHeader : Decorator
             this.DetachAdornment();
 
             this.adornmentSource = source;
+
+            // Hosted inside a clipping border: headers deliberately run with ClipToBounds="False" (the
+            // resize thumb overhangs), so without this an over-long adornment paints across its
+            // neighbours. The consumer's own control is left untouched.
             this.adornment = source switch
             {
                 null => null,
-                Control control => control,
-                _ => new ContentPresenter { Content = source },
+                Control control => new Border { ClipToBounds = true, Child = control },
+                _ => new Border { ClipToBounds = true, Child = new ContentPresenter { Content = source } },
             };
         }
 
@@ -398,8 +411,15 @@ public class TreeDataGridOverflowHeader : Decorator
         this.LogicalChildren.Remove(adorn);
         ((ISetLogicalParent)adorn).SetParent(null);
 
+        // Hand the consumer's control back, so the next header to serve this column can re-host it.
+        if (adorn is Border { Child: not null } border)
+        {
+            border.Child = null;
+        }
+
         this.adornment = null;
         this.adornmentSource = null;
+        this.adornmentNaturalWidth = 0;
         this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
     }
 

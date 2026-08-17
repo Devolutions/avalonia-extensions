@@ -20,6 +20,8 @@
       <Setter Property="Foreground" Value="White" />
       <Setter Property="FontSize" Value="11" />
       <Setter Property="VerticalAlignment" Value="Center" />
+      <!-- The chip is clamped to the header width, so a long term has to trim rather than spill. -->
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
     <Style Selector="Border.search-chip Ellipse, Border.search-chip Rectangle">
       <Setter Property="Stroke" Value="White" />
@@ -67,14 +69,16 @@
       <TreeDataGridTextColumn Header="Name" Binding="{Binding Name}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
           <Border Classes="search-chip" IsVisible="{Binding HasNameSearch}">
-            <StackPanel Orientation="Horizontal" Spacing="3">
-              <Panel Width="9" Height="9" VerticalAlignment="Center">
+            <!-- Grid, not StackPanel: a horizontal StackPanel measures children with infinite width, so
+                 the term would never trim. -->
+            <Grid ColumnDefinitions="Auto,*">
+              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
                 <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
                          HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
               </Panel>
-              <TextBlock Text="{Binding NameSearch}" />
-            </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding NameSearch}" />
+            </Grid>
           </Border>
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>
@@ -82,14 +86,14 @@
       <TreeDataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
           <Border Classes="search-chip" IsVisible="{Binding HasTypeSearch}">
-            <StackPanel Orientation="Horizontal" Spacing="3">
-              <Panel Width="9" Height="9" VerticalAlignment="Center">
+            <Grid ColumnDefinitions="Auto,*">
+              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
                 <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
                          HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
               </Panel>
-              <TextBlock Text="{Binding TypeSearch}" />
-            </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding TypeSearch}" />
+            </Grid>
           </Border>
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>
@@ -99,14 +103,14 @@
       <TreeDataGridTextColumn Header="Status of the item" Binding="{Binding Status}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
           <Border Classes="search-chip" IsVisible="{Binding HasStatusSearch}">
-            <StackPanel Orientation="Horizontal" Spacing="3">
-              <Panel Width="9" Height="9" VerticalAlignment="Center">
+            <Grid ColumnDefinitions="Auto,*">
+              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
                 <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
                          HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
               </Panel>
-              <TextBlock Text="{Binding StatusSearch}" />
-            </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding StatusSearch}" />
+            </Grid>
           </Border>
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>

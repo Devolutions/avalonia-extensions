@@ -158,14 +158,16 @@
                     Data="{StaticResource DevoDataGridSortIconPath}" />
             </Panel>
 
-            <!-- Header content -->
+            <!-- Header content. The reserve below is 24 = 12 chevron + 12 gap before the caption, matching
+                 Ubuntu's System Monitor. Reserving only the chevron's own 12px let the caption run right up
+                 against it before trimming. -->
             <TreeDataGridOverflowHeader Name="HeaderContent"
                                         Content="{TemplateBinding Header}"
                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                         Padding="{TemplateBinding Padding}"
                                         InnerContentMargin="{BindingToggler
                                           {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
-                                          0 0 12 0,
+                                          0 0 24 0,
                                           0 0 0 0
                                         }"
                                         TextTrimming="CharacterEllipsis"

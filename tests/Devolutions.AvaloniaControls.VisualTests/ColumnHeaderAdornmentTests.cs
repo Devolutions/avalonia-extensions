@@ -141,6 +141,32 @@ public class ColumnHeaderAdornmentTests
     [InlineData("MacClassic")]
     [InlineData("DevExpress")]
     [InlineData("Linux")]
+    public void ControlHeader_SizesAutoWidthColumn(string themeName)
+    {
+        // Every theme must let a Control header drive an Auto column's width, the same way a string
+        // caption does. MacOS used to clamp it: its caption sat in a `*` Grid cell that handed down a
+        // constrained width, so an icon-only header could not widen its column.
+        SetTheme(themeName);
+
+        Border header = new() { Width = 20, Height = 12, Background = Brushes.Red };
+        TreeDataGrid grid = BuildGrid(header, GridLength.Auto, adornment: null);
+        Window window = Show(grid);
+
+        double before = ColumnWidth(grid);
+        header.Width = 200;
+        double after = ColumnWidth(grid);
+
+        window.Close();
+
+        Assert.True(
+            after - before > 150,
+            $"a Control header growing 20 -> 200 should widen the Auto column, got {before} -> {after}");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
     public void Adornment_IsClampedToTheHeaderWidth(string themeName)
     {
         SetTheme(themeName);

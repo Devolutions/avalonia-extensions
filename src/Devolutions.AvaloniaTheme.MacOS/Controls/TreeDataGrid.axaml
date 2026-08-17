@@ -169,27 +169,38 @@
             <Panel Margin="{TemplateBinding Padding}"
                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" MinWidth="{DynamicResource DataGridSortIconMinWidth}" />
-                </Grid.ColumnDefinitions>
+              <Panel>
+                <!-- The chevron overlays the caption rather than occupying a reserved column: native
+                     macOS ellipsizes the caption when the chevron appears instead of permanently
+                     holding space for it, and showing it must not resize an auto-sized column. The
+                     caption yields room via InnerContentMargin, as in the DevExpress and Yaru themes.
+                     Shifted left by the header adornment's width so a committed column-search
+                     indicator sits to its right. -->
+                <Panel HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False">
+                  <Panel.RenderTransform>
+                    <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+                  </Panel.RenderTransform>
+                  <Path Name="SortIcon"
+                        IsVisible="False"
+                        Width="{DynamicResource DataGridSortChevronSize}"
+                        Margin="0 0 5 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Fill="{DynamicResource SortIconForegroundBrush}"
+                        Stretch="Uniform" />
+                </Panel>
 
                 <TreeDataGridOverflowHeader Name="HeaderContent"
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            InnerContentMargin="{BindingToggler
+                                              {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
+                                              0 0 12 0,
+                                              0 0 0 0
+                                            }"
                                             TextTrimming="CharacterEllipsis"
                                             ShowToolTip="True" />
-
-                <Path Name="SortIcon"
-                      IsVisible="False"
-                      Grid.Column="1"
-                      Width="{DynamicResource DataGridSortChevronSize}"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Fill="{DynamicResource SortIconForegroundBrush}"
-                      Stretch="Uniform" />
-              </Grid>
+              </Panel>
             </Panel>
 
             <!-- Right vertical separator (like DataGrid) -->

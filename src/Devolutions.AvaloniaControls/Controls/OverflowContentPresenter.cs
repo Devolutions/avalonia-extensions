@@ -24,13 +24,25 @@ public class OverflowContentPresenter : ContentPresenter
 
     private object? appliedToolTip;
 
+    private int? appliedToolTipShowDelay;
+
     public static readonly StyledProperty<bool> ShowToolTipWhenTextOverflowingProperty =
         AvaloniaProperty.Register<OverflowContentPresenter, bool>(nameof(ShowToolTipWhenTextOverflowing));
+
+    /// <summary>Optional tooltip delay in milliseconds. Null preserves the theme default.</summary>
+    public static readonly StyledProperty<int?> ToolTipShowDelayProperty =
+        AvaloniaProperty.Register<OverflowContentPresenter, int?>(nameof(ToolTipShowDelay));
 
     public bool ShowToolTipWhenTextOverflowing
     {
         get => this.GetValue(ShowToolTipWhenTextOverflowingProperty);
         set => this.SetValue(ShowToolTipWhenTextOverflowingProperty, value);
+    }
+
+    public int? ToolTipShowDelay
+    {
+        get => this.GetValue(ToolTipShowDelayProperty);
+        set => this.SetValue(ToolTipShowDelayProperty, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -42,7 +54,10 @@ public class OverflowContentPresenter : ContentPresenter
             this.ClearTextBlockCache();
             this.InvalidateToolTip();
         }
-        else if (change.Property == BoundsProperty || change.Property == PaddingProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
+        else if (change.Property == BoundsProperty
+            || change.Property == PaddingProperty
+            || change.Property == ShowToolTipWhenTextOverflowingProperty
+            || change.Property == ToolTipShowDelayProperty)
         {
             this.InvalidateToolTip();
         }
@@ -87,7 +102,17 @@ public class OverflowContentPresenter : ContentPresenter
             this.ShowToolTipWhenTextOverflowing,
             true);
         ToolTip.SetTip(target, toolTip);
-        ToolTip.SetShowDelay(target, 200);
+        if (this.ToolTipShowDelay is { } showDelay)
+        {
+            ToolTip.SetShowDelay(target, showDelay);
+            this.appliedToolTipShowDelay = showDelay;
+        }
+        else if (this.appliedToolTipShowDelay is not null)
+        {
+            target.ClearValue(ToolTip.ShowDelayProperty);
+            this.appliedToolTipShowDelay = null;
+        }
+
         this.appliedToolTip = toolTip;
     }
 
@@ -197,7 +222,13 @@ public class OverflowContentPresenter : ContentPresenter
             ToolTip.SetTip(target, null);
         }
 
+        if (this.cachedToolTipTarget is { } targetWithDelay && this.appliedToolTipShowDelay is not null)
+        {
+            targetWithDelay.ClearValue(ToolTip.ShowDelayProperty);
+        }
+
         this.appliedToolTip = null;
+        this.appliedToolTipShowDelay = null;
     }
 
     private static void FindTextBlocks(Visual visual, List<TextBlock> textBlocks)

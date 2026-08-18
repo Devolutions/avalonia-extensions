@@ -230,7 +230,6 @@ internal static class TextOverflowToolTip
     }
 
     ToolTip.SetTip(target, toolTip);
-    ToolTip.SetShowDelay(target, 200);
   }
 
   public static string? GetOverflowingText(

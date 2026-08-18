@@ -11,15 +11,10 @@ public class OverflowContentPresenter : ContentPresenter
 {
     private double arrangedWidth;
 
+    private double lastTooltipWidth = double.NaN;
+
     public static readonly StyledProperty<bool> ShowToolTipWhenTextOverflowingProperty =
         AvaloniaProperty.Register<OverflowContentPresenter, bool>(nameof(ShowToolTipWhenTextOverflowing));
-
-    public OverflowContentPresenter()
-    {
-        this.GetObservable(ContentProperty).Subscribe(_ => this.UpdateToolTip());
-        this.GetObservable(BoundsProperty).Subscribe(_ => this.UpdateToolTip());
-        this.GetObservable(ShowToolTipWhenTextOverflowingProperty).Subscribe(_ => this.UpdateToolTip());
-    }
 
     public bool ShowToolTipWhenTextOverflowing
     {
@@ -27,11 +22,26 @@ public class OverflowContentPresenter : ContentPresenter
         set => this.SetValue(ShowToolTipWhenTextOverflowingProperty, value);
     }
 
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == ContentProperty || change.Property == BoundsProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
+        {
+            this.InvalidateToolTip();
+        }
+    }
+
     protected override Size ArrangeOverride(Size finalSize)
     {
+        bool widthChanged = !AreClose(this.arrangedWidth, finalSize.Width);
         this.arrangedWidth = finalSize.Width;
         Size size = base.ArrangeOverride(finalSize);
-        this.UpdateToolTip();
+        if (widthChanged)
+        {
+            this.UpdateToolTip();
+        }
+
         return size;
     }
 
@@ -47,9 +57,24 @@ public class OverflowContentPresenter : ContentPresenter
             availableWidth = Math.Min(availableWidth, textBlock.Bounds.Width);
         }
 
+        if (AreClose(this.lastTooltipWidth, availableWidth))
+        {
+            return;
+        }
+
+        this.lastTooltipWidth = availableWidth;
+
         Control target = this.GetToolTipTarget();
         TextOverflowToolTip.Update(target, textBlock, text, availableWidth, this.ShowToolTipWhenTextOverflowing, true);
     }
+
+    private void InvalidateToolTip()
+    {
+        this.lastTooltipWidth = double.NaN;
+        this.UpdateToolTip();
+    }
+
+    private static bool AreClose(double left, double right) => Math.Abs(left - right) < 0.5;
 
     private Control GetToolTipTarget()
     {

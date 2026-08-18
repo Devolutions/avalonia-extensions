@@ -140,7 +140,10 @@
             <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. Shifted
                  left by the header adornment's width so a committed column-search indicator sits to its
                  right. -->
-            <Panel HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False">
+            <Panel HorizontalAlignment="Right"
+                   VerticalAlignment="Stretch"
+                   IsHitTestVisible="False"
+                   IsVisible="{Binding !#HeaderContent.IsAdornmentFilling}">
               <Panel.RenderTransform>
                 <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
               </Panel.RenderTransform>

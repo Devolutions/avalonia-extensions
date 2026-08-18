@@ -6,7 +6,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -141,11 +143,41 @@ public class ColumnHeaderAdornmentTests
     [InlineData("MacClassic")]
     [InlineData("DevExpress")]
     [InlineData("Linux")]
-    public void ControlHeader_SizesAutoWidthColumn(string themeName)
+    public void ControlHeader_SizesAutoWidthColumn_FromInitialLayout(string themeName)
     {
-        // Every theme must let a Control header drive an Auto column's width, the same way a string
-        // caption does. MacOS used to clamp it: its caption sat in a `*` Grid cell that handed down a
-        // constrained width, so an icon-only header could not widen its column.
+        SetTheme(themeName);
+
+        Border narrow = new() { Width = 20, Height = 12, Background = Brushes.Red };
+        TreeDataGrid narrowGrid = BuildGrid(narrow, GridLength.Auto, adornment: null);
+        Window narrowWindow = Show(narrowGrid);
+        double narrowWidth = ColumnWidth(narrowGrid);
+        narrowWindow.Close();
+
+        SetTheme(themeName);
+
+        Border wide = new() { Width = 200, Height = 12, Background = Brushes.Red };
+        TreeDataGrid wideGrid = BuildGrid(wide, GridLength.Auto, adornment: null);
+        Window wideWindow = Show(wideGrid);
+        double wideWidth = ColumnWidth(wideGrid);
+        wideWindow.Close();
+
+        Assert.True(
+            wideWidth - narrowWidth > 150,
+            $"a 200px Control header should give a wider Auto column than a 20px one, got {narrowWidth} vs {wideWidth}");
+    }
+
+    // DevExpress is deliberately excluded. Its caption is a sibling of HeaderBorder, so that interactive
+    // header content works without the full-width border claiming the resize-thumb lane, and in that
+    // arrangement a *runtime* size change latches: HeaderContent's DesiredSize is clamped to the width it
+    // was offered, so it never changes, so the invalidation stops propagating and TreeDataGrid never
+    // recomputes the Auto width. Initial layout is unaffected on all three themes (see the test above),
+    // and the search adornment is excluded from desired width by design, so column search does not rely
+    // on this. Revisit if a consumer needs a Control header that resizes itself after first layout.
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("Linux")]
+    public void ControlHeader_RegrowsAutoWidthColumnAfterResize(string themeName)
+    {
         SetTheme(themeName);
 
         Border header = new() { Width = 20, Height = 12, Background = Brushes.Red };
@@ -204,8 +236,11 @@ public class ColumnHeaderAdornmentTests
     [InlineData("MacClassic")]
     [InlineData("DevExpress")]
     [InlineData("Linux")]
-    public void Demo_IndicatorTracksSearchTermWithoutResizingColumn(string themeName)
+    public void Demo_FullSearchFlowLeavesColumnWidthUntouched(string themeName)
     {
+        // Walks the whole showcase: hover reveals the magnifier, clicking it opens a field spanning the
+        // header, committing filters the rows and leaves the term on display -- all without the Auto
+        // column changing width.
         SetTheme(themeName);
 
         TreeDataGridColumnSearchViewModel viewModel = new();
@@ -219,33 +254,234 @@ public class ColumnHeaderAdornmentTests
         };
 
         window.Show();
+
+        // Headless windows are not activated by Show alone, and focus does not take on an inactive window.
+        window.Activate();
         Dispatcher.UIThread.RunJobs();
 
         TreeDataGrid grid = page.GetVisualDescendants().OfType<TreeDataGrid>().First();
+        double idleWidth = ColumnWidth(grid);
 
-        double widthBefore = ColumnWidth(grid);
-        Border chip = SearchChip(grid);
-        bool visibleBefore = chip.IsVisible;
+        Button searchButton = Header(grid).GetVisualDescendants()
+            .OfType<Button>()
+            .First(static b => b.Name == "PART_SearchButton");
 
-        viewModel.NameSearch = "a-deliberately-long-search-term";
+        // Hover the header: the magnifier is hover-only.
+        Point? headerCentre = Header(grid).TranslatePoint(
+            new Point(Header(grid).Bounds.Width / 2, Header(grid).Bounds.Height / 2),
+            window);
+        window.MouseMove(headerCentre!.Value);
+        Dispatcher.UIThread.RunJobs();
         Layout(grid);
 
-        double widthAfter = ColumnWidth(grid);
-        bool visibleAfter = chip.IsVisible;
-        string chipText = chip.GetVisualDescendants().OfType<TextBlock>().First().Text ?? string.Empty;
-        double adornmentWidth = OverflowHeader(grid).AdornmentWidth;
+        bool magnifierVisibleOnHover = searchButton.IsVisible;
+        double hoverWidth = ColumnWidth(grid);
+
+        // Click it: the header becomes an editor.
+        Point? buttonCentre = searchButton.TranslatePoint(
+            new Point(searchButton.Bounds.Width / 2, searchButton.Bounds.Height / 2),
+            window);
+        window.MouseDown(buttonCentre!.Value, MouseButton.Left);
+        window.MouseUp(buttonCentre.Value, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+        Layout(grid);
+
+        bool isEditing = viewModel.NameSearch.IsEditing;
+        double editingWidth = ColumnWidth(grid);
+        double editorWidth = OverflowHeader(grid).AdornmentWidth;
+        double headerWidth = OverflowHeader(grid).Bounds.Width;
+
+        // Focus is deliberately not asserted: this headless setup never reports a focused element, not even
+        // after a click that lands (see AdornmentContent_ReceivesClicks), so auto-focus and select-all can
+        // only be confirmed by running the SampleApp.
+        viewModel.NameSearch.Draft = "DESKTOP";
+        viewModel.NameSearch.CommitCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        Layout(grid);
+
+        double committedWidth = ColumnWidth(grid);
+        int matches = viewModel.VisibleNodes.Count;
+        string committedTerm = viewModel.NameSearch.Term;
+        bool stillEditing = viewModel.NameSearch.IsEditing;
+        Border? chip = Header(grid).GetVisualDescendants()
+            .OfType<Border>()
+            .FirstOrDefault(static b => b.Classes.Contains("committed"));
+        string chipText = chip?.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
 
         window.Close();
 
-        Assert.False(visibleBefore);
-        Assert.True(visibleAfter);
-        Assert.Equal("a-deliberately-long-search-term", chipText);
-        Assert.True(adornmentWidth > 0, "the visible indicator should report a non-zero width");
-        Assert.Equal(widthBefore, widthAfter, Tolerance);
+        Assert.True(magnifierVisibleOnHover, "the magnifier should appear while the header is hovered");
+        Assert.True(isEditing, "clicking the magnifier should open the search field");
+        Assert.True(
+            editorWidth >= headerWidth - Tolerance,
+            $"the editor should span the header, got {editorWidth} of {headerWidth}");
+        Assert.False(stillEditing, "committing should leave edit mode");
+        Assert.Equal("DESKTOP", committedTerm);
+        Assert.Equal(2, matches);
+        Assert.Equal("DESKTOP", chipText);
+
+        // The whole point: none of those three states moved the column.
+        Assert.Equal(idleWidth, hoverWidth, Tolerance);
+        Assert.Equal(idleWidth, editingWidth, Tolerance);
+        Assert.Equal(idleWidth, committedWidth, Tolerance);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void SortIndicator_IsHiddenWhileAdornmentFillsHeader(string themeName)
+    {
+        // A full-width adornment (an in-header search field) takes over the cell, so the sort indicator
+        // must get out of the way instead of sitting on top of it.
+        SetTheme(themeName);
+
+        Border adornment = new() { Background = Brushes.Red, Height = 12 };
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(300), adornment);
+        Window window = Show(grid);
+
+        Control sortIcon = Header(grid).GetVisualDescendants()
+            .OfType<Control>()
+            .First(static c => c.Name == "SortIcon");
+
+        // Assert on the slot the theme parks the indicator in, not the Path itself: MacOS leaves the Path
+        // IsVisible="False" until a column is actually sorted, so the Path alone says nothing here.
+        Control sortSlot = (Control)sortIcon.GetVisualParent()!;
+
+        bool visibleWhileHugging = sortSlot.IsVisible;
+
+        DevoTreeDataGridExtensions.SetFillsHeaderWidth(adornment, true);
+        Layout(grid);
+
+        bool isFilling = OverflowHeader(grid).IsAdornmentFilling;
+        bool visibleWhileFilling = sortSlot.IsVisible;
+
+        window.Close();
+
+        Assert.True(visibleWhileHugging, "the sort indicator slot should be present when the adornment only hugs its content");
+        Assert.True(isFilling, "the adornment should report that it is filling the header");
+        Assert.False(visibleWhileFilling, "the sort indicator should be hidden while the adornment fills the header");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void AdornmentContent_ReceivesClicks(string themeName)
+    {
+        // Without this the in-header column-search affordances are inert. DevExpress used to suppress
+        // hit-testing on its header content, so a button in the adornment never saw the click.
+        SetTheme(themeName);
+
+        bool clicked = false;
+        Button button = new() { Content = "S", Width = 26, Height = 16 };
+        button.Click += (_, _) => clicked = true;
+
+        Border adornment = new() { Child = button };
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(300), adornment);
+        Window window = Show(grid, width: 900);
+
+        Point? centre = button.TranslatePoint(
+            new Point(button.Bounds.Width / 2, button.Bounds.Height / 2),
+            window);
+
+        Assert.NotNull(centre);
+
+        window.MouseDown(centre!.Value, MouseButton.Left);
+        window.MouseUp(centre.Value, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+
+        window.Close();
+
+        Assert.True(clicked, "a button inside the header adornment should receive the click");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void CaptionClick_StillSorts(string themeName)
+    {
+        // Interactive header content must not cost the header its sort-on-click: unhandled clicks have to
+        // keep bubbling to the TreeDataGridColumnHeader.
+        SetTheme(themeName);
+
+        TreeDataGrid grid = BuildSortableGrid();
+        Window window = Show(grid, width: 900);
+
+        TreeDataGridColumnHeader header = Header(grid);
+        Point? captionPoint = header.TranslatePoint(new Point(30, header.Bounds.Height / 2), window);
+
+        Assert.NotNull(captionPoint);
+
+        window.MouseDown(captionPoint!.Value, MouseButton.Left);
+        window.MouseUp(captionPoint.Value, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        object? sortDirection = Header(grid).SortDirection;
+
+        window.Close();
+
+        Assert.NotNull(sortDirection);
+    }
+
+    [AvaloniaFact]
+    public void DevExpress_ResizeOverflowLaneStaysGrabbable()
+    {
+        // DevExpress deliberately overhangs its 11px resize thumb into the next header, and that header's
+        // hit-target is inset 6px to leave it grabbable. Interactive header content must not cover it.
+        // Only DevExpress overhangs; the other themes keep a 5px thumb inside their own header.
+        SetTheme("DevExpress");
+
+        TreeDataGrid grid = BuildSortableGrid();
+        Window window = Show(grid, width: 900);
+
+        TreeDataGridColumnHeader second = grid.GetVisualDescendants()
+            .OfType<TreeDataGridColumnHeader>()
+            .First(static h => h.ColumnIndex == 1);
+
+        Point? lanePoint = second.TranslatePoint(new Point(2, second.Bounds.Height / 2), window);
+        Assert.NotNull(lanePoint);
+
+        IInputElement? laneHit = window.InputHitTest(lanePoint!.Value);
+
+        // The thumb's template is an unnamed Border, so identify it from the ancestor chain.
+        bool hitsThumb = laneHit is Visual visual && visual.GetSelfAndVisualAncestors().OfType<Thumb>().Any();
+
+        window.Close();
+
+        Assert.True(hitsThumb, "the previous column's resize thumb should still win the 6px overflow lane");
+    }
+
+    private static TreeDataGrid BuildSortableGrid()
+    {
+        TreeDataGrid grid = new() { CanUserSortColumns = true, CanUserResizeColumns = true };
+
+        grid.Columns.Add(new TreeDataGridTemplateColumn
+        {
+            Header = "Name",
+            Width = new GridLength(200),
+            CellTemplate = CellTemplate(),
+            CanUserSort = true,
+            CompareAscending = static (a, b) => string.Compare(a as string, b as string, StringComparison.Ordinal),
+            CompareDescending = static (a, b) => string.Compare(b as string, a as string, StringComparison.Ordinal),
+        });
+        grid.Columns.Add(new TreeDataGridTemplateColumn
+        {
+            Header = "Filler",
+            Width = new GridLength(200),
+            CellTemplate = CellTemplate(),
+        });
+
+        List<string> items = ["alpha", "beta", "gamma"];
+        grid.ItemsSource = items;
+
+        return grid;
     }
 
     private static Border SearchChip(TreeDataGrid grid) =>
-        Header(grid).GetVisualDescendants().OfType<Border>().First(static b => b.Classes.Contains("search-chip"));
+        Header(grid).GetVisualDescendants().OfType<Border>().First(static b => b.Classes.Contains("committed"));
 
     private static void SetTheme(string themeName)
     {

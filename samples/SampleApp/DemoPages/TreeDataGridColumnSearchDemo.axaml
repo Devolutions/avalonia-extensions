@@ -3,31 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:SampleApp.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="620"
+             xmlns:pages="using:SampleApp.DemoPages"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="560"
              x:Class="SampleApp.DemoPages.TreeDataGridColumnSearchDemo"
              x:DataType="vm:TreeDataGridColumnSearchViewModel">
-
-  <UserControl.Styles>
-    <!-- The committed-search indicator, as it would appear once a term is applied to a column. -->
-    <Style Selector="Border.search-chip">
-      <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-      <Setter Property="CornerRadius" Value="3" />
-      <Setter Property="Padding" Value="4 1" />
-      <Setter Property="Margin" Value="4 0 2 0" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-    <Style Selector="Border.search-chip TextBlock">
-      <Setter Property="Foreground" Value="White" />
-      <Setter Property="FontSize" Value="11" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <!-- The chip is clamped to the header width, so a long term has to trim rather than spill. -->
-      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-    </Style>
-    <Style Selector="Border.search-chip Ellipse, Border.search-chip Rectangle">
-      <Setter Property="Stroke" Value="White" />
-      <Setter Property="Fill" Value="White" />
-    </Style>
-  </UserControl.Styles>
 
   <Design.DataContext>
     <vm:TreeDataGridColumnSearchViewModel />
@@ -35,28 +14,19 @@
 
   <DockPanel LastChildFill="True">
     <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 0 0 16">
-      <TextBlock Text="Column header search indicator" Classes="section-title" FontSize="18" />
+      <TextBlock Text="In-column search" Classes="section-title" FontSize="18" />
 
       <TextBlock TextWrapping="Wrap"
-                 Text="Each searchable column carries a DevoTreeDataGridExtensions.HeaderRightAdornment. Type below to apply a term: the indicator appears at the right of that column's header and the caption ellipsizes to make room. The three terms accumulate — a row must match all of them." />
+                 Text="Hover a searchable column header (Name, Type, Status) to reveal a magnifier. Click it and the header turns into a search field spanning the column; press Enter to commit, Escape to cancel, or use ✕ to clear. A committed term stays visible in the header, to the right of the sort indicator, and clicking it reopens the field." />
 
       <TextBlock TextWrapping="Wrap"
                  FontWeight="SemiBold"
-                 Text="Watch the Name, Type and Status column widths: they are Auto-sized, and they must not move when an indicator appears or grows. Use 'Long name term' to make an indicator much wider and confirm the columns stay put." />
+                 Text="Those three columns are Auto-sized. Their widths must not shift as the magnifier, the field or the committed term appear — the adornment is measured but excluded from the header's desired width. Sorting still works: click a header away from the search affordance." />
 
-      <Grid ColumnDefinitions="Auto,180,Auto,180,Auto,180" RowDefinitions="Auto" >
-        <TextBlock Grid.Column="0" Text="Name" VerticalAlignment="Center" Margin="0 0 6 0" />
-        <TextBox Grid.Column="1" Text="{Binding NameSearch}" Watermark="Search name" />
-        <TextBlock Grid.Column="2" Text="Type" VerticalAlignment="Center" Margin="12 0 6 0" />
-        <TextBox Grid.Column="3" Text="{Binding TypeSearch}" Watermark="Search type" />
-        <TextBlock Grid.Column="4" Text="Status" VerticalAlignment="Center" Margin="12 0 6 0" />
-        <TextBox Grid.Column="5" Text="{Binding StatusSearch}" Watermark="Search status" />
-      </Grid>
-
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Content="Long name term" Command="{Binding UseLongNameTermCommand}" />
-        <Button Content="Clear all" Command="{Binding ClearAllCommand}" />
-        <TextBlock Text="{Binding MatchSummary}" VerticalAlignment="Center" Margin="8 0 0 0" Opacity="0.7" />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <Button Content="Clear all searches" Command="{Binding ClearAllCommand}" />
+        <TextBlock Text="{Binding MatchSummary}" VerticalAlignment="Center" Opacity="0.7" />
+        <TextBlock Text="{Binding ActiveTerms}" VerticalAlignment="Center" Opacity="0.7" FontStyle="Italic" />
       </StackPanel>
     </StackPanel>
 
@@ -68,33 +38,13 @@
 
       <TreeDataGridTextColumn Header="Name" Binding="{Binding Name}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
-          <Border Classes="search-chip" IsVisible="{Binding HasNameSearch}">
-            <!-- Grid, not StackPanel: a horizontal StackPanel measures children with infinite width, so
-                 the term would never trim. -->
-            <Grid ColumnDefinitions="Auto,*">
-              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
-                <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
-                         HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
-              </Panel>
-              <TextBlock Grid.Column="1" Text="{Binding NameSearch}" />
-            </Grid>
-          </Border>
+          <pages:ColumnSearchAdornment DataContext="{Binding NameSearch}" />
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>
 
       <TreeDataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
-          <Border Classes="search-chip" IsVisible="{Binding HasTypeSearch}">
-            <Grid ColumnDefinitions="Auto,*">
-              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
-                <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
-                         HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
-              </Panel>
-              <TextBlock Grid.Column="1" Text="{Binding TypeSearch}" />
-            </Grid>
-          </Border>
+          <pages:ColumnSearchAdornment DataContext="{Binding TypeSearch}" />
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>
 
@@ -102,16 +52,7 @@
 
       <TreeDataGridTextColumn Header="Status of the item" Binding="{Binding Status}" Width="Auto">
         <DevoTreeDataGridExtensions.HeaderRightAdornment>
-          <Border Classes="search-chip" IsVisible="{Binding HasStatusSearch}">
-            <Grid ColumnDefinitions="Auto,*">
-              <Panel Grid.Column="0" Width="9" Height="9" VerticalAlignment="Center" Margin="0 0 3 0">
-                <Ellipse Width="7" Height="7" StrokeThickness="1.2" Fill="Transparent"
-                         HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <Rectangle Width="3.5" Height="1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
-              </Panel>
-              <TextBlock Grid.Column="1" Text="{Binding StatusSearch}" />
-            </Grid>
-          </Border>
+          <pages:ColumnSearchAdornment DataContext="{Binding StatusSearch}" />
         </DevoTreeDataGridExtensions.HeaderRightAdornment>
       </TreeDataGridTextColumn>
 

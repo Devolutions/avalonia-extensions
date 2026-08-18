@@ -72,11 +72,20 @@ public class TreeDataGridOverflowHeader : Decorator
             nameof(AdornmentWidth),
             static o => o.AdornmentWidth);
 
+    public static readonly DirectProperty<TreeDataGridOverflowHeader, bool> IsAdornmentFillingProperty =
+        AvaloniaProperty.RegisterDirect<TreeDataGridOverflowHeader, bool>(
+            nameof(IsAdornmentFilling),
+            static o => o.IsAdornmentFilling);
+
     private Control? adornment;
 
     private object? adornmentSource;
 
+    private Control? adornmentContent;
+
     private double adornmentWidth;
+
+    private bool isAdornmentFilling;
 
     private double adornmentNaturalWidth;
 
@@ -100,6 +109,11 @@ public class TreeDataGridOverflowHeader : Decorator
 
         ContentProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
         ContentTemplateProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
+
+        // Fill mode is resolved during arrange, so a change has to schedule one; otherwise nothing else
+        // may invalidate layout and the adornment keeps its previous width.
+        DevoTreeDataGridExtensions.FillsHeaderWidthProperty.Changed.AddClassHandler<Control>(
+            static (control, _) => control.FindAncestorOfType<TreeDataGridOverflowHeader>()?.InvalidateArrange());
     }
 
     public object? Content
@@ -216,6 +230,13 @@ public class TreeDataGridOverflowHeader : Decorator
     /// </summary>
     public double AdornmentWidth => this.adornmentWidth;
 
+    /// <summary>
+    /// True while the adornment is spanning the whole header (see
+    /// <c>DevoTreeDataGridExtensions.FillsHeaderWidth</c>). Themes bind this to hide the sort indicator,
+    /// which would otherwise sit on top of a full-width adornment such as a search field.
+    /// </summary>
+    public bool IsAdornmentFilling => this.isAdornmentFilling;
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
@@ -242,7 +263,12 @@ public class TreeDataGridOverflowHeader : Decorator
             return new Size(layout.Width + padding.Left + padding.Right, layout.Height + padding.Top + padding.Bottom);
         }
 
-        this.Child?.Measure(availableSize);
+        // Measured unconstrained, matching the string path above, which reports its natural width and
+        // ignores availableSize. Passing availableSize through instead lets Avalonia clamp the child to the
+        // column's current width, which self-locks an Auto column: the clamped desired size reproduces the
+        // width it was clamped by, so the column can never grow to fit its header. Arrange re-measures
+        // against the real width so content can still trim.
+        this.Child?.Measure(Size.Infinity);
         return this.Child?.DesiredSize ?? default;
     }
 
@@ -258,6 +284,10 @@ public class TreeDataGridOverflowHeader : Decorator
                 margin.Top,
                 Math.Max(0, finalSize.Width - margin.Left - margin.Right - adornmentWidth),
                 Math.Max(0, finalSize.Height - margin.Top - margin.Bottom));
+
+            // Deliberately NOT re-measured against rect here, unlike the adornment. The child's desired
+            // size is what an Auto column sizes from, so shrinking it to the width it was just given makes
+            // the column self-lock at its current width.
             child.Arrange(rect);
         }
 
@@ -287,12 +317,17 @@ public class TreeDataGridOverflowHeader : Decorator
         if (this.adornment is not { } adorn)
         {
             this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
+            this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, false);
             return 0;
         }
 
-        double width = Math.Min(this.adornmentNaturalWidth, finalSize.Width);
+        bool fills = this.adornmentContent is { } content && DevoTreeDataGridExtensions.GetFillsHeaderWidth(content);
+        this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, fills);
+        double width = fills
+            ? finalSize.Width
+            : Math.Min(this.adornmentNaturalWidth, finalSize.Width);
 
-        if (width < this.adornmentNaturalWidth)
+        if (fills || width < this.adornmentNaturalWidth)
         {
             adorn.Measure(new Size(width, finalSize.Height));
         }
@@ -368,12 +403,16 @@ public class TreeDataGridOverflowHeader : Decorator
             // Hosted inside a clipping border: headers deliberately run with ClipToBounds="False" (the
             // resize thumb overhangs), so without this an over-long adornment paints across its
             // neighbours. The consumer's own control is left untouched.
-            this.adornment = source switch
+            this.adornmentContent = source switch
             {
                 null => null,
-                Control control => new Border { ClipToBounds = true, Child = control },
-                _ => new Border { ClipToBounds = true, Child = new ContentPresenter { Content = source } },
+                Control control => control,
+                _ => new ContentPresenter { Content = source },
             };
+
+            this.adornment = this.adornmentContent is { } content
+                ? new Border { ClipToBounds = true, Child = content }
+                : null;
         }
 
         this.EnsureAdornmentAttached();
@@ -418,9 +457,11 @@ public class TreeDataGridOverflowHeader : Decorator
         }
 
         this.adornment = null;
+        this.adornmentContent = null;
         this.adornmentSource = null;
         this.adornmentNaturalWidth = 0;
         this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
+        this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, false);
     }
 
     private TextLayout CreateTextLayout(string text, double maxWidth, double maxHeight)

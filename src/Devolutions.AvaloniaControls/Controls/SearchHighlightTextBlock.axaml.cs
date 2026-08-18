@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using Avalonia.VisualTree;
 
@@ -215,25 +216,80 @@ internal static class TextOverflowToolTip
 {
   public static void Update(Control target, TextBlock? textBlock, string? text, double availableWidth, bool enabled, bool zeroWidthIsOverflow = false)
   {
-    if (!enabled || string.IsNullOrEmpty(text))
+    string? toolTip = null;
+    if (enabled && !string.IsNullOrEmpty(text))
     {
-      ToolTip.SetTip(target, null);
-      return;
+      if (availableWidth <= 0)
+      {
+        toolTip = zeroWidthIsOverflow ? text : null;
+      }
+      else if (textBlock is not null && IsOverflowing(textBlock, text, availableWidth))
+      {
+        toolTip = text;
+      }
+    }
+
+    ToolTip.SetTip(target, toolTip);
+    ToolTip.SetShowDelay(target, 200);
+  }
+
+  public static string? GetOverflowingText(
+    IReadOnlyList<TextBlock> textBlocks,
+    string? fallbackText,
+    double availableWidth,
+    bool enabled,
+    bool zeroWidthIsOverflow = false)
+  {
+    if (!enabled)
+    {
+      return null;
     }
 
     if (availableWidth <= 0)
     {
-      ToolTip.SetTip(target, zeroWidthIsOverflow ? text : null);
-      ToolTip.SetShowDelay(target, 200);
-      return;
+      if (!zeroWidthIsOverflow)
+      {
+        return null;
+      }
+
+      if (!string.IsNullOrEmpty(fallbackText))
+      {
+        return fallbackText;
+      }
+
+      foreach (TextBlock textBlock in textBlocks)
+      {
+        if (textBlock.IsVisible && !string.IsNullOrEmpty(textBlock.Text))
+        {
+          return textBlock.Text;
+        }
+      }
+
+      return null;
     }
 
-    if (textBlock is null)
+    foreach (TextBlock textBlock in textBlocks)
     {
-      ToolTip.SetTip(target, null);
-      return;
+      string? text = textBlock.Text;
+      if (!textBlock.IsVisible || string.IsNullOrEmpty(text))
+      {
+        continue;
+      }
+
+      double textAvailableWidth = textBlock.Bounds.Width > 0
+        ? Math.Min(availableWidth, textBlock.Bounds.Width)
+        : availableWidth;
+      if (IsOverflowing(textBlock, text, textAvailableWidth))
+      {
+        return text;
+      }
     }
 
+    return null;
+  }
+
+  private static bool IsOverflowing(TextBlock textBlock, string text, double availableWidth)
+  {
     TextLayout layout = new(
       text,
       new Typeface(textBlock.FontFamily, textBlock.FontStyle, textBlock.FontWeight, textBlock.FontStretch),
@@ -252,7 +308,6 @@ internal static class TextOverflowToolTip
       textBlock.FontFeatures,
       null);
 
-    ToolTip.SetTip(target, layout.Width > availableWidth + 0.5 ? text : null);
-    ToolTip.SetShowDelay(target, 200);
+    return layout.Width > availableWidth + 0.5;
   }
 }

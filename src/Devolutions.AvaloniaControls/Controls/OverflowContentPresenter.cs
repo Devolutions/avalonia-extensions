@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -15,9 +16,13 @@ public class OverflowContentPresenter : ContentPresenter
 
     private double lastTooltipWidth = double.NaN;
 
-    private TextBlock? cachedTextBlock;
+    private readonly List<TextBlock> cachedTextBlocks = new();
+
+    private bool textBlocksCached;
 
     private Control? cachedToolTipTarget;
+
+    private object? appliedToolTip;
 
     public static readonly StyledProperty<bool> ShowToolTipWhenTextOverflowingProperty =
         AvaloniaProperty.Register<OverflowContentPresenter, bool>(nameof(ShowToolTipWhenTextOverflowing));
@@ -34,10 +39,10 @@ public class OverflowContentPresenter : ContentPresenter
 
         if (change.Property == ContentProperty || change.Property == ContentTemplateProperty)
         {
-            this.cachedTextBlock = null;
+            this.ClearTextBlockCache();
             this.InvalidateToolTip();
         }
-        else if (change.Property == BoundsProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
+        else if (change.Property == BoundsProperty || change.Property == PaddingProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
         {
             this.InvalidateToolTip();
         }
@@ -67,13 +72,6 @@ public class OverflowContentPresenter : ContentPresenter
         double availableWidth = this.arrangedWidth > 0 ? this.arrangedWidth : this.Bounds.Width;
         availableWidth -= this.Padding.Left + this.Padding.Right;
 
-        TextBlock? textBlock = this.GetTextBlock();
-        string? text = textBlock?.Text ?? (this.Content as string);
-        if (textBlock?.Bounds.Width > 0)
-        {
-            availableWidth = Math.Min(availableWidth, textBlock.Bounds.Width);
-        }
-
         if (AreClose(this.lastTooltipWidth, availableWidth))
         {
             return;
@@ -82,7 +80,15 @@ public class OverflowContentPresenter : ContentPresenter
         this.lastTooltipWidth = availableWidth;
 
         Control target = this.GetToolTipTarget();
-        TextOverflowToolTip.Update(target, textBlock, text, availableWidth, this.ShowToolTipWhenTextOverflowing, true);
+        string? toolTip = TextOverflowToolTip.GetOverflowingText(
+            this.GetTextBlocks(),
+            this.Content as string,
+            availableWidth,
+            this.ShowToolTipWhenTextOverflowing,
+            true);
+        ToolTip.SetTip(target, toolTip);
+        ToolTip.SetShowDelay(target, 200);
+        this.appliedToolTip = toolTip;
     }
 
     private void InvalidateToolTip()
@@ -114,60 +120,96 @@ public class OverflowContentPresenter : ContentPresenter
     {
         base.OnAttachedToVisualTree(e);
 
+        this.ClearOwnedToolTip();
         this.cachedToolTipTarget = null;
         this.hasArranged = false;
-        ToolTip.SetTip(this.GetToolTipTarget(), null);
         this.InvalidateToolTip();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        base.OnDetachedFromVisualTree(e);
-
+        this.ClearOwnedToolTip();
         this.cachedToolTipTarget = null;
-        this.cachedTextBlock = null;
+        this.ClearTextBlockCache();
         this.hasArranged = false;
         this.lastTooltipWidth = double.NaN;
+
+        base.OnDetachedFromVisualTree(e);
     }
 
-    private TextBlock? GetTextBlock()
+    private IReadOnlyList<TextBlock> GetTextBlocks()
     {
-        return this.cachedTextBlock ??= this.FindTextBlock();
-    }
-
-    private TextBlock? FindTextBlock()
-    {
-        foreach (Visual child in this.GetVisualChildren())
+        if (!this.textBlocksCached)
         {
-            if (child is TextBlock textBlock)
+            this.textBlocksCached = true;
+            FindTextBlocks(this, this.cachedTextBlocks);
+            foreach (TextBlock textBlock in this.cachedTextBlocks)
             {
-                return textBlock;
-            }
-
-            if (FindTextBlock(child) is { } descendant)
-            {
-                return descendant;
+                textBlock.PropertyChanged += this.OnTextBlockPropertyChanged;
+                textBlock.DetachedFromVisualTree += this.OnTextBlockDetachedFromVisualTree;
             }
         }
 
-        return null;
+        return this.cachedTextBlocks;
     }
 
-    private static TextBlock? FindTextBlock(Visual visual)
+    private void ClearTextBlockCache()
+    {
+        foreach (TextBlock textBlock in this.cachedTextBlocks)
+        {
+            textBlock.PropertyChanged -= this.OnTextBlockPropertyChanged;
+            textBlock.DetachedFromVisualTree -= this.OnTextBlockDetachedFromVisualTree;
+        }
+
+        this.cachedTextBlocks.Clear();
+        this.textBlocksCached = false;
+    }
+
+    private void OnTextBlockPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs change)
+    {
+        if (change.Property == TextBlock.TextProperty
+            || change.Property == BoundsProperty
+            || change.Property == Visual.IsVisibleProperty
+            || change.Property == TextBlock.FontFamilyProperty
+            || change.Property == TextBlock.FontSizeProperty
+            || change.Property == TextBlock.FontStyleProperty
+            || change.Property == TextBlock.FontWeightProperty
+            || change.Property == TextBlock.FontStretchProperty
+            || change.Property == TextBlock.LetterSpacingProperty
+            || change.Property == TextBlock.FontFeaturesProperty)
+        {
+            this.InvalidateToolTip();
+        }
+    }
+
+    private void OnTextBlockDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        this.ClearTextBlockCache();
+        this.InvalidateToolTip();
+    }
+
+    private void ClearOwnedToolTip()
+    {
+        if (this.cachedToolTipTarget is { } target
+            && this.appliedToolTip is { } toolTip
+            && ReferenceEquals(ToolTip.GetTip(target), toolTip))
+        {
+            ToolTip.SetTip(target, null);
+        }
+
+        this.appliedToolTip = null;
+    }
+
+    private static void FindTextBlocks(Visual visual, List<TextBlock> textBlocks)
     {
         foreach (Visual child in visual.GetVisualChildren())
         {
             if (child is TextBlock textBlock)
             {
-                return textBlock;
+                textBlocks.Add(textBlock);
             }
 
-            if (FindTextBlock(child) is { } descendant)
-            {
-                return descendant;
-            }
+            FindTextBlocks(child, textBlocks);
         }
-
-        return null;
     }
 }

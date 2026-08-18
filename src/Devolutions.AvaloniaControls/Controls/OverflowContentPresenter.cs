@@ -13,6 +13,10 @@ public class OverflowContentPresenter : ContentPresenter
 
     private double lastTooltipWidth = double.NaN;
 
+    private TextBlock? cachedTextBlock;
+
+    private Control? cachedToolTipTarget;
+
     public static readonly StyledProperty<bool> ShowToolTipWhenTextOverflowingProperty =
         AvaloniaProperty.Register<OverflowContentPresenter, bool>(nameof(ShowToolTipWhenTextOverflowing));
 
@@ -26,7 +30,12 @@ public class OverflowContentPresenter : ContentPresenter
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == ContentProperty || change.Property == BoundsProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
+        if (change.Property == ContentProperty || change.Property == ContentTemplateProperty)
+        {
+            this.cachedTextBlock = null;
+            this.InvalidateToolTip();
+        }
+        else if (change.Property == BoundsProperty || change.Property == ShowToolTipWhenTextOverflowingProperty)
         {
             this.InvalidateToolTip();
         }
@@ -50,7 +59,7 @@ public class OverflowContentPresenter : ContentPresenter
         double availableWidth = this.arrangedWidth > 0 ? this.arrangedWidth : this.Bounds.Width;
         availableWidth -= this.Padding.Left + this.Padding.Right;
 
-        TextBlock? textBlock = this.FindTextBlock();
+        TextBlock? textBlock = this.GetTextBlock();
         string? text = textBlock?.Text ?? (this.Content as string);
         if (textBlock?.Bounds.Width > 0)
         {
@@ -78,12 +87,41 @@ public class OverflowContentPresenter : ContentPresenter
 
     private Control GetToolTipTarget()
     {
+        if (this.cachedToolTipTarget is { } target)
+        {
+            return target;
+        }
+
         if (this.FindAncestorOfType<ToggleButton>() is { } toggleButton)
         {
+            this.cachedToolTipTarget = toggleButton;
             return toggleButton;
         }
 
-        return (Control?)this.FindAncestorOfType<Border>() ?? this;
+        this.cachedToolTipTarget = (Control?)this.FindAncestorOfType<Border>() ?? this;
+        return this.cachedToolTipTarget;
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        this.cachedToolTipTarget = null;
+        this.InvalidateToolTip();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        this.cachedToolTipTarget = null;
+        this.cachedTextBlock = null;
+        this.lastTooltipWidth = double.NaN;
+    }
+
+    private TextBlock? GetTextBlock()
+    {
+        return this.cachedTextBlock ??= this.FindTextBlock();
     }
 
     private TextBlock? FindTextBlock()

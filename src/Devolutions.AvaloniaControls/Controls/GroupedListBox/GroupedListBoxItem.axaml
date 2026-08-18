@@ -35,6 +35,7 @@
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               TextElement.Foreground="{TemplateBinding Foreground}"
                               TextElement.FontWeight="Bold"
+                              TextTrimming="CharacterEllipsis"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Left" />
             <Border Name="ChevronButton"
@@ -118,7 +119,8 @@
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 Foreground="{TemplateBinding Foreground}"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                TextTrimming="CharacterEllipsis" />
               <ContentPresenter Name="PART_RightPresenter"
                                 Grid.Column="2"
                                 Margin="8 0 0 0"

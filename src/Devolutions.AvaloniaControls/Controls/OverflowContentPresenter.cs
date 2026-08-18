@@ -11,6 +11,8 @@ public class OverflowContentPresenter : ContentPresenter
 {
     private double arrangedWidth;
 
+    private bool hasArranged;
+
     private double lastTooltipWidth = double.NaN;
 
     private TextBlock? cachedTextBlock;
@@ -45,6 +47,7 @@ public class OverflowContentPresenter : ContentPresenter
     {
         bool widthChanged = !AreClose(this.arrangedWidth, finalSize.Width);
         this.arrangedWidth = finalSize.Width;
+        this.hasArranged = true;
         Size size = base.ArrangeOverride(finalSize);
         if (widthChanged)
         {
@@ -56,6 +59,11 @@ public class OverflowContentPresenter : ContentPresenter
 
     private void UpdateToolTip()
     {
+        if (!this.hasArranged)
+        {
+            return;
+        }
+
         double availableWidth = this.arrangedWidth > 0 ? this.arrangedWidth : this.Bounds.Width;
         availableWidth -= this.Padding.Left + this.Padding.Right;
 
@@ -107,6 +115,8 @@ public class OverflowContentPresenter : ContentPresenter
         base.OnAttachedToVisualTree(e);
 
         this.cachedToolTipTarget = null;
+        this.hasArranged = false;
+        ToolTip.SetTip(this.GetToolTipTarget(), null);
         this.InvalidateToolTip();
     }
 
@@ -116,6 +126,7 @@ public class OverflowContentPresenter : ContentPresenter
 
         this.cachedToolTipTarget = null;
         this.cachedTextBlock = null;
+        this.hasArranged = false;
         this.lastTooltipWidth = double.NaN;
     }
 

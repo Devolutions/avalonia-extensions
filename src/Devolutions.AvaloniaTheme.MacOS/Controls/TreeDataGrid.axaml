@@ -168,7 +168,7 @@
             <!-- Main content area with sort icon -->
             <Panel Margin="{TemplateBinding Padding}"
                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                   VerticalAlignment="Stretch">
               <Panel>
                 <!-- The chevron overlays the caption rather than occupying a reserved column: native
                      macOS ellipsizes the caption when the chevron appears instead of permanently
@@ -176,7 +176,10 @@
                      caption yields room via InnerContentMargin, as in the DevExpress and Yaru themes.
                      Shifted left by the header adornment's width so a committed column-search
                      indicator sits to its right. -->
-                <Panel HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False">
+                <Panel HorizontalAlignment="Right"
+                       VerticalAlignment="Stretch"
+                       IsHitTestVisible="False"
+                       IsVisible="{Binding !#HeaderContent.IsAdornmentFilling}">
                   <Panel.RenderTransform>
                     <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
                   </Panel.RenderTransform>

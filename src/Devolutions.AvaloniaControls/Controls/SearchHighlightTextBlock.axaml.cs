@@ -5,7 +5,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using Avalonia.VisualTree;
 
@@ -188,32 +190,12 @@ public class SearchHighlightTextBlock : ContentControl
 
   private void UpdateToolTip()
   {
-    if (!this.ShowToolTipWhenTextOverflowing || this.textBlock == null || this.textBlock.Bounds.Width <= 0)
-    {
-      ToolTip.SetTip(this, null);
-      return;
-    }
-
-    string content = this.Content?.ToString() ?? string.Empty;
-    if (content.Length == 0)
-    {
-      ToolTip.SetTip(this, null);
-      return;
-    }
-
-    TextBlock measureBlock = new()
-    {
-      Text = content,
-      FontFamily = this.textBlock.FontFamily,
-      FontSize = this.textBlock.FontSize,
-      FontStyle = this.textBlock.FontStyle,
-      FontWeight = this.textBlock.FontWeight,
-      FontStretch = this.textBlock.FontStretch,
-      TextWrapping = TextWrapping.NoWrap,
-    };
-    measureBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-    ToolTip.SetTip(this, measureBlock.DesiredSize.Width > this.textBlock.Bounds.Width + 0.5 ? content : null);
+    TextOverflowToolTip.Update(
+      this,
+      this.textBlock,
+      this.Content?.ToString(),
+      this.textBlock?.Bounds.Width ?? 0,
+      this.ShowToolTipWhenTextOverflowing);
   }
 
   private void BindTextBlockBounds()
@@ -227,5 +209,104 @@ public class SearchHighlightTextBlock : ContentControl
     {
       this.textBlock.GetObservable(BoundsProperty).Subscribe(_ => this.UpdateToolTip())
     };
+  }
+}
+
+internal static class TextOverflowToolTip
+{
+  public static void Update(Control target, TextBlock? textBlock, string? text, double availableWidth, bool enabled, bool zeroWidthIsOverflow = false)
+  {
+    string? toolTip = null;
+    if (enabled && !string.IsNullOrEmpty(text))
+    {
+      if (availableWidth <= 0)
+      {
+        toolTip = zeroWidthIsOverflow ? text : null;
+      }
+      else if (textBlock is not null && IsOverflowing(textBlock, text, availableWidth))
+      {
+        toolTip = text;
+      }
+    }
+
+    ToolTip.SetTip(target, toolTip);
+  }
+
+  public static string? GetOverflowingText(
+    IReadOnlyList<TextBlock> textBlocks,
+    string? fallbackText,
+    double availableWidth,
+    bool enabled,
+    bool zeroWidthIsOverflow = false)
+  {
+    if (!enabled)
+    {
+      return null;
+    }
+
+    if (availableWidth <= 0)
+    {
+      if (!zeroWidthIsOverflow)
+      {
+        return null;
+      }
+
+      if (!string.IsNullOrEmpty(fallbackText))
+      {
+        return fallbackText;
+      }
+
+      foreach (TextBlock textBlock in textBlocks)
+      {
+        if (textBlock.IsVisible && !string.IsNullOrEmpty(textBlock.Text))
+        {
+          return textBlock.Text;
+        }
+      }
+
+      return null;
+    }
+
+    foreach (TextBlock textBlock in textBlocks)
+    {
+      string? text = textBlock.Text;
+      if (!textBlock.IsVisible || string.IsNullOrEmpty(text))
+      {
+        continue;
+      }
+
+      double textAvailableWidth = textBlock.Bounds.Width > 0
+        ? Math.Min(availableWidth, textBlock.Bounds.Width)
+        : availableWidth;
+      if (IsOverflowing(textBlock, text, textAvailableWidth))
+      {
+        return text;
+      }
+    }
+
+    return null;
+  }
+
+  private static bool IsOverflowing(TextBlock textBlock, string text, double availableWidth)
+  {
+    TextLayout layout = new(
+      text,
+      new Typeface(textBlock.FontFamily, textBlock.FontStyle, textBlock.FontWeight, textBlock.FontStretch),
+      textBlock.FontSize,
+      textBlock.Foreground,
+      textBlock.TextAlignment,
+      TextWrapping.NoWrap,
+      TextTrimming.None,
+      textBlock.TextDecorations,
+      textBlock.FlowDirection,
+      double.PositiveInfinity,
+      double.PositiveInfinity,
+      textBlock.LineHeight,
+      textBlock.LetterSpacing,
+      textBlock.MaxLines,
+      textBlock.FontFeatures,
+      null);
+
+    return layout.Width > availableWidth + 0.5;
   }
 }

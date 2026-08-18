@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using System;
 using System.Reactive.Disposables;
 using Avalonia.VisualTree;
@@ -233,19 +234,25 @@ internal static class TextOverflowToolTip
       return;
     }
 
-    TextBlock measureBlock = new()
-    {
-      Text = text,
-      FontFamily = textBlock.FontFamily,
-      FontSize = textBlock.FontSize,
-      FontStyle = textBlock.FontStyle,
-      FontWeight = textBlock.FontWeight,
-      FontStretch = textBlock.FontStretch,
-      TextWrapping = TextWrapping.NoWrap,
-    };
-    measureBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+    TextLayout layout = new(
+      text,
+      new Typeface(textBlock.FontFamily, textBlock.FontStyle, textBlock.FontWeight, textBlock.FontStretch),
+      textBlock.FontSize,
+      textBlock.Foreground,
+      textBlock.TextAlignment,
+      TextWrapping.NoWrap,
+      TextTrimming.None,
+      textBlock.TextDecorations,
+      textBlock.FlowDirection,
+      double.PositiveInfinity,
+      double.PositiveInfinity,
+      textBlock.LineHeight,
+      textBlock.LetterSpacing,
+      textBlock.MaxLines,
+      textBlock.FontFeatures,
+      null);
 
-    ToolTip.SetTip(target, measureBlock.DesiredSize.Width > availableWidth + 0.5 ? text : null);
+    ToolTip.SetTip(target, layout.Width > availableWidth + 0.5 ? text : null);
     ToolTip.SetShowDelay(target, 200);
   }
 }

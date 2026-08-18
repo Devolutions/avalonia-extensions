@@ -266,11 +266,12 @@ public sealed partial class BindingEvaluator
                     && b.Source == AvaloniaProperty.UnsetValue
                     && string.IsNullOrEmpty(b.ElementName)
                     && b.RelativeSource is null => path,
-                CompiledBindingExtension c when c.Converter is null
+                CompiledBinding c when c.Converter is null
                     && c.StringFormat is null
                     && c.FallbackValue == AvaloniaProperty.UnsetValue
                     && c.TargetNullValue == AvaloniaProperty.UnsetValue
                     && c.Source == AvaloniaProperty.UnsetValue => c.Path?.ToString(),
+                // Note: `CompiledBindingExtension` IS a `CompiledBinding`
                 _ => null,
             };
 
@@ -464,7 +465,8 @@ public sealed partial class BindingEvaluator
                 targetNullValue = b.TargetNullValue == AvaloniaProperty.UnsetValue ? null : b.TargetNullValue;
                 return true;
 
-            case CompiledBindingExtension c:
+            case CompiledBinding c:
+            {
                 string? pathString = c.Path?.ToString();
                 if (string.IsNullOrEmpty(pathString) || !IsSimpleDotPath(pathString))
                 {
@@ -480,6 +482,9 @@ public sealed partial class BindingEvaluator
                 fallbackValue = c.FallbackValue == AvaloniaProperty.UnsetValue ? null : c.FallbackValue;
                 targetNullValue = c.TargetNullValue == AvaloniaProperty.UnsetValue ? null : c.TargetNullValue;
                 return true;
+            }
+            
+            // Note: `CompiledBindingExtension` IS a `CompiledBinding`
         }
 
         path = null;

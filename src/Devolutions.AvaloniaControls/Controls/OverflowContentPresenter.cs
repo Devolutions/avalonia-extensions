@@ -3,11 +3,8 @@ namespace Devolutions.AvaloniaControls.Controls;
 using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Media;
-using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
 
 public class OverflowContentPresenter : ContentPresenter
@@ -50,37 +47,8 @@ public class OverflowContentPresenter : ContentPresenter
             availableWidth = Math.Min(availableWidth, textBlock.Bounds.Width);
         }
 
-        if (!this.ShowToolTipWhenTextOverflowing || string.IsNullOrEmpty(text) || availableWidth <= 0)
-        {
-            ToolTip.SetTip(this.GetToolTipTarget(), null);
-            return;
-        }
-
-        var layout = new TextLayout(
-            text,
-            new Typeface(
-                textBlock?.FontFamily ?? this.GetValue(TextElement.FontFamilyProperty),
-                textBlock?.FontStyle ?? this.GetValue(TextElement.FontStyleProperty),
-                textBlock?.FontWeight ?? this.GetValue(TextElement.FontWeightProperty),
-                textBlock?.FontStretch ?? FontStretch.Normal),
-            textBlock?.FontSize ?? this.GetValue(TextElement.FontSizeProperty),
-            textBlock?.Foreground ?? this.GetValue(TextElement.ForegroundProperty),
-            textBlock?.TextAlignment ?? TextAlignment.Left,
-            TextWrapping.NoWrap,
-            TextTrimming.None,
-            null,
-            textBlock?.FlowDirection ?? this.FlowDirection,
-            double.PositiveInfinity,
-            double.PositiveInfinity,
-            0,
-            0,
-            0,
-            null,
-            null);
-
         Control target = this.GetToolTipTarget();
-        ToolTip.SetTip(target, layout.Width > availableWidth + 0.5 ? text : null);
-        ToolTip.SetShowDelay(target, 200);
+        TextOverflowToolTip.Update(target, textBlock, text, availableWidth, this.ShowToolTipWhenTextOverflowing, true);
     }
 
     private Control GetToolTipTarget()
@@ -90,7 +58,7 @@ public class OverflowContentPresenter : ContentPresenter
             return toggleButton;
         }
 
-        return (Control?)this.FindAncestorOfType<GroupedListBoxItem>() ?? this;
+        return (Control?)this.FindAncestorOfType<Border>() ?? this;
     }
 
     private TextBlock? FindTextBlock()

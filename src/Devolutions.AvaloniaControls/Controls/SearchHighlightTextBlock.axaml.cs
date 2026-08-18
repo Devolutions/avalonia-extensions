@@ -188,32 +188,12 @@ public class SearchHighlightTextBlock : ContentControl
 
   private void UpdateToolTip()
   {
-    if (!this.ShowToolTipWhenTextOverflowing || this.textBlock == null || this.textBlock.Bounds.Width <= 0)
-    {
-      ToolTip.SetTip(this, null);
-      return;
-    }
-
-    string content = this.Content?.ToString() ?? string.Empty;
-    if (content.Length == 0)
-    {
-      ToolTip.SetTip(this, null);
-      return;
-    }
-
-    TextBlock measureBlock = new()
-    {
-      Text = content,
-      FontFamily = this.textBlock.FontFamily,
-      FontSize = this.textBlock.FontSize,
-      FontStyle = this.textBlock.FontStyle,
-      FontWeight = this.textBlock.FontWeight,
-      FontStretch = this.textBlock.FontStretch,
-      TextWrapping = TextWrapping.NoWrap,
-    };
-    measureBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-    ToolTip.SetTip(this, measureBlock.DesiredSize.Width > this.textBlock.Bounds.Width + 0.5 ? content : null);
+    TextOverflowToolTip.Update(
+      this,
+      this.textBlock,
+      this.Content?.ToString(),
+      this.textBlock?.Bounds.Width ?? 0,
+      this.ShowToolTipWhenTextOverflowing);
   }
 
   private void BindTextBlockBounds()
@@ -227,5 +207,45 @@ public class SearchHighlightTextBlock : ContentControl
     {
       this.textBlock.GetObservable(BoundsProperty).Subscribe(_ => this.UpdateToolTip())
     };
+  }
+}
+
+internal static class TextOverflowToolTip
+{
+  public static void Update(Control target, TextBlock? textBlock, string? text, double availableWidth, bool enabled, bool zeroWidthIsOverflow = false)
+  {
+    if (!enabled || string.IsNullOrEmpty(text))
+    {
+      ToolTip.SetTip(target, null);
+      return;
+    }
+
+    if (availableWidth <= 0)
+    {
+      ToolTip.SetTip(target, zeroWidthIsOverflow ? text : null);
+      ToolTip.SetShowDelay(target, 200);
+      return;
+    }
+
+    if (textBlock is null)
+    {
+      ToolTip.SetTip(target, null);
+      return;
+    }
+
+    TextBlock measureBlock = new()
+    {
+      Text = text,
+      FontFamily = textBlock.FontFamily,
+      FontSize = textBlock.FontSize,
+      FontStyle = textBlock.FontStyle,
+      FontWeight = textBlock.FontWeight,
+      FontStretch = textBlock.FontStretch,
+      TextWrapping = TextWrapping.NoWrap,
+    };
+    measureBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+    ToolTip.SetTip(target, measureBlock.DesiredSize.Width > availableWidth + 0.5 ? text : null);
+    ToolTip.SetShowDelay(target, 200);
   }
 }

@@ -110,10 +110,10 @@ public class TreeDataGridOverflowHeader : Decorator
         ContentProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
         ContentTemplateProperty.Changed.AddClassHandler<TreeDataGridOverflowHeader>((control, _) => control.UpdateChild());
 
-        // Fill mode is resolved during arrange, so a change has to schedule one; otherwise nothing else
-        // may invalidate layout and the adornment keeps its previous width.
-        DevoTreeDataGridExtensions.FillsHeaderWidthProperty.Changed.AddClassHandler<Control>(
-            static (control, _) => control.FindAncestorOfType<TreeDataGridOverflowHeader>()?.InvalidateArrange());
+        // The position is resolved during arrange, so a change has to schedule one; otherwise nothing
+        // else may invalidate layout and the adornment keeps its previous placement.
+        DevoTreeDataGridExtensions.HeaderAdornmentPositionProperty.Changed.AddClassHandler<AvaloniaObject>(
+            static (target, _) => (target as Control)?.FindAncestorOfType<TreeDataGridOverflowHeader>()?.InvalidateArrange());
     }
 
     public object? Content
@@ -321,7 +321,7 @@ public class TreeDataGridOverflowHeader : Decorator
             return 0;
         }
 
-        bool fills = this.adornmentContent is { } content && DevoTreeDataGridExtensions.GetFillsHeaderWidth(content);
+        bool fills = this.ResolveAdornmentPosition() == HeaderAdornmentPosition.Fill;
         this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, fills);
         double width = fills
             ? finalSize.Width
@@ -388,10 +388,25 @@ public class TreeDataGridOverflowHeader : Decorator
         this.UpdateAdornment();
     }
 
+    // A value on the adornment control wins over the column's: the column is a plain AvaloniaObject with no
+    // DataContext, so only the control can carry a binding that flips the position at runtime.
+    private HeaderAdornmentPosition ResolveAdornmentPosition()
+    {
+        if (this.adornmentContent is { } content
+            && content.IsSet(DevoTreeDataGridExtensions.HeaderAdornmentPositionProperty))
+        {
+            return DevoTreeDataGridExtensions.GetHeaderAdornmentPosition(content);
+        }
+
+        return this.TryGetOwningColumn() is { } column
+            ? DevoTreeDataGridExtensions.GetHeaderAdornmentPosition(column)
+            : HeaderAdornmentPosition.Right;
+    }
+
     private void UpdateAdornment()
     {
         object? source = this.TryGetOwningColumn() is { } column
-            ? DevoTreeDataGridExtensions.GetHeaderRightAdornment(column)
+            ? DevoTreeDataGridExtensions.GetHeaderAdornment(column)
             : null;
 
         if (!ReferenceEquals(source, this.adornmentSource))

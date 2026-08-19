@@ -350,7 +350,7 @@ public class ColumnHeaderAdornmentTests
 
         bool visibleWhileHugging = sortSlot.IsVisible;
 
-        DevoTreeDataGridExtensions.SetFillsHeaderWidth(adornment, true);
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
         Layout(grid);
 
         bool isFilling = OverflowHeader(grid).IsAdornmentFilling;
@@ -483,6 +483,32 @@ public class ColumnHeaderAdornmentTests
     private static Border SearchChip(TreeDataGrid grid) =>
         Header(grid).GetVisualDescendants().OfType<Border>().First(static b => b.Classes.Contains("committed"));
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void AdornmentPosition_IsHonouredOnTheColumn(string themeName)
+    {
+        // RDM builds its columns in code, so the position has to work when set on the column itself and not
+        // only on the adornment control.
+        SetTheme(themeName);
+
+        Border adornment = new() { Background = Brushes.Red, Height = 12 };
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(300), adornment);
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(grid.Columns[0], HeaderAdornmentPosition.Fill);
+
+        Window window = Show(grid);
+
+        bool isFilling = OverflowHeader(grid).IsAdornmentFilling;
+        double adornmentWidth = OverflowHeader(grid).AdornmentWidth;
+        double headerWidth = OverflowHeader(grid).Bounds.Width;
+
+        window.Close();
+
+        Assert.True(isFilling, "a Fill position set on the column should be honoured");
+        Assert.Equal(headerWidth, adornmentWidth, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;
@@ -516,7 +542,7 @@ public class ColumnHeaderAdornmentTests
 
         if (adornment is not null)
         {
-            DevoTreeDataGridExtensions.SetHeaderRightAdornment(grid.Columns[0], adornment);
+            DevoTreeDataGridExtensions.SetHeaderAdornment(grid.Columns[0], adornment);
         }
 
         List<string> items = ["alpha", "beta", "gamma"];

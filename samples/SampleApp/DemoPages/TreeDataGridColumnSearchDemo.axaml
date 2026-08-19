@@ -37,23 +37,23 @@
                   MaxHeight="320">
 
       <TreeDataGridTextColumn Header="Name" Binding="{Binding Name}" Width="Auto">
-        <DevoTreeDataGridExtensions.HeaderRightAdornment>
+        <DevoTreeDataGridExtensions.HeaderAdornment>
           <pages:ColumnSearchAdornment DataContext="{Binding NameSearch}" />
-        </DevoTreeDataGridExtensions.HeaderRightAdornment>
+        </DevoTreeDataGridExtensions.HeaderAdornment>
       </TreeDataGridTextColumn>
 
       <TreeDataGridTextColumn Header="Type" Binding="{Binding Type}" Width="Auto">
-        <DevoTreeDataGridExtensions.HeaderRightAdornment>
+        <DevoTreeDataGridExtensions.HeaderAdornment>
           <pages:ColumnSearchAdornment DataContext="{Binding TypeSearch}" />
-        </DevoTreeDataGridExtensions.HeaderRightAdornment>
+        </DevoTreeDataGridExtensions.HeaderAdornment>
       </TreeDataGridTextColumn>
 
       <TreeDataGridTextColumn Header="IP Address" Binding="{Binding IPAddress}" Width="140" />
 
       <TreeDataGridTextColumn Header="Status of the item" Binding="{Binding Status}" Width="Auto">
-        <DevoTreeDataGridExtensions.HeaderRightAdornment>
+        <DevoTreeDataGridExtensions.HeaderAdornment>
           <pages:ColumnSearchAdornment DataContext="{Binding StatusSearch}" />
-        </DevoTreeDataGridExtensions.HeaderRightAdornment>
+        </DevoTreeDataGridExtensions.HeaderAdornment>
       </TreeDataGridTextColumn>
 
       <TreeDataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}" />

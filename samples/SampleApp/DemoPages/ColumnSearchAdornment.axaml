@@ -4,7 +4,7 @@
              x:Class="SampleApp.DemoPages.ColumnSearchAdornment"
              x:DataType="vm:ColumnSearchViewModel"
              VerticalAlignment="Stretch"
-             DevoTreeDataGridExtensions.FillsHeaderWidth="{Binding IsEditing}">
+             DevoTreeDataGridExtensions.HeaderAdornmentPosition="{BindingToggler {Binding IsEditing}, Fill, Right}">
 
   <UserControl.Styles>
     <!-- Magnifier glyph drawn from primitives, so the demo needs no icon asset. -->

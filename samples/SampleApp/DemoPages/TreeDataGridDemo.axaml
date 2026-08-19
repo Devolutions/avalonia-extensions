@@ -58,8 +58,33 @@
                                 Width="90" />
         <TreeDataGridTextColumn Header="Status of the item" 
                                 Binding="{Binding Status}"
-                                Width="90"/>
-        <TreeDataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}" />
+                                Width="90">
+          <!-- HeaderAdornment at its default Right position: pinned after the sort indicator, sized to its
+               own content, and excluded from the header's desired width so a column never resizes because
+               of it. The caption ellipsizes to make room instead. -->
+          <DevoTreeDataGridExtensions.HeaderAdornment>
+            <Border Background="{DynamicResource SystemAccentColor}"
+                    CornerRadius="3"
+                    Width="10"
+                    Height="10"
+                    Margin="6 0 2 0"
+                    VerticalAlignment="Center"
+                    ToolTip.Tip="HeaderAdornment, Right position" />
+          </DevoTreeDataGridExtensions.HeaderAdornment>
+        </TreeDataGridTextColumn>
+        <TreeDataGridTextColumn Header="Last Seen" Binding="{Binding LastSeen}">
+          <!-- HeaderAdornmentPosition=Fill: the adornment takes the whole cell, hiding both the caption and
+               the sort indicator. This is how an in-column search field is hosted. -->
+          <DevoTreeDataGridExtensions.HeaderAdornment>
+            <TextBox Watermark="Fill spans the header"
+                     DevoTreeDataGridExtensions.HeaderAdornmentPosition="Fill"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     FontSize="12"
+                     VerticalAlignment="Stretch"
+                     VerticalContentAlignment="Center" />
+          </DevoTreeDataGridExtensions.HeaderAdornment>
+        </TreeDataGridTextColumn>
         <TreeDataGridTemplateColumn Header="Icon" CellTemplate="{StaticResource IconColumnTemplate}" />
         <TreeDataGridTemplateColumn CellTemplate="{StaticResource CheckBoxColumnTemplate}">
           <TreeDataGridTemplateColumn.Header>

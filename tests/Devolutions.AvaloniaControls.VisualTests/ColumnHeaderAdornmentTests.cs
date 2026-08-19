@@ -14,8 +14,6 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
-using SampleApp.DemoPages;
-using SampleApp.ViewModels;
 
 // Covers DevoTreeDataGridExtensions.HeaderRightAdornment. The load-bearing guarantee is that the
 // adornment is excluded from the header's desired width, so an Auto-width column never resizes when
@@ -236,100 +234,6 @@ public class ColumnHeaderAdornmentTests
     [InlineData("MacClassic")]
     [InlineData("DevExpress")]
     [InlineData("Linux")]
-    public void Demo_FullSearchFlowLeavesColumnWidthUntouched(string themeName)
-    {
-        // Walks the whole showcase: hover reveals the magnifier, clicking it opens a field spanning the
-        // header, committing filters the rows and leaves the term on display -- all without the Auto
-        // column changing width.
-        SetTheme(themeName);
-
-        TreeDataGridColumnSearchViewModel viewModel = new();
-        TreeDataGridColumnSearchDemo page = new() { DataContext = viewModel };
-
-        Window window = new()
-        {
-            Width = 1100,
-            Height = 700,
-            Content = page,
-        };
-
-        window.Show();
-
-        // Headless windows are not activated by Show alone, and focus does not take on an inactive window.
-        window.Activate();
-        Dispatcher.UIThread.RunJobs();
-
-        TreeDataGrid grid = page.GetVisualDescendants().OfType<TreeDataGrid>().First();
-        double idleWidth = ColumnWidth(grid);
-
-        Button searchButton = Header(grid).GetVisualDescendants()
-            .OfType<Button>()
-            .First(static b => b.Name == "PART_SearchButton");
-
-        // Hover the header: the magnifier is hover-only.
-        Point? headerCentre = Header(grid).TranslatePoint(
-            new Point(Header(grid).Bounds.Width / 2, Header(grid).Bounds.Height / 2),
-            window);
-        window.MouseMove(headerCentre!.Value);
-        Dispatcher.UIThread.RunJobs();
-        Layout(grid);
-
-        bool magnifierVisibleOnHover = searchButton.IsVisible;
-        double hoverWidth = ColumnWidth(grid);
-
-        // Click it: the header becomes an editor.
-        Point? buttonCentre = searchButton.TranslatePoint(
-            new Point(searchButton.Bounds.Width / 2, searchButton.Bounds.Height / 2),
-            window);
-        window.MouseDown(buttonCentre!.Value, MouseButton.Left);
-        window.MouseUp(buttonCentre.Value, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
-        Layout(grid);
-
-        bool isEditing = viewModel.NameSearch.IsEditing;
-        double editingWidth = ColumnWidth(grid);
-        double editorWidth = OverflowHeader(grid).AdornmentWidth;
-        double headerWidth = OverflowHeader(grid).Bounds.Width;
-
-        // Focus is deliberately not asserted: this headless setup never reports a focused element, not even
-        // after a click that lands (see AdornmentContent_ReceivesClicks), so auto-focus and select-all can
-        // only be confirmed by running the SampleApp.
-        viewModel.NameSearch.Draft = "DESKTOP";
-        viewModel.NameSearch.CommitCommand.Execute(null);
-        Dispatcher.UIThread.RunJobs();
-        Layout(grid);
-
-        double committedWidth = ColumnWidth(grid);
-        int matches = viewModel.VisibleNodes.Count;
-        string committedTerm = viewModel.NameSearch.Term;
-        bool stillEditing = viewModel.NameSearch.IsEditing;
-        Border? chip = Header(grid).GetVisualDescendants()
-            .OfType<Border>()
-            .FirstOrDefault(static b => b.Classes.Contains("committed"));
-        string chipText = chip?.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
-
-        window.Close();
-
-        Assert.True(magnifierVisibleOnHover, "the magnifier should appear while the header is hovered");
-        Assert.True(isEditing, "clicking the magnifier should open the search field");
-        Assert.True(
-            editorWidth >= headerWidth - Tolerance,
-            $"the editor should span the header, got {editorWidth} of {headerWidth}");
-        Assert.False(stillEditing, "committing should leave edit mode");
-        Assert.Equal("DESKTOP", committedTerm);
-        Assert.Equal(2, matches);
-        Assert.Equal("DESKTOP", chipText);
-
-        // The whole point: none of those three states moved the column.
-        Assert.Equal(idleWidth, hoverWidth, Tolerance);
-        Assert.Equal(idleWidth, editingWidth, Tolerance);
-        Assert.Equal(idleWidth, committedWidth, Tolerance);
-    }
-
-    [AvaloniaTheory]
-    [InlineData("MacClassic")]
-    [InlineData("DevExpress")]
-    [InlineData("Linux")]
     public void SortIndicator_IsHiddenWhileAdornmentFillsHeader(string themeName)
     {
         // A full-width adornment (an in-header search field) takes over the cell, so the sort indicator
@@ -479,9 +383,6 @@ public class ColumnHeaderAdornmentTests
 
         return grid;
     }
-
-    private static Border SearchChip(TreeDataGrid grid) =>
-        Header(grid).GetVisualDescendants().OfType<Border>().First(static b => b.Classes.Contains("committed"));
 
     [AvaloniaTheory]
     [InlineData("MacClassic")]

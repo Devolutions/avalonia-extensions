@@ -415,22 +415,6 @@
       }
     },
     {
-      "uniqueTitle": "TreeDataGrid Column Search",
-      "source": "AvaloniaPro",
-      "category": "Data",
-      "demo": "TreeDataGridColumnSearchDemo.axaml",
-      "viewModel": "TreeDataGridColumnSearchViewModel",
-      "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "🚧", "LiquidGlass": "❌", "DevExpress": "🚧", "Linux": "🚧", "WinUI": "❌"
-      },
-      // No baselines captured yet: the indicator's placement relative to the sort icon is still undecided.
-      "excludeFromTests": {
-        "MacClassic": true,
-        "DevExpress": true,
-        "Linux": true
-      }
-    },
-    {
       "uniqueTitle": "TreeView",
       "source": "Avalonia",
       "category": "Navigation",

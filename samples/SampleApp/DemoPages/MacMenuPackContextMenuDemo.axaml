@@ -5,10 +5,10 @@
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
-             x:Class="SampleApp.DemoPages.MenuPackMenuDemo">
+             x:Class="SampleApp.DemoPages.MacMenuPackContextMenuDemo">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
   <StackPanel>
@@ -25,7 +25,7 @@
       </TextBlock>
     </Border>
 
-    <demo:MenuPackMenuDemoContent x:Name="SupportedDemoRoot"
-                                  IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
+    <demo:MenuPackContextMenuDemoContent x:Name="SupportedDemoRoot"
+                                         IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
   </StackPanel>
 </UserControl>

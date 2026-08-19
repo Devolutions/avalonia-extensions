@@ -60,9 +60,18 @@ public abstract class EnumPicker : TemplatedControl
             static o => o.InnerRightContent,
             static (o, v) => o.InnerRightContent = v);
 
-    protected bool UpdatingItems;
+    protected bool updatingItems;
 
     public abstract Type EnumType { get; }
+
+    /// <summary>
+    /// Fills the item list — translated, filtered and sorted — without the control ever being templated or initialized.
+    /// For a host that mirrors a picker offscreen and reads its values but never renders it: the rebuild is otherwise
+    /// gated on OnApplyTemplate having run, so such a host would have to build a whole ComboBox template to get text.
+    ///
+    /// Idempotent, and safe to call before or after the picker's own lifecycle reaches it.
+    /// </summary>
+    public abstract void PrimeItemsWithoutTemplate();
 
     public IReadOnlyCollection<EnumPickerItem> Items
     {
@@ -71,12 +80,12 @@ public abstract class EnumPicker : TemplatedControl
         {
             try
             {
-                this.UpdatingItems = true;
+                this.updatingItems = true;
                 this.SetAndRaise(ItemsProperty, ref field, value);
             }
             finally
             {
-                this.UpdatingItems = false;
+                this.updatingItems = false;
             }
         }
     } = [];
@@ -128,6 +137,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private bool initialized;
     private bool isInitialValueSet;
     private bool isTemplateSet;
+    private bool primedWithoutTemplate;
     private bool textOverridesDirty = true;
     private HashSet<T>? includedSet = null;
     private bool includedSetDirty = true;
@@ -138,6 +148,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
+    //  TODO: Can some/all work done here be moved to OnInitialized/OnApplyTemplate/last-of-these-2
+    //        so that consumers never rendering `EnumPicker` and simply using `PrimeItemsWithoutTemplate`
+    //        can skip all that?
+    //        It's possible that this constructor is being called with the wrong TextProvider initially
+    //        and then consumers set the proper one and end up re-populating the Items
     public EnumPicker()
     {
         Func<Enum, string>? textProvider = this.TextProvider;
@@ -145,7 +160,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         for (var i = 0; i < this.allEnumValues.Length; ++i)
         {
             T v = this.allEnumValues[i];
-            items.Add(new EnumPickerItem<T> { Value = v, EnumValue = v, Text = GetEnumText(v, EmptyOverrides, textProvider) });
+            items.Add(new EnumPickerItem<T> { Value = v, EnumValue = v, Text = GetEnumText(v, emptyOverrides, textProvider) });
         }
         this.Items = items;
 
@@ -154,7 +169,14 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
     public override Type EnumType => typeof(T);
 
-    private static readonly Dictionary<T, string> EmptyOverrides = [];
+    public override void PrimeItemsWithoutTemplate()
+    {
+        this.primedWithoutTemplate = true;
+
+        this.UpdateValuesCore();
+    }
+
+    private static readonly Dictionary<T, string> emptyOverrides = [];
 
     // Cached sort delegate to avoid per-call closure allocation. Reads cached fields.
     private Comparison<EnumPickerItem<T>>? cachedSortComparison;
@@ -395,11 +417,18 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     
     private void UpdateValues()
     {
-        if (!this.initialized || !this.isTemplateSet)
+        if ((!this.initialized || !this.isTemplateSet) && !this.primedWithoutTemplate)
         {
             return;
         }
 
+        this.UpdateValuesCore();
+    }
+
+    // The rebuild itself. Its own preconditions stay here, because they are correctness rather than lifecycle: a
+    // transiently null included/excluded list must not produce a filtered-to-nothing item set.
+    private void UpdateValuesCore()
+    {
         if (!this.includedValuesValid || !this.excludedValuesValid)
         {
             return;
@@ -656,7 +685,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
         else if (change.Property == SelectedValueProperty)
         {
-            if (this.UpdatingItems)
+            if (this.updatingItems)
             {
                 this.SelectedItem = null;
             }

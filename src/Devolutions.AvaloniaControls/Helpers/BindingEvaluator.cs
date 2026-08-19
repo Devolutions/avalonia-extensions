@@ -153,34 +153,29 @@ public sealed partial class BindingEvaluator
         }
 
         ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
-        Expression propertyAccess = rowParameter;
+        Expression propertyAccess;
 
         try
         {
-            foreach (string propertyName in path.Split('.'))
-            {
-                propertyAccess = Expression.PropertyOrField(propertyAccess, propertyName);
-            }
+            propertyAccess = BuildNullSafePropertyAccess(rowParameter, path);
         }
         catch
         {
             return null;
         }
 
-        if (propertyAccess.Type == typeof(string))
-        {
-            Expression body = Expression.Coalesce(propertyAccess, Expression.Constant(string.Empty));
-            return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
-        }
-
-        Expression toStringExpr = ToStringExpression(propertyAccess);
-        Expression<Func<TDataContext, string>> innerLambda = Expression.Lambda<Func<TDataContext, string>>(toStringExpr, rowParameter);
-        Func<TDataContext, string?> compiledGetter = innerLambda.Compile();
-
-        ParameterExpression outerParam = Expression.Parameter(typeof(TDataContext), "row");
-        Expression outerBody = Expression.Invoke(Expression.Constant(compiledGetter), outerParam);
-
-        return Expression.Lambda<Func<TDataContext, string>>(outerBody, outerParam);
+        ParameterExpression value = Expression.Variable(typeof(object), "value");
+        Expression missingValue = Expression.OrElse(
+            Expression.ReferenceEqual(value, Expression.Constant(null)),
+            Expression.ReferenceEqual(value, Expression.Constant(AvaloniaProperty.UnsetValue)));
+        Expression valueAsString = Expression.Coalesce(
+            Expression.Call(value, objectToStringMethod),
+            Expression.Constant(string.Empty));
+        Expression body = Expression.Block(
+            [value],
+            Expression.Assign(value, propertyAccess),
+            Expression.Condition(missingValue, Expression.Constant(string.Empty), valueAsString));
+        return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
     }
 
     private static Expression<Func<TDataContext, object?>>? BuildFastPathRawExpression<TDataContext>(string path)
@@ -191,40 +186,51 @@ public sealed partial class BindingEvaluator
         }
 
         ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
-        Expression propertyAccess = rowParameter;
+        Expression body;
 
         try
         {
-            foreach (string propertyName in path.Split('.'))
-            {
-                propertyAccess = Expression.PropertyOrField(propertyAccess, propertyName);
-            }
+            body = BuildNullSafePropertyAccess(rowParameter, path);
         }
         catch
         {
             return null;
         }
 
-        Expression body = propertyAccess.Type.IsValueType ? Expression.Convert(propertyAccess, typeof(object)) : propertyAccess;
         return Expression.Lambda<Func<TDataContext, object?>>(body, rowParameter);
     }
 
     private static Func<object, object?> BuildPropertyGetter(string path, Type rootType)
     {
         ParameterExpression param = Expression.Parameter(typeof(object), "root");
-        Expression access = Expression.Convert(param, rootType);
-
-        foreach (string propertyName in path.Split('.'))
-        {
-            access = Expression.PropertyOrField(access, propertyName);
-        }
-
-        if (access.Type.IsValueType)
-        {
-            access = Expression.Convert(access, typeof(object));
-        }
+        Expression access = BuildNullSafePropertyAccess(Expression.Convert(param, rootType), path);
 
         return Expression.Lambda<Func<object, object?>>(access, param).Compile();
+    }
+
+    private static Expression BuildNullSafePropertyAccess(Expression root, string path) =>
+        BuildNullSafePropertyAccess(root, path.Split('.'), 0);
+
+    private static Expression BuildNullSafePropertyAccess(Expression receiver, string[] propertyNames, int index)
+    {
+        if (index == propertyNames.Length)
+        {
+            return Expression.Convert(receiver, typeof(object));
+        }
+
+        if (receiver.Type.IsValueType && Nullable.GetUnderlyingType(receiver.Type) is null)
+        {
+            return BuildNullSafePropertyAccess(Expression.PropertyOrField(receiver, propertyNames[index]), propertyNames, index + 1);
+        }
+
+        ParameterExpression receiverValue = Expression.Variable(receiver.Type, $"segment{index}");
+        return Expression.Block(
+            [receiverValue],
+            Expression.Assign(receiverValue, receiver),
+            Expression.Condition(
+                Expression.Equal(receiverValue, Expression.Constant(null, receiver.Type)),
+                Expression.Constant(AvaloniaProperty.UnsetValue, typeof(object)),
+                BuildNullSafePropertyAccess(Expression.PropertyOrField(receiverValue, propertyNames[index]), propertyNames, index + 1)));
     }
 
     private static StyledElement? FindLogicalAncestorOfType(StyledElement start, Type ancestorType)
@@ -316,23 +322,6 @@ public sealed partial class BindingEvaluator
         return null;
     }
 
-    private static Expression ToStringExpression(Expression value)
-    {
-        if (value.Type == typeof(string))
-        {
-            return Expression.Coalesce(value, Expression.Constant(string.Empty));
-        }
-
-        if (value.Type.IsValueType)
-        {
-            return Expression.Call(value, objectToStringMethod);
-        }
-
-        Expression toString = Expression.Call(value, objectToStringMethod);
-        Expression toStringOrEmpty = Expression.Coalesce(toString, Expression.Constant(string.Empty));
-        return Expression.Condition(Expression.Equal(value, Expression.Constant(null, value.Type)), Expression.Constant(string.Empty), toStringOrEmpty);
-    }
-
     private static bool TryBuildFastPathRawExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, object?>>? expression)
     {
         string? pathString = GetSimplePathWithoutExtras(binding);
@@ -416,6 +405,11 @@ public sealed partial class BindingEvaluator
                 try
                 {
                     object? value = propertyGetter(source ?? row);
+
+                    if (value == AvaloniaProperty.UnsetValue)
+                    {
+                        return fallbackString ?? string.Empty;
+                    }
 
                     if (converter is not null)
                     {
@@ -526,7 +520,9 @@ public sealed partial class BindingEvaluator
         try
         {
             Func<object, object?> rawGetter = BuildPropertyGetter(pathString, this.dataContextType);
-            getter = row => rawGetter(row) is { } value ? value as string ?? value.ToString() ?? string.Empty : string.Empty;
+            getter = row => rawGetter(row) is { } value && value != AvaloniaProperty.UnsetValue
+                ? value as string ?? value.ToString() ?? string.Empty
+                : string.Empty;
             return true;
         }
         catch

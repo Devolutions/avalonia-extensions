@@ -49,6 +49,62 @@ public class BindingEvaluatorTests
     }
 
     [Fact]
+    public void CompiledThreePartPathReturnsValue()
+    {
+        CompiledBinding binding = CreateCityBinding();
+        var row = new TestRow
+        {
+            Customer = new TestCustomer { Address = new TestAddress { City = "Montreal" } }
+        };
+
+        Assert.Equal("Montreal", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("Montreal", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("Montreal", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("Montreal", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void CompiledThreePartPathHandlesNullMiddleSegment()
+    {
+        CompiledBinding binding = CreateCityBinding();
+        var row = new TestRow { Customer = new TestCustomer() };
+
+        Assert.Equal(string.Empty, CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal(string.Empty, CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Same(AvaloniaProperty.UnsetValue, CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void CompiledThreePartPathUsesFallbackWhenMiddleSegmentIsNull()
+    {
+        CompiledBinding binding = CreateCityBinding();
+        binding.FallbackValue = "Unknown";
+        var row = new TestRow { Customer = new TestCustomer() };
+
+        Assert.Equal("Unknown", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("Unknown", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("Unknown", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("Unknown", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void CompiledThreePartPathUsesTargetNullValueWhenLeafIsNull()
+    {
+        CompiledBinding binding = CreateCityBinding();
+        binding.TargetNullValue = "No city";
+        var row = new TestRow
+        {
+            Customer = new TestCustomer { Address = new TestAddress() }
+        };
+
+        Assert.Equal("No city", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("No city", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("No city", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("No city", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
     public void ReflectionMultiSegmentFormattedGetterReturnsValue()
     {
         Binding binding = CreateReflectionNameBinding();
@@ -89,10 +145,71 @@ public class BindingEvaluatorTests
         Assert.Equal("Unknown", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
+    [Fact]
+    public void ReflectionThreePartPathReturnsValue()
+    {
+        Binding binding = CreateReflectionCityBinding();
+        var row = new TestRow
+        {
+            Customer = new TestCustomer { Address = new TestAddress { City = "Montreal" } }
+        };
+
+        Assert.Equal("Montreal", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("Montreal", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("Montreal", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("Montreal", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void ReflectionThreePartPathHandlesNullMiddleSegment()
+    {
+        Binding binding = CreateReflectionCityBinding();
+        var row = new TestRow { Customer = new TestCustomer() };
+
+        Assert.Equal(string.Empty, CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal(string.Empty, CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Same(AvaloniaProperty.UnsetValue, CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void ReflectionThreePartPathUsesFallbackWhenMiddleSegmentIsNull()
+    {
+        Binding binding = CreateReflectionCityBinding();
+        binding.FallbackValue = "Unknown";
+        var row = new TestRow { Customer = new TestCustomer() };
+
+        Assert.Equal("Unknown", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("Unknown", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("Unknown", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("Unknown", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [Fact]
+    public void ReflectionThreePartPathUsesTargetNullValueWhenLeafIsNull()
+    {
+        Binding binding = CreateReflectionCityBinding();
+        binding.TargetNullValue = "No city";
+        var row = new TestRow
+        {
+            Customer = new TestCustomer { Address = new TestAddress() }
+        };
+
+        Assert.Equal("No city", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("No city", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+        Assert.Equal("No city", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("No city", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
     private static CompiledBinding CreateNameBinding() =>
         CompiledBinding.Create((TestRow row) => row.Customer!.Name);
 
+    private static CompiledBinding CreateCityBinding() =>
+        CompiledBinding.Create((TestRow row) => row.Customer!.Address!.City);
+
     private static Binding CreateReflectionNameBinding() => new("Customer.Name");
+
+    private static Binding CreateReflectionCityBinding() => new("Customer.Address.City");
 
     private static BindingEvaluator CreateEvaluator() => new(new Control(), typeof(TestRow));
 
@@ -106,5 +223,12 @@ public class BindingEvaluatorTests
     private sealed class TestCustomer
     {
         public string? Name { get; init; }
+
+        public TestAddress? Address { get; init; }
+    }
+
+    private sealed class TestAddress
+    {
+        public string? City { get; init; }
     }
 }

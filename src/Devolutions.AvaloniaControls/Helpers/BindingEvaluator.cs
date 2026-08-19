@@ -132,12 +132,22 @@ public sealed partial class BindingEvaluator
             return getter;
         }
 
+        if (this.TryBuildIntermediateRawGetter(binding, out getter))
+        {
+            return getter;
+        }
+
         return this.BuildProxyRawGetter(binding);
     }
 
     public Expression<Func<TDataContext, object?>> BuildRawGetterExpression<TDataContext>(BindingBase binding)
     {
         if (TryBuildFastPathRawExpression(binding, out Expression<Func<TDataContext, object?>>? expression))
+        {
+            return expression;
+        }
+
+        if (TryBuildIntermediateRawExpression(binding, out expression))
         {
             return expression;
         }
@@ -356,6 +366,125 @@ public sealed partial class BindingEvaluator
         }
     }
 
+    private static bool TryBuildIntermediateRawExpression<TDataContext>(
+        BindingBase binding,
+        [NotNullWhen(true)] out Expression<Func<TDataContext, object?>>? expression)
+    {
+        if (!TryGetIntermediateRawParts(binding, out string? path, out object? fallbackValue, out object? targetNullValue))
+        {
+            expression = null;
+            return false;
+        }
+
+        try
+        {
+            Func<object, object?> getter = BuildIntermediateRawGetter(path, fallbackValue, targetNullValue, typeof(TDataContext));
+            expression = WrapRawObjectDelegateAsExpression<TDataContext>(getter);
+            return true;
+        }
+        catch
+        {
+            expression = null;
+            return false;
+        }
+    }
+
+    private bool TryBuildIntermediateRawGetter(BindingBase binding, [NotNullWhen(true)] out Func<object, object?>? getter)
+    {
+        if (!TryGetIntermediateRawParts(binding, out string? path, out object? fallbackValue, out object? targetNullValue))
+        {
+            getter = null;
+            return false;
+        }
+
+        try
+        {
+            getter = BuildIntermediateRawGetter(path, fallbackValue, targetNullValue, this.dataContextType);
+            return true;
+        }
+        catch
+        {
+            getter = null;
+            return false;
+        }
+    }
+
+    private static Func<object, object?> BuildIntermediateRawGetter(
+        string path,
+        object? fallbackValue,
+        object? targetNullValue,
+        Type rowType)
+    {
+        Func<object, object?> propertyGetter = BuildPropertyGetter(path, rowType);
+
+        return row =>
+            {
+                try
+                {
+                    object? value = propertyGetter(row);
+                    if (ReferenceEquals(value, AvaloniaProperty.UnsetValue))
+                    {
+                        return ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
+                            ? AvaloniaProperty.UnsetValue
+                            : fallbackValue;
+                    }
+
+                    if (value is null && !ReferenceEquals(targetNullValue, AvaloniaProperty.UnsetValue))
+                    {
+                        return targetNullValue;
+                    }
+
+                    return value;
+                }
+                catch
+                {
+                    return ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
+                        ? AvaloniaProperty.UnsetValue
+                        : fallbackValue;
+                }
+            };
+    }
+
+    private static bool TryGetIntermediateRawParts(
+        BindingBase binding,
+        [NotNullWhen(true)] out string? path,
+        out object? fallbackValue,
+        out object? targetNullValue)
+    {
+        switch (binding)
+        {
+            case Binding { Path: { Length: > 0 } bindingPath } b when b.Converter is null
+                && b.StringFormat is null
+                && b.Source == AvaloniaProperty.UnsetValue
+                && string.IsNullOrEmpty(b.ElementName)
+                && b.RelativeSource is null:
+                path = bindingPath;
+                fallbackValue = b.FallbackValue;
+                targetNullValue = b.TargetNullValue;
+                break;
+
+            // Note: `CompiledBindingExtension` IS a `CompiledBinding`.
+            case CompiledBinding c when c.Converter is null
+                && c.StringFormat is null
+                && c.Source == AvaloniaProperty.UnsetValue:
+                path = c.Path?.ToString();
+                fallbackValue = c.FallbackValue;
+                targetNullValue = c.TargetNullValue;
+                break;
+
+            default:
+                path = null;
+                fallbackValue = null;
+                targetNullValue = null;
+                return false;
+        }
+
+        return (!ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
+                || !ReferenceEquals(targetNullValue, AvaloniaProperty.UnsetValue))
+            && !string.IsNullOrEmpty(path)
+            && IsSimpleDotPath(path);
+    }
+
     private static bool TryBuildIntermediateExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)
     {
         if (!TryGetIntermediateParts(binding, out string? path, out object? source, out IValueConverter? converter, out object? converterParameter,
@@ -539,6 +668,13 @@ public sealed partial class BindingEvaluator
         return Expression.Lambda<Func<TDataContext, string>>(body, rowParameter);
     }
 
+    private static Expression<Func<TDataContext, object?>> WrapRawObjectDelegateAsExpression<TDataContext>(Func<object, object?> getter)
+    {
+        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
+        Expression body = Expression.Invoke(Expression.Constant(getter), Expression.Convert(rowParameter, typeof(object)));
+        return Expression.Lambda<Func<TDataContext, object?>>(body, rowParameter);
+    }
+
     private Func<object, string> BuildFrameworkDelegatedGetter(BindingBase binding)
     {
         binding = this.RewriteParentBindingIfNeeded(binding);
@@ -585,9 +721,7 @@ public sealed partial class BindingEvaluator
     private Expression<Func<TDataContext, object?>> BuildProxyRawGetterExpression<TDataContext>(BindingBase binding)
     {
         Func<object, object?> getter = this.BuildProxyRawGetter(binding);
-        ParameterExpression rowParameter = Expression.Parameter(typeof(TDataContext), "row");
-        Expression body = Expression.Invoke(Expression.Constant(getter), Expression.Convert(rowParameter, typeof(object)));
-        return Expression.Lambda<Func<TDataContext, object?>>(body, rowParameter);
+        return WrapRawObjectDelegateAsExpression<TDataContext>(getter);
     }
 
     private ParentPathRewrite? GetOrCreatePathRewrite(string rawPath)

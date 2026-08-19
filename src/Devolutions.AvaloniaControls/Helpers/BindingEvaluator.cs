@@ -12,7 +12,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 [RequiresDynamicCode("BindingEvaluator require preserved types")]
@@ -223,24 +222,26 @@ public sealed partial class BindingEvaluator
 
     private static Expression BuildNullSafePropertyAccess(Expression receiver, string[] propertyNames, int index)
     {
-        if (index == propertyNames.Length)
+        while (true)
         {
-            return Expression.Convert(receiver, typeof(object));
-        }
+            if (index == propertyNames.Length)
+            {
+                return Expression.Convert(receiver, typeof(object));
+            }
 
-        if (receiver.Type.IsValueType && Nullable.GetUnderlyingType(receiver.Type) is null)
-        {
-            return BuildNullSafePropertyAccess(Expression.PropertyOrField(receiver, propertyNames[index]), propertyNames, index + 1);
-        }
+            if (receiver.Type.IsValueType && Nullable.GetUnderlyingType(receiver.Type) is null)
+            {
+                receiver = Expression.PropertyOrField(receiver, propertyNames[index++]);
+                continue;
+            }
 
-        ParameterExpression receiverValue = Expression.Variable(receiver.Type, $"segment{index}");
-        return Expression.Block(
-            [receiverValue],
-            Expression.Assign(receiverValue, receiver),
-            Expression.Condition(
-                Expression.Equal(receiverValue, Expression.Constant(null, receiver.Type)),
-                Expression.Constant(AvaloniaProperty.UnsetValue, typeof(object)),
-                BuildNullSafePropertyAccess(Expression.PropertyOrField(receiverValue, propertyNames[index]), propertyNames, index + 1)));
+            ParameterExpression receiverValue = Expression.Variable(receiver.Type, $"segment{index}");
+            return Expression.Block([receiverValue],
+                Expression.Assign(receiverValue, receiver),
+                Expression.Condition(Expression.Equal(receiverValue, Expression.Constant(null, receiver.Type)),
+                    Expression.Constant(AvaloniaProperty.UnsetValue, typeof(object)),
+                    BuildNullSafePropertyAccess(Expression.PropertyOrField(receiverValue, propertyNames[index]), propertyNames, index + 1)));
+        }
     }
 
     private static StyledElement? FindLogicalAncestorOfType(StyledElement start, Type ancestorType)
@@ -424,9 +425,7 @@ public sealed partial class BindingEvaluator
                     object? value = propertyGetter(row);
                     if (ReferenceEquals(value, AvaloniaProperty.UnsetValue))
                     {
-                        return ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
-                            ? AvaloniaProperty.UnsetValue
-                            : fallbackValue;
+                        return fallbackValue;
                     }
 
                     if (value is null && !ReferenceEquals(targetNullValue, AvaloniaProperty.UnsetValue))
@@ -438,9 +437,7 @@ public sealed partial class BindingEvaluator
                 }
                 catch
                 {
-                    return ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
-                        ? AvaloniaProperty.UnsetValue
-                        : fallbackValue;
+                    return fallbackValue;
                 }
             };
     }
@@ -453,20 +450,22 @@ public sealed partial class BindingEvaluator
     {
         switch (binding)
         {
-            case Binding { Path: { Length: > 0 } bindingPath } b when b.Converter is null
-                && b.StringFormat is null
-                && b.Source == AvaloniaProperty.UnsetValue
-                && string.IsNullOrEmpty(b.ElementName)
-                && b.RelativeSource is null:
+            case Binding { Path: { Length: > 0 } bindingPath } b
+                when b.Converter is null
+                     && b.StringFormat is null
+                     && b.Source == AvaloniaProperty.UnsetValue
+                     && string.IsNullOrEmpty(b.ElementName)
+                     && b.RelativeSource is null:
                 path = bindingPath;
                 fallbackValue = b.FallbackValue;
                 targetNullValue = b.TargetNullValue;
                 break;
 
             // Note: `CompiledBindingExtension` IS a `CompiledBinding`.
-            case CompiledBinding c when c.Converter is null
-                && c.StringFormat is null
-                && c.Source == AvaloniaProperty.UnsetValue:
+            case CompiledBinding c
+                when c.Converter is null
+                     && c.StringFormat is null
+                     && c.Source == AvaloniaProperty.UnsetValue:
                 path = c.Path?.ToString();
                 fallbackValue = c.FallbackValue;
                 targetNullValue = c.TargetNullValue;
@@ -479,10 +478,7 @@ public sealed partial class BindingEvaluator
                 return false;
         }
 
-        return (!ReferenceEquals(fallbackValue, AvaloniaProperty.UnsetValue)
-                || !ReferenceEquals(targetNullValue, AvaloniaProperty.UnsetValue))
-            && !string.IsNullOrEmpty(path)
-            && IsSimpleDotPath(path);
+        return !string.IsNullOrEmpty(path) && IsSimpleDotPath(path);
     }
 
     private static bool TryBuildIntermediateExpression<TDataContext>(BindingBase binding, [NotNullWhen(true)] out Expression<Func<TDataContext, string>>? expression)

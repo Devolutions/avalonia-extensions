@@ -24,6 +24,7 @@ Use this skill when the task involves validating or debugging runtime UI behavio
 3. App instrumentation in target app:
    - `AvaloniaUI.DiagnosticsSupport` package
    - `.WithDeveloperTools()` or `this.AttachDeveloperTools()` at startup
+   - Keep this instrumentation development-only (Debug), since MCP enables live inspection, mutation, and input simulation.
 
 ## Standard workflow
 
@@ -54,7 +55,9 @@ Working behavior was restored by **removing** explicit MCP `env` override and re
 
 If license/product errors appear:
 
-1. Remove explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`
-2. Ensure `AvaloniaUI.DeveloperTools` is current
-3. Retry attach
-4. If prompted, complete Avalonia portal sign-in dialog (auth may be cached for later sessions)
+1. Ensure `AvaloniaUI.DeveloperTools` is current:
+   - `dotnet tool update --global AvaloniaUI.DeveloperTools`
+   - If not installed yet: `dotnet tool install --global AvaloniaUI.DeveloperTools`
+2. Verify license key and entitlement for DevTools MCP.
+3. For the exact observed error above (and when a cached authenticated session is available), try removing explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`, then retry attach.
+4. If a portal sign-in dialog appears, ask the user to complete it (do not enter credentials from the agent).

@@ -140,6 +140,7 @@ Manual validation via SampleApp is still important for exploratory UI checks and
 - Required app instrumentation:
   - `AvaloniaUI.DiagnosticsSupport` package installed
   - `.WithDeveloperTools()` on `AppBuilder` **or** `this.AttachDeveloperTools()` in `Application`
+  - Keep DevTools instrumentation development-only (Debug), since MCP enables live inspection, runtime property mutation, and synthetic input.
 - Typical MCP flow for `attach-to-app`:
   1. `attach-to-app` with no id (enumerates available running clients)
   2. Call `attach-to-app` again with selected process id
@@ -151,8 +152,10 @@ Manual validation via SampleApp is still important for exploratory UI checks and
 - In this setup, MCP attach worked when that env var was **not** forced in MCP config (while an authenticated DevTools session already existed).
 - First-time/expired sessions may prompt for Avalonia portal credentials in a GUI dialog; after successful sign-in, local auth state is reused by DevTools.
 - If MCP attach fails with product/license errors:
-  - remove explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`
-  - ensure current DevTools tool is installed (`dotnet tool install --global AvaloniaUI.DeveloperTools`)
+  - update DevTools first (`dotnet tool update --global AvaloniaUI.DeveloperTools`; install only if missing)
+  - verify license key and entitlement
+  - only for the exact error above (and if a cached authenticated session exists), try removing explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`
+  - if a portal sign-in dialog appears, pause and ask the user to complete it (do not enter credentials from the agent)
   - retry attach
 
 ### Packaging

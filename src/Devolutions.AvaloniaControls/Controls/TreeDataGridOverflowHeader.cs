@@ -212,6 +212,18 @@ public class TreeDataGridOverflowHeader : Decorator
         set => this.SetValue(FontFeaturesProperty, value);
     }
 
+    /// <summary>
+    /// Inset applied to the caption inside the header. Excluded from the header's desired size, so a theme
+    /// can reserve room without widening every column by that much.
+    /// </summary>
+    /// <remarks>
+    /// The right inset carries a second, load-bearing meaning: it is the lane a theme reserves for its sort
+    /// indicator. A <see cref="HeaderAdornmentPosition.Right"/> adornment is clamped so it cannot consume
+    /// that lane, because themes shift the indicator left by <see cref="AdornmentWidth"/> and an adornment
+    /// allowed to take the whole header would push the indicator out of it and into the neighbouring
+    /// column. A theme that uses the right inset for ordinary padding instead will narrow its own
+    /// right-positioned adornments by that much.
+    /// </remarks>
     public Thickness InnerContentMargin
     {
         get => this.GetValue(InnerContentMarginProperty);
@@ -271,8 +283,13 @@ public class TreeDataGridOverflowHeader : Decorator
         // Measured unconstrained, matching the string path above, which reports its natural width and
         // ignores availableSize. Passing availableSize through instead lets Avalonia clamp the child to the
         // column's current width, which self-locks an Auto column: the clamped desired size reproduces the
-        // width it was clamped by, so the column can never grow to fit its header. Arrange re-measures
-        // against the real width so content can still trim.
+        // width it was clamped by, so the column can never grow to fit its header.
+        //
+        // Nothing re-measures the child afterwards; ArrangeOverride explains why that is deliberate. A
+        // string caption still trims because Render rebuilds its TextLayout against the real bounds, while
+        // a Control child trims itself against the width it is arranged into. Neither wraps: an
+        // unconstrained measure reports a single line, so the header is only ever one line tall, which is
+        // what the themes' TextTrimming plus the overflow tooltip are there to handle.
         this.Child?.Measure(Size.Infinity);
         return this.Child?.DesiredSize ?? default;
     }

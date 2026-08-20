@@ -15,9 +15,10 @@ using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
-// Covers DevoTreeDataGridExtensions.HeaderRightAdornment. The load-bearing guarantee is that the
-// adornment is excluded from the header's desired width, so an Auto-width column never resizes when
-// the adornment appears or changes size (DEVEX-303: committing a column search must not shift columns).
+// Covers DevoTreeDataGridExtensions.HeaderAdornment and HeaderAdornmentPosition. The load-bearing
+// guarantee is that the adornment is excluded from the header's desired width, so an Auto-width column
+// never resizes when it appears or changes size (DEVEX-303: committing a column search must not shift
+// columns).
 [Collection("VisualTests")]
 public class ColumnHeaderAdornmentTests
 {
@@ -234,6 +235,57 @@ public class ColumnHeaderAdornmentTests
     [InlineData("MacClassic")]
     [InlineData("DevExpress")]
     [InlineData("Linux")]
+    public void Adornment_LeavesTheSortIndicatorLaneOnASortedColumn(string themeName)
+    {
+        // Regression: clamping only to the header width let a long Right adornment take the whole header, so
+        // the theme's -AdornmentWidth shift pushed the sort indicator out of the header and into its
+        // neighbour. Adornment_IsClampedToTheHeaderWidth never caught it because an unsorted column
+        // reserves no lane.
+        SetTheme(themeName);
+
+        TextBlock term = new()
+        {
+            Text = "a deliberately long committed search term that cannot possibly fit",
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+
+        // Not hit-testable: the adornment covers the caption at this width, and the sort below needs the
+        // click to reach the header. Only layout is under test here.
+        Border adornment = new() { Background = Brushes.Red, Child = term, IsHitTestVisible = false };
+
+        TreeDataGrid grid = BuildSortableGrid();
+        DevoTreeDataGridExtensions.SetHeaderAdornment(grid.Columns[0], adornment);
+        Window window = Show(grid, width: 900);
+
+        TreeDataGridColumnHeader header = Header(grid);
+        Point? captionPoint = header.TranslatePoint(new Point(30, header.Bounds.Height / 2), window);
+
+        Assert.NotNull(captionPoint);
+
+        window.MouseDown(captionPoint!.Value, MouseButton.Left);
+        window.MouseUp(captionPoint.Value, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        object? sortDirection = Header(grid).SortDirection;
+        double headerWidth = overflowHeader.Bounds.Width;
+        double lane = overflowHeader.InnerContentMargin.Right;
+        double reportedWidth = overflowHeader.AdornmentWidth;
+
+        window.Close();
+
+        Assert.NotNull(sortDirection);
+        Assert.True(lane > 0, "a sorted column should reserve an indicator lane through InnerContentMargin");
+        Assert.True(
+            reportedWidth <= headerWidth - lane + Tolerance,
+            $"AdornmentWidth {reportedWidth} should leave the {lane}px indicator lane inside the {headerWidth}px header");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
     public void SortIndicator_IsHiddenWhileAdornmentFillsHeader(string themeName)
     {
         // A full-width adornment (an in-header search field) takes over the cell, so the sort indicator
@@ -257,7 +309,7 @@ public class ColumnHeaderAdornmentTests
         DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
         Layout(grid);
 
-        bool isFilling = OverflowHeader(grid).IsAdornmentFilling;
+        bool isFilling = OverflowHeader(grid).AdornmentPosition == HeaderAdornmentPosition.Fill;
         bool visibleWhileFilling = sortSlot.IsVisible;
 
         window.Close();
@@ -400,7 +452,7 @@ public class ColumnHeaderAdornmentTests
 
         Window window = Show(grid);
 
-        bool isFilling = OverflowHeader(grid).IsAdornmentFilling;
+        bool isFilling = OverflowHeader(grid).AdornmentPosition == HeaderAdornmentPosition.Fill;
         double adornmentWidth = OverflowHeader(grid).AdornmentWidth;
         double headerWidth = OverflowHeader(grid).Bounds.Width;
 

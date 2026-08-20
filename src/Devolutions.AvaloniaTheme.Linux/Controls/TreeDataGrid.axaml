@@ -138,12 +138,12 @@
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Panel VerticalAlignment="Stretch">
             <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. Shifted
-                 left by the header adornment's width so a committed column-search indicator sits to its
-                 right. -->
+                 left by the header adornment's width so a Right-positioned adornment sits beside it, and
+                 hidden while the adornment fills the header, where the two would otherwise overlap. -->
             <Panel HorizontalAlignment="Right"
                    VerticalAlignment="Stretch"
                    IsHitTestVisible="False"
-                   IsVisible="{Binding !#HeaderContent.IsAdornmentFilling}">
+                   IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
               <Panel.RenderTransform>
                 <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
               </Panel.RenderTransform>

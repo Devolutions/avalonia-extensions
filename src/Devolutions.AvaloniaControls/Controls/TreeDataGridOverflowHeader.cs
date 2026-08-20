@@ -72,10 +72,10 @@ public class TreeDataGridOverflowHeader : Decorator
             nameof(AdornmentWidth),
             static o => o.AdornmentWidth);
 
-    public static readonly DirectProperty<TreeDataGridOverflowHeader, bool> IsAdornmentFillingProperty =
-        AvaloniaProperty.RegisterDirect<TreeDataGridOverflowHeader, bool>(
-            nameof(IsAdornmentFilling),
-            static o => o.IsAdornmentFilling);
+    public static readonly DirectProperty<TreeDataGridOverflowHeader, HeaderAdornmentPosition> AdornmentPositionProperty =
+        AvaloniaProperty.RegisterDirect<TreeDataGridOverflowHeader, HeaderAdornmentPosition>(
+            nameof(AdornmentPosition),
+            static o => o.AdornmentPosition);
 
     private Control? adornment;
 
@@ -85,7 +85,7 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private double adornmentWidth;
 
-    private bool isAdornmentFilling;
+    private HeaderAdornmentPosition adornmentPosition;
 
     private double adornmentNaturalWidth;
 
@@ -225,17 +225,22 @@ public class TreeDataGridOverflowHeader : Decorator
     }
 
     /// <summary>
-    /// Width the right-hand adornment occupies, or 0 when there is none. Themes bind this to offset the
-    /// sort indicator so the adornment sits to its right.
+    /// Width the adornment occupies, or 0 when there is none. Themes bind this to shift the sort indicator
+    /// left, so a <see cref="HeaderAdornmentPosition.Right"/> adornment sits beside it instead of over it.
     /// </summary>
     public double AdornmentWidth => this.adornmentWidth;
 
     /// <summary>
-    /// True while the adornment is spanning the whole header (see
-    /// <c>DevoTreeDataGridExtensions.FillsHeaderWidth</c>). Themes bind this to hide the sort indicator,
-    /// which would otherwise sit on top of a full-width adornment such as a search field.
+    /// Position the adornment was actually arranged at, resolved from
+    /// <see cref="DevoTreeDataGridExtensions.HeaderAdornmentPositionProperty"/>, or
+    /// <see cref="HeaderAdornmentPosition.Right"/> when there is no adornment.
     /// </summary>
-    public bool IsAdornmentFilling => this.isAdornmentFilling;
+    /// <remarks>
+    /// Themes bind this to hide the sort indicator while the adornment covers the header, since the two
+    /// would otherwise overlap. A theme testing for a specific member has to be revisited whenever a new
+    /// <see cref="HeaderAdornmentPosition"/> member is added.
+    /// </remarks>
+    public HeaderAdornmentPosition AdornmentPosition => this.adornmentPosition;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -309,23 +314,34 @@ public class TreeDataGridOverflowHeader : Decorator
         this.adornmentNaturalWidth = adorn.DesiredSize.Width;
     }
 
-    // Sits flush right, so the sort indicator (which themes shift left by AdornmentWidth) lands to its
-    // left. Never wider than the header: a long term is re-measured against what is actually available so
-    // its content can trim, instead of spilling over neighbouring columns.
+    // Arranged flush right, so a Right adornment leaves the sort indicator (which themes shift left by
+    // AdornmentWidth) beside it, while a Fill one spans the header. A Right adornment is also kept clear of
+    // the indicator's own lane. Either way it is re-measured against what it was really granted, so its
+    // content can trim rather than spill over neighbouring columns.
     private double ArrangeAdornment(Size finalSize)
     {
         if (this.adornment is not { } adorn)
         {
             this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
-            this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, false);
+            this.SetAndRaise(AdornmentPositionProperty, ref this.adornmentPosition, HeaderAdornmentPosition.Right);
             return 0;
         }
 
-        bool fills = this.ResolveAdornmentPosition() == HeaderAdornmentPosition.Fill;
-        this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, fills);
+        HeaderAdornmentPosition position = this.ResolveAdornmentPosition();
+        this.SetAndRaise(AdornmentPositionProperty, ref this.adornmentPosition, position);
+
+        bool fills = position == HeaderAdornmentPosition.Fill;
+
+        // A Right adornment has to leave the sort-indicator lane alone. Themes shift the indicator left by
+        // AdornmentWidth and declare that lane as InnerContentMargin.Right, so an adornment allowed to take
+        // the whole header pushes the indicator clean out of it and into the neighbouring column.
+        double available = fills
+            ? finalSize.Width
+            : Math.Max(0, finalSize.Width - this.InnerContentMargin.Right);
+
         double width = fills
             ? finalSize.Width
-            : Math.Min(this.adornmentNaturalWidth, finalSize.Width);
+            : Math.Min(this.adornmentNaturalWidth, available);
 
         if (fills || width < this.adornmentNaturalWidth)
         {
@@ -334,8 +350,9 @@ public class TreeDataGridOverflowHeader : Decorator
 
         adorn.Arrange(new Rect(Math.Max(0, finalSize.Width - width), 0, width, finalSize.Height));
 
-        // Report the effective width, not the natural one, so a clamped adornment cannot push a theme's
-        // sort indicator off the left edge of the header.
+        // Report the width actually used, not the natural one: a theme shifts its sort indicator by exactly
+        // this, so reporting more than was granted would displace the indicator by more than the adornment
+        // occupies.
         this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, width);
 
         return width;
@@ -415,9 +432,8 @@ public class TreeDataGridOverflowHeader : Decorator
 
             this.adornmentSource = source;
 
-            // Hosted inside a clipping border: headers deliberately run with ClipToBounds="False" (the
-            // resize thumb overhangs), so without this an over-long adornment paints across its
-            // neighbours. The consumer's own control is left untouched.
+            // A Control is hosted as-is, so the consumer can keep a reference and drive it; anything else
+            // needs a presenter to render.
             this.adornmentContent = source switch
             {
                 null => null,
@@ -425,6 +441,9 @@ public class TreeDataGridOverflowHeader : Decorator
                 _ => new ContentPresenter { Content = source },
             };
 
+            // Wrapped in a clipping border: headers deliberately run with ClipToBounds="False" (the resize
+            // thumb overhangs), so without this an over-long adornment paints across its neighbours. The
+            // consumer's own control is left untouched.
             this.adornment = this.adornmentContent is { } content
                 ? new Border { ClipToBounds = true, Child = content }
                 : null;
@@ -476,7 +495,7 @@ public class TreeDataGridOverflowHeader : Decorator
         this.adornmentSource = null;
         this.adornmentNaturalWidth = 0;
         this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
-        this.SetAndRaise(IsAdornmentFillingProperty, ref this.isAdornmentFilling, false);
+        this.SetAndRaise(AdornmentPositionProperty, ref this.adornmentPosition, HeaderAdornmentPosition.Right);
     }
 
     private TextLayout CreateTextLayout(string text, double maxWidth, double maxHeight)

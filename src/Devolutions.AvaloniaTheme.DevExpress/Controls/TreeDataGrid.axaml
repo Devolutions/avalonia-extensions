@@ -183,11 +183,12 @@
                   ClipToBounds="False"
                   IsHitTestVisible="False">
             <Panel VerticalAlignment="Stretch" ClipToBounds="False">
-              <!-- Sort icon (reusing DataGrid foreground). Shifted left by the header adornment's width so
-                   a committed column-search indicator sits to its right. -->
+              <!-- Sort icon (reusing DataGrid foreground). Shifted left by the header adornment's width so a
+                   Right-positioned adornment sits beside it, and hidden while the adornment fills the
+                   header, where the two would otherwise overlap. -->
               <Panel HorizontalAlignment="Right"
                      VerticalAlignment="Stretch"
-                     IsVisible="{Binding !#HeaderContent.IsAdornmentFilling}">
+                     IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
                 <Panel.RenderTransform>
                   <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
                 </Panel.RenderTransform>

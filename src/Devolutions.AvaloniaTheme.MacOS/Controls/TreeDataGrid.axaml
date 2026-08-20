@@ -174,12 +174,13 @@
                      macOS ellipsizes the caption when the chevron appears instead of permanently
                      holding space for it, and showing it must not resize an auto-sized column. The
                      caption yields room via InnerContentMargin, as in the DevExpress and Yaru themes.
-                     Shifted left by the header adornment's width so a committed column-search
-                     indicator sits to its right. -->
+                     Shifted left by the header adornment's width so a Right-positioned adornment sits
+                     beside it, and hidden while the adornment fills the header, where the two would
+                     otherwise overlap. -->
                 <Panel HorizontalAlignment="Right"
                        VerticalAlignment="Stretch"
                        IsHitTestVisible="False"
-                       IsVisible="{Binding !#HeaderContent.IsAdornmentFilling}">
+                       IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
                   <Panel.RenderTransform>
                     <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
                   </Panel.RenderTransform>

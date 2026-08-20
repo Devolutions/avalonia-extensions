@@ -134,6 +134,27 @@ Automated tests are available and should be used:
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 
+### DevTools MCP (Live UI inspection with AI agents)
+- Prefer DevTools MCP for runtime UI inspection tasks (visual tree, properties, styles, screenshots, input simulation) instead of relying only on human visual checks.
+- User-level MCP config is stored in `~/Library/Application Support/Code/User/mcp.json` (not `~/.vscode/mcp.json` in this environment).
+- Required app instrumentation:
+  - `AvaloniaUI.DiagnosticsSupport` package installed
+  - `.WithDeveloperTools()` on `AppBuilder` **or** `this.AttachDeveloperTools()` in `Application`
+- Typical MCP flow for `attach-to-app`:
+  1. `attach-to-app` with no id (enumerates available running clients)
+  2. Call `attach-to-app` again with selected process id
+  3. Use `tree`, `search`, `props`, `styles`, `screenshot`, etc.
+
+#### Important licensing note (observed in this repo/session)
+- We observed that forcing `AVALONIA_TOOLS_LICENSE_KEY` into MCP server env could cause:
+  - `Authenticated session does not have access to required product: avalonia-developer-tools-console`
+- In this setup, MCP attach worked when that env var was **not** forced in MCP config (while an authenticated DevTools session already existed).
+- First-time/expired sessions may prompt for Avalonia portal credentials in a GUI dialog; after successful sign-in, local auth state is reused by DevTools.
+- If MCP attach fails with product/license errors:
+  - remove explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`
+  - ensure current DevTools tool is installed (`dotnet tool install --global AvaloniaUI.DeveloperTools`)
+  - retry attach
+
 ### Packaging
 ```bash
 # Pack a specific theme for NuGet

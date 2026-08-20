@@ -462,6 +462,64 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(headerWidth, adornmentWidth, Tolerance);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void HeaderAdornment_SetOnTheColumnAfterLayout_IsPickedUp(string themeName)
+    {
+        // The adornment lives on the column, a plain AvaloniaObject that nothing in the visual tree
+        // observes, so the header has to follow its column to notice one arriving after first layout.
+        SetTheme(themeName);
+
+        TreeDataGrid grid = BuildGrid("Caption", new GridLength(300), adornment: null);
+        Window window = Show(grid);
+
+        double before = OverflowHeader(grid).AdornmentWidth;
+
+        Border adornment = new() { Width = 40, Height = 12, Background = Brushes.Red };
+        DevoTreeDataGridExtensions.SetHeaderAdornment(grid.Columns[0], adornment);
+        Layout(grid);
+
+        double after = OverflowHeader(grid).AdornmentWidth;
+
+        window.Close();
+
+        Assert.Equal(0, before, Tolerance);
+        Assert.Equal(40, after, Tolerance);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void AdornmentPosition_SetOnTheColumnAfterLayout_IsPickedUp(string themeName)
+    {
+        // Same hole as the adornment itself: the class handler only covers a position set on the adornment
+        // control, which is in the visual tree. Set on the column it needs the column subscription.
+        SetTheme(themeName);
+
+        Border adornment = new() { Width = 40, Height = 12, Background = Brushes.Red };
+        TreeDataGrid grid = BuildGrid("Caption", new GridLength(300), adornment);
+        Window window = Show(grid);
+
+        double before = OverflowHeader(grid).AdornmentWidth;
+
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(grid.Columns[0], HeaderAdornmentPosition.Fill);
+        Layout(grid);
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        bool isFilling = overflowHeader.AdornmentPosition == HeaderAdornmentPosition.Fill;
+        double headerWidth = overflowHeader.Bounds.Width;
+        double after = overflowHeader.AdornmentWidth;
+
+        window.Close();
+
+        Assert.Equal(40, before, Tolerance);
+        Assert.True(isFilling, "a Fill position set on the column after layout should be honoured");
+        Assert.Equal(headerWidth, after, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

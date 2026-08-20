@@ -89,6 +89,8 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private double adornmentNaturalWidth;
 
+    private TreeDataGridColumn? subscribedColumn;
+
     public static void SetColumnToolTip(TreeDataGridColumn column, object? value) =>
         DevoTreeDataGridExtensions.SetToolTip(column, value);
 
@@ -266,6 +268,7 @@ public class TreeDataGridOverflowHeader : Decorator
 
         // Column headers are recycled, so release the adornment: a Control can only have one parent,
         // and the next column this header serves may supply a different one.
+        this.SubscribeToColumn(null);
         this.DetachAdornment();
     }
 
@@ -439,7 +442,12 @@ public class TreeDataGridOverflowHeader : Decorator
 
     private void UpdateAdornment()
     {
-        object? source = this.TryGetOwningColumn() is { } column
+        TreeDataGridColumn? owningColumn = this.TryGetOwningColumn();
+
+        // Headers are recycled between columns, so follow whichever one this header currently serves.
+        this.SubscribeToColumn(owningColumn);
+
+        object? source = owningColumn is { } column
             ? DevoTreeDataGridExtensions.GetHeaderAdornment(column)
             : null;
 
@@ -467,6 +475,43 @@ public class TreeDataGridOverflowHeader : Decorator
         }
 
         this.EnsureAdornmentAttached();
+    }
+
+    // Both the adornment and its position can live on the column, which is a plain AvaloniaObject that
+    // nothing in the visual tree observes. Without following it, setting either one after the header is
+    // laid out would be silently ignored until the header happened to be recycled. The class handler in the
+    // static constructor covers the other case, a position set on the adornment control itself.
+    private void SubscribeToColumn(TreeDataGridColumn? column)
+    {
+        if (ReferenceEquals(column, this.subscribedColumn))
+        {
+            return;
+        }
+
+        if (this.subscribedColumn is { } previous)
+        {
+            previous.PropertyChanged -= this.OnColumnPropertyChanged;
+        }
+
+        this.subscribedColumn = column;
+
+        if (column is not null)
+        {
+            column.PropertyChanged += this.OnColumnPropertyChanged;
+        }
+    }
+
+    private void OnColumnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == DevoTreeDataGridExtensions.HeaderAdornmentProperty)
+        {
+            this.UpdateAdornment();
+        }
+        else if (e.Property == DevoTreeDataGridExtensions.HeaderAdornmentPositionProperty)
+        {
+            // Resolved during arrange, so a change has to schedule one.
+            this.InvalidateArrange();
+        }
     }
 
     private void EnsureAdornmentAttached()

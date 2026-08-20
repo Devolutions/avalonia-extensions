@@ -56,13 +56,6 @@ internal static class MenuResourceAliasBuilder
     ("MacOsMenuCheckMarkPath", "CheckMarkPath"),
   };
 
-  public static ResourceDictionary Build(Styles styles)
-  {
-    ResourceDictionary aliases = new();
-    Rebuild(styles, aliases);
-    return aliases;
-  }
-
   public static void Rebuild(Styles styles, ResourceDictionary aliases)
   {
     aliases.ThemeDictionaries.Clear();

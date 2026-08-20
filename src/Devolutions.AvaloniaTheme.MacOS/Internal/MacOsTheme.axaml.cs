@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
@@ -19,7 +20,9 @@ internal class MacOsTheme : Styles
     Uri baseUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources.axaml");
     ResourceInclude baseInclude = new(baseUri) { Source = baseUri };
     this.Resources.MergedDictionaries.Add(baseInclude);
-    var menuAliases = MenuResourceAliasBuilder.Build(this);
+    // Registered here so the aliases win over the menu defaults; populated once all
+    // variant dictionaries below have been merged.
+    ResourceDictionary menuAliases = new();
     this.Resources.MergedDictionaries.Add(menuAliases);
 
     // 2) Conditionally load LiquidGlass overrides
@@ -29,20 +32,12 @@ internal class MacOsTheme : Styles
       ResourceInclude liquidGlassInclude = new(liquidGlassUri) { Source = liquidGlassUri };
       this.Resources.MergedDictionaries.Add(liquidGlassInclude);
 
-      Uri liquidGlassMenuUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/MenuResources_LiquidGlass.axaml");
-      ResourceInclude liquidGlassMenuInclude = new(liquidGlassMenuUri) { Source = liquidGlassMenuUri };
-      this.Resources.MergedDictionaries.Add(liquidGlassMenuInclude);
-
       // Apply wallpaper-tinted TextBox background for LiquidGlass.
       // Deferred so that Application.Current is fully initialised before the hook runs.
       if (Avalonia.Application.Current is { } app)
       {
         Avalonia.Threading.Dispatcher.UIThread.Post(
-          () =>
-          {
-            WallpaperTintApplier.HookAndApply(app);
-            MenuResourceAliasBuilder.Rebuild(this, menuAliases);
-          },
+          () => WallpaperTintApplier.HookAndApply(app),
           Avalonia.Threading.DispatcherPriority.Background);
       }
     }

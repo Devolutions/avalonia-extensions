@@ -18,7 +18,11 @@
       The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent). It can be used as a drop-in replacement for the default menu styles where a consistent look across all platforms is required.
     </TextBlock>
 
-    <TextBlock Classes="section-title">Menu pack URI</TextBlock>
+    <TextBlock FontSize="15" TextWrapping="Wrap">
+      Unlike the other menu packs, the MacOS pack needs to detect the macOS version in order to apply the matching classic / LiquidGlass styles. So a plain <TextBlock Classes="code">StyleInclude</TextBlock> does not suffice here.
+    </TextBlock>
+
+    <TextBlock Classes="section-title">Menu pack styles URI</TextBlock>
     <TextBlock FontFamily="{DynamicResource CodeFontFamily}"
                Text="avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml"
                TextWrapping="Wrap" />
@@ -30,10 +34,10 @@
                Margin="5 -5 0 0"
                Padding="5 8 6 8">
       <TextBlock.Inlines>
-        <Run Text="&lt;Application ...&gt;&#x0a;" />
+        <Run Text="&lt;Application xmlns:macos=&quot;clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls;assembly=Devolutions.AvaloniaTheme.MacOS&quot; ...&gt;&#x0a;" />
         <Run Text="  &lt;Application.Styles&gt;&#x0a;" />
         <Run Text="    &lt;FluentTheme /&gt;&#x0a;" />
-        <Run Text="    &lt;StyleInclude Source=&quot;avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml&quot; /&gt;&#x0a;" />
+        <Run Text="    &lt;macos:MacOsMenuPack /&gt;&#x0a;" />
         <Run Text="  &lt;/Application.Styles&gt;&#x0a;" />
         <Run Text="&lt;/Application&gt;" />
       </TextBlock.Inlines>

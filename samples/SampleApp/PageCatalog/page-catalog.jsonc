@@ -27,8 +27,8 @@
     "Overview",
     "Control Demos",
     "Control Alignment",
-    "DevExpress Menu Pack",
-    "MacOS Menu Pack",
+    "📦 DevExpress Menu Pack",
+    "📦 MacOS Menu Pack",
     "Experiments"
   ],
   "pages": {
@@ -438,7 +438,7 @@
       // No visual regression tests required for these pages.
       // They are tested in MenuPackContractTests.cs
       {
-        "uniqueTitle": "About",
+        "uniqueTitle": "🪟 About",
         "demo": "MenuPackAbout.axaml"
       },
       {
@@ -464,7 +464,7 @@
       // No visual regression tests required for these pages.
       // They are covered by MenuPack contract tests.
       {
-        "uniqueTitle": "MacAbout",
+        "uniqueTitle": "🍏 About",
         "demo": "MacMenuPackAbout.axaml"
       },
       {

@@ -68,56 +68,6 @@ public class MacOsMenuPackContractTests
         "MacOsMenuCheckMarkPath",
     };
 
-    private static readonly (string MenuToken, string LegacyToken)[] FullThemeParityMappings =
-    {
-        ("MacOsMenuPopupBackgroundBrush", "PopupBackgroundBrush"),
-        ("MacOsMenuPopupInnerBorderHighlightBrush", "PopupInnerBorderHighlightBrush"),
-        ("MacOsMenuPopupBorderBrush", "PopupBorderBrush"),
-        ("MacOsMenuItemForegroundBrush", "MenuItemForegroundBrush"),
-        ("MacOsMenuForegroundHighBrush", "ForegroundHighBrush"),
-        ("MacOsMenuForegroundMidLowBrush", "ForegroundMidLowBrush"),
-        ("MacOsMenuForegroundLowBrush", "ForegroundLowBrush"),
-        ("MacOsMenuAccentForegroundBrush", "ControlForegroundAccentHighBrush"),
-        ("MacOsMenuSelectedBackgroundBrush", "LayoutBackgroundMidBrush"),
-        ("MacOsMenuPressedBackgroundBrush", "LayoutBackgroundHighBrush"),
-        ("MacOsMenuItemPointerOverBackgroundBrush", "MenuItemPointerOverBackgroundBrush"),
-        ("MacOsMenuSeparatorBrush", "SeparatorBrush"),
-        ("MacOsMenuPopupBorderThickness", "MenuFlyoutPresenterBorderThickness"),
-        ("MacOsMenuFontSize", "ControlFontSize"),
-        ("MacOsMenuHeaderFontSizeSmall", "MenuHeaderFontSizeSmall"),
-        ("MacOsMenuChevronSize", "TreeViewItemChevronSize"),
-        ("MacOsMenuSelectionCornerRadius", "SelectionCornerRadius"),
-        ("MacOsMenuPopupMargin", "PopupMargin"),
-        ("MacOsMenuPopupInnerBorderThickness", "PopupInnerBorderThickness"),
-        ("MacOsMenuPopupCornerRadius", "PopupCornerRadius"),
-        ("MacOsMenuPopupShadow", "PopupShadow"),
-        ("MacOsMenuPopupMaxWidth", "FlyoutThemeMaxWidth"),
-        ("MacOsMenuPopupMinHeight", "MenuFlyoutThemeMinHeight"),
-        ("MacOsMenuPopupPadding", "MenuFlyoutPadding"),
-        ("MacOsMenuFlyoutPresenterPadding", "MenuFlyoutPresenterThemePadding"),
-        ("MacOsMenuFlyoutScrollerMargin", "MenuFlyoutScrollerMargin"),
-        ("MacOsMenuHorizontalFlyoutMinWidth", "HorizontalMenuFlyoutThemeMinWidth"),
-        ("MacOsMenuSubMenuPopupHorizontalOffset", "SubMenuPopupHorizontalOffset"),
-        ("MacOsMenuSubMenuPopupVerticalOffset", "SubMenuPopupVerticalOffset"),
-        ("MacOsMenuPopupHorizontalOffset", "MenuPopupHorizontalOffset"),
-        ("MacOsMenuPopupVerticalOffset", "MenuPopupVerticalOffset"),
-        ("MacOsMenuToolBarPopupVerticalOffset", "MenuToolBarPopupVerticalOffset"),
-        ("MacOsMenuBarPadding", "MenuBarPadding"),
-        ("MacOsMenuItemPadding", "MenuItemPadding"),
-        ("MacOsMenuItemMinHeight", "MenuItemMinHeight"),
-        ("MacOsMenuIconPresenterMargin", "MenuIconPresenterMargin"),
-        ("MacOsMenuInputGestureTextMargin", "MenuInputGestureTextMargin"),
-        ("MacOsMenuItemIconPadding", "MenuItemIconPadding"),
-        ("MacOsMenuToolBarItemPadding", "MenuToolBarItemPadding"),
-        ("MacOsMenuToolBarItemIconPadding", "MenuToolBarItemIconPadding"),
-        ("MacOsMenuToolBarItemActiveBackgroundMargin", "MenuToolBarItemActiveBackgroundMargin"),
-        ("MacOsMenuItemActiveBackgroundMargin", "MenuItemActiveBackgroundMargin"),
-        ("MacOsMenuSeparatorHeight", "MenuFlyoutSeparatorThemeHeight"),
-        ("MacOsMenuSeparatorPadding", "MenuFlyoutSeparatorThemePadding"),
-        ("MacOsMenuChevronPath", "ChevronPath"),
-        ("MacOsMenuCheckMarkPath", "CheckMarkPath"),
-    };
-
     private static Window ShowWithFullTheme(ThemeVariant variant)
     {
         App.CurrentTheme = null;
@@ -434,6 +384,29 @@ public class MacOsMenuPackContractTests
         }
         finally
         {
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Readme_documented_xaml_element_follows_liquid_glass()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        window.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        try
+        {
+            Assert.True(window.TryFindResource("MacOsMenuPopupMargin", ThemeVariant.Light, out object? margin));
+            Assert.Equal(new Thickness(12, 4, 12, 29), Assert.IsType<Thickness>(margin));
+        }
+        finally
+        {
+            window.Close();
             MacOSVersionDetector.SetTestOverride(null);
         }
     }

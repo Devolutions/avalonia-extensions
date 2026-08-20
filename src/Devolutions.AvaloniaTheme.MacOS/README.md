@@ -107,18 +107,27 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 Use the menu pack when you only want MacOS menu styling without importing the full `<DevolutionsMacOsTheme />`.
 
 ```xaml
-<Application ...>
+<Application xmlns:macos="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls;assembly=Devolutions.AvaloniaTheme.MacOS"
+             ...>
   <Application.Styles>
     <!-- Required prerequisite -->
     <FluentTheme />
 
     <!-- MacOS menu pack -->
-    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml" />
+    <macos:MacOsMenuPack />
   </Application.Styles>
 </Application>
 ```
 
-Exact menu pack URI:
+From code (for example to scope the pack to a single view):
+
+```csharp
+using Devolutions.AvaloniaTheme.MacOS.Controls;
+
+MacMenuPackStyles.ApplyTo(this.Styles);
+```
+
+Underlying styles URI:
 
 `avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml`
 
@@ -126,6 +135,11 @@ Prerequisites and caveats:
 
 - `FluentTheme` must be loaded application-wide in `Application.Styles` (not scoped to a subtree).
 - The pack exports `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, and menu helper styles.
+- The pack detects the macOS version itself and applies the matching classic / LiquidGlass menu
+  appearance, independently of the host theme.
+- Prefer `<macos:MacOsMenuPack />` over including the styles URI directly: a bare
+  `StyleInclude` of `MenuPack.styles.axaml` carries only the classic menu defaults, because the
+  sub-theme resources it needs are supplied by `MacOsMenuPack`.
 - If you need full control coverage, use `<DevolutionsMacOsTheme />` instead.
 
 ## Styled Controls

@@ -2,9 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
 using Avalonia.Threading;
+using Devolutions.AvaloniaTheme.MacOS;
+using Devolutions.AvaloniaTheme.MacOS.Internal;
 using SampleApp;
 using Xunit;
 
@@ -176,6 +179,121 @@ public class MacOsMenuPackContractTests
     }
 
     [AvaloniaFact]
+    public void MenuPack_uses_liquid_glass_resource_variant_when_supported()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        Devolutions.AvaloniaTheme.MacOS.Controls.MacMenuPackStyles.ApplyTo(window.Styles);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.TryFindResource("MacOsMenuPopupMargin", ThemeVariant.Light, out object? popupMargin),
+                "LiquidGlass MenuPack should include the MacOsMenuPopupMargin token.");
+            Assert.True(window.TryFindResource("MacOsMenuItemPadding", ThemeVariant.Light, out object? itemPadding),
+                "LiquidGlass MenuPack should include the MacOsMenuItemPadding token.");
+
+            Thickness popupThickness = Assert.IsType<Thickness>(popupMargin);
+            Thickness itemThickness = Assert.IsType<Thickness>(itemPadding);
+
+            Assert.Equal(12, popupThickness.Left);
+            Assert.Equal(4, popupThickness.Top);
+            Assert.Equal(12, popupThickness.Right);
+            Assert.Equal(29, popupThickness.Bottom);
+
+            Assert.Equal(9, itemThickness.Left);
+            Assert.Equal(4, itemThickness.Top);
+            Assert.Equal(7, itemThickness.Right);
+            Assert.Equal(4, itemThickness.Bottom);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Pack_aliases_follow_the_active_macos_menu_variant()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        var macOsTheme = new DevolutionsMacOsTheme();
+        macOsTheme.BeginInit();
+        macOsTheme.EndInit();
+        window.Styles.Add(macOsTheme);
+
+        Devolutions.AvaloniaTheme.MacOS.Controls.MacMenuPackStyles.ApplyTo(window.Styles);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.TryFindResource("MacOsMenuPopupMargin", ThemeVariant.Light, out object? menuPopupMargin),
+                "MacOs menu popup margin should resolve in the active LiquidGlass pack.");
+            Assert.True(window.TryFindResource("PopupMargin", ThemeVariant.Light, out object? genericPopupMargin),
+                "Legacy popup margin alias should resolve in the active LiquidGlass pack.");
+            Assert.True(window.TryFindResource("MacOsMenuItemPadding", ThemeVariant.Light, out object? menuItemPadding),
+                "MacOs menu item padding should resolve in the active LiquidGlass pack.");
+            Assert.True(window.TryFindResource("MenuItemPadding", ThemeVariant.Light, out object? genericItemPadding),
+                "Legacy menu item padding alias should resolve in the active LiquidGlass pack.");
+
+            Assert.Equal(menuPopupMargin, genericPopupMargin);
+            Assert.Equal(menuItemPadding, genericItemPadding);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void MacMenuPackPage_uses_active_MacOS_variant_when_added_to_the_sample_app()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var page = new SampleApp.DemoPages.MacMenuPackMenuDemo();
+        var window = new Window { Content = page, RequestedThemeVariant = ThemeVariant.Light };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(page.TryFindResource("MacOsMenuPopupMargin", ThemeVariant.Light, out object? popupMargin),
+                "Menu pack page should resolve the active MacOS popup margin.");
+            Assert.True(page.TryFindResource("MacOsMenuItemPadding", ThemeVariant.Light, out object? itemPadding),
+                "Menu pack page should resolve the active MacOS item padding.");
+
+            Thickness popupThickness = Assert.IsType<Thickness>(popupMargin);
+            Thickness itemThickness = Assert.IsType<Thickness>(itemPadding);
+
+            Assert.Equal(12, popupThickness.Left);
+            Assert.Equal(4, popupThickness.Top);
+            Assert.Equal(12, popupThickness.Right);
+            Assert.Equal(29, popupThickness.Bottom);
+
+            Assert.Equal(9, itemThickness.Left);
+            Assert.Equal(4, itemThickness.Top);
+            Assert.Equal(7, itemThickness.Right);
+            Assert.Equal(4, itemThickness.Bottom);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
     public void Host_theme_overrides_do_not_leak_into_menu_tokens()
     {
         ThemeVariant variant = ThemeVariant.Light;
@@ -227,36 +345,96 @@ public class MacOsMenuPackContractTests
     }
 
     [AvaloniaTheory]
-    [InlineData("Light")]
-    [InlineData("Dark")]
-    public void Full_theme_macos_menu_tokens_match_legacy_tokens(string variantName)
+    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(false, "#FFE7E7E7", 1.0)]
+    public void Full_theme_menu_background_follows_active_macos_variant(
+        bool liquidGlass,
+        string expectedColor,
+        double expectedOpacity)
     {
-        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Window fullWindow = ShowWithFullTheme(variant);
+        MacOSVersionDetector.SetTestOverride(liquidGlass);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        var macOsTheme = new DevolutionsMacOsTheme();
+        macOsTheme.BeginInit();
+        macOsTheme.EndInit();
+        window.Styles.Add(macOsTheme);
 
         try
         {
-            var mismatches = new List<string>();
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
 
-            foreach ((string menuToken, string legacyToken) in FullThemeParityMappings)
-            {
-                Assert.True(fullWindow.TryFindResource(menuToken, variant, out object? menuValue),
-                    $"MacOS menu token '{menuToken}' did not resolve ({variant}).");
-                Assert.True(fullWindow.TryFindResource(legacyToken, variant, out object? legacyValue),
-                    $"Legacy token '{legacyToken}' did not resolve ({variant}).");
+            Assert.True(
+                window.TryFindResource("MacOsMenuPopupBackgroundBrush", ThemeVariant.Light, out object? menuBackground),
+                "Full MacOS theme should resolve the menu popup background brush.");
 
-                if (!Equals(menuValue?.ToString(), legacyValue?.ToString()))
-                {
-                    mismatches.Add($"{menuToken} != {legacyToken} | menu='{menuValue}' legacy='{legacyValue}'");
-                }
-            }
-
-            Assert.True(mismatches.Count == 0,
-                "MacOS menu tokens diverged from legacy full-theme tokens:\n  " + string.Join("\n  ", mismatches));
+            ISolidColorBrush brush = Assert.IsAssignableFrom<ISolidColorBrush>(menuBackground);
+            Assert.Equal(expectedColor, brush.Color.ToString(), ignoreCase: true);
+            Assert.Equal(expectedOpacity, brush.Opacity, 3);
         }
         finally
         {
-            fullWindow.Close();
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(false, "#FFE7E7E7", 1.0)]
+    public void Pack_menu_background_follows_active_macos_variant(
+        bool liquidGlass,
+        string expectedColor,
+        double expectedOpacity)
+    {
+        MacOSVersionDetector.SetTestOverride(liquidGlass);
+
+        var page = new UserControl();
+        var window = new Window { Content = page, RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        Devolutions.AvaloniaTheme.MacOS.Controls.MacMenuPackStyles.ApplyTo(page.Styles);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(
+                page.TryFindResource("MacOsMenuPopupBackgroundBrush", ThemeVariant.Light, out object? menuBackground),
+                "Menu pack should resolve the menu popup background brush over a non-MacOS host theme.");
+
+            ISolidColorBrush brush = Assert.IsAssignableFrom<ISolidColorBrush>(menuBackground);
+            Assert.Equal(expectedColor, brush.Color.ToString(), ignoreCase: true);
+            Assert.Equal(expectedOpacity, brush.Opacity, 3);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Switching_to_a_non_macos_theme_restores_menu_pack_platform_detection()
+    {
+        // Simulates selecting "MacOS - classic" (which pins the process-global override)
+        // and then switching to a non-MacOS base theme.
+        App.CurrentTheme = null;
+        App.SetTheme(new MacOsClassicTheme());
+        Assert.False(MacOSVersionDetector.IsLiquidGlassSupported());
+
+        App.SetTheme(new SampleApp.FluentTheme());
+
+        try
+        {
+            Assert.Equal(
+                OperatingSystem.IsMacOS() && OperatingSystem.IsMacOSVersionAtLeast(26),
+                MacOSVersionDetector.IsLiquidGlassSupported());
+        }
+        finally
+        {
+            MacOSVersionDetector.SetTestOverride(null);
         }
     }
 }

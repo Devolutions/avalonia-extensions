@@ -76,14 +76,34 @@ internal static class MenuResourceAliasBuilder
 
     foreach ((string menuToken, string legacyToken) in AliasMappings)
     {
-      if (!styles.TryGetResource(legacyToken, variant, out object? value))
+      if (TryResolveMenuValue(styles, menuToken, legacyToken, variant, out object? value))
       {
-        throw new KeyNotFoundException($"Legacy menu resource '{legacyToken}' was not found for variant '{variant.Key}'.");
+        variantDictionary[menuToken] = value;
       }
-
-      variantDictionary[menuToken] = value;
     }
 
     return variantDictionary;
+  }
+
+  private static bool TryResolveMenuValue(
+    Styles styles,
+    string menuToken,
+    string legacyToken,
+    ThemeVariant variant,
+    out object? value)
+  {
+    // The legacy theme tokens are the source of truth: they already reflect the
+    // active MacOS variant (classic vs LiquidGlass). The MacOsMenu* defaults are
+    // only a fallback for standalone menu-pack consumers that load no theme tokens.
+    if (styles.TryGetResource(legacyToken, variant, out value) ||
+        styles.TryGetResource(menuToken, variant, out value) ||
+        styles.TryGetResource(legacyToken, null, out value) ||
+        styles.TryGetResource(menuToken, null, out value))
+    {
+      return true;
+    }
+
+    value = null;
+    return false;
   }
 }

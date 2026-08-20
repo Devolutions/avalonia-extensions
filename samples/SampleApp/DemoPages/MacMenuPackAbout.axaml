@@ -7,10 +7,6 @@
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
              x:Class="SampleApp.DemoPages.MacMenuPackAbout">
 
-  <UserControl.Styles>
-    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml" />
-  </UserControl.Styles>
-
   <StackPanel Margin="10" Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
     <TextBlock Classes="h1">About MacOS Menu Pack</TextBlock>
 

@@ -137,6 +137,8 @@ Prerequisites and caveats:
 - The pack exports `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, and menu helper styles.
 - The pack detects the macOS version itself and applies the matching classic / LiquidGlass menu
   appearance, independently of the host theme.
+- Only the prefixed `MacOsMenu*` tokens are published, so non-menu controls keep using the host
+  theme's resources.
 - Prefer `<macos:MacOsMenuPack />` over including the styles URI directly: a bare
   `StyleInclude` of `MenuPack.styles.axaml` carries only the classic menu defaults, because the
   sub-theme resources it needs are supplied by `MacOsMenuPack`.

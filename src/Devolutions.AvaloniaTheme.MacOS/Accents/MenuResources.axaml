@@ -22,7 +22,7 @@
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#12000000" />
       <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#1f000000" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#a1007aff" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
       <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33000000" />
       <Thickness x:Key="MacOsMenuPopupBorderThickness">0</Thickness>
     </ResourceDictionary>
@@ -38,7 +38,7 @@
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#deecf9" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#2bffffff" />
       <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#3dffffff" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#a1007aff" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
       <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33ffffff" />
       <Thickness x:Key="MacOsMenuPopupBorderThickness">1</Thickness>
     </ResourceDictionary>

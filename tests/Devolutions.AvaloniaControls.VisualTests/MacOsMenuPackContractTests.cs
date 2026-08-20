@@ -1,4 +1,5 @@
 using Avalonia;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
@@ -410,4 +411,110 @@ public class MacOsMenuPackContractTests
             MacOSVersionDetector.SetTestOverride(null);
         }
     }
+
+    [AvaloniaTheory]
+    [InlineData("ButtonBackgroundBrush")]
+    [InlineData("SeparatorBrush")]
+    [InlineData("TextBoxBorderBrush")]
+    [InlineData("LayoutBackgroundMidBrush")]
+    [InlineData("PopupBackgroundBrush")]
+    public void Pack_does_not_publish_non_menu_macos_resources(string nonMenuKey)
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var page = new UserControl();
+        var window = new Window { Content = page, RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(
+                page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? leaked),
+                $"Menu pack must not publish the non-menu MacOS resource '{nonMenuKey}' (got '{leaked}').");
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The pack pins its LiquidGlass values while the full theme derives them from its own
+    ///   resources, so this guards the two representations against drifting apart.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(true, "Light")]
+    [InlineData(true, "Dark")]
+    [InlineData(false, "Light")]
+    [InlineData(false, "Dark")]
+    public void Pack_menu_tokens_match_the_full_theme(bool liquidGlass, string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        MacOSVersionDetector.SetTestOverride(liquidGlass);
+
+        var fullTheme = new DevolutionsMacOsTheme();
+        fullTheme.BeginInit();
+        fullTheme.EndInit();
+        var fullWindow = new Window { RequestedThemeVariant = variant };
+        fullWindow.Styles.Add(fullTheme);
+
+        var packPage = new UserControl();
+        var packWindow = new Window { Content = packPage, RequestedThemeVariant = variant };
+        packWindow.Styles.Add(new AvaloniaFluentTheme());
+        packPage.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        try
+        {
+            fullWindow.Show();
+            packWindow.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var mismatches = new List<string>();
+
+            foreach (string token in MenuTokenNames.All)
+            {
+                fullWindow.TryFindResource(token, variant, out object? fullValue);
+                packPage.TryFindResource(token, variant, out object? packValue);
+
+                if (DescribeToken(fullValue) != DescribeToken(packValue))
+                {
+                    mismatches.Add($"{token}: theme='{DescribeToken(fullValue)}' pack='{DescribeToken(packValue)}'");
+                }
+            }
+
+            Assert.True(
+                mismatches.Count == 0,
+                $"Menu pack drifted from the full theme (liquidGlass={liquidGlass}, {variant}):\n  "
+                + string.Join("\n  ", mismatches));
+        }
+        finally
+        {
+            packWindow.Close();
+            fullWindow.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   Describes a token by its effective value so that equivalent brush representations
+    ///   (for example <c>#d9000000</c> and black at 85% opacity) compare as equal.
+    /// </summary>
+    private static string DescribeToken(object? value) => value switch
+    {
+        ISolidColorBrush brush =>
+            string.Format(
+                CultureInfo.InvariantCulture,
+                "rgba({0},{1},{2},{3:F2})",
+                brush.Color.R,
+                brush.Color.G,
+                brush.Color.B,
+                brush.Color.A / 255d * brush.Opacity),
+        null => "<null>",
+        _ => $"{value.GetType().Name}|{value}",
+    };
 }

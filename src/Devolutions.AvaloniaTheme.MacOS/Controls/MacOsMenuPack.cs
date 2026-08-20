@@ -1,7 +1,6 @@
 namespace Devolutions.AvaloniaTheme.MacOS.Controls;
 
 using System;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Internal;
@@ -12,31 +11,28 @@ using Internal;
 ///   importing the full <c>DevolutionsMacOsTheme</c>.
 /// </summary>
 /// <remarks>
-///   The pack detects the running macOS version itself, so menus follow the classic /
-///   LiquidGlass appearance independently of the host theme.
+///   <para>
+///     The pack detects the running macOS version itself, so menus follow the classic /
+///     LiquidGlass appearance independently of the host theme.
+///   </para>
+///   <para>
+///     Only the prefixed <c>MacOsMenu*</c> tokens are published: the MacOS theme dictionaries
+///     are deliberately not merged, so non-menu controls keep resolving their host theme's
+///     resources.
+///   </para>
 /// </remarks>
 public class MacOsMenuPack : Styles
 {
   public MacOsMenuPack()
   {
-    // Nested so the menu defaults it carries stay below the resources merged here,
-    // which lets the aliases resolved for the active sub-theme take precedence.
+    // Carries the menu control themes plus the classic MacOsMenu* token defaults.
     Uri menuPackUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml");
     this.Add(new StyleInclude(menuPackUri) { Source = menuPackUri });
 
-    // The menu tokens are derived from these theme resources, so the pack has to carry
-    // them even when no MacOS theme is present in the host application.
-    Uri baseUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources.axaml");
-    this.Resources.MergedDictionaries.Add(new ResourceInclude(baseUri) { Source = baseUri });
-
     if (MacOSVersionDetector.IsLiquidGlassSupported())
     {
-      Uri liquidGlassUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources_LiquidGlass.axaml");
-      this.Resources.MergedDictionaries.Add(new ResourceInclude(liquidGlassUri) { Source = liquidGlassUri });
+      Uri liquidGlassMenuUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/MenuResources_LiquidGlass.axaml");
+      this.Resources.MergedDictionaries.Add(new ResourceInclude(liquidGlassMenuUri) { Source = liquidGlassMenuUri });
     }
-
-    ResourceDictionary menuAliases = new();
-    this.Resources.MergedDictionaries.Add(menuAliases);
-    MenuResourceAliasBuilder.Rebuild(this, menuAliases);
   }
 }

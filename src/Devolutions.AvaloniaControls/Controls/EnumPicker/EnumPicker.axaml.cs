@@ -68,9 +68,18 @@ public abstract class EnumPicker : TemplatedControl
     /// Fills the item list — translated, filtered and sorted — without the control ever being templated or initialized.
     /// For a host that mirrors a picker offscreen and reads its values but never renders it: the rebuild is otherwise
     /// gated on OnApplyTemplate having run, so such a host would have to build a whole ComboBox template to get text.
-    ///
-    /// Idempotent, and safe to call before or after the picker's own lifecycle reaches it.
     /// </summary>
+    /// <remarks>
+    /// Safe to call before or after the picker's own lifecycle reaches it, and safe to call repeatedly. Repeat calls
+    /// are not free though: each one rebuilds the list and raises change notifications for <see cref="Items"/> and for
+    /// the selected item, even when the resulting content is identical.
+    /// <para>
+    /// Priming more than once is normally unnecessary, because once primed every observed input — the text provider,
+    /// text overrides, sorting and value filtering — rebuilds the list on its own. Calling this again is however the
+    /// only way to force a rebuild when the text of a value changed without the picker being able to observe it, such
+    /// as a culture switch behind an unchanged <see cref="TextProvider"/> delegate.
+    /// </para>
+    /// </remarks>
     public abstract void PrimeItemsWithoutTemplate();
 
     public IReadOnlyCollection<EnumPickerItem> Items

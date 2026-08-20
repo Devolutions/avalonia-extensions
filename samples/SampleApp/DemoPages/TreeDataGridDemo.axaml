@@ -76,7 +76,7 @@
           <!-- HeaderAdornmentPosition=Fill: the adornment takes the whole cell, hiding both the caption and
                the sort indicator. This is how an in-column search field is hosted. -->
           <DevoTreeDataGridExtensions.HeaderAdornment>
-            <TextBox Watermark="Fill spans the header"
+            <TextBox PlaceholderText="Fill spans the header"
                      DevoTreeDataGridExtensions.HeaderAdornmentPosition="Fill"
                      BorderThickness="0"
                      Background="Transparent"

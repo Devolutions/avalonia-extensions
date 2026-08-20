@@ -60,9 +60,27 @@ public abstract class EnumPicker : TemplatedControl
             static o => o.InnerRightContent,
             static (o, v) => o.InnerRightContent = v);
 
-    protected bool UpdatingItems;
+    protected bool updatingItems;
 
     public abstract Type EnumType { get; }
+
+    /// <summary>
+    /// Fills the item list — translated, filtered and sorted — without the control ever being templated or initialized.
+    /// For a host that mirrors a picker offscreen and reads its values but never renders it: the rebuild is otherwise
+    /// gated on OnApplyTemplate having run, so such a host would have to build a whole ComboBox template to get text.
+    /// </summary>
+    /// <remarks>
+    /// Safe to call before or after the picker's own lifecycle reaches it, and safe to call repeatedly. Repeat calls
+    /// are not free though: each one rebuilds the list and raises change notifications for <see cref="Items"/> and for
+    /// the selected item, even when the resulting content is identical.
+    /// <para>
+    /// Priming more than once is normally unnecessary, because once primed every observed input — the text provider,
+    /// text overrides, sorting and value filtering — rebuilds the list on its own. Calling this again is however the
+    /// only way to force a rebuild when the text of a value changed without the picker being able to observe it, such
+    /// as a culture switch behind an unchanged <see cref="TextProvider"/> delegate.
+    /// </para>
+    /// </remarks>
+    public abstract void PrimeItemsWithoutTemplate();
 
     public IReadOnlyCollection<EnumPickerItem> Items
     {
@@ -71,12 +89,12 @@ public abstract class EnumPicker : TemplatedControl
         {
             try
             {
-                this.UpdatingItems = true;
+                this.updatingItems = true;
                 this.SetAndRaise(ItemsProperty, ref field, value);
             }
             finally
             {
-                this.UpdatingItems = false;
+                this.updatingItems = false;
             }
         }
     } = [];
@@ -123,11 +141,12 @@ public abstract class EnumPicker : TemplatedControl
 
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
-    private readonly T[] allEnumValues = Enum.GetValues<T>();
+    private static readonly T[] allEnumValues = Enum.GetValues<T>();
 
     private bool initialized;
     private bool isInitialValueSet;
     private bool isTemplateSet;
+    private bool primedWithoutTemplate;
     private bool textOverridesDirty = true;
     private HashSet<T>? includedSet = null;
     private bool includedSetDirty = true;
@@ -138,23 +157,29 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
+    // The item list is deliberately NOT built here. Every input that shapes it — TextProvider, TextOverrides,
+    // CustomSort, AlphabeticalOrder, IncludedValues, ExcludedValues — is assigned by object initializers, XAML
+    // setters or bindings, all of which run after this constructor. A list built here would therefore always be
+    // the unfiltered, unsorted, ToString()-named one, and would always be thrown away by the first
+    // UpdateValuesCore triggered from OnInitialized, OnApplyTemplate or PrimeItemsWithoutTemplate.
+    //
+    // Items stays empty until one of those three runs, which also means a host that only ever calls
+    // PrimeItemsWithoutTemplate pays for exactly one build instead of two.
     public EnumPicker()
     {
-        Func<Enum, string>? textProvider = this.TextProvider;
-        List<EnumPickerItem> items = new(this.allEnumValues.Length);
-        for (var i = 0; i < this.allEnumValues.Length; ++i)
-        {
-            T v = this.allEnumValues[i];
-            items.Add(new EnumPickerItem<T> { Value = v, EnumValue = v, Text = GetEnumText(v, EmptyOverrides, textProvider) });
-        }
-        this.Items = items;
-
+        // Must stay: XAML adds TextOverrides entries into the default collection exposed by the getter, so the
+        // collection-changed subscription has to exist before any of that content is parsed.
         this.DidChangeTextOverrides();
     }
 
     public override Type EnumType => typeof(T);
 
-    private static readonly Dictionary<T, string> EmptyOverrides = [];
+    public override void PrimeItemsWithoutTemplate()
+    {
+        this.primedWithoutTemplate = true;
+
+        this.UpdateValuesCore();
+    }
 
     // Cached sort delegate to avoid per-call closure allocation. Reads cached fields.
     private Comparison<EnumPickerItem<T>>? cachedSortComparison;
@@ -395,11 +420,18 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     
     private void UpdateValues()
     {
-        if (!this.initialized || !this.isTemplateSet)
+        if ((!this.initialized || !this.isTemplateSet) && !this.primedWithoutTemplate)
         {
             return;
         }
 
+        this.UpdateValuesCore();
+    }
+
+    // The rebuild itself. Its own preconditions stay here, because they are correctness rather than lifecycle: a
+    // transiently null included/excluded list must not produce a filtered-to-nothing item set.
+    private void UpdateValuesCore()
+    {
         if (!this.includedValuesValid || !this.excludedValuesValid)
         {
             return;
@@ -466,11 +498,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         //
         // Profiling show a ~3x improvement in speed + reduced GC pressure, which
         // can be relevant since this can be a pretty hot path in some applications.
-        var list = new List<EnumPickerItem<T>>(this.allEnumValues.Length);
+        var list = new List<EnumPickerItem<T>>(allEnumValues.Length);
         EnumPickerItem? selectedItem = null;
-        for (var i = 0; i < this.allEnumValues.Length; ++i)
+        for (var i = 0; i < allEnumValues.Length; ++i)
         {
-            T val = this.allEnumValues[i];
+            T val = allEnumValues[i];
 
             if (includedCount > 0 && !this.includedSet!.Contains(val))
             {
@@ -656,7 +688,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
         else if (change.Property == SelectedValueProperty)
         {
-            if (this.UpdatingItems)
+            if (this.updatingItems)
             {
                 this.SelectedItem = null;
             }

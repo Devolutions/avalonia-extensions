@@ -6,7 +6,6 @@ using Avalonia.Threading;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
-[Collection("VisualTests")]
 public class EnumPickerTests
 {
     private enum TestEnum
@@ -48,9 +47,9 @@ public class EnumPickerTests
         picker.PrimeItemsWithoutTemplate();
 
         Assert.Equal(
-            new[] { PrimeTestEnum.Gamma, PrimeTestEnum.Alpha },
+            [PrimeTestEnum.Gamma, PrimeTestEnum.Alpha],
             picker.Items.Select(item => (PrimeTestEnum)item.EnumValue));
-        Assert.Equal(new[] { "Initial Gamma", "Initial Alpha" }, picker.Items.Select(item => item.Text));
+        Assert.Equal(["Initial Gamma", "Initial Alpha"], picker.Items.Select(item => item.Text));
 
         typedPicker.ExcludedValues = [PrimeTestEnum.Gamma];
         Assert.Equal(PrimeTestEnum.Alpha, Assert.Single(picker.Items).EnumValue);

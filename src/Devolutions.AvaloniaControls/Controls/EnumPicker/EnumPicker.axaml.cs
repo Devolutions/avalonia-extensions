@@ -132,7 +132,7 @@ public abstract class EnumPicker : TemplatedControl
 
 public class EnumPicker<T> : EnumPicker where T : struct, Enum
 {
-    private readonly T[] allEnumValues = Enum.GetValues<T>();
+    private static readonly T[] allEnumValues = Enum.GetValues<T>();
 
     private bool initialized;
     private bool isInitialValueSet;
@@ -148,22 +148,18 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
     private Dictionary<T, string> cachedTextOverrides = [];
     private ICollection<EnumPickerTextOverride<T>> textOverrides = new AvaloniaList<EnumPickerTextOverride<T>>();
     
-    //  TODO: Can some/all work done here be moved to OnInitialized/OnApplyTemplate/last-of-these-2
-    //        so that consumers never rendering `EnumPicker` and simply using `PrimeItemsWithoutTemplate`
-    //        can skip all that?
-    //        It's possible that this constructor is being called with the wrong TextProvider initially
-    //        and then consumers set the proper one and end up re-populating the Items
+    // The item list is deliberately NOT built here. Every input that shapes it — TextProvider, TextOverrides,
+    // CustomSort, AlphabeticalOrder, IncludedValues, ExcludedValues — is assigned by object initializers, XAML
+    // setters or bindings, all of which run after this constructor. A list built here would therefore always be
+    // the unfiltered, unsorted, ToString()-named one, and would always be thrown away by the first
+    // UpdateValuesCore triggered from OnInitialized, OnApplyTemplate or PrimeItemsWithoutTemplate.
+    //
+    // Items stays empty until one of those three runs, which also means a host that only ever calls
+    // PrimeItemsWithoutTemplate pays for exactly one build instead of two.
     public EnumPicker()
     {
-        Func<Enum, string>? textProvider = this.TextProvider;
-        List<EnumPickerItem> items = new(this.allEnumValues.Length);
-        for (var i = 0; i < this.allEnumValues.Length; ++i)
-        {
-            T v = this.allEnumValues[i];
-            items.Add(new EnumPickerItem<T> { Value = v, EnumValue = v, Text = GetEnumText(v, emptyOverrides, textProvider) });
-        }
-        this.Items = items;
-
+        // Must stay: XAML adds TextOverrides entries into the default collection exposed by the getter, so the
+        // collection-changed subscription has to exist before any of that content is parsed.
         this.DidChangeTextOverrides();
     }
 
@@ -175,8 +171,6 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
 
         this.UpdateValuesCore();
     }
-
-    private static readonly Dictionary<T, string> emptyOverrides = [];
 
     // Cached sort delegate to avoid per-call closure allocation. Reads cached fields.
     private Comparison<EnumPickerItem<T>>? cachedSortComparison;
@@ -495,11 +489,11 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         //
         // Profiling show a ~3x improvement in speed + reduced GC pressure, which
         // can be relevant since this can be a pretty hot path in some applications.
-        var list = new List<EnumPickerItem<T>>(this.allEnumValues.Length);
+        var list = new List<EnumPickerItem<T>>(allEnumValues.Length);
         EnumPickerItem? selectedItem = null;
-        for (var i = 0; i < this.allEnumValues.Length; ++i)
+        for (var i = 0; i < allEnumValues.Length; ++i)
         {
-            T val = this.allEnumValues[i];
+            T val = allEnumValues[i];
 
             if (includedCount > 0 && !this.includedSet!.Contains(val))
             {

@@ -29,10 +29,10 @@ public static class DevoTreeDataGridExtensions
     /// </summary>
     /// <remarks>
     /// Settable on the column, or on the adornment control itself, where a value takes precedence over the
-    /// column's. Set it on the control when the position changes at runtime: a
-    /// <see cref="TreeDataGridColumn"/> is a plain <see cref="AvaloniaObject"/> with no DataContext, so a
-    /// XAML binding cannot resolve against it, and a change made on a column after layout cannot schedule
-    /// one either.
+    /// column's. Setting it directly on a column works at any time, including after layout, because the
+    /// header follows its column's property changes. Set it on the control when the position needs to come
+    /// from a <c>{Binding}</c>: a <see cref="TreeDataGridColumn"/> is a plain <see cref="AvaloniaObject"/>
+    /// with no DataContext, so a binding has nothing to resolve against on the column.
     /// </remarks>
     public static readonly AttachedProperty<HeaderAdornmentPosition> HeaderAdornmentPositionProperty =
         AvaloniaProperty.RegisterAttached<AvaloniaObject, HeaderAdornmentPosition>(

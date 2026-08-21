@@ -155,7 +155,7 @@
                     MinHeight="{DynamicResource DevExMenuPopupMinHeight}"
                     HorizontalAlignment="Stretch"
                     CornerRadius="{DynamicResource DevExMenuPopupCornerRadius}">
-              <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+              <ScrollViewer Theme="{StaticResource DevExMenuScrollViewer}">
                 <ItemsPresenter Name="PART_ItemsPresenter"
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
                                 Grid.IsSharedSizeScope="True" />

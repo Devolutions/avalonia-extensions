@@ -25,6 +25,20 @@
     </Style>
   </Style>
 
+  <!--
+    Menu row geometry and typography are (re)applied at Style level, not only through the
+    MenuItem ControlTheme. Host themes set these with Styles of their own (for example the
+    DevExpress theme's Menu.styles.axaml), and a Style setter outranks a ControlTheme setter,
+    so a ControlTheme alone lets the host resize menu rows when the menu pack is layered on top.
+  -->
+  <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
+    <Setter Property="MinHeight" Value="{DynamicResource MacOsMenuItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource MacOsMenuFontSize}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+
   <Style Selector="MenuFlyoutPresenter > MenuItem:separator, ContextMenu > MenuItem:separator">
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="Padding" Value="0" />

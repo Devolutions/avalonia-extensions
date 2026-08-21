@@ -52,7 +52,7 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <conv:PlatformKeyGestureConverter x:Key="KeyGestureConverter" />
+  <conv:PlatformKeyGestureConverter x:Key="MacOsMenuKeyGestureConverter" />
 
   <ControlTheme x:Key="DevolutionsMacOsMenuItemIconTheme" TargetType="ContentControl">
     <Setter Property="Width" Value="10" />
@@ -71,12 +71,15 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
-    <Setter Property="FontSize" Value="{StaticResource ControlFontSize}" />
+    <Setter Property="FontSize" Value="{StaticResource MacOsMenuFontSize}" />
+    <Setter Property="FontFamily" Value="{StaticResource MacOsMenuFontFamily}" />
+    <!-- Block inheritance of LineHeight from parent controls -->
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
-    <Setter Property="MinHeight" Value="{DynamicResource MenuItemMinHeight}" />
+    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MacOsMenuItemMinHeight}" />
     <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
-    <Setter Property="Padding" Value="{DynamicResource MenuItemPadding}" />
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -87,7 +90,7 @@
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="{StaticResource SelectionCornerRadius}">
+                  CornerRadius="{StaticResource MacOsMenuSelectionCornerRadius}">
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"
@@ -103,14 +106,14 @@
                               x:Name="PART_ToggleIconPresenter"
                               IsVisible="False"
                               Theme="{StaticResource DevolutionsMacOsMenuItemIconTheme}"
-                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+                              Margin="{DynamicResource MacOsMenuIconPresenterMargin}" />
 
               <ContentControl Name="PART_IconPresenter"
                               Grid.Column="1"
                               IsVisible="False"
                               Theme="{StaticResource DevolutionsMacOsMenuItemIconTheme}"
                               Content="{TemplateBinding Icon}"
-                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+                              Margin="{DynamicResource MacOsMenuIconPresenterMargin}" />
 
               <ContentPresenter Name="PART_HeaderPresenter"
                                 Grid.Column="2"
@@ -122,19 +125,19 @@
                                 RecognizesAccessKey="True" />
               <TextBlock Name="PART_InputGestureText"
                          Grid.Column="3"
-                         Margin="{DynamicResource MenuInputGestureTextMargin}"
-                         Text="{TemplateBinding InputGesture, Converter={StaticResource KeyGestureConverter}}"
+                         Margin="{DynamicResource MacOsMenuInputGestureTextMargin}"
+                         Text="{TemplateBinding InputGesture, Converter={StaticResource MacOsMenuKeyGestureConverter}}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center"
-                         Foreground="{DynamicResource ForegroundMidLowBrush}"
+                         Foreground="{DynamicResource MacOsMenuForegroundMidLowBrush}"
                          IsVisible="{TemplateBinding InputGesture, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
               <!-- Not sure why `TemplateBinding Foreground` doesn't work with the PART_ChevronPath Fill (won't pick up any changes) -->
               <Path Name="PART_ChevronPath"
                     Grid.Column="3"
                     Stretch="Uniform"
-                    Width="{StaticResource TreeViewItemChevronSize}"
-                    Height="{StaticResource TreeViewItemChevronSize}"
-                    Data="{StaticResource ChevronPath}"
+                    Width="{StaticResource MacOsMenuChevronSize}"
+                    Height="{StaticResource MacOsMenuChevronSize}"
+                    Data="{StaticResource MacOsMenuChevronPath}"
                     Fill="{Binding $parent[MenuItem].Foreground}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right">
@@ -149,28 +152,28 @@
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  Placement="RightEdgeAlignedTop"
-                 HorizontalOffset="{DynamicResource SubMenuPopupHorizontalOffset}"
-                 VerticalOffset="{DynamicResource SubMenuPopupVerticalOffset}"
+                 HorizontalOffset="{DynamicResource MacOsMenuSubMenuPopupHorizontalOffset}"
+                 VerticalOffset="{DynamicResource MacOsMenuSubMenuPopupVerticalOffset}"
                  IsLightDismissEnabled="False"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
-            <Border Margin="{StaticResource PopupMargin} "
-                    BorderBrush="{DynamicResource PopupBorderBrush}"
-                    BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                    MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
-                    MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+            <Border Margin="{DynamicResource MacOsMenuPopupMargin} "
+                    BorderBrush="{DynamicResource MacOsMenuPopupBorderBrush}"
+                    BorderThickness="{DynamicResource MacOsMenuPopupBorderThickness}"
+                    MaxWidth="{DynamicResource MacOsMenuPopupMaxWidth}"
+                    MinHeight="{DynamicResource MacOsMenuPopupMinHeight}"
                     HorizontalAlignment="Stretch"
-                    BoxShadow="{DynamicResource PopupShadow}"
-                    CornerRadius="{DynamicResource PopupCornerRadius}">
+                    BoxShadow="{DynamicResource MacOsMenuPopupShadow}"
+                    CornerRadius="{DynamicResource MacOsMenuPopupCornerRadius}">
               <Border Name="InnerBorderHighlight"
-                      Background="{DynamicResource PopupBackgroundBrush}"
-                      BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
-                      BorderThickness="{DynamicResource PopupInnerBorderThickness}"
-                      CornerRadius="{DynamicResource PopupCornerRadius}"
-                      Padding="{DynamicResource MenuFlyoutPadding}">
+                      Background="{DynamicResource MacOsMenuPopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource MacOsMenuPopupInnerBorderHighlightBrush}"
+                      BorderThickness="{DynamicResource MacOsMenuPopupInnerBorderThickness}"
+                      CornerRadius="{DynamicResource MacOsMenuPopupCornerRadius}"
+                      Padding="{DynamicResource MacOsMenuPopupPadding}">
                 <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
                   <ItemsPresenter Name="PART_ItemsPresenter"
                                   ItemsPanel="{TemplateBinding ItemsPanel}"
-                                  Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                  Margin="{DynamicResource MacOsMenuFlyoutScrollerMargin}"
                                   Grid.IsSharedSizeScope="True" />
                 </ScrollViewer>
               </Border>
@@ -181,7 +184,7 @@
     </Setter>
 
     <Style Selector="^:open /template/ Path#PART_ChevronPath">
-      <Setter Property="Fill" Value="{DynamicResource ForegroundHighBrush}" />
+      <Setter Property="Fill" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
     </Style>
 
     <Style Selector="^:icon /template/ ContentControl#PART_IconPresenter">
@@ -189,28 +192,28 @@
     </Style>
     <Style Selector="^:selected, ^:focus-visible">
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuSelectedBackgroundBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
       </Style>
     </Style>
     <Style Selector="^:pointerover">
-      <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuAccentForegroundBrush}" />
       <Style Selector="^ /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource MenuItemPointerOverBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MacOsMenuItemPointerOverBackgroundBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource ControlForegroundAccentHighBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MacOsMenuAccentForegroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^:disabled">
       <Style Selector="^">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
       </Style>
       <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundLowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
       </Style>
     </Style>
 
@@ -241,7 +244,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Stretch="Fill"
-                Data="{DynamicResource CheckMarkPath}" />
+                Data="{DynamicResource MacOsMenuCheckMarkPath}" />
         </Template>
       </Setter>
     </Style>

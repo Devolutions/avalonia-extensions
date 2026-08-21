@@ -1,0 +1,47 @@
+<!--
+  MacOS LiquidGlass menu token overrides (macOS 26+).
+
+  Merged by Controls/MacOsMenuPack.cs on top of Accents/MenuResources.axaml when the
+  running OS supports LiquidGlass, so the standalone pack renders the same menus as the
+  full theme without pulling in the MacOS theme dictionaries (which would restyle
+  non-menu controls in the consuming app).
+
+  Only keys that actually differ from the classic values are listed. Values are pinned
+  literals mirroring Accents/ThemeResources_LiquidGlass.axaml; MacOsMenuPackContractTests
+  asserts pack/full-theme parity so the two cannot drift apart.
+
+  NOTE: the full DevolutionsMacOsTheme does NOT merge this file. There the menu tokens are
+  derived from the theme's own resources by MenuResourceAliasBuilder.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" Opacity="0.93" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#000000" Opacity="0.2" />
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#171717" Opacity="0.89" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#171717" Opacity="0.89" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
+      <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!--
+    Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
+    OklchAdjustmentConverter here, which the pack cannot reuse without importing the theme
+    dictionaries. The value matches the default accent; with a custom macOS accent colour the
+    LiquidGlass hover tint stays at the default (the classic value above does follow the accent).
+  -->
+  <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
+
+  <Thickness x:Key="MacOsMenuPopupMargin">12 4 12 29</Thickness>
+  <Thickness x:Key="MacOsMenuItemPadding">9 4 7 4</Thickness>
+  <x:Double x:Key="MacOsMenuItemMinHeight">24</x:Double>
+  <CornerRadius x:Key="MacOsMenuPopupCornerRadius">12</CornerRadius>
+  <x:Double x:Key="MacOsMenuSubMenuPopupVerticalOffset">-11</x:Double>
+</ResourceDictionary>

@@ -27,7 +27,8 @@
     "Overview",
     "Control Demos",
     "Control Alignment",
-    "DevExpress Menu Pack",
+    "📦 DevExpress Menu Pack",
+    "📦 MacOS Menu Pack",
     "Experiments"
   ],
   "pages": {
@@ -433,30 +434,56 @@
         }
       }
     ],
-    "DevExpress Menu Pack": [
+    "📦 DevExpress Menu Pack": [
       // No visual regression tests required for these pages.
       // They are tested in MenuPackContractTests.cs
       {
-        "uniqueTitle": "About",
+        "uniqueTitle": "🪟 About",
         "demo": "MenuPackAbout.axaml"
       },
       {
-        "uniqueTitle": "📦 Menu",
+        "uniqueTitle": "🪟 Menu",
         "source": "Avalonia",
         "category": "Navigation",
         "demo": "MenuPackMenuDemo.axaml"
       },
       {
-        "uniqueTitle": "📦 ContextMenu",
+        "uniqueTitle": "🪟 ContextMenu",
         "source": "Avalonia",
         "category": "Navigation",
         "demo": "MenuPackContextMenuDemo.axaml"
       },
       {
-        "uniqueTitle": "📦 MenuFlyout",
+        "uniqueTitle": "🪟 MenuFlyout",
         "source": "Avalonia",
         "category": "Navigation",
         "demo": "MenuPackMenuFlyoutDemo.axaml"
+      }
+    ],
+    "📦 MacOS Menu Pack": [
+      // No visual regression tests required for these pages.
+      // They are covered by MenuPack contract tests.
+      {
+        "uniqueTitle": "🍏 About",
+        "demo": "MacMenuPackAbout.axaml"
+      },
+      {
+        "uniqueTitle": "🍏 Menu",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "MacMenuPackMenuDemo.axaml"
+      },
+      {
+        "uniqueTitle": "🍏 ContextMenu",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "MacMenuPackContextMenuDemo.axaml"
+      },
+      {
+        "uniqueTitle": "🍏 MenuFlyout",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "MacMenuPackMenuFlyoutDemo.axaml"
       }
     ],
     "Experiments": [

@@ -1,9 +1,12 @@
 <!-- Based off https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/MenuFlyoutPresenter.xaml -->
 
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors">
   
   <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter">
+    <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.IsMenuOwner" Value="True" />
+
     <Setter Property="Background" Value="{DynamicResource DevExMenuBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource DevExMenuPopupBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource DevExMenuPopupBorderThickness}" />

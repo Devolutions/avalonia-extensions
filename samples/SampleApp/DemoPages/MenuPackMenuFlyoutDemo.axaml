@@ -25,7 +25,7 @@
       </TextBlock>
     </Border>
 
-    <demo:MenuFlyoutDemo x:Name="SupportedDemoRoot"
-                         IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
+    <demo:MenuPackMenuFlyoutDemoContent x:Name="SupportedDemoRoot"
+                                        IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
   </StackPanel>
 </UserControl>

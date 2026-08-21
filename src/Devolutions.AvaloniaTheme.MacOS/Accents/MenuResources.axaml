@@ -1,0 +1,87 @@
+<!--
+  MacOS menu token contract — single source of truth for menu visuals.
+
+  Included by both:
+    - ThemeRoot.axaml                 (full DevolutionsMacOsTheme)
+    - Controls/MenuPack.styles.axaml  (externally consumable menu pack)
+
+  Every key is prefixed "MacOsMenu" to avoid collisions with host themes.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#e7e7e7" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#e7e7e7" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="MacOsMenuItemForegroundBrush" Color="#d9000000" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundHighBrush" Color="#d9000000" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundMidLowBrush" Color="#57000000" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundLowBrush" Color="#40000000" />
+      <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#12000000" />
+      <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#1f000000" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
+      <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33000000" />
+      <Thickness x:Key="MacOsMenuPopupBorderThickness">0</Thickness>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#262626" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#262626" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#33ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuItemForegroundBrush" Color="#8cffffff" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundHighBrush" Color="#d9ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundMidLowBrush" Color="#57ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuForegroundLowBrush" Color="#59ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#deecf9" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#2bffffff" />
+      <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#3dffffff" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
+      <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33ffffff" />
+      <Thickness x:Key="MacOsMenuPopupBorderThickness">1</Thickness>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- Pinned (mirrors MacOsThemeFontFamily): inheriting the host's font changes menu text
+       metrics, and therefore row heights, when the pack is layered on a foreign theme. -->
+  <FontFamily x:Key="MacOsMenuFontFamily">SF Pro Text, Inter, Helvetica Neue, Segoe UI, sans-serif</FontFamily>
+  <x:Double x:Key="MacOsMenuFontSize">13</x:Double>
+  <x:Double x:Key="MacOsMenuHeaderFontSizeSmall">10</x:Double>
+  <x:Double x:Key="MacOsMenuChevronSize">8</x:Double>
+  <CornerRadius x:Key="MacOsMenuSelectionCornerRadius">4</CornerRadius>
+
+  <Thickness x:Key="MacOsMenuPopupMargin">12 1 12 29</Thickness>
+  <Thickness x:Key="MacOsMenuPopupInnerBorderThickness">1 1 0 0</Thickness>
+  <CornerRadius x:Key="MacOsMenuPopupCornerRadius">5</CornerRadius>
+  <BoxShadows x:Key="MacOsMenuPopupShadow">0 0 1 0 #66000000, 0 0 1.5 00 #4d000000, 0 7 22 0 #40000000</BoxShadows>
+  <x:Double x:Key="MacOsMenuPopupMaxWidth">456</x:Double>
+  <x:Double x:Key="MacOsMenuPopupMinHeight">32</x:Double>
+  <Thickness x:Key="MacOsMenuPopupPadding">5 2 5 2</Thickness>
+  <Thickness x:Key="MacOsMenuFlyoutPresenterPadding">0</Thickness>
+  <Thickness x:Key="MacOsMenuFlyoutScrollerMargin">0 4 0 4</Thickness>
+  <x:Double x:Key="MacOsMenuHorizontalFlyoutMinWidth">32</x:Double>
+  <x:Double x:Key="MacOsMenuSubMenuPopupHorizontalOffset">-14</x:Double>
+  <x:Double x:Key="MacOsMenuSubMenuPopupVerticalOffset">-7</x:Double>
+  <x:Double x:Key="MacOsMenuPopupHorizontalOffset">-12</x:Double>
+  <x:Double x:Key="MacOsMenuPopupVerticalOffset">6</x:Double>
+  <x:Double x:Key="MacOsMenuToolBarPopupVerticalOffset">-10</x:Double>
+
+  <Thickness x:Key="MacOsMenuBarPadding">6</Thickness>
+  <Thickness x:Key="MacOsMenuItemPadding">9 4 7 2</Thickness>
+  <x:Double x:Key="MacOsMenuItemMinHeight">22</x:Double>
+  <Thickness x:Key="MacOsMenuIconPresenterMargin">0 0 4 0</Thickness>
+  <Thickness x:Key="MacOsMenuInputGestureTextMargin">24 0 0 0</Thickness>
+  <Thickness x:Key="MacOsMenuItemIconPadding">0</Thickness>
+  <Thickness x:Key="MacOsMenuToolBarItemPadding">4 0 4 4</Thickness>
+  <Thickness x:Key="MacOsMenuToolBarItemIconPadding">10 5 8 5</Thickness>
+  <Thickness x:Key="MacOsMenuToolBarItemActiveBackgroundMargin">-10 -3 -8 -3</Thickness>
+  <Thickness x:Key="MacOsMenuItemActiveBackgroundMargin">-6 -2 -7 -2</Thickness>
+
+  <x:Double x:Key="MacOsMenuSeparatorHeight">1</x:Double>
+  <Thickness x:Key="MacOsMenuSeparatorPadding">8 5 8 5</Thickness>
+
+  <StreamGeometry x:Key="MacOsMenuChevronPath">M257.2,177.4c-8.3,0-16.6-3.2-23-9.5l-89.4-89.4-89.4,89.4c-12.7,12.7-33.3,12.7-46,0-12.7-12.7-12.7-33.3,0-46L121.9,9.5c12.7-12.7,33.3-12.7,46,0l112.4,112.4c12.7,12.7,12.7,33.3,0,46s-14.7,9.5-23,9.5Z</StreamGeometry>
+  <StreamGeometry x:Key="MacOsMenuCheckMarkPath">M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z</StreamGeometry>
+</ResourceDictionary>

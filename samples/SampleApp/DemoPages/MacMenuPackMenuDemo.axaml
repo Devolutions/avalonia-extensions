@@ -5,11 +5,7 @@
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
-             x:Class="SampleApp.DemoPages.MenuPackMenuDemo">
-
-  <UserControl.Styles>
-    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
-  </UserControl.Styles>
+             x:Class="SampleApp.DemoPages.MacMenuPackMenuDemo">
 
   <StackPanel>
     <Border x:Name="SimpleThemePrerequisiteNote"

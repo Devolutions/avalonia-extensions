@@ -19,7 +19,6 @@ internal static class MenuResourceAliasBuilder
     ("MacOsMenuSelectedBackgroundBrush", "LayoutBackgroundMidBrush"),
     ("MacOsMenuPressedBackgroundBrush", "LayoutBackgroundHighBrush"),
     ("MacOsMenuItemPointerOverBackgroundBrush", "MenuItemPointerOverBackgroundBrush"),
-    ("MacOsMenuSeparatorBrush", "SeparatorBrush"),
     ("MacOsMenuPopupBorderThickness", "MenuFlyoutPresenterBorderThickness"),
     ("MacOsMenuFontSize", "ControlFontSize"),
     ("MacOsMenuHeaderFontSizeSmall", "MenuHeaderFontSizeSmall"),

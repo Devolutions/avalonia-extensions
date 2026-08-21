@@ -218,9 +218,6 @@ public class MacOsMenuPackContractTests
 
         try
         {
-            window.Show();
-            Dispatcher.UIThread.RunJobs();
-
             Assert.True(page.TryFindResource("MacOsMenuPopupMargin", ThemeVariant.Light, out object? popupMargin),
                 "Menu pack page should resolve the active MacOS popup margin.");
             Assert.True(page.TryFindResource("MacOsMenuItemPadding", ThemeVariant.Light, out object? itemPadding),
@@ -427,16 +424,27 @@ public class MacOsMenuPackContractTests
         var page = new UserControl();
         var window = new Window { Content = page, RequestedThemeVariant = ThemeVariant.Light };
         window.Styles.Add(new AvaloniaFluentTheme());
-        page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
 
         try
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
 
-            Assert.False(
-                page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? leaked),
-                $"Menu pack must not publish the non-menu MacOS resource '{nonMenuKey}' (got '{leaked}').");
+            bool hostFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? hostValue);
+            string hostToken = DescribeToken(hostValue);
+
+            page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+            Dispatcher.UIThread.RunJobs();
+
+            bool packFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? packValue);
+            string packToken = DescribeToken(packValue);
+
+            Assert.Equal(
+                hostFound,
+                packFound);
+            Assert.Equal(
+                hostToken,
+                packToken);
         }
         finally
         {

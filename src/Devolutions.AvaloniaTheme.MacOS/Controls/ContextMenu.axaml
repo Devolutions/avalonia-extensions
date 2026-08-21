@@ -62,7 +62,7 @@
                   BorderThickness="{DynamicResource MacOsMenuPopupInnerBorderThickness}"
                   CornerRadius="{TemplateBinding CornerRadius}"
                   Padding="{DynamicResource MacOsMenuPopupPadding}">
-            <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}"
+            <ScrollViewer Theme="{StaticResource MacOsMenuScrollViewer}"
                           HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                           VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
               <ItemsPresenter Name="PART_ItemsPresenter"

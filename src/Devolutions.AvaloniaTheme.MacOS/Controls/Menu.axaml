@@ -83,6 +83,9 @@
        (instead of multiple individual variations on the property level) -->
   <ControlTheme x:Key="DevolutionsMacOsTopLevelMenuItem" TargetType="MenuItem">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="FontFamily" Value="{StaticResource MacOsMenuFontFamily}" />
+    <!-- Block inheritance of LineHeight from parent controls -->
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
     <Setter Property="FontSize">
       <Setter.Value>
         <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
@@ -98,8 +101,8 @@
         <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                       ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
           <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-          <Binding Source="{StaticResource MenuToolBarItemPadding}" />
-          <Binding Source="{StaticResource MenuItemPadding}" />
+          <Binding Source="{StaticResource MacOsMenuToolBarItemPadding}" />
+          <Binding Source="{StaticResource MacOsMenuItemPadding}" />
         </MultiBinding>
       </Setter.Value>
     </Setter>
@@ -143,8 +146,8 @@
                   <MultiBinding Converter="{x:Static DevoMultiConverters.ClassToChoiceConverter}"
                                 ConverterParameter="MacOS_Theme_MenuLabelBelowIcon">
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=Menu}" Path="Classes" />
-                    <Binding Source="{StaticResource MenuToolBarItemIconPadding}" />
-                    <Binding Source="{StaticResource MenuItemIconPadding}" />
+                    <Binding Source="{StaticResource MacOsMenuToolBarItemIconPadding}" />
+                    <Binding Source="{StaticResource MacOsMenuItemIconPadding}" />
                   </MultiBinding>
                 </Border.Padding>
                 <Panel>

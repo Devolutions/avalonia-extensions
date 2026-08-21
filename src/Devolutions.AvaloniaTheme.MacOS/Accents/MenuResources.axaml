@@ -44,6 +44,9 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
+  <!-- Pinned (mirrors MacOsThemeFontFamily): inheriting the host's font changes menu text
+       metrics, and therefore row heights, when the pack is layered on a foreign theme. -->
+  <FontFamily x:Key="MacOsMenuFontFamily">SF Pro Text, Inter, Helvetica Neue, Segoe UI, sans-serif</FontFamily>
   <x:Double x:Key="MacOsMenuFontSize">13</x:Double>
   <x:Double x:Key="MacOsMenuHeaderFontSizeSmall">10</x:Double>
   <x:Double x:Key="MacOsMenuChevronSize">8</x:Double>

@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
                     x:ClassModifier="internal">
   <Design.PreviewWith>
     <Border Padding="20">
@@ -86,6 +87,8 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type Menu}" TargetType="Menu">
+    <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.IsMenuOwner" Value="True" />
+
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Height" Value="{DynamicResource DevExMenuBarHeight}" />
     <Setter Property="ItemContainerTheme" Value="{StaticResource MenuTopLevelMenuItem}" />

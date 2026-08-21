@@ -1,5 +1,7 @@
 using Avalonia;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
@@ -517,4 +519,137 @@ public class MacOsMenuPackContractTests
         null => "<null>",
         _ => $"{value.GetType().Name}|{value}",
     };
+
+
+    /// <summary>
+    ///   Menu row geometry and typography must be applied at Style level, not only through the
+    ///   MenuItem ControlTheme.
+    /// </summary>
+    /// <remarks>
+    ///   Host themes set menu metrics with Styles of their own (for example the DevExpress
+    ///   theme's Menu.styles.axaml), and a Style setter outranks a ControlTheme setter. Relying
+    ///   on the ControlTheme alone regressed once already: menus kept the MacOS chrome while the
+    ///   host resized every row.
+    ///   Asserted structurally because rendering two themes in one headless process is not
+    ///   currently reliable.
+    /// </remarks>
+    [AvaloniaFact]
+    public void Pack_applies_menu_row_geometry_at_style_level()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        try
+        {
+            var pack = new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack();
+
+            List<Style> nestedItemStyles = Flatten(pack)
+                .Where(style => style.Selector?.ToString() is { } selector
+                                && selector.Contains("MenuItem")
+                                && selector.Contains(":not(:separator)"))
+                .ToList();
+
+            Assert.True(
+                nestedItemStyles.Count > 0,
+                "The pack must style nested menu items so host-theme Styles cannot resize menu rows.");
+
+            List<string> styledProperties = nestedItemStyles
+                .SelectMany(style => style.Setters)
+                .OfType<Setter>()
+                .Select(setter => setter.Property?.Name ?? string.Empty)
+                .ToList();
+
+            Assert.Contains("MinHeight", styledProperties);
+            Assert.Contains("Padding", styledProperties);
+            Assert.Contains("FontFamily", styledProperties);
+            Assert.Contains("FontSize", styledProperties);
+            Assert.Contains("LineHeight", styledProperties);
+        }
+        finally
+        {
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    private static IEnumerable<Style> Flatten(IStyle style)
+    {
+        if (style is StyleInclude include)
+        {
+            if (include.Loaded is { } loaded)
+            {
+                foreach (Style descendant in Flatten(loaded))
+                {
+                    yield return descendant;
+                }
+            }
+
+            yield break;
+        }
+
+        if (style is Style typed)
+        {
+            yield return typed;
+        }
+
+        foreach (IStyle child in style.Children.OfType<IStyle>())
+        {
+            foreach (Style descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+
+    /// <summary>
+    ///   Menu separator metrics must survive a host theme that positions separators itself.
+    /// </summary>
+    /// <remarks>
+    ///   The DevExpress theme aligns menu separators to its icon column from a behavior that
+    ///   assigns <c>Margin</c> as a local value, which outranks every style. Before it was scoped
+    ///   to menus that theme actually owns, it also re-positioned separators in menus styled by
+    ///   this pack, making the popup noticeably shorter under a DevExpress host.
+    /// </remarks>
+    [AvaloniaFact]
+    public void Menu_separator_metrics_survive_a_devexpress_host()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var hostTheme = new Devolutions.AvaloniaTheme.DevExpress.DevolutionsDevExpressTheme();
+        hostTheme.BeginInit();
+        hostTheme.EndInit();
+
+        var page = new UserControl();
+        var window = new Window { Content = page, Width = 800, Height = 600, RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(hostTheme);
+        page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        var separator = new Separator();
+        var contextMenu = new ContextMenu();
+        contextMenu.Items.Add(new MenuItem { Header = "Item", Icon = new TextBlock { Text = "*" } });
+        contextMenu.Items.Add(separator);
+        contextMenu.Items.Add(new MenuItem { Header = "Other" });
+
+        var target = new Border { Width = 300, Height = 200, ContextMenu = contextMenu };
+        page.Content = target;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            contextMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(
+                page.TryFindResource("MacOsMenuSeparatorPadding", ThemeVariant.Light, out object? expectedMargin),
+                "The pack must own the menu separator margin.");
+
+            Assert.Equal(expectedMargin, separator.Margin);
+        }
+        finally
+        {
+            contextMenu.Close();
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
 }

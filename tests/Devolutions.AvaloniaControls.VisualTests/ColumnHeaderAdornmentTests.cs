@@ -520,6 +520,51 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(headerWidth, after, Tolerance);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void PositionChange_DoesNotResizeAnEmptyAutoColumn(string themeName)
+    {
+        // The themes hide the sort indicator by collapsing a panel that is inside the measured tree, so
+        // switching to Fill does lower the header's own desired width by a few px. This pins the part that
+        // actually matters: the column does not move. The worst case is used deliberately -- an empty
+        // caption and no rows, so nothing but the header can decide the width.
+        SetTheme(themeName);
+
+        Border adornment = new() { Width = 40, Height = 12, Background = Brushes.Red };
+
+        TreeDataGrid grid = new() { CanUserSortColumns = true };
+        TreeDataGridTemplateColumn column = new()
+        {
+            Header = string.Empty,
+            Width = GridLength.Auto,
+            CellTemplate = CellTemplate(),
+        };
+
+        grid.Columns.Add(column);
+        grid.Columns.Add(new TreeDataGridTemplateColumn
+        {
+            Header = "Filler",
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTemplate = CellTemplate(),
+        });
+
+        DevoTreeDataGridExtensions.SetHeaderAdornment(column, adornment);
+        grid.ItemsSource = new List<string>();
+
+        Window window = Show(grid);
+
+        double rightWidth = ColumnWidth(grid);
+
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(column, HeaderAdornmentPosition.Fill);
+        double fillWidth = ColumnWidth(grid);
+
+        window.Close();
+
+        Assert.Equal(rightWidth, fillWidth, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

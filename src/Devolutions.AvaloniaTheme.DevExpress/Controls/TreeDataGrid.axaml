@@ -168,6 +168,13 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel ClipToBounds="False" ZIndex="9">
+          <!-- hit-target, for the column itself, offset to the left for the Thumb overflow).
+               Comes FIRST so interactive header content sits above it and wins the click; anything not
+               handled there bubbles to the TreeDataGridColumnHeader, which performs the sort. -->
+          <Border Background="Transparent" Margin="6 0 0 0" />
+
+          <!-- Stays inert: it spans the full width, so making it hit-testable would cover the 6px lane
+               the previous column's resize thumb overhangs into. -->
           <Border Name="HeaderBorder"
                   Background="{TemplateBinding Background}"
                   BorderBrush="Transparent"
@@ -176,40 +183,54 @@
                   ClipToBounds="False"
                   IsHitTestVisible="False">
             <Panel VerticalAlignment="Stretch" ClipToBounds="False">
-              <!-- Sort icon (reusing DataGrid foreground) -->
-              <Path Name="SortIcon"
-                    Fill="{TemplateBinding Foreground}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Margin="-6 0 3 0"
-                    Stretch="Uniform"
-                    Width="12"
-                    Height="7"
-                    TabIndex="-1"
-                    IsTabStop="False"
-                    Opacity="0"
-                    Data="{StaticResource TreeDataGridSortIconPath}" />
+              <!-- Sort icon (reusing DataGrid foreground). Shifted left by the header adornment's width so a
+                   Right-positioned adornment sits beside it, and hidden while the adornment fills the
+                   header, where the two would otherwise overlap.
 
-              <!-- Header content -->
-              <TreeDataGridOverflowHeader Name="HeaderContent"
-                                          Content="{TemplateBinding Header}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Padding="{TemplateBinding Padding}"
-                                          InnerContentMargin="{BindingToggler
-                                            {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
-                                            6 0 12 0,
-                                            6 0 0 0
-                                          }"
-                                          TextTrimming="CharacterEllipsis"
-                                          ShowToolTip="True"
-                                          IsHitTestVisible="False"
-                                          Margin="0 0 6 0"
-                                          TabIndex="0" />
+                   Collapsing this panel does drop a few px from the header's own desired width, since it
+                   sits in the measured tree. That cannot move a column: the icon footprint is smaller than
+                   TreeDataGrid's minimum column width, which wins at those sizes, and any caption wide
+                   enough to beat that minimum already outmeasures the icon. Pinned by
+                   PositionChange_DoesNotResizeAnEmptyAutoColumn. -->
+              <Panel HorizontalAlignment="Right"
+                     VerticalAlignment="Stretch"
+                     IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
+                <Panel.RenderTransform>
+                  <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+                </Panel.RenderTransform>
+                <Path Name="SortIcon"
+                      Fill="{TemplateBinding Foreground}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="-6 0 3 0"
+                      Stretch="Uniform"
+                      Width="12"
+                      Height="7"
+                      TabIndex="-1"
+                      IsTabStop="False"
+                      Opacity="0"
+                      Data="{StaticResource TreeDataGridSortIconPath}" />
+              </Panel>
             </Panel>
           </Border>
-          
-          <!-- hit-target, for the column itself, offset to the left for the Thumb overflow) -->
-          <Border Background="Transparent" Margin="6 0 0 0" />
+
+          <!-- Header content, a sibling of HeaderBorder rather than its child so it can be interactive
+               without the full-width border becoming so. The leading 6 stays in InnerContentMargin rather
+               than moving to Margin: InnerContentMargin is excluded from the desired size, so moving it
+               would widen every column by 6px. -->
+          <TreeDataGridOverflowHeader Name="HeaderContent"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      InnerContentMargin="{BindingToggler
+                                        {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
+                                        6 0 12 0,
+                                        6 0 0 0
+                                      }"
+                                      TextTrimming="CharacterEllipsis"
+                                      ShowToolTip="True"
+                                      Margin="0 0 6 0"
+                                      TabIndex="0" />
 
           <!-- Right separator + resizer -->
           <Panel HorizontalAlignment="Right" TabIndex="2" ClipToBounds="False" Width="5" ZIndex="99">
@@ -254,6 +275,15 @@
       <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridHeaderBorderBrushPressedBrush}" />
       <Setter Property="TextBlock.Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
       <Setter Property="Path.Fill" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
+    </Style>
+
+    <!-- The caption is a sibling of HeaderBorder, so it no longer inherits that border's
+         TextBlock.Foreground and needs the pointer states applied directly. -->
+    <Style Selector="^:pointerover:not(:pressed) /template/ TreeDataGridOverflowHeader#HeaderContent">
+      <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundPointerOverBrush}" />
+    </Style>
+    <Style Selector="^:pressed /template/ TreeDataGridOverflowHeader#HeaderContent">
+      <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundPressedBrush}" />
     </Style>
 
     <!-- Sort Adorners -->

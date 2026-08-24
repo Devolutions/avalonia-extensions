@@ -408,6 +408,7 @@ public class LinuxMenuPackContractTests
                 $"itemFontWeight={item.FontWeight}",
                 $"itemFontFamily={item.FontFamily}",
                 $"itemForeground={Describe(item.Foreground)}",
+                $"itemBackground={Describe(item.Background)}",
                 FormattableString.Invariant($"separatorHeight={separator.DesiredSize.Height:F2}"),
                 $"separatorMargin={separator.Margin}",
                 $"separatorBackground={Describe(separator.Background)}");
@@ -432,6 +433,8 @@ public class LinuxMenuPackContractTests
     [InlineData("FontFamily")]
     [InlineData("FontSize")]
     [InlineData("FontWeight")]
+    [InlineData("Background")]
+    [InlineData("Foreground")]
     public void Host_menu_item_styles_do_not_change_pinned_typography(string property)
     {
         string expected = DescribeRenderedMenu(hostTheme: "Fluent");
@@ -456,6 +459,8 @@ public class LinuxMenuPackContractTests
     [InlineData("FontWeight")]
     [InlineData("Padding")]
     [InlineData("MinHeight")]
+    [InlineData("Background")]
+    [InlineData("Foreground")]
     public void Host_menu_item_styles_do_not_change_the_menu_bar(string property)
     {
         string expected = DescribeRenderedMenuBar(hostStyle: null);
@@ -475,6 +480,8 @@ public class LinuxMenuPackContractTests
             "FontFamily" => new Setter(TemplatedControl.FontFamilyProperty, new FontFamily("Comic Sans MS")),
             "FontSize" => new Setter(TemplatedControl.FontSizeProperty, 42d),
             "Padding" => new Setter(TemplatedControl.PaddingProperty, new Thickness(30)),
+            "Background" => new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(Colors.Magenta)),
+            "Foreground" => new Setter(TemplatedControl.ForegroundProperty, new SolidColorBrush(Colors.Magenta)),
             "MinHeight" => new Setter(Layoutable.MinHeightProperty, 77d),
             _ => new Setter(TemplatedControl.FontWeightProperty, FontWeight.Bold),
         });
@@ -524,6 +531,8 @@ public class LinuxMenuPackContractTests
                 FormattableString.Invariant($"fontSize={topLevelItem.FontSize}"),
                 $"fontWeight={topLevelItem.FontWeight}",
                 $"padding={topLevelItem.Padding}",
+                $"background={Describe(topLevelItem.Background)}",
+                $"foreground={Describe(topLevelItem.Foreground)}",
                 FormattableString.Invariant($"minHeight={topLevelItem.MinHeight}"),
                 FormattableString.Invariant($"height={topLevelItem.Bounds.Height:F2}"));
         }

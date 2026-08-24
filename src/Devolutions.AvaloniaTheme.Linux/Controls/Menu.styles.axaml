@@ -30,6 +30,8 @@
     ControlTheme alone lets the host resize menu rows when the pack is layered on top.
   -->
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
     <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
     <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
@@ -47,6 +49,8 @@
     the popup row padding must NOT be applied here.
   -->
   <Style Selector="Menu > MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
     <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
     <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />

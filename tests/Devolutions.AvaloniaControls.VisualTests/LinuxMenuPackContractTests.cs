@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.Styling;
@@ -435,16 +436,100 @@ public class LinuxMenuPackContractTests
     {
         string expected = DescribeRenderedMenu(hostTheme: "Fluent");
 
-        var hostStyle = new Style(x => x.OfType<MenuItem>());
-        hostStyle.Setters.Add(property switch
+        string actual = DescribeRenderedMenu(hostTheme: "Fluent", HostileMenuItemStyle(property));
+
+        Assert.Equal(expected, actual);
+    }
+
+    /// <summary>
+    /// A host <c>Style</c> targeting <c>MenuItem</c> must not change the menu bar either.
+    /// </summary>
+    /// <remarks>
+    ///   Menu-bar items are direct children of <c>Menu</c>, so the sealing selector for popup
+    ///   rows (<c>MenuFlyoutPresenter/ContextMenu/MenuItem</c> descendants) does not reach them.
+    ///   They were left exposed originally: a host style changed the menu bar's font, padding
+    ///   and — most visibly — its height.
+    /// </remarks>
+    [AvaloniaTheory]
+    [InlineData("FontFamily")]
+    [InlineData("FontSize")]
+    [InlineData("FontWeight")]
+    [InlineData("Padding")]
+    [InlineData("MinHeight")]
+    public void Host_menu_item_styles_do_not_change_the_menu_bar(string property)
+    {
+        string expected = DescribeRenderedMenuBar(hostStyle: null);
+        string actual = DescribeRenderedMenuBar(HostileMenuItemStyle(property));
+
+        Assert.Equal(expected, actual);
+    }
+
+    /// <summary>
+    ///   Builds a host <c>Style</c> that tries to override one pinned menu property.
+    /// </summary>
+    private static Style HostileMenuItemStyle(string property)
+    {
+        var style = new Style(x => x.OfType<MenuItem>());
+        style.Setters.Add(property switch
         {
             "FontFamily" => new Setter(TemplatedControl.FontFamilyProperty, new FontFamily("Comic Sans MS")),
             "FontSize" => new Setter(TemplatedControl.FontSizeProperty, 42d),
+            "Padding" => new Setter(TemplatedControl.PaddingProperty, new Thickness(30)),
+            "MinHeight" => new Setter(Layoutable.MinHeightProperty, 77d),
             _ => new Setter(TemplatedControl.FontWeightProperty, FontWeight.Bold),
         });
 
-        string actual = DescribeRenderedMenu(hostTheme: "Fluent", hostStyle);
+        return style;
+    }
 
-        Assert.Equal(expected, actual);
+    /// <summary>
+    ///   Renders a menu bar with the pack over Fluent and describes what its top-level item
+    ///   renders with.
+    /// </summary>
+    private static string DescribeRenderedMenuBar(Style? hostStyle)
+    {
+        var page = new UserControl();
+        var window = new Window
+        {
+            Content = page,
+            Width = 700,
+            Height = 400,
+            RequestedThemeVariant = ThemeVariant.Light,
+        };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        if (hostStyle is not null)
+        {
+            window.Styles.Add(hostStyle);
+        }
+
+        var uri = new Uri(PackUri);
+        page.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        var topLevelItem = new MenuItem { Header = "File" };
+        topLevelItem.Items.Add(new MenuItem { Header = "Open" });
+
+        var menu = new Menu();
+        menu.Items.Add(topLevelItem);
+        page.Content = menu;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            return string.Join(
+                "\n",
+                $"fontFamily={topLevelItem.FontFamily}",
+                FormattableString.Invariant($"fontSize={topLevelItem.FontSize}"),
+                $"fontWeight={topLevelItem.FontWeight}",
+                $"padding={topLevelItem.Padding}",
+                FormattableString.Invariant($"minHeight={topLevelItem.MinHeight}"),
+                FormattableString.Invariant($"height={topLevelItem.Bounds.Height:F2}"));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

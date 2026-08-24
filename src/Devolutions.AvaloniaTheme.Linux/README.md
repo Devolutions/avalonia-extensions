@@ -118,9 +118,14 @@ owned by the pack. The point of the pack is that menus in a branded or opted-out
 platform-themed menus elsewhere in the same app; inheriting the host's font defeats that, and pinning also keeps
 menu geometry identical across hosts (font metrics change row heights).
 
-**Row geometry is applied at `Style` level, not only in the `MenuItem` `ControlTheme`.** Host themes set menu
-metrics with `Style`s of their own, and in Avalonia a `Style` setter outranks a `ControlTheme` setter — so a
-`ControlTheme` alone would let the host resize menu rows.
+**Row geometry and typography are applied at `Style` level, not only in the `MenuItem` `ControlTheme`.** Host
+themes set menu metrics with `Style`s of their own, and in Avalonia a `Style` setter outranks a `ControlTheme`
+setter — so a `ControlTheme` alone would let the host resize menu rows or restyle their text.
+
+This sealing is applied in two places, because one selector cannot cover both: popup rows and submenu items are
+descendants of `ContextMenu` / `MenuFlyoutPresenter` / `MenuItem`, whereas **menu-bar items are direct children
+of `Menu`** and would otherwise be left exposed. The two blocks pin the same typography but different geometry,
+since menu-bar items have their own padding.
 
 **The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`: that resource
 is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your app rather than just menu

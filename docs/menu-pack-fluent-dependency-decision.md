@@ -39,6 +39,10 @@ hard to diagnose:
 The practical risk is therefore not "menus look slightly off" but "an unfamiliar consumer hits an
 undiagnosable exception and concludes the pack is broken."
 
+The resolved implementation starts from the same conclusion: the menu scroll-viewer and its arrow
+resources are vendored into the pack and pinned with `DevExMenu*` keys so the pack remains host-
+independent even when the surrounding app is not Fluent-based.
+
 ## 3. Argument for removing it
 
 Makes the pack genuinely self-contained — matching the stated goal of an *externally consumable*

@@ -138,8 +138,8 @@ Two rules make the pack safe to layer over a host theme you do not control:
 
 **Inherited from the host (by design):**
 
-None. Menu template dependencies are now fully owned by the pack, including
-`DevExMenuScrollViewer`.
+None. Menu template dependencies are fully owned by the pack, including the vendored
+`DevExMenuScrollViewer` and the arrow resources it pins locally.
 
 **Typography is pinned, not inherited.** `DevExMenuFontFamily` / `DevExMenuFontSize` /
 `DevExMenuFontWeight` are owned by the pack. The point of the pack is that menus in a branded or

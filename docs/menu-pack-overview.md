@@ -88,7 +88,8 @@ every value is a literal.
 
 ### What is *deliberately* inherited from the host
 
-None. The pack owns all menu template dependencies, including `DevExMenuScrollViewer`.
+None. The pack owns all menu template dependencies, including the vendored
+`DevExMenuScrollViewer` and the arrow resources it pins locally.
 Anything not `DevExMenu*`-prefixed is a bug.
 
 

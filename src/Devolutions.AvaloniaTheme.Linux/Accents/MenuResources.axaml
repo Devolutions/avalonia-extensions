@@ -1,0 +1,222 @@
+<!--
+  Linux (Yaru) menu token contract — the single source of truth for menu visuals.
+
+  Included by BOTH:
+    - ThemeRoot.axaml                (full DevolutionsLinuxYaruTheme, via Controls/_index.axaml)
+    - Controls/MenuPack.styles.axaml (externally consumable menu pack)
+
+  so the two can never drift apart.
+
+  Rules for this file:
+    1. Every key is prefixed "LinuxMenu" so it can never collide with, or be silently
+       overridden by, a host theme when the pack is layered on top.
+    2. Values are pinned literals. Do NOT use StaticResource/DynamicResource to point at
+       theme-wide or Fluent-owned keys: when the pack is consumed over a foreign host theme
+       those keys resolve to the host's values and the menus drift.
+
+  This matters more here than for the other packs. The Linux menu templates were derived from
+  Fluent and used to consume Fluent's own generic keys (MenuFlyoutItemBackground,
+  MenuFlyoutPresenterBackground, CheckMarkPathData, ...). Under the full theme that is fine,
+  but layered over DevExpress or MacOS every one of those keys resolved to the *host's* value,
+  so the "Linux" menus rendered in the host's colours. The literals below are the values the
+  full Linux theme actually resolved to, captured per variant.
+
+  Typography is PINNED, not inherited, for the same reason it is in the DevExpress pack: a
+  branded section must render menus that match the platform-themed menus elsewhere in the same
+  app, and pinning keeps menu geometry host-invariant.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:Avalonia.Controls.Converters">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="LinuxMenuPresenterBackground" Color="#f2f2f2" />
+      <SolidColorBrush x:Key="LinuxMenuPresenterBorderBrush" Color="Black" Opacity="0.14" />
+      <SolidColorBrush x:Key="LinuxMenuSeparatorBrush" Color="Black" Opacity="0.14" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="LinuxMenuItemForeground" Color="Black" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundPointerOver" Color="#19000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundPointerOver" Color="Black" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundPressed" Color="#33000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundPressed" Color="Black" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundDisabled" Color="#66000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForeground" Color="#99000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundPointerOver" Color="#99000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundPressed" Color="#99000000" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundDisabled" Color="#66000000" />
+      <SolidColorBrush x:Key="LinuxMenuScrollArrowForeground" Color="Black" />
+      <SolidColorBrush x:Key="LinuxMenuScrollArrowForegroundPointerOver" Color="Black" />
+
+      <!--
+        The full theme only ever overrode the chevron margin for Dark, so Light has always
+        rendered with Fluent's value. Both are pinned exactly as they resolved, to avoid
+        changing current appearance; the asymmetry looks unintentional and is worth a look,
+        but tightening it is a visual change and belongs in its own PR.
+      -->
+      <Thickness x:Key="LinuxMenuItemChevronMargin">12 0 0 0</Thickness>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="LinuxMenuPresenterBackground" Color="#1b1d1a" />
+      <SolidColorBrush x:Key="LinuxMenuPresenterBorderBrush" Color="#494a47" />
+      <SolidColorBrush x:Key="LinuxMenuSeparatorBrush" Color="#494a47" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackground" Color="Transparent" />
+      <SolidColorBrush x:Key="LinuxMenuItemForeground" Color="White" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundPointerOver" Color="#19ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundPointerOver" Color="White" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundPressed" Color="#33ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundPressed" Color="White" />
+      <SolidColorBrush x:Key="LinuxMenuItemBackgroundDisabled" Color="Transparent" />
+      <SolidColorBrush x:Key="LinuxMenuItemForegroundDisabled" Color="#66ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForeground" Color="#99ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundPointerOver" Color="#99ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundPressed" Color="#99ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuItemKeyboardAcceleratorTextForegroundDisabled" Color="#66ffffff" />
+      <SolidColorBrush x:Key="LinuxMenuScrollArrowForeground" Color="White" />
+      <SolidColorBrush x:Key="LinuxMenuScrollArrowForegroundPointerOver" Color="White" />
+
+      <Thickness x:Key="LinuxMenuItemChevronMargin">0 0 7 0</Thickness>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- Typography (pinned — see header) -->
+  <FontFamily x:Key="LinuxMenuFontFamily">Open Sans, sans-serif</FontFamily>
+  <x:Double x:Key="LinuxMenuFontSize">14</x:Double>
+  <FontWeight x:Key="LinuxMenuFontWeight">Normal</FontWeight>
+
+  <!-- Menu bar -->
+  <x:Double x:Key="LinuxMenuBarHeight">32</x:Double>
+  <Thickness x:Key="LinuxMenuTopLevelItemPadding">6 1</Thickness>
+  <Thickness x:Key="LinuxMenuTopLevelIconMargin">0 0 6 0</Thickness>
+
+  <!-- Popup surfaces -->
+  <Thickness x:Key="LinuxMenuPresenterBorderThickness">1</Thickness>
+  <Thickness x:Key="LinuxMenuPresenterPadding">0</Thickness>
+  <CornerRadius x:Key="LinuxMenuPopupCornerRadius">5</CornerRadius>
+  <x:Double x:Key="LinuxMenuPopupMaxWidth">456</x:Double>
+  <x:Double x:Key="LinuxMenuPopupMinHeight">32</x:Double>
+  <x:Double x:Key="LinuxMenuHorizontalFlyoutMinWidth">32</x:Double>
+  <Thickness x:Key="LinuxMenuScrollerMargin">0 4 0 4</Thickness>
+  <x:Double x:Key="LinuxMenuSubMenuPopupHorizontalOffset">-4</x:Double>
+
+  <!-- Separators -->
+  <x:Double x:Key="LinuxMenuSeparatorHeight">1</x:Double>
+  <Thickness x:Key="LinuxMenuSeparatorMargin">0</Thickness>
+  <Thickness x:Key="LinuxMenuBarSeparatorMargin">0 4</Thickness>
+  <x:Double x:Key="LinuxMenuBarSeparatorWidth">1</x:Double>
+
+  <!-- Menu items -->
+  <x:Double x:Key="LinuxMenuItemMinHeight">25</x:Double>
+  <Thickness x:Key="LinuxMenuItemPadding">6 0</Thickness>
+  <Thickness x:Key="LinuxMenuIconPresenterMargin">6 0 6 0</Thickness>
+  <Thickness x:Key="LinuxMenuInputGestureTextMargin">24 0 0 0</Thickness>
+  <Thickness x:Key="LinuxMenuHorizontalItemMargin">2 0 2 0</Thickness>
+  <x:Double x:Key="LinuxMenuItemIconSize">16</x:Double>
+  <x:Double x:Key="LinuxMenuItemToggleColumnMinWidth">25</x:Double>
+  <x:Double x:Key="LinuxMenuItemChevronWidth">5</x:Double>
+  <x:Double x:Key="LinuxMenuItemChevronHeight">10</x:Double>
+
+  <StreamGeometry x:Key="LinuxMenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
+  <!--
+    Owned rather than inherited: the full theme picks this up from Controls/CheckBox.axaml,
+    which the menu pack deliberately does not ship, so a pack consumer would otherwise get the
+    host theme's check mark.
+  -->
+  <StreamGeometry x:Key="LinuxMenuItemCheckMarkPathData">M5.5 10.586 1.707 6.793A1 1 0 0 0 .293 8.207l4.5 4.5a1 1 0 0 0 1.414 0l11-11A1 1 0 0 0 15.793.293L5.5 10.586Z</StreamGeometry>
+
+  <x:Double x:Key="LinuxMenuScrollArrowSize">8</x:Double>
+
+  <!--
+    Owned rather than inherited from Fluent's FluentMenuScrollViewer: sharing that key across
+    themes caused an InvalidCastException when more than one theme was loaded in the same
+    process (see #629). Each pack now ships its own.
+  -->
+  <ControlTheme x:Key="LinuxMenuScrollViewer" TargetType="ScrollViewer">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="IsScrollChainingEnabled" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <RepeatButton DockPanel.Dock="Top"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        RenderTransform="{x:Null}"
+                        Command="{Binding LineUp, RelativeSource={RelativeSource TemplatedParent}}">
+            <RepeatButton.IsVisible>
+              <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
+                            ConverterParameter="0">
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="VerticalScrollBarVisibility" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Offset.Y" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Extent.Height" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
+              </MultiBinding>
+            </RepeatButton.IsVisible>
+            <Viewbox Width="{DynamicResource LinuxMenuScrollArrowSize}"
+                     Height="{DynamicResource LinuxMenuScrollArrowSize}">
+              <Path VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Data="M 19.091797 14.970703 L 10 5.888672 L 0.908203 14.970703 L 0.029297 14.091797 L 10 4.111328 L 19.970703 14.091797 Z"
+                    Fill="{DynamicResource LinuxMenuScrollArrowForeground}"
+                    Width="20"
+                    Height="20" />
+            </Viewbox>
+          </RepeatButton>
+          <RepeatButton DockPanel.Dock="Bottom"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        RenderTransform="{x:Null}"
+                        Command="{Binding LineDown, RelativeSource={RelativeSource TemplatedParent}}">
+            <RepeatButton.IsVisible>
+              <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
+                            ConverterParameter="100">
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="VerticalScrollBarVisibility" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Offset.Y" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Extent.Height" />
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
+              </MultiBinding>
+            </RepeatButton.IsVisible>
+            <Viewbox Width="{DynamicResource LinuxMenuScrollArrowSize}"
+                     Height="{DynamicResource LinuxMenuScrollArrowSize}">
+              <Path VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Data="M 18.935547 4.560547 L 19.814453 5.439453 L 10 15.253906 L 0.185547 5.439453 L 1.064453 4.560547 L 10 13.496094 Z"
+                    Fill="{DynamicResource LinuxMenuScrollArrowForeground}"
+                    Width="20"
+                    Height="20" />
+            </Viewbox>
+          </RepeatButton>
+          <ScrollContentPresenter Name="PART_ContentPresenter">
+            <ScrollContentPresenter.GestureRecognizers>
+              <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                       CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}" />
+            </ScrollContentPresenter.GestureRecognizers>
+          </ScrollContentPresenter>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^ /template/ RepeatButton:pointerover > Viewbox > Path">
+      <Setter Property="Fill" Value="{DynamicResource LinuxMenuScrollArrowForegroundPointerOver}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="LinuxMenuItemIconTheme" TargetType="ContentControl">
+    <Setter Property="Width" Value="{DynamicResource LinuxMenuItemIconSize}" />
+    <Setter Property="Height" Value="{DynamicResource LinuxMenuItemIconSize}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Viewbox StretchDirection="DownOnly"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center">
+          <ContentPresenter x:Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+        </Viewbox>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

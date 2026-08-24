@@ -1,0 +1,413 @@
+using System.ComponentModel;
+using System.IO;
+using System.Text.RegularExpressions;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Headless.XUnit;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Media;
+using Avalonia.Threading;
+using Avalonia.Styling;
+using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
+using Devolutions.AvaloniaTheme.Linux;
+using Xunit;
+
+namespace Devolutions.AvaloniaControls.VisualTests;
+
+/// <summary>
+/// Guards the Linux (Yaru) menu pack contract.
+///
+/// The full theme and the externally consumable menu pack both source their menu tokens from
+/// <c>Accents/MenuResources.axaml</c>, so the two cannot drift apart.
+///
+/// This matters more for Linux than for the other packs. The Linux menu templates were derived
+/// from Fluent and consumed Fluent's own generic keys (MenuFlyoutItemBackground,
+/// MenuFlyoutPresenterBackground, CheckMarkPathData, ...). That is invisible under the full
+/// theme but breaks the pack: layered over DevExpress or MacOS, every one of those keys
+/// resolves to the *host's* value, so "Linux" menus render in the host's colours.
+/// </summary>
+[Collection("VisualTests")]
+public class LinuxMenuPackContractTests
+{
+    private const string PackUri = "avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml";
+
+    /// <summary>
+    /// Every resource key the Linux menu templates depend on. All are owned by the pack and
+    /// prefixed, so a host theme cannot silently redefine them.
+    /// </summary>
+    private static readonly string[] MenuTokens =
+    {
+        "LinuxMenuPresenterBackground",
+        "LinuxMenuPresenterBorderBrush",
+        "LinuxMenuSeparatorBrush",
+        "LinuxMenuItemBackground",
+        "LinuxMenuItemForeground",
+        "LinuxMenuItemBackgroundPointerOver",
+        "LinuxMenuItemForegroundPointerOver",
+        "LinuxMenuItemBackgroundPressed",
+        "LinuxMenuItemForegroundPressed",
+        "LinuxMenuItemBackgroundDisabled",
+        "LinuxMenuItemForegroundDisabled",
+        "LinuxMenuItemKeyboardAcceleratorTextForeground",
+        "LinuxMenuItemKeyboardAcceleratorTextForegroundPointerOver",
+        "LinuxMenuItemKeyboardAcceleratorTextForegroundPressed",
+        "LinuxMenuItemKeyboardAcceleratorTextForegroundDisabled",
+        "LinuxMenuScrollArrowForeground",
+        "LinuxMenuScrollArrowForegroundPointerOver",
+        "LinuxMenuItemChevronMargin",
+        "LinuxMenuFontFamily",
+        "LinuxMenuFontSize",
+        "LinuxMenuFontWeight",
+        "LinuxMenuBarHeight",
+        "LinuxMenuTopLevelItemPadding",
+        "LinuxMenuTopLevelIconMargin",
+        "LinuxMenuPresenterBorderThickness",
+        "LinuxMenuPresenterPadding",
+        "LinuxMenuPopupCornerRadius",
+        "LinuxMenuPopupMaxWidth",
+        "LinuxMenuPopupMinHeight",
+        "LinuxMenuHorizontalFlyoutMinWidth",
+        "LinuxMenuScrollerMargin",
+        "LinuxMenuSubMenuPopupHorizontalOffset",
+        "LinuxMenuSeparatorHeight",
+        "LinuxMenuSeparatorMargin",
+        "LinuxMenuBarSeparatorMargin",
+        "LinuxMenuBarSeparatorWidth",
+        "LinuxMenuItemMinHeight",
+        "LinuxMenuItemPadding",
+        "LinuxMenuIconPresenterMargin",
+        "LinuxMenuInputGestureTextMargin",
+        "LinuxMenuHorizontalItemMargin",
+        "LinuxMenuItemIconSize",
+        "LinuxMenuItemToggleColumnMinWidth",
+        "LinuxMenuItemChevronWidth",
+        "LinuxMenuItemChevronHeight",
+        "LinuxMenuItemChevronPathData",
+        "LinuxMenuItemCheckMarkPathData",
+        "LinuxMenuScrollArrowSize",
+        "LinuxMenuScrollViewer",
+        "LinuxMenuItemIconTheme",
+    };
+
+    private static Window ShowWithFullTheme(ThemeVariant variant)
+    {
+        var theme = new DevolutionsLinuxYaruTheme();
+        theme.BeginInit();
+        theme.EndInit();
+
+        var window = new Window { RequestedThemeVariant = variant };
+        window.Styles.Add(theme);
+        window.Show();
+        return window;
+    }
+
+    private static Window ShowWithPackOverHostTheme(ThemeVariant variant, Action<Window>? applyHostOverrides = null)
+    {
+        var window = new Window { RequestedThemeVariant = variant };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        applyHostOverrides?.Invoke(window);
+
+        // Resolved exactly the way an external consumer would: by avares URI only, with no
+        // reference to the theme object itself.
+        var uri = new Uri(PackUri);
+        window.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        window.Show();
+        return window;
+    }
+
+    private static Dictionary<string, string> Resolve(Window window, ThemeVariant variant)
+    {
+        var result = new Dictionary<string, string>();
+        foreach (string key in MenuTokens)
+        {
+            Assert.True(window.TryFindResource(key, variant, out object? value),
+                $"Menu token '{key}' did not resolve ({variant}). Every token the menu templates " +
+                "consume must be defined in Accents/MenuResources.axaml.");
+            result[key] = Describe(value);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Describes a token by its effective value so equivalent brush representations compare
+    /// as equal.
+    /// </summary>
+    private static string Describe(object? value) => value switch
+    {
+        ISolidColorBrush brush => FormattableString.Invariant(
+            $"rgba({brush.Color.R},{brush.Color.G},{brush.Color.B},{brush.Color.A / 255d * brush.Opacity:F3})"),
+        null => "<null>",
+        _ => value.ToString() ?? "<null>",
+    };
+
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Pack_and_full_theme_resolve_identical_menu_tokens(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+
+        Window fullWindow = ShowWithFullTheme(variant);
+        Window packWindow = ShowWithPackOverHostTheme(variant);
+
+        try
+        {
+            Dictionary<string, string> full = Resolve(fullWindow, variant);
+            Dictionary<string, string> pack = Resolve(packWindow, variant);
+
+            var drift = MenuTokens
+                .Where(key => full[key] != pack[key])
+                .Select(key => $"{key}: fullTheme='{full[key]}' packOverFluent='{pack[key]}'")
+                .ToList();
+
+            Assert.True(drift.Count == 0,
+                "Menu pack has drifted from the full Linux theme:\n  " + string.Join("\n  ", drift));
+        }
+        finally
+        {
+            fullWindow.Close();
+            packWindow.Close();
+        }
+    }
+
+    /// <summary>
+    /// The pack is layered over a host theme we do not control. A host that defines the generic
+    /// Fluent keys the Linux menus used to consume must not be able to move menu visuals.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Host_theme_overrides_do_not_leak_into_menu_tokens(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+
+        Window baseline = ShowWithPackOverHostTheme(variant);
+        Window hostile = ShowWithPackOverHostTheme(variant, window =>
+        {
+            // Exactly the keys the Linux menu templates used to read straight from the host.
+            window.Resources["MenuFlyoutPresenterBackground"] = new SolidColorBrush(Colors.Magenta);
+            window.Resources["MenuFlyoutPresenterBorderBrush"] = new SolidColorBrush(Colors.Magenta);
+            window.Resources["MenuFlyoutPresenterBorderThemeThickness"] = new Thickness(9);
+            window.Resources["MenuFlyoutPresenterThemePadding"] = new Thickness(12);
+            window.Resources["MenuFlyoutItemBackground"] = new SolidColorBrush(Colors.Magenta);
+            window.Resources["MenuFlyoutItemForeground"] = new SolidColorBrush(Colors.Magenta);
+            window.Resources["MenuFlyoutItemBackgroundPointerOver"] = new SolidColorBrush(Colors.Magenta);
+            window.Resources["MenuFlyoutItemThemePadding"] = new Thickness(21);
+            window.Resources["MenuFlyoutItemMinHeight"] = 99d;
+            window.Resources["MenuFlyoutItemChevronMargin"] = new Thickness(21);
+            window.Resources["MenuIconPresenterMargin"] = new Thickness(21);
+            window.Resources["MenuInputGestureTextMargin"] = new Thickness(21);
+            window.Resources["MenuFlyoutScrollerMargin"] = new Thickness(21);
+            window.Resources["MenuFlyoutSeparatorThemeHeight"] = 7d;
+            window.Resources["MenuFlyoutSeparatorThemePadding"] = new Thickness(21);
+            window.Resources["SubMenuPopupHorizontalOffset"] = 99d;
+            window.Resources["FlyoutThemeMaxWidth"] = 1234d;
+            window.Resources["MenuFlyoutThemeMinHeight"] = 99d;
+            window.Resources["OverlayCornerRadius"] = new CornerRadius(20);
+            window.Resources["MenuBarHeight"] = 99d;
+            window.Resources["CheckMarkPathData"] = StreamGeometry.Parse("M 0,0 L 5,5");
+            window.Resources["DefaultFontFamily"] = new FontFamily("Comic Sans MS");
+            window.Resources["ControlContentThemeFontSize"] = 42d;
+        });
+
+        try
+        {
+            Dictionary<string, string> expected = Resolve(baseline, variant);
+            Dictionary<string, string> actual = Resolve(hostile, variant);
+
+            var leaked = MenuTokens
+                .Where(key => expected[key] != actual[key])
+                .Select(key => $"{key}: expected='{expected[key]}' withHostOverrides='{actual[key]}'")
+                .ToList();
+
+            Assert.True(leaked.Count == 0,
+                "Host theme overrides leaked into Linux menu tokens:\n  " + string.Join("\n  ", leaked));
+        }
+        finally
+        {
+            baseline.Close();
+            hostile.Close();
+        }
+    }
+
+    /// <summary>
+    /// The menu templates must only read resources the pack owns.
+    /// </summary>
+    /// <remarks>
+    ///   This is the check that would have caught the original problem. The token-parity tests
+    ///   above verify that <c>LinuxMenu*</c> keys resolve correctly, but they cannot see a
+    ///   template that bypasses them and reads a generic Fluent key such as
+    ///   <c>MenuFlyoutItemForeground</c> straight from the host.
+    /// </remarks>
+    [AvaloniaFact]
+    public void Menu_templates_only_read_owned_resources()
+    {
+        // Consumed from Fluent by design: re-basing HorizontalMenuItem would mean duplicating
+        // Fluent's top-level item template, which the pack deliberately avoids. Documented as
+        // the pack's one inherited prerequisite in README.md.
+        var allowed = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "FluentTopLevelMenuItem",
+        };
+
+        string[] menuFiles =
+        {
+            "Accents/MenuResources.axaml",
+            "Controls/ContextMenu.axaml",
+            "Controls/MenuFlyoutPresenter.axaml",
+            "Controls/Menu.axaml",
+            "Controls/MenuItem.axaml",
+            "Controls/Menu.styles.axaml",
+            "Controls/Separator.styles.axaml",
+        };
+
+        string themeRoot = FindThemeRoot();
+        var offenders = new List<string>();
+
+        foreach (string relativePath in menuFiles)
+        {
+            string path = Path.Combine(themeRoot, relativePath);
+            Assert.True(File.Exists(path), $"Expected menu file '{relativePath}' to exist at '{path}'.");
+
+            string markup = File.ReadAllText(path);
+
+            // Design-time previews are not part of the shipped contract.
+            markup = StripDesignPreview(markup);
+
+            foreach (Match match in Regex.Matches(markup, @"\{(?:Dynamic|Static)Resource\s+([A-Za-z0-9_]+)\}"))
+            {
+                string key = match.Groups[1].Value;
+                if (!key.StartsWith("LinuxMenu", StringComparison.Ordinal) && allowed.Add(key))
+                {
+                    offenders.Add($"{relativePath}: {{...Resource {key}}}");
+                }
+            }
+        }
+
+        Assert.True(offenders.Count == 0,
+            "Linux menu templates read resources the pack does not own, so they resolve to the " +
+            "host theme's values when the pack is layered on top:\n  " + string.Join("\n  ", offenders));
+    }
+
+    private static string StripDesignPreview(string markup) =>
+        Regex.Replace(markup, "<Design.PreviewWith>.*?</Design.PreviewWith>", string.Empty, RegexOptions.Singleline);
+
+    private static string FindThemeRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+        while (directory is not null)
+        {
+            string candidate = Path.Combine(directory.FullName, "src", "Devolutions.AvaloniaTheme.Linux");
+            if (Directory.Exists(candidate))
+            {
+                return candidate;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Could not locate src/Devolutions.AvaloniaTheme.Linux from " + AppContext.BaseDirectory);
+    }
+
+    /// <summary>
+    /// Rendered menu geometry must be identical under the full theme and under the pack on any
+    /// host, which is what a consumer actually sees.
+    /// </summary>
+    /// <remarks>
+    ///   The token tests above compare resource values; this compares the properties the menu
+    ///   actually renders with. It is the check that catches a host theme winning through a
+    ///   channel the tokens do not cover — for example a host <c>Style</c> outranking the
+    ///   <c>MenuItem</c> <c>ControlTheme</c>, or an inherited font changing row heights.
+    /// </remarks>
+    [AvaloniaTheory]
+    [InlineData("Fluent")]
+    [InlineData("DevExpress")]
+    public void Rendered_menu_geometry_matches_the_full_theme_on_any_host(string host)
+    {
+        string expected = DescribeRenderedMenu(hostTheme: null);
+        string actual = DescribeRenderedMenu(host);
+
+        Assert.Equal(expected, actual);
+    }
+
+    /// <summary>
+    /// Opens a context menu and describes what it renders with.
+    /// </summary>
+    /// <param name="hostTheme">
+    ///   Host theme to layer the pack over, or <c>null</c> to use the full Linux theme with no
+    ///   pack (the reference rendering).
+    /// </param>
+    private static string DescribeRenderedMenu(string? hostTheme)
+    {
+        IStyle theme = hostTheme switch
+        {
+            "DevExpress" => new Devolutions.AvaloniaTheme.DevExpress.DevolutionsDevExpressTheme(),
+            "Fluent" => new AvaloniaFluentTheme(),
+            _ => new DevolutionsLinuxYaruTheme(),
+        };
+
+        if (theme is ISupportInitialize initializable)
+        {
+            initializable.BeginInit();
+            initializable.EndInit();
+        }
+
+        var page = new UserControl();
+        var window = new Window
+        {
+            Content = page,
+            Width = 800,
+            Height = 600,
+            RequestedThemeVariant = ThemeVariant.Light,
+        };
+        window.Styles.Add(theme);
+
+        if (hostTheme is not null)
+        {
+            var uri = new Uri(PackUri);
+            page.Styles.Add(new StyleInclude(uri) { Source = uri });
+        }
+
+        var item = new MenuItem { Header = "Item 0" };
+        var separator = new Separator();
+        var contextMenu = new ContextMenu();
+        contextMenu.Items.Add(item);
+        contextMenu.Items.Add(separator);
+        contextMenu.Items.Add(new MenuItem { Header = "Item 1" });
+
+        var target = new Border { Width = 300, Height = 200, ContextMenu = contextMenu };
+        page.Content = target;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            contextMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+
+            return string.Join(
+                "\n",
+                FormattableString.Invariant($"popupHeight={contextMenu.Bounds.Height:F2}"),
+                $"popupBackground={Describe(contextMenu.Background)}",
+                $"popupBorder={Describe(contextMenu.BorderBrush)}",
+                $"popupCornerRadius={contextMenu.CornerRadius}",
+                FormattableString.Invariant($"itemHeight={item.Bounds.Height:F2}"),
+                FormattableString.Invariant($"itemMinHeight={item.MinHeight}"),
+                $"itemPadding={item.Padding}",
+                FormattableString.Invariant($"itemFontSize={item.FontSize}"),
+                $"itemFontFamily={item.FontFamily}",
+                $"itemForeground={Describe(item.Foreground)}",
+                FormattableString.Invariant($"separatorHeight={separator.DesiredSize.Height:F2}"),
+                $"separatorMargin={separator.Margin}",
+                $"separatorBackground={Describe(separator.Background)}");
+        }
+        finally
+        {
+            contextMenu.Close();
+            window.Close();
+        }
+    }
+}

@@ -54,6 +54,92 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 </Application>
 ```
 
+### Menu pack (menu controls only)
+
+Use the menu pack when you only want Linux menu styling but not the full `<DevolutionsLinuxYaruTheme />`
+(e.g. to give consistent Menu chrome to custom-branded sections of your app).
+
+The Linux theme has no OS-dependent sub-themes, so — unlike the MacOS pack, which has to pick between its
+classic and LiquidGlass variants at runtime — this pack is a plain style include, the same shape as the
+DevExpress pack.
+
+```xaml
+<Application ...>
+  <Application.Styles>
+    <!-- Required prerequisite: must be application-wide, not scoped to a subtree -->
+    <FluentTheme />
+
+    <!-- Linux menu pack -->
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml" />
+  </Application.Styles>
+</Application>
+```
+
+Exact menu pack URI:
+
+`avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml`
+
+Prerequisites and caveats:
+
+- **`FluentTheme` must be loaded application-wide, in `Application.Styles` — not scoped to a subtree.** The
+  Linux control themes build on Fluent's base templates, and `HorizontalMenuItem` derives from Fluent's
+  `FluentTopLevelMenuItem`, which is resolved when the menu template is built.
+- This pack includes styling for `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, and the
+  menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`).
+- If you need full control coverage, use `<DevolutionsLinuxYaruTheme />` instead.
+
+#### Resource contract
+
+All menu tokens live in a single shared file, `Accents/MenuResources.axaml`, which is included by **both** the
+full theme and the menu pack. There is one source of truth, so the pack can never drift from the full theme.
+
+Two rules make the pack safe to layer over a host theme you do not control:
+
+1. **Every key the pack owns is prefixed `LinuxMenu`** — it cannot collide with, or be silently overridden by,
+   the host theme's keys.
+2. **Values are pinned literals, never aliases.** Menu tokens do not resolve through generic theme-wide or
+   Fluent-owned keys. A host theme that redefines e.g. `MenuFlyoutItemForeground` or `FlyoutThemeMaxWidth`
+   cannot move menu visuals.
+
+Rule 2 mattered more here than for the other packs. The Linux menu templates were derived from Fluent and read
+Fluent's own generic keys directly (`MenuFlyoutItemBackground`, `MenuFlyoutPresenterBackground`,
+`CheckMarkPathData`, ...). That is invisible under the full theme, but layered over another theme every one of
+those keys resolved to the *host's* value, so the "Linux" menus rendered in the host's colours. Those templates
+now read `LinuxMenu*` tokens only.
+
+**Inherited from the host (by design):**
+
+| Key | Why |
+|-----|-----|
+| `FluentTopLevelMenuItem` | Base for `HorizontalMenuItem` (the horizontal `TextBox` context flyout). Re-basing it would mean duplicating Fluent's top-level item template, which the pack deliberately avoids. |
+
+**Typography is pinned, not inherited.** `LinuxMenuFontFamily` / `LinuxMenuFontSize` / `LinuxMenuFontWeight` are
+owned by the pack. The point of the pack is that menus in a branded or opted-out section still match the
+platform-themed menus elsewhere in the same app; inheriting the host's font defeats that, and pinning also keeps
+menu geometry identical across hosts (font metrics change row heights).
+
+**Row geometry is applied at `Style` level, not only in the `MenuItem` `ControlTheme`.** Host themes set menu
+metrics with `Style`s of their own, and in Avalonia a `Style` setter outranks a `ControlTheme` setter — so a
+`ControlTheme` alone would let the host resize menu rows.
+
+**The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`: that resource
+is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your app rather than just menu
+ones. Menu separators instead reuse the host's separator template — identical across Fluent, MacOS, Linux and
+DevExpress — with every template-bound property pinned inside the menu-scoped selector.
+
+**Overriding a token.** Because tokens are prefixed, you can retarget any single value without affecting the rest
+of your app:
+
+```xaml
+<StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml" />
+<!-- ... later in your own resources ... -->
+<SolidColorBrush x:Key="LinuxMenuSeparatorBrush" Color="#ff0000" />
+```
+
+These rules are enforced by `LinuxMenuPackContractTests` in the visual test project, which asserts that every
+`LinuxMenu*` token resolves identically under the full theme and under "pack over a foreign host", that a hostile
+host theme cannot leak into any of them, and that the menu templates never read an unowned resource key.
+
 ## Styled Controls
 
 Below are some screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples. For an always up-to-date visual reference you can also browse the [baseline screenshots](https://github.com/Devolutions/avalonia-extensions/tree/master/tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline/Linux). 

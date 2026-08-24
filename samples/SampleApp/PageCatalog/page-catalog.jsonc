@@ -29,6 +29,7 @@
     "Control Alignment",
     "📦 DevExpress Menu Pack",
     "📦 MacOS Menu Pack",
+    "📦 Linux Menu Pack",
     "Experiments"
   ],
   "pages": {
@@ -484,6 +485,32 @@
         "source": "Avalonia",
         "category": "Navigation",
         "demo": "MacMenuPackMenuFlyoutDemo.axaml"
+      }
+    ],
+    "📦 Linux Menu Pack": [
+      // No visual regression tests required for these pages.
+      // They are covered by LinuxMenuPackContractTests.cs
+      {
+        "uniqueTitle": "🐧 About",
+        "demo": "LinuxMenuPackAbout.axaml"
+      },
+      {
+        "uniqueTitle": "🐧 Menu",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "LinuxMenuPackMenuDemo.axaml"
+      },
+      {
+        "uniqueTitle": "🐧 ContextMenu",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "LinuxMenuPackContextMenuDemo.axaml"
+      },
+      {
+        "uniqueTitle": "🐧 MenuFlyout",
+        "source": "Avalonia",
+        "category": "Navigation",
+        "demo": "LinuxMenuPackMenuFlyoutDemo.axaml"
       }
     ],
     "Experiments": [

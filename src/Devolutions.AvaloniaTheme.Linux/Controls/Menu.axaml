@@ -16,12 +16,10 @@
     </Border>
   </Design.PreviewWith>
   
-  <x:Double x:Key="MenuBarHeight">32</x:Double>
-
-  <ControlTheme x:Key="MenuTopLevelMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForeground}" />
-    <Setter Property="Padding" Value="6 1" />
+  <ControlTheme x:Key="LinuxMenuTopLevelMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
     
     <Setter Property="Template">
       <ControlTemplate>
@@ -40,14 +38,14 @@
             <StackPanel Grid.Column="0" Orientation="Horizontal">
               <ContentControl Name="PART_ToggleIconPresenter"
                               IsVisible="False"
-                              Theme="{StaticResource FluentMenuItemIconTheme}"
-                              Margin="0 0 6 0" />
+                              Theme="{StaticResource LinuxMenuItemIconTheme}"
+                              Margin="{DynamicResource LinuxMenuTopLevelIconMargin}" />
   
               <ContentControl Name="PART_IconPresenter"
                               IsVisible="False"
-                              Theme="{StaticResource FluentMenuItemIconTheme}"
+                              Theme="{StaticResource LinuxMenuItemIconTheme}"
                               Content="{TemplateBinding Icon}"
-                              Margin="0 0 6 0" />
+                              Margin="{DynamicResource LinuxMenuTopLevelIconMargin}" />
             </StackPanel>
   
             <ContentPresenter Name="PART_HeaderPresenter"
@@ -63,18 +61,18 @@
                    IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
                    Placement="BottomEdgeAlignedLeft"
                    OverlayInputPassThroughElement="{Binding $parent[Menu]}">
-              <Border Background="{DynamicResource MenuFlyoutPresenterBackground}"
-                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
-                      Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
-                      MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
-                      MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+              <Border Background="{DynamicResource LinuxMenuPresenterBackground}"
+                      BorderBrush="{DynamicResource LinuxMenuPresenterBorderBrush}"
+                      BorderThickness="{DynamicResource LinuxMenuPresenterBorderThickness}"
+                      Padding="{DynamicResource LinuxMenuPresenterPadding}"
+                      MaxWidth="{DynamicResource LinuxMenuPopupMaxWidth}"
+                      MinHeight="{DynamicResource LinuxMenuPopupMinHeight}"
                       HorizontalAlignment="Stretch"
-                      CornerRadius="{DynamicResource OverlayCornerRadius}">
-                <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                      CornerRadius="{DynamicResource LinuxMenuPopupCornerRadius}">
+                <ScrollViewer Theme="{StaticResource LinuxMenuScrollViewer}">
                   <ItemsPresenter Name="PART_ItemsPresenter"
                                   ItemsPanel="{TemplateBinding ItemsPanel}"
-                                  Margin="0 4"
+                                  Margin="{DynamicResource LinuxMenuScrollerMargin}"
                                   Grid.IsSharedSizeScope="True" />
                 </ScrollViewer>
               </Border>
@@ -87,8 +85,8 @@
 
   <ControlTheme x:Key="{x:Type Menu}" TargetType="Menu">
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Height" Value="{DynamicResource MenuBarHeight}" />
-    <Setter Property="ItemContainerTheme" Value="{StaticResource MenuTopLevelMenuItem}" />
+    <Setter Property="Height" Value="{DynamicResource LinuxMenuBarHeight}" />
+    <Setter Property="ItemContainerTheme" Value="{StaticResource LinuxMenuTopLevelMenuItem}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"

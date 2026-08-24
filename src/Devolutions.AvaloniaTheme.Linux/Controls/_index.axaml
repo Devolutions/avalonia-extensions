@@ -17,6 +17,7 @@
     <MergeResourceInclude Source="ColorView.axaml" />
     <MergeResourceInclude Source="ComboBox.axaml" />
     <MergeResourceInclude Source="ComboBoxItem.axaml" />
+    <MergeResourceInclude Source="../Accents/MenuResources.axaml" />
     <MergeResourceInclude Source="ContextMenu.axaml" />
     <MergeResourceInclude Source="DataGrid.axaml" />
     <MergeResourceInclude Source="DropDownButton.axaml" />
@@ -31,6 +32,7 @@
     <MergeResourceInclude Source="ListBox.axaml" />
     <MergeResourceInclude Source="Menu.axaml" />
     <MergeResourceInclude Source="MenuItem.axaml" />
+    <MergeResourceInclude Source="MenuFlyoutPresenter.axaml" />
     <MergeResourceInclude Source="NumericUpDown.axaml" />
     <MergeResourceInclude Source="ScrollBar.axaml" />
     <MergeResourceInclude Source="Separator.axaml" />

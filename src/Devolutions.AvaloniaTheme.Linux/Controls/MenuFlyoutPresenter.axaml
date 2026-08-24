@@ -1,53 +1,28 @@
-<!-- 
-    Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/abe839e1c133b12524d8ba24fbc831e29e354a29/src/Avalonia.Themes.Fluent/Controls/ContextMenu.xaml
+<!--
+  Linux (Yaru) MenuFlyoutPresenter.
+
+  The theme historically shipped no MenuFlyoutPresenter, so MenuFlyouts fell back to Fluent's
+  presenter. That was survivable for the full theme (Fluent's presenter reads the same generic
+  keys the theme overrode) but not for the standalone menu pack: layered over another theme the
+  flyout would pick up the *host's* presenter while its items used Linux's, which looks broken.
+
+  The template mirrors Controls/ContextMenu.axaml so the two popup surfaces stay identical.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
-  <Design.PreviewWith>
-    <design:ThemePreviewer>
-      <Border Background="{DynamicResource SystemAccentColor}"
-              Margin="16"
-              Padding="48"
-              Width="400"
-              Height="200">
-        <Border.ContextMenu>
-          <ContextMenu>
-            <MenuItem Header="Standard _Menu Item" />
-            <MenuItem Header="Disabled" IsEnabled="False" />
-            <Separator />
-            <MenuItem Header="Menu with _Submenu">
-              <MenuItem Header="Submenu _1" />
-              <MenuItem Header="Submenu _2" />
-            </MenuItem>
-            <MenuItem Header="Menu Item with _Icon" />
-            <MenuItem Header="Menu Item with _Checkbox">
-              <MenuItem.Icon>
-                <CheckBox BorderThickness="0"
-                          IsHitTestVisible="False"
-                          IsChecked="True" />
-              </MenuItem.Icon>
-            </MenuItem>
-          </ContextMenu>
-        </Border.ContextMenu>
-        <TextBlock Text="Defined in XAML" />
-      </Border>
-    </design:ThemePreviewer>
-  </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
+  <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter">
     <Setter Property="Background" Value="{DynamicResource LinuxMenuPresenterBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource LinuxMenuPresenterBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource LinuxMenuPresenterBorderThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource LinuxMenuPopupCornerRadius}" />
-    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuPresenterPadding}" />
     <Setter Property="MaxWidth" Value="{DynamicResource LinuxMenuPopupMaxWidth}" />
     <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuPopupMinHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource LinuxMenuPresenterPadding}" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
-    <Setter Property="WindowManagerAddShadowHint" Value="False" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
@@ -58,7 +33,9 @@
                 MinHeight="{TemplateBinding MinHeight}"
                 HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                 CornerRadius="{TemplateBinding CornerRadius}">
-          <ScrollViewer Theme="{StaticResource LinuxMenuScrollViewer}">
+          <ScrollViewer Theme="{StaticResource LinuxMenuScrollViewer}"
+                        HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
                             Margin="{DynamicResource LinuxMenuScrollerMargin}"
@@ -67,6 +44,16 @@
           </ScrollViewer>
         </Border>
       </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="HorizontalMenuFlyoutPresenter" TargetType="MenuFlyoutPresenter"
+                BasedOn="{StaticResource {x:Type MenuFlyoutPresenter}}">
+    <Setter Property="MinWidth" Value="{DynamicResource LinuxMenuHorizontalFlyoutMinWidth}" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal" />
+      </ItemsPanelTemplate>
     </Setter>
   </ControlTheme>
 </ResourceDictionary>

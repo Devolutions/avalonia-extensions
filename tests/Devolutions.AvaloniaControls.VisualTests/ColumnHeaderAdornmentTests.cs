@@ -725,6 +725,68 @@ public class ColumnHeaderAdornmentTests
         Assert.Null(tip);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void OversizedControlCaption_CannotPaintOverARightAdornment(string themeName)
+    {
+        // Arranging the caption into the narrower rect bounds where it sits, not how large it is, so it took
+        // a clipping wrapper to keep it out of the adornment. A 250px caption in a 300px header alongside a
+        // 200px adornment previously drew to x=175 while the adornment began at x=100.
+        SetTheme(themeName);
+
+        Border caption = new() { Width = 250, Height = 12, Background = Brushes.Blue };
+        Border adornment = new() { Width = 200, Height = 12, Background = Brushes.Red };
+        TreeDataGrid grid = BuildGrid(caption, new GridLength(300), adornment);
+
+        Window window = Show(grid, width: 900);
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        double adornmentLeft = overflowHeader.Bounds.Width - overflowHeader.AdornmentWidth;
+
+        // The wrapper bounds the visible caption; together with its clip that is what keeps the oversized
+        // child off the adornment, so both halves are asserted.
+        Control wrapper = (Control)caption.GetVisualParent()!;
+        Point? wrapperRight = wrapper.TranslatePoint(new Point(wrapper.Bounds.Width, 0), overflowHeader);
+        bool clips = wrapper.ClipToBounds;
+
+        window.Close();
+
+        Assert.NotNull(wrapperRight);
+        Assert.True(clips, "the caption wrapper should clip its content");
+        Assert.True(
+            wrapperRight!.Value.X <= adornmentLeft + Tolerance,
+            $"caption region ends at {wrapperRight.Value.X}, adornment starts at {adornmentLeft}");
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void OversizedControlCaption_IsGoneWhileAnAdornmentFills(string themeName)
+    {
+        // Fill is documented as hiding the caption. A sized control kept its own Width regardless of the
+        // zero-width rect it was handed, so it stayed fully drawn over the filling adornment.
+        SetTheme(themeName);
+
+        Border caption = new() { Width = 250, Height = 12, Background = Brushes.Blue };
+        Border adornment = new() { Height = 12, Background = Brushes.Red };
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
+        TreeDataGrid grid = BuildGrid(caption, new GridLength(300), adornment);
+
+        Window window = Show(grid, width: 900);
+
+        Control wrapper = (Control)caption.GetVisualParent()!;
+        double wrapperWidth = wrapper.Bounds.Width;
+        bool clips = wrapper.ClipToBounds;
+
+        window.Close();
+
+        Assert.True(clips, "the caption wrapper should clip its content");
+        Assert.Equal(0, wrapperWidth, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

@@ -422,22 +422,30 @@ public class TreeDataGridOverflowHeader : Decorator
     {
         object? content = this.Content;
 
-        if (content is null or string)
+        // Hand a previously hosted Control back before re-parenting. The wrapper below owns it, and a
+        // Control can only have one parent, so a header recycled to different content would otherwise
+        // strand it. DetachAdornment does the same for the adornment's control.
+        if (this.Child is Border { Child: not null } previousWrapper)
         {
-            this.Child = null;
+            previousWrapper.Child = null;
         }
-        else if (content is Control control)
+
+        Control? caption = content switch
         {
-            this.Child = control;
-        }
-        else
-        {
-            this.Child = new ContentPresenter
-            {
-                Content = content,
-                ContentTemplate = this.ContentTemplate,
-            };
-        }
+            null or string => null,
+            Control control => control,
+            _ => new ContentPresenter { Content = content, ContentTemplate = this.ContentTemplate },
+        };
+
+        // Wrapped in a clipping border, as the adornment is. Arranging the caption into the narrower rect
+        // constrains where it sits, not how large it is: an explicitly sized control keeps its own Width,
+        // and a container hands its children their desired widths whatever it was granted. Either would
+        // paint over a Right adornment, and stay fully visible over a Fill one, where the rect collapses to
+        // nothing and the caption is supposed to be gone. A self-trimming control such as a TextBlock never
+        // needed this; a composite header does.
+        this.Child = caption is null
+            ? null
+            : new Border { ClipToBounds = true, Child = caption };
 
         // Setting Child clears LogicalChildren, and a new Content may mean a new column, so re-resolve.
         this.UpdateAdornment();

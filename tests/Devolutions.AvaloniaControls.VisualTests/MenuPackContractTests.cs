@@ -262,6 +262,64 @@ public class MenuPackContractTests
     }
 
     [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_the_menu_bar()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        var uri = new Uri(PackUri);
+        window.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily("Comic Sans MS")),
+                new Setter(TextBlock.FontSizeProperty, 42d),
+                new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
+                new Setter(MenuItem.PaddingProperty, new Thickness(30)),
+                new Setter(MenuItem.MinHeightProperty, 77d),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var menu = new Menu
+        {
+            Items =
+            {
+                new MenuItem { Header = "File" },
+                new MenuItem { Header = "Edit" },
+            },
+        };
+        window.Content = menu;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var item = (MenuItem)menu.Items[0];
+
+            Assert.True(window.TryFindResource("DevExMenuFontFamily", ThemeVariant.Light, out object? fontFamily));
+            Assert.True(window.TryFindResource("DevExMenuFontSize", ThemeVariant.Light, out object? fontSize));
+            Assert.True(window.TryFindResource("DevExMenuFontWeight", ThemeVariant.Light, out object? fontWeight));
+
+            Assert.Equal(fontFamily, item.FontFamily);
+            Assert.Equal((double)fontSize, item.FontSize, 3);
+            Assert.Equal((FontWeight)fontWeight, item.FontWeight);
+            Assert.Equal(new Thickness(6, 1, 6, 1), item.Padding);
+            Assert.Equal(32d, item.MinHeight, 3);
+            Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
     public void Open_submenu_does_not_queue_close_when_pointer_exits_parent()
     {
         var parent = new MenuItem

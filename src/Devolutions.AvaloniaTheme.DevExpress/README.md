@@ -148,6 +148,11 @@ opted-out section still match the platform-themed menus elsewhere in the same ap
 host's font defeated that, because the branded section rendered its menus in the branded font and
 size. Pinning also keeps menu geometry identical across hosts.
 
+Style-level sealing is applied in two selectors instead of one: popup rows are descendants of
+`MenuFlyoutPresenter`/`ContextMenu`/`Menu`, while menu-bar items are direct children of `Menu`. The
+popup-row geometry and the top-level bar geometry are different, so the seal pins the same typography
+for both but preserves each item's own padding and bar height.
+
 **The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`:
 that resource is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your
 app rather than just menu ones. Menu separators instead reuse the host's separator template — which

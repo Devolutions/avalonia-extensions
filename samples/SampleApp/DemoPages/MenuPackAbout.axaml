@@ -15,11 +15,11 @@
     <TextBlock Classes="h1">About DevExpress Menu Pack</TextBlock>
 
     <TextBlock FontSize="15" TextWrapping="Wrap">
-      The DevExpress Menu Pack is an externally consumable style pack for menu-related controls. It lets apps import menu styling without importing the full theme object.
+      The DevExpress Menu Pack is an externally consumable style pack for menu-related controls. It lets apps use platform-specific menu chrome even in otherwise custom branded areas.
     </TextBlock>
 
     <TextBlock FontSize="15" TextWrapping="Wrap">
-      The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent). It can be used as a drop-in replacement for the default menu styles where a consistent look across all platforms is required.
+      The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent), to demonstrate how DevExpress menu styles can be applied over any Fluent-based host theme.
     </TextBlock>
 
     <TextBlock Classes="section-title">Menu pack URI</TextBlock>

@@ -212,9 +212,8 @@ public class MenuPackContractTests
     }
 
     /// <summary>
-    /// A fast pointer move can jump from the parent item to outside the submenu without
-    /// ever entering the popup. Avalonia normally queues a delayed close on that exit,
-    /// so the DevExpress behavior must intercept the open parent's exit event.
+    /// Host menu-item styles must not override the pack's pinned popup-row typography,
+    /// including the font family, size, weight, and line-height seal applied at style level.
     /// </summary>
     [AvaloniaFact]
     public void Host_menu_item_styles_do_not_change_pinned_typography()
@@ -229,6 +228,7 @@ public class MenuPackContractTests
         {
             Setters =
             {
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily("Comic Sans MS")),
                 new Setter(TextBlock.FontSizeProperty, 42d),
                 new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
                 new Setter(TextBlock.LineHeightProperty, 55d),
@@ -249,6 +249,8 @@ public class MenuPackContractTests
             contextMenu.Open(button);
             Dispatcher.UIThread.RunJobs();
 
+            Assert.True(window.TryFindResource("DevExMenuFontFamily", ThemeVariant.Light, out object? fontFamily));
+            Assert.Equal(fontFamily, menuItem.FontFamily);
             Assert.Equal(12d, menuItem.FontSize, 3);
             Assert.Equal(FontWeight.Normal, menuItem.FontWeight);
             Assert.True(double.IsNaN(menuItem.GetValue(TextBlock.LineHeightProperty)));
@@ -277,6 +279,7 @@ public class MenuPackContractTests
                 new Setter(TextBlock.FontFamilyProperty, new FontFamily("Comic Sans MS")),
                 new Setter(TextBlock.FontSizeProperty, 42d),
                 new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
+                new Setter(TextBlock.LineHeightProperty, 55d),
                 new Setter(MenuItem.PaddingProperty, new Thickness(30)),
                 new Setter(MenuItem.MinHeightProperty, 77d),
             },
@@ -377,6 +380,11 @@ public class MenuPackContractTests
         }
     }
 
+    /// <summary>
+    /// A fast pointer move can jump from the parent item to outside the submenu without
+    /// ever entering the popup. Avalonia normally queues a delayed close on that exit,
+    /// so the DevExpress behavior must intercept the open parent's exit event.
+    /// </summary>
     [AvaloniaFact]
     public void Open_submenu_does_not_queue_close_when_pointer_exits_parent()
     {

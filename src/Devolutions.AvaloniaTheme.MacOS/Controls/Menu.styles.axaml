@@ -45,6 +45,8 @@
 
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
     <Setter Property="MinHeight" Value="{DynamicResource MacOsMenuItemMinHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource MacOsMenuFontSize}" />
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />

@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -705,12 +706,13 @@ public class MacOsMenuPackContractTests
     }
 
     [AvaloniaTheory]
-    [InlineData("Light", ".st0 {fill : #000000; }", ".st0 {fill : #FFFFFF; }")]
-    [InlineData("Dark", ".st0 {fill : #B8B8B8; }", ".st0 {fill : #DEECF9; }")]
+    [InlineData("Light", ".st0 {fill : #000000; }", ".st0 {fill : #FFFFFF; }", ".st0, .st1, .st2, .st3 {fill : #B2B2B2; }")]
+    [InlineData("Dark", ".st0 {fill : #B8B8B8; }", ".st0 {fill : #DEECF9; }", ".st0, .st1, .st2, .st3 {fill : #757575; }")]
     public void Svg_menu_icons_are_recoloured_identically_by_pack_and_full_theme(
         string variantName,
         string expectedDefaultCss,
-        string expectedPointerOverCss)
+        string expectedPointerOverCss,
+        string expectedDisabledCss)
     {
         ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         var previousStyles = Application.Current?.Styles.ToList() ?? [];
@@ -729,19 +731,29 @@ public class MacOsMenuPackContractTests
 
         try
         {
-            Assert.True(fullWindow.TryFindResource("MacOsMenuSvgItemDefaultCss", variant, out object? fullDefaultCss),
-                "Full MacOS theme should resolve the default SVG CSS resource.");
-            Assert.True(packWindow.TryFindResource("MacOsMenuSvgItemDefaultCss", variant, out object? packDefaultCss),
-                "Menu pack should resolve the default SVG CSS resource.");
-            Assert.Equal(expectedDefaultCss, fullDefaultCss?.ToString());
-            Assert.Equal(expectedDefaultCss, packDefaultCss?.ToString());
+            var fullItem = CreateMenuItemWithSvg(fullWindow, out object fullSvg);
+            var packItem = CreateMenuItemWithSvg(packWindow, out object packSvg);
 
-            Assert.True(fullWindow.TryFindResource("MacOsMenuSvgItemPointerOverCss", variant, out object? fullPointerOverCss),
-                "Full MacOS theme should resolve the pointer-over SVG CSS resource.");
-            Assert.True(packWindow.TryFindResource("MacOsMenuSvgItemPointerOverCss", variant, out object? packPointerOverCss),
-                "Menu pack should resolve the pointer-over SVG CSS resource.");
-            Assert.Equal(expectedPointerOverCss, fullPointerOverCss?.ToString());
-            Assert.Equal(expectedPointerOverCss, packPointerOverCss?.ToString());
+            Assert.Equal(expectedDefaultCss, ReadSvgCss(fullSvg));
+            Assert.Equal(expectedDefaultCss, ReadSvgCss(packSvg));
+
+            typeof(InputElement)
+                .GetProperty("IsPointerOver", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+                .SetValue(fullItem, true);
+            typeof(InputElement)
+                .GetProperty("IsPointerOver", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+                .SetValue(packItem, true);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(expectedPointerOverCss, ReadSvgCss(fullSvg));
+            Assert.Equal(expectedPointerOverCss, ReadSvgCss(packSvg));
+
+            fullItem.IsEnabled = false;
+            packItem.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(expectedDisabledCss, ReadSvgCss(fullSvg));
+            Assert.Equal(expectedDisabledCss, ReadSvgCss(packSvg));
         }
         finally
         {
@@ -753,6 +765,56 @@ public class MacOsMenuPackContractTests
                 Application.Current?.Styles.Add(style);
             }
         }
+    }
+
+    private static MenuItem CreateMenuItemWithSvg(Window window, out object svg)
+    {
+        var menu = new Menu();
+        var item = new MenuItem { Header = "File" };
+        svg = CreateSvg();
+        item.Icon = svg;
+        menu.Items.Add(item);
+        window.Content = menu;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        return item;
+    }
+
+    private static object CreateSvg()
+    {
+        Assembly svgAssembly = Assembly.Load("Svg.Controls.Avalonia");
+        Type? svgType = svgAssembly
+            .GetTypes()
+            .FirstOrDefault(type => type.Name == "Svg" && typeof(Control).IsAssignableFrom(type));
+
+        Assert.NotNull(svgType);
+
+        ConstructorInfo? uriCtor = svgType!
+            .GetConstructors()
+            .FirstOrDefault(ctor => ctor.GetParameters().Length == 1 && ctor.GetParameters()[0].ParameterType == typeof(Uri));
+
+        Assert.NotNull(uriCtor);
+        return uriCtor!.Invoke(new object[] { new Uri("avares://Devolutions.AvaloniaTheme.MacOS") });
+    }
+
+    private static string ReadSvgCss(object svg)
+    {
+        Type svgType = svg.GetType();
+        FieldInfo? currentCssField = svgType.GetField("CurrentCssProperty", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        FieldInfo? cssField = svgType.GetField("CssProperty", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
+        object? css = null;
+        if (currentCssField is not null)
+        {
+            css = ((AvaloniaObject)svg).GetValue((AvaloniaProperty)currentCssField.GetValue(null)!);
+        }
+
+        if (css is null && cssField is not null)
+        {
+            css = ((AvaloniaObject)svg).GetValue((AvaloniaProperty)cssField.GetValue(null)!);
+        }
+
+        return css is string cssText ? cssText : css?.ToString() ?? "<null>";
     }
 
     private static IEnumerable<Style> Flatten(IStyle style)

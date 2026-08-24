@@ -138,9 +138,8 @@ Two rules make the pack safe to layer over a host theme you do not control:
 
 **Inherited from the host (by design):**
 
-| Key | Why |
-|-----|-----|
-| `FluentMenuScrollViewer` | Fluent's scroll viewer theme, reused rather than duplicated. This is the one remaining hard dependency on Fluent — see the prerequisite note above. |
+None. Menu template dependencies are now fully owned by the pack, including
+`DevExMenuScrollViewer`.
 
 **Typography is pinned, not inherited.** `DevExMenuFontFamily` / `DevExMenuFontSize` /
 `DevExMenuFontWeight` are owned by the pack. The point of the pack is that menus in a branded or

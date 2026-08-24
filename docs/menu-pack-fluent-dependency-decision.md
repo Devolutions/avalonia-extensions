@@ -1,15 +1,14 @@
-# Open decision: should the Menu Pack be fully independent of Fluent?
+# Historical decision record: Fluent MenuScrollViewer dependency
 
 *Companion to "The DevExpress Menu Pack — Purpose and Structure".*
-*Current status: **deferred**. README prerequisite sharpened in the meantime.*
+*Current status: **resolved** — the pack now owns `DevExMenuScrollViewer`; this document is kept as historical context.*
 
 ---
 
-## 1. The dependency
+## 1. The dependency (historical)
 
-The menu pack is self-contained except for **one** foreign resource reference:
-Fluent's `FluentMenuScrollViewer` control theme, referenced from `MenuItem.axaml` (the scroll
-container for menus long enough to overflow).
+At the time this note was written, the menu pack was self-contained except for one foreign
+resource reference: Fluent's `FluentMenuScrollViewer` control theme.
 
 `Separator` is no longer part of this dependency discussion. The pack previously merged
 `Separator.axaml` (implicit `{x:Type Separator}` theme), but that leaked styling out to non-menu

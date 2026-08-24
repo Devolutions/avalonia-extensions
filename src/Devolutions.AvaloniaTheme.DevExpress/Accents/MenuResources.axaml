@@ -14,9 +14,9 @@
        point at theme-wide or Fluent-owned keys: when the pack is consumed over a
        foreign host theme those keys resolve to the host's values and the menus
        drift. Everything the menus depend on visually lives here.
-    3. Keys deliberately NOT owned here are intentionally inherited from the host.
-       At this point that list is only FluentMenuScrollViewer (a ControlTheme).
-       See README for the full prerequisite contract.
+    3. Menu template dependencies are owned in this file. No host-owned menu keys are
+       intentionally inherited; this includes the menu scroll viewer ControlTheme
+       (`DevExMenuScrollViewer`), which is now vendored to keep pack behavior host-invariant.
 
   Typography is PINNED here, not inherited. The pack exists so that menus in a
   branded/opted-out section still match the platform-themed menus elsewhere in the

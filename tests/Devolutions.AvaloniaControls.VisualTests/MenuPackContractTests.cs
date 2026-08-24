@@ -4,6 +4,7 @@ using Avalonia.Controls.Platform;
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
 using Avalonia.Threading;
@@ -215,6 +216,51 @@ public class MenuPackContractTests
     /// ever entering the popup. Avalonia normally queues a delayed close on that exit,
     /// so the DevExpress behavior must intercept the open parent's exit event.
     /// </summary>
+    [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_pinned_typography()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        var uri = new Uri(PackUri);
+        window.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.FontSizeProperty, 42d),
+                new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
+                new Setter(TextBlock.LineHeightProperty, 55d),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var menuItem = new MenuItem { Header = "Pinned" };
+        var contextMenu = new ContextMenu { Items = { menuItem } };
+        var button = new Button { Content = "Open", ContextMenu = contextMenu };
+        window.Content = button;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            contextMenu.Open(button);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(12d, menuItem.FontSize, 3);
+            Assert.Equal(FontWeight.Normal, menuItem.FontWeight);
+            Assert.True(double.IsNaN(menuItem.GetValue(TextBlock.LineHeightProperty)));
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
     [AvaloniaFact]
     public void Open_submenu_does_not_queue_close_when_pointer_exits_parent()
     {

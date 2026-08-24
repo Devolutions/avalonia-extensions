@@ -23,5 +23,9 @@
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
     <Setter Property="MinHeight" Value="{DynamicResource DevExMenuNestedItemMinHeight}" />
     <Setter Property="Padding" Value="{DynamicResource DevExMenuNestedItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </Style>
 </Styles>

@@ -6,13 +6,19 @@ using Avalonia.Threading;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
-[Collection("VisualTests")]
 public class EnumPickerTests
 {
     private enum TestEnum
     {
         Valid,
         Invalid
+    }
+
+    private enum PrimeTestEnum
+    {
+        Alpha,
+        Beta,
+        Gamma
     }
 
     /// <summary>
@@ -24,6 +30,39 @@ public class EnumPickerTests
     {
         App.CurrentTheme = null;
         App.SetTheme(new DevExpressTheme());
+    }
+
+    [AvaloniaFact]
+    public void PrimeItemsWithoutTemplateKeepsOffscreenItemsUpdated()
+    {
+        var typedPicker = new EnumPicker<PrimeTestEnum>
+        {
+            IncludedValues = [PrimeTestEnum.Alpha, PrimeTestEnum.Gamma],
+            CustomSort = (left, right) => right.CompareTo(left),
+            TextProvider = value => $"Initial {value}"
+        };
+        EnumPicker picker = typedPicker;
+
+        picker.PrimeItemsWithoutTemplate();
+        picker.PrimeItemsWithoutTemplate();
+
+        Assert.Equal(
+            [PrimeTestEnum.Gamma, PrimeTestEnum.Alpha],
+            picker.Items.Select(item => (PrimeTestEnum)item.EnumValue));
+        Assert.Equal(["Initial Gamma", "Initial Alpha"], picker.Items.Select(item => item.Text));
+
+        typedPicker.ExcludedValues = [PrimeTestEnum.Gamma];
+        Assert.Equal(PrimeTestEnum.Alpha, Assert.Single(picker.Items).EnumValue);
+
+        typedPicker.TextProvider = value => $"Updated {value}";
+        Assert.Equal("Updated Alpha", Assert.Single(picker.Items).Text);
+
+        typedPicker.TextOverrides.Add(new EnumPickerDirectTextOverride<PrimeTestEnum>
+        {
+            Enum = PrimeTestEnum.Alpha,
+            Text = "Overridden Alpha"
+        });
+        Assert.Equal("Overridden Alpha", Assert.Single(picker.Items).Text);
     }
 
     [AvaloniaFact]

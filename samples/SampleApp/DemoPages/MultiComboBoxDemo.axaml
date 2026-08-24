@@ -159,6 +159,24 @@
           SelectedItems="{Binding RequiredValues}"
           ItemsSource="{Binding Items}"
           PlaceholderText="Required" />
+
+        <Separator Margin="-10 10" />
+
+        <TextBlock>Inside Flyout</TextBlock>
+        <Button Content="Open Flyout">
+          <Button.Flyout>
+            <Flyout>
+              <StackPanel Width="200" Spacing="10">
+                <TextBlock Text="MultiComboBox in Flyout" />
+                <MultiComboBox
+                  HorizontalAlignment="Stretch"
+                  PlaceholderText="Flyout options"
+                  ItemsSource="{Binding Items}"
+                  SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+              </StackPanel>
+            </Flyout>
+          </Button.Flyout>
+        </Button>
       </StackPanel>
 
       <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">

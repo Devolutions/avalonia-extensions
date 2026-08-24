@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaTheme.MacOS.Internal;
 
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
@@ -15,6 +16,10 @@ internal class MacOsThemeWithGlobalStyles : Styles
     Uri baseUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Accents/ThemeResources.axaml");
     ResourceInclude baseInclude = new(baseUri) { Source = baseUri };
     this.Resources.MergedDictionaries.Add(baseInclude);
+    // Registered here so the aliases win over the menu defaults; populated once all
+    // variant dictionaries below have been merged.
+    ResourceDictionary menuAliases = new();
+    this.Resources.MergedDictionaries.Add(menuAliases);
 
     // 2) Conditionally load LiquidGlass overrides
     if (MacOSVersionDetector.IsLiquidGlassSupported())
@@ -45,5 +50,7 @@ internal class MacOsThemeWithGlobalStyles : Styles
     Uri themePreviewerUri = new("avares://Devolutions.AvaloniaTheme.MacOS/Design/ThemePreviewer.axaml");
     this.Resources.MergedDictionaries.Add(new ResourceInclude(themePreviewerUri) { Source = themePreviewerUri });
 #endif
+
+    MenuResourceAliasBuilder.Rebuild(this, menuAliases);
   }
 }

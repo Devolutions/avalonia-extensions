@@ -948,7 +948,11 @@ public partial class MultiComboBox : SelectingItemsControl
             return false;
         }
 
-        if (TopLevel.GetTopLevel(source) is PopupRoot)
+        // Clicks bubbling out of the drop-down must not re-toggle it. Comparing against our own top level rather than
+        // testing for "any PopupRoot" keeps that working when the whole control is itself hosted in a popup, such as a
+        // Flyout, where every click on the control would otherwise be rejected and the drop-down could only be opened
+        // from the keyboard.
+        if (TopLevel.GetTopLevel(source) is PopupRoot sourceRoot && !ReferenceEquals(sourceRoot, TopLevel.GetTopLevel(this)))
         {
             return false;
         }

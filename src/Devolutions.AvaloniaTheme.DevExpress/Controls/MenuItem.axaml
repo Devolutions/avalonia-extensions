@@ -57,6 +57,8 @@
   <StreamGeometry x:Key="DevExMenuItemCheckMarkPathData">M 0.5,4.5 L 3.5,7.5 L 10.5,0.5</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
+    <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.IsMenuOwner" Value="True" />
+
     <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
     <Setter Property="Padding" Value="4 1" />
@@ -153,7 +155,7 @@
                     MinHeight="{DynamicResource DevExMenuPopupMinHeight}"
                     HorizontalAlignment="Stretch"
                     CornerRadius="{DynamicResource DevExMenuPopupCornerRadius}">
-              <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+              <ScrollViewer Theme="{StaticResource DevExMenuScrollViewer}">
                 <ItemsPresenter Name="PART_ItemsPresenter"
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
                                 Grid.IsSharedSizeScope="True" />

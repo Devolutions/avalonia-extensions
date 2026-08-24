@@ -102,6 +102,48 @@ In your App.axaml, replace the existing theme (e.g. `<FluentTheme />` or `<Simpl
 
 **Note:** Some global Styles will also be loaded by default, you can opt out by setting `GlobalStyles` to false (`<DevolutionsMacOsTheme GlobalStyles="False" />`). GlobalStyles are also available as a separate tag `<DevolutionsMacOsThemeGlobalStyles />` to cover scenarios where consumers would like to scope them to some control instead of including them globally. This is may be necessary to prevent styles from "bleeding out" in cases where that might be undesirable.
 
+### Menu pack (menu controls only)
+
+Use the menu pack when you only want MacOS menu styling without importing the full `<DevolutionsMacOsTheme />`.
+
+```xaml
+<Application xmlns:macos="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Controls;assembly=Devolutions.AvaloniaTheme.MacOS"
+             ...>
+  <Application.Styles>
+    <!-- Required prerequisite -->
+    <FluentTheme />
+
+    <!-- MacOS menu pack -->
+    <macos:MacOsMenuPack />
+  </Application.Styles>
+</Application>
+```
+
+From code (for example to scope the pack to a single view):
+
+```csharp
+using Devolutions.AvaloniaTheme.MacOS.Controls;
+
+MacMenuPackStyles.ApplyTo(this.Styles);
+```
+
+Underlying styles URI:
+
+`avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml`
+
+Prerequisites and caveats:
+
+- `FluentTheme` must be loaded application-wide in `Application.Styles` (not scoped to a subtree).
+- The pack exports `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, and menu helper styles.
+- The pack detects the macOS version itself and applies the matching classic / LiquidGlass menu
+  appearance, independently of the host theme.
+- Only the prefixed `MacOsMenu*` tokens are published, so non-menu controls keep using the host
+  theme's resources.
+- Prefer `<macos:MacOsMenuPack />` over including the styles URI directly: a bare
+  `StyleInclude` of `MenuPack.styles.axaml` carries only the classic menu defaults, because the
+  sub-theme resources it needs are supplied by `MacOsMenuPack`.
+- If you need full control coverage, use `<DevolutionsMacOsTheme />` instead.
+
 ## Styled Controls
 
 Most of the images below are screenshots from the [SampleApp test and demo pages](https://github.com/Devolutions/avalonia-extensions/tree/master/samples/SampleApp/DemoPages) - feel free to check out the code there for more detailed usage examples.

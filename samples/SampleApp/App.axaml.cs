@@ -332,6 +332,14 @@ public class App : Application
             // Default: only the dedicated WinUI-Mica branch below turns this on.
             IsWinUiMicaTheme = false;
 
+            if (theme is not MacOsTheme)
+            {
+                // The MacOS sub-theme override is process-global. Leaving a forced value behind
+                // would also pin the standalone MacOS menu pack (which detects the OS itself)
+                // to that sub-theme while a non-MacOS base theme is active.
+                MacOSVersionDetector.SetTestOverride(null);
+            }
+
             // MacOS themes require special handling to support sub-theme switching
             if (theme is MacOsTheme macOsTheme)
             {

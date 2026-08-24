@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
                     x:ClassModifier="internal">
   <Design.PreviewWith>
     <Border Padding="20">
@@ -72,7 +73,7 @@
                       MinHeight="{DynamicResource DevExMenuPopupMinHeight}"
                       HorizontalAlignment="Stretch"
                       CornerRadius="{DynamicResource DevExMenuTopLevelPopupCornerRadius}">
-                <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}" Margin="1">
+                <ScrollViewer Theme="{StaticResource DevExMenuScrollViewer}" Margin="1">
                   <ItemsPresenter Name="PART_ItemsPresenter"
                                   ItemsPanel="{TemplateBinding ItemsPanel}"
                                   Grid.IsSharedSizeScope="True" />
@@ -86,6 +87,8 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type Menu}" TargetType="Menu">
+    <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.IsMenuOwner" Value="True" />
+
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Height" Value="{DynamicResource DevExMenuBarHeight}" />
     <Setter Property="ItemContainerTheme" Value="{StaticResource MenuTopLevelMenuItem}" />

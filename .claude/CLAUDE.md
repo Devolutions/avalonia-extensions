@@ -134,6 +134,30 @@ Automated tests are available and should be used:
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 
+### DevTools MCP (Live UI inspection with AI agents)
+- Prefer DevTools MCP for runtime UI inspection tasks (visual tree, properties, styles, screenshots, input simulation) instead of relying only on human visual checks.
+- User-level MCP config is stored in `~/Library/Application Support/Code/User/mcp.json` (not `~/.vscode/mcp.json` in this environment).
+- Required app instrumentation:
+  - `AvaloniaUI.DiagnosticsSupport` package installed
+  - `.WithDeveloperTools()` on `AppBuilder` **or** `this.AttachDeveloperTools()` in `Application`
+  - Keep DevTools instrumentation development-only (Debug), since MCP enables live inspection, runtime property mutation, and synthetic input.
+- Typical MCP flow for `attach-to-app`:
+  1. `attach-to-app` with no id (enumerates available running clients)
+  2. Call `attach-to-app` again with selected process id
+  3. Use `tree`, `search`, `props`, `styles`, `screenshot`, etc.
+
+#### Important licensing note (observed in this repo/session)
+- We observed that forcing `AVALONIA_TOOLS_LICENSE_KEY` into MCP server env could cause:
+  - `Authenticated session does not have access to required product: avalonia-developer-tools-console`
+- In this setup, MCP attach worked when that env var was **not** forced in MCP config (while an authenticated DevTools session already existed).
+- First-time/expired sessions may prompt for Avalonia portal credentials in a GUI dialog; after successful sign-in, local auth state is reused by DevTools.
+- If MCP attach fails with product/license errors:
+  - update DevTools first (`dotnet tool update --global AvaloniaUI.DeveloperTools`; install only if missing)
+  - verify license key and entitlement
+  - only for the exact error above (and if a cached authenticated session exists), try removing explicit MCP `env` override for `AVALONIA_TOOLS_LICENSE_KEY`
+  - if a portal sign-in dialog appears, pause and ask the user to complete it (do not enter credentials from the agent)
+  - retry attach
+
 ### Packaging
 ```bash
 # Pack a specific theme for NuGet

@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaTheme.DevExpress.Behaviors;
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 
@@ -11,6 +12,17 @@ internal static class MenuSeparatorAlignmentBehavior
 
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<Separator, bool>("Enable", typeof(MenuSeparatorAlignmentBehavior));
+
+    /// <summary>
+    ///   Marks a menu container as styled by this theme.
+    /// </summary>
+    /// <remarks>
+    ///   Set from the DevExpress menu control themes. Menus styled by another pack (for example
+    ///   the standalone MacOS menu pack) resolve their own control themes instead, so they never
+    ///   carry this marker and the alignment behavior leaves their separators alone.
+    /// </remarks>
+    public static readonly AttachedProperty<bool> IsMenuOwnerProperty =
+        AvaloniaProperty.RegisterAttached<Control, bool>("IsMenuOwner", typeof(MenuSeparatorAlignmentBehavior));
 
     private const double DefaultIconColumnWidth = 30;
 
@@ -41,6 +53,10 @@ internal static class MenuSeparatorAlignmentBehavior
 
     public static bool GetEnable(Separator element) => element.GetValue(EnableProperty);
 
+    public static void SetIsMenuOwner(Control element, bool value) => element.SetValue(IsMenuOwnerProperty, value);
+
+    public static bool GetIsMenuOwner(Control element) => element.GetValue(IsMenuOwnerProperty);
+
     private static void OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (sender is Separator separator)
@@ -51,6 +67,14 @@ internal static class MenuSeparatorAlignmentBehavior
 
     private static void UpdateMargin(Separator separator)
     {
+        // The margin is applied as a local value, which outranks every style. Writing it into a
+        // menu owned by another pack would override that pack's separator metrics and silently
+        // change its menu height, so only touch menus this theme actually styles.
+        if (!IsOwnedByThisTheme(separator))
+        {
+            return;
+        }
+
         Thickness baseMargin = GetResource(separator, "DevExMenuSeparatorMargin", defaultMargin);
         double iconColumnWidth = GetResource(separator, "DevExMenuSeparatorIconColumnWidth", DefaultIconColumnWidth);
         int iconColumnCount = GetIconColumnCount(separator);
@@ -60,6 +84,27 @@ internal static class MenuSeparatorAlignmentBehavior
             baseMargin.Top,
             baseMargin.Right,
             baseMargin.Bottom);
+    }
+
+    /// <summary>
+    ///   Determines whether the separator lives in a menu styled by this theme.
+    /// </summary>
+    private static bool IsOwnedByThisTheme(Separator separator)
+    {
+        ILogical? current = separator.GetLogicalParent();
+
+        while (current is not null)
+        {
+            if (current is ContextMenu or MenuFlyoutPresenter or Menu or MenuItem)
+            {
+                return GetIsMenuOwner((Control)current);
+            }
+
+            current = current.GetLogicalParent();
+        }
+
+        // Not inside a recognised menu container: keep the historical behavior.
+        return true;
     }
 
     private static int GetIconColumnCount(Separator separator)

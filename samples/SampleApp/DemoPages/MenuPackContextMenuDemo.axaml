@@ -25,7 +25,7 @@
       </TextBlock>
     </Border>
 
-    <demo:ContextMenuDemo x:Name="SupportedDemoRoot"
-                          IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
+    <demo:MenuPackContextMenuDemoContent x:Name="SupportedDemoRoot"
+                                         IsVisible="{ext:ThemeIsOneOf 'Fluent, MacClassic, LiquidGlass, DevExpress, Linux, WinUI'}" />
   </StackPanel>
 </UserControl>

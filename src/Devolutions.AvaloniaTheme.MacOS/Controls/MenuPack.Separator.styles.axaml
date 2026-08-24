@@ -1,0 +1,13 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator, MenuItem Separator">
+    <Setter Property="Background" Value="{DynamicResource MacOsMenuSeparatorBrush}" />
+    <Setter Property="Margin" Value="{DynamicResource MacOsMenuSeparatorPadding}" />
+    <Setter Property="Height" Value="{DynamicResource MacOsMenuSeparatorHeight}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Focusable" Value="False" />
+  </Style>
+</Styles>

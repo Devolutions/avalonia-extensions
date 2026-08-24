@@ -705,6 +705,47 @@ public class MacOsMenuPackContractTests
         }
     }
 
+    [AvaloniaFact]
+    public void Host_theme_overrides_do_not_leak_into_popup_row_colors()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        window.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        var contextMenu = new ContextMenu();
+        var target = new Border { Width = 200, Height = 100, ContextMenu = contextMenu };
+        var popupItem = new MenuItem { Header = "Open" };
+        contextMenu.Items.Add(popupItem);
+        window.Content = target;
+
+        window.Styles.Add(new Style(x => x.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(MenuItem.BackgroundProperty, Brushes.Fuchsia),
+                new Setter(MenuItem.ForegroundProperty, Brushes.Fuchsia),
+            }
+        });
+
+        try
+        {
+            window.Show();
+            contextMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.NotEqual(Brushes.Fuchsia, popupItem.Background);
+            Assert.NotEqual(Brushes.Fuchsia, popupItem.Foreground);
+        }
+        finally
+        {
+            contextMenu.Close();
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
     [AvaloniaTheory]
     [InlineData("Light", ".st0 {fill : #000000; }", ".st0 {fill : #FFFFFF; }", ".st0, .st1, .st2, .st3 {fill : #B2B2B2; }")]
     [InlineData("Dark", ".st0 {fill : #B8B8B8; }", ".st0 {fill : #DEECF9; }", ".st0, .st1, .st2, .st3 {fill : #757575; }")]
@@ -731,6 +772,12 @@ public class MacOsMenuPackContractTests
 
         try
         {
+            Assert.True(fullWindow.TryFindResource("MacOsMenuSvgItemDefaultCss", variant, out object? fullDefaultCss),
+                "Full MacOS theme should resolve the shared menu SVG CSS token.");
+            Assert.True(fullWindow.TryFindResource("SvgMenuItemDefaultCss", variant, out object? legacyDefaultCss),
+                "Full MacOS theme should expose its legacy SVG CSS resource for alias reconstruction.");
+            Assert.Equal(legacyDefaultCss?.ToString(), fullDefaultCss?.ToString());
+
             var fullItem = CreateMenuItemWithSvg(fullWindow, out object fullSvg);
             var packItem = CreateMenuItemWithSvg(packWindow, out object packSvg);
 

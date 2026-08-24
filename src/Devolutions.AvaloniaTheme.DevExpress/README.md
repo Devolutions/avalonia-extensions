@@ -130,11 +130,16 @@ theme and the menu pack. There is one source of truth, so the pack can never dri
 
 Two rules make the pack safe to layer over a host theme you do not control:
 
-1. **Every key the pack owns is prefixed `DevExMenu`** — it cannot collide with, or be silently overridden by, the host
-   theme's keys.
+1. **The pack's token keys are prefixed `DevExMenu`** — those resources are owned by the pack and cannot collide with,
+   or be silently overridden by, the host theme's keys.
 2. **Values are pinned literals, never aliases.** Menu tokens do not resolve through generic theme-wide or Fluent-owned
    keys. A host theme that redefines e.g. `MenuFlyoutPresenterBorderThemeThickness` or `FlyoutThemeMaxWidth` cannot move
    menu visuals.
+
+The pack also intentionally ships non-prefixed named and implicit control themes such as `MenuTopLevelMenuItem`,
+`HorizontalMenuFlyoutPresenter`, `{x:Type MenuItem}`, `{x:Type Menu}`, and `{x:Type ContextMenu}`. Those keys are not
+resource-name collisions: they are the pack's own design-time theme registrations, and they are intentionally exempt
+from the `DevExMenu` prefix rule.
 
 **Inherited from the host (by design):**
 
@@ -142,16 +147,17 @@ Two rules make the pack safe to layer over a host theme you do not control:
 |-----|-----|
 | `FluentMenuScrollViewer` | Fluent's scroll viewer theme, reused rather than duplicated. This is the one remaining hard dependency on Fluent — see the prerequisite note above. |
 
-**Typography is pinned, not inherited.** `DevExMenuFontFamily` / `DevExMenuFontSize` /
-`DevExMenuFontWeight` are owned by the pack. The point of the pack is that menus in a branded or
-opted-out section still match the platform-themed menus elsewhere in the same app; inheriting the
-host's font defeated that, because the branded section rendered its menus in the branded font and
-size. Pinning also keeps menu geometry identical across hosts.
+**Typography and normal-state colours are pinned, not inherited.** `DevExMenuFontFamily` /
+`DevExMenuFontSize` / `DevExMenuFontWeight` are owned by the pack, and the same applies to the
+normal-state `DevExMenuItemBackground` / `DevExMenuItemForeground` values. The point of the pack is that
+menus in a branded or opted-out section still match the platform-themed menus elsewhere in the same app;
+inheriting the host's font or colours defeated that. Pinning also keeps menu geometry identical across hosts.
 
 Style-level sealing is applied in two selectors instead of one: popup rows are descendants of
-`MenuFlyoutPresenter`/`ContextMenu`/`Menu`, while menu-bar items are direct children of `Menu`. The
-popup-row geometry and the top-level bar geometry are different, so the seal pins the same typography
-for both but preserves each item's own padding and bar height.
+`MenuFlyoutPresenter`/`ContextMenu`/`Menu`, while menu-bar items are direct children of `Menu`. The popup-row
+geometry and the top-level bar geometry are different, so the seal pins the same typography and normal-state colour
+for both while preserving each item's own padding and bar height. The seal intentionally covers the normal state only;
+hover, pressed, selected, and disabled states are handled by template-child selectors in the `MenuItem` control theme.
 
 **The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`:
 that resource is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your

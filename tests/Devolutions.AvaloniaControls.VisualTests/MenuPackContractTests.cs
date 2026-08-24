@@ -320,6 +320,64 @@ public class MenuPackContractTests
     }
 
     [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_normal_state_colours()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        window.Styles.Add(new StyleInclude(new Uri(PackUri)) { Source = new Uri(PackUri) });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(MenuItem.BackgroundProperty, Brushes.Purple),
+                new Setter(MenuItem.ForegroundProperty, Brushes.Green),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var popupItem = new MenuItem { Header = "Popup" };
+        var contextMenu = new ContextMenu { Items = { popupItem } };
+        var button = new Button { ContextMenu = contextMenu };
+        button.Content = "Open";
+
+        var menu = new Menu
+        {
+            Items =
+            {
+                new MenuItem { Header = "File" },
+                new MenuItem { Header = "Edit" },
+            },
+        };
+        var barItem = (MenuItem)menu.Items[0];
+        window.Content = new StackPanel { Children = { button, menu } };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            contextMenu.Open(button);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.TryFindResource("DevExMenuItemBackground", ThemeVariant.Light, out object? popupBackground));
+            Assert.True(window.TryFindResource("DevExMenuItemForeground", ThemeVariant.Light, out object? popupForeground));
+
+            Assert.Equal(((SolidColorBrush)popupBackground!).Color, ((SolidColorBrush)popupItem.Background!).Color);
+            Assert.Equal(((SolidColorBrush)popupForeground!).Color, ((SolidColorBrush)popupItem.Foreground!).Color);
+
+            Assert.Equal(((SolidColorBrush)popupBackground!).Color, ((SolidColorBrush)barItem.Background!).Color);
+            Assert.Equal(((SolidColorBrush)popupForeground!).Color, ((SolidColorBrush)barItem.Foreground!).Color);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
     public void Open_submenu_does_not_queue_close_when_pointer_exits_parent()
     {
         var parent = new MenuItem

@@ -541,4 +541,104 @@ public class LinuxMenuPackContractTests
             window.Close();
         }
     }
+
+    /// <summary>
+    /// SVG menu icons must be recoloured by the pack, not left at their embedded fill.
+    /// </summary>
+    /// <remarks>
+    ///   The full theme applies this from <c>GlobalStyles.axaml</c>, which the pack does not
+    ///   ship. Without a pack-owned equivalent a consumer over a foreign host got no
+    ///   <c>Css</c> at all — in the dark variant that leaves dark icons on a dark popup.
+    /// </remarks>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Svg_menu_icons_are_recoloured_identically_by_pack_and_full_theme(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+
+        string expected = DescribeMenuSvgCss(usePack: false, variant);
+        string actual = DescribeMenuSvgCss(usePack: true, variant);
+
+        Assert.Equal(expected, actual);
+        Assert.DoesNotContain("<null>", actual);
+    }
+
+    /// <summary>
+    ///   Renders a menu whose item carries an SVG icon and reports the CSS applied to it.
+    /// </summary>
+    private static string DescribeMenuSvgCss(bool usePack, ThemeVariant variant)
+    {
+        // The test host application installs a platform theme of its own; clear it so only the
+        // theme under test supplies menu styles.
+        var app = Application.Current!;
+        var savedStyles = new List<IStyle>(app.Styles);
+        app.Styles.Clear();
+
+        var page = new UserControl();
+        var window = new Window { Content = page, Width = 600, Height = 400, RequestedThemeVariant = variant };
+
+        try
+        {
+            if (usePack)
+            {
+                window.Styles.Add(new AvaloniaFluentTheme());
+                var packUri = new Uri(PackUri);
+                page.Styles.Add(new StyleInclude(packUri) { Source = packUri });
+            }
+            else
+            {
+                var theme = new DevolutionsLinuxYaruTheme();
+                theme.BeginInit();
+                theme.EndInit();
+                window.Styles.Add(theme);
+            }
+
+            // The Svg control comes from a transitive package reference, so it is resolved
+            // reflectively rather than compiled against.
+            Type svgType = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly =>
+                {
+                    try
+                    {
+                        return assembly.GetTypes();
+                    }
+                    catch
+                    {
+                        return Array.Empty<Type>();
+                    }
+                })
+                .First(type => type.Name == "Svg" && typeof(Control).IsAssignableFrom(type));
+
+            var svg = (Control)Activator.CreateInstance(svgType, new Uri("avares://SampleApp/"))!;
+            svgType.GetProperty("Path")!.SetValue(svg, "/Assets/Computer.svg");
+
+            var item = new MenuItem { Header = "Open", Icon = svg };
+            var contextMenu = new ContextMenu();
+            contextMenu.Items.Add(item);
+
+            var target = new Border { Width = 200, Height = 100, ContextMenu = contextMenu };
+            page.Content = target;
+
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            contextMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+
+            var cssProperty = (AvaloniaProperty)svgType.GetField("CssProperty")!.GetValue(null)!;
+            string css = svg.GetValue(cssProperty)?.ToString() ?? "<null>";
+
+            contextMenu.Close();
+            return css;
+        }
+        finally
+        {
+            window.Close();
+            app.Styles.Clear();
+            foreach (IStyle style in savedStyles)
+            {
+                app.Styles.Add(style);
+            }
+        }
+    }
 }

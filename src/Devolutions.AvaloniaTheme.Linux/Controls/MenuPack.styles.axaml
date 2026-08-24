@@ -34,6 +34,7 @@
     </ResourceDictionary>
   </Styles.Resources>
 
+  <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
   <StyleInclude Source="/Controls/Separator.styles.axaml" />
   <StyleInclude Source="/Controls/Menu.styles.axaml" />
 </Styles>

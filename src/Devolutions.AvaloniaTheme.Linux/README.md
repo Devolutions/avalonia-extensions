@@ -85,7 +85,7 @@ Prerequisites and caveats:
   Linux control themes build on Fluent's base templates, and `HorizontalMenuItem` derives from Fluent's
   `FluentTopLevelMenuItem`, which is resolved when the menu template is built.
 - This pack includes styling for `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, and the
-  menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`).
+  menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`, `MenuSvg.styles.axaml`).
 - If you need full control coverage, use `<DevolutionsLinuxYaruTheme />` instead.
 
 #### Resource contract
@@ -135,6 +135,10 @@ descendants of `ContextMenu` / `MenuFlyoutPresenter` / `MenuItem`, whereas **men
 of `Menu`** and would otherwise be left exposed. The two blocks pin the same typography but different geometry,
 since menu-bar items have their own padding. Only the *normal* state is sealed there; hover / selected /
 disabled colours are applied to template children, which a host `MenuItem` style cannot reach.
+
+**SVG menu icons are recoloured by the pack.** Menu icons ship with an embedded fill, so
+`MenuSvg.styles.axaml` applies `LinuxMenuSvgItemDefaultCss` / `LinuxMenuSvgItemDisabledCss` per variant. The full
+theme includes the same file from `GlobalStyles.axaml`, so the two cannot drift.
 
 **The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`: that resource
 is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your app rather than just menu

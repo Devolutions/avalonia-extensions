@@ -95,8 +95,15 @@ full theme and the menu pack. There is one source of truth, so the pack can neve
 
 Two rules make the pack safe to layer over a host theme you do not control:
 
-1. **Every key the pack owns is prefixed `LinuxMenu`** — it cannot collide with, or be silently overridden by,
-   the host theme's keys.
+1. **Every menu *token* the pack owns is prefixed `LinuxMenu`** — no token can collide with, or be silently
+   overridden by, the host theme's keys.
+
+   This applies to the tokens, not to every resource in the pack. The pack also ships `ControlTheme`s, and those
+   are deliberately *not* prefixed: the implicit ones (`{x:Type MenuItem}`, `{x:Type Menu}`,
+   `{x:Type ContextMenu}`, `{x:Type MenuFlyoutPresenter}`) must keep their `x:Type` keys, since that is the
+   mechanism by which the pack restyles menus at all. Two named ones — `HorizontalMenuItem` and
+   `HorizontalMenuFlyoutPresenter` — are also unprefixed and share their names with the other Devolutions themes;
+   whichever is nearest in scope wins, so the pack's versions apply within the scope the pack is added to.
 2. **Values are pinned literals, never aliases.** Menu tokens do not resolve through generic theme-wide or
    Fluent-owned keys. A host theme that redefines e.g. `MenuFlyoutItemForeground` or `FlyoutThemeMaxWidth`
    cannot move menu visuals.

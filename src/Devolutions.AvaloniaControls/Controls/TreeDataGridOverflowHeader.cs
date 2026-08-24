@@ -490,6 +490,11 @@ public class TreeDataGridOverflowHeader : Decorator
             this.adornment = this.adornmentContent is { } content
                 ? new Border { ClipToBounds = true, Child = content }
                 : null;
+
+            // Invalidate here rather than relying on EnsureAdornmentAttached, which only does so when there
+            // is something to attach. Removing an adornment would otherwise leave a caption arranged into
+            // the narrower slot it no longer has to share, and the overflow state stale with it.
+            this.InvalidateMeasure();
         }
 
         this.EnsureAdornmentAttached();

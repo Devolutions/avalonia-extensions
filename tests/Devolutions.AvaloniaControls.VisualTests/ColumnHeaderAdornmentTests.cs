@@ -630,6 +630,36 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(HeaderAdornmentPosition.Right, positionWhenHidden);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void RemovingTheAdornment_ReturnsItsWidthToTheCaption(string themeName)
+    {
+        // Detaching resets the reported width, but nothing used to invalidate measure when the new source
+        // was null, so the caption stayed arranged into the narrower slot it no longer had to share.
+        SetTheme(themeName);
+
+        Border adornment = new() { Width = 80, Height = 12, Background = Brushes.Red };
+        TextBlock caption = new() { Text = "Cap" };
+        TreeDataGrid grid = BuildGrid(caption, new GridLength(300), adornment);
+
+        Window window = Show(grid);
+
+        double captionBefore = caption.Bounds.Width;
+
+        DevoTreeDataGridExtensions.SetHeaderAdornment(grid.Columns[0], null);
+        Layout(grid);
+
+        double captionAfter = caption.Bounds.Width;
+        double reportedAfter = OverflowHeader(grid).AdornmentWidth;
+
+        window.Close();
+
+        Assert.Equal(0, reportedAfter, Tolerance);
+        Assert.Equal(captionBefore + 80, captionAfter, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

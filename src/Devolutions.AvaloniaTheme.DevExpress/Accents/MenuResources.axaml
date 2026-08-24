@@ -14,9 +14,10 @@
        point at theme-wide or Fluent-owned keys: when the pack is consumed over a
        foreign host theme those keys resolve to the host's values and the menus
        drift. Everything the menus depend on visually lives here.
-    3. Keys deliberately NOT owned here are intentionally inherited from the host.
-       At this point that list is only FluentMenuScrollViewer (a ControlTheme).
-       See README for the full prerequisite contract.
+    3. Menu template dependencies are owned in this file. No host-owned menu keys are
+       intentionally inherited; this includes the vendored scroll-viewer ControlTheme
+       (`DevExMenuScrollViewer`) and its arrow resources, which are pinned here to keep
+       pack behavior host-invariant.
 
   Typography is PINNED here, not inherited. The pack exists so that menus in a
   branded/opted-out section still match the platform-themed menus elsewhere in the
@@ -48,6 +49,9 @@
       <SolidColorBrush x:Key="DevExMenuItemPointerOverBackground" Color="#eaeaea" />
       <SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#dadada" />
       <SolidColorBrush x:Key="DevExMenuItemChevronBrush" Color="#000000" />
+      <SolidColorBrush x:Key="DevExMenuScrollBarButtonArrowForeground" Color="#000000" />
+      <SolidColorBrush x:Key="DevExMenuScrollBarButtonArrowForegroundPointerOver" Color="#000000" />
+      <x:Double x:Key="DevExMenuScrollBarButtonArrowIconFontSize">12</x:Double>
       <x:String x:Key="DevExMenuSvgItemDefaultCss">.st0{fill:#010101;}</x:String>
       <x:String x:Key="DevExMenuSvgItemDisabledCss">.st0,.st1,.st2,.st3{fill:#bdbdbd;}</x:String>
     </ResourceDictionary>
@@ -69,6 +73,9 @@
       <SolidColorBrush x:Key="DevExMenuItemPointerOverBackground" Color="#3c3c3c" />
       <SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#404040" />
       <SolidColorBrush x:Key="DevExMenuItemChevronBrush" Color="#f5f5f5" />
+      <SolidColorBrush x:Key="DevExMenuScrollBarButtonArrowForeground" Color="#f5f5f5" />
+      <SolidColorBrush x:Key="DevExMenuScrollBarButtonArrowForegroundPointerOver" Color="#f5f5f5" />
+      <x:Double x:Key="DevExMenuScrollBarButtonArrowIconFontSize">12</x:Double>
       <x:String x:Key="DevExMenuSvgItemDefaultCss">.st0{fill:#f5f5f5;}</x:String>
       <x:String x:Key="DevExMenuSvgItemDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>
     </ResourceDictionary>
@@ -131,12 +138,12 @@
                 <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
               </MultiBinding>
             </RepeatButton.IsVisible>
-            <Viewbox Width="{DynamicResource ScrollBarButtonArrowIconFontSize}"
-                     Height="{DynamicResource ScrollBarButtonArrowIconFontSize}">
+            <Viewbox Width="{DynamicResource DevExMenuScrollBarButtonArrowIconFontSize}"
+                     Height="{DynamicResource DevExMenuScrollBarButtonArrowIconFontSize}">
               <Path VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Data="M 19.091797 14.970703 L 10 5.888672 L 0.908203 14.970703 L 0.029297 14.091797 L 10 4.111328 L 19.970703 14.091797 Z"
-                    Fill="{DynamicResource ScrollBarButtonArrowForeground}"
+                    Fill="{DynamicResource DevExMenuScrollBarButtonArrowForeground}"
                     Width="20"
                     Height="20" />
             </Viewbox>
@@ -157,12 +164,12 @@
                 <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
               </MultiBinding>
             </RepeatButton.IsVisible>
-            <Viewbox Width="{DynamicResource ScrollBarButtonArrowIconFontSize}"
-                     Height="{DynamicResource ScrollBarButtonArrowIconFontSize}">
+            <Viewbox Width="{DynamicResource DevExMenuScrollBarButtonArrowIconFontSize}"
+                     Height="{DynamicResource DevExMenuScrollBarButtonArrowIconFontSize}">
               <Path VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Data="M 18.935547 4.560547 L 19.814453 5.439453 L 10 15.253906 L 0.185547 5.439453 L 1.064453 4.560547 L 10 13.496094 Z"
-                    Fill="{DynamicResource ScrollBarButtonArrowForeground}"
+                    Fill="{DynamicResource DevExMenuScrollBarButtonArrowForeground}"
                     Width="20"
                     Height="20" />
             </Viewbox>
@@ -177,7 +184,7 @@
       </ControlTemplate>
     </Setter>
     <Style Selector="^ /template/ RepeatButton:pointerover > Viewbox > Path">
-      <Setter Property="Fill" Value="{DynamicResource ScrollBarButtonArrowForegroundPointerOver}" />
+      <Setter Property="Fill" Value="{DynamicResource DevExMenuScrollBarButtonArrowForegroundPointerOver}" />
     </Style>
   </ControlTheme>
 

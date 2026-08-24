@@ -88,13 +88,9 @@ every value is a literal.
 
 ### What is *deliberately* inherited from the host
 
-Only one dependency is intentionally inherited:
-
-| Key | Rationale |
-|-----|-----------|
-| `FluentMenuScrollViewer` | Technical dependency only: reused rather than vendored (for now). See the companion decision document. |
-
-This list is the explicit contract. Anything *not* on it and not `DevExMenu*`-prefixed is a bug.
+None. The pack owns all menu template dependencies, including the vendored
+`DevExMenuScrollViewer` and the arrow resources it pins locally.
+Anything not `DevExMenu*`-prefixed is a bug.
 
 
 ## 5. How it is guarded
@@ -131,7 +127,7 @@ the theme object — so the sample exercises the same path an external consumer 
 **Known gaps:**
 
 - Packs for MacOS & Linux are not built yet.
-- The `FluentMenuScrollViewer` dependency — see the companion decision document.
+- Historical discussion of the removed Fluent dependency — see the companion decision document.
 
 
 **URI:** `avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml`

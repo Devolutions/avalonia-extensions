@@ -3,10 +3,13 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
 using Avalonia.Threading;
 using Devolutions.AvaloniaTheme.MacOS;
@@ -35,6 +38,9 @@ public class MacOsMenuPackContractTests
         "MacOsMenuPressedBackgroundBrush",
         "MacOsMenuItemPointerOverBackgroundBrush",
         "MacOsMenuSeparatorBrush",
+        "MacOsMenuScrollBarButtonArrowForeground",
+        "MacOsMenuScrollBarButtonArrowForegroundPointerOver",
+        "MacOsMenuScrollBarButtonArrowIconFontSize",
         "MacOsMenuPopupBorderThickness",
         "MacOsMenuFontSize",
         "MacOsMenuHeaderFontSizeSmall",
@@ -129,6 +135,41 @@ public class MacOsMenuPackContractTests
             fullWindow.Close();
             packWindow.Close();
         }
+    }
+
+    [AvaloniaFact]
+    public void MacOsMenuScrollViewer_uses_pack_owned_arrow_resources_even_when_host_defines_generic_values()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Resources["ScrollBarButtonArrowForeground"] = Brushes.Red;
+        window.Resources["ScrollBarButtonArrowForegroundPointerOver"] = Brushes.Blue;
+        window.Resources["ScrollBarButtonArrowIconFontSize"] = 99.0;
+        window.Styles.Add(new AvaloniaFluentTheme());
+        Devolutions.AvaloniaTheme.MacOS.Controls.MacMenuPackStyles.ApplyTo(window.Styles);
+
+        Assert.True(window.TryFindResource("MacOsMenuScrollBarButtonArrowForeground", ThemeVariant.Light, out object? packForeground));
+        Assert.True(window.TryFindResource("MacOsMenuScrollBarButtonArrowForegroundPointerOver", ThemeVariant.Light, out object? packPointerOver));
+        Assert.True(window.TryFindResource("MacOsMenuScrollBarButtonArrowIconFontSize", ThemeVariant.Light, out object? packSize));
+
+        ISolidColorBrush hostForeground = Assert.IsAssignableFrom<ISolidColorBrush>(window.Resources["ScrollBarButtonArrowForeground"]);
+        ISolidColorBrush packBrush = Assert.IsAssignableFrom<ISolidColorBrush>(packForeground);
+        Assert.Equal(Colors.Red, hostForeground.Color);
+        Assert.NotEqual(hostForeground.Color, packBrush.Color);
+
+        ISolidColorBrush hostPointerOver = Assert.IsAssignableFrom<ISolidColorBrush>(window.Resources["ScrollBarButtonArrowForegroundPointerOver"]);
+        ISolidColorBrush packPointerOverBrush = Assert.IsAssignableFrom<ISolidColorBrush>(packPointerOver);
+        Assert.Equal(Colors.Blue, hostPointerOver.Color);
+        Assert.NotEqual(hostPointerOver.Color, packPointerOverBrush.Color);
+
+        Assert.Equal(12d, Assert.IsType<double>(packSize));
+
+        string xaml = System.IO.File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "../../../../../src/Devolutions.AvaloniaTheme.MacOS/Accents/MenuResources.axaml"));
+        Assert.Contains("MacOsMenuScrollBarButtonArrowForeground", xaml);
+        Assert.Contains("MacOsMenuScrollBarButtonArrowForegroundPointerOver", xaml);
+        Assert.Contains("MacOsMenuScrollBarButtonArrowIconFontSize", xaml);
+        Assert.DoesNotContain("ScrollBarButtonArrowForeground", xaml.Replace("MacOsMenuScrollBarButtonArrowForeground", ""));
+        Assert.DoesNotContain("ScrollBarButtonArrowForegroundPointerOver", xaml.Replace("MacOsMenuScrollBarButtonArrowForegroundPointerOver", ""));
+        Assert.DoesNotContain("ScrollBarButtonArrowIconFontSize", xaml.Replace("MacOsMenuScrollBarButtonArrowIconFontSize", ""));
     }
 
     [AvaloniaFact]
@@ -431,20 +472,19 @@ public class MacOsMenuPackContractTests
             Dispatcher.UIThread.RunJobs();
 
             bool hostFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? hostValue);
-            string hostToken = DescribeToken(hostValue);
 
             page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
             Dispatcher.UIThread.RunJobs();
 
             bool packFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? packValue);
-            string packToken = DescribeToken(packValue);
 
             Assert.Equal(
                 hostFound,
                 packFound);
-            Assert.Equal(
-                hostToken,
-                packToken);
+            if (hostFound)
+            {
+                Assert.Same(hostValue, packValue);
+            }
         }
         finally
         {

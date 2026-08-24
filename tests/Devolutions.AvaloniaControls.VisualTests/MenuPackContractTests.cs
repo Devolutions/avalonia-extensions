@@ -35,8 +35,7 @@ public class MenuPackContractTests
 
     /// <summary>
     /// Every resource key the menu templates depend on. Keys here are owned by the
-    /// pack and must be prefixed; anything intentionally inherited from the host
-    /// (currently only FluentMenuScrollViewer) is deliberately excluded.
+    /// pack and must be prefixed.
     ///
     /// Typography is owned, not inherited: menus in a branded section must match the
     /// platform-themed menus elsewhere in the app, and pinning it also keeps menu
@@ -63,6 +62,9 @@ public class MenuPackContractTests
         "DevExMenuItemPointerOverBackground",
         "DevExMenuSeparatorBrush",
         "DevExMenuItemChevronBrush",
+        "DevExMenuScrollBarButtonArrowForeground",
+        "DevExMenuScrollBarButtonArrowForegroundPointerOver",
+        "DevExMenuScrollBarButtonArrowIconFontSize",
         "DevExMenuSvgItemDefaultCss",
         "DevExMenuSvgItemDisabledCss",
         "DevExMenuBarHeight",

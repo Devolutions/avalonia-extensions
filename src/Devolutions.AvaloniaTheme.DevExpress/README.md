@@ -110,17 +110,11 @@ Exact menu pack URI:
 
 Prerequisites and caveats:
 
-- **`FluentTheme` must be loaded application-wide, in `Application.Styles` — not scoped to a subtree.** Adding
-  `<FluentTheme />` to the `Styles` of a `Window`, `UserControl`, or other container is *not* sufficient, even though
-  the resource appears reachable from that subtree. The pack reuses Fluent's `MenuScrollViewer` control theme, which is
-  resolved when the menu template is built; if `FluentTheme` is not application-wide this fails with an
-  `InvalidCastException` during template construction. The exception surfaces on any menu — including a single-item
-  menu that never needs to scroll — and its message does not mention scrolling, so it is easy to misdiagnose. If you
-  see an unexplained `InvalidCastException` when a menu first opens, check this first.
-- The pack reuses the Fluent base control templates and deliberately inherits a small set of keys from the host so
-  menus still feel native to the surrounding app (see "Inherited from the host" below).
-- This pack includes styling for `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, `Separator`, and
-  menu-specific helper styles (`Menu.styles.axaml`, `Separator.styles.axaml`, and the `MenuItem` Svg icon CSS styles).
+- The pack is designed to be layered over a foreign host theme without depending on host-owned menu resources.
+  It vendors its own scroll-viewer theme and pins the arrow resources it consumes locally, so no application-wide
+  Fluent prerequisite remains.
+- The pack styles `ContextMenu`, `MenuFlyoutPresenter`, `Menu`, `MenuItem`, `Separator`, and the menu-specific helper
+  styles (`Menu.styles.axaml`, `Separator.styles.axaml`, and the `MenuItem` Svg icon CSS styles).
 - If you need full control coverage, use `<DevolutionsDevExpressTheme />` instead.
 
 #### Resource contract
@@ -138,9 +132,8 @@ Two rules make the pack safe to layer over a host theme you do not control:
 
 **Inherited from the host (by design):**
 
-| Key | Why |
-|-----|-----|
-| `FluentMenuScrollViewer` | Fluent's scroll viewer theme, reused rather than duplicated. This is the one remaining hard dependency on Fluent — see the prerequisite note above. |
+None. Menu template dependencies are fully owned by the pack, including the vendored
+`DevExMenuScrollViewer` and the arrow resources it pins locally.
 
 **Typography is pinned, not inherited.** `DevExMenuFontFamily` / `DevExMenuFontSize` /
 `DevExMenuFontWeight` are owned by the pack. The point of the pack is that menus in a branded or

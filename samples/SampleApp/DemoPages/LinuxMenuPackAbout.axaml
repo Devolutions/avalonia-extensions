@@ -5,26 +5,26 @@
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              xmlns:demo="clr-namespace:SampleApp.DemoPages"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="640"
-             x:Class="SampleApp.DemoPages.MenuPackAbout">
+             x:Class="SampleApp.DemoPages.LinuxMenuPackAbout">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml" />
   </UserControl.Styles>
 
   <StackPanel Margin="10" Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
-    <TextBlock Classes="h1">About DevExpress Menu Pack</TextBlock>
+    <TextBlock Classes="h1">About Linux Menu Pack</TextBlock>
 
     <TextBlock FontSize="15" TextWrapping="Wrap">
-      The DevExpress Menu Pack is an externally consumable style pack for menu-related controls. It lets apps use platform-specific menu chrome even in otherwise custom branded areas.
+      The Linux Menu Pack is an externally consumable style pack for menu-related controls. It lets apps use platform-specific menu chrome even in otherwise custom branded areas.
     </TextBlock>
 
     <TextBlock FontSize="15" TextWrapping="Wrap">
-      The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent), to demonstrate how DevExpress menu styles can be applied over any Fluent-based host theme.
+      The pages in this section load the MenuPack on top of the currently selected theme (must be or contain Fluent), to demonstrate how Linux menu styles can be applied over any Fluent-based host theme.
     </TextBlock>
 
     <TextBlock Classes="section-title">Menu pack URI</TextBlock>
     <TextBlock FontFamily="{DynamicResource CodeFontFamily}"
-               Text="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml"
+               Text="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml"
                TextWrapping="Wrap" />
 
     <TextBlock Classes="section-title">Minimal usage</TextBlock>
@@ -37,7 +37,7 @@
         <Run Text="&lt;Application ...&gt;&#x0a;" />
         <Run Text="  &lt;Application.Styles&gt;&#x0a;" />
         <Run Text="    &lt;FluentTheme /&gt;&#x0a;" />
-        <Run Text="    &lt;StyleInclude Source=&quot;avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml&quot; /&gt;&#x0a;" />
+        <Run Text="    &lt;StyleInclude Source=&quot;avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml&quot; /&gt;&#x0a;" />
         <Run Text="  &lt;/Application.Styles&gt;&#x0a;" />
         <Run Text="&lt;/Application&gt;" />
       </TextBlock.Inlines>

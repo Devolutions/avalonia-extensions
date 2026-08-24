@@ -1,0 +1,40 @@
+<!--
+  Externally consumable Linux (Yaru) menu pack.
+
+  Lets an app adopt Linux menu styling without importing the full DevolutionsLinuxYaruTheme.
+  Consumed by avares URI:
+
+    avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml
+
+  Prerequisite: a Fluent-based host theme must be loaded application-wide (the menu templates
+  build on Fluent's menu infrastructure). See README.md for the full contract.
+
+  The control themes here are the same files the full theme loads, so the pack and the theme
+  cannot drift apart.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Accents/MenuResources.axaml" />
+        <MergeResourceInclude Source="/Controls/ContextMenu.axaml" />
+        <MergeResourceInclude Source="/Controls/MenuFlyoutPresenter.axaml" />
+        <MergeResourceInclude Source="/Controls/Menu.axaml" />
+        <MergeResourceInclude Source="/Controls/MenuItem.axaml" />
+        <!--
+          Separator.axaml is deliberately NOT merged here. It is keyed `{x:Type Separator}`,
+          i.e. an implicit theme, so merging it would restyle EVERY separator in the consuming
+          app rather than just menu ones. Menu separators instead use the host's template
+          (identical across Fluent, MacOS, DevExpress and Linux) with every bound property
+          pinned in Separator.styles.axaml.
+        -->
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
+  <StyleInclude Source="/Controls/Separator.styles.axaml" />
+  <StyleInclude Source="/Controls/Menu.styles.axaml" />
+</Styles>

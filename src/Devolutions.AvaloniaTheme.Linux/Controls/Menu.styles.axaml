@@ -13,13 +13,49 @@
   </Design.PreviewWith>
 
   <Style Selector="Menu > Separator, Menu > MenuItem:separator > Separator">
-    <Setter Property="Margin" Value="0 4" />
-    <Setter Property="Width" Value="1" />
+    <Setter Property="Margin" Value="{DynamicResource LinuxMenuBarSeparatorMargin}" />
+    <Setter Property="Width" Value="{DynamicResource LinuxMenuBarSeparatorWidth}" />
     <Setter Property="Height" Value="NaN" />
     <Setter Property="MinHeight" Value="NaN" />
   </Style>
 
   <Style Selector="MenuItem:separator">
     <Setter Property="MinHeight" Value="1" />
+  </Style>
+
+  <!--
+    Row geometry and typography are (re)applied at Style level, not only through the MenuItem
+    ControlTheme. Host themes set these with Styles of their own (for example the DevExpress
+    theme's Menu.styles.axaml), and a Style setter outranks a ControlTheme setter, so a
+    ControlTheme alone lets the host resize menu rows when the pack is layered on top.
+  -->
+  <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
+    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+
+  <!--
+    Same sealing for menu-bar items. They are direct children of Menu, so the selector above
+    (which only matches popup rows and submenu items) does not reach them, leaving the menu bar
+    exposed to a host MenuItem Style.
+
+    The geometry tokens differ from the popup rows: menu-bar items have their own padding, so
+    the popup row padding must NOT be applied here.
+  -->
+  <Style Selector="Menu > MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
+    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </Style>
 </Styles>

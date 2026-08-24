@@ -1,0 +1,22 @@
+<!--
+  SVG menu-icon recolouring, shared by BOTH:
+    - GlobalStyles.axaml             (full DevolutionsLinuxYaruTheme)
+    - Controls/MenuPack.styles.axaml (externally consumable menu pack)
+
+  so the two cannot drift apart.
+
+  This has to live in the pack, not only in GlobalStyles: menu icons ship with an embedded fill,
+  and without these styles a pack consumer over a foreign host gets no Css at all. In the dark
+  variant that leaves dark icons on a dark popup, i.e. nearly invisible.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="MenuItem Svg">
+    <Setter Property="Css" Value="{DynamicResource LinuxMenuSvgItemDefaultCss}" />
+  </Style>
+
+  <Style Selector="MenuItem Svg:disabled">
+    <Setter Property="Css" Value="{DynamicResource LinuxMenuSvgItemDisabledCss}" />
+  </Style>
+</Styles>

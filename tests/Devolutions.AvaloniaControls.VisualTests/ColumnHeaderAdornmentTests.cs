@@ -565,6 +565,37 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(rightWidth, fillWidth, Tolerance);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic", 5)]
+    [InlineData("DevExpress", 0)]
+    [InlineData("Linux", 0)]
+    public void FillAdornment_ReachesTheColumnHeaderEdges(string themeName, double trailingChrome)
+    {
+        // The point of positioning the adornment against the header rather than the caption: a theme's
+        // caption inset -- macOS's 18px Padding, DevExpress's trailing gutter, Yaru's leading 5 -- must not
+        // hold the adornment off the header's edge. Only structural chrome may, which is why MacClassic
+        // stops 5px short: its separator and resizer own a Grid column the adornment must not cross.
+        SetTheme(themeName);
+
+        Border adornment = new() { Background = Brushes.Red };
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(300), adornment);
+
+        Window window = Show(grid);
+
+        TreeDataGridColumnHeader header = Header(grid);
+        double headerWidth = header.Bounds.Width;
+        Point? left = adornment.TranslatePoint(new Point(0, 0), header);
+        Point? right = adornment.TranslatePoint(new Point(adornment.Bounds.Width, 0), header);
+
+        window.Close();
+
+        Assert.NotNull(left);
+        Assert.NotNull(right);
+        Assert.Equal(0, left!.Value.X, Tolerance);
+        Assert.Equal(headerWidth - trailingChrome, right!.Value.X, Tolerance);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

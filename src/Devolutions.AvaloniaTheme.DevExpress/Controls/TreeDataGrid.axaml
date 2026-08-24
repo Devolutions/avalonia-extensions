@@ -160,7 +160,11 @@
     <Setter Property="Foreground" Value="{DynamicResource TreeDataGridHeaderForegroundBrush}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="MinHeight" Value="{StaticResource TreeDataGridHeaderHeight}" />
-    <Setter Property="Padding" Value="0" />
+    <!-- Trailing 6 is the caption's gutter before the column separator. It lives in Padding rather than in
+         a Margin on HeaderContent: both reserve the same 6px and both count toward the header's desired
+         width, but a Margin also shrinks HeaderContent's own bounds, which kept a header adornment 6px off
+         the header's right edge. Padding insets only the caption. -->
+    <Setter Property="Padding" Value="0 0 6 0" />
     <Setter Property="BorderBrush" Value="{DynamicResource TreeDataGridInnerGridBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -229,7 +233,6 @@
                                       }"
                                       TextTrimming="CharacterEllipsis"
                                       ShowToolTip="True"
-                                      Margin="0 0 6 0"
                                       TabIndex="0" />
 
           <!-- Right separator + resizer -->

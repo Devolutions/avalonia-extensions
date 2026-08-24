@@ -294,7 +294,19 @@ public class TreeDataGridOverflowHeader : Decorator
         // unconstrained measure reports a single line, so the header is only ever one line tall, which is
         // what the themes' TextTrimming plus the overflow tooltip are there to handle.
         this.Child?.Measure(Size.Infinity);
-        return this.Child?.DesiredSize ?? default;
+
+        if (this.Child is not { } child)
+        {
+            return default;
+        }
+
+        // Padding is added here and honoured in ArrangeOverride, matching the string path. It is a caption
+        // inset only: the adornment is positioned against the full header, so a theme can inset its caption
+        // without also pushing the adornment off the header's edge.
+        Thickness childPadding = this.Padding;
+        return new Size(
+            child.DesiredSize.Width + childPadding.Left + childPadding.Right,
+            child.DesiredSize.Height + childPadding.Top + childPadding.Bottom);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
@@ -303,12 +315,13 @@ public class TreeDataGridOverflowHeader : Decorator
 
         if (this.Content is not string && this.Child is { } child)
         {
+            Thickness padding = this.Padding;
             Thickness margin = this.InnerContentMargin;
             var rect = new Rect(
-                margin.Left,
-                margin.Top,
-                Math.Max(0, finalSize.Width - margin.Left - margin.Right - adornmentWidth),
-                Math.Max(0, finalSize.Height - margin.Top - margin.Bottom));
+                padding.Left + margin.Left,
+                padding.Top + margin.Top,
+                Math.Max(0, finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right - adornmentWidth),
+                Math.Max(0, finalSize.Height - padding.Top - padding.Bottom - margin.Top - margin.Bottom));
 
             // Deliberately NOT re-measured against rect here, unlike the adornment. The child's desired
             // size is what an Auto column sizes from, so shrinking it to the width it was just given makes

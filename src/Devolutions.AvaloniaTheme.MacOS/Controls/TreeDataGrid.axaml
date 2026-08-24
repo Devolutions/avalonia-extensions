@@ -165,9 +165,11 @@
                 BorderThickness="0"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid Name="PART_ColumnHeaderRoot" ColumnDefinitions="*,Auto">
-            <!-- Main content area with sort icon -->
-            <Panel Margin="{TemplateBinding Padding}"
-                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            <!-- Main content area with sort icon. The header's Padding is handed to HeaderContent instead
+                 of being applied here as a Margin: a Margin shrinks HeaderContent's own bounds, which would
+                 stop a header adornment reaching the header's edge. As Padding it insets only the caption,
+                 as in the Yaru theme. -->
+            <Panel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                    VerticalAlignment="Stretch">
               <Panel>
                 <!-- The chevron overlays the caption rather than occupying a reserved column: native
@@ -206,6 +208,7 @@
                 <TreeDataGridOverflowHeader Name="HeaderContent"
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Padding="{TemplateBinding Padding}"
                                             InnerContentMargin="{BindingToggler
                                               {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
                                               0 0 24 0,

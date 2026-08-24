@@ -431,20 +431,19 @@ public class MacOsMenuPackContractTests
             Dispatcher.UIThread.RunJobs();
 
             bool hostFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? hostValue);
-            string hostToken = DescribeToken(hostValue);
 
             page.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
             Dispatcher.UIThread.RunJobs();
 
             bool packFound = page.TryFindResource(nonMenuKey, ThemeVariant.Light, out object? packValue);
-            string packToken = DescribeToken(packValue);
 
             Assert.Equal(
                 hostFound,
                 packFound);
-            Assert.Equal(
-                hostToken,
-                packToken);
+            if (hostFound)
+            {
+                Assert.Same(hostValue, packValue);
+            }
         }
         finally
         {

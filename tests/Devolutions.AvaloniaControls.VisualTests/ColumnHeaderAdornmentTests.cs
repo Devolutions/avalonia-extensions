@@ -596,6 +596,40 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(headerWidth - trailingChrome, right!.Value.X, Tolerance);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void HiddenAdornment_IsTreatedAsAbsentWhileFilling(string themeName)
+    {
+        // The consumer's control is wrapped in a clipping Border that stays visible, so hiding the control
+        // used to leave a Fill adornment still claiming the whole header: caption arranged to zero width and
+        // the sort indicator hidden, with nothing drawn in their place. The existing visibility tests all
+        // use the default Right position, where a zero natural width already produced the right answer.
+        SetTheme(themeName);
+
+        Border adornment = new() { Width = 40, Height = 12, Background = Brushes.Red };
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
+        TreeDataGrid grid = BuildGrid("Name", new GridLength(300), adornment);
+
+        Window window = Show(grid);
+
+        double whenShown = OverflowHeader(grid).AdornmentWidth;
+
+        adornment.IsVisible = false;
+        Layout(grid);
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        double whenHidden = overflowHeader.AdornmentWidth;
+        HeaderAdornmentPosition positionWhenHidden = overflowHeader.AdornmentPosition;
+
+        window.Close();
+
+        Assert.True(whenShown > 0, $"a visible Fill adornment should claim the header, got {whenShown}");
+        Assert.Equal(0, whenHidden, Tolerance);
+        Assert.Equal(HeaderAdornmentPosition.Right, positionWhenHidden);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

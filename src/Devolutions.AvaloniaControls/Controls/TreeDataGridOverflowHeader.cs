@@ -353,8 +353,13 @@ public class TreeDataGridOverflowHeader : Decorator
     // content can trim rather than spill over neighbouring columns.
     private double ArrangeAdornment(Size finalSize)
     {
-        if (this.adornment is not { } adorn)
+        // A hidden adornment counts as absent. The consumer's control is wrapped in a clipping Border that
+        // stays visible, so without this a Fill adornment would keep claiming the whole header while hidden:
+        // the caption would be arranged to zero width and the theme would hide the sort indicator, leaving
+        // the header blank.
+        if (this.adornment is not { } adorn || this.adornmentContent is not { IsVisible: true })
         {
+            this.adornment?.Arrange(new Rect(finalSize.Width, 0, 0, finalSize.Height));
             this.SetAndRaise(AdornmentWidthProperty, ref this.adornmentWidth, 0);
             this.SetAndRaise(AdornmentPositionProperty, ref this.adornmentPosition, HeaderAdornmentPosition.Right);
             return 0;

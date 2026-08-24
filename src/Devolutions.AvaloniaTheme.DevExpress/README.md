@@ -156,13 +156,23 @@ inside the menu-scoped selector. A guard test asserts that adding the pack leave
 separators byte-identical.
 
 **Overriding a token.** Because tokens are prefixed, you can retarget any single value without affecting the rest of
-your app:
+your app. The override must live in the same resource scope as the pack (or a descendant of it), because resource lookup
+walks up the tree and stops at the first match. If a `StyleInclude` is added on a `UserControl` but the override lives on the
+`Window`, the override is silently ignored.
 
 ```xaml
-<StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
-<!-- ... later in your own resources ... -->
-<SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#ff0000" />
+<Application.Styles>
+  <StyleInclude Source="avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml" />
+</Application.Styles>
+
+<Application.Resources>
+  <SolidColorBrush x:Key="DevExMenuSeparatorBrush" Color="#ff0000" />
+</Application.Resources>
 ```
+
+The pack and the override must live in the same collection scope, or in a parent/child scope where the override is resolved
+before the pack is considered. In practice, the simplest pattern is to keep the pack in `Application.Styles` and the override in
+`Application.Resources` (or in the same `UserControl.Resources` scope as the pack).
 
 Both rules are enforced by `MenuPackContractTests` in the visual test project, which asserts that every `DevExMenu*`
 token resolves identically under the full theme and under "pack over a foreign host", and that a hostile host theme

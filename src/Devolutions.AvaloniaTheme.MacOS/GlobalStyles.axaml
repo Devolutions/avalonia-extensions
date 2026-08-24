@@ -31,23 +31,12 @@
     </Style>
   </Style>
 
-  <Style Selector="MenuItem Svg">
-    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDefaultCss}" />
-  </Style>
-
-  <Style Selector="MenuItem:pointerover Svg">
-    <Setter Property="Css" Value="{DynamicResource SvgMenuItemPointerOverCss}" />
-  </Style>
-
-  <Style Selector="MenuItem Svg:disabled">
-    <Setter Property="Css" Value="{DynamicResource SvgMenuItemDisabledCss}" />
-  </Style>
-
   <!-- Custom Classes used as ConverterParameters in Template styles - declared here to make them available to the IDE's parser to avoid false error highlighting -->
   <Style Selector=".MacOS_Theme_MenuLabelBelowIcon" />
   <Style Selector=".MacOS_Theme_MenuItemIconOnly" />
 
   <StyleInclude Source="/Controls/Menu.styles.axaml" />
+  <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
   <StyleInclude Source="/Controls/TextBox.styles.axaml" />
 
 </Styles>

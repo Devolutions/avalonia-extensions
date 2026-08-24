@@ -28,6 +28,9 @@
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForeground" Color="#000000" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForegroundPointerOver" Color="#000000" />
       <x:Double x:Key="MacOsMenuScrollBarButtonArrowIconFontSize">12</x:Double>
+      <x:String x:Key="MacOsMenuSvgItemDefaultCss">.st0 {fill : #000000; }</x:String>
+      <x:String x:Key="MacOsMenuSvgItemPointerOverCss">.st0 {fill : #FFFFFF; }</x:String>
+      <x:String x:Key="MacOsMenuSvgItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #B2B2B2; }</x:String>
       <Thickness x:Key="MacOsMenuPopupBorderThickness">0</Thickness>
     </ResourceDictionary>
 
@@ -47,6 +50,9 @@
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForeground" Color="#f5f5f5" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForegroundPointerOver" Color="#f5f5f5" />
       <x:Double x:Key="MacOsMenuScrollBarButtonArrowIconFontSize">12</x:Double>
+      <x:String x:Key="MacOsMenuSvgItemDefaultCss">.st0 {fill : #B8B8B8; }</x:String>
+      <x:String x:Key="MacOsMenuSvgItemPointerOverCss">.st0 {fill : #DEECF9; }</x:String>
+      <x:String x:Key="MacOsMenuSvgItemDisabledCss">.st0, .st1, .st2, .st3 {fill : #757575; }</x:String>
       <Thickness x:Key="MacOsMenuPopupBorderThickness">1</Thickness>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

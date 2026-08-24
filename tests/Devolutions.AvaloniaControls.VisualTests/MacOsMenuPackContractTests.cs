@@ -2,6 +2,7 @@ using Avalonia;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
@@ -570,19 +571,18 @@ public class MacOsMenuPackContractTests
 
 
     /// <summary>
-    ///   Menu row geometry and typography must be applied at Style level, not only through the
-    ///   MenuItem ControlTheme.
+    ///   Menu row geometry and typography must be pinned at Style level for the host-invariant
+    ///   properties, while the class-dependent top-level sizing remains in the ControlTheme.
     /// </summary>
     /// <remarks>
-    ///   Host themes set menu metrics with Styles of their own (for example the DevExpress
-    ///   theme's Menu.styles.axaml), and a Style setter outranks a ControlTheme setter. Relying
-    ///   on the ControlTheme alone regressed once already: menus kept the MacOS chrome while the
-    ///   host resized every row.
-    ///   Asserted structurally because rendering two themes in one headless process is not
-    ///   currently reliable.
+    ///   Host themes set menu metrics with Styles of their own, and a Style setter outranks a
+    ///   ControlTheme setter. Relying on the ControlTheme alone regressed once already: menus kept
+    ///   the MacOS chrome while the host resized every row. For MacOS top-level toolbars, however,
+    ///   FontSize and Padding are intentionally class-driven in the ControlTheme; a blanket fixed
+    ///   override would break the MacOS_Theme_MenuLabelBelowIcon variant.
     /// </remarks>
     [AvaloniaFact]
-    public void Pack_applies_menu_row_geometry_at_style_level()
+    public void Pack_applies_host_invariant_menu_metrics_at_style_level()
     {
         MacOSVersionDetector.SetTestOverride(true);
 
@@ -590,31 +590,168 @@ public class MacOsMenuPackContractTests
         {
             var pack = new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack();
 
-            List<Style> nestedItemStyles = Flatten(pack)
+            List<Style> topLevelStyles = Flatten(pack)
                 .Where(style => style.Selector?.ToString() is { } selector
-                                && selector.Contains("MenuItem")
-                                && selector.Contains(":not(:separator)"))
+                                && selector.Contains("Menu > MenuItem:not(:separator)"))
                 .ToList();
 
             Assert.True(
-                nestedItemStyles.Count > 0,
-                "The pack must style nested menu items so host-theme Styles cannot resize menu rows.");
+                topLevelStyles.Count > 0,
+                "The pack must seal the menu-bar item metrics that are host-invariant.");
 
-            List<string> styledProperties = nestedItemStyles
+            List<string> styledProperties = topLevelStyles
                 .SelectMany(style => style.Setters)
                 .OfType<Setter>()
                 .Select(setter => setter.Property?.Name ?? string.Empty)
                 .ToList();
 
             Assert.Contains("MinHeight", styledProperties);
-            Assert.Contains("Padding", styledProperties);
             Assert.Contains("FontFamily", styledProperties);
-            Assert.Contains("FontSize", styledProperties);
             Assert.Contains("LineHeight", styledProperties);
+            Assert.DoesNotContain("Padding", styledProperties);
+            Assert.DoesNotContain("FontSize", styledProperties);
         }
         finally
         {
             MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Menu_bar_item_class_switching_still_uses_the_macos_toolbar_values()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var defaultWindow = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        defaultWindow.Styles.Add(new AvaloniaFluentTheme());
+        defaultWindow.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        var toolbarWindow = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        toolbarWindow.Styles.Add(new AvaloniaFluentTheme());
+        toolbarWindow.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        var defaultMenu = new Menu();
+        var defaultItem = new MenuItem { Header = "File" };
+        defaultMenu.Items.Add(defaultItem);
+        defaultWindow.Content = defaultMenu;
+
+        var toolbarMenu = new Menu { Classes = { "MacOS_Theme_MenuLabelBelowIcon" } };
+        var toolbarItem = new MenuItem { Header = "File" };
+        toolbarMenu.Items.Add(toolbarItem);
+        toolbarWindow.Content = toolbarMenu;
+
+        try
+        {
+            defaultWindow.Show();
+            toolbarWindow.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(13d, defaultItem.FontSize);
+            Assert.Equal(new Thickness(9, 4, 7, 2), defaultItem.Padding);
+
+            Assert.Equal(10d, toolbarItem.FontSize);
+            Assert.Equal(new Thickness(4, 0, 4, 4), toolbarItem.Padding);
+        }
+        finally
+        {
+            defaultWindow.Close();
+            toolbarWindow.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_the_menu_bar()
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        window.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        var menu = new Menu();
+        var item = new MenuItem { Header = "File" };
+        menu.Items.Add(item);
+        window.Content = menu;
+
+        window.Styles.Add(new Style(x => x.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(MenuItem.MinHeightProperty, 77d),
+                new Setter(MenuItem.BackgroundProperty, Brushes.Fuchsia),
+                new Setter(MenuItem.ForegroundProperty, Brushes.Fuchsia),
+                new Setter(TextBlock.LineHeightProperty, 42d),
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily("Times New Roman"))
+            }
+        });
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(0d, item.MinHeight);
+            Assert.NotEqual(Brushes.Fuchsia, item.Background);
+            Assert.NotEqual(Brushes.Fuchsia, item.Foreground);
+            Assert.NotEqual(new FontFamily("Times New Roman"), item.FontFamily);
+            Assert.True(double.IsNaN((double)item.GetValue(TextBlock.LineHeightProperty)));
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("Light", ".st0 {fill : #000000; }", ".st0 {fill : #FFFFFF; }")]
+    [InlineData("Dark", ".st0 {fill : #B8B8B8; }", ".st0 {fill : #DEECF9; }")]
+    public void Svg_menu_icons_are_recoloured_identically_by_pack_and_full_theme(
+        string variantName,
+        string expectedDefaultCss,
+        string expectedPointerOverCss)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        var previousStyles = Application.Current?.Styles.ToList() ?? [];
+        Application.Current?.Styles.Clear();
+
+        var fullWindow = new Window { RequestedThemeVariant = variant };
+        var packWindow = new Window { RequestedThemeVariant = variant };
+
+        var fullTheme = new DevolutionsMacOsTheme();
+        fullTheme.BeginInit();
+        fullTheme.EndInit();
+        fullWindow.Styles.Add(fullTheme);
+
+        packWindow.Styles.Add(new AvaloniaFluentTheme());
+        packWindow.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
+
+        try
+        {
+            Assert.True(fullWindow.TryFindResource("MacOsMenuSvgItemDefaultCss", variant, out object? fullDefaultCss),
+                "Full MacOS theme should resolve the default SVG CSS resource.");
+            Assert.True(packWindow.TryFindResource("MacOsMenuSvgItemDefaultCss", variant, out object? packDefaultCss),
+                "Menu pack should resolve the default SVG CSS resource.");
+            Assert.Equal(expectedDefaultCss, fullDefaultCss?.ToString());
+            Assert.Equal(expectedDefaultCss, packDefaultCss?.ToString());
+
+            Assert.True(fullWindow.TryFindResource("MacOsMenuSvgItemPointerOverCss", variant, out object? fullPointerOverCss),
+                "Full MacOS theme should resolve the pointer-over SVG CSS resource.");
+            Assert.True(packWindow.TryFindResource("MacOsMenuSvgItemPointerOverCss", variant, out object? packPointerOverCss),
+                "Menu pack should resolve the pointer-over SVG CSS resource.");
+            Assert.Equal(expectedPointerOverCss, fullPointerOverCss?.ToString());
+            Assert.Equal(expectedPointerOverCss, packPointerOverCss?.ToString());
+        }
+        finally
+        {
+            fullWindow.Close();
+            packWindow.Close();
+            Application.Current?.Styles.Clear();
+            foreach (var style in previousStyles)
+            {
+                Application.Current?.Styles.Add(style);
+            }
         }
     }
 

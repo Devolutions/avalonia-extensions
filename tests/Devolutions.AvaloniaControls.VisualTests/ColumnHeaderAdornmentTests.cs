@@ -660,6 +660,66 @@ public class ColumnHeaderAdornmentTests
         Assert.Equal(captionBefore + 80, captionAfter, Tolerance);
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void CaptionSqueezedToNothing_StillReportsOverflow(string themeName)
+    {
+        // An oversized Right adornment on an unsorted column reserves no indicator lane, so it can take the
+        // whole header and leave the caption no room. The old `availableWidth > 0` guard called that "not
+        // overflowing" and cleared the tooltip, dropping it exactly where the caption was least readable.
+        SetTheme(themeName);
+
+        Border adornment = new() { Width = 2000, Height = 12, Background = Brushes.Red };
+        TreeDataGrid grid = BuildGrid(
+            "A considerably longer header caption that keeps going and going",
+            new GridLength(300),
+            adornment);
+
+        Window window = Show(grid, width: 900);
+
+        TreeDataGridOverflowHeader overflowHeader = OverflowHeader(grid);
+        double adornmentWidth = overflowHeader.AdornmentWidth;
+        double headerWidth = overflowHeader.Bounds.Width;
+        bool overflowing = IsOverflowing(grid);
+        object? tip = ToolTip.GetTip(Header(grid));
+
+        window.Close();
+
+        Assert.Equal(headerWidth, adornmentWidth, Tolerance);
+        Assert.True(overflowing, "a caption with no room left should report overflow");
+        Assert.NotNull(tip);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    public void FillAdornment_DoesNotReportCaptionOverflow(string themeName)
+    {
+        // Fill replaces the caption rather than crowding it, so there is no hidden text to offer a tooltip
+        // for. This is the case the clamp above must not turn into a false positive.
+        SetTheme(themeName);
+
+        Border adornment = new() { Height = 12, Background = Brushes.Red };
+        DevoTreeDataGridExtensions.SetHeaderAdornmentPosition(adornment, HeaderAdornmentPosition.Fill);
+        TreeDataGrid grid = BuildGrid(
+            "A considerably longer header caption that keeps going and going",
+            new GridLength(300),
+            adornment);
+
+        Window window = Show(grid, width: 900);
+
+        bool overflowing = IsOverflowing(grid);
+        object? tip = ToolTip.GetTip(Header(grid));
+
+        window.Close();
+
+        Assert.False(overflowing);
+        Assert.Null(tip);
+    }
+
     private static void SetTheme(string themeName)
     {
         App.CurrentTheme = null;

@@ -609,9 +609,16 @@ public class TreeDataGridOverflowHeader : Decorator
         var text = this.Content as string;
         Thickness padding = this.Padding;
         Thickness margin = this.InnerContentMargin;
-        double availableWidth = finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right - this.adornmentWidth;
+        // Clamped at zero rather than guarded above it. A Right adornment can leave the caption no room at
+        // all, and that is precisely the case that needs the tooltip, so treating it as "not overflowing"
+        // dropped the tooltip exactly when the text was least readable. Fill is excluded instead, because
+        // that position replaces the caption rather than crowding it.
+        double availableWidth = Math.Max(
+            0,
+            finalSize.Width - padding.Left - padding.Right - margin.Left - margin.Right - this.adornmentWidth);
+
         bool isOverflowing = !string.IsNullOrEmpty(text)
-                             && availableWidth > 0
+                             && this.adornmentPosition != HeaderAdornmentPosition.Fill
                              && this.CreateTextLayout(text, double.PositiveInfinity, double.PositiveInfinity).Width > availableWidth + 0.5;
 
         this.PseudoClasses.Set(":is-overflowing", isOverflowing);

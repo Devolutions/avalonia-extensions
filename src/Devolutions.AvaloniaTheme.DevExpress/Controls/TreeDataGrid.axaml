@@ -178,7 +178,12 @@
           <Border Background="Transparent" Margin="6 0 0 0" />
 
           <!-- Stays inert: it spans the full width, so making it hit-testable would cover the 6px lane
-               the previous column's resize thumb overhangs into. -->
+               the previous column's resize thumb overhangs into.
+
+               A hit-testable Fill header adornment does cover that lane, since it reaches the header's own
+               edges by design, and the previous column then cannot be resized from its right edge. Accepted
+               rather than reserved: insetting Fill would stop it styling the whole cell, which is the point
+               of that position. See the remarks on HeaderAdornmentPosition.Fill. -->
           <Border Name="HeaderBorder"
                   Background="{TemplateBinding Background}"
                   BorderBrush="Transparent"

@@ -388,6 +388,11 @@ public class ColumnHeaderAdornmentTests
         // DevExpress deliberately overhangs its 11px resize thumb into the next header, and that header's
         // hit-target is inset 6px to leave it grabbable. Interactive header content must not cover it.
         // Only DevExpress overhangs; the other themes keep a 5px thumb inside their own header.
+        //
+        // Scope: this covers a string caption, which draws itself and so puts no hit-testable visual in the
+        // lane. It deliberately does NOT cover a hit-testable Fill adornment, which does cover the lane and
+        // does make the previous column unresizable from its right edge. That is an accepted limitation, not
+        // an untested case; see the remarks on HeaderAdornmentPosition.Fill.
         SetTheme("DevExpress");
 
         TreeDataGrid grid = BuildSortableGrid();

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
@@ -340,7 +341,7 @@ public class LinuxMenuPackContractTests
     ///   Host theme to layer the pack over, or <c>null</c> to use the full Linux theme with no
     ///   pack (the reference rendering).
     /// </param>
-    private static string DescribeRenderedMenu(string? hostTheme)
+    private static string DescribeRenderedMenu(string? hostTheme, Style? hostStyle = null)
     {
         IStyle theme = hostTheme switch
         {
@@ -364,6 +365,11 @@ public class LinuxMenuPackContractTests
             RequestedThemeVariant = ThemeVariant.Light,
         };
         window.Styles.Add(theme);
+
+        if (hostStyle is not null)
+        {
+            window.Styles.Add(hostStyle);
+        }
 
         if (hostTheme is not null)
         {
@@ -398,6 +404,7 @@ public class LinuxMenuPackContractTests
                 FormattableString.Invariant($"itemMinHeight={item.MinHeight}"),
                 $"itemPadding={item.Padding}",
                 FormattableString.Invariant($"itemFontSize={item.FontSize}"),
+                $"itemFontWeight={item.FontWeight}",
                 $"itemFontFamily={item.FontFamily}",
                 $"itemForeground={Describe(item.Foreground)}",
                 FormattableString.Invariant($"separatorHeight={separator.DesiredSize.Height:F2}"),
@@ -409,5 +416,35 @@ public class LinuxMenuPackContractTests
             contextMenu.Close();
             window.Close();
         }
+    }
+
+    /// <summary>
+    /// A host <c>Style</c> targeting <c>MenuItem</c> must not change pinned menu typography.
+    /// </summary>
+    /// <remarks>
+    ///   The token tests cannot see this: the <c>LinuxMenu*</c> tokens still resolve correctly,
+    ///   but a Style setter outranks the <c>ControlTheme</c> setter that applies them, so the
+    ///   host wins on the control. Every pinned typography property therefore has to be
+    ///   re-applied at Style level. <c>FontWeight</c> was missed originally and did leak.
+    /// </remarks>
+    [AvaloniaTheory]
+    [InlineData("FontFamily")]
+    [InlineData("FontSize")]
+    [InlineData("FontWeight")]
+    public void Host_menu_item_styles_do_not_change_pinned_typography(string property)
+    {
+        string expected = DescribeRenderedMenu(hostTheme: "Fluent");
+
+        var hostStyle = new Style(x => x.OfType<MenuItem>());
+        hostStyle.Setters.Add(property switch
+        {
+            "FontFamily" => new Setter(TemplatedControl.FontFamilyProperty, new FontFamily("Comic Sans MS")),
+            "FontSize" => new Setter(TemplatedControl.FontSizeProperty, 42d),
+            _ => new Setter(TemplatedControl.FontWeightProperty, FontWeight.Bold),
+        });
+
+        string actual = DescribeRenderedMenu(hostTheme: "Fluent", hostStyle);
+
+        Assert.Equal(expected, actual);
     }
 }

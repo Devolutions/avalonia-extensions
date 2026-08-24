@@ -34,6 +34,7 @@
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
     <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
     <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </Style>
 </Styles>

@@ -131,10 +131,27 @@ DevExpress — with every template-bound property pinned inside the menu-scoped 
 of your app:
 
 ```xaml
-<StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml" />
-<!-- ... later in your own resources ... -->
-<SolidColorBrush x:Key="LinuxMenuSeparatorBrush" Color="#ff0000" />
+<Application ...>
+  <Application.Resources>
+    <!-- Your override: same key, your value -->
+    <SolidColorBrush x:Key="LinuxMenuSeparatorBrush" Color="#ff0000" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml" />
+  </Application.Styles>
+</Application>
 ```
+
+The two go in different collections — the token override is a *resource*, the pack is a *style* — and the
+relative order of the collections does not matter.
+
+**The override must not sit in an outer scope relative to the pack.** Resource lookup walks up from the
+control and stops at the first match, and an element's `Resources` are consulted before its `Styles`. So an
+override works when it sits on the same element that carries the pack (as above) or on a descendant, but is
+silently ignored if the pack is added lower down — e.g. pack on a `UserControl`, override on the `Window`.
+In that case the pack's own token is found first and your value never applies.
 
 These rules are enforced by `LinuxMenuPackContractTests` in the visual test project, which asserts that every
 `LinuxMenu*` token resolves identically under the full theme and under "pack over a foreign host", that a hostile

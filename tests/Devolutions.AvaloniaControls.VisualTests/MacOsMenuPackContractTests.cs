@@ -737,6 +737,16 @@ public class MacOsMenuPackContractTests
 
             Assert.NotEqual(Brushes.Fuchsia, popupItem.Background);
             Assert.NotEqual(Brushes.Fuchsia, popupItem.Foreground);
+
+            typeof(InputElement)
+                .GetProperty("IsPointerOver", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+                .SetValue(popupItem, true);
+            Dispatcher.UIThread.RunJobs();
+            Assert.NotEqual(Brushes.Fuchsia, popupItem.Foreground);
+
+            popupItem.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+            Assert.NotEqual(Brushes.Fuchsia, popupItem.Foreground);
         }
         finally
         {

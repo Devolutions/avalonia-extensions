@@ -51,6 +51,14 @@
     <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
     <Setter Property="TextBlock.LineHeight" Value="NaN" />
+
+    <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuAccentForegroundBrush}" />
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
+    </Style>
   </Style>
 
   <Style Selector="MenuFlyoutPresenter > MenuItem:separator, ContextMenu > MenuItem:separator">

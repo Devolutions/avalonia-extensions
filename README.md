@@ -53,13 +53,27 @@ Screenshots are captured at a fixed width (`1200`) with auto-calculated content 
 Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linux`) due to rendering differences. When updating baselines, they only update for your current platform.
 
 ### Usage
-- `dotnet test --filter "DisplayName~VisualRegressionTests"` - runs all tests
-- `dotnet test` - runs all tests, plus some little unit tests (worth it for the time saved typing!)
+- `dotnet test` - runs all tests
+- `dotnet test --filter "DisplayName~VisualRegressionTests"` - runs only visual regression tests
+- `dotnet test --filter "DisplayName!~VisualRegressionTests"` - runs only non-visual tests
 - `dotnet test --filter "DisplayName~DevExpress"` - runs tests for all controls implemented in DevExpress
 - `dotnet test --filter "DisplayName~Button"` - runs tests for Button under each of the themes it's implemented in
 - `dotnet test --list-tests` - lists all test cases
-🆕 **Shor hand command & cleaner output:**
-- `./devtest` (macOS/Linux/Git Bash) or `.\devtest` (Windows PowerShell/CMD) - runs a script that calls the tests and prints a succinct visual-regression summary at the end. You can also use it with shorthand filter values (for example `--filter EditableCombo` instead of `--filter "DisplayName~EditableCombo"`).
+
+#### Combining `DisplayName` filters
+The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT. 
+
+- `dotnet test --filter "DisplayName~Button&DisplayName~DevExpress"` - runs only tests whose display name contains both `Button` and `DevExpress`
+- `dotnet test --filter "DisplayName~ContextMenu|DisplayName~MenuFlyout"` - runs tests containing either `ContextMenu` or `MenuFlyout`
+- `dotnet test --filter "DisplayName~Button&DisplayName!~HyperlinkButton"` - runs tests containing `Button` but excluding `HyperlinkButton`
+
+
+🆕 **Shorthand command & cleaner output:**
+- `./devtest` (macOS/Linux/Git Bash) or `.\devtest` (Windows PowerShell/CMD) - runs all tests with a succinct summary.
+- `./devtest visual` - runs only visual regression tests.
+- `./devtest nonvisual` - runs only non-visual tests.
+- `./devtest functional` - alias for `nonvisual`.
+- `./devtest --filter EditableCombo` - shorthand for (`DisplayName~EditableCombo`).
 
 **Updating baseline screenshots** when changes are intentional:
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`

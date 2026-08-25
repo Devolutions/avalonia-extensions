@@ -15,12 +15,47 @@ function Normalize-FilterExpression {
     return "DisplayName~$Expression"
 }
 
+function Resolve-PresetFilter {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Preset
+    )
+
+    switch ($Preset.ToLowerInvariant()) {
+        "visual" { return "DisplayName~VisualRegressionTests" }
+        "nonvisual" { return "DisplayName!~VisualRegressionTests" }
+        "non-visual" { return "DisplayName!~VisualRegressionTests" }
+        "functional" { return "DisplayName!~VisualRegressionTests" }
+        "all" { return "" }
+        default { return $null }
+    }
+}
+
 $dotnetArgs = [System.Collections.Generic.List[string]]::new()
 $hasLoggerArg = $false
+$hasFilterArg = $false
+
+$presetFilter = $null
+$presetToken = $null
+if ($args.Count -gt 0) {
+    $resolvedPresetFilter = Resolve-PresetFilter -Preset $args[0]
+    if ($null -ne $resolvedPresetFilter) {
+        $presetFilter = $resolvedPresetFilter
+        $presetToken = $args[0]
+        if ($args.Count -gt 1) {
+            $args = $args[1..($args.Count - 1)]
+        }
+        else {
+            $args = @()
+        }
+    }
+}
+
 for ($index = 0; $index -lt $args.Count; ) {
     $current = $args[$index]
 
     if ($current -eq "--filter") {
+        $hasFilterArg = $true
         if ($index + 1 -ge $args.Count) {
             $dotnetArgs.Add($current)
             $index += 1
@@ -34,6 +69,7 @@ for ($index = 0; $index -lt $args.Count; ) {
     }
 
     if ($current.StartsWith("--filter=")) {
+        $hasFilterArg = $true
         $dotnetArgs.Add("--filter=$(Normalize-FilterExpression -Expression $current.Substring(9))")
         $index += 1
         continue
@@ -65,6 +101,15 @@ for ($index = 0; $index -lt $args.Count; ) {
     $index += 1
 }
 
+if (-not [string]::IsNullOrEmpty($presetFilter)) {
+    if ($hasFilterArg) {
+        throw "Cannot combine preset '$presetToken' with an explicit --filter. Use one or the other."
+    }
+
+    $dotnetArgs.Add("--filter")
+    $dotnetArgs.Add($presetFilter)
+}
+
 if (-not $hasLoggerArg) {
     $dotnetArgs.Add("--logger")
     $dotnetArgs.Add("console;verbosity=normal")
@@ -72,8 +117,11 @@ if (-not $hasLoggerArg) {
 
 $summaryRows = [System.Collections.Generic.HashSet[string]]::new()
 $fallbackLines = [System.Collections.Generic.List[string]]::new()
+$functionalFailureRows = [System.Collections.Generic.List[string]]::new()
 $resultLine = ""
 $progressSeen = $false
+$lastProgressTest = $null
+$lastProgressStatus = $null
 $testRunTarget = ""
 $testRunStatus = ""
 $totalTests = 0
@@ -81,6 +129,9 @@ $passedTests = 0
 $failedTests = 0
 $skippedTests = 0
 $totalDuration = ""
+$currentFailedTest = $null
+$currentFailureMessage = ""
+$inErrorMessageBlock = $false
 
 & dotnet test @dotnetArgs 2>&1 | ForEach-Object {
     $line = "$_"
@@ -106,30 +157,66 @@ $totalDuration = ""
         return
     }
 
-    if ($normalized -match '^(Passed|Failed|Skipped)\s+.*\[[^\]]+\]$') {
+    if ($normalized -match '^(Passed|Failed|Skipped)\s+(.+)\[[^\]]+\]$') {
+        $status = $Matches[1]
+        $testName = $Matches[2].TrimEnd()
+
+        if ($null -ne $lastProgressTest -and $lastProgressTest -eq $testName -and $lastProgressStatus -eq $status) {
+            $lastProgressTest = $null
+            $lastProgressStatus = $null
+            return
+        }
+
         if (-not $progressSeen) {
             Write-Host -NoNewline "Progress: "
             $progressSeen = $true
         }
 
-        switch ($Matches[1]) {
+        switch ($status) {
             "Passed" { Write-Host -NoNewline "✅" }
             "Failed" { Write-Host -NoNewline "❌" }
             "Skipped" { Write-Host -NoNewline "s" }
         }
+        $lastProgressTest = $testName
+        $lastProgressStatus = $status
+
+        if ($status -eq "Failed") {
+            if ($testName -match 'VisualRegressionTests') {
+                $currentFailedTest = $null
+            }
+            else {
+                $currentFailedTest = $testName
+            }
+            $currentFailureMessage = ""
+            $inErrorMessageBlock = $false
+        }
         return
     }
 
-    if ($normalized -match '\[(FAIL|PASS|SKIP)\]$') {
-        if (-not $progressSeen) {
-            Write-Host -NoNewline "Progress: "
-            $progressSeen = $true
+    if ($normalized -match '^Error Message:$') {
+        $inErrorMessageBlock = $true
+        return
+    }
+
+    if ($inErrorMessageBlock) {
+        if ($normalized -match '^Stack Trace:$') {
+            if (-not [string]::IsNullOrWhiteSpace($currentFailedTest) -and -not [string]::IsNullOrWhiteSpace($currentFailureMessage)) {
+                $functionalFailureRows.Add("$currentFailedTest`t$currentFailureMessage")
+            }
+            $currentFailedTest = $null
+            $currentFailureMessage = ""
+            $inErrorMessageBlock = $false
+            return
         }
 
-        switch ($Matches[1]) {
-            "PASS" { Write-Host -NoNewline "✅" }
-            "FAIL" { Write-Host -NoNewline "❌" }
-            "SKIP" { Write-Host -NoNewline "s" }
+        $trimmed = $normalized.Trim()
+        if (-not [string]::IsNullOrWhiteSpace($trimmed) -and -not $trimmed.StartsWith('at ')) {
+            if ([string]::IsNullOrWhiteSpace($currentFailureMessage)) {
+                $currentFailureMessage = $trimmed
+            }
+            else {
+                $currentFailureMessage = "$currentFailureMessage | $trimmed"
+            }
         }
         return
     }
@@ -232,6 +319,21 @@ if ($summaryRows.Count -gt 0) {
     foreach ($row in $summaryRows) {
         $parts = $row -split "`t", 6
         Write-Host ("{0,-18} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f $parts[0], "[$($parts[1])]", $parts[2], $parts[3], $parts[5], $parts[4]) -ForegroundColor Yellow
+    }
+
+    Write-Host "________________________________________________________________________________"
+    Write-Host ""
+}
+
+if ($functionalFailureRows.Count -gt 0) {
+    Write-Host ""
+    Write-Host "________________________________________________________________________________"
+    Write-Host "Functional test failures" -ForegroundColor White
+
+    foreach ($row in $functionalFailureRows) {
+        $parts = $row -split "`t", 2
+        Write-Host ("• {0}" -f $parts[0]) -ForegroundColor White
+        Write-Host ("  {0}" -f $parts[1])
     }
 
     Write-Host "________________________________________________________________________________"

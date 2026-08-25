@@ -143,6 +143,11 @@ Prerequisites and caveats:
   `StyleInclude` of `MenuPack.styles.axaml` carries only the classic menu defaults, because the
   sub-theme resources it needs are supplied by `MacOsMenuPack`.
 - If you need full control coverage, use `<DevolutionsMacOsTheme />` instead.
+- Style-level sealing is intentionally narrow: menu-bar items are pinned for the host-invariant
+  properties (`MinHeight`, `Background`, `Foreground`, `FontFamily`, `TextBlock.LineHeight`) so a
+  hostile host cannot recolor, resize, or retype the menu chrome. `FontSize` and `Padding` remain
+  class-driven by the menu's `MacOS_Theme_MenuLabelBelowIcon` variant, so the toolbar /
+  label-below-icon sizing stays intact.
 
 ## Styled Controls
 

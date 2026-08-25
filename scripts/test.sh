@@ -20,11 +20,42 @@ normalize_filter_expression() {
   printf 'DisplayName~%s' "$expression"
 }
 
+resolve_preset_filter() {
+  local preset="$1"
+  case "$preset" in
+    visual)
+      printf 'DisplayName~VisualRegressionTests'
+      ;;
+    nonvisual|non-visual|functional)
+      printf 'DisplayName!~VisualRegressionTests'
+      ;;
+    all)
+      printf ''
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 dotnet_args=()
 has_logger_arg=0
+has_filter_arg=0
+preset_filter=""
+preset_token=""
+
+if [[ $# -gt 0 ]]; then
+  if resolved_preset_filter="$(resolve_preset_filter "$1")"; then
+    preset_filter="$resolved_preset_filter"
+    preset_token="$1"
+    shift
+  fi
+fi
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --filter)
+      has_filter_arg=1
       if [[ $# -lt 2 ]]; then
         dotnet_args+=("$1")
         shift
@@ -34,6 +65,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --filter=*)
+      has_filter_arg=1
       dotnet_args+=("--filter=$(normalize_filter_expression "${1#--filter=}")")
       shift
       ;;
@@ -59,6 +91,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ -n "$preset_filter" ]]; then
+  if [[ "$has_filter_arg" -eq 1 ]]; then
+    printf '%s\n' "Cannot combine preset '$preset_token' with an explicit --filter. Use one or the other." >&2
+    exit 1
+  fi
+  dotnet_args+=("--filter" "$preset_filter")
+fi
+
 if [[ "$has_logger_arg" -eq 0 ]]; then
   dotnet_args+=("--logger" "console;verbosity=normal")
 fi
@@ -68,17 +108,23 @@ result_line_file="$(mktemp -t visual-regression-result.XXXXXX)"
 progress_seen_file="$(mktemp -t visual-regression-progress.XXXXXX)"
 fallback_file="$(mktemp -t visual-regression-fallback.XXXXXX)"
 totals_file="$(mktemp -t visual-regression-totals.XXXXXX)"
+raw_output_file="$(mktemp -t visual-regression-output.XXXXXX)"
+functional_failures_file="$(mktemp -t functional-test-failures.XXXXXX)"
+last_progress_test=""
+last_progress_status=""
 cleanup() {
   rm -f "$summary_file"
   rm -f "$result_line_file"
   rm -f "$progress_seen_file"
   rm -f "$fallback_file"
   rm -f "$totals_file"
+  rm -f "$raw_output_file"
+  rm -f "$functional_failures_file"
 }
 trap cleanup EXIT
 
 test_run_target=""
-dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line; do
+dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then
@@ -101,29 +147,28 @@ dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | while IFS= read -r line
     continue
   fi
 
-  if [[ "$normalized" =~ ^(Passed|Failed|Skipped)[[:space:]]+.*\[[^]]+\]$ ]]; then
+  if [[ "$normalized" =~ ^(Passed|Failed|Skipped)[[:space:]]+(.+)\[[^]]+\]$ ]]; then
+    status_key="${BASH_REMATCH[1]}"
+    test_name="${BASH_REMATCH[2]}"
+    test_name="${test_name%[[:space:]]}"
+
+    if [[ "$last_progress_test" == "$test_name" && "$last_progress_status" == "$status_key" ]]; then
+      last_progress_test=""
+      last_progress_status=""
+      continue
+    fi
+
     if [[ ! -s "$progress_seen_file" ]]; then
       printf 'Progress: '
       printf '1' > "$progress_seen_file"
     fi
-    case "${BASH_REMATCH[1]}" in
+    case "$status_key" in
       Passed) printf '✅' ;;
       Failed) printf '❌' ;;
       Skipped) printf 's' ;;
     esac
-    continue
-  fi
-
-  if [[ "$normalized" =~ \[(FAIL|PASS|SKIP)\]$ ]]; then
-    if [[ ! -s "$progress_seen_file" ]]; then
-      printf 'Progress: '
-      printf '1' > "$progress_seen_file"
-    fi
-    case "${BASH_REMATCH[1]}" in
-      PASS) printf '✅' ;;
-      FAIL) printf '❌' ;;
-      SKIP) printf 's' ;;
-    esac
+    last_progress_test="$test_name"
+    last_progress_status="$status_key"
     continue
   fi
 
@@ -201,6 +246,54 @@ done
 
 dotnet_exit_code=${PIPESTATUS[0]}
 
+# Parse the raw output after the run so we can print a readable functional failure list regardless of xUnit formatting details.
+if [[ -s "$raw_output_file" ]]; then
+  awk '
+    BEGIN { current=""; message=""; in_error=0 }
+    /^[[:space:]]*Failed[[:space:]]+/ {
+      if (current != "" && message != "") {
+        print current "\t" message
+      }
+      current = $0
+      sub(/^[[:space:]]*Failed[[:space:]]+/, "", current)
+      sub(/[[:space:]]+\[[^]]+\][[:space:]]*$/, "", current)
+      message = ""
+      in_error = 0
+      next
+    }
+    /^[[:space:]]*Error Message:[[:space:]]*$/ {
+      in_error = 1
+      next
+    }
+    in_error {
+      if ($0 ~ /^[[:space:]]*Stack Trace:[[:space:]]*$/) {
+        if (current != "" && message != "") {
+          print current "\t" message
+        }
+        current = ""
+        message = ""
+        in_error = 0
+        next
+      }
+      line = $0
+      sub(/^[[:space:]]+/, "", line)
+      if (line == "" || line ~ /^at /) {
+        next
+      }
+      if (message != "") {
+        message = message " | "
+      }
+      message = message line
+      next
+    }
+    END {
+      if (current != "" && message != "") {
+        print current "\t" message
+      }
+    }
+  ' "$raw_output_file" > "$functional_failures_file"
+fi
+
 if [[ -s "$progress_seen_file" ]]; then
   printf '\n'
 fi
@@ -240,6 +333,16 @@ if [[ -s "$summary_file" ]]; then
   while IFS=$'\t' read -r status theme page variant path capped_desired_height; do
     printf '\033[33;1m%-18s %-14s %-34s %-10s %-8s %s\033[0m\n' "$status" "[$theme]" "$page" "$variant" "${capped_desired_height:-}" "$path"
   done < "$summary_file"
+  printf '%s\n\n' "________________________________________________________________________________"
+fi
+
+if [[ -s "$functional_failures_file" ]]; then
+  printf '\n%s\n' "________________________________________________________________________________"
+  printf '\033[1m%s\033[0m\n' "Functional test failures"
+  while IFS=$'\t' read -r test_name failure_message; do
+    printf '\033[1m• %s\033[0m\n' "$test_name"
+    printf '  %s\n' "$failure_message"
+  done < "$functional_failures_file"
   printf '%s\n\n' "________________________________________________________________________________"
 fi
 

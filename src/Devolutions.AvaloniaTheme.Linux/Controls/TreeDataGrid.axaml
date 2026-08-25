@@ -137,28 +137,46 @@
                 BorderThickness="0"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Panel VerticalAlignment="Stretch">
-            <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. -->
-            <Path Name="SortIcon"
-                  Fill="{TemplateBinding Foreground}"
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center"
-                  Stretch="Uniform"
-                  Width="12"
-                  Height="7"
-                  TabIndex="-1"
-                  IsTabStop="False"
-                  IsHitTestVisible="False"
-                  Opacity="0"
-                  Data="{StaticResource DevoDataGridSortIconPath}" />
+            <!-- Sort icon overlays the header so sorting cannot change auto-sized column width. Shifted
+                 left by the header adornment's width so a Right-positioned adornment sits beside it, and
+                 hidden while the adornment fills the header, where the two would otherwise overlap.
 
-            <!-- Header content -->
+                 Collapsing this panel does drop a few px from the header's own desired width, since it
+                 sits in the measured tree. That cannot move a column: the icon footprint is smaller than
+                 TreeDataGrid's minimum column width, which wins at those sizes, and any caption wide
+                 enough to beat that minimum already outmeasures the icon. Pinned by
+                 PositionChange_DoesNotResizeAnEmptyAutoColumn. -->
+            <Panel HorizontalAlignment="Right"
+                   VerticalAlignment="Stretch"
+                   IsHitTestVisible="False"
+                   IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
+              <Panel.RenderTransform>
+                <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+              </Panel.RenderTransform>
+              <Path Name="SortIcon"
+                    Fill="{TemplateBinding Foreground}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Stretch="Uniform"
+                    Width="12"
+                    Height="7"
+                    TabIndex="-1"
+                    IsTabStop="False"
+                    IsHitTestVisible="False"
+                    Opacity="0"
+                    Data="{StaticResource DevoDataGridSortIconPath}" />
+            </Panel>
+
+            <!-- Header content. The reserve below is 24 = 12 chevron + 12 gap before the caption, matching
+                 Ubuntu's System Monitor. Reserving only the chevron's own 12px let the caption run right up
+                 against it before trimming. -->
             <TreeDataGridOverflowHeader Name="HeaderContent"
                                         Content="{TemplateBinding Header}"
                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                         Padding="{TemplateBinding Padding}"
                                         InnerContentMargin="{BindingToggler
                                           {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
-                                          0 0 12 0,
+                                          0 0 24 0,
                                           0 0 0 0
                                         }"
                                         TextTrimming="CharacterEllipsis"

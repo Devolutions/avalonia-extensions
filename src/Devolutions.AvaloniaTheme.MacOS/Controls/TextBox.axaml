@@ -304,6 +304,11 @@
     <Style Selector="^.borderless">
       <Style Selector="^ /template/ Border#PART_BorderElement">
         <Setter Property="BorderThickness" Value="0" />
+        <!-- Zeroing BorderThickness is not enough to leave no edge. TextBoxBoxShadow is a spread ring
+             around this same rect, independent of both thickness and corner radius. Under LiquidGlass,
+             where TextBoxBorderThickness is already 0, that shadow was the only thing still drawing an
+             edge. -->
+        <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
       </Style>
       <Style Selector="^ /template/ Border#BottomBorder">
         <Setter Property="BorderThickness" Value="0" />

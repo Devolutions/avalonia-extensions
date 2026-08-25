@@ -165,31 +165,58 @@
                 BorderThickness="0"
                 CornerRadius="{TemplateBinding CornerRadius}">
           <Grid Name="PART_ColumnHeaderRoot" ColumnDefinitions="*,Auto">
-            <!-- Main content area with sort icon -->
-            <Panel Margin="{TemplateBinding Padding}"
-                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" MinWidth="{DynamicResource DataGridSortIconMinWidth}" />
-                </Grid.ColumnDefinitions>
+            <!-- Main content area with sort icon. The header's Padding is handed to HeaderContent instead
+                 of being applied here as a Margin: a Margin shrinks HeaderContent's own bounds, which would
+                 stop a header adornment reaching the header's edge. As Padding it insets only the caption,
+                 as in the Yaru theme. -->
+            <Panel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                   VerticalAlignment="Stretch">
+              <Panel>
+                <!-- The chevron overlays the caption rather than occupying a reserved column: native
+                     macOS ellipsizes the caption when the chevron appears instead of permanently
+                     holding space for it, and showing it must not resize an auto-sized column. The
+                     caption yields room via InnerContentMargin, as in the DevExpress and Yaru themes.
+                     Shifted left by the header adornment's width so a Right-positioned adornment sits
+                     beside it, and hidden while the adornment fills the header, where the two would
+                     otherwise overlap.
 
+                     Collapsing this panel does drop a few px from the header's own desired width, since
+                     it sits in the measured tree. That cannot move a column: the chevron footprint is
+                     smaller than TreeDataGrid's minimum column width, which wins at those sizes, and any
+                     caption wide enough to beat that minimum already outmeasures the chevron. Pinned by
+                     PositionChange_DoesNotResizeAnEmptyAutoColumn. -->
+                <Panel HorizontalAlignment="Right"
+                       VerticalAlignment="Stretch"
+                       IsHitTestVisible="False"
+                       IsVisible="{Binding #HeaderContent.AdornmentPosition, Converter={x:Static DevoConverters.IsOneOfConverter}, ConverterParameter=Right}">
+                  <Panel.RenderTransform>
+                    <TranslateTransform X="{MultiplyBinding {Binding #HeaderContent.AdornmentWidth}, -1}" />
+                  </Panel.RenderTransform>
+                  <Path Name="SortIcon"
+                        IsVisible="False"
+                        Width="{DynamicResource DataGridSortChevronSize}"
+                        Margin="0 0 5 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Fill="{DynamicResource SortIconForegroundBrush}"
+                        Stretch="Uniform" />
+                </Panel>
+
+                <!-- The reserve below is 24 = 5 gap to the separator + 7 chevron + 12 gap before the
+                     caption. macOS keeps a clear gap between caption and chevron; reserving only the
+                     chevron's own footprint would let the text run up against it before trimming. -->
                 <TreeDataGridOverflowHeader Name="HeaderContent"
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Padding="{TemplateBinding Padding}"
+                                            InnerContentMargin="{BindingToggler
+                                              {Binding $parent[TreeDataGridColumnHeader].SortDirection, Converter={x:Static ObjectConverters.IsNotNull}},
+                                              0 0 24 0,
+                                              0 0 0 0
+                                            }"
                                             TextTrimming="CharacterEllipsis"
                                             ShowToolTip="True" />
-
-                <Path Name="SortIcon"
-                      IsVisible="False"
-                      Grid.Column="1"
-                      Width="{DynamicResource DataGridSortChevronSize}"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Fill="{DynamicResource SortIconForegroundBrush}"
-                      Stretch="Uniform" />
-              </Grid>
+              </Panel>
             </Panel>
 
             <!-- Right vertical separator (like DataGrid) -->

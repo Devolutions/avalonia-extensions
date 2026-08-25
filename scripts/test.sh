@@ -169,11 +169,32 @@ dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" 
     esac
     last_progress_test="$test_name"
     last_progress_status="$status_key"
+
+    if [[ "$status_key" == "Failed" ]]; then
+      if [[ "$test_name" == *"VisualRegressionTests"* ]]; then
+        current_failed_test=""
+      else
+        current_failed_test="$test_name"
+      fi
+      current_failed_message=""
+      in_error_message_block=0
+    fi
     continue
   fi
 
   if [[ "$normalized" =~ ^(Failed!|Passed!)[[:space:]]+-[[:space:]]+Failed:[[:space:]]+[0-9]+,[[:space:]]+Passed:[[:space:]]+[0-9]+,[[:space:]]+Skipped:[[:space:]]+[0-9]+,[[:space:]]+Total:[[:space:]]+[0-9]+, ]]; then
     printf '%s\n' "$normalized" > "$result_line_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Failed[[:space:]]+(.+)\[[^]]+\]$ ]]; then
+    if [[ "${BASH_REMATCH[1]}" == *"VisualRegressionTests"* ]]; then
+      continue
+    fi
+    current_failed_test="${BASH_REMATCH[1]}"
+    current_failed_test="${current_failed_test%[[:space:]]}"
+    current_failed_message=""
+    in_error_message_block=0
     continue
   fi
 
@@ -251,17 +272,32 @@ if [[ -s "$raw_output_file" ]]; then
   awk '
     BEGIN { current=""; message=""; in_error=0 }
     /^[[:space:]]*Failed[[:space:]]+/ {
-      if (current != "" && message != "") {
-        print current "\t" message
-      }
       current = $0
       sub(/^[[:space:]]*Failed[[:space:]]+/, "", current)
       sub(/[[:space:]]+\[[^]]+\][[:space:]]*$/, "", current)
+      if (current ~ /VisualRegressionTests/) {
+        current = ""
+        message = ""
+        in_error = 0
+        next
+      }
+      if (message != "") {
+        print current "\t" message
+      }
+      message = ""
+      in_error = 0
+      next
+    }
+    /^[[:space:]]*No baseline found for / || /^[[:space:]]*Visual regression detected for / {
+      current = ""
       message = ""
       in_error = 0
       next
     }
     /^[[:space:]]*Error Message:[[:space:]]*$/ {
+      if (current == "") {
+        next
+      }
       in_error = 1
       next
     }

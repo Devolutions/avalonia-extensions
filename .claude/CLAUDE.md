@@ -132,7 +132,7 @@ Automated tests are available and should be used:
 - `dotnet test` runs the repository test suite, including visual regression tests.
 - `dotnet test --filter "DisplayName~VisualRegressionTests"` runs only visual regression tests.
 - `dotnet test --filter "DisplayName!~VisualRegressionTests"` runs only non-visual tests.
-- `./devtest visual` / `./devtest nonvisual` provide the same split with concise output.
+- `./devtest visual` / `./devtest nonvisual` / `./devtest functional` provide the same split with concise output; these are wrapper shorthands, not native `dotnet test` arguments.
 - Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `PageCatalogTests`, `VisualRegressionTests`, and `MainWindowNavigationTests`).
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.

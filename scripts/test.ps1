@@ -179,13 +179,17 @@ $inErrorMessageBlock = $false
         }
         $lastProgressTest = $testName
         $lastProgressStatus = $status
-        return
-    }
 
-    if ($normalized -match '^Failed\s+(.+)\[[^\]]+\]$') {
-        $currentFailedTest = $Matches[1].TrimEnd()
-        $currentFailureMessage = ""
-        $inErrorMessageBlock = $false
+        if ($status -eq "Failed") {
+            if ($testName -match 'VisualRegressionTests') {
+                $currentFailedTest = $null
+            }
+            else {
+                $currentFailedTest = $testName
+            }
+            $currentFailureMessage = ""
+            $inErrorMessageBlock = $false
+        }
         return
     }
 

@@ -271,7 +271,7 @@ dotnet_exit_code=${PIPESTATUS[0]}
 if [[ -s "$raw_output_file" ]]; then
   awk '
     BEGIN { current=""; message=""; in_error=0 }
-    /^[[:space:]]*Failed[[:space:]]+/ {
+    /^[[:space:]]*Failed[[:space:]]+[^[]+\[[^]]+\][[:space:]]*$/ {
       current = $0
       sub(/^[[:space:]]*Failed[[:space:]]+/, "", current)
       sub(/[[:space:]]+\[[^]]+\][[:space:]]*$/, "", current)

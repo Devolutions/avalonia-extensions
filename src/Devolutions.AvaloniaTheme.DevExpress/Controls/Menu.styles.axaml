@@ -23,5 +23,26 @@
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
     <Setter Property="MinHeight" Value="{DynamicResource DevExMenuNestedItemMinHeight}" />
     <Setter Property="Padding" Value="{DynamicResource DevExMenuNestedItemPadding}" />
+    <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+
+  <!--
+    Menu-bar items are direct children of Menu, so the popup-row selector above does not reach them.
+    A host MenuItem Style therefore still overrides the ControlTheme unless we seal the bar items too.
+  -->
+  <Style Selector="Menu > MenuItem:not(:separator)">
+    <Setter Property="MinHeight" Value="{DynamicResource DevExMenuBarHeight}" />
+    <Setter Property="Padding" Value="6 1" />
+    <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
+    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </Style>
 </Styles>

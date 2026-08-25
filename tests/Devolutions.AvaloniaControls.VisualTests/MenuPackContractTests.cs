@@ -4,6 +4,7 @@ using Avalonia.Controls.Platform;
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
 using Avalonia.Threading;
@@ -209,6 +210,175 @@ public class MenuPackContractTests
         {
             baseline.Close();
             hostile.Close();
+        }
+    }
+
+    /// <summary>
+    /// Host menu-item styles must not override the pack's pinned popup-row typography,
+    /// including the font family, size, weight, and line-height seal applied at style level.
+    /// </summary>
+    [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_pinned_typography()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        var uri = new Uri(PackUri);
+        window.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily("Comic Sans MS")),
+                new Setter(TextBlock.FontSizeProperty, 42d),
+                new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
+                new Setter(TextBlock.LineHeightProperty, 55d),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var menuItem = new MenuItem { Header = "Pinned" };
+        var contextMenu = new ContextMenu { Items = { menuItem } };
+        var button = new Button { Content = "Open", ContextMenu = contextMenu };
+        window.Content = button;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            contextMenu.Open(button);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.TryFindResource("DevExMenuFontFamily", ThemeVariant.Light, out object? fontFamily));
+            Assert.Equal(fontFamily, menuItem.FontFamily);
+            Assert.Equal(12d, menuItem.FontSize, 3);
+            Assert.Equal(FontWeight.Normal, menuItem.FontWeight);
+            Assert.True(double.IsNaN(menuItem.GetValue(TextBlock.LineHeightProperty)));
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_the_menu_bar()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+
+        var uri = new Uri(PackUri);
+        window.Styles.Add(new StyleInclude(uri) { Source = uri });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.FontFamilyProperty, new FontFamily("Comic Sans MS")),
+                new Setter(TextBlock.FontSizeProperty, 42d),
+                new Setter(TextBlock.FontWeightProperty, FontWeight.Bold),
+                new Setter(TextBlock.LineHeightProperty, 55d),
+                new Setter(MenuItem.PaddingProperty, new Thickness(30)),
+                new Setter(MenuItem.MinHeightProperty, 77d),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var menu = new Menu
+        {
+            Items =
+            {
+                new MenuItem { Header = "File" },
+                new MenuItem { Header = "Edit" },
+            },
+        };
+        window.Content = menu;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var item = (MenuItem)menu.Items[0];
+
+            Assert.True(window.TryFindResource("DevExMenuFontFamily", ThemeVariant.Light, out object? fontFamily));
+            Assert.True(window.TryFindResource("DevExMenuFontSize", ThemeVariant.Light, out object? fontSize));
+            Assert.True(window.TryFindResource("DevExMenuFontWeight", ThemeVariant.Light, out object? fontWeight));
+
+            Assert.Equal(fontFamily, item.FontFamily);
+            Assert.Equal((double)fontSize, item.FontSize, 3);
+            Assert.Equal((FontWeight)fontWeight, item.FontWeight);
+            Assert.Equal(new Thickness(6, 1, 6, 1), item.Padding);
+            Assert.Equal(32d, item.MinHeight, 3);
+            Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Host_menu_item_styles_do_not_change_normal_state_colours()
+    {
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light, Width = 500, Height = 300 };
+        window.Styles.Add(new AvaloniaFluentTheme());
+        window.Styles.Add(new StyleInclude(new Uri(PackUri)) { Source = new Uri(PackUri) });
+
+        var hostStyle = new Style(selector => selector.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(MenuItem.BackgroundProperty, Brushes.Purple),
+                new Setter(MenuItem.ForegroundProperty, Brushes.Green),
+            },
+        };
+        window.Styles.Add(hostStyle);
+
+        var popupItem = new MenuItem { Header = "Popup" };
+        var contextMenu = new ContextMenu { Items = { popupItem } };
+        var button = new Button { ContextMenu = contextMenu };
+        button.Content = "Open";
+
+        var menu = new Menu
+        {
+            Items =
+            {
+                new MenuItem { Header = "File" },
+                new MenuItem { Header = "Edit" },
+            },
+        };
+        var barItem = (MenuItem)menu.Items[0];
+        window.Content = new StackPanel { Children = { button, menu } };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            contextMenu.Open(button);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.TryFindResource("DevExMenuItemBackground", ThemeVariant.Light, out object? popupBackground));
+            Assert.True(window.TryFindResource("DevExMenuItemForeground", ThemeVariant.Light, out object? popupForeground));
+
+            Assert.Equal(((SolidColorBrush)popupBackground!).Color, ((SolidColorBrush)popupItem.Background!).Color);
+            Assert.Equal(((SolidColorBrush)popupForeground!).Color, ((SolidColorBrush)popupItem.Foreground!).Color);
+
+            Assert.Equal(((SolidColorBrush)popupBackground!).Color, ((SolidColorBrush)barItem.Background!).Color);
+            Assert.Equal(((SolidColorBrush)popupForeground!).Color, ((SolidColorBrush)barItem.Foreground!).Color);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
         }
     }
 

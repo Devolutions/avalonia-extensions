@@ -63,6 +63,9 @@
     <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />
     <!-- Enable :flat / :hierarchical pseudo-classes automatically -->
     <Setter Property="TreeDataGridPseudoTypeBehavior.Enable" Value="True" />
+    <!-- Enable :sel-run-first / :sel-run-middle / :sel-run-last pseudo-classes on rows, so that a
+         contiguous multi-row selection is drawn as one rounded shape (see TreeDataGridRow below) -->
+    <Setter Property="TreeDataGridSelectionRunBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
@@ -259,6 +262,9 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="{Binding $parent[TreeDataGrid].Background}" />
     <Setter Property="MinHeight" Value="22" />
+    <!-- Selection rounding lives on the row so the run styles below can filter it down to one
+         edge; ItemBorder just follows whatever the row resolves to. -->
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="RowBorder"
@@ -271,7 +277,7 @@
             <Border Name="ItemBorder"
                     Background="{TemplateBinding Background}"
                     Margin="{DynamicResource DataGridRowMargin}"
-                    CornerRadius="{DynamicResource ControlCornerRadius}" />
+                    CornerRadius="{TemplateBinding CornerRadius}" />
             <!-- Invalid overlay like DataGrid -->
             <Rectangle Name="InvalidVisualElement"
                        Opacity="0"
@@ -289,6 +295,22 @@
     <!-- Selected: accent background on inner ItemBorder (like DataGrid) -->
     <Style Selector="^:selected /template/ Border#ItemBorder">
       <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+    </Style>
+
+    <!-- A contiguous multi-row selection has to read as one shape, so only the two ends of the run
+         stay rounded and everything between them is squared off. The pseudo-classes come from
+         TreeDataGridSelectionRunBehavior. A lone selected row matches none of these and keeps the
+         fully rounded radius set above. -->
+    <Style Selector="^:selected:sel-run-first /template/ Border#ItemBorder">
+      <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius, Converter={StaticResource TopCornerRadiusFilterConverter}}" />
+    </Style>
+
+    <Style Selector="^:selected:sel-run-middle /template/ Border#ItemBorder">
+      <Setter Property="CornerRadius" Value="{StaticResource ZeroCornerRadius}" />
+    </Style>
+
+    <Style Selector="^:selected:sel-run-last /template/ Border#ItemBorder">
+      <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius, Converter={StaticResource BottomCornerRadiusFilterConverter}}" />
     </Style>
 
     <Style Selector="^:invalid /template/ Rectangle#InvalidVisualElement">

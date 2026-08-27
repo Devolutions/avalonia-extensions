@@ -124,7 +124,11 @@ public class TreeDataGridViewModel : ObservableObject
 
         this.TreeRowSelectionSource = new HierarchicalTreeDataGridSource<NetworkNode>(this.treeNodes);
         AddTreeSharedColumns(this.TreeRowSelectionSource);
-        this.TreeRowSelectionSource.Selection = new TreeDataGridRowSelectionModel<NetworkNode>(this.TreeRowSelectionSource);
+
+        // SingleSelect defaults to true. Allowing multiple lets the demo show a contiguous run of
+        // selected rows, which the macOS theme draws as a single rounded shape.
+        this.TreeRowSelectionSource.Selection =
+            new TreeDataGridRowSelectionModel<NetworkNode>(this.TreeRowSelectionSource) { SingleSelect = false };
     }
 
     private static void AddSharedColumns(FlatTreeDataGridSource<NetworkNode> source)

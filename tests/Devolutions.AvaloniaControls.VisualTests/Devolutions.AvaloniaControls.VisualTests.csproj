@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="../../Common.props" />
+    <!-- Defines ENABLE_ACCELERATE, which gates the TreeDataGrid tests: without a licence key the
+         TreeDataGrid package is not referenced and those tests must compile out. -->
+    <Import Project="../../Accelerate.Packages.props" />
 
     <PropertyGroup>
         <TargetFramework>$(DemoFramework)</TargetFramework>

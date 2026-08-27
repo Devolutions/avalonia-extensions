@@ -706,6 +706,49 @@ public class MacOsMenuPackContractTests
     }
 
     /// <summary>
+    /// A menu-bar item must have the same rendered height under the full theme and under the
+    /// standalone pack. Guards against sealing a bar-sized token (which sizes the Menu itself)
+    /// as an item's MinHeight - see the DevExpress pack for a regression of exactly that kind.
+    /// </summary>
+    [AvaloniaFact]
+    public void Pack_and_full_theme_render_the_same_menu_bar_item_height()
+    {
+        static double MeasureBarItemHeight(Window window)
+        {
+            var menu = new Menu();
+            var item = new MenuItem { Header = "File" };
+            menu.Items.Add(item);
+            window.Content = menu;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            return item.Bounds.Height;
+        }
+
+        Window fullWindow = ShowWithFullTheme(ThemeVariant.Light);
+        double fullHeight = MeasureBarItemHeight(fullWindow);
+        fullWindow.Close();
+        fullWindow.Content = null;
+        Dispatcher.UIThread.RunJobs();
+
+        Window packWindow = ShowWithPackOverHostTheme(ThemeVariant.Light);
+
+        try
+        {
+            double packHeight = MeasureBarItemHeight(packWindow);
+
+            Assert.True(fullHeight > 0, "Full-theme menu bar item did not lay out.");
+            Assert.Equal(fullHeight, packHeight, 1);
+        }
+        finally
+        {
+            packWindow.Close();
+            packWindow.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
     /// Under the full theme (not the standalone pack), an app-level Style override on top-level
     /// MenuItems must be able to recolor them - the same way an app can override any other
     /// theme-styled control. The full theme's sealing styles (in Menu.styles.axaml) apply at plain

@@ -313,7 +313,12 @@ public class MenuPackContractTests
             Assert.Equal((double)fontSize, item.FontSize, 3);
             Assert.Equal((FontWeight)fontWeight, item.FontWeight);
             Assert.Equal(new Thickness(6, 1, 6, 1), item.Padding);
-            Assert.Equal(32d, item.MinHeight, 3);
+
+            // The host's 77d must not leak. The sealed value is the nested-item min height, which
+            // is what the full theme renders for bar items too - NOT DevExMenuBarHeight, which
+            // sizes the bar itself (see MenuPack.Sealing.styles.axaml).
+            Assert.True(window.TryFindResource("DevExMenuNestedItemMinHeight", ThemeVariant.Light, out object? minHeight));
+            Assert.Equal(Convert.ToDouble(minHeight), item.MinHeight, 3);
             Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
         }
         finally
@@ -364,6 +369,60 @@ public class MenuPackContractTests
         {
             window.Close();
             window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// A menu-bar item must have the same rendered height under the full theme and under the
+    /// standalone pack, and must fit inside the bar.
+    ///
+    /// The pack used to seal <c>MinHeight</c> to <c>DevExMenuBarHeight</c>, but that token is the
+    /// height of the *bar* (consumed by the Menu ControlTheme's Height), not of an item. Since
+    /// items also carry <c>Margin="3"</c>, that made each item claim BarHeight + 3 + 3 inside a
+    /// BarHeight-tall bar, so bar items rendered taller than under the full theme and the
+    /// pointer-over highlight spilled over the menu's border.
+    /// </summary>
+    [AvaloniaFact]
+    public void Pack_and_full_theme_render_the_same_menu_bar_item_height()
+    {
+        static double MeasureBarItemHeight(Window window)
+        {
+            var menu = new Menu();
+            var item = new MenuItem { Header = "File" };
+            menu.Items.Add(item);
+            window.Content = menu;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            return item.Bounds.Height;
+        }
+
+        Window fullWindow = ShowWithFullTheme(ThemeVariant.Light);
+        Window packWindow = ShowWithPackOverHostTheme(ThemeVariant.Light);
+
+        try
+        {
+            double fullHeight = MeasureBarItemHeight(fullWindow);
+            double packHeight = MeasureBarItemHeight(packWindow);
+
+            Assert.True(fullHeight > 0, "Full-theme menu bar item did not lay out.");
+            Assert.Equal(fullHeight, packHeight, 1);
+
+            Assert.True(packWindow.TryFindResource("DevExMenuBarHeight", ThemeVariant.Light, out object? barHeight));
+            double bar = Convert.ToDouble(barHeight);
+
+            // The item plus its margins must fit within the bar it lives in.
+            Assert.True(packHeight <= bar,
+                $"Menu bar item is {packHeight}px tall inside a {bar}px bar, so its highlight " +
+                "overflows the menu border. DevExMenuBarHeight sizes the bar, not the item.");
+        }
+        finally
+        {
+            fullWindow.Close();
+            packWindow.Close();
+            fullWindow.Content = null;
+            packWindow.Content = null;
             Dispatcher.UIThread.RunJobs();
         }
     }

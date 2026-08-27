@@ -38,9 +38,15 @@
   <!--
     Menu-bar items are direct children of Menu, so the popup-row selector above does not reach them.
     A host MenuItem Style therefore still overrides the ControlTheme unless we seal the bar items too.
+
+    MinHeight must match what the full theme renders (the base MenuItem ControlTheme's nested-item
+    min height), NOT DevExMenuBarHeight: that token sizes the *bar* via the Menu ControlTheme's
+    Height. Because items also carry Margin="3", sealing the bar height here made each item claim
+    BarHeight + 3 + 3 inside a BarHeight-tall bar, so bar items rendered taller than under the full
+    theme and their pointer-over highlight spilled over the menu border.
   -->
   <Style Selector="Menu > MenuItem:not(:separator)">
-    <Setter Property="MinHeight" Value="{DynamicResource DevExMenuBarHeight}" />
+    <Setter Property="MinHeight" Value="{DynamicResource DevExMenuNestedItemMinHeight}" />
     <Setter Property="Padding" Value="6 1" />
     <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />

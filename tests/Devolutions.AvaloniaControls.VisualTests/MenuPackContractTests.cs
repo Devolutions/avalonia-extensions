@@ -69,6 +69,7 @@ public class MenuPackContractTests
         "DevExMenuSvgItemDefaultCss",
         "DevExMenuSvgItemDisabledCss",
         "DevExMenuBarHeight",
+        "DevExMenuBarItemMinHeight",
         "DevExMenuPopupBorderThickness",
         "DevExMenuPopupPadding",
         "DevExMenuFlyoutPresenterPadding",
@@ -314,10 +315,10 @@ public class MenuPackContractTests
             Assert.Equal((FontWeight)fontWeight, item.FontWeight);
             Assert.Equal(new Thickness(6, 1, 6, 1), item.Padding);
 
-            // The host's 77d must not leak. The sealed value is the nested-item min height, which
+            // The host's 77d must not leak. The sealed value is the dedicated bar-item token, which
             // is what the full theme renders for bar items too - NOT DevExMenuBarHeight, which
             // sizes the bar itself (see MenuPack.Sealing.styles.axaml).
-            Assert.True(window.TryFindResource("DevExMenuNestedItemMinHeight", ThemeVariant.Light, out object? minHeight));
+            Assert.True(window.TryFindResource("DevExMenuBarItemMinHeight", ThemeVariant.Light, out object? minHeight));
             Assert.Equal(Convert.ToDouble(minHeight), item.MinHeight, 3);
             Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
         }
@@ -381,7 +382,8 @@ public class MenuPackContractTests
     /// height of the *bar* (consumed by the Menu ControlTheme's Height), not of an item. Since
     /// items also carry <c>Margin="3"</c>, that made each item claim BarHeight + 3 + 3 inside a
     /// BarHeight-tall bar, so bar items rendered taller than under the full theme and the
-    /// pointer-over highlight spilled over the menu's border.
+    /// pointer-over highlight spilled over the menu's border. It now seals the dedicated
+    /// <c>DevExMenuBarItemMinHeight</c> token instead.
     /// </summary>
     [AvaloniaFact]
     public void Pack_and_full_theme_render_the_same_menu_bar_item_height()

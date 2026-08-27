@@ -87,7 +87,13 @@
   <FontWeight x:Key="DevExMenuFontWeight">Normal</FontWeight>
 
   <!-- Menu bar -->
+  <!--
+    BarHeight sizes the bar itself (the Menu ControlTheme's Height). BarItemMinHeight sizes the
+    items inside it, which also carry Margin="3" - so it must stay small enough that
+    BarItemMinHeight + margins fits within BarHeight, or bar items overflow the menu's border.
+  -->
   <x:Double x:Key="DevExMenuBarHeight">32</x:Double>
+  <x:Double x:Key="DevExMenuBarItemMinHeight">26</x:Double>
 
   <!-- Popup surfaces -->
   <Thickness x:Key="DevExMenuPopupBorderThickness">1</Thickness>

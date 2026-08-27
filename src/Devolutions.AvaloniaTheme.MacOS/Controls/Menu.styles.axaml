@@ -26,39 +26,20 @@
   </Style>
 
   <!--
-    Menu row geometry and typography are pinned at Style level, not only through the MenuItem
-    ControlTheme. Host themes set these with Styles of their own, and a Style setter outranks a
-    ControlTheme setter, so a ControlTheme alone lets the host resize menu rows when the menu pack
-    is layered on top.
+    Popup-row geometry. This predates the menu pack's host-proofing work and is part of the
+    theme's baseline look, so it stays here and ships with the full theme as well as the pack.
+    (The MenuItem ControlTheme sets the same values, so this is a belt-and-braces restatement.)
 
-    We deliberately do not pin FontSize/Padding here: MacOS top-level menu items compute those values
-    from the Menu's MacOS_Theme_MenuLabelBelowIcon class via DevolutionsMacOsTopLevelMenuItem in
-    Menu.axaml. A blanket fixed FontSize/Padding would break the class-based toolbar sizing.
+    The host-proofing "sealing" styles that used to sit alongside this (re-asserting colors,
+    typography and the menu-bar geometry) have moved to MenuPack.Sealing.styles.axaml, which is
+    included only by the standalone menu pack (MenuPack.styles.axaml), not by the full theme's
+    GlobalStyles.axaml. Inside the full theme, app-level Style overrides on menu items must be
+    able to win, the same way they can for any other themed control - see
+    MenuPack.Sealing.styles.axaml for the full rationale.
   -->
-  <Style Selector="Menu > MenuItem:not(:separator)">
-    <Setter Property="MinHeight" Value="0" />
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuItemForegroundBrush}" />
-    <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-  </Style>
-
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
     <Setter Property="MinHeight" Value="{DynamicResource MacOsMenuItemMinHeight}" />
-    <Setter Property="FontSize" Value="{DynamicResource MacOsMenuFontSize}" />
     <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
-    <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-
-    <Style Selector="^:pointerover">
-      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuAccentForegroundBrush}" />
-    </Style>
-
-    <Style Selector="^:disabled">
-      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
-    </Style>
   </Style>
 
   <Style Selector="MenuFlyoutPresenter > MenuItem:separator, ContextMenu > MenuItem:separator">

@@ -152,6 +152,13 @@ geometry and the top-level bar geometry are different, so the seal pins the same
 for both while preserving each item's own padding and bar height. The seal intentionally covers the normal state only;
 hover, pressed, selected, and disabled states are handled by template-child selectors in the `MenuItem` control theme.
 
+This sealing lives in `MenuPack.Sealing.styles.axaml` and is included only by the standalone pack, not by the full
+`DevolutionsDevExpressTheme`. Inside the full theme, app-level `Style` overrides on menu items are expected to win,
+the same as for any other themed control. To override a pack-sealed property from a consuming app, your override
+selector must also match a pseudo-class (e.g. `:not(:separator)`) to reach the same `StyleTrigger` priority tier, and
+should live in a scope nested inside the one hosting the pack (Avalonia resolves same-priority ties by scope — inner
+wins — before declaration order).
+
 **The pack styles menu content only.** It deliberately does not ship a `Separator` `ControlTheme`:
 that resource is keyed `{x:Type Separator}`, so merging it would restyle *every* separator in your
 app rather than just menu ones. Menu separators instead reuse the host's separator template — which

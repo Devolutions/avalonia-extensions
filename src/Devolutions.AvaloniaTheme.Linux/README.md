@@ -136,6 +136,13 @@ of `Menu`** and would otherwise be left exposed. The two blocks pin the same typ
 since menu-bar items have their own padding. Only the *normal* state is sealed there; hover / selected /
 disabled colours are applied to template children, which a host `MenuItem` style cannot reach.
 
+This sealing lives in `MenuPack.Sealing.styles.axaml` and is included only by the standalone pack, not by the full
+`DevolutionsLinuxYaruTheme`. Inside the full theme, app-level `Style` overrides on menu items are expected to win,
+the same as for any other themed control. To override a pack-sealed property from a consuming app, your override
+selector must also match a pseudo-class (e.g. `:not(:separator)`) to reach the same `StyleTrigger` priority tier, and
+should live in a scope nested inside the one hosting the pack (Avalonia resolves same-priority ties by scope — inner
+wins — before declaration order).
+
 **SVG menu icons are recoloured by the pack.** Menu icons ship with an embedded fill, so
 `MenuSvg.styles.axaml` applies `LinuxMenuSvgItemDefaultCss` / `LinuxMenuSvgItemDisabledCss` per variant. The full
 theme includes the same file from `GlobalStyles.axaml`, so the two cannot drift.

@@ -1,0 +1,56 @@
+<!--
+  Host-proofing for the standalone Linux (Yaru) menu pack.
+
+  When the pack is layered onto an unrelated host theme (rather than used as part of the full
+  DevolutionsLinuxYaruTheme), a host Style targeting MenuItem generically would otherwise win over
+  the pack's ControlTheme, because a Style setter outranks a ControlTheme setter. These selectors
+  re-assert the host-invariant menu-bar/menu-row properties at StyleTrigger priority
+  (via the `:not(:separator)` pseudo-class) so they beat ordinary host Styles regardless of
+  declaration order or scope.
+
+  This file is intentionally NOT included by GlobalStyles.axaml. Inside the full theme, menu items
+  are just theme-styled controls like any other, and app-level Style overrides must be able to win,
+  the same way they can override any other control's theme styling. Only MenuPack.styles.axaml
+  includes this file, since only the standalone pack needs to defend its look against a host theme
+  it doesn't control.
+
+  If you need to override these pack styles from an app that only consumes the standalone pack
+  (not the full theme), your override selector must also enter StyleTrigger priority (for example
+  by adding your own `:not(:separator)` or other pseudo-class predicate) and should live in a scope
+  nested inside the one that hosts the pack (e.g. a UserControl.Styles below the pack's
+  Application/Window-level Styles) - Avalonia resolves same-priority ties by scope (inner wins)
+  before declaration order.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
+    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+
+  <!--
+    Same sealing for menu-bar items. They are direct children of Menu, so the selector above
+    (which only matches popup rows and submenu items) does not reach them, leaving the menu bar
+    exposed to a host MenuItem Style.
+
+    The geometry tokens differ from the popup rows: menu-bar items have their own padding, so
+    the popup row padding must NOT be applied here.
+  -->
+  <Style Selector="Menu > MenuItem:not(:separator)">
+    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
+    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
+    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+</Styles>

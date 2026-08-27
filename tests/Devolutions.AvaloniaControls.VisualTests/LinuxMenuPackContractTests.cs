@@ -470,6 +470,42 @@ public class LinuxMenuPackContractTests
     }
 
     /// <summary>
+    /// Under the full theme (not the standalone pack), an app-level Style override on top-level
+    /// MenuItems must be able to recolor them - the same way an app can override any other
+    /// theme-styled control. The full theme's sealing styles (in Menu.styles.axaml) apply at plain
+    /// Style priority; only the standalone MenuPack's styles (in MenuPack.Sealing.styles.axaml)
+    /// escalate to StyleTrigger priority to defend against a foreign host theme.
+    /// </summary>
+    [AvaloniaFact]
+    public void App_level_override_wins_over_full_theme_menu_bar_styling()
+    {
+        var window = ShowWithFullTheme(ThemeVariant.Light);
+
+        var menu = new Menu { Name = "MainMenu" };
+        var item = new MenuItem { Header = "File" };
+        menu.Items.Add(item);
+
+        var appPage = new UserControl { Content = menu };
+        appPage.Styles.Add(new Style(x => x.OfType<Menu>().Name("MainMenu").Child().OfType<MenuItem>())
+        {
+            Setters = { new Setter(MenuItem.ForegroundProperty, Brushes.HotPink) }
+        });
+
+        window.Content = appPage;
+
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(Brushes.HotPink, item.Foreground);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>
     ///   Builds a host <c>Style</c> that tries to override one pinned menu property.
     /// </summary>
     private static Style HostileMenuItemStyle(string property)

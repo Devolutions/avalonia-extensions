@@ -705,6 +705,50 @@ public class MacOsMenuPackContractTests
         }
     }
 
+    /// <summary>
+    /// Under the full theme (not the standalone pack), an app-level Style override on top-level
+    /// MenuItems must be able to recolor them - the same way an app can override any other
+    /// theme-styled control. The full theme's sealing styles (in Menu.styles.axaml) apply at plain
+    /// Style priority; only the standalone MenuPack's styles (in MenuPack.Sealing.styles.axaml)
+    /// escalate to StyleTrigger priority to defend against a foreign host theme. This guards
+    /// against regressing to a state where the sealing styles unconditionally win over app
+    /// overrides even inside the full theme (see PRs #630/#631/#633 and the fix in this PR).
+    /// </summary>
+    [AvaloniaFact]
+    public void App_level_override_wins_over_full_theme_menu_bar_styling()
+    {
+        var fullTheme = new DevolutionsMacOsTheme();
+        fullTheme.BeginInit();
+        fullTheme.EndInit();
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Dark };
+        window.Styles.Add(fullTheme);
+
+        var menu = new Menu { Name = "MainMenu" };
+        var item = new MenuItem { Header = "File" };
+        menu.Items.Add(item);
+
+        var appPage = new UserControl { Content = menu };
+        appPage.Styles.Add(new Style(x => x.OfType<Menu>().Name("MainMenu").Child().OfType<MenuItem>())
+        {
+            Setters = { new Setter(MenuItem.ForegroundProperty, Brushes.HotPink) }
+        });
+
+        window.Content = appPage;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(Brushes.HotPink, item.Foreground);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Host_theme_overrides_do_not_leak_into_popup_row_colors()
     {

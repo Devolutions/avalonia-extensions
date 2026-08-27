@@ -148,6 +148,13 @@ Prerequisites and caveats:
   hostile host cannot recolor, resize, or retype the menu chrome. `FontSize` and `Padding` remain
   class-driven by the menu's `MacOS_Theme_MenuLabelBelowIcon` variant, so the toolbar /
   label-below-icon sizing stays intact.
+- This sealing is specific to the standalone pack (`MenuPack.Sealing.styles.axaml`) and does not
+  apply when using `<DevolutionsMacOsTheme />` directly: inside the full theme, app-level `Style`
+  overrides on menu items are expected to win, the same as for any other themed control. To
+  override a pack-sealed property from a consuming app, your override selector must also match a
+  pseudo-class (e.g. `:not(:separator)`) to reach the same `StyleTrigger` priority tier, and should
+  live in a scope nested inside the one hosting the pack (Avalonia resolves same-priority ties by
+  scope, inner wins, before declaration order).
 
 ## Styled Controls
 

@@ -5,3 +5,11 @@ ai-review-approval:
   authorized-authors: ["apman", "Samuel-B-D", "xfortin-devolutions"]
   human-review-paths:
     - ".github/"
+
+pull-request-rules:
+  - name: autoSquashMerge
+    action: merge
+    authorized-actors: ["devolutions/architecture-maintainers"]
+    tags: ["auto-squash"]
+    options:
+      merge-strategy: squash

@@ -46,7 +46,10 @@
 
       <TextBlock Text="Flat mode" Classes="section-title" />
       <!-- We demonstrate the AXAML-based usage here -->
+      <!-- Multiple so a contiguous run of selected rows can be demonstrated: the macOS theme draws
+           one as a single rounded shape rather than a stack of separate pills -->
       <TreeDataGrid ItemsSource="{Binding FlatNodes}"
+                    SelectionMode="Row, Multiple"
                     CanUserResizeColumns="True"
                     CanUserSortColumns="True"
                     MaxHeight="300">

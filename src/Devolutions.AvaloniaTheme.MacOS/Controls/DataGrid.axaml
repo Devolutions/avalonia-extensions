@@ -1,7 +1,8 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid">
+  xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid"
+  xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Behaviors">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -367,6 +368,10 @@
 
   <!-- Row -->
   <ControlTheme x:Key="{x:Type DataGridRow}" TargetType="DataGridRow">
+    <!-- Selection rounding lives on the row so the run styles below can filter it down to one
+         edge. ItemBorder still routes it through GridLinesVisibility, which flattens it to zero
+         whenever grid lines are shown. -->
+    <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
     <Setter Property="Background"
             Value="{BindingToggler
               {SelfBinding Index, Converter={x:Static DevoConverters.IsOddConverter}},
@@ -403,7 +408,7 @@
                 <MultiBinding Converter="{x:Static DevoMultiConverters.OptionsToChoiceConverter}"
                               ConverterParameter="None,All,Horizontal,Vertical">
                   <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=DataGrid}" Path="GridLinesVisibility" />
-                  <Binding Source="{StaticResource ControlCornerRadius}" />
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="CornerRadius" />
                   <Binding Source="{StaticResource ZeroCornerRadius}" />
                 </MultiBinding>
               </Border.CornerRadius>
@@ -443,6 +448,22 @@
 
     <Style Selector="^:selected /template/ Border#ItemBorder">
       <Setter Property="Background" Value="{WindowActiveResourceToggler DataGridItemBackgroundSelected, SelectionInInactiveWindow}" />
+    </Style>
+
+    <!-- A contiguous multi-row selection has to read as one shape, so only the two ends of the run
+         stay rounded and everything between them is squared off. The pseudo-classes come from
+         DataGridSelectionRunBehavior, which leaves grouped views alone. A lone selected row matches
+         none of these and keeps the fully rounded radius set above. -->
+    <Style Selector="^:selected:sel-run-first">
+      <Setter Property="CornerRadius" Value="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource TopCornerRadiusFilterConverter}}" />
+    </Style>
+
+    <Style Selector="^:selected:sel-run-middle">
+      <Setter Property="CornerRadius" Value="{StaticResource ZeroCornerRadius}" />
+    </Style>
+
+    <Style Selector="^:selected:sel-run-last">
+      <Setter Property="CornerRadius" Value="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" />
     </Style>
   </ControlTheme>
 
@@ -605,6 +626,9 @@
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
     <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     <Setter Property="SelectionMode" Value="Extended" />
+    <!-- Enable :sel-run-first / :sel-run-middle / :sel-run-last pseudo-classes on rows, so that a
+         contiguous multi-row selection is drawn as one rounded shape (see DataGridRow above) -->
+    <Setter Property="behaviors:DataGridSelectionRunBehavior.Enable" Value="True" />
     <Setter Property="GridLinesVisibility" Value="None" />
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DataGridGridLinesBrush}" />

@@ -333,9 +333,15 @@ public class MenuPackContractTests
     /// <summary>
     /// Under the full theme (not the standalone pack), an app-level Style override on top-level
     /// MenuItems must be able to recolor them - the same way an app can override any other
-    /// theme-styled control. The full theme's sealing styles (in Menu.styles.axaml) apply at plain
-    /// Style priority; only the standalone MenuPack's styles (in MenuPack.Sealing.styles.axaml)
-    /// escalate to StyleTrigger priority to defend against a foreign host theme.
+    /// theme-styled control.
+    ///
+    /// The mechanism is the deliberate *absence* of menu-bar sealing from the full theme, not a
+    /// priority difference: Menu.styles.axaml ships no `Menu &gt; MenuItem` selector at all, so the
+    /// app's Style competes only with the MenuItem ControlTheme, which any Style outranks. (The
+    /// popup-row geometry selector that remains there still uses `:not(:separator)` and so is
+    /// still StyleTrigger priority - it just doesn't match menu-bar items.) Menu-bar sealing lives
+    /// solely in MenuPack.Sealing.styles.axaml, which only the standalone pack includes, because
+    /// only the pack has to defend its look against a foreign host theme.
     /// </summary>
     [AvaloniaFact]
     public void App_level_override_wins_over_full_theme_menu_bar_styling()
@@ -376,7 +382,7 @@ public class MenuPackContractTests
 
     /// <summary>
     /// A menu-bar item must have the same rendered height under the full theme and under the
-    /// standalone pack, and must fit inside the bar.
+    /// standalone pack, and must fit inside the bar together with its margins.
     ///
     /// The pack used to seal <c>MinHeight</c> to <c>DevExMenuBarHeight</c>, but that token is the
     /// height of the *bar* (consumed by the Menu ControlTheme's Height), not of an item. Since
@@ -388,7 +394,9 @@ public class MenuPackContractTests
     [AvaloniaFact]
     public void Pack_and_full_theme_render_the_same_menu_bar_item_height()
     {
-        static double MeasureBarItemHeight(Window window)
+        // Bounds excludes the item's margin, so the vertical space it actually occupies inside the
+        // bar - which is what can overflow the menu's border - is the bounds plus those margins.
+        static (double Rendered, double Occupied) MeasureBarItem(Window window)
         {
             var menu = new Menu();
             var item = new MenuItem { Header = "File" };
@@ -397,7 +405,8 @@ public class MenuPackContractTests
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
 
-            return item.Bounds.Height;
+            double rendered = item.Bounds.Height;
+            return (rendered, rendered + item.Margin.Top + item.Margin.Bottom);
         }
 
         Window fullWindow = ShowWithFullTheme(ThemeVariant.Light);
@@ -405,8 +414,8 @@ public class MenuPackContractTests
 
         try
         {
-            double fullHeight = MeasureBarItemHeight(fullWindow);
-            double packHeight = MeasureBarItemHeight(packWindow);
+            (double fullHeight, _) = MeasureBarItem(fullWindow);
+            (double packHeight, double packOccupied) = MeasureBarItem(packWindow);
 
             Assert.True(fullHeight > 0, "Full-theme menu bar item did not lay out.");
             Assert.Equal(fullHeight, packHeight, 1);
@@ -415,9 +424,10 @@ public class MenuPackContractTests
             double bar = Convert.ToDouble(barHeight);
 
             // The item plus its margins must fit within the bar it lives in.
-            Assert.True(packHeight <= bar,
-                $"Menu bar item is {packHeight}px tall inside a {bar}px bar, so its highlight " +
-                "overflows the menu border. DevExMenuBarHeight sizes the bar, not the item.");
+            Assert.True(packOccupied <= bar,
+                $"Menu bar item occupies {packOccupied}px (bounds {packHeight}px plus margins) " +
+                $"inside a {bar}px bar, so its highlight overflows the menu border. " +
+                "DevExMenuBarHeight sizes the bar, not the item.");
         }
         finally
         {

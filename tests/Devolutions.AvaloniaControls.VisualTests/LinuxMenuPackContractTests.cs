@@ -513,9 +513,15 @@ public class LinuxMenuPackContractTests
     /// <summary>
     /// Under the full theme (not the standalone pack), an app-level Style override on top-level
     /// MenuItems must be able to recolor them - the same way an app can override any other
-    /// theme-styled control. The full theme's sealing styles (in Menu.styles.axaml) apply at plain
-    /// Style priority; only the standalone MenuPack's styles (in MenuPack.Sealing.styles.axaml)
-    /// escalate to StyleTrigger priority to defend against a foreign host theme.
+    /// theme-styled control.
+    ///
+    /// The mechanism is the deliberate *absence* of menu-bar sealing from the full theme, not a
+    /// priority difference: Menu.styles.axaml ships no `Menu &gt; MenuItem` selector at all, so the
+    /// app's Style competes only with the MenuItem ControlTheme, which any Style outranks. (The
+    /// `MenuItem:separator` rule that remains there is itself StyleTrigger priority - it just
+    /// matches separators, not menu-bar items.) Menu-bar sealing lives solely in
+    /// MenuPack.Sealing.styles.axaml, which only the standalone pack includes, because only the
+    /// pack has to defend its look against a foreign host theme.
     /// </summary>
     [AvaloniaFact]
     public void App_level_override_wins_over_full_theme_menu_bar_styling()

@@ -24,38 +24,14 @@
   </Style>
 
   <!--
-    Row geometry and typography are (re)applied at Style level, not only through the MenuItem
-    ControlTheme. Host themes set these with Styles of their own (for example the DevExpress
-    theme's Menu.styles.axaml), and a Style setter outranks a ControlTheme setter, so a
-    ControlTheme alone lets the host resize menu rows when the pack is layered on top.
-  -->
-  <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
-    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
-    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
-    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
-    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
-    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-  </Style>
+    Note: host-proofing "sealing" styles for menu-bar/menu-row geometry and typography used to
+    live here. They have moved to MenuPack.Sealing.styles.axaml, which is included only by the
+    standalone menu pack (MenuPack.styles.axaml), not by the full theme's GlobalStyles.axaml.
+    Inside the full theme, app-level Style overrides on menu items must be able to win, the same
+    way they can for any other themed control - see MenuPack.Sealing.styles.axaml for the full
+    rationale.
 
-  <!--
-    Same sealing for menu-bar items. They are direct children of Menu, so the selector above
-    (which only matches popup rows and submenu items) does not reach them, leaving the menu bar
-    exposed to a host MenuItem Style.
-
-    The geometry tokens differ from the popup rows: menu-bar items have their own padding, so
-    the popup row padding must NOT be applied here.
+    The separate `MenuItem:separator` MinHeight rule above remains here (StyleTrigger priority,
+    unaffected by this move) and continues to protect separator rows independently.
   -->
-  <Style Selector="Menu > MenuItem:not(:separator)">
-    <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
-    <Setter Property="MinHeight" Value="{DynamicResource LinuxMenuItemMinHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
-    <Setter Property="FontFamily" Value="{DynamicResource LinuxMenuFontFamily}" />
-    <Setter Property="FontSize" Value="{DynamicResource LinuxMenuFontSize}" />
-    <Setter Property="FontWeight" Value="{DynamicResource LinuxMenuFontWeight}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-  </Style>
 </Styles>

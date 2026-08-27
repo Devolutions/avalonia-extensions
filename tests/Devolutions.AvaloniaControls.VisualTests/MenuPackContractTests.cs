@@ -69,6 +69,7 @@ public class MenuPackContractTests
         "DevExMenuSvgItemDefaultCss",
         "DevExMenuSvgItemDisabledCss",
         "DevExMenuBarHeight",
+        "DevExMenuBarItemMinHeight",
         "DevExMenuPopupBorderThickness",
         "DevExMenuPopupPadding",
         "DevExMenuFlyoutPresenterPadding",
@@ -313,13 +314,127 @@ public class MenuPackContractTests
             Assert.Equal((double)fontSize, item.FontSize, 3);
             Assert.Equal((FontWeight)fontWeight, item.FontWeight);
             Assert.Equal(new Thickness(6, 1, 6, 1), item.Padding);
-            Assert.Equal(32d, item.MinHeight, 3);
+
+            // The host's 77d must not leak. The sealed value is the dedicated bar-item token, which
+            // is what the full theme renders for bar items too - NOT DevExMenuBarHeight, which
+            // sizes the bar itself (see MenuPack.Sealing.styles.axaml).
+            Assert.True(window.TryFindResource("DevExMenuBarItemMinHeight", ThemeVariant.Light, out object? minHeight));
+            Assert.Equal(Convert.ToDouble(minHeight), item.MinHeight, 3);
             Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
         }
         finally
         {
             window.Close();
             window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// Under the full theme (not the standalone pack), an app-level Style override on top-level
+    /// MenuItems must be able to recolor them - the same way an app can override any other
+    /// theme-styled control.
+    ///
+    /// The mechanism is the deliberate *absence* of menu-bar sealing from the full theme, not a
+    /// priority difference: Menu.styles.axaml ships no `Menu &gt; MenuItem` selector at all, so the
+    /// app's Style competes only with the MenuItem ControlTheme, which any Style outranks. (The
+    /// popup-row geometry selector that remains there still uses `:not(:separator)` and so is
+    /// still StyleTrigger priority - it just doesn't match menu-bar items.) Menu-bar sealing lives
+    /// solely in MenuPack.Sealing.styles.axaml, which only the standalone pack includes, because
+    /// only the pack has to defend its look against a foreign host theme.
+    /// </summary>
+    [AvaloniaFact]
+    public void App_level_override_wins_over_full_theme_menu_bar_styling()
+    {
+        var theme = new DevolutionsDevExpressTheme();
+        theme.BeginInit();
+        theme.EndInit();
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        window.Styles.Add(theme);
+
+        var menu = new Menu { Name = "MainMenu" };
+        var item = new MenuItem { Header = "File" };
+        menu.Items.Add(item);
+
+        var appPage = new UserControl { Content = menu };
+        appPage.Styles.Add(new Style(selector => selector.OfType<Menu>().Name("MainMenu").Child().OfType<MenuItem>())
+        {
+            Setters = { new Setter(MenuItem.ForegroundProperty, Brushes.HotPink) }
+        });
+
+        window.Content = appPage;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(Brushes.HotPink, item.Foreground);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// A menu-bar item must have the same rendered height under the full theme and under the
+    /// standalone pack, and must fit inside the bar together with its margins.
+    ///
+    /// The pack used to seal <c>MinHeight</c> to <c>DevExMenuBarHeight</c>, but that token is the
+    /// height of the *bar* (consumed by the Menu ControlTheme's Height), not of an item. Since
+    /// items also carry <c>Margin="3"</c>, that made each item claim BarHeight + 3 + 3 inside a
+    /// BarHeight-tall bar, so bar items rendered taller than under the full theme and the
+    /// pointer-over highlight spilled over the menu's border. It now seals the dedicated
+    /// <c>DevExMenuBarItemMinHeight</c> token instead.
+    /// </summary>
+    [AvaloniaFact]
+    public void Pack_and_full_theme_render_the_same_menu_bar_item_height()
+    {
+        // Bounds excludes the item's margin, so the vertical space it actually occupies inside the
+        // bar - which is what can overflow the menu's border - is the bounds plus those margins.
+        static (double Rendered, double Occupied) MeasureBarItem(Window window)
+        {
+            var menu = new Menu();
+            var item = new MenuItem { Header = "File" };
+            menu.Items.Add(item);
+            window.Content = menu;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            double rendered = item.Bounds.Height;
+            return (rendered, rendered + item.Margin.Top + item.Margin.Bottom);
+        }
+
+        Window fullWindow = ShowWithFullTheme(ThemeVariant.Light);
+        Window packWindow = ShowWithPackOverHostTheme(ThemeVariant.Light);
+
+        try
+        {
+            (double fullHeight, _) = MeasureBarItem(fullWindow);
+            (double packHeight, double packOccupied) = MeasureBarItem(packWindow);
+
+            Assert.True(fullHeight > 0, "Full-theme menu bar item did not lay out.");
+            Assert.Equal(fullHeight, packHeight, 1);
+
+            Assert.True(packWindow.TryFindResource("DevExMenuBarHeight", ThemeVariant.Light, out object? barHeight));
+            double bar = Convert.ToDouble(barHeight);
+
+            // The item plus its margins must fit within the bar it lives in.
+            Assert.True(packOccupied <= bar,
+                $"Menu bar item occupies {packOccupied}px (bounds {packHeight}px plus margins) " +
+                $"inside a {bar}px bar, so its highlight overflows the menu border. " +
+                "DevExMenuBarHeight sizes the bar, not the item.");
+        }
+        finally
+        {
+            fullWindow.Close();
+            packWindow.Close();
+            fullWindow.Content = null;
+            packWindow.Content = null;
             Dispatcher.UIThread.RunJobs();
         }
     }

@@ -20,29 +20,19 @@
     <Setter Property="behaviors:MenuSeparatorAlignmentBehavior.Enable" Value="False" />
   </Style>
 
+  <!--
+    Popup-row geometry. This predates the menu pack's host-proofing work and is part of the
+    theme's baseline look, so it stays here and ships with the full theme as well as the pack.
+
+    The host-proofing "sealing" styles that used to sit alongside this (re-asserting colors,
+    typography and the menu-bar geometry) have moved to MenuPack.Sealing.styles.axaml, which is
+    included only by the standalone menu pack (MenuPack.styles.axaml), not by the full theme's
+    GlobalStyles.axaml. Inside the full theme, app-level Style overrides on menu items must be
+    able to win, the same way they can for any other themed control - see
+    MenuPack.Sealing.styles.axaml for the full rationale.
+  -->
   <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
     <Setter Property="MinHeight" Value="{DynamicResource DevExMenuNestedItemMinHeight}" />
     <Setter Property="Padding" Value="{DynamicResource DevExMenuNestedItemPadding}" />
-    <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
-    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
-    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
-    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
-  </Style>
-
-  <!--
-    Menu-bar items are direct children of Menu, so the popup-row selector above does not reach them.
-    A host MenuItem Style therefore still overrides the ControlTheme unless we seal the bar items too.
-  -->
-  <Style Selector="Menu > MenuItem:not(:separator)">
-    <Setter Property="MinHeight" Value="{DynamicResource DevExMenuBarHeight}" />
-    <Setter Property="Padding" Value="6 1" />
-    <Setter Property="Background" Value="{DynamicResource DevExMenuItemBackground}" />
-    <Setter Property="Foreground" Value="{DynamicResource DevExMenuItemForeground}" />
-    <Setter Property="FontFamily" Value="{DynamicResource DevExMenuFontFamily}" />
-    <Setter Property="FontSize" Value="{DynamicResource DevExMenuFontSize}" />
-    <Setter Property="FontWeight" Value="{DynamicResource DevExMenuFontWeight}" />
-    <Setter Property="TextBlock.LineHeight" Value="NaN" />
   </Style>
 </Styles>

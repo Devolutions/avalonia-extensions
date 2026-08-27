@@ -37,4 +37,5 @@
   <StyleInclude Source="/Controls/MenuSvg.styles.axaml" />
   <StyleInclude Source="/Controls/Separator.styles.axaml" />
   <StyleInclude Source="/Controls/Menu.styles.axaml" />
+  <StyleInclude Source="/Controls/MenuPack.Sealing.styles.axaml" />
 </Styles>

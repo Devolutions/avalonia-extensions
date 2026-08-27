@@ -1,0 +1,52 @@
+<!--
+  Host-proofing for the standalone MacOS menu pack.
+
+  When the pack is layered onto an unrelated host theme (rather than used as part of the full
+  DevolutionsMacOsTheme), a host Style targeting MenuItem generically would otherwise win over the
+  pack's ControlTheme, because a Style setter outranks a ControlTheme setter. These selectors
+  re-assert the host-invariant menu-bar/menu-row properties at StyleTrigger priority
+  (via the `:not(:separator)` pseudo-class) so they beat ordinary host Styles regardless of
+  declaration order or scope.
+
+  This file is intentionally NOT included by GlobalStyles.axaml. Inside the full theme, menu items
+  are just theme-styled controls like any other, and app-level Style overrides (e.g. a MenuDemo
+  page recoloring its own top-level MenuItems) must be able to win, the same way they can override
+  any other control's theme styling. Only MenuPack.styles.axaml includes this file, since only the
+  standalone pack needs to defend its look against a host theme it doesn't control.
+
+  If you need to override these pack styles from an app that only consumes the standalone pack
+  (not the full theme), your override selector must also enter StyleTrigger priority (for example
+  by adding your own `:not(:separator)` or other pseudo-class predicate) and should live in a scope
+  nested inside the one that hosts the pack (e.g. a UserControl.Styles below the pack's
+  Application/Window-level Styles) - Avalonia resolves same-priority ties by scope (inner wins)
+  before declaration order.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Menu > MenuItem:not(:separator)">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuItemForegroundBrush}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+  </Style>
+
+  <Style Selector="MenuFlyoutPresenter MenuItem:not(:separator), ContextMenu MenuItem:not(:separator), MenuItem MenuItem:not(:separator)">
+    <Setter Property="MinHeight" Value="{DynamicResource MacOsMenuItemMinHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource MacOsMenuFontSize}" />
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundHighBrush}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MacOsMenuFontFamily}" />
+    <Setter Property="TextBlock.LineHeight" Value="NaN" />
+
+    <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuAccentForegroundBrush}" />
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource MacOsMenuForegroundLowBrush}" />
+    </Style>
+  </Style>
+</Styles>

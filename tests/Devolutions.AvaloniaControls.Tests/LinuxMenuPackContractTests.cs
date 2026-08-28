@@ -329,10 +329,23 @@ public class LinuxMenuPackContractTests
     [InlineData("DevExpress")]
     public void Rendered_menu_geometry_matches_the_full_theme_on_any_host(string host)
     {
-        string expected = DescribeRenderedMenu(hostTheme: null);
-        string actual = DescribeRenderedMenu(host);
+        SampleApp.Theme? previousTheme = SampleApp.App.CurrentTheme;
+        SampleApp.App.SetTheme(new SampleApp.FluentTheme());
 
-        Assert.Equal(expected, actual);
+        try
+        {
+            string expected = DescribeRenderedMenu(hostTheme: null);
+            string actual = DescribeRenderedMenu(host);
+
+            Assert.Equal(expected, actual);
+        }
+        finally
+        {
+            if (previousTheme is not null)
+            {
+                SampleApp.App.SetTheme(previousTheme);
+            }
+        }
     }
 
     /// <summary>

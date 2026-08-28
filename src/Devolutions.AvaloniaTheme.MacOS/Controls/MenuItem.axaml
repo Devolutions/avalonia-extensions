@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="using:Avalonia.Controls.Converters"
-                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
+                    xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
+                    xmlns:behaviors="using:Devolutions.AvaloniaTheme.MacOS.Behaviors">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Width="280" MinHeight="540">
@@ -81,6 +82,7 @@
     <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
     <Setter Property="Padding" Value="{DynamicResource MacOsMenuItemPadding}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="behaviors:MenuItemSubmenuPointerExitBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>

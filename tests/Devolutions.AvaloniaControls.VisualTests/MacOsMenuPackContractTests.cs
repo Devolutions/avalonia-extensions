@@ -4,10 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
+using Avalonia.Controls.Platform;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -744,6 +746,56 @@ public class MacOsMenuPackContractTests
         {
             packWindow.Close();
             packWindow.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// A submenu overlaps its parent item near the chevron. Avalonia normally queues a delayed
+    /// close when that overlap moves the pointer out of the parent, so the MacOS behavior must
+    /// intercept the open parent's exit event without breaking normal sibling navigation.
+    /// </summary>
+    [AvaloniaFact]
+    public void Open_submenu_does_not_queue_close_when_pointer_exits_parent()
+    {
+        var parent = new MenuItem
+        {
+            Header = "Parent",
+            Items = { new MenuItem { Header = "Child" } },
+        };
+        var sibling = new MenuItem { Header = "Sibling" };
+        var presenter = new MenuFlyoutPresenter { Items = { parent, sibling } };
+        Window window = ShowWithFullTheme(ThemeVariant.Light);
+        TimeSpan originalMenuShowDelay = DefaultMenuInteractionHandler.MenuShowDelay;
+
+        try
+        {
+            window.Content = presenter;
+            Dispatcher.UIThread.RunJobs();
+
+            presenter.SelectedIndex = 0;
+            parent.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(parent.IsSubMenuOpen);
+
+            DefaultMenuInteractionHandler.MenuShowDelay = TimeSpan.Zero;
+            var exit = new RoutedEventArgs(MenuItem.PointerExitedItemEvent, parent);
+            parent.RaiseEvent(exit);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(exit.Handled);
+            Assert.True(parent.IsSubMenuOpen);
+
+            sibling.RaiseEvent(new RoutedEventArgs(MenuItem.PointerEnteredItemEvent, sibling));
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(parent.IsSubMenuOpen);
+        }
+        finally
+        {
+            DefaultMenuInteractionHandler.MenuShowDelay = originalMenuShowDelay;
+            window.Close();
+            window.Content = null;
             Dispatcher.UIThread.RunJobs();
         }
     }

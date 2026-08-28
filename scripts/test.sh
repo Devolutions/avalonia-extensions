@@ -220,7 +220,7 @@ fi
   fi
 
   if [[ "$normalized" =~ ^(Failed!|Passed!)[[:space:]]+-[[:space:]]+Failed:[[:space:]]+[0-9]+,[[:space:]]+Passed:[[:space:]]+[0-9]+,[[:space:]]+Skipped:[[:space:]]+[0-9]+,[[:space:]]+Total:[[:space:]]+[0-9]+, ]]; then
-    printf '%s\n' "$normalized" > "$result_line_file"
+    printf '%s\n' "$normalized" >> "$result_line_file"
     continue
   fi
 
@@ -242,6 +242,7 @@ fi
   fi
 
   if [[ "$normalized" =~ ^Test\ Run\ (Successful|Failed)\.$ ]]; then
+    printf 'record\n' >> "$totals_file"
     printf 'status=%s\n' "${BASH_REMATCH[1]}" >> "$totals_file"
     continue
   fi
@@ -372,7 +373,64 @@ if [[ -s "$progress_seen_file" ]]; then
 fi
 
 if [[ -s "$result_line_file" ]]; then
-  cat "$result_line_file"
+  result_line_count="$(wc -l < "$result_line_file" | tr -d ' ')"
+  if [[ "$result_line_count" -eq 1 ]]; then
+    cat "$result_line_file"
+  else
+    aggregate_failed=0
+    aggregate_passed=0
+    aggregate_skipped=0
+    aggregate_total=0
+    aggregate_duration_seconds=0
+    aggregate_parse_succeeded=1
+
+    while IFS= read -r result_line; do
+      if [[ "$result_line" =~ Failed:[[:space:]]+([0-9]+),[[:space:]]+Passed:[[:space:]]+([0-9]+),[[:space:]]+Skipped:[[:space:]]+([0-9]+),[[:space:]]+Total:[[:space:]]+([0-9]+),[[:space:]]+Duration:[[:space:]]+([0-9.]+)[[:space:]]+(Seconds|Minutes|Hours) ]]; then
+        aggregate_failed=$((aggregate_failed + BASH_REMATCH[1]))
+        aggregate_passed=$((aggregate_passed + BASH_REMATCH[2]))
+        aggregate_skipped=$((aggregate_skipped + BASH_REMATCH[3]))
+        aggregate_total=$((aggregate_total + BASH_REMATCH[4]))
+        duration_value="${BASH_REMATCH[5]}"
+        case "${BASH_REMATCH[6]}" in
+          Hours) aggregate_duration_seconds="$(awk -v value="$aggregate_duration_seconds" -v duration="$duration_value" 'BEGIN { printf "%.4f", value + duration * 3600 }')" ;;
+          Minutes) aggregate_duration_seconds="$(awk -v value="$aggregate_duration_seconds" -v duration="$duration_value" 'BEGIN { printf "%.4f", value + duration * 60 }')" ;;
+          Seconds) aggregate_duration_seconds="$(awk -v value="$aggregate_duration_seconds" -v duration="$duration_value" 'BEGIN { printf "%.4f", value + duration }')" ;;
+        esac
+      else
+        aggregate_parse_succeeded=0
+        break
+      fi
+    done < "$result_line_file"
+
+    if [[ "$aggregate_parse_succeeded" -eq 1 ]]; then
+      if [[ "$aggregate_failed" -eq 0 ]]; then
+        aggregate_status_label="Passed!"
+      else
+        aggregate_status_label="Failed!"
+      fi
+      printf "%s  - Failed: %5s, Passed: %5s, Skipped: %5s, Total: %5s, Duration: %.4f Seconds (%s projects) - dotnet test\n" \
+        "$aggregate_status_label" "$aggregate_failed" "$aggregate_passed" "$aggregate_skipped" "$aggregate_total" "$aggregate_duration_seconds" "$result_line_count"
+    else
+      cat "$result_line_file"
+    fi
+  fi
+elif [[ -s "$totals_file" && "$(grep -c '^record$' "$totals_file")" -gt 1 ]]; then
+  aggregate_values="$(awk -F= '
+    $0 == "record" { records++; next }
+    $1 == "total" { total += $2; next }
+    $1 == "passed" { passed += $2; next }
+    $1 == "failed" { failed += $2; next }
+    $1 == "skipped" { skipped += $2; next }
+    END { printf "%d %d %d %d %d", failed, passed, skipped, total, records }
+  ' "$totals_file")"
+  read -r aggregate_failed aggregate_passed aggregate_skipped aggregate_total aggregate_projects <<< "$aggregate_values"
+  if [[ "$aggregate_failed" -eq 0 ]]; then
+    aggregate_status_label="Passed!"
+  else
+    aggregate_status_label="Failed!"
+  fi
+  printf "%s  - Failed: %5s, Passed: %5s, Skipped: %5s, Total: %5s, Projects: %s - dotnet test\n" \
+    "$aggregate_status_label" "$aggregate_failed" "$aggregate_passed" "$aggregate_skipped" "$aggregate_total" "$aggregate_projects"
 elif [[ -s "$totals_file" ]]; then
   status_value="$(awk -F= '/^status=/{v=$2} END{print v}' "$totals_file")"
   total_value="$(awk -F= '/^total=/{v=$2} END{print v}' "$totals_file")"

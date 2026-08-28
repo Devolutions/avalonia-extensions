@@ -150,7 +150,9 @@ if (-not $hasLoggerArg) {
 $summaryRows = [System.Collections.Generic.HashSet[string]]::new()
 $fallbackLines = [System.Collections.Generic.List[string]]::new()
 $functionalFailureRows = [System.Collections.Generic.List[string]]::new()
-$resultLine = ""
+$resultLines = [System.Collections.Generic.List[string]]::new()
+$projectTotals = [System.Collections.Generic.List[hashtable]]::new()
+$currentProjectTotals = $null
 $progressSeen = $false
 $lastProgressTest = $null
 $lastProgressStatus = $null
@@ -260,7 +262,7 @@ try {
     }
 
     if ($normalized -match '^(Failed!|Passed!)\s+-\s+Failed:\s+\d+,\s+Passed:\s+\d+,\s+Skipped:\s+\d+,\s+Total:\s+\d+,') {
-        $resultLine = $normalized
+        $resultLines.Add($normalized)
         return
     }
 
@@ -271,31 +273,41 @@ try {
 
     if ($normalized -match '^Test Run (Successful|Failed)\.$') {
         $testRunStatus = $Matches[1]
+        $currentProjectTotals = @{ Status = $Matches[1]; Total = 0; Passed = 0; Failed = 0; Skipped = 0; Duration = "" }
         return
     }
 
     if ($normalized -match '^Total tests:\s+(\d+)$') {
         $totalTests = [int]$Matches[1]
+        if ($null -ne $currentProjectTotals) { $currentProjectTotals.Total = $totalTests }
         return
     }
 
     if ($normalized -match '^Passed:\s+(\d+)$') {
         $passedTests = [int]$Matches[1]
+        if ($null -ne $currentProjectTotals) { $currentProjectTotals.Passed = $passedTests }
         return
     }
 
     if ($normalized -match '^Failed:\s+(\d+)$') {
         $failedTests = [int]$Matches[1]
+        if ($null -ne $currentProjectTotals) { $currentProjectTotals.Failed = $failedTests }
         return
     }
 
     if ($normalized -match '^Skipped:\s+(\d+)$') {
         $skippedTests = [int]$Matches[1]
+        if ($null -ne $currentProjectTotals) { $currentProjectTotals.Skipped = $skippedTests }
         return
     }
 
     if ($normalized -match '^Total time:\s+(.+)$') {
         $totalDuration = $Matches[1]
+        if ($null -ne $currentProjectTotals) {
+            $currentProjectTotals.Duration = $totalDuration
+            $projectTotals.Add($currentProjectTotals)
+            $currentProjectTotals = $null
+        }
         return
     }
 
@@ -342,8 +354,50 @@ if ($progressSeen) {
     Write-Host ""
 }
 
-if (-not [string]::IsNullOrWhiteSpace($resultLine)) {
-    Write-Host $resultLine
+if ($resultLines.Count -eq 1) {
+    Write-Host $resultLines[0]
+}
+elseif ($resultLines.Count -gt 1) {
+    $aggregateFailed = 0
+    $aggregatePassed = 0
+    $aggregateSkipped = 0
+    $aggregateTotal = 0
+    $aggregateDurationSeconds = 0.0
+    $aggregateParseSucceeded = $true
+
+    foreach ($line in $resultLines) {
+        if ($line -notmatch 'Failed:\s+(\d+),\s+Passed:\s+(\d+),\s+Skipped:\s+(\d+),\s+Total:\s+(\d+),\s+Duration:\s+([0-9.]+)\s+(Seconds|Minutes|Hours)') {
+            $aggregateParseSucceeded = $false
+            break
+        }
+
+        $aggregateFailed += [int]$Matches[1]
+        $aggregatePassed += [int]$Matches[2]
+        $aggregateSkipped += [int]$Matches[3]
+        $aggregateTotal += [int]$Matches[4]
+        $durationSeconds = [double]$Matches[5]
+        switch ($Matches[6]) {
+            "Hours" { $durationSeconds *= 3600 }
+            "Minutes" { $durationSeconds *= 60 }
+        }
+        $aggregateDurationSeconds += $durationSeconds
+    }
+
+    if ($aggregateParseSucceeded) {
+        $aggregateStatus = if ($aggregateFailed -eq 0) { "Passed!" } else { "Failed!" }
+        Write-Host ("{0}  - Failed: {1,5}, Passed: {2,5}, Skipped: {3,5}, Total: {4,5}, Duration: {5:F4} Seconds ({6} projects) - dotnet test" -f $aggregateStatus, $aggregateFailed, $aggregatePassed, $aggregateSkipped, $aggregateTotal, $aggregateDurationSeconds, $resultLines.Count)
+    }
+    else {
+        $resultLines | ForEach-Object { Write-Host $_ }
+    }
+}
+elseif ($projectTotals.Count -gt 1) {
+    $aggregateFailed = ($projectTotals | Measure-Object -Property Failed -Sum).Sum
+    $aggregatePassed = ($projectTotals | Measure-Object -Property Passed -Sum).Sum
+    $aggregateSkipped = ($projectTotals | Measure-Object -Property Skipped -Sum).Sum
+    $aggregateTotal = ($projectTotals | Measure-Object -Property Total -Sum).Sum
+    $aggregateStatus = if ($aggregateFailed -eq 0) { "Passed!" } else { "Failed!" }
+    Write-Host ("{0}  - Failed: {1,5}, Passed: {2,5}, Skipped: {3,5}, Total: {4,5}, Projects: {5} - dotnet test" -f $aggregateStatus, $aggregateFailed, $aggregatePassed, $aggregateSkipped, $aggregateTotal, $projectTotals.Count)
 }
 elseif (-not [string]::IsNullOrWhiteSpace($testRunStatus) -and -not [string]::IsNullOrWhiteSpace($totalDuration)) {
     $statusLabel = if ($testRunStatus -eq "Successful") { "Passed!" } else { "Failed!" }

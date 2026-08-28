@@ -22,11 +22,26 @@ function Resolve-PresetFilter {
     )
 
     switch ($Preset.ToLowerInvariant()) {
-        "visual" { return "DisplayName~VisualRegressionTests" }
-        "nonvisual" { return "DisplayName!~VisualRegressionTests" }
-        "non-visual" { return "DisplayName!~VisualRegressionTests" }
-        "functional" { return "DisplayName!~VisualRegressionTests" }
+        "visual" { return "" }
+        "nonvisual" { return "" }
+        "non-visual" { return "" }
+        "functional" { return "" }
         "all" { return "" }
+        default { return $null }
+    }
+}
+
+function Resolve-PresetProject {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Preset
+    )
+
+    switch ($Preset.ToLowerInvariant()) {
+        "visual" { return "tests/Devolutions.AvaloniaControls.VisualTests/Devolutions.AvaloniaControls.VisualTests.csproj" }
+        "nonvisual" { return "tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj" }
+        "non-visual" { return "tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj" }
+        "functional" { return "tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj" }
         default { return $null }
     }
 }
@@ -37,11 +52,18 @@ $hasFilterArg = $false
 
 $presetFilter = $null
 $presetToken = $null
+$presetProject = $null
+$updateBaselines = $false
+if ($args.Count -gt 0 -and $args[0] -eq "--update-baselines") {
+    $updateBaselines = $true
+    $args = if ($args.Count -gt 1) { $args[1..($args.Count - 1)] } else { @() }
+}
 if ($args.Count -gt 0) {
     $resolvedPresetFilter = Resolve-PresetFilter -Preset $args[0]
     if ($null -ne $resolvedPresetFilter) {
         $presetFilter = $resolvedPresetFilter
         $presetToken = $args[0]
+        $presetProject = Resolve-PresetProject -Preset $presetToken
         if ($args.Count -gt 1) {
             $args = $args[1..($args.Count - 1)]
         }
@@ -53,6 +75,12 @@ if ($args.Count -gt 0) {
 
 for ($index = 0; $index -lt $args.Count; ) {
     $current = $args[$index]
+
+    if ($current -eq "--update-baselines") {
+        $updateBaselines = $true
+        $index += 1
+        continue
+    }
 
     if ($current -eq "--filter") {
         $hasFilterArg = $true
@@ -101,13 +129,17 @@ for ($index = 0; $index -lt $args.Count; ) {
     $index += 1
 }
 
-if (-not [string]::IsNullOrEmpty($presetFilter)) {
-    if ($hasFilterArg) {
-        throw "Cannot combine preset '$presetToken' with an explicit --filter. Use one or the other."
-    }
+if ($hasFilterArg -and ($null -ne $presetProject -or -not [string]::IsNullOrEmpty($presetFilter))) {
+    throw "Cannot combine preset '$presetToken' with an explicit --filter. Use one or the other."
+}
 
+if (-not [string]::IsNullOrEmpty($presetFilter)) {
     $dotnetArgs.Add("--filter")
     $dotnetArgs.Add($presetFilter)
+}
+
+if (-not [string]::IsNullOrEmpty($presetProject)) {
+    $dotnetArgs.Insert(0, $presetProject)
 }
 
 if (-not $hasLoggerArg) {
@@ -133,6 +165,12 @@ $currentFailedTest = $null
 $currentFailureMessage = ""
 $inErrorMessageBlock = $false
 
+$previousUpdateBaselines = [Environment]::GetEnvironmentVariable("UPDATE_BASELINES", "Process")
+if ($updateBaselines) {
+    [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", "true", "Process")
+}
+
+try {
 & dotnet test @dotnetArgs 2>&1 | ForEach-Object {
     $line = "$_"
     $normalized = $line
@@ -293,6 +331,12 @@ $inErrorMessageBlock = $false
 }
 
 $dotnetExitCode = $LASTEXITCODE
+}
+finally {
+    if ($updateBaselines) {
+        [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", $previousUpdateBaselines, "Process")
+    }
+}
 
 if ($progressSeen) {
     Write-Host ""

@@ -24,13 +24,28 @@ resolve_preset_filter() {
   local preset="$1"
   case "$preset" in
     visual)
-      printf 'DisplayName~VisualRegressionTests'
+      printf ''
       ;;
     nonvisual|non-visual|functional)
-      printf 'DisplayName!~VisualRegressionTests'
+      printf ''
       ;;
     all)
       printf ''
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+resolve_preset_project() {
+  local preset="$1"
+  case "$preset" in
+    visual)
+      printf 'tests/Devolutions.AvaloniaControls.VisualTests/Devolutions.AvaloniaControls.VisualTests.csproj'
+      ;;
+    nonvisual|non-visual|functional)
+      printf 'tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj'
       ;;
     *)
       return 1
@@ -43,17 +58,29 @@ has_logger_arg=0
 has_filter_arg=0
 preset_filter=""
 preset_token=""
+preset_project=""
+update_baselines=0
+
+if [[ $# -gt 0 && "$1" == "--update-baselines" ]]; then
+  update_baselines=1
+  shift
+fi
 
 if [[ $# -gt 0 ]]; then
   if resolved_preset_filter="$(resolve_preset_filter "$1")"; then
     preset_filter="$resolved_preset_filter"
     preset_token="$1"
+    preset_project="$(resolve_preset_project "$1" || true)"
     shift
   fi
 fi
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --update-baselines)
+      update_baselines=1
+      shift
+      ;;
     --filter)
       has_filter_arg=1
       if [[ $# -lt 2 ]]; then
@@ -91,12 +118,17 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$has_filter_arg" -eq 1 && ( -n "$preset_project" || -n "$preset_filter" ) ]]; then
+  printf '%s\n' "Cannot combine preset '$preset_token' with an explicit --filter. Use one or the other." >&2
+  exit 1
+fi
+
 if [[ -n "$preset_filter" ]]; then
-  if [[ "$has_filter_arg" -eq 1 ]]; then
-    printf '%s\n' "Cannot combine preset '$preset_token' with an explicit --filter. Use one or the other." >&2
-    exit 1
-  fi
   dotnet_args+=("--filter" "$preset_filter")
+fi
+
+if [[ -n "$preset_project" ]]; then
+  dotnet_args=("$preset_project" "${dotnet_args[@]}")
 fi
 
 if [[ "$has_logger_arg" -eq 0 ]]; then
@@ -124,7 +156,12 @@ cleanup() {
 trap cleanup EXIT
 
 test_run_target=""
-dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
+dotnet_env=()
+if [[ "$update_baselines" -eq 1 ]]; then
+  dotnet_env=(env UPDATE_BASELINES=true)
+fi
+
+"${dotnet_env[@]}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then

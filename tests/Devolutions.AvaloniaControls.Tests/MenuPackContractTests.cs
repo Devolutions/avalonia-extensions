@@ -13,7 +13,7 @@ using SampleApp;
 using SampleApp.DemoPages;
 using Xunit;
 
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 /// <summary>
 /// Guards the DevExpress menu pack contract.
@@ -29,7 +29,7 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 ///   2. Menu tokens are immune to host-theme overrides — a host that redefines
 ///      the generic Fluent keys we used to alias must not move our menus.
 /// </summary>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MenuPackContractTests
 {
     private const string PackUri = "avares://Devolutions.AvaloniaTheme.DevExpress/Controls/MenuPack.styles.axaml";

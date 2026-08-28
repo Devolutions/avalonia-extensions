@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.claude/CLAUDE.md = .claude/CLAUDE.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devolutions.AvaloniaControls.Tests", "tests\Devolutions.AvaloniaControls.Tests\Devolutions.AvaloniaControls.Tests.csproj", "{0910B2BD-569C-4D76-A82A-53ED957F20F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37A56EB5-31A4-493F-B411-F2D310F7D976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0910B2BD-569C-4D76-A82A-53ED957F20F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0910B2BD-569C-4D76-A82A-53ED957F20F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0910B2BD-569C-4D76-A82A-53ED957F20F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0910B2BD-569C-4D76-A82A-53ED957F20F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{052424E1-48F3-4D8E-A780-DEB4D33B4482} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
@@ -77,5 +83,6 @@ Global
 		{A28F77D4-27F9-490B-8AA0-72F15E16D58E} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
 		{3652052E-B032-409A-AB43-C18CB6A18086} = {7756B42B-13EB-4DC9-BA61-11997466D93C}
 		{37A56EB5-31A4-493F-B411-F2D310F7D976} = {A091072B-6B14-4D57-B6CE-B7DEEA212054}
+		{0910B2BD-569C-4D76-A82A-53ED957F20F7} = {A091072B-6B14-4D57-B6CE-B7DEEA212054}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
+[Collection("StylesTest")]
 public class EnumPickerTests
 {
     private enum TestEnum

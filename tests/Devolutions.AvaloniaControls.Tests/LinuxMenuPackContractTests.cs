@@ -14,7 +14,7 @@ using AvaloniaFluentTheme = Avalonia.Themes.Fluent.FluentTheme;
 using Devolutions.AvaloniaTheme.Linux;
 using Xunit;
 
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 /// <summary>
 /// Guards the Linux (Yaru) menu pack contract.
@@ -28,7 +28,7 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 /// theme but breaks the pack: layered over DevExpress or MacOS, every one of those keys
 /// resolves to the *host's* value, so "Linux" menus render in the host's colours.
 /// </summary>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class LinuxMenuPackContractTests
 {
     private const string PackUri = "avares://Devolutions.AvaloniaTheme.Linux/Controls/MenuPack.styles.axaml";

@@ -21,9 +21,9 @@ using Devolutions.AvaloniaTheme.MacOS.Internal;
 using SampleApp;
 using Xunit;
 
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsMenuPackContractTests
 {
     private const string PackUri = "avares://Devolutions.AvaloniaTheme.MacOS/Controls/MenuPack.styles.axaml";
@@ -617,7 +617,7 @@ public class MacOsMenuPackContractTests
 
             var mismatches = new List<string>();
 
-            foreach (string token in MenuTokenNames.All)
+            foreach (string token in AllMenuTokenNames)
             {
                 fullWindow.TryFindResource(token, variant, out object? fullValue);
                 packPage.TryFindResource(token, variant, out object? packValue);
@@ -712,6 +712,9 @@ public class MacOsMenuPackContractTests
     {
         MacOSVersionDetector.SetTestOverride(true);
 
+        var appFluentTheme = new AvaloniaFluentTheme();
+        Application.Current!.Styles.Add(appFluentTheme);
+
         var defaultWindow = new Window { RequestedThemeVariant = ThemeVariant.Light };
         defaultWindow.Styles.Add(new AvaloniaFluentTheme());
         defaultWindow.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
@@ -746,6 +749,7 @@ public class MacOsMenuPackContractTests
         {
             defaultWindow.Close();
             toolbarWindow.Close();
+            Application.Current?.Styles.Remove(appFluentTheme);
             MacOSVersionDetector.SetTestOverride(null);
         }
     }
@@ -1189,4 +1193,57 @@ public class MacOsMenuPackContractTests
             MacOSVersionDetector.SetTestOverride(null);
         }
     }
+    
+    public static readonly string[] AllMenuTokenNames =
+    {
+        "MacOsMenuPopupBackgroundBrush",
+        "MacOsMenuPopupInnerBorderHighlightBrush",
+        "MacOsMenuPopupBorderBrush",
+        "MacOsMenuItemForegroundBrush",
+        "MacOsMenuForegroundHighBrush",
+        "MacOsMenuForegroundMidLowBrush",
+        "MacOsMenuForegroundLowBrush",
+        "MacOsMenuAccentForegroundBrush",
+        "MacOsMenuSelectedBackgroundBrush",
+        "MacOsMenuPressedBackgroundBrush",
+        "MacOsMenuItemPointerOverBackgroundBrush",
+        "MacOsMenuSeparatorBrush",
+        "MacOsMenuScrollBarButtonArrowForeground",
+        "MacOsMenuScrollBarButtonArrowForegroundPointerOver",
+        "MacOsMenuScrollBarButtonArrowIconFontSize",
+        "MacOsMenuPopupBorderThickness",
+        "MacOsMenuFontSize",
+        "MacOsMenuHeaderFontSizeSmall",
+        "MacOsMenuChevronSize",
+        "MacOsMenuSelectionCornerRadius",
+        "MacOsMenuPopupMargin",
+        "MacOsMenuPopupInnerBorderThickness",
+        "MacOsMenuPopupCornerRadius",
+        "MacOsMenuPopupShadow",
+        "MacOsMenuPopupMaxWidth",
+        "MacOsMenuPopupMinHeight",
+        "MacOsMenuPopupPadding",
+        "MacOsMenuFlyoutPresenterPadding",
+        "MacOsMenuFlyoutScrollerMargin",
+        "MacOsMenuHorizontalFlyoutMinWidth",
+        "MacOsMenuSubMenuPopupHorizontalOffset",
+        "MacOsMenuSubMenuPopupVerticalOffset",
+        "MacOsMenuPopupHorizontalOffset",
+        "MacOsMenuPopupVerticalOffset",
+        "MacOsMenuToolBarPopupVerticalOffset",
+        "MacOsMenuBarPadding",
+        "MacOsMenuItemPadding",
+        "MacOsMenuItemMinHeight",
+        "MacOsMenuIconPresenterMargin",
+        "MacOsMenuInputGestureTextMargin",
+        "MacOsMenuItemIconPadding",
+        "MacOsMenuToolBarItemPadding",
+        "MacOsMenuToolBarItemIconPadding",
+        "MacOsMenuToolBarItemActiveBackgroundMargin",
+        "MacOsMenuItemActiveBackgroundMargin",
+        "MacOsMenuSeparatorHeight",
+        "MacOsMenuSeparatorPadding",
+        "MacOsMenuChevronPath",
+        "MacOsMenuCheckMarkPath",
+    };
 }

@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using SampleApp;
 using SampleApp.PageCatalog;
 using SampleApp.ViewModels;
 
+[Collection("StylesTest")]
 public class MainWindowNavigationTests
 {
   [AvaloniaFact]

@@ -375,6 +375,82 @@ public class MacOsMenuPackContractTests
         }
     }
 
+    /// <summary>
+    ///   The full theme ships in two shapes: <c>GlobalStyles="True"</c> wraps ThemeRoot.axaml in an
+    ///   outer Styles element, while <c>GlobalStyles="False"</c> *is* ThemeRoot.axaml. Only the
+    ///   second one carries the classic MenuResources defaults in its own resource dictionary, and
+    ///   own entries outrank every merged dictionary - including the menu alias dictionary that
+    ///   carries the active variant's values. Consumers using GlobalStyles="False" (RDM) therefore
+    ///   used to get classic menus while every other control followed LiquidGlass.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(true, true)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(false, false)]
+    public void Full_theme_menu_tokens_follow_the_active_variant_with_and_without_global_styles(
+        bool globalStyles,
+        bool liquidGlass)
+    {
+        MacOSVersionDetector.SetTestOverride(liquidGlass);
+
+        var window = new Window { RequestedThemeVariant = ThemeVariant.Light };
+        var macOsTheme = new DevolutionsMacOsTheme { GlobalStyles = globalStyles };
+        macOsTheme.BeginInit();
+        macOsTheme.EndInit();
+        window.Styles.Add(macOsTheme);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            // Every menu token must agree with the legacy theme key it aliases, whichever variant
+            // the theme loaded. This is what breaks when the alias dictionary loses the lookup.
+            (string MenuToken, string LegacyToken)[] pairs =
+            {
+                ("MacOsMenuPopupBackgroundBrush", "PopupBackgroundBrush"),
+                ("MacOsMenuPopupCornerRadius", "PopupCornerRadius"),
+                ("MacOsMenuPopupMargin", "PopupMargin"),
+                ("MacOsMenuItemPadding", "MenuItemPadding"),
+                ("MacOsMenuItemMinHeight", "MenuItemMinHeight"),
+                ("MacOsMenuSubMenuPopupVerticalOffset", "SubMenuPopupVerticalOffset"),
+            };
+
+            foreach ((string menuToken, string legacyToken) in pairs)
+            {
+                Assert.True(
+                    window.TryFindResource(menuToken, ThemeVariant.Light, out object? menuValue),
+                    $"Menu token '{menuToken}' should resolve (GlobalStyles={globalStyles}).");
+                Assert.True(
+                    window.TryFindResource(legacyToken, ThemeVariant.Light, out object? legacyValue),
+                    $"Legacy token '{legacyToken}' should resolve (GlobalStyles={globalStyles}).");
+
+                Assert.Equal(
+                    Describe(legacyValue),
+                    Describe(menuValue));
+            }
+
+            // Absolute check, so a regression that makes both sides classic still fails.
+            Assert.True(window.TryFindResource("MacOsMenuPopupCornerRadius", ThemeVariant.Light, out object? radius));
+            Assert.Equal(
+                liquidGlass ? new CornerRadius(12) : new CornerRadius(5),
+                Assert.IsType<CornerRadius>(radius));
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    private static string Describe(object? value) => value switch
+    {
+        ISolidColorBrush brush => $"{brush.Color} @{brush.Opacity.ToString(CultureInfo.InvariantCulture)}",
+        null => "<null>",
+        _ => value.ToString() ?? "<null>",
+    };
+
     [AvaloniaTheory]
     [InlineData(true, "#FFF8F9F9", 0.93)]
     [InlineData(false, "#FFE7E7E7", 1.0)]

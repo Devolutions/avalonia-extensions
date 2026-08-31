@@ -6,6 +6,10 @@
   full theme without pulling in the MacOS theme dictionaries (which would restyle
   non-menu controls in the consuming app).
 
+  The menu surface is deliberately opaque: Avalonia can only blur a popup's backdrop through the
+  window compositor, and that blur cannot be shaped to the menu's rounded corners, so translucent
+  menus show sharp content straight through. These values are sampled from native macOS menus.
+
   Only keys that actually differ from the classic values are listed. Values are pinned
   literals mirroring Accents/ThemeResources_LiquidGlass.axaml; MacOsMenuPackContractTests
   asserts pack/full-theme parity so the two cannot drift apart.
@@ -18,14 +22,14 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" Opacity="0.93" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" />
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#000000" Opacity="0.2" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#171717" Opacity="0.89" />
-      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#171717" Opacity="0.89" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#22272a" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#22272a" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
     </ResourceDictionary>

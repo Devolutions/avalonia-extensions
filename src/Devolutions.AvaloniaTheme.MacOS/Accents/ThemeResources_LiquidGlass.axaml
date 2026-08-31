@@ -144,7 +144,15 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT07" Color="#ececec" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
+      <!--
+        Opaque, even though LiquidGlass is translucent elsewhere. Avalonia can only blur a popup's
+        backdrop through the window compositor, and that blur cannot be shaped to the popup's
+        rounded corners - so a translucent popup shows sharp, legible content straight through it
+        instead of the frosted surface AppKit produces. This colour is sampled from a native macOS
+        menu sitting over a typical window background, so popups land where AppKit's do without
+        needing the blur. Renamed from TranslucentSurface, which no longer describes it.
+      -->
+      <SolidColorBrush x:Key="PopupSurface" Color="#f8f9f9" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" x:DataType="SolidColorBrush"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
@@ -160,7 +168,7 @@
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
-      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="PopupSurface" />
       <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Highlight" />
 
       <!-- Control-specific resources -->
@@ -226,7 +234,12 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT08" Color="#323341" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
+      <!--
+        Opaque popup surface - see the light variant above for the rationale. Sampled straight from
+        a native macOS dark menu, so it carries that material's slight cool cast rather than being a
+        neutral grey.
+      -->
+      <SolidColorBrush x:Key="PopupSurface" Color="#22272a" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
@@ -242,7 +255,7 @@
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
-      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="PopupSurface" />
       <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="PopupBackgroundBrush" />
 
       <!-- Control-specific resources -->

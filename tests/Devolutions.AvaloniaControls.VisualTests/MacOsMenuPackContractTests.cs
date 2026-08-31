@@ -340,7 +340,7 @@ public class MacOsMenuPackContractTests
     }
 
     [AvaloniaTheory]
-    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(true, "#FFF8F9F9", 1.0)]
     [InlineData(false, "#FFE7E7E7", 1.0)]
     public void Full_theme_menu_background_follows_active_macos_variant(
         bool liquidGlass,
@@ -452,7 +452,7 @@ public class MacOsMenuPackContractTests
     };
 
     [AvaloniaTheory]
-    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(true, "#FFF8F9F9", 1.0)]
     [InlineData(false, "#FFE7E7E7", 1.0)]
     public void Pack_menu_background_follows_active_macos_variant(
         bool liquidGlass,

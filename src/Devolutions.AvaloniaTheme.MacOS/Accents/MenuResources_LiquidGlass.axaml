@@ -44,10 +44,16 @@
   </ResourceDictionary.ThemeDictionaries>
 
 
-  <!-- Selection inset/radius: matches native macOS 26 (4pt inset, 5pt radius inside a 12pt menu). -->
+  <!--
+    Selection inset and radius, mirroring Accents/ThemeResources_LiquidGlass.axaml. The 4pt inset is
+    measured from a native macOS 26 menu; the 7pt radius is a judgement call that reads better than
+    the ~6pt a native menu measures, against our 12pt menu corner. The padding and scroller margin
+    are asymmetric on purpose - they absorb the top/left-only bevel from
+    MacOsMenuPopupInnerBorderThickness so the visible gap comes out even at 4pt.
+  -->
   <Thickness x:Key="MacOsMenuPopupPadding">3 0 4 0</Thickness>
   <Thickness x:Key="MacOsMenuFlyoutScrollerMargin">0 3 0 4</Thickness>
-  <CornerRadius x:Key="MacOsMenuSelectionCornerRadius">6</CornerRadius>
+  <CornerRadius x:Key="MacOsMenuSelectionCornerRadius">7</CornerRadius>
 
   <Thickness x:Key="MacOsMenuPopupMargin">12 4 12 29</Thickness>
   <Thickness x:Key="MacOsMenuItemPadding">9 4 7 4</Thickness>

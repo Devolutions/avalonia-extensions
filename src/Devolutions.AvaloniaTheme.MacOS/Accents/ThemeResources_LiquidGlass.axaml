@@ -416,8 +416,12 @@
 
   <!--
     Menu surface insets. Native macOS 26 menus inset the selected row by 4pt from the menu
-    background on every side, and round it at 6pt inside the menu's own 12pt corner. Ours sat at 6pt
-    with a 4pt radius, which reads as too much air around a corner that is too tight.
+    background on every side, inside the menu's own 12pt corner. Ours sat at 6pt with a 4pt radius,
+    which reads as too much air around a corner that is too tight.
+
+    The 4pt inset is measured from Finder. The 7pt radius is not: measurement of a native menu puts
+    it nearer 6pt, but 7pt is what looks right against our 12pt menu corner, so it was chosen by eye
+    and should stay a judgement call rather than being "corrected" back to the measured value.
 
     The inset is not a single value. Horizontally it is PopupInnerBorderThickness + MenuFlyoutPadding;
     vertically it is PopupInnerBorderThickness + MenuFlyoutScrollerMargin. PopupInnerBorderThickness
@@ -431,7 +435,7 @@
   -->
   <Thickness x:Key="MenuFlyoutPadding">3 0 4 0</Thickness>
   <Thickness x:Key="MenuFlyoutScrollerMargin">0 3 0 4</Thickness>
-  <CornerRadius x:Key="MenuSelectionCornerRadius">6</CornerRadius>
+  <CornerRadius x:Key="MenuSelectionCornerRadius">7</CornerRadius>
 
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>

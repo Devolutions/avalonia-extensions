@@ -89,7 +89,7 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="IsHitTestVisible" Value="True" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="ContentTemplate">
       <DataTemplate>
@@ -130,7 +130,7 @@
       </ControlTemplate>
     </Setter>
     <Style Selector="^ /template/ Border#PART_Background">
-      <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
     </Style>
 
     <Style Selector="^[IsCommittedSelected=True]">

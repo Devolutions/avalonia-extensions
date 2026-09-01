@@ -69,7 +69,23 @@
                          Classes="selection_checkmark_off"
                          BorderThickness="0"
                          Background="Transparent"
-                         ItemTemplate="{TemplateBinding ItemTemplate}" />
+                         Padding="0"
+                         ItemTemplate="{TemplateBinding ItemTemplate}">
+                  <!--
+                    Rows here are ListBoxItems, shared with plain (non-popup) ListBoxes, so they
+                    carry the raised-accent hover and the generic control radius. Inside a drop-down
+                    they need to read like every other drop-down row. Padding is zeroed because the
+                    popup surface already supplies the inset - the ListBox's own would double it.
+                  -->
+                  <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                      <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
+                    </Style>
+                    <Style Selector="ListBoxItem:pointerover /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
+                    </Style>
+                  </ListBox.Styles>
+                </ListBox>
               </Border>
             </Border>
           </Popup>

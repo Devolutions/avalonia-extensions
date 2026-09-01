@@ -120,6 +120,31 @@ public class MacOsPopupInsetTests
         }
     }
 
+    /// <summary>
+    ///   A selected row should look the same whether it is in a menu or a drop-down. The two carry
+    ///   separate tokens - menus cannot share ComboBox's, which ComboBox itself needs - so nothing
+    ///   but this keeps them at the same radius.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Menu_and_drop_down_rows_share_a_corner_radius(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window w = ShowLiquidGlass(variant);
+        try
+        {
+            Assert.True(w.TryFindResource("MenuSelectionCornerRadius", variant, out object? menu));
+            Assert.True(w.TryFindResource("ComboBoxItemCornerRadius", variant, out object? row));
+            Assert.Equal(Assert.IsType<CornerRadius>(menu), Assert.IsType<CornerRadius>(row));
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]

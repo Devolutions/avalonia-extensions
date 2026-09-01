@@ -19,7 +19,7 @@ internal static class MenuResourceAliasBuilder
     ("MacOsMenuSvgItemPointerOverCss", "SvgMenuItemPointerOverCss"),
     ("MacOsMenuSvgItemDisabledCss", "SvgMenuItemDisabledCss"),
     ("MacOsMenuAccentForegroundBrush", "ControlForegroundAccentHighBrush"),
-    ("MacOsMenuSelectedBackgroundBrush", "LayoutBackgroundMidBrush"),
+    ("MacOsMenuSelectedBackgroundBrush", "MenuItemSelectedBackgroundBrush"),
     ("MacOsMenuPressedBackgroundBrush", "LayoutBackgroundHighBrush"),
     ("MacOsMenuItemPointerOverBackgroundBrush", "MenuItemPointerOverBackgroundBrush"),
     ("MacOsMenuPopupBorderThickness", "MenuFlyoutPresenterBorderThickness"),

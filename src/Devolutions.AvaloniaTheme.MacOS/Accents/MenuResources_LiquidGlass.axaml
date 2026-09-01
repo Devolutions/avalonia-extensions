@@ -28,10 +28,15 @@
       <!--
         Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
         OklchAdjustmentConverter, which the pack cannot reuse without importing the theme
-        dictionaries. Per variant because the two adjustments differ. With a custom macOS accent the
-        pack's hover tint stays at the default.
+        dictionaries. Per variant because the two adjustments differ.
+
+        The values are the converter's output for macOS's default accent (#007aff), so a stock Mac
+        renders the pack and the full theme identically. MacOsMenuPackContractTests pins
+        SystemAccentColor to that same accent, so the parity check measures what ships rather than
+        the headless fallback accent. With a custom macOS accent the pack's tint stays at default.
       -->
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005df1" Opacity="0.64" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#005df1" Opacity="0.64" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -39,7 +44,8 @@
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#22272a" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#1063d8" Opacity="0.69" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#2960ff" Opacity="0.69" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#2960ff" Opacity="0.69" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

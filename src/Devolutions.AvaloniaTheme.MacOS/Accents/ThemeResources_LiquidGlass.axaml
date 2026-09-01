@@ -228,8 +228,13 @@
         Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
         menus end up wearing the light accent at the light opacity.
+
+        Both states are needed. A menu row is :selected while the keyboard is on it and :pointerover
+        under the mouse, and AppKit accents both; leaving the selected key undefined here drops
+        keyboard navigation back to the neutral LayoutBackgroundMidBrush from the base dictionary.
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -321,8 +326,13 @@
         Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
         menus end up wearing the light accent at the light opacity.
+
+        Both states are needed. A menu row is :selected while the keyboard is on it and :pointerover
+        under the mouse, and AppKit accents both; leaving the selected key undefined here drops
+        keyboard navigation back to the neutral LayoutBackgroundMidBrush from the base dictionary.
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 

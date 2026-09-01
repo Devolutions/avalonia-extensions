@@ -43,6 +43,11 @@
   -->
   <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
 
+  <!-- Selection inset/radius: matches native macOS 26 (4pt inset, 5pt radius inside a 12pt menu). -->
+  <Thickness x:Key="MacOsMenuPopupPadding">3 0 4 0</Thickness>
+  <Thickness x:Key="MacOsMenuFlyoutScrollerMargin">0 3 0 4</Thickness>
+  <CornerRadius x:Key="MacOsMenuSelectionCornerRadius">6</CornerRadius>
+
   <Thickness x:Key="MacOsMenuPopupMargin">12 4 12 29</Thickness>
   <Thickness x:Key="MacOsMenuItemPadding">9 4 7 4</Thickness>
   <x:Double x:Key="MacOsMenuItemMinHeight">24</x:Double>

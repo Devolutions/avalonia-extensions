@@ -392,6 +392,25 @@
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
 
+  <!--
+    Menu surface insets. Native macOS 26 menus inset the selected row by 4pt from the menu
+    background on every side, and round it at 6pt inside the menu's own 12pt corner. Ours sat at 6pt
+    with a 4pt radius, which reads as too much air around a corner that is too tight.
+
+    The inset is not a single value. Horizontally it is PopupInnerBorderThickness + MenuFlyoutPadding;
+    vertically it is PopupInnerBorderThickness + MenuFlyoutScrollerMargin. PopupInnerBorderThickness
+    is "1 1 0 0" - a top/left-only bevel - so the padding and margin have to give that pixel back on
+    those two sides for the visible gap to come out even at 4pt. Hence the asymmetric values below;
+    they are not arbitrary, and a symmetric pair lands 1pt out on the top and left.
+
+    MenuSelectionCornerRadius exists because the generic SelectionCornerRadius is shared with
+    ComboBox, which should keep its own radius. Classic defines neither key and falls through to the
+    MacOsMenu* defaults in Accents/MenuResources.axaml, so it is unaffected.
+  -->
+  <Thickness x:Key="MenuFlyoutPadding">3 0 4 0</Thickness>
+  <Thickness x:Key="MenuFlyoutScrollerMargin">0 3 0 4</Thickness>
+  <CornerRadius x:Key="MenuSelectionCornerRadius">6</CornerRadius>
+
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>
   <x:Double x:Key="MenuItemMinHeight">24</x:Double>

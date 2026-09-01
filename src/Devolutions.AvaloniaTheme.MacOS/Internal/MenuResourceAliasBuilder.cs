@@ -26,7 +26,7 @@ internal static class MenuResourceAliasBuilder
     ("MacOsMenuFontSize", "ControlFontSize"),
     ("MacOsMenuHeaderFontSizeSmall", "MenuHeaderFontSizeSmall"),
     ("MacOsMenuChevronSize", "TreeViewItemChevronSize"),
-    ("MacOsMenuSelectionCornerRadius", "SelectionCornerRadius"),
+    ("MacOsMenuSelectionCornerRadius", "MenuSelectionCornerRadius"),
     ("MacOsMenuPopupMargin", "PopupMargin"),
     ("MacOsMenuPopupInnerBorderThickness", "PopupInnerBorderThickness"),
     ("MacOsMenuPopupCornerRadius", "PopupCornerRadius"),

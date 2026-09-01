@@ -152,7 +152,7 @@
         <Setter
           Property="Background"
           Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
+                  {Binding $parent[EditableComboBoxItem].IsPointerOver},
                   {DynamicResource ComboBoxItemBackgroundBrush},
                   {DynamicResource ControlBackgroundSelectedBrush}
                }" />
@@ -161,7 +161,7 @@
         <Setter
           Property="Background"
           Value="{BindingToggler
-                  {Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=ItemsPresenter}},
+                  {Binding $parent[EditableComboBoxItem].IsPointerOver},
                   {DynamicResource TransparentBrush},
                   {DynamicResource ControlBorderSelectedBrush}
                }" />

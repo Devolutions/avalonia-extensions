@@ -36,7 +36,7 @@
         the headless fallback accent. With a custom macOS accent the pack's tint stays at default.
       -->
       <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005df1" Opacity="0.64" />
-      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#005df1" Opacity="0.64" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#d7d9d9" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -45,7 +45,7 @@
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#2960ff" Opacity="0.69" />
-      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#2960ff" Opacity="0.69" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#3d4243" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

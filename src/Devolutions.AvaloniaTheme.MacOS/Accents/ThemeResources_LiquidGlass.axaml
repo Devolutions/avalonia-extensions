@@ -229,12 +229,13 @@
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
         menus end up wearing the light accent at the light opacity.
 
-        Both states are needed. A menu row is :selected while the keyboard is on it and :pointerover
-        under the mouse, and AppKit accents both; leaving the selected key undefined here drops
-        keyboard navigation back to the neutral LayoutBackgroundMidBrush from the base dictionary.
+        Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
+        neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one
+        under the pointer - see MenuResourceAliasBuilder.
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
-      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
+      <!-- Sampled from a native menu whose submenu is open with the pointer elsewhere. -->
+      <SolidColorBrush x:Key="MenuItemSelectedBackgroundBrush" Color="#d7d9d9" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -327,12 +328,12 @@
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
         menus end up wearing the light accent at the light opacity.
 
-        Both states are needed. A menu row is :selected while the keyboard is on it and :pointerover
-        under the mouse, and AppKit accents both; leaving the selected key undefined here drops
-        keyboard navigation back to the neutral LayoutBackgroundMidBrush from the base dictionary.
+        Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
+        neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one
+        under the pointer - see MenuResourceAliasBuilder.
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
-      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
+      <SolidColorBrush x:Key="MenuItemSelectedBackgroundBrush" Color="#3d4243" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 

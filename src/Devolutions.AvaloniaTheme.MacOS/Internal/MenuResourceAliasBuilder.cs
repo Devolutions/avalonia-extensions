@@ -19,6 +19,10 @@ internal static class MenuResourceAliasBuilder
     ("MacOsMenuSvgItemPointerOverCss", "SvgMenuItemPointerOverCss"),
     ("MacOsMenuSvgItemDisabledCss", "SvgMenuItemDisabledCss"),
     ("MacOsMenuAccentForegroundBrush", "ControlForegroundAccentHighBrush"),
+    // Deliberately NOT the accent. A row is :selected when its submenu is open and the pointer has
+    // moved away, and :focus-visible under keyboard navigation. AppKit greys both so they stay
+    // distinguishable from the accent the pointer paints; accenting them makes a keyboard-focused
+    // row indistinguishable from a hovered one.
     ("MacOsMenuSelectedBackgroundBrush", "MenuItemSelectedBackgroundBrush"),
     ("MacOsMenuPressedBackgroundBrush", "LayoutBackgroundHighBrush"),
     ("MacOsMenuItemPointerOverBackgroundBrush", "MenuItemPointerOverBackgroundBrush"),

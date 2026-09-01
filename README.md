@@ -52,20 +52,23 @@ Screenshots are captured at a fixed width (`1200`) with auto-calculated content 
 ### Platform-Specific Baselines
 Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linux`) due to rendering differences. When updating baselines, they only update for your current platform.
 
+> **Note:** We're showing single quotes here, since in interactive `bash`/`zsh` (Linux/Mac), `!` triggers history expansion, so the following term is interpreted as a history variable, unless the filter string is single-quoted (`'...'`) instead of double-quoted. However, on Windows only Powershell supports the single quotes - so you might want to get used to double quotes if you're always on Windows.
+
+
 ### Usage
 - `dotnet test` - runs all tests
-- `dotnet test --filter "DisplayName~VisualRegressionTests"` - runs only visual regression tests
-- `dotnet test --filter "DisplayName!~VisualRegressionTests"` - runs only non-visual tests
-- `dotnet test --filter "DisplayName~DevExpress"` - runs tests for all controls implemented in DevExpress
-- `dotnet test --filter "DisplayName~Button"` - runs tests for Button under each of the themes it's implemented in
+- `dotnet test --filter 'DisplayName~VisualRegressionTests'` - runs only visual regression tests
+- `dotnet test --filter 'DisplayName!~VisualRegressionTests'` - runs only non-visual tests
+- `dotnet test --filter 'DisplayName~DevExpress'` - runs tests for all controls implemented in DevExpress
+- `dotnet test --filter 'DisplayName~Button'` - runs tests for Button under each of the themes it's implemented in
 - `dotnet test --list-tests` - lists all test cases
 
 #### Combining `DisplayName` filters
 The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT. 
 
-- `dotnet test --filter "DisplayName~Button&DisplayName~DevExpress"` - runs only tests whose display name contains both `Button` and `DevExpress`
-- `dotnet test --filter "DisplayName~ContextMenu|DisplayName~MenuFlyout"` - runs tests containing either `ContextMenu` or `MenuFlyout`
-- `dotnet test --filter "DisplayName~Button&DisplayName!~HyperlinkButton"` - runs tests containing `Button` but excluding `HyperlinkButton`
+- `dotnet test --filter 'DisplayName~Button&DisplayName~DevExpress'` - runs only tests whose display name contains both `Button` and `DevExpress`
+- `dotnet test --filter 'DisplayName~ContextMenu|DisplayName~MenuFlyout'` - runs tests containing either `ContextMenu` or `MenuFlyout`
+- `dotnet test --filter 'DisplayName~Button&DisplayName!~HyperlinkButton'` - runs tests containing `Button` but excluding `HyperlinkButton`
 
 
 🆕 **Shorthand command & cleaner output:**

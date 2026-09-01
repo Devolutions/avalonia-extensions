@@ -150,6 +150,12 @@
                   Shares the popup surface with the drop-downs, but not their inner bevel or inset:
                   it wraps a calendar rather than a list of rows, so it keeps its own
                   CalendarPopupPadding and has no row margin to compose with.
+
+                  The background is the one token on this surface that does not resolve identically
+                  under the classic theme - SystemRegionBrush was White / #21222f there against
+                  PopupBackgroundBrush's #e7e7e7 / #262626 - so classic calendars change too. That is
+                  intentional: a calendar popping out of a control should read as the same surface as
+                  a menu or a drop-down in either theme.
                 -->
                 <Border BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
                         BorderBrush="{DynamicResource PopupBorderBrush}"

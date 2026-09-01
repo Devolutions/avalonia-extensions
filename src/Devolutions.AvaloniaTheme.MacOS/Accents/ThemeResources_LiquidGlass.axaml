@@ -434,6 +434,8 @@
   -->
   <Thickness x:Key="PopupPadding">1 3 2 4</Thickness>
   <x:Int32 x:Key="InitialFirstItemDistance">7</x:Int32>
+  <!-- PopupMargin is "12 4 12 29" here, 3pt taller than classic's, so the trim follows it. -->
+  <x:Int32 x:Key="PopupTrimHeight">33</x:Int32>
   <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
 
   <!--

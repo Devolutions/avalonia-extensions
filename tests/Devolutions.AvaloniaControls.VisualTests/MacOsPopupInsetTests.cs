@@ -121,6 +121,32 @@ public class MacOsPopupInsetTests
     }
 
     /// <summary>
+    ///   MaxDropDownHeight is applied to the Popup, so it covers the chrome as well as the list.
+    ///   PopupTrimHeight is subtracted to get back to the usable list height, and the chrome that
+    ///   makes the difference is PopupMargin's vertical total. Nothing recomputes it, so a change to
+    ///   the margin silently mis-clamps how far a popup may shift.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Popup_trim_height_tracks_the_popup_margin(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window w = ShowLiquidGlass(variant);
+        try
+        {
+            Thickness margin = Get(w, "PopupMargin", variant);
+            Assert.True(w.TryFindResource("PopupTrimHeight", variant, out object? trim));
+            Assert.Equal(margin.Top + margin.Bottom, System.Convert.ToDouble(trim));
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
     ///   A selected row should look the same whether it is in a menu or a drop-down. The two carry
     ///   separate tokens - menus cannot share ComboBox's, which ComboBox itself needs - so nothing
     ///   but this keeps them at the same radius.

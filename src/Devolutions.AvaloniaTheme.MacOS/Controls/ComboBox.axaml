@@ -296,7 +296,7 @@
                   <Binding Source="{StaticResource ComboBoxItemHeight}" />
                   <DynamicResource ResourceKey="InitialFirstItemDistance" />
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight" />
-                  <Binding Source="{StaticResource PopupTrimHeight}" />
+                  <DynamicResource ResourceKey="PopupTrimHeight" />
                 </MultiBinding>
               </Popup.VerticalOffset>
               <Border

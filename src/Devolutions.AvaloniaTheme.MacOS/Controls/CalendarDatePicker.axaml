@@ -110,8 +110,15 @@
                         </ItemsPanelTemplate>
                       </ItemsControl.ItemsPanel>
                     </ItemsControl>
+                    <!-- Focusable="False" (as in the DevExpress theme): PART_Button lives inside PART_TextBox
+                         to host the inner-content slots, so if it were a tab stop, tabbing out of the text box
+                         would land on it — re-entering the picker via Tab, which makes
+                         CalendarDatePicker.OnGotFocus bounce focus straight back to PART_TextBox. That traps
+                         Tab in a text box <-> button loop. The text box already represents this control in the
+                         tab order; the button stays fully clickable. -->
                     <Button Name="PART_Button"
                             Theme="{StaticResource DatePickerButton}"
+                            Focusable="False"
                             VerticalAlignment="Center">
                       <Panel>
                         <!-- The icon lives inside PART_TextBox.InnerRightContent, so it is outside the
@@ -160,7 +167,19 @@
                             SelectedDate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedDate, Mode=TwoWay}"
                             DisplayDate="{TemplateBinding DisplayDate}"
                             DisplayDateStart="{TemplateBinding DisplayDateStart}"
-                            DisplayDateEnd="{TemplateBinding DisplayDateEnd}" />
+                            DisplayDateEnd="{TemplateBinding DisplayDateEnd}">
+                    <!-- Scoped to this calendar only (a standalone Calendar keeps focusable month/year
+                         buttons, so its keyboard navigation is unaffected).
+                         Picking a month/year makes Calendar hide the year/month panel; the FocusManager then
+                         re-homes focus off the vanishing button into this picker's PART_TextBox subtree,
+                         whose GotFocus handler closes the drop-down before the date is committed. Keeping
+                         these buttons out of the focus path avoids that. -->
+                    <Calendar.Styles>
+                      <Style Selector="CalendarButton">
+                        <Setter Property="Focusable" Value="False" />
+                      </Style>
+                    </Calendar.Styles>
+                  </Calendar>
                 </Border>
               </Popup>
             </Panel>

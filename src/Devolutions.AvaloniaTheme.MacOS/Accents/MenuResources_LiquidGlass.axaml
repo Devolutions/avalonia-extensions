@@ -25,6 +25,13 @@
       <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" />
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#000000" Opacity="0.2" />
+      <!--
+        Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
+        OklchAdjustmentConverter, which the pack cannot reuse without importing the theme
+        dictionaries. Per variant because the two adjustments differ. With a custom macOS accent the
+        pack's hover tint stays at the default.
+      -->
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -32,16 +39,10 @@
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#22272a" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#1063d8" Opacity="0.69" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <!--
-    Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
-    OklchAdjustmentConverter here, which the pack cannot reuse without importing the theme
-    dictionaries. The value matches the default accent; with a custom macOS accent colour the
-    LiquidGlass hover tint stays at the default (the classic value above does follow the accent).
-  -->
-  <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
 
   <!-- Selection inset/radius: matches native macOS 26 (4pt inset, 5pt radius inside a 12pt menu). -->
   <Thickness x:Key="MacOsMenuPopupPadding">3 0 4 0</Thickness>

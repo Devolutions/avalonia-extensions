@@ -21,7 +21,13 @@
   <OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
   <OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
-  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="0.04" ChromaAdjustment="-0.02" HueAdjustment="-4.4" />
+  <!--
+    Fitted so the macOS default accent (#007aff) lands the menu/ComboBox selection on #274fbe, the
+    colour AppKit uses for a selected dark menu row. Applied as a relative Oklch delta, so a custom
+    system accent shifts with it. The previous values moved lightness and chroma the other way, which
+    read as a washed-out cyan next to Finder's.
+  -->
+  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="-0.0422" ChromaAdjustment="0.0238" HueAdjustment="7.12" />
 
   <!-- MARK: Brushes -->
 
@@ -217,6 +223,14 @@
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT20" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+
+      <!--
+        Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
+        into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
+        menus end up wearing the light accent at the light opacity.
+      -->
+      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -303,6 +317,14 @@
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+
+      <!--
+        Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
+        into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
+        menus end up wearing the light accent at the light opacity.
+      -->
+      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -414,8 +436,6 @@
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>
   <x:Double x:Key="MenuItemMinHeight">24</x:Double>
-  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
-  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
 
 
   <!-- TextBox -->

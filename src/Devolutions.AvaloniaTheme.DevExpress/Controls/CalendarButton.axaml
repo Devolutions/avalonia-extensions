@@ -30,6 +30,11 @@
 
   <ControlTheme x:Key="{x:Type CalendarButton}" TargetType="CalendarButton">
     <Setter Property="ClickMode" Value="Release" />
+    <!-- Month/year buttons must not take focus. Picking one makes Calendar hide the year/month panel, and
+         the FocusManager then re-homes focus away from the vanishing button — into the picker's text box
+         subtree, whose GotFocus handler closes the drop-down before the date is committed. The Calendar
+         itself is focusable and handles keyboard navigation, so these buttons never need focus. -->
+    <Setter Property="Focusable" Value="False" />
     <Setter Property="MinWidth" Value="40" />
     <Setter Property="MinHeight" Value="40" />
     <Setter Property="Padding" Value="0,0,0,0" />

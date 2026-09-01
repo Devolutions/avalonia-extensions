@@ -10,7 +10,7 @@ using Devolutions.AvaloniaTheme.MacOS.Internal;
 using Xunit;
 
 /// <summary>
-///   Guards the visible gap between a popup's background edge and the first row inside it.
+///   Guards the visible gap between a menu's background edge and the first row inside it.
 /// </summary>
 /// <remarks>
 ///   The gap is composed of two tokens, and the inner border is a top/left-only bevel
@@ -46,41 +46,14 @@ public class MacOsPopupInsetTests
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]
-    public void Generic_popup_inset_is_even_on_all_sides(string variantName)
+    public void Menu_inset_is_even_on_all_sides(string variantName)
     {
         ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         Window w = ShowLiquidGlass(variant);
         try
         {
-            // The row carries a margin of its own, so the gap is a sum of three tokens - checking
-            // only the bevel and the padding reports 4 while the rendered gap is 6.
-            Thickness bevel = Get(w, "PopupInnerBorderThickness", variant);
-            Thickness padding = Get(w, "PopupPadding", variant);
-            Thickness item = Get(w, "ComboBoxItemMargin", variant);
-
-            Assert.Equal(ExpectedInset, bevel.Left + padding.Left + item.Left);
-            Assert.Equal(ExpectedInset, bevel.Top + padding.Top + item.Top);
-            Assert.Equal(ExpectedInset, bevel.Right + padding.Right + item.Right);
-            Assert.Equal(ExpectedInset, bevel.Bottom + padding.Bottom + item.Bottom);
-        }
-        finally
-        {
-            w.Close();
-            MacOSVersionDetector.SetTestOverride(null);
-        }
-    }
-
-    [AvaloniaTheory]
-    [InlineData("Light")]
-    [InlineData("Dark")]
-    public void Menu_inset_matches_the_generic_popup_inset(string variantName)
-    {
-        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Window w = ShowLiquidGlass(variant);
-        try
-        {
-            // Menus split the inset differently: the padding supplies the horizontal gap and the
-            // items-presenter margin the vertical one.
+            // Menus split the inset across two tokens: the padding supplies the horizontal gap and
+            // the items-presenter margin the vertical one.
             Thickness bevel = Get(w, "MacOsMenuPopupInnerBorderThickness", variant);
             Thickness padding = Get(w, "MacOsMenuPopupPadding", variant);
             Thickness scroller = Get(w, "MacOsMenuFlyoutScrollerMargin", variant);

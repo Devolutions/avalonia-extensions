@@ -52,7 +52,7 @@ Screenshots are captured at a fixed width (`1200`) with auto-calculated content 
 ### Platform-Specific Baselines
 Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linux`) due to rendering differences. When updating baselines, they only update for your current platform.
 
-> **Note:** We're showing single quotes here, since in interactive `bash`/`zsh` (Linux/Mac), `!` triggers history expansion, so the following term is interpreted as a history variable, unless the filter string is single-quoted (`'...'`) instead of double-quoted. However, on Windows only Powershell supports the single quotes - so you might want to get used to double quotes if you're always on Windows.
+> **Note:** We're showing single quotes here, since in interactive `bash`/`zsh` (Linux/Mac), `!` triggers history expansion, so the following term is interpreted as a history variable, unless the filter string is single-quoted (`'...'`) instead of double-quoted. However, on Windows only PowerShell supports the single quotes - so you might want to get used to double quotes if you're always on Windows.
 
 
 ### Usage

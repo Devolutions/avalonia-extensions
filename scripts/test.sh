@@ -128,7 +128,7 @@ if [[ -n "$preset_filter" ]]; then
 fi
 
 if [[ -n "$preset_project" ]]; then
-  dotnet_args=("$preset_project" "${dotnet_args[@]}")
+  dotnet_args=("$preset_project" "${dotnet_args[@]+"${dotnet_args[@]}"}")
 fi
 
 if [[ "$has_logger_arg" -eq 0 ]]; then
@@ -161,7 +161,7 @@ if [[ "$update_baselines" -eq 1 ]]; then
   dotnet_env=(env UPDATE_BASELINES=true)
 fi
 
-"${dotnet_env[@]}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
+"${dotnet_env[@]+"${dotnet_env[@]}"}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then

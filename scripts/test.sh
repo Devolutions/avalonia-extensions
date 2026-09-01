@@ -170,7 +170,7 @@ print_progress() {
   printf '\033[1GProgress: %*d/%-*s [' "$progress_number_width" "$progress_count" "$progress_number_width" "$progress_total"
   printf '%*s' "$completed" '' | tr ' ' '#'
   printf '%*s' "$remaining" '' | tr ' ' '-'
-  printf '] ok:%3d fail:%3d skip:%3d' "$passed_count" "$failed_count" "$skipped_count"
+  printf '] ok:%4d - fail:%3d - skip:%3d' "$passed_count" "$failed_count" "$skipped_count"
 }
 
 animate_flower() {

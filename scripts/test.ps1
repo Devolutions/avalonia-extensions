@@ -262,11 +262,11 @@ function Write-TestProgress {
     $currentText = $script:progressCount.ToString().PadLeft($script:progressNumberWidth)
     $totalText = $script:progressTotal.PadRight($script:progressNumberWidth)
     $bar = ("#" * $completed) + ("-" * $remaining)
-    $passedText = $script:progressPassed.ToString().PadLeft(3)
+    $passedText = $script:progressPassed.ToString().PadLeft(4)
     $failedText = $script:progressFailed.ToString().PadLeft(3)
     $skippedText = $script:progressSkipped.ToString().PadLeft(3)
 
-    Write-Host -NoNewline ("{0}[1GProgress: {1}/{2} [{3}] ok:{4} fail:{5} skip:{6}" -f $script:escape, $currentText, $totalText, $bar, $passedText, $failedText, $skippedText)
+    Write-Host -NoNewline ("{0}[1GProgress: {1}/{2} [{3}] ok:{4} - fail:{5} - skip:{6}" -f $script:escape, $currentText, $totalText, $bar, $passedText, $failedText, $skippedText)
 }
 
 function Write-FlowerFrame {

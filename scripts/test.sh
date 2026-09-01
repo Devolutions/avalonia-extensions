@@ -137,21 +137,59 @@ fi
 
 summary_file="$(mktemp -t visual-regression-summary.XXXXXX)"
 result_line_file="$(mktemp -t visual-regression-result.XXXXXX)"
-progress_seen_file="$(mktemp -t visual-regression-progress.XXXXXX)"
 fallback_file="$(mktemp -t visual-regression-fallback.XXXXXX)"
 totals_file="$(mktemp -t visual-regression-totals.XXXXXX)"
 raw_output_file="$(mktemp -t visual-regression-output.XXXXXX)"
 functional_failures_file="$(mktemp -t functional-test-failures.XXXXXX)"
+test_list_file="$(mktemp -t test-list.XXXXXX)"
+test_exit_file="$(mktemp -t test-exit-code.XXXXXX)"
 last_progress_test=""
 last_progress_status=""
+progress_count=0
+passed_count=0
+failed_count=0
+skipped_count=0
+total_tests=0
+progress_bar_width=30
+progress_number_width=6
+initialization_done_text='Initializing test run... done!'
+flower_frames=('✻' '✽' '✶' '✳' '✢')
+flower_index=0
+flower_column=$(( ${#initialization_done_text} + 2 ))
+flower_tick=$'\036devtest-flower-tick'
+
+print_progress() {
+  local completed=0
+  local remaining=$progress_bar_width
+
+  if [[ "$total_tests" -gt 0 ]]; then
+    completed=$((progress_count * progress_bar_width / total_tests))
+    remaining=$((progress_bar_width - completed))
+  fi
+
+  printf '\033[1GProgress: %*d/%-*s [' "$progress_number_width" "$progress_count" "$progress_number_width" "$progress_total"
+  printf '%*s' "$completed" '' | tr ' ' '#'
+  printf '%*s' "$remaining" '' | tr ' ' '-'
+  printf '] ok:%3d fail:%3d skip:%3d' "$passed_count" "$failed_count" "$skipped_count"
+}
+
+animate_flower() {
+  flower_index=$(( (flower_index + 1) % ${#flower_frames[@]} ))
+  printf '\033[1A\033[%dG%s\033[1B' "$flower_column" "${flower_frames[$flower_index]}"
+}
+
 cleanup() {
+  if [[ "${cursor_hidden:-0}" -eq 1 ]]; then
+    printf '\033[?25h'
+  fi
   rm -f "$summary_file"
   rm -f "$result_line_file"
-  rm -f "$progress_seen_file"
   rm -f "$fallback_file"
   rm -f "$totals_file"
   rm -f "$raw_output_file"
   rm -f "$functional_failures_file"
+  rm -f "$test_list_file"
+  rm -f "$test_exit_file"
 }
 trap cleanup EXIT
 
@@ -161,7 +199,58 @@ if [[ "$update_baselines" -eq 1 ]]; then
   dotnet_env=(env UPDATE_BASELINES=true)
 fi
 
-"${dotnet_env[@]+"${dotnet_env[@]}"}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file" | while IFS= read -r line; do
+spinner_frames=('⠋' '⠙' '⠸' '⠴' '⠦' '⠇')
+spinner_index=0
+cursor_hidden=1
+printf '\033[?25lInitializing test run... %s\n' "${spinner_frames[$spinner_index]}"
+"${dotnet_env[@]+"${dotnet_env[@]}"}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} --list-tests > "$test_list_file" 2>&1 &
+discovery_pid=$!
+while kill -0 "$discovery_pid" 2>/dev/null; do
+  spinner_index=$(( (spinner_index + 1) % ${#spinner_frames[@]} ))
+  printf '\033[1A\rInitializing test run... %s\033[K\033[1B\r' "${spinner_frames[$spinner_index]}"
+  sleep 0.1
+done
+
+if wait "$discovery_pid"; then
+  total_tests="$(awk '/^    [^[:space:]]/ { count++ } END { print count + 0 }' "$test_list_file")"
+fi
+printf '\033[1A\033[1G\033[2K%s %s\033[1B\033[1G' "$initialization_done_text" "${flower_frames[$flower_index]}"
+
+if [[ "$total_tests" -gt 0 ]]; then
+  progress_total="$total_tests"
+  progress_number_width="${#total_tests}"
+else
+  progress_total='?'
+fi
+progress_count=0
+print_progress
+
+# Timer emits parser events instead of writing to the terminal, keeping cursor updates single-threaded.
+{
+  (
+    "${dotnet_env[@]+"${dotnet_env[@]}"}" dotnet test ${dotnet_args[@]+"${dotnet_args[@]}"} 2>&1 | tee "$raw_output_file"
+    printf '%s\n' "${PIPESTATUS[0]}" > "$test_exit_file"
+  ) &
+  test_pid=$!
+
+  (
+    while kill -0 "$test_pid" 2>/dev/null; do
+      sleep 0.35
+      if kill -0 "$test_pid" 2>/dev/null; then
+        printf '%s\n' "$flower_tick"
+      fi
+    done
+  ) &
+  timer_pid=$!
+
+  wait "$test_pid"
+  wait "$timer_pid"
+} | while IFS= read -r line; do
+  if [[ "$line" == "$flower_tick" ]]; then
+    animate_flower
+    continue
+  fi
+
   normalized="$line"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then
@@ -195,15 +284,13 @@ fi
       continue
     fi
 
-    if [[ ! -s "$progress_seen_file" ]]; then
-      printf 'Progress: '
-      printf '1' > "$progress_seen_file"
-    fi
+    progress_count=$((progress_count + 1))
     case "$status_key" in
-      Passed) printf '✅' ;;
-      Failed) printf '❌' ;;
-      Skipped) printf 's' ;;
+      Passed) passed_count=$((passed_count + 1)) ;;
+      Failed) failed_count=$((failed_count + 1)) ;;
+      Skipped) skipped_count=$((skipped_count + 1)) ;;
     esac
+    print_progress
     last_progress_test="$test_name"
     last_progress_status="$status_key"
 
@@ -303,7 +390,10 @@ fi
   printf '%s\n' "$line" >> "$fallback_file"
 done
 
-dotnet_exit_code=${PIPESTATUS[0]}
+dotnet_exit_code="$(< "$test_exit_file")"
+if [[ -z "$dotnet_exit_code" ]]; then
+  dotnet_exit_code=1
+fi
 
 # Parse the raw output after the run so we can print a readable functional failure list regardless of xUnit formatting details.
 if [[ -s "$raw_output_file" ]]; then
@@ -368,9 +458,7 @@ if [[ -s "$raw_output_file" ]]; then
   ' "$raw_output_file" > "$functional_failures_file"
 fi
 
-if [[ -s "$progress_seen_file" ]]; then
-  printf '\n'
-fi
+printf '\033[1G\n'
 
 if [[ -s "$result_line_file" ]]; then
   result_line_count="$(wc -l < "$result_line_file" | tr -d ' ')"

@@ -223,7 +223,7 @@
               <Border Background="{DynamicResource PopupBackgroundBrush}"
                       BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
                       BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      CornerRadius="{DynamicResource LayoutCornerRadius}"
+                      CornerRadius="{DynamicResource PopupCornerRadius}"
                       Margin="{DynamicResource PopupMargin}"
                       Padding="{DynamicResource PopupPadding}"
                       BoxShadow="{DynamicResource PopupShadow}">

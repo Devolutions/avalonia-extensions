@@ -410,6 +410,20 @@
   <!-- Popup -->
   <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
+  <!--
+    The drop-down list inset, matching the 4pt the menus use so every popup surface reads the same.
+    Three tokens stack up to it, which is why the numbers look arbitrary:
+      PopupInnerBorderThickness  1 1 0 0   top/left-only bevel
+      PopupPadding               1 3 2 4   this key
+      ComboBoxItemMargin         2 0       carried by the row itself
+    left 1+1+2, top 1+3+0, right 0+2+2, bottom 0+4+0 - an even 4 on every side.
+
+    InitialFirstItemDistance must track PopupPadding.Top (see ThemeResources.axaml): it positions a
+    ComboBox popup so the selected row lands over the closed control. ComboBox and MultiComboBox read
+    it through DynamicResource so this override actually reaches them.
+  -->
+  <Thickness x:Key="PopupPadding">1 3 2 4</Thickness>
+  <x:Int32 x:Key="InitialFirstItemDistance">7</x:Int32>
   <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
 
   <!--

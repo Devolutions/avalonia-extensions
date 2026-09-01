@@ -146,12 +146,17 @@
                      HorizontalOffset="-10"
                      WindowManagerAddShadowHint="False"
                      IsLightDismissEnabled="True">
+                <!--
+                  Shares the popup surface with the drop-downs, but not their inner bevel or inset:
+                  it wraps a calendar rather than a list of rows, so it keeps its own
+                  CalendarPopupPadding and has no row margin to compose with.
+                -->
                 <Border BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                        BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                        Background="{DynamicResource SystemRegionBrush}"
-                        CornerRadius="{DynamicResource LayoutCornerRadius}"
+                        BorderBrush="{DynamicResource PopupBorderBrush}"
+                        Background="{DynamicResource PopupBackgroundBrush}"
+                        CornerRadius="{DynamicResource PopupCornerRadius}"
                         Margin="{DynamicResource PopupMargin}"
-                        Padding="{DynamicResource PopupPadding}"
+                        Padding="{DynamicResource CalendarPopupPadding}"
                         BoxShadow="{DynamicResource PopupShadow}">
                   <Calendar Name="PART_Calendar"
                             Focusable="True"

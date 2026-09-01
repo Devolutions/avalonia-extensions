@@ -679,6 +679,14 @@
   <Thickness x:Key="PopupMargin">12 1 12 29</Thickness> <!-- to accommodate shadow -->
   <x:Double x:Key="PopupMarginCompensationOffset">-10</x:Double> <!-- to correct positioning -->
   <Thickness x:Key="PopupPadding">3 5</Thickness>
+  <!--
+    PopupPadding is the drop-down list inset and is composed with PopupInnerBorderThickness and
+    ComboBoxItemMargin (see MacOsPopupInsetTests). These two consumers compose it differently - the
+    calendar has no rows and no bevel, a plain ListBox is not a popup at all - so they carry their
+    own copies and are not dragged along when the list inset is tuned.
+  -->
+  <Thickness x:Key="CalendarPopupPadding">3 5</Thickness>
+  <Thickness x:Key="ListBoxPadding">3 5</Thickness>
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />
   <SolidColorBrush x:Key="PopupInnerBorderHighlightBrush" Color="{DynamicResource PopupBackgroundColor}" />

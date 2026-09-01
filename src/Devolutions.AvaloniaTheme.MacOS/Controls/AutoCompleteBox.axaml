@@ -55,18 +55,22 @@
             </Popup.MinWidth>
             <Border Name="PART_SuggestionsContainer"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                    Background="{DynamicResource PopupBackgroundBrush}"
+                    BorderBrush="{DynamicResource PopupBorderBrush}"
                     CornerRadius="{DynamicResource PopupCornerRadius}"
                     Margin="{DynamicResource PopupMargin}"
-                    Padding="{DynamicResource PopupPadding}"
                     BoxShadow="{DynamicResource PopupShadow}">
-              <ListBox Name="PART_SelectingItemsControl"
-                       Classes="selection_checkmark_off"
-                       BorderThickness="0"
-                       Background="Transparent"
-                       ItemTemplate="{TemplateBinding ItemTemplate}"
-                       Margin="{DynamicResource AutoCompleteListPadding}" />
+              <Border Name="InnerBorderHighlight"
+                      Background="{DynamicResource PopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                      BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                      CornerRadius="{DynamicResource PopupCornerRadius}"
+                      Padding="{DynamicResource PopupPadding}">
+                <ListBox Name="PART_SelectingItemsControl"
+                         Classes="selection_checkmark_off"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         ItemTemplate="{TemplateBinding ItemTemplate}" />
+              </Border>
             </Border>
           </Popup>
         </Panel>

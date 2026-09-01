@@ -46,6 +46,83 @@ public class MacOsPopupInsetTests
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]
+    public void Drop_down_inset_is_even_on_all_sides(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window w = ShowLiquidGlass(variant);
+        try
+        {
+            // ComboBox, EditableComboBox, MultiComboBox and AutoCompleteBox all share this
+            // composition: the popup surface supplies the bevel and padding, the row its margin.
+            Thickness bevel = Get(w, "PopupInnerBorderThickness", variant);
+            Thickness padding = Get(w, "PopupPadding", variant);
+            Thickness row = Get(w, "ComboBoxItemMargin", variant);
+
+            Assert.Equal(ExpectedInset, bevel.Left + padding.Left + row.Left);
+            Assert.Equal(ExpectedInset, bevel.Top + padding.Top + row.Top);
+            Assert.Equal(ExpectedInset, bevel.Right + padding.Right + row.Right);
+            Assert.Equal(ExpectedInset, bevel.Bottom + padding.Bottom + row.Bottom);
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   A ComboBox popup is positioned so the selected row lands over the closed control, and that
+    ///   offset is a constant that has to track the padding above the first row. Nothing recomputes
+    ///   it, so this is the only thing stopping the two drifting apart.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Popup_offset_constant_tracks_the_padding_above_the_first_row(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window w = ShowLiquidGlass(variant);
+        try
+        {
+            Thickness shadow = Get(w, "ComboBoxShadowMargin", variant);
+            Thickness padding = Get(w, "PopupPadding", variant);
+            Assert.True(w.TryFindResource("InitialFirstItemDistance", variant, out object? distance));
+
+            Assert.Equal(shadow.Bottom + padding.Top, System.Convert.ToDouble(distance));
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The calendar popup and a plain ListBox compose the inset differently, so they carry their
+    ///   own padding keys. If either is pointed back at the shared one, tuning the drop-down inset
+    ///   silently distorts them.
+    /// </summary>
+    [AvaloniaFact]
+    public void Calendar_and_list_box_do_not_share_the_drop_down_padding()
+    {
+        Window w = ShowLiquidGlass(ThemeVariant.Dark);
+        try
+        {
+            Assert.True(w.TryFindResource("CalendarPopupPadding", ThemeVariant.Dark, out object? cal));
+            Assert.True(w.TryFindResource("ListBoxPadding", ThemeVariant.Dark, out object? list));
+            Assert.NotEqual(Get(w, "PopupPadding", ThemeVariant.Dark), Assert.IsType<Thickness>(cal));
+            Assert.NotEqual(Get(w, "PopupPadding", ThemeVariant.Dark), Assert.IsType<Thickness>(list));
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
     public void Menu_inset_is_even_on_all_sides(string variantName)
     {
         ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;

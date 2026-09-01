@@ -294,7 +294,7 @@
                 <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex" />
                   <Binding Source="{StaticResource ComboBoxItemHeight}" />
-                  <Binding Source="{StaticResource InitialFirstItemDistance}" />
+                  <DynamicResource ResourceKey="InitialFirstItemDistance" />
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight" />
                   <Binding Source="{StaticResource PopupTrimHeight}" />
                 </MultiBinding>

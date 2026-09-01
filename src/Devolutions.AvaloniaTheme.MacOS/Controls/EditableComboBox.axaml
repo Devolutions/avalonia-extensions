@@ -312,15 +312,19 @@
                 ClipToBounds="False">
                 <Border
                   x:Name="PopupBorder"
-                  Background="{DynamicResource PopupBackgroundBrush}"
-                  BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                  BorderBrush="{DynamicResource PopupBorderBrush}"
                   BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                  Padding="{DynamicResource PopupPadding}"
                   HorizontalAlignment="Stretch"
                   MaxWidth="{TemplateBinding MaxDropDownWidth}"
                   BoxShadow="{DynamicResource PopupShadow}"
                   Margin="{DynamicResource PopupMargin}"
                   CornerRadius="{DynamicResource PopupCornerRadius}">
+                  <Border Name="InnerBorderHighlight"
+                          Background="{DynamicResource PopupBackgroundBrush}"
+                          BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                          BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                          CornerRadius="{DynamicResource PopupCornerRadius}"
+                          Padding="{DynamicResource PopupPadding}">
                   <ScrollViewer
                     Name="PART_DropDownScrollViewer"
                     CornerRadius="{DynamicResource PopupCornerRadius}"
@@ -337,6 +341,7 @@
                       </ItemsPresenter.Styles>
                     </ItemsPresenter>
                   </ScrollViewer>
+                  </Border>
                 </Border>
               </Popup>
             </Grid>

@@ -110,8 +110,15 @@
                         </ItemsPanelTemplate>
                       </ItemsControl.ItemsPanel>
                     </ItemsControl>
+                    <!-- Focusable="False" (as in the DevExpress theme): PART_Button lives inside PART_TextBox
+                         to host the inner-content slots, so if it were a tab stop, tabbing out of the text box
+                         would land on it — re-entering the picker via Tab, which makes
+                         CalendarDatePicker.OnGotFocus bounce focus straight back to PART_TextBox. That traps
+                         Tab in a text box <-> button loop. The text box already represents this control in the
+                         tab order; the button stays fully clickable. -->
                     <Button Name="PART_Button"
                             Theme="{StaticResource DatePickerButton}"
+                            Focusable="False"
                             VerticalAlignment="Center">
                       <Panel>
                         <!-- The icon lives inside PART_TextBox.InnerRightContent, so it is outside the

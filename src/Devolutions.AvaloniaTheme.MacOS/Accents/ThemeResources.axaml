@@ -55,10 +55,6 @@
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.12" />
       <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
       <!--
-        Per variant, not at the dictionary root: a root-level StaticResource cannot see into
-        ThemeDictionaries and would bind the Default (light) brush for dark menus too.
-      -->
-      <!--
         The neutral a popup row takes when it is selected or keyboard-focused but not under the
         pointer - menus and drop-down rows share it so the two read the same. Per variant, not at the
         dictionary root: a root-level StaticResource cannot see into ThemeDictionaries and would bind
@@ -781,6 +777,12 @@
   <Thickness x:Key="MenuItemActiveBackgroundMargin">-6,-2,-7,-2</Thickness>
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
+  <!--
+    Classic menus hover flat here while drop-down rows use the ControlBackgroundAccentRaisedBrush
+    gradient - a long-standing inconsistency, not something LiquidGlass introduced. Unifying them
+    needs the standalone menu pack to pin a gradient literal too (it currently pins a solid), so it
+    is left alone rather than half-done here.
+  -->
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

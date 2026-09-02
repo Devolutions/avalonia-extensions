@@ -147,9 +147,16 @@
                      WindowManagerAddShadowHint="False"
                      IsLightDismissEnabled="True">
                 <!--
-                  Shares the popup surface with the drop-downs, but not their inner bevel or inset:
-                  it wraps a calendar rather than a list of rows, so it keeps its own
-                  CalendarPopupPadding and has no row margin to compose with.
+                  Shares the drop-downs' border and radius, but deliberately not their background,
+                  inner bevel or inset: it wraps a calendar rather than a list of rows, so it keeps
+                  its own CalendarPopupPadding and has no row margin to compose with.
+
+                  The background stays SystemRegionBrush. Sharing the popup surface was tried and
+                  does not work here: Calendar paints its own background, so the surface showed only
+                  through CalendarPopupPadding and read as a frame around the calendar; making the
+                  Calendar transparent instead exposed a per-element background behind every day
+                  cell. Keeping its own background is both simpler and correct - this popup is a
+                  panel of controls, not a list of rows on a surface.
 
                   The background is the one token on this surface that does not resolve identically
                   under the classic theme - SystemRegionBrush was White / #21222f there against
@@ -159,7 +166,7 @@
                 -->
                 <Border BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
                         BorderBrush="{DynamicResource PopupBorderBrush}"
-                        Background="{DynamicResource PopupBackgroundBrush}"
+                        Background="{DynamicResource SystemRegionBrush}"
                         CornerRadius="{DynamicResource PopupCornerRadius}"
                         Margin="{DynamicResource PopupMargin}"
                         Padding="{DynamicResource CalendarPopupPadding}"

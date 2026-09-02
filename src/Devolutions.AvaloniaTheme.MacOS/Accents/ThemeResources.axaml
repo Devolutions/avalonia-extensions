@@ -107,7 +107,7 @@
       <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
       <StaticResource x:Key="RadioButtonDisabledTextBrush" ResourceKey="CheckBoxDisabledTextBrush" />
       <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
 
       <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.10" />
       <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.20" />

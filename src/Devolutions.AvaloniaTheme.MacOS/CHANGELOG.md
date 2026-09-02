@@ -9,6 +9,9 @@ Please see commits if you're curious. However we will do our best to call out ke
   buttons, checkbox/radio fills and borders, the ComboBox button, drop-down row hover, the
   DropDownButton, ListBoxItem selection and the Expander chevron were pinned to Avalonia's fallback
   accent (`#0078d7`) instead of the platform accent.
+- Fixed: in the classic light variant, a pressed checked `RadioButton` kept its unpressed fill. The
+  light dictionary spelled the key `RadioButtonPressedCheckedBackgroundBrush` while the control and
+  the dark dictionary both use `RadioButtonCheckedPressedBackgroundBrush`, so nothing resolved.
 - Changed: in the classic variant, menu hover now uses the accent gradient
   (`ControlBackgroundAccentRaisedBrush`), the same brush as drop-down rows. It was a flat accent at
   0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The

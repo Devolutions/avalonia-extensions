@@ -222,6 +222,12 @@ public class MacOsClassicAccentTests
         try
         {
             Assert.Equal(Accent, ColorOf(w, "CheckBoxCheckedPressedBackgroundBrush", variant));
+
+            // The radio button takes the same fill. The light dictionary used to spell this key
+            // "RadioButtonPressedCheckedBackgroundBrush" while every consumer says
+            // "CheckedPressed", so in light it resolved nothing at all and the pressed-checked
+            // radio kept its unpressed fill.
+            Assert.Equal(Accent, ColorOf(w, "RadioButtonCheckedPressedBackgroundBrush", variant));
         }
         finally
         {

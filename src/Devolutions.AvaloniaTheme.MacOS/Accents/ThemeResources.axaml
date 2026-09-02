@@ -779,9 +779,29 @@
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <!--
     Classic menus hover flat here while drop-down rows use the ControlBackgroundAccentRaisedBrush
-    gradient - a long-standing inconsistency, not something LiquidGlass introduced. Unifying them
-    needs the standalone menu pack to pin a gradient literal too (it currently pins a solid), so it
-    is left alone rather than half-done here.
+    gradient - a long-standing inconsistency, not something LiquidGlass introduced.
+
+    They also differ in a way that is not stylistic: this brush follows the system accent and the
+    gradient does not. Verified by forcing the accent to red - menus went red, the gradient stayed
+    on #269fff -> #0078d7, Avalonia's fallback accent.
+
+    The gradient's stops read AccentButtonTopColor/BottomColor, which are declared as
+    <StaticResource ResourceKey="SystemAccentColorLight1" /> aliases. A StaticResource alias resolves
+    once at load, so it captures the fallback accent before the platform value arrives and can never
+    update - the same scope-and-timing trap as the variant bugs elsewhere in this theme, but freezing
+    a live platform value rather than a variant.
+
+    Observed to affect the LIGHT variant only; dark follows a changed accent correctly. Both variants
+    declare the stops the same way, so the reason for the difference is not yet established - the
+    light stops go through SystemAccentColorLight1 while dark's top stop is SystemAccentColor
+    itself, which may be why one survives and the other does not. Worth confirming before fixing.
+
+    Fixing it properly means declaring ControlBackgroundAccentRaisedBrush per variant with stops
+    bound through DynamicResource, since the light and dark variants use different stops and a
+    root-level brush cannot vary by theme. That reaches every accent-raised surface in the classic
+    theme, not just these rows, so it wants its own change. Unifying the two hover styles would
+    additionally need the standalone menu pack to pin a gradient literal (it pins a solid), and the
+    pack parity check compares gradients only by type, so it would not really verify them.
   -->
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />

@@ -33,6 +33,33 @@ For detailed instructions on working with this repository as an AI assistant, pl
 - Custom commands (`/worksetup`, `/commit`, `/explain`, `/simplify`)
 - SampleApp + visual regression test workflow (see [`README.md`](README.md) Testing section)
 
+## ⚠️ Two things agents get wrong
+
+**1. Sign your GitHub comments.** The `gh` CLI authenticates as the developer running it, so anything you post
+(PR descriptions, comments, review replies) looks like the human wrote it. End agent-authored GitHub content with a
+footer, stating the current agent/tool, and resolving the username dynamically with `gh api user --jq .login` (never hardcode it — this file is
+shared across the team):
+
+```markdown
+_Posted by <agent/tool name> (agent), on behalf of @<login>._
+```
+
+
+**2. This repo has NO git tags.** `git tag --contains <commit>` returns nothing for *every* commit, so it will
+falsely tell you a change was never released. Releases are date-based NuGet packages published via a manual
+workflow, **published per-package** (versions differ between them). To check if something shipped, compare the
+commit date to the latest published version of the relevant package:
+
+```bash
+curl -s "https://api.nuget.org/v3-flatcontainer/devolutions.avaloniatheme.macos/index.json" \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['versions'][-1])"
+```
+
+Also: CHANGELOGs are only updated for substantial/breaking changes, not routine fixes. And PRs get no
+automated CI checks (the workflow is `workflow_dispatch`-only), so missing checks are expected.
+
+See [`.claude/CLAUDE.md`](.claude/CLAUDE.md) — "GitHub Identity for Agents" and "Releases & Versioning".
+
 ## Quick Reference
 
 For human developers, see the main [`README.md`](README.md) for getting started.

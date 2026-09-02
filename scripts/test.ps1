@@ -244,6 +244,7 @@ $progressBarWidth = 30
 $progressNumberWidth = 6
 $progressTotal = "?"
 $discoveredTestCount = 0
+$expectedProjectCount = 0
 $initializationDoneText = "Initializing test run... done!"
 $flowerFrames = @("✻", "✽", "✶", "✳", "✢")
 $flowerIndex = 0
@@ -299,6 +300,7 @@ while (-not $discoveryProcess.WaitForExit(100)) {
 $discoveryProcess.WaitForExit()
 $discoveryOutput = $discoveryOutputTask.GetAwaiter().GetResult() + "`n" + $discoveryErrorTask.GetAwaiter().GetResult()
 $discoveredTestCount = [regex]::Matches($discoveryOutput, '(?m)^    \S').Count
+$expectedProjectCount = [regex]::Matches($discoveryOutput, '(?m)^\s*Test run for ').Count
 Write-Host -NoNewline ("{0}[1A{0}[1G{0}[2K{1} {2}{0}[1B{0}[1G" -f $escape, $initializationDoneText, $flowerFrames[$flowerIndex])
 
 if ($discoveredTestCount -gt 0) {
@@ -544,7 +546,14 @@ if ($progressSeen) {
     Write-Host ""
 }
 
-if ($resultLines.Count -eq 1) {
+$reportedProjectCount = [Math]::Max($resultLines.Count, $projectTotals.Count)
+$partialRun = $dotnetExitCode -ne 0 -and ($expectedProjectCount -eq 0 -or $reportedProjectCount -lt $expectedProjectCount)
+
+if ($partialRun) {
+    $fallbackLines | ForEach-Object { Write-Host $_ }
+    Write-Host "Failed! - dotnet test exited with code $dotnetExitCode before all project summaries were produced."
+}
+elseif ($resultLines.Count -eq 1) {
     Write-Host $resultLines[0]
 }
 elseif ($resultLines.Count -gt 1) {

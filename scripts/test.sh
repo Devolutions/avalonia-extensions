@@ -214,6 +214,7 @@ done
 if wait "$discovery_pid"; then
   total_tests="$(awk '/^    [^[:space:]]/ { count++ } END { print count + 0 }' "$test_list_file")"
 fi
+expected_project_count="$(awk '/^[[:space:]]*Test run for / { count++ } END { print count + 0 }' "$test_list_file")"
 printf '\033[1A\033[1G\033[2K%s %s\033[1B\033[1G' "$initialization_done_text" "${flower_frames[$flower_index]}"
 
 if [[ "$total_tests" -gt 0 ]]; then
@@ -324,7 +325,7 @@ print_progress
 
   if [[ "$normalized" =~ ^Test\ run\ for\ (.+)\ \((.+)\)$ ]]; then
     test_run_target="${BASH_REMATCH[1]} ${BASH_REMATCH[2]}"
-    printf 'target=%s\n' "$test_run_target" > "$totals_file"
+    printf 'target=%s\n' "$test_run_target" >> "$totals_file"
     continue
   fi
 
@@ -460,7 +461,24 @@ fi
 
 printf '\033[1G\n'
 
-if [[ -s "$result_line_file" ]]; then
+partial_run=0
+result_project_count="$(wc -l < "$result_line_file" | tr -d ' ')"
+legacy_project_count="$(grep -c '^record$' "$totals_file" || true)"
+reported_project_count="$result_project_count"
+if [[ "$legacy_project_count" -gt "$reported_project_count" ]]; then
+  reported_project_count="$legacy_project_count"
+fi
+if [[ "$dotnet_exit_code" -ne 0 ]] &&
+   { [[ "$expected_project_count" -eq 0 ]] || [[ "$reported_project_count" -lt "$expected_project_count" ]]; }; then
+  partial_run=1
+fi
+
+if [[ "$partial_run" -eq 1 ]]; then
+  if [[ -s "$fallback_file" ]]; then
+    cat "$fallback_file"
+  fi
+  printf 'Failed! - dotnet test exited with code %s before all project summaries were produced.\n' "$dotnet_exit_code"
+elif [[ -s "$result_line_file" ]]; then
   result_line_count="$(wc -l < "$result_line_file" | tr -d ' ')"
   if [[ "$result_line_count" -eq 1 ]]; then
     cat "$result_line_file"

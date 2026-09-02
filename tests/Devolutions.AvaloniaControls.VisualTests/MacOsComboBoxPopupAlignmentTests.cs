@@ -1,0 +1,249 @@
+namespace Devolutions.AvaloniaControls.VisualTests;
+
+using System;
+using System.Linq;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Headless.XUnit;
+using Avalonia.Styling;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
+using Devolutions.AvaloniaTheme.MacOS;
+using Devolutions.AvaloniaTheme.MacOS.Internal;
+using Xunit;
+
+/// <summary>
+///   Checks the outcome the macOS drop-down is actually trying to achieve: the selected row lands
+///   on the closed ComboBox, so the visible text does not jump when the list opens.
+/// </summary>
+/// <remarks>
+///   <para>
+///     <see cref="MacOsPopupOffsetTests" /> pins the arithmetic estimate the template's
+///     <c>VerticalOffset</c> binding produces. That estimate is only correct while the entire list
+///     fits in the popup; once the list scrolls, the ComboBox scrolls the selected row into view and
+///     the row is no longer at <c>SelectedIndex * ItemHeight</c>.
+///   </para>
+///   <para>
+///     These tests therefore assert the observable result rather than the intermediate offset, which
+///     is what lets the correction pass use whichever lever - popup offset or scroll position - is
+///     still available.
+///   </para>
+/// </remarks>
+[Collection("VisualTests")]
+public class MacOsComboBoxPopupAlignmentTests
+{
+    /// <summary>Rounding across two coordinate spaces; a fraction of a row is invisible.</summary>
+    private const double Tolerance = 2.0;
+
+    private static Window ShowLiquidGlass(ThemeVariant variant)
+    {
+        MacOSVersionDetector.SetTestOverride(true);
+        var theme = new DevolutionsMacOsTheme();
+        theme.BeginInit();
+        theme.EndInit();
+        // Tall enough that a scrolling drop-down is not additionally clamped by the window.
+        var window = new Window { RequestedThemeVariant = variant, Width = 400, Height = 700 };
+        window.Styles.Add(theme);
+        return window;
+    }
+
+    /// <summary>
+    ///   Vertical distance between the centre of the closed ComboBox and the centre of the
+    ///   selected row, in screen space. Zero means "the text did not move".
+    /// </summary>
+    private static double SelectedRowOffsetFromComboBox(ComboBox combo)
+    {
+        Control container = Assert.IsAssignableFrom<Control>(combo.ContainerFromIndex(combo.SelectedIndex));
+        Assert.True(container.IsAttachedToVisualTree(), "The selected row should be realized when the popup is open.");
+
+        double comboCentre = combo.PointToScreen(new Point(0, combo.Bounds.Height / 2)).Y;
+        double rowCentre = container.PointToScreen(new Point(0, container.Bounds.Height / 2)).Y;
+        return rowCentre - comboCentre;
+    }
+
+    private static ComboBox OpenComboBox(Window window, int itemCount, int selectedIndex, double maxDropDownHeight)
+    {
+        var combo = new ComboBox
+        {
+            ItemsSource = Enumerable.Range(1, itemCount).Select(i => $"Item {i}").ToList(),
+            SelectedIndex = selectedIndex,
+            MaxDropDownHeight = maxDropDownHeight,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        };
+        window.Content = combo;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        combo.IsDropDownOpen = true;
+        Dispatcher.UIThread.RunJobs();
+        return combo;
+    }
+
+    /// <summary>The case that already worked: the whole list fits, no scrolling involved.</summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Selected_row_sits_on_the_combo_box_when_the_list_fits(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window window = ShowLiquidGlass(variant);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 6, selectedIndex: 3, maxDropDownHeight: 400);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The regression this work targets. With a selection in the middle of a long, scrolling list
+    ///   the popup cannot be shifted far enough on its own, so the list has to be scrolled to make
+    ///   up the difference.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Selected_row_sits_on_the_combo_box_when_the_list_scrolls(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window window = ShowLiquidGlass(variant);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: 120, maxDropDownHeight: 200);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The ends of a long list are the case where the popup has to do the work: the list is
+    ///   already scrolled as far as it goes, so the alignment can only come from moving the popup.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(0)]
+    [InlineData(199)]
+    public void Selected_row_sits_on_the_combo_box_at_the_ends_of_a_long_list(int selectedIndex)
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: selectedIndex, maxDropDownHeight: 200);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   Guards the mechanism rather than the outcome: for a mid-list selection the alignment must
+    ///   come from scrolling, since the popup alone cannot reach that far into the list. Without
+    ///   that second lever the first item would be showing instead.
+    /// </summary>
+    [AvaloniaFact]
+    public void Long_list_is_scrolled_to_bring_the_selection_into_view()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: 120, maxDropDownHeight: 200);
+
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            ScrollViewer scroller = popup.Child!.GetVisualDescendants().OfType<ScrollViewer>().First();
+
+            Assert.True(scroller.Offset.Y > 0, "A mid-list selection should have scrolled the drop-down.");
+            Assert.True(
+                scroller.Offset.Y < scroller.Extent.Height - scroller.Viewport.Height,
+                "A mid-list selection should not have run the drop-down to the end of the list.");
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   Re-opening must align as well as the first open did. Corrections used to accumulate on top
+    ///   of the offset the template's binding produced, so the second open of a far-down selection
+    ///   started from an already-corrected offset and landed a row or more out.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(998)]
+    [InlineData(120)]
+    [InlineData(0)]
+    public void Selected_row_still_sits_on_the_combo_box_after_reopening(int selectedIndex)
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: selectedIndex, maxDropDownHeight: 200);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+
+            for (int reopen = 0; reopen < 3; reopen++)
+            {
+                combo.IsDropDownOpen = false;
+                Dispatcher.UIThread.RunJobs();
+
+                combo.IsDropDownOpen = true;
+                Dispatcher.UIThread.RunJobs();
+
+                Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+            }
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   Closing must hand the offset back to the template's binding. A leftover correction is what
+    ///   let a later open place the drop-down far away from its ComboBox.
+    /// </summary>
+    [AvaloniaFact]
+    public void Closing_the_drop_down_restores_the_offset_the_binding_produced()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 800, maxDropDownHeight: 200);
+
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            combo.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+
+            double afterFirstClose = popup.VerticalOffset;
+
+            for (int reopen = 0; reopen < 3; reopen++)
+            {
+                combo.IsDropDownOpen = true;
+                Dispatcher.UIThread.RunJobs();
+                combo.IsDropDownOpen = false;
+                Dispatcher.UIThread.RunJobs();
+
+                // Every open/close cycle must land back on the same estimate rather than drifting by
+                // the correction that cycle applied.
+                Assert.Equal(afterFirstClose, popup.VerticalOffset, 3);
+            }
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+}

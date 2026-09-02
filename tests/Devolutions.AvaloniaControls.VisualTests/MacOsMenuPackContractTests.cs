@@ -340,7 +340,7 @@ public class MacOsMenuPackContractTests
     }
 
     [AvaloniaTheory]
-    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(true, "#FFF8F9F9", 1.0)]
     [InlineData(false, "#FFE7E7E7", 1.0)]
     public void Full_theme_menu_background_follows_active_macos_variant(
         bool liquidGlass,
@@ -452,7 +452,7 @@ public class MacOsMenuPackContractTests
     };
 
     [AvaloniaTheory]
-    [InlineData(true, "#FFF8F9F9", 0.93)]
+    [InlineData(true, "#FFF8F9F9", 1.0)]
     [InlineData(false, "#FFE7E7E7", 1.0)]
     public void Pack_menu_background_follows_active_macos_variant(
         bool liquidGlass,
@@ -587,14 +587,25 @@ public class MacOsMenuPackContractTests
         ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         MacOSVersionDetector.SetTestOverride(liquidGlass);
 
+        var fullWindow = new Window { RequestedThemeVariant = variant };
+
+        // The pack cannot run the accent through OklchAdjustmentConverter, so its accent-derived
+        // tokens are pinned literals - and they are pinned to what macOS's default accent produces,
+        // which is what ships. Headless otherwise supplies Avalonia's fallback accent (#0078d7), so
+        // without this the parity check would compare against a colour no user ever sees and would
+        // demand pins that are wrong on a real Mac.
+        fullWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
+
         var fullTheme = new DevolutionsMacOsTheme();
         fullTheme.BeginInit();
         fullTheme.EndInit();
-        var fullWindow = new Window { RequestedThemeVariant = variant };
         fullWindow.Styles.Add(fullTheme);
 
         var packPage = new UserControl();
         var packWindow = new Window { Content = packPage, RequestedThemeVariant = variant };
+        // The classic pack pins follow SystemAccentColor rather than being literals, so both sides
+        // of the comparison have to sit on the same accent.
+        packWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
         packWindow.Styles.Add(new AvaloniaFluentTheme());
         packPage.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
 

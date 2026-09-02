@@ -6,6 +6,10 @@
   full theme without pulling in the MacOS theme dictionaries (which would restyle
   non-menu controls in the consuming app).
 
+  The menu surface is deliberately opaque: Avalonia can only blur a popup's backdrop through the
+  window compositor, and that blur cannot be shaped to the menu's rounded corners, so translucent
+  menus show sharp content straight through. These values are sampled from native macOS menus.
+
   Only keys that actually differ from the classic values are listed. Values are pinned
   literals mirroring Accents/ThemeResources_LiquidGlass.axaml; MacOsMenuPackContractTests
   asserts pack/full-theme parity so the two cannot drift apart.
@@ -18,26 +22,44 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" Opacity="0.93" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" />
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#000000" Opacity="0.2" />
+      <!--
+        Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
+        OklchAdjustmentConverter, which the pack cannot reuse without importing the theme
+        dictionaries. Per variant because the two adjustments differ.
+
+        The values are the converter's output for macOS's default accent (#007aff), so a stock Mac
+        renders the pack and the full theme identically. MacOsMenuPackContractTests pins
+        SystemAccentColor to that same accent, so the parity check measures what ships rather than
+        the headless fallback accent. With a custom macOS accent the pack's tint stays at default.
+      -->
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005df1" Opacity="0.64" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#d7d9d9" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#171717" Opacity="0.89" />
-      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#171717" Opacity="0.89" />
+      <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#22272a" />
+      <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#22272a" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#2960ff" Opacity="0.69" />
+      <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#3d4243" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
+
   <!--
-    Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
-    OklchAdjustmentConverter here, which the pack cannot reuse without importing the theme
-    dictionaries. The value matches the default accent; with a custom macOS accent colour the
-    LiquidGlass hover tint stays at the default (the classic value above does follow the accent).
+    Selection inset and radius, mirroring Accents/ThemeResources_LiquidGlass.axaml. The 4pt inset is
+    measured from a native macOS 26 menu; the 7pt radius is a judgement call that reads better than
+    the ~6pt a native menu measures, against our 12pt menu corner. The padding and scroller margin
+    are asymmetric on purpose - they absorb the top/left-only bevel from
+    MacOsMenuPopupInnerBorderThickness so the visible gap comes out even at 4pt.
   -->
-  <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005eca" Opacity="0.64" />
+  <Thickness x:Key="MacOsMenuPopupPadding">3 0 4 0</Thickness>
+  <Thickness x:Key="MacOsMenuFlyoutScrollerMargin">0 3 0 4</Thickness>
+  <CornerRadius x:Key="MacOsMenuSelectionCornerRadius">7</CornerRadius>
 
   <Thickness x:Key="MacOsMenuPopupMargin">12 4 12 29</Thickness>
   <Thickness x:Key="MacOsMenuItemPadding">9 4 7 4</Thickness>

@@ -215,18 +215,22 @@
                 <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex" />
                   <Binding Source="{StaticResource ComboBoxItemHeight}" />
-                  <Binding Source="{StaticResource InitialFirstItemDistance}" />
+                  <DynamicResource ResourceKey="InitialFirstItemDistance" />
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight" />
-                  <Binding Source="{StaticResource PopupTrimHeight}" />
+                  <DynamicResource ResourceKey="PopupTrimHeight" />
                 </MultiBinding>
               </Popup.VerticalOffset>
-              <Border Background="{DynamicResource PopupBackgroundBrush}"
-                      BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+              <Border BorderBrush="{DynamicResource PopupBorderBrush}"
                       BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                      CornerRadius="{DynamicResource LayoutCornerRadius}"
+                      CornerRadius="{DynamicResource PopupCornerRadius}"
                       Margin="{DynamicResource PopupMargin}"
-                      Padding="{DynamicResource PopupPadding}"
                       BoxShadow="{DynamicResource PopupShadow}">
+                <Border Name="InnerBorderHighlight"
+                        Background="{DynamicResource PopupBackgroundBrush}"
+                        BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                        BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                        CornerRadius="{DynamicResource PopupCornerRadius}"
+                        Padding="{DynamicResource PopupPadding}">
                 <DockPanel LastChildFill="True">
                   <TextBox
                     Name="PART_FilterTextBox"
@@ -271,6 +275,7 @@
                       Foreground="{DynamicResource TextControlPlaceholderForeground}" />
                   </Panel>
                 </DockPanel>
+                </Border>
               </Border>
             </Popup>
             <!-- In-template focus ring (see TextBox.axaml). Lives in the normal visual tree so it is

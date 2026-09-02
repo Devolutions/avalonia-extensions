@@ -54,6 +54,13 @@
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.12" />
       <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.07" />
+      <!--
+        The neutral a popup row takes when it is selected or keyboard-focused but not under the
+        pointer - menus and drop-down rows share it so the two read the same. Per variant, not at the
+        dictionary root: a root-level StaticResource cannot see into ThemeDictionaries and would bind
+        the Default (light) brush for dark popups too.
+      -->
+      <StaticResource x:Key="PopupRowSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
       <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
 
       <SolidColorBrush x:Key="LayoutBorderHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
@@ -289,6 +296,7 @@
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />
       <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.17" />
+      <StaticResource x:Key="PopupRowSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
       <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
 
       <SolidColorBrush x:Key="LayoutBorderHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
@@ -674,11 +682,25 @@
   <!-- TODO: Use Bindings to named item properties & AddBinding to encode these dependencies more securely -->
   <!-- InitialFirstItemDistance must match ComboBoxShadowMargin.bottom + PopupPadding.top -->
   <x:Int32 x:Key="InitialFirstItemDistance">9</x:Int32>
-  <x:Int32 x:Key="PopupTrimHeight">30</x:Int32> <!-- includes Margin, Padding, Shadow -->
+  <!--
+    Subtracted from a ComboBox's MaxDropDownHeight to get the usable list height, because
+    MaxDropDownHeight is applied to the Popup itself and so covers the chrome as well. In practice
+    that chrome is PopupMargin's vertical total - the allowance the shadow is drawn into - which is
+    why this is 30 against a "12 1 12 29" margin. Keep the two in step; MacOsPopupInsetTests checks it.
+  -->
+  <x:Int32 x:Key="PopupTrimHeight">30</x:Int32>
   <x:Int32 x:Key="PopupSideMarginWidth">12</x:Int32> <!-- must match PopupMargin l/r values -->
   <Thickness x:Key="PopupMargin">12 1 12 29</Thickness> <!-- to accommodate shadow -->
   <x:Double x:Key="PopupMarginCompensationOffset">-10</x:Double> <!-- to correct positioning -->
   <Thickness x:Key="PopupPadding">3 5</Thickness>
+  <!--
+    PopupPadding is the drop-down list inset and is composed with PopupInnerBorderThickness and
+    ComboBoxItemMargin (see MacOsPopupInsetTests). These two consumers compose it differently - the
+    calendar has no rows and no bevel, a plain ListBox is not a popup at all - so they carry their
+    own copies and are not dragged along when the list inset is tuned.
+  -->
+  <Thickness x:Key="CalendarPopupPadding">3 5</Thickness>
+  <Thickness x:Key="ListBoxPadding">3 5</Thickness>
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
   <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />
   <SolidColorBrush x:Key="PopupInnerBorderHighlightBrush" Color="{DynamicResource PopupBackgroundColor}" />
@@ -755,6 +777,32 @@
   <Thickness x:Key="MenuItemActiveBackgroundMargin">-6,-2,-7,-2</Thickness>
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
+  <!--
+    Classic menus hover flat here while drop-down rows use the ControlBackgroundAccentRaisedBrush
+    gradient - a long-standing inconsistency, not something LiquidGlass introduced.
+
+    They also differ in a way that is not stylistic: this brush follows the system accent and the
+    gradient does not. Verified by forcing the accent to red - menus went red, the gradient stayed
+    on #269fff -> #0078d7, Avalonia's fallback accent.
+
+    The gradient's stops read AccentButtonTopColor/BottomColor, which are declared as
+    <StaticResource ResourceKey="SystemAccentColorLight1" /> aliases. A StaticResource alias resolves
+    once at load, so it captures the fallback accent before the platform value arrives and can never
+    update - the same scope-and-timing trap as the variant bugs elsewhere in this theme, but freezing
+    a live platform value rather than a variant.
+
+    Observed to affect the LIGHT variant only; dark follows a changed accent correctly. Both variants
+    declare the stops the same way, so the reason for the difference is not yet established - the
+    light stops go through SystemAccentColorLight1 while dark's top stop is SystemAccentColor
+    itself, which may be why one survives and the other does not. Worth confirming before fixing.
+
+    Fixing it properly means declaring ControlBackgroundAccentRaisedBrush per variant with stops
+    bound through DynamicResource, since the light and dark variants use different stops and a
+    root-level brush cannot vary by theme. That reaches every accent-raised surface in the classic
+    theme, not just these rows, so it wants its own change. Unifying the two hover styles would
+    additionally need the standalone menu pack to pin a gradient literal (it pins a solid), and the
+    pack parity check compares gradients only by type, so it would not really verify them.
+  -->
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

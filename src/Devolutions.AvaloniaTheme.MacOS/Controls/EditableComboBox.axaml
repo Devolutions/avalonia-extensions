@@ -89,7 +89,7 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="IsHitTestVisible" Value="True" />
     <Setter Property="Margin" Value="{DynamicResource ComboBoxItemMargin}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
     <Setter Property="Padding" Value="{DynamicResource ComboBoxItemPadding}" />
     <Setter Property="ContentTemplate">
       <DataTemplate>
@@ -130,7 +130,7 @@
       </ControlTemplate>
     </Setter>
     <Style Selector="^ /template/ Border#PART_Background">
-      <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
     </Style>
 
     <Style Selector="^[IsCommittedSelected=True]">
@@ -141,13 +141,13 @@
 
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^[IsSelected=True]">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
       </Style>
     </Style>
 
@@ -312,18 +312,22 @@
                 ClipToBounds="False">
                 <Border
                   x:Name="PopupBorder"
-                  Background="{DynamicResource PopupBackgroundBrush}"
-                  BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                  BorderBrush="{DynamicResource PopupBorderBrush}"
                   BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                  Padding="{DynamicResource PopupPadding}"
                   HorizontalAlignment="Stretch"
                   MaxWidth="{TemplateBinding MaxDropDownWidth}"
                   BoxShadow="{DynamicResource PopupShadow}"
                   Margin="{DynamicResource PopupMargin}"
-                  CornerRadius="{DynamicResource LayoutCornerRadius}">
+                  CornerRadius="{DynamicResource PopupCornerRadius}">
+                  <Border Name="InnerBorderHighlight"
+                          Background="{DynamicResource PopupBackgroundBrush}"
+                          BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                          BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                          CornerRadius="{DynamicResource PopupCornerRadius}"
+                          Padding="{DynamicResource PopupPadding}">
                   <ScrollViewer
                     Name="PART_DropDownScrollViewer"
-                    CornerRadius="{DynamicResource LayoutCornerRadius}"
+                    CornerRadius="{DynamicResource PopupCornerRadius}"
                     HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                     IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
@@ -337,6 +341,7 @@
                       </ItemsPresenter.Styles>
                     </ItemsPresenter>
                   </ScrollViewer>
+                  </Border>
                 </Border>
               </Popup>
             </Grid>

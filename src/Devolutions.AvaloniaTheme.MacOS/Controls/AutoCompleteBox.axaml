@@ -55,18 +55,56 @@
             </Popup.MinWidth>
             <Border Name="PART_SuggestionsContainer"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThickness}"
-                    BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
-                    Background="{DynamicResource PopupBackgroundBrush}"
-                    CornerRadius="{DynamicResource LayoutCornerRadius}"
+                    BorderBrush="{DynamicResource PopupBorderBrush}"
+                    CornerRadius="{DynamicResource PopupCornerRadius}"
                     Margin="{DynamicResource PopupMargin}"
-                    Padding="{DynamicResource PopupPadding}"
                     BoxShadow="{DynamicResource PopupShadow}">
-              <ListBox Name="PART_SelectingItemsControl"
-                       Classes="selection_checkmark_off"
-                       BorderThickness="0"
-                       Background="Transparent"
-                       ItemTemplate="{TemplateBinding ItemTemplate}"
-                       Margin="{DynamicResource AutoCompleteListPadding}" />
+              <Border Name="InnerBorderHighlight"
+                      Background="{DynamicResource PopupBackgroundBrush}"
+                      BorderBrush="{DynamicResource PopupInnerBorderHighlightBrush}"
+                      BorderThickness="{DynamicResource PopupInnerBorderThickness}"
+                      CornerRadius="{DynamicResource PopupCornerRadius}"
+                      Padding="{DynamicResource PopupPadding}">
+                <ListBox Name="PART_SelectingItemsControl"
+                         Classes="selection_checkmark_off"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         Padding="0"
+                         ItemTemplate="{TemplateBinding ItemTemplate}">
+                  <!--
+                    Rows here are ListBoxItems, shared with plain (non-popup) ListBoxes, so they
+                    carry the raised-accent hover and the generic control radius. Inside a drop-down
+                    they need to read like every other drop-down row. Padding is zeroed because the
+                    popup surface already supplies the inset - the ListBox's own would double it.
+                  -->
+                  <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                      <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
+                    </Style>
+
+                    <!--
+                      A ListBoxItem shows selection as a checkmark and keyboard focus as a ring.
+                      Neither survives here: selection_checkmark_off hides the checkmark, and the
+                      other drop-downs indicate both with the neutral fill instead. Without these a
+                      selected or keyboard-focused suggestion shows nothing at all.
+                    -->
+                    <Style Selector="ListBoxItem:selected /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
+                    </Style>
+                    <Style Selector="ListBoxItem:focus-visible /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
+                    </Style>
+                    <Style Selector="ListBoxItem:focus-visible /template/ Border#FocusRing">
+                      <Setter Property="IsVisible" Value="False" />
+                    </Style>
+
+                    <!-- Last, so the pointer's accent still wins over the neutral. -->
+                    <Style Selector="ListBoxItem:pointerover /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
+                    </Style>
+                  </ListBox.Styles>
+                </ListBox>
+              </Border>
             </Border>
           </Popup>
         </Panel>

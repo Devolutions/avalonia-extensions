@@ -21,7 +21,13 @@
   <OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
   <OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
-  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="0.04" ChromaAdjustment="-0.02" HueAdjustment="-4.4" />
+  <!--
+    Fitted so the macOS default accent (#007aff) lands the menu/ComboBox selection on #274fbe, the
+    colour AppKit uses for a selected dark menu row. Applied as a relative Oklch delta, so a custom
+    system accent shifts with it. The previous values moved lightness and chroma the other way, which
+    read as a washed-out cyan next to Finder's.
+  -->
+  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="-0.0422" ChromaAdjustment="0.0238" HueAdjustment="7.12" />
 
   <!-- MARK: Brushes -->
 
@@ -144,7 +150,15 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT07" Color="#ececec" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#f8f9f9" Opacity="0.93" />
+      <!--
+        Opaque, even though LiquidGlass is translucent elsewhere. Avalonia can only blur a popup's
+        backdrop through the window compositor, and that blur cannot be shaped to the popup's
+        rounded corners - so a translucent popup shows sharp, legible content straight through it
+        instead of the frosted surface AppKit produces. This colour is sampled from a native macOS
+        menu sitting over a typical window background, so popups land where AppKit's do without
+        needing the blur. Renamed from TranslucentSurface, which no longer describes it.
+      -->
+      <SolidColorBrush x:Key="PopupSurface" Color="#f8f9f9" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash" x:DataType="SolidColorBrush"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
@@ -160,7 +174,7 @@
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
-      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="PopupSurface" />
       <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="Highlight" />
 
       <!-- Control-specific resources -->
@@ -209,6 +223,19 @@
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT20" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+
+      <!--
+        Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
+        into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
+        menus end up wearing the light accent at the light opacity.
+
+        Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
+        neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one
+        under the pointer - see MenuResourceAliasBuilder.
+      -->
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+      <!-- Sampled from a native menu whose submenu is open with the pointer elsewhere. -->
+      <SolidColorBrush x:Key="PopupRowSelectedBackgroundBrush" Color="#d7d9d9" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -226,7 +253,12 @@
       <!-- OpaqueSurfaceTxx colours are used to fake the look of SurfaceTxx on standard backgrounds when true transparency doesn't work -->
       <SolidColorBrush x:Key="OpaqueSurfaceT08" Color="#323341" />
 
-      <SolidColorBrush x:Key="TranslucentSurface" Color="#171717" Opacity="0.89" />
+      <!--
+        Opaque popup surface - see the light variant above for the rationale. Sampled straight from
+        a native macOS dark menu, so it carries that material's slight cool cast rather than being a
+        neutral grey.
+      -->
+      <SolidColorBrush x:Key="PopupSurface" Color="#22272a" />
 
       <SolidColorBrush x:Key="AccentBackgroundWash"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
@@ -242,7 +274,7 @@
       <StaticResource x:Key="ControlLabelBrush" ResourceKey="ForegroundT85" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundT24" />
 
-      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="TranslucentSurface" />
+      <StaticResource x:Key="PopupBackgroundBrush" ResourceKey="PopupSurface" />
       <StaticResource x:Key="PopupInnerBorderHighlightBrush" ResourceKey="PopupBackgroundBrush" />
 
       <!-- Control-specific resources -->
@@ -290,6 +322,18 @@
 
       <StaticResource x:Key="PopupBorderBrush" ResourceKey="ForegroundT26" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+
+      <!--
+        Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
+        into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
+        menus end up wearing the light accent at the light opacity.
+
+        Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
+        neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one
+        under the pointer - see MenuResourceAliasBuilder.
+      -->
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
+      <SolidColorBrush x:Key="PopupRowSelectedBackgroundBrush" Color="#3d4243" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -377,13 +421,50 @@
   <!-- Popup -->
   <Thickness x:Key="PopupMargin">12 4 12 29</Thickness> <!-- to accommodate shadow -->
   <Thickness x:Key="PopupInnerBorderThickness">1 1 0 0</Thickness>
+  <!--
+    The drop-down list inset, matching the 4pt the menus use so every popup surface reads the same.
+    Three tokens stack up to it, which is why the numbers look arbitrary:
+      PopupInnerBorderThickness  1 1 0 0   top/left-only bevel
+      PopupPadding               1 3 2 4   this key
+      ComboBoxItemMargin         2 0       carried by the row itself
+    left 1+1+2, top 1+3+0, right 0+2+2, bottom 0+4+0 - an even 4 on every side.
+
+    InitialFirstItemDistance must track PopupPadding.Top (see ThemeResources.axaml): it positions a
+    ComboBox popup so the selected row lands over the closed control. ComboBox and MultiComboBox read
+    it through DynamicResource so this override actually reaches them.
+  -->
+  <Thickness x:Key="PopupPadding">1 3 2 4</Thickness>
+  <x:Int32 x:Key="InitialFirstItemDistance">7</x:Int32>
+  <!-- PopupMargin is "12 4 12 29" here, 3pt taller than classic's, so the trim follows it. -->
+  <x:Int32 x:Key="PopupTrimHeight">33</x:Int32>
   <x:Double x:Key="SubMenuPopupVerticalOffset">-11</x:Double>
+
+  <!--
+    Menu surface insets. Native macOS 26 menus inset the selected row by 4pt from the menu
+    background on every side, inside the menu's own 12pt corner. Ours sat at 6pt with a 4pt radius,
+    which reads as too much air around a corner that is too tight.
+
+    The 4pt inset is measured from Finder. The 7pt radius is not: measurement of a native menu puts
+    it nearer 6pt, but 7pt is what looks right against our 12pt menu corner, so it was chosen by eye
+    and should stay a judgement call rather than being "corrected" back to the measured value.
+
+    The inset is not a single value. Horizontally it is PopupInnerBorderThickness + MenuFlyoutPadding;
+    vertically it is PopupInnerBorderThickness + MenuFlyoutScrollerMargin. PopupInnerBorderThickness
+    is "1 1 0 0" - a top/left-only bevel - so the padding and margin have to give that pixel back on
+    those two sides for the visible gap to come out even at 4pt. Hence the asymmetric values below;
+    they are not arbitrary, and a symmetric pair lands 1pt out on the top and left.
+
+    MenuSelectionCornerRadius exists because the generic SelectionCornerRadius is shared with
+    ComboBox, which should keep its own radius. Classic defines neither key and falls through to the
+    MacOsMenu* defaults in Accents/MenuResources.axaml, so it is unaffected.
+  -->
+  <Thickness x:Key="MenuFlyoutPadding">3 0 4 0</Thickness>
+  <Thickness x:Key="MenuFlyoutScrollerMargin">0 3 0 4</Thickness>
+  <CornerRadius x:Key="MenuSelectionCornerRadius">7</CornerRadius>
 
   <!-- MenuItem -->
   <Thickness x:Key="MenuItemPadding">9 4 7 4</Thickness>
   <x:Double x:Key="MenuItemMinHeight">24</x:Double>
-  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="AccentHighlight" />
-  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
 
 
   <!-- TextBox -->

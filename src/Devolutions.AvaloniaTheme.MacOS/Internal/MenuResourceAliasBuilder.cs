@@ -23,7 +23,7 @@ internal static class MenuResourceAliasBuilder
     // moved away, and :focus-visible under keyboard navigation. AppKit greys both so they stay
     // distinguishable from the accent the pointer paints; accenting them makes a keyboard-focused
     // row indistinguishable from a hovered one.
-    ("MacOsMenuSelectedBackgroundBrush", "MenuItemSelectedBackgroundBrush"),
+    ("MacOsMenuSelectedBackgroundBrush", "PopupRowSelectedBackgroundBrush"),
     ("MacOsMenuPressedBackgroundBrush", "LayoutBackgroundHighBrush"),
     ("MacOsMenuItemPointerOverBackgroundBrush", "MenuItemPointerOverBackgroundBrush"),
     ("MacOsMenuPopupBorderThickness", "MenuFlyoutPresenterBorderThickness"),

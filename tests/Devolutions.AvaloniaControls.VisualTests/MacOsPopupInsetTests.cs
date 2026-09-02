@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.VisualTests;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Devolutions.AvaloniaTheme.MacOS;
@@ -112,6 +113,36 @@ public class MacOsPopupInsetTests
             Assert.True(w.TryFindResource("ListBoxPadding", ThemeVariant.Dark, out object? list));
             Assert.NotEqual(Get(w, "PopupPadding", ThemeVariant.Dark), Assert.IsType<Thickness>(cal));
             Assert.NotEqual(Get(w, "PopupPadding", ThemeVariant.Dark), Assert.IsType<Thickness>(list));
+        }
+        finally
+        {
+            w.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   A row that is selected or keyboard-focused but not hovered takes a neutral, and a menu row
+    ///   and a drop-down row must take the same one. They reach it by different routes - the menu
+    ///   through the MacOsMenu* alias, drop-down rows straight from the shared key - so nothing else
+    ///   keeps them together.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Menu_and_drop_down_rows_share_the_selected_neutral(string variantName)
+    {
+        ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Window w = ShowLiquidGlass(variant);
+        try
+        {
+            Assert.True(w.TryFindResource("MacOsMenuSelectedBackgroundBrush", variant, out object? menu));
+            Assert.True(w.TryFindResource("PopupRowSelectedBackgroundBrush", variant, out object? row));
+
+            var m = Assert.IsAssignableFrom<ISolidColorBrush>(menu);
+            var r = Assert.IsAssignableFrom<ISolidColorBrush>(row);
+            Assert.Equal(r.Color, m.Color);
+            Assert.Equal(r.Opacity, m.Opacity, 3);
         }
         finally
         {

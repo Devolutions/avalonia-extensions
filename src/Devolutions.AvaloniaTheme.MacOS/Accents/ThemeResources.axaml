@@ -58,7 +58,13 @@
         Per variant, not at the dictionary root: a root-level StaticResource cannot see into
         ThemeDictionaries and would bind the Default (light) brush for dark menus too.
       -->
-      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
+      <!--
+        The neutral a popup row takes when it is selected or keyboard-focused but not under the
+        pointer - menus and drop-down rows share it so the two read the same. Per variant, not at the
+        dictionary root: a root-level StaticResource cannot see into ThemeDictionaries and would bind
+        the Default (light) brush for dark popups too.
+      -->
+      <StaticResource x:Key="PopupRowSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
       <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.03" />
 
       <SolidColorBrush x:Key="LayoutBorderHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
@@ -294,7 +300,7 @@
 
       <SolidColorBrush x:Key="LayoutBackgroundHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.24" />
       <SolidColorBrush x:Key="LayoutBackgroundMidBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.17" />
-      <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
+      <StaticResource x:Key="PopupRowSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
       <SolidColorBrush x:Key="LayoutBackgroundLowBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.05" />
 
       <SolidColorBrush x:Key="LayoutBorderHighBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
@@ -774,6 +780,7 @@
   <Thickness x:Key="MenuToolBarItemActiveBackgroundMargin">-10 -3 -8 -3</Thickness>
   <Thickness x:Key="MenuItemActiveBackgroundMargin">-6,-2,-7,-2</Thickness>
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
+  <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

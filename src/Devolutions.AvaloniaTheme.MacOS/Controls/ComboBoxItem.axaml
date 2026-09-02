@@ -67,7 +67,7 @@
 
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#RootPanel">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
       </Style>
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundHighBrush}" />

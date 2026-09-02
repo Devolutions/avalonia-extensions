@@ -141,13 +141,13 @@
 
     <Style Selector="^:focus-visible">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
       </Style>
     </Style>
 
     <Style Selector="^[IsSelected=True]">
       <Style Selector="^ /template/ Border#PART_Background">
-        <Setter Property="Background" Value="{DynamicResource LayoutBackgroundMidBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
       </Style>
     </Style>
 

@@ -235,7 +235,7 @@
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
       <!-- Sampled from a native menu whose submenu is open with the pointer elsewhere. -->
-      <SolidColorBrush x:Key="MenuItemSelectedBackgroundBrush" Color="#d7d9d9" />
+      <SolidColorBrush x:Key="PopupRowSelectedBackgroundBrush" Color="#d7d9d9" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 
@@ -333,7 +333,7 @@
         under the pointer - see MenuResourceAliasBuilder.
       -->
       <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="AccentHighlight" />
-      <SolidColorBrush x:Key="MenuItemSelectedBackgroundBrush" Color="#3d4243" />
+      <SolidColorBrush x:Key="PopupRowSelectedBackgroundBrush" Color="#3d4243" />
       <!-- Note: Shadow used to render a border on the _outside_ -->
       <StaticResource x:Key="ComboBoxBoxShadow" ResourceKey="TextBoxBoxShadow" />
 

@@ -109,7 +109,51 @@ targets `#528cfa` light / `#274fbe` dark, from PR #644):
   multiplies chroma).
 
 For each accent, record: the system accent value **per appearance**, and Finder's **menu** selection
-**per appearance**. Six numbers per accent.
+**per appearance** — four hex values per accent.
+
+#### Capture protocol (agreed 2026-09-02)
+
+The two measurement traps that would silently invalidate a fit:
+
+1. **Digital Color Meter must report sRGB, not display-native.** Set *View → Display Values →
+   Hexadecimal* and the colour space to **sRGB**. "Display native values" returns numbers in the
+   monitor's space, which will not match what the theme computes and will look like a bad model.
+2. **Do not eyedrop the accent off a native AppKit control.** AppKit draws accent surfaces with
+   gradients and overlays, so the sampled pixel is not the accent. Read the accent from the
+   SampleApp's *SystemColours* experiment page instead (`SystemAccentColor` row): that swatch is a
+   flat fill of Avalonia's resolved value, which is exactly the input the converter receives.
+
+Per accent, with the accent set in System Settings → Appearance:
+
+- Set Appearance to **Light**, then: sample the `SystemAccentColor` swatch on the SystemColours page,
+  and sample the **middle** of a hovered Finder menu row (open any Finder menu, hover an item; stay
+  away from text, glyphs and the rounded ends).
+- Switch Appearance to **Dark** and repeat both. macOS reports a *different* accent per appearance,
+  so both halves are required.
+
+Accents worth having, in priority order:
+
+| accent | why |
+|---|---|
+| **blue dark** | The one actually blocking dark. The existing blue-dark row is a **guess** (`#0a84ff`) and is the likeliest reason dark looks unmodellable. |
+| **graphite** | The discriminating case: chroma ≈ 0, so any model that *scales* chroma is exposed immediately, and "reduce saturation ~6pp" clamps to 0 with lightness carrying the whole effect. |
+| **green or red** | Furthest in hue from purple and blue, so it tests whether the light constants really are hue-independent. |
+
+Template to fill in:
+
+| accent | accent light | accent dark | Finder menu selection light | Finder menu selection dark |
+|---|---|---|---|---|
+| blue | `#007aff` | ? | `#528cfa` | `#274fbe` (from #644, re-check) |
+| graphite | ? | ? | ? | ? |
+| green/red | ? | ? | ? | ? |
+| purple | `#8B3689` | `#9C479B` | `#B252B2` | `#A425A0` |
+
+**Independently re-verified 2026-09-02** (all figures in the tables above reproduce to 4 dp): the
+Oklch values, the identical −5.6pp HSL saturation delta on both light points, and the gamut result —
+light needs a base with G = −11.9 at 0.64 opacity, so it is impossible, while dark needs
+≈`#de24d5`, in gamut but extreme. The one figure that did not reproduce is blue *dark*
+(recomputed dL −0.154 / dC −0.025 against the plan's −0.133 / −0.037), which is moot because that
+row rests on the guessed accent.
 
 ### Steps
 

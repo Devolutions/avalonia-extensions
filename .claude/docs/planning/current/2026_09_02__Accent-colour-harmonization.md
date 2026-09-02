@@ -147,29 +147,41 @@ For each accent, record: the system accent value **per appearance**, and Finder'
   `ComboBoxItemPointerOverBackgroundBrush` both resolve `AccentHighlight`, declared **per variant**),
   so one fix covers every popup. Keep them per variant — a root-level `StaticResource` binds the
   Default (light) entry and cannot see `ThemeDictionaries`.
-- The pack's parity check compares gradients **by type only**, so gradient parity is not verified.
+- ~~The pack's parity check compares gradients **by type only**, so gradient parity is not
+  verified.~~ Fixed in 2a: `DescribeToken` now compares stops and, for linear gradients, start/end
+  point. Note the classic pack tokens follow `SystemAccentColor` through `DynamicResource`; only the
+  **LiquidGlass** pack pins literals, because only it needs the converter.
 
 ---
 
 ## Part 2 — Classic
 
-### 2a. Unify menu and drop-down hover
+### 2a. Unify menu and drop-down hover — IMPLEMENTED
 
-Two different classic-native brushes, both pre-existing, both accent-derived in intent:
+**Decision: gradient.** xfortin confirmed the drop-down gradient is the right classic look, so the
+menus moved to it. Classic menu hover and drop-down row hover are now the same brush,
+`ControlBackgroundAccentRaisedBrush`. What menus lost was `ControlBackgroundAccentMidBrush`
+(`SystemAccentColor` @0.63, flat), which now has no consumers.
 
-| | brush | appearance |
-|---|---|---|
-| menus | `ControlBackgroundAccentMidBrush` = `SystemAccentColor` @0.63 | flat |
-| drop-downs | `ControlBackgroundAccentRaisedBrush` = gradient of `AccentButtonTopColor`→`BottomColor` | gradient |
+`MenuItemPointerOverBackgroundBrush` had to move from the dictionary root into both
+`ThemeDictionaries`, because the gradient it points at is per variant — the same relocation 2b forced
+on the ComboBox tokens.
 
-**Decision required: flat or gradient.**
-- *Gradient* matches the classic look and was the initial preference, but the standalone menu pack
-  pins solid literals and cannot express a gradient that parity would actually verify (see
-  constraint above). Choosing gradient means accepting an unverified pack, or teaching the pack to
-  pin a gradient literal and strengthening `DescribeToken` to compare stops.
-- *Flat* is trivially expressible in the pack and already verified.
+**One premise in the original plan was wrong, and it was the premise blocking "gradient":** the
+classic pack does *not* pin solid literals. `MenuResources.axaml` already declared
+`MacOsMenuItemPointerOverBackgroundBrush` as `{DynamicResource SystemAccentColor}` @0.63 — only the
+*LiquidGlass* pack pins literals, because it cannot run the `OklchAdjustmentConverter`. Classic can
+express the gradient with `DynamicResource` stops directly, so there was no need to pin a gradient
+literal and nothing to accept as unverified.
 
-Recommendation: decide this **after** 2b, because 2b may change what the gradient even looks like.
+The other half of that constraint was real and is now closed: `DescribeToken` in
+`MacOsMenuPackContractTests` compared gradients by type only, so any two gradients matched. It now
+describes stops (offset + rgba) and, for linear gradients, start/end point — so
+`Pack_menu_tokens_match_the_full_theme` genuinely verifies that the pack's gradient equals the
+theme's. Without that, the pack could drift to different colours or a different direction and parity
+would still pass.
+
+**Still to do manually:** confirm the harmonized hover reads correctly in classic, light and dark.
 
 ### 2b. The accent freeze — IMPLEMENTED (branch `harmonize-menu-selection-colors`)
 
@@ -261,7 +273,8 @@ was deliberately kept out of PR #644.
    gradient decision is unblocked and unchanged.
 2. **Part 1 next**, once the accent data is collected. Still blocked on the manual measurements: the
    real per-appearance accent values for 3–4 accents including graphite. Nothing in 2b closes that gap.
-3. **2a last**, as a taste decision informed by both.
+3. ~~**2a last**, as a taste decision informed by both.~~ **Done** — gradient chosen; see 2a. It
+   turned out not to depend on Part 1 at all, so it did not need to wait for the accent data.
 
 ## Risks
 

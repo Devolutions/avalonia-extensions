@@ -47,15 +47,9 @@ _Posted by <agent/tool name> (agent), on behalf of @<login>._
 
 **2. This repo has NO git tags.** `git tag --contains <commit>` returns nothing for *every* commit, so it will
 falsely tell you a change was never released. Releases are date-based NuGet packages published via a manual
-workflow, **published per-package** (versions differ between them). To check if something shipped, compare the
-commit date to the latest published version of the relevant package:
+workflow, **published per-package** (versions differ between them). 
 
-```bash
-curl -s "https://api.nuget.org/v3-flatcontainer/devolutions.avaloniatheme.macos/index.json" \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['versions'][-1])"
-```
-
-Also: CHANGELOGs are only updated for substantial/breaking changes, not routine fixes. And PRs get no
+CHANGELOGs are only updated for substantial/breaking changes, not routine fixes - confirm with the user, if a changelog entry seems to be appropriate. And PRs get no
 automated CI checks (the workflow is `workflow_dispatch`-only), so missing checks are expected.
 
 See [`.claude/CLAUDE.md`](.claude/CLAUDE.md) — "GitHub Identity for Agents" and "Releases & Versioning".

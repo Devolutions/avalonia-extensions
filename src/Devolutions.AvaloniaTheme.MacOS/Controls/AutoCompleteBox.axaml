@@ -81,6 +81,24 @@
                     <Style Selector="ListBoxItem">
                       <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}" />
                     </Style>
+
+                    <!--
+                      A ListBoxItem shows selection as a checkmark and keyboard focus as a ring.
+                      Neither survives here: selection_checkmark_off hides the checkmark, and the
+                      other drop-downs indicate both with the neutral fill instead. Without these a
+                      selected or keyboard-focused suggestion shows nothing at all.
+                    -->
+                    <Style Selector="ListBoxItem:selected /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
+                    </Style>
+                    <Style Selector="ListBoxItem:focus-visible /template/ Border#RootPanel">
+                      <Setter Property="Background" Value="{DynamicResource PopupRowSelectedBackgroundBrush}" />
+                    </Style>
+                    <Style Selector="ListBoxItem:focus-visible /template/ Border#FocusRing">
+                      <Setter Property="IsVisible" Value="False" />
+                    </Style>
+
+                    <!-- Last, so the pointer's accent still wins over the neutral. -->
                     <Style Selector="ListBoxItem:pointerover /template/ Border#RootPanel">
                       <Setter Property="Background" Value="{DynamicResource ComboBoxItemPointerOverBackgroundBrush}" />
                     </Style>

@@ -655,9 +655,27 @@ public class MacOsMenuPackContractTests
                 brush.Color.G,
                 brush.Color.B,
                 brush.Color.A / 255d * brush.Opacity),
+        // Gradients are described down to their stops. Falling through to the type name below would
+        // make every gradient compare equal to every other gradient, so the pack could drift from
+        // the theme - different colours, different direction - and parity would still pass.
+        ILinearGradientBrush linear =>
+            $"linear({linear.StartPoint} -> {linear.EndPoint}, {DescribeStops(linear)})",
+        IGradientBrush gradient => $"{gradient.GetType().Name}({DescribeStops(gradient)})",
         null => "<null>",
         _ => $"{value.GetType().Name}|{value}",
     };
+
+    private static string DescribeStops(IGradientBrush brush) =>
+        string.Join(
+            " ",
+            brush.GradientStops.Select(stop => string.Format(
+                CultureInfo.InvariantCulture,
+                "{0:F2}:rgba({1},{2},{3},{4:F2})",
+                stop.Offset,
+                stop.Color.R,
+                stop.Color.G,
+                stop.Color.B,
+                stop.Color.A / 255d * brush.Opacity)));
 
 
     /// <summary>

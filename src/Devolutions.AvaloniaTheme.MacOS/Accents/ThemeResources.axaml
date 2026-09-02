@@ -186,10 +186,13 @@
       <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource SystemAccentColor}" />
 
       <!-- Per variant because their targets are: a root-level StaticResource would bind the
-           Default (light) brush for dark as well. -->
+           Default (light) brush for dark as well. MenuItemPointerOverBackgroundBrush is here so
+           menus hover with the same accent gradient as drop-down rows - see the note at the menu
+           resources below. -->
       <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
       <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
 
       <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="TransparentBrush" />
       <Thickness x:Key="MenuFlyoutPresenterBorderThickness">0</Thickness>
@@ -442,10 +445,13 @@
       <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource SystemAccentColorLight1}" />
 
       <!-- Per variant because their targets are: a root-level StaticResource would bind the
-           Default (light) brush for dark as well. -->
+           Default (light) brush for dark as well. MenuItemPointerOverBackgroundBrush is here so
+           menus hover with the same accent gradient as drop-down rows - see the note at the menu
+           resources below. -->
       <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
       <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
       <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
 
       <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="ControlBorderBrush" />
       <Thickness x:Key="MenuFlyoutPresenterBorderThickness">1</Thickness>
@@ -810,20 +816,20 @@
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <!--
-    Classic menus hover flat here while drop-down rows use the ControlBackgroundAccentRaisedBrush
-    gradient - a long-standing inconsistency, not something LiquidGlass introduced. What remains is
-    purely stylistic: both sides now follow the system accent.
+    Classic menu hover and drop-down row hover are the same brush: ControlBackgroundAccentRaisedBrush,
+    the accent gradient. Menus used to hover flat (ControlBackgroundAccentMidBrush, the accent at
+    0.63) while drop-down rows used the gradient - a long-standing inconsistency, not something
+    LiquidGlass introduced. The gradient is the classic-native look, so the menus moved to it.
 
-    They used to differ in a way that was not stylistic - the gradient did not follow the accent at
-    all, because its stops went through <StaticResource> colour aliases. That is fixed; the
-    accent-derived brushes are declared per variant in the ThemeDictionaries above and reach the
-    accent through DynamicResource. See the note there for why the alias form cannot work.
+    MenuItemPointerOverBackgroundBrush is therefore declared per variant, up in the ThemeDictionaries
+    alongside the gradient it points at: the gradient differs by variant, so a root-level
+    StaticResource here would bind the Default (light) one for dark too.
 
-    Unifying the two hover styles is still open. It would need the standalone menu pack to pin a
-    gradient literal (it pins a solid), and the pack parity check compares gradients only by type,
-    so it would not really verify them.
+    The standalone menu pack mirrors this in MenuResources.axaml, and it can express the gradient
+    honestly because the classic pack tokens follow SystemAccentColor through DynamicResource rather
+    than being pinned literals (only the LiquidGlass pack pins, because it cannot run the converter).
+    Pack parity compares gradient stops, not just brush type - see DescribeToken.
   -->
-  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
   <x:Double x:Key="MenuHeaderFontSizeSmall">10</x:Double>

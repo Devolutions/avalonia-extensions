@@ -9,6 +9,11 @@ Please see commits if you're curious. However we will do our best to call out ke
   buttons, checkbox/radio fills and borders, the ComboBox button, drop-down row hover, the
   DropDownButton, ListBoxItem selection and the Expander chevron were pinned to Avalonia's fallback
   accent (`#0078d7`) instead of the platform accent.
+- Changed: in the classic variant, menu hover now uses the accent gradient
+  (`ControlBackgroundAccentRaisedBrush`), the same brush as drop-down rows. It was a flat accent at
+  0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The
+  standalone menu pack mirrors the change, so `MacOsMenuItemPointerOverBackgroundBrush` is now a
+  gradient rather than a solid brush.
 - BREAKING (resource keys): the intermediate colour tokens `AccentButtonTopColor`,
   `AccentButtonBottomColor`, `ControlBackgroundAccentRecessedTopColor`,
   `ControlBackgroundAccentRecessedBottomColor` and `ControlBorderAccentColor` were removed. They

@@ -6,7 +6,7 @@ using Devolutions.AvaloniaTheme.WinUI;
 using Devolutions.AvaloniaTheme.WinUI.Internal;
 using Xunit;
 
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 /// <summary>
 /// Guards the Windows 11 Mica overlay mechanism for the WinUI theme.

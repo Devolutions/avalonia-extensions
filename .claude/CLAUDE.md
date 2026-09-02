@@ -129,11 +129,11 @@ to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is w
 
 ### Testing
 Automated tests are available and should be used:
-- `dotnet test` runs the repository test suite, including visual regression tests.
-- `dotnet test --filter "DisplayName~VisualRegressionTests"` runs only visual regression tests.
-- `dotnet test --filter "DisplayName!~VisualRegressionTests"` runs only non-visual tests.
-- `./devtest visual` / `./devtest nonvisual` / `./devtest functional` provide the same split with concise output; these are wrapper shorthands, not native `dotnet test` arguments.
-- Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `PageCatalogTests`, `VisualRegressionTests`, and `MainWindowNavigationTests`).
+- `dotnet test` runs both test projects: functional tests and visual regression tests.
+- `./devtest visual` runs `tests/Devolutions.AvaloniaControls.VisualTests/`; `./devtest nonvisual` and `./devtest functional` run `tests/Devolutions.AvaloniaControls.Tests/`.
+- The `devtest` presets are wrapper shorthands, not native `dotnet test` arguments. To target a project directly, pass its `.csproj` path to `dotnet test`.
+- Functional catalog and navigation behavior is covered in `tests/Devolutions.AvaloniaControls.Tests/` by tests such as `PageCatalogTests` and `MainWindowNavigationTests`.
+- Visual page discovery and screenshot regression behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` by `PageDiscoveryTests` and `VisualRegressionTests`.
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 

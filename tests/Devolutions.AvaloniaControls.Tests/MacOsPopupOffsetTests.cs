@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Linq;
@@ -37,7 +37,7 @@ using Xunit;
 ///     <c>StaticResource</c> did resolve the wrong one.
 ///   </para>
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsPopupOffsetTests
 {
     private const int SelectedIndex = 3;

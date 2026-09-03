@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -27,7 +27,7 @@ using Xunit;
 ///     <c>Show()</c> and assert the derived brushes moved with it.
 ///   </para>
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsClassicAccentTests
 {
     // Deliberately nothing like the fallback accent (#0078d7 / Light1 #269fff / Dark1 #0063b1), so a

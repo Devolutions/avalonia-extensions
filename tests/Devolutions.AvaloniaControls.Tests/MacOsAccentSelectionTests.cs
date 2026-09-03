@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ using Xunit;
 ///     look; the cap is what keeps vivid accents - red, pink - from overshooting the other way.
 ///   </para>
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsAccentSelectionTests
 {
     /// <summary>The accent macOS reports for its default "Blue", read from Avalonia per appearance.</summary>

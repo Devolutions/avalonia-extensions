@@ -26,11 +26,6 @@ Please see commits if you're curious. However we will do our best to call out ke
   0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The
   standalone menu pack mirrors the change, so `MacOsMenuItemPointerOverBackgroundBrush` is now a
   gradient rather than a solid brush.
-- Known issue (Avalonia, not this theme): `SystemAccentColor` is captured when the app starts and
-  is not refreshed when the macOS appearance changes, so after a light/dark switch accent-derived
-  colours are computed from the previous appearance's accent until restart. macOS reports a different
-  accent per appearance for some accents (red `#E0383E` light / `#FF5257` dark), so it is visible on
-  those and not on blue or green. Tracked at https://support.avaloniaui.net/support/tickets/1857
 - BREAKING (resource keys): the intermediate colour tokens `AccentButtonTopColor`,
   `AccentButtonBottomColor`, `ControlBackgroundAccentRecessedTopColor`,
   `ControlBackgroundAccentRecessedBottomColor` and `ControlBorderAccentColor` were removed. They

@@ -15,7 +15,80 @@ Two related problems, both about how the system accent reaches a selected row.
 
 ---
 
-## Part 1 — LiquidGlass selection colour
+## Part 1 — LiquidGlass selection colour — IMPLEMENTED
+
+**Outcome: a deliberate approximation, not a match to Finder.** Decision taken by xfortin once the
+model search came up empty. Hue preserved, chroma **capped** (not set, so a graphite accent stays
+grey), lightness offset. Light `cap 0.162 / +0.055`, dark `cap 0.170 / -0.140`. The selection is now
+opaque. Guarded by `MacOsAccentSelectionTests`, which pins both the exact literal the pack carries
+and the dE tolerance against the recorded native colours.
+
+**No new code at all in the end.** The change is: drop the brush opacity, and change the two
+`LightnessAdjustment` values. Hue and chroma pass through untouched.
+
+Getting there went through two dead ends worth recording. A separate converter was written first
+(duplicating the whole class to change four lines of arithmetic), then collapsed into a `ChromaCap`
+property on the existing converter, then dropped entirely once the models were scored against each
+other: capping chroma buys ~0.01 mean dE over a lightness shift alone — about half a
+just-noticeable difference — and is not worth new API. Scores against Finder's drop-down target:
+
+| model | light mean/worst | dark mean/worst |
+|---|---|---|
+| raw accent, unchanged | 0.043 / 0.063 | **0.107** / 0.129 |
+| **lightness offset only (shipped)** | 0.037 / 0.048 | 0.040 / 0.077 |
+| chroma cap only | 0.036 / 0.053 | 0.105 / 0.123 |
+| both | 0.026 / 0.042 | 0.031 / 0.077 |
+
+The dark lightness offset is the one indispensable part: native dark selection is much darker than
+the accent, so anything without it lands at dE ~0.107.
+
+### What the measurements settled
+
+The earlier data was wrong at the input: the accent column had been sampled from the **swatch circles
+in System Settings**, which are artwork, not the value macOS reports to an app. Re-read from
+Avalonia's resolved `SystemAccentColor` (via the hex readout added to the SampleApp SystemColours
+page), the accents are:
+
+| accent | light | dark | Finder menu light | Finder menu dark |
+|---|---|---|---|---|
+| purple | `#953D96` | `#A550A7` | `#B252B2` | `#A425A0` |
+| red | `#E0383E` | `#FF5257` | `#E05D5C` | `#C03737` |
+| green | `#62BA46` | `#62BA46` | `#65BA5C` | `#358B2A` |
+| blue (default) | `#007AFF` | `#007AFF` | `#5D93FB` | `#254BB7` |
+
+Note the default blue is `#007AFF` — the plan's original value was right; `#286AFA` was the swatch,
+and the `#0a84ff` dark guess was never needed since blue reports the same value in both appearances.
+
+**Every simple model is ruled out**, measured across four accents with correct inputs:
+
+- constant Oklch offsets, and constant HSL offsets — the original "saturation −5.6pp" lead was an
+  artefact of the swatch-sampled accents and disappears with correct ones
+- compositing over any single surface, in sRGB **and** linear light — a joint fit of alpha and
+  surface wants an implausible pink `#EDBACF` and still leaves RMS 15/255
+- fixed-alpha Oklab blending — the chroma ratio varies 0.76–1.32
+- sRGB gamut limiting — C/maxC spans 0.57–0.96
+- Display P3 blending toward white/black — RMS 12–21/255
+
+**What held:** hue is preserved (+0.3° to +7.7°) and target chroma is near-constant (light
+0.164 ± 0.018; dark 0.169 ± 0.019 excluding purple). That is what the converter reproduces.
+
+**There is no formula to find.** Apple ships hand-picked per-accent constants — `AppleHighlightColor`
+stores explicit RGB per accent while `AppleAccentColor` is only an index (−1…7, absent =
+Multicolor) — and exposes variants through opaque `NSColor` APIs. WWDC 2018 explicitly warns against
+applying a constant darkening to a base colour because it only holds in one appearance, which is
+exactly the failure mode of the offsets this replaced.
+
+**Data caveat:** Finder's dark menus are translucent, so a measured dark target carries some of
+whatever sat behind the menu. That is the likeliest reason dark fits worse and why purple dark
+(chroma 0.208 against a 0.169 group) is the worst case.
+
+**Decision revisited:** menu and drop-down selections *do* differ natively and both were measured,
+but xfortin chose to keep a single colour — the menu value — for both surfaces, as originally
+planned.
+
+---
+
+### Original analysis, kept for the record
 
 ### Measured data (macOS accent = Purple)
 
@@ -310,13 +383,52 @@ was deliberately kept out of PR #644.
 
 ---
 
+## Known upstream issue: the accent input goes stale
+
+**Avalonia captures `SystemAccentColor` at startup and never refreshes it when the macOS appearance
+changes.** Confirmed by readout, symmetrically:
+
+| | reported accent | correct for that appearance |
+|---|---|---|
+| dark on open | `#FF5257` | yes |
+| light **on switch** | `#FF5257` | no - should be `#E0383E` |
+| light on open | `#E0383E` | yes |
+| dark **on switch** | `#E0383E` | no - should be `#FF5257` |
+
+Located precisely: `ColorValuesChanged` **does** fire on the appearance change and carries the
+**correct** `ThemeVariant`, but an **unchanged** `AccentColor1`; the `SystemAccentColor` resource
+always equals the platform value. So `FluentTheme` re-derives correctly and is simply never handed a
+new accent - the gap is in the macOS backend, upstream of anything here.
+
+Only some accents expose it: macOS reports one value for both appearances for blue and green, and
+different values for red (`#E0383E` / `#FF5257`) and purple (`#953D96` / `#A550A7`).
+
+**Why it matters:** macOS's *Auto* appearance switches at sunrise/sunset, so a long-running app ends
+up deriving from the wrong accent for part of the day with no user action. It affects every
+per-variant accent derivation - selection, focus ring, accent wash - not just the selection colour.
+
+Tracked at https://support.avaloniaui.net/support/tickets/1857. Minimal repro app: `~/Desktop/AvaloniaAccentStaleRepro` (shows Avalonia's value
+against `NSColor.controlAccentColor` resolved per appearance via AppKit, read live).
+
+**Workaround if upstream does not land:** resolve `controlAccentColor` ourselves for
+`NSAppearanceNameAqua` and `NSAppearanceNameDarkAqua` and publish each into its own theme dictionary.
+Then no refresh is needed at all - both values are correct up front, whichever appearance the app
+launched in. `WallpaperTintApplier` already establishes the P/Invoke pattern in this assembly, and the
+approach is proven to work (it is what the repro app uses). Note classic's gradient also consumes
+`SystemAccentColorLight1`/`Dark1`, which Avalonia derives, so those would need deriving per variant
+too.
+
+---
+
 ## Sequencing
 
 1. ~~**2b first.**~~ **Done** — see the status block in 2b. It did not change the gradient's
    *intended* colours (same accent steps), it changed whether they arrive at all, so 2a's flat-vs-
    gradient decision is unblocked and unchanged.
-2. **Part 1 next**, once the accent data is collected. Still blocked on the manual measurements: the
-   real per-appearance accent values for 3–4 accents including graphite. Nothing in 2b closes that gap.
+2. ~~**Part 1 next**, once the accent data is collected.~~ **Done** — four accents measured from
+   Avalonia's resolved values, model search closed, approximation implemented. Graphite was never
+   measured in the end; the chroma **cap** makes it degrade correctly by construction (a grey accent
+   keeps its own near-zero chroma) and that is pinned by test rather than by measurement.
 3. ~~**2a last**, as a taste decision informed by both.~~ **Done** — gradient chosen; see 2a. It
    turned out not to depend on Part 1 at all, so it did not need to wait for the accent data.
 

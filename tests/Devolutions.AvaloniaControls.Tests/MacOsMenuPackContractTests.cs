@@ -574,9 +574,10 @@ public class MacOsMenuPackContractTests
     }
 
     /// <summary>
-    ///   The pack and the full theme derive the same tokens from separate files, so this guards the
-    ///   two against drifting apart - the accent-derived ones because the converter parameters are
-    ///   declared in both places, and the sampled ones because the pack repeats them as literals.
+    ///   The pack and the full theme build the same tokens from separate files, so this guards the two
+    ///   against drifting apart: the accent-derived ones because each side declares its own derivation
+    ///   (a converter under LiquidGlass, a gradient over the accent steps in classic), and the sampled
+    ///   ones because the pack repeats them as literals.
     /// </summary>
     [AvaloniaTheory]
     [InlineData(true, "Light")]
@@ -590,11 +591,16 @@ public class MacOsMenuPackContractTests
 
         var fullWindow = new Window { RequestedThemeVariant = variant };
 
-        // Both sides run the accent through OklchAdjustmentConverter now, so they have to sit on the
-        // same accent for the comparison to mean anything. Pinned to what macOS actually reports for
-        // its default accent, which is what ships: headless otherwise supplies Avalonia's fallback
-        // accent (#0078d7), and the check would then compare two derivations of a colour no user ever
-        // sees.
+        // Both windows have to resolve the same accent resources or the comparison means nothing.
+        // What each side does with them differs by variant: LiquidGlass runs the accent through
+        // OklchAdjustmentConverter, while classic builds a gradient from the base plus the
+        // Light1/Dark1 steps.
+        //
+        // Only the base is pinned, and only the base moves - Fluent derives the steps from the
+        // platform accent, so they keep their headless values. With the base at #007aff the classic
+        // gradient comes out #269fff -> #007aff: Light1 of the fallback accent (#0078d7) over the
+        // pinned base. Harmless here, because both sides see the identical mix, but this is a parity
+        // check between two representations of the same inputs - not a reproduction of what ships.
         fullWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
 
         var fullTheme = new DevolutionsMacOsTheme();

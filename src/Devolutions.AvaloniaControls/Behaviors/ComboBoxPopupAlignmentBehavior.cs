@@ -228,6 +228,16 @@ public static class ComboBoxPopupAlignmentBehavior
                 return;
             }
 
+            if (Math.Abs(misalignment) > MaxCorrection)
+            {
+                // Reject the sample outright: it is almost certainly measured mid-reposition. It
+                // must not reach the popupIsStuck comparison either, or two identical bad readings
+                // in a row would look like a clamped popup and send TryScroll off to an endpoint.
+                this.previousMisalignment = double.NaN;
+                this.SchedulePass();
+                return;
+            }
+
             // If the previous correction did not move the row, the popup is clamped - by the screen
             // edge, or because the list is already scrolled to an end. Scrolling is the only lever
             // left, and if that cannot help either we are as close as this ComboBox can get.
@@ -247,12 +257,6 @@ public static class ComboBoxPopupAlignmentBehavior
                     this.Unsubscribe();
                 }
 
-                return;
-            }
-
-            if (Math.Abs(misalignment) > MaxCorrection)
-            {
-                this.SchedulePass();
                 return;
             }
 

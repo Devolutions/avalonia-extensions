@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
+using Avalonia.Themes.Fluent;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -36,9 +37,21 @@ public class MacOsComboBoxPopupAlignmentTests
     /// <summary>Rounding across two coordinate spaces; a fraction of a row is invisible.</summary>
     private const double Tolerance = 2.0;
 
-    private static Window ShowLiquidGlass(ThemeVariant variant)
+    /// <summary>
+    ///   Shows a window using one of the two macOS geometries. They differ in row height and popup
+    ///   trim, so the alignment cases are worth running against both.
+    /// </summary>
+    private static Window ShowMacOs(ThemeVariant variant, bool liquidGlass = true)
     {
-        MacOSVersionDetector.SetTestOverride(true);
+        MacOSVersionDetector.SetTestOverride(liquidGlass);
+
+        // The classic resources alias the accent colours with StaticResource, which resolves once as
+        // the theme loads - so the accent has to be in scope before that, not on the window.
+        if (Application.Current is { } app && !app.Resources.ContainsKey("SystemAccentColor"))
+        {
+            app.Styles.Insert(0, new FluentTheme());
+        }
+
         var theme = new DevolutionsMacOsTheme();
         theme.BeginInit();
         theme.EndInit();
@@ -47,6 +60,8 @@ public class MacOsComboBoxPopupAlignmentTests
         window.Styles.Add(theme);
         return window;
     }
+
+    private static Window ShowLiquidGlass(ThemeVariant variant) => ShowMacOs(variant);
 
     /// <summary>
     ///   Vertical distance between the centre of the closed ComboBox and the centre of the
@@ -115,6 +130,30 @@ public class MacOsComboBoxPopupAlignmentTests
         try
         {
             ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: 120, maxDropDownHeight: 200);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The same cases against the classic geometry, whose row height and popup trim differ from
+    ///   LiquidGlass. The alignment is measured rather than derived from those constants, so it
+    ///   should hold either way - this is what proves that.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(0)]
+    [InlineData(120)]
+    [InlineData(199)]
+    public void Selected_row_sits_on_the_combo_box_with_the_classic_geometry(int selectedIndex)
+    {
+        Window window = ShowMacOs(ThemeVariant.Light, liquidGlass: false);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: selectedIndex, maxDropDownHeight: 200);
             Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
         }
         finally

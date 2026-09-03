@@ -59,14 +59,17 @@ public static class ComboBoxPopupAlignmentBehavior
 
     /// <summary>
     /// How many consecutive passes must measure the same misalignment before the popup is treated
-    /// as clamped rather than merely not yet repositioned. <see cref="Aligner.Misalignment"/> is
-    /// computed entirely from local layout (this behavior's own <c>VerticalOffset</c> and the
-    /// container's position within the popup's own content), not from any round-trip through the
-    /// platform's screen coordinates, so it does not suffer the async-positioning staleness that a
-    /// screen-coordinate measurement would on a compositor like Wayland's. A single repeat is
-    /// therefore already a reliable signal.
+    /// as clamped rather than merely not yet repositioned. <see cref="Aligner.Misalignment"/> uses
+    /// <c>PointToScreen</c>/<c>PointToClient</c>, which round-trip through the platform's window
+    /// position - and on Linux (X11, including under a Wayland session via XWayland) that position
+    /// is only updated when a <c>ConfigureNotify</c> event lands, asynchronously after the popup is
+    /// requested to move. The first pass or two after opening or repositioning can therefore measure
+    /// a stale, pre-move position that looks identical to being genuinely stuck against the screen
+    /// edge. Requiring more than one repeat before concluding "stuck" gives that round-trip a chance
+    /// to land first - see the macOS behavior's history for why one repeat was not enough there
+    /// either.
     /// </summary>
-    private const int StuckStreakThreshold = 1;
+    private const int StuckStreakThreshold = 3;
 
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
@@ -442,55 +445,45 @@ public static class ComboBoxPopupAlignmentBehavior
         /// not have to share padding or height to look aligned.
         /// </summary>
         /// <remarks>
-        /// This deliberately never calls <c>PointToScreen</c>/<c>PointToClient</c>. Those round-trip
-        /// through the platform's absolute screen coordinates, and on Wayland a client cannot obtain
-        /// its own window's screen position at all - <c>Position</c> is always <c>(0, 0)</c> and both
-        /// conversions are simple identity passthroughs. Comparing "screen" points for the ComboBox's
-        /// top level and the popup's top level therefore compared two unrelated coordinate systems:
-        /// not a stale reading that a later pass would correct, but a wrong answer every time, which
-        /// is why the popup could end up anywhere - a row off, or off the bottom of the screen.
+        /// A previous version of this method tried to avoid <c>PointToScreen</c>/<c>PointToClient</c>
+        /// entirely, using <see cref="Visual.TranslatePoint"/> to express both centres in the popup's
+        /// own root instead. That was based on a mistaken premise: it assumed the ComboBox's popup
+        /// renders as a native platform window entirely disconnected from the main window's visual
+        /// tree, so that <c>PointToScreen</c>/<c>PointToClient</c> would not be meaningful across the
+        /// two. On Linux, though, there is no separate Wayland backend in Avalonia at all - even
+        /// under a Wayland session the app runs through <c>Avalonia.X11</c> (via XWayland), whose
+        /// <c>Position</c>/<c>PointToScreen</c>/<c>PointToClient</c> are not identity passthroughs:
+        /// they track the window's real position, kept current via <c>ConfigureNotify</c> events.
         /// <para>
-        /// The fix is to never need screen coordinates. The ComboBox and the selected row's
-        /// container both sit somewhere in the popup's own visual tree (the ComboBox as the popup's
-        /// placement target, the row inside its content), so <see cref="Visual.TranslatePoint"/> can
-        /// express both of their centres in that one shared frame without ever leaving it. The
-        /// difference between the two is exactly how far <see cref="Popup.VerticalOffset"/> is off:
-        /// the row's own position within the popup's frame is fixed regardless of the offset, while
-        /// the popup's frame - and so the ComboBox's apparent position within it - moves by whatever
-        /// the offset changes by. This also sidesteps the template's per-theme chrome around
-        /// <c>Popup.Child</c> (shadow margin, border): translating straight into the popup's root
-        /// means neither centre passes through that Border at all, so its size cannot leave a
-        /// constant residual error the correction pass could never close.
+        /// <see cref="Visual.TranslatePoint"/> requires the two visuals to share a common ancestor
+        /// reachable by walking <c>VisualParent</c> pointers. The popup's root and the ComboBox's own
+        /// window are two separate native windows: the popup only keeps a *logical* parent link back
+        /// to the ComboBox's top level (used for focus routing), not a visual-tree one. So
+        /// <c>TranslatePoint</c> silently returned <c>null</c> for every corner case where the popup
+        /// was not merely an overlay layer on top of the same window - which is exactly what happens
+        /// in the headless test host (its popups default to an overlay layer sharing one visual tree
+        /// with the main window), but not in a real windowed app. That made every measurement return
+        /// <c>0</c>, i.e. no correction, on the genuine article - matching what was reported: the
+        /// error was never corrected even on reopening.
+        /// </para>
+        /// <para>
+        /// The fix is to go back to <c>PointToScreen</c>/<c>PointToClient</c>, the same approach the
+        /// macOS behavior uses, converting both screen points back through the popup's own top level
+        /// rather than dividing by a scale factor - see the macOS implementation's remarks for why.
         /// </para>
         /// </remarks>
         private double Misalignment(Control container)
         {
             if (!this.comboBox.IsAttachedToVisualTree() || !container.IsAttachedToVisualTree()) return 0;
-            if (TopLevel.GetTopLevel(container) is not { } popupRoot) return 0;
-
-            // Translate both centres into the popup's own root - not just the row's, and not into
-            // Popup.Child (whose origin sits behind the template's shadow-margin Border, an offset
-            // that varies per theme). Comparing two points expressed in the same frame is exact by
-            // construction, so it does not depend on the anchor/gravity placement contract matching
-            // the template's border/margin arithmetic precisely - which is what a few pixels of
-            // theme-specific chrome around Popup.Child broke.
-            Point? containerCentreInPopup =
-                container.TranslatePoint(new Point(0, container.Bounds.Height / 2), popupRoot);
-            Point? comboBoxCentreInPopup =
-                this.comboBox.TranslatePoint(new Point(0, this.comboBox.Bounds.Height / 2), popupRoot);
-            if (containerCentreInPopup is not { } containerCentre
-                || comboBoxCentreInPopup is not { } comboBoxCentre)
+            if ((TopLevel.GetTopLevel(container) ?? TopLevel.GetTopLevel(this.comboBox)) is not { } popupRoot)
             {
                 return 0;
             }
 
-            // The row is inside the popup, so its position within the popup's own frame does not
-            // move when VerticalOffset changes - only the popup's frame itself moves relative to the
-            // (stationary) ComboBox. Increasing VerticalOffset by some amount moves the popup down by
-            // that amount, which decreases the ComboBox's own coordinate within the popup's frame by
-            // the same amount. So the offset that brings the two centres together is exactly their
-            // current difference.
-            return comboBoxCentre.Y - containerCentre.Y;
+            PixelPoint comboBoxCentre = this.comboBox.PointToScreen(new Point(0, this.comboBox.Bounds.Height / 2));
+            PixelPoint containerCentre = container.PointToScreen(new Point(0, container.Bounds.Height / 2));
+
+            return popupRoot.PointToClient(comboBoxCentre).Y - popupRoot.PointToClient(containerCentre).Y;
         }
     }
 }

@@ -6,7 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
-using Avalonia.Themes.Fluent;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -38,20 +38,39 @@ public class MacOsComboBoxPopupAlignmentTests
     /// <summary>Rounding across two coordinate spaces; a fraction of a row is invisible.</summary>
     private const double Tolerance = 2.0;
 
+    /// <summary>Accent colour keys the classic resources alias at load time.</summary>
+    private static readonly (string Key, string Colour)[] AccentFallback =
+    [
+        ("SystemAccentColor", "#007aff"),
+        ("SystemAccentColorLight1", "#3395ff"),
+        ("SystemAccentColorLight2", "#66b0ff"),
+        ("SystemAccentColorLight3", "#99caff"),
+        ("SystemAccentColorDark1", "#0062cc"),
+        ("SystemAccentColorDark2", "#004999"),
+        ("SystemAccentColorDark3", "#003166"),
+    ];
+
     /// <summary>
     ///   Shows a window using one of the two macOS geometries. They differ in row height and popup
     ///   trim, so the alignment cases are worth running against both.
     /// </summary>
+    /// <remarks>
+    ///   The classic resources alias the accent colours with <c>StaticResource</c>, which resolves as
+    ///   the theme loads, so the accent has to already be in scope - putting it on the window is too
+    ///   late. It therefore goes on the <see cref="Application" />, which the headless test host
+    ///   shares with every other test, so <see cref="RemoveAccentFallback" /> must take it back off
+    ///   again rather than leaving the suite order-dependent.
+    /// </remarks>
     private static Window ShowMacOs(ThemeVariant variant, bool liquidGlass = true)
     {
         MacOSVersionDetector.SetTestOverride(liquidGlass);
 
-        // The classic resources alias the accent colours with StaticResource, which resolves once as
-        // the theme loads - so the accent has to be in scope before that, not on the window. The
-        // application is shared across the whole test run, so only ever add the fallback once.
-        if (Application.Current is { } app && !app.Styles.Any(style => style is FluentTheme))
+        if (Application.Current is { } app)
         {
-            app.Styles.Insert(0, new FluentTheme());
+            foreach ((string key, string colour) in AccentFallback)
+            {
+                app.Resources[key] = Color.Parse(colour);
+            }
         }
 
         var theme = new DevolutionsMacOsTheme();
@@ -63,25 +82,37 @@ public class MacOsComboBoxPopupAlignmentTests
         return window;
     }
 
+    /// <summary>Undoes <see cref="ShowMacOs" />'s application-wide accent fallback.</summary>
+    private static void RemoveAccentFallback()
+    {
+        if (Application.Current is not { } app) return;
+
+        foreach ((string key, _) in AccentFallback)
+        {
+            app.Resources.Remove(key);
+        }
+    }
+
     private static Window ShowLiquidGlass(ThemeVariant variant) => ShowMacOs(variant);
 
     /// <summary>
-    ///   The accent fallback goes into the application, which is shared by every test in the run, so
-    ///   it must be added once rather than once per window.
+    ///   The accent fallback lives on the application the headless host shares with every other
+    ///   test, so it must not outlive these tests.
     /// </summary>
     [AvaloniaFact]
-    public void Accent_fallback_is_added_to_the_application_only_once()
+    public void Accent_fallback_does_not_outlive_the_test()
     {
-        for (int i = 0; i < 3; i++)
-        {
-            Window window = ShowMacOs(ThemeVariant.Light, liquidGlass: i % 2 == 0);
-            window.Show();
-            Dispatcher.UIThread.RunJobs();
-            window.Close();
-            MacOSVersionDetector.SetTestOverride(null);
-        }
+        Window window = ShowMacOs(ThemeVariant.Light, liquidGlass: false);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.Close();
+        MacOSVersionDetector.SetTestOverride(null);
+        RemoveAccentFallback();
 
-        Assert.Equal(1, Application.Current!.Styles.Count(style => style is FluentTheme));
+        foreach ((string key, _) in AccentFallback)
+        {
+            Assert.False(Application.Current!.Resources.ContainsKey(key), $"'{key}' should not be left behind.");
+        }
     }
 
     /// <summary>
@@ -133,6 +164,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -157,6 +189,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -181,6 +214,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -203,6 +237,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -231,6 +266,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -266,6 +302,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -304,6 +341,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -337,6 +375,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -364,6 +403,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 
@@ -386,6 +426,7 @@ public class MacOsComboBoxPopupAlignmentTests
         {
             window.Close();
             MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
         }
     }
 }

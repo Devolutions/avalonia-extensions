@@ -21,7 +21,7 @@
     <!-- Outer grid + GridSplitter lets you resize the demo container (and thus the ComboBoxes) at runtime, to compare against EditableComboBox -->
     <Grid ColumnDefinitions="500 Auto * Auto">
       <Border Grid.Column="0" Margin="20" Padding="20" Background="{DynamicResource LayoutBackgroundLowBrush}">
-        <Grid ColumnDefinitions="Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
+        <Grid ColumnDefinitions="Auto * Auto" RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto">
           <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="0 5 10 15">
             <Bold>ComboBox: </Bold>
           </TextBlock>
@@ -74,11 +74,6 @@
 
           <TextBlock Grid.Column="0" Grid.Row="5" VerticalAlignment="Top" Margin="0 5 10 15">
             - Scrolling options list:
-            <LineBreak />
-            <TextBlock
-              IsVisible="{ext:ThemeIsOneOf 'MacClassic, LiquidGlass'}">
-              (results in minor positioning bug)
-            </TextBlock>
           </TextBlock>
           <ComboBox Grid.Column="1" Grid.Row="5" MaxDropDownHeight="100" SelectedIndex="4" VerticalAlignment="Top"
                     Margin="10 0 20 20">
@@ -138,6 +133,12 @@
 
           <TextBlock Grid.Column="0" Grid.Row="12" VerticalAlignment="Top" Margin="0 5 10 15">- 1000 items (memory leak test):</TextBlock>
           <ComboBox Grid.Column="1" Grid.Row="12" ItemsSource="{Binding LargeItemsList}" MaxDropDownHeight="200" VerticalAlignment="Top" Margin="10 0 20 0" />
+
+          <TextBlock Grid.Column="0" Grid.Row="13" VerticalAlignment="Top" Margin="0 5 10 15">
+            - 1000 items, selection mid-list:
+          </TextBlock>
+          <ComboBox Grid.Column="1" Grid.Row="13" ItemsSource="{Binding LargeItemsList}" SelectedIndex="500"
+                    MaxDropDownHeight="200" VerticalAlignment="Top" Margin="10 0 20 0" />
         </Grid>
       </Border>
       <GridSplitter Grid.Column="1" Width="6" ResizeDirection="Columns" Background="Gray" />

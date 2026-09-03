@@ -30,11 +30,19 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <Border Name="ThumbHitTarget">
-            <Border Width="{TemplateBinding Width}"
-                    Height="{TemplateBinding Height}"
+          <Border Name="ThumbHitTarget"
+                  Background="Transparent">
+            <Border Name="ThumbVisual"
                     Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}" />
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    RenderTransform="{TemplateBinding Tag}"
+                    RenderTransformOrigin="{TemplateBinding RenderTransformOrigin}">
+              <Border.Transitions>
+                <Transitions>
+                  <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.034" />
+                </Transitions>
+              </Border.Transitions>
+            </Border>
           </Border>
         </ControlTemplate>
       </Setter.Value>
@@ -42,9 +50,16 @@
     <Setter Property="Transitions">
       <Transitions>
         <CornerRadiusTransition Property="CornerRadius" Duration="0:0:0.034" />
-        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.034" />
       </Transitions>
     </Setter>
+    <Style Selector="^.vertical /template/ Border#ThumbVisual">
+      <Setter Property="Width" Value="7" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="^.horizontal /template/ Border#ThumbVisual">
+      <Setter Property="Height" Value="7" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
   </ControlTheme>
 
   <ControlTheme x:Key="FluentScrollBarPageButton" TargetType="RepeatButton">
@@ -128,10 +143,11 @@
                                   Theme="{StaticResource FluentScrollBarPageButton}"
                                   Focusable="False" />
                   </Track.IncreaseButton>
-                  <Thumb Theme="{StaticResource FluentScrollBarThumb}"
-                         Width="7"
+                  <Thumb Classes="vertical"
+                         Theme="{StaticResource FluentScrollBarThumb}"
+                         Width="{DynamicResource ScrollBarSize}"
                          MinHeight="{DynamicResource ScrollBarThumbMinLength}"
-                         RenderTransform="{StaticResource VerticalScrollThumbShrinkTransform}"
+                         Tag="{StaticResource VerticalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="50%,100%" />
                 </Track>
 
@@ -209,10 +225,11 @@
                                   Theme="{StaticResource FluentScrollBarPageButton}"
                                   Focusable="False" />
                   </Track.IncreaseButton>
-                  <Thumb Theme="{StaticResource FluentScrollBarThumb}"
-                         Height="7"
+                  <Thumb Classes="horizontal"
+                         Theme="{StaticResource FluentScrollBarThumb}"
+                         Height="{DynamicResource ScrollBarSize}"
                          MinWidth="{DynamicResource ScrollBarThumbMinLength}"
-                         RenderTransform="{StaticResource HorizontalScrollThumbShrinkTransform}"
+                         Tag="{StaticResource HorizontalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="100%,50%" />
                 </Track>
 
@@ -331,22 +348,22 @@
     </Style>
 
     <Style Selector="^:vertical[AllowAutoHide=True] /template/ Thumb">
-      <Setter Property="RenderTransform" Value="{StaticResource VerticalScrollThumbShrinkTransform}" />
+      <Setter Property="Tag" Value="{StaticResource VerticalScrollThumbShrinkTransform}" />
     </Style>
     <Style Selector="^:vertical[AllowAutoHide=False] /template/ Thumb">
-      <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
+      <Setter Property="Tag" Value="{StaticResource NoTransform}" />
     </Style>
 
     <Style Selector="^:horizontal[AllowAutoHide=True] /template/ Thumb">
-      <Setter Property="RenderTransform" Value="{StaticResource HorizontalScrollThumbShrinkTransform}" />
+      <Setter Property="Tag" Value="{StaticResource HorizontalScrollThumbShrinkTransform}" />
     </Style>
     <Style Selector="^:horizontal[AllowAutoHide=False] /template/ Thumb">
-      <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
+      <Setter Property="Tag" Value="{StaticResource NoTransform}" />
     </Style>
 
     <Style Selector="^:pointerover, ^[IsExpanded=True], ^:thumb-dragging, ^:veryshort">
       <Style Selector="^ /template/ Thumb">
-        <Setter Property="RenderTransform" Value="{StaticResource NoTransform}" />
+        <Setter Property="Tag" Value="{StaticResource NoTransform}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ScrollBarThumbExpandedCornerRadius}" />
       </Style>
       <Style Selector="^ /template/ RepeatButton">

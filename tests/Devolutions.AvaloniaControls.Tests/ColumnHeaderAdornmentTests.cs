@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,7 @@ using SampleApp;
 // guarantee is that the adornment is excluded from the header's desired width, so an Auto-width column
 // never resizes when it appears or changes size (DEVEX-303: committing a column search must not shift
 // columns).
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class ColumnHeaderAdornmentTests
 {
     private const double Tolerance = 0.5;

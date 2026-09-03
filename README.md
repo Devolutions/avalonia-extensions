@@ -73,12 +73,14 @@ The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT.
 
 🆕 **Shorthand command & cleaner output:**
 - `./devtest` (macOS/Linux/Git Bash) or `.\devtest` (Windows PowerShell/CMD) - runs all tests with a succinct summary.
-- `./devtest visual` - runs only visual regression tests.
-- `./devtest nonvisual` - runs only non-visual tests.
+- `./devtest visual` - runs all tests in `Devolutions.AvaloniaControls.VisualTests`.
+- `./devtest nonvisual` - runs all tests in `Devolutions.AvaloniaControls.Tests`.
 - `./devtest functional` - alias for `nonvisual`.
 - `./devtest --filter EditableCombo` - shorthand for (`DisplayName~EditableCombo`).
 
 **Updating baseline screenshots** when changes are intentional:
+- `./devtest visual --update-baselines` - updates baselines from VisualTests project.
+- `./devtest --update-baselines` - runs all projects with baseline updates enabled.
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`
 - **Windows (PowerShell):** `$env:UPDATE_BASELINES="true"; dotnet test [filters]; Remove-Item env:UPDATE_BASELINES`
 - **Windows (Command Prompt):** `set UPDATE_BASELINES=true && dotnet test [filters] && set UPDATE_BASELINES=`

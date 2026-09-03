@@ -279,7 +279,12 @@
 
   <ScrollBarVisibility x:Key="ScrollBarVisibilityDisabled">Disabled</ScrollBarVisibility>
   <ScrollBarVisibility x:Key="ScrollBarVisibilityAuto">Auto</ScrollBarVisibility>
+  <x:Double x:Key="ScrollBarThumbThickness">8</x:Double>
   <x:Double x:Key="ScrollBarShortThumbMinLength">7</x:Double>
+  <SolidColorBrush x:Key="ScrollBarTrackFillPointerOver" Color="{DynamicResource ForegroundColor}" Opacity="0.08" />
+  <TransformOperations x:Key="VerticalSmallScrollThumbScaleTransform">scaleX(0.25)</TransformOperations>
+  <TransformOperations x:Key="HorizontalSmallScrollThumbScaleTransform">scaleY(0.25)</TransformOperations>
+  <TransformOperations x:Key="ExpandedScrollThumbTransform">none</TransformOperations>
 
   <!-- ColorPicker Resources -->
   <VisualBrush x:Key="ColorControlCheckeredBackgroundBrush"

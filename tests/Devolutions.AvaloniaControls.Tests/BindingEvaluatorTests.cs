@@ -1,13 +1,14 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Headless.XUnit;
 using Devolutions.AvaloniaControls.Helpers;
 
 public class BindingEvaluatorTests
 {
-    [Fact]
+    [AvaloniaFact]
     public void CompiledMultiSegmentFormattedGetterReturnsValue()
     {
         CompiledBinding binding = CreateNameBinding();
@@ -17,7 +18,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Alice", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledMultiSegmentFormattedGetterHandlesNullIntermediate()
     {
         CompiledBinding binding = CreateNameBinding();
@@ -27,7 +28,7 @@ public class BindingEvaluatorTests
         Assert.Equal(string.Empty, CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledMultiSegmentRawGetterReturnsUnsetForNullIntermediate()
     {
         CompiledBinding binding = CreateNameBinding();
@@ -37,7 +38,7 @@ public class BindingEvaluatorTests
         Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledMultiSegmentFormattedGetterUsesFallbackForNullIntermediate()
     {
         CompiledBinding binding = CreateNameBinding();
@@ -48,7 +49,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Unknown", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledThreePartPathReturnsValue()
     {
         CompiledBinding binding = CreateCityBinding();
@@ -63,7 +64,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Montreal", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledThreePartPathHandlesNullMiddleSegment()
     {
         CompiledBinding binding = CreateCityBinding();
@@ -75,7 +76,7 @@ public class BindingEvaluatorTests
         Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledThreePartPathUsesFallbackWhenMiddleSegmentIsNull()
     {
         CompiledBinding binding = CreateCityBinding();
@@ -88,7 +89,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Unknown", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CompiledThreePartPathUsesTargetNullValueWhenLeafIsNull()
     {
         CompiledBinding binding = CreateCityBinding();
@@ -104,7 +105,7 @@ public class BindingEvaluatorTests
         Assert.Equal("No city", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionMultiSegmentFormattedGetterReturnsValue()
     {
         Binding binding = CreateReflectionNameBinding();
@@ -114,7 +115,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Alice", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionMultiSegmentFormattedGetterHandlesNullIntermediate()
     {
         Binding binding = CreateReflectionNameBinding();
@@ -124,7 +125,7 @@ public class BindingEvaluatorTests
         Assert.Equal(string.Empty, CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionMultiSegmentRawGetterReturnsUnsetForNullIntermediate()
     {
         Binding binding = CreateReflectionNameBinding();
@@ -134,7 +135,7 @@ public class BindingEvaluatorTests
         Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionMultiSegmentFormattedGetterUsesFallbackForNullIntermediate()
     {
         Binding binding = CreateReflectionNameBinding();
@@ -145,7 +146,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Unknown", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionThreePartPathReturnsValue()
     {
         Binding binding = CreateReflectionCityBinding();
@@ -160,7 +161,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Montreal", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionThreePartPathHandlesNullMiddleSegment()
     {
         Binding binding = CreateReflectionCityBinding();
@@ -172,7 +173,7 @@ public class BindingEvaluatorTests
         Assert.Same(AvaloniaProperty.UnsetValue, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionThreePartPathUsesFallbackWhenMiddleSegmentIsNull()
     {
         Binding binding = CreateReflectionCityBinding();
@@ -185,7 +186,7 @@ public class BindingEvaluatorTests
         Assert.Equal("Unknown", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void ReflectionThreePartPathUsesTargetNullValueWhenLeafIsNull()
     {
         Binding binding = CreateReflectionCityBinding();

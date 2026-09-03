@@ -129,11 +129,11 @@ to the OS-default theme (MacOS on macOS, DevExpress on Windows, etc.). This is w
 
 ### Testing
 Automated tests are available and should be used:
-- `dotnet test` runs the repository test suite, including visual regression tests.
-- `dotnet test --filter "DisplayName~VisualRegressionTests"` runs only visual regression tests.
-- `dotnet test --filter "DisplayName!~VisualRegressionTests"` runs only non-visual tests.
-- `./devtest visual` / `./devtest nonvisual` / `./devtest functional` provide the same split with concise output; these are wrapper shorthands, not native `dotnet test` arguments.
-- Catalog and discovery behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` (for example `PageCatalogTests`, `VisualRegressionTests`, and `MainWindowNavigationTests`).
+- `dotnet test` runs both test projects: functional tests and visual regression tests.
+- `./devtest visual` runs `tests/Devolutions.AvaloniaControls.VisualTests/`; `./devtest nonvisual` and `./devtest functional` run `tests/Devolutions.AvaloniaControls.Tests/`.
+- The `devtest` presets are wrapper shorthands, not native `dotnet test` arguments. To target a project directly, pass its `.csproj` path to `dotnet test`.
+- Functional catalog and navigation behavior is covered in `tests/Devolutions.AvaloniaControls.Tests/` by tests such as `PageCatalogTests` and `MainWindowNavigationTests`.
+- Visual page discovery and screenshot regression behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` by `PageDiscoveryTests` and `VisualRegressionTests`.
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 
@@ -208,6 +208,9 @@ The repository uses GitHub Actions for building and publishing NuGet packages. T
 - Publishes to nuget.org
 - Supports individual or batch package publishing
 - Automatic stable versioning based on date (`yyyy.MM.dd.0`), with optional prerelease suffixes for migration/testing builds
+- **No git tags are created** — see "Releases & Versioning" below for how to check whether a change has shipped
+- Note: the workflow has no `pull_request` trigger, so PRs do not get automated CI checks. An absence of checks
+  on a PR is expected, not a failure.
 
 ## Control Status Tracking
 Each theme's README.md maintains a checklist of styled controls with status indicators:
@@ -266,6 +269,70 @@ functionality.
   - `[ComponentName] Description of changes`
   - Include details in commit body about what was done and why
   - Always include Claude Code attribution footer
+
+# GitHub Identity for Agents
+
+**The `gh` CLI authenticates as the developer who configured it.** Anything an agent posts to GitHub
+ (PR descriptions, issue comments, review replies) appears to come from that developer, with no visual indication
+ that an agent wrote it.  Always make agent-authored GitHub content clearly attributable.
+
+**Sign every agent-authored GitHub comment, PR body, and review reply** with an italic footer as the last line.
+**Determine the username dynamically** — never hardcode it, since these instructions are shared across the team:
+
+```bash
+gh api user --jq .login
+```
+
+Then sign with that value:
+
+```markdown
+_Posted by Claude Code (agent), on behalf of @<login>._
+```
+
+For example, if `gh api user --jq .login` returns `octocat`, the footer reads
+`_Posted by Claude Code (agent), on behalf of @octocat._`
+
+Rules:
+- **Never hardcode a specific username** in a signature or in these docs — always resolve it per-session with
+  `gh api user --jq .login`. The authenticated account differs per developer.
+- Do **not** sign as just "Copilot" — GitHub Copilot's own reviewer already posts under that name, so it is
+  ambiguous. Name the actual agent/tool (e.g. "Claude Code").
+- Applies to: PR bodies (`gh pr create`/`edit`), issue and PR comments, and replies to review threads.
+- Does **not** apply to git commit messages — those already carry a `Co-authored-by:` trailer and the commit
+  author metadata makes provenance clear.
+- When replying to a review thread, sign the reply even if the thread is on your own PR.
+
+# Releases & Versioning
+
+**This repository does NOT use git tags.** Do not use `git tag`, `git describe`, or `git tag --contains` to
+determine whether a change has shipped — there are no tags, so every such check silently reports "unreleased"
+and will mislead you.
+
+Packages are published to nuget.org through a GitHub Actions workflow (`.github/workflows/build-package.yml`,
+triggered manually via `workflow_dispatch`). Versions are **date-based**.
+
+**To check whether a commit has been released**, compare the commit's date against the latest published
+package version:
+
+```bash
+# Latest published version of the package you care about — packages are published
+# individually, so versions differ between them. Check the specific one(s) your
+# change touches (e.g. devolutions.avaloniatheme.devexpress, devolutions.avaloniacontrols).
+curl -s "https://api.nuget.org/v3-flatcontainer/devolutions.avaloniatheme.macos/index.json" \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['versions'][-1])"
+
+# Date of the commit in question
+git log -1 --format=%ad --date=short <commit>
+```
+
+If the PR's merge-commit date is before that package's latest published version, the change has shipped in it.
+Human-readable page: <https://www.nuget.org/packages/Devolutions.AvaloniaTheme.MacOS>
+
+## CHANGELOGs
+
+Each theme has a `CHANGELOG.md`, but they are **only updated for substantial or breaking changes** — not for
+routine fixes. Do not add a CHANGELOG entry for an ordinary bug fix; most PRs correctly touch no changelog at
+all. When in doubt, ask.
 
 # User Notifications via Dialog
 **CRITICAL**: The user may be working on other things and not watching this conversation. You MUST use dialog notifications for important events.

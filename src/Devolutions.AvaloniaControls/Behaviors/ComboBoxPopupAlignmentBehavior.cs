@@ -419,18 +419,17 @@ public static class ComboBoxPopupAlignmentBehavior
         private double Misalignment(Control container)
         {
             if (!this.comboBox.IsAttachedToVisualTree() || !container.IsAttachedToVisualTree()) return 0;
+            if ((TopLevel.GetTopLevel(container) ?? TopLevel.GetTopLevel(this.comboBox)) is not { } popupRoot) return 0;
 
-            // The result is spent in the popup's own units - its ScrollViewer offset and its
-            // VerticalOffset - so the popup root's scaling is the one that applies. A native popup
-            // can land on a monitor whose DPI differs from the owner window's, and using the owner
-            // scale there would over- or under-correct on every pass.
-            double scaling = (TopLevel.GetTopLevel(container) ?? TopLevel.GetTopLevel(this.comboBox))?.RenderScaling ?? 1;
-            if (scaling <= 0) scaling = 1;
+            PixelPoint comboBoxCentre = this.comboBox.PointToScreen(new Point(0, this.comboBox.Bounds.Height / 2));
+            PixelPoint containerCentre = container.PointToScreen(new Point(0, container.Bounds.Height / 2));
 
-            double comboBoxCentre = this.comboBox.PointToScreen(new Point(0, this.comboBox.Bounds.Height / 2)).Y;
-            double containerCentre = container.PointToScreen(new Point(0, container.Bounds.Height / 2)).Y;
-
-            return (comboBoxCentre - containerCentre) / scaling;
+            // Convert both screen points back through the popup's own top level rather than dividing
+            // by a scale factor. The relationship between screen coordinates and logical units is a
+            // platform detail - on macOS PointToScreen yields Cocoa points (DesktopScaling is 1)
+            // while RenderScaling is the backing scale, so dividing by RenderScaling would halve
+            // every correction and the pass loop could run out before aligning.
+            return popupRoot.PointToClient(comboBoxCentre).Y - popupRoot.PointToClient(containerCentre).Y;
         }
     }
 }

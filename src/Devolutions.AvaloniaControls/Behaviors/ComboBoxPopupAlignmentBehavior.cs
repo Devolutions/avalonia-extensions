@@ -138,6 +138,10 @@ public static class ComboBoxPopupAlignmentBehavior
             this.Popup.Opened -= this.OnPopupOpened;
             this.Popup.Closed -= this.OnPopupClosed;
             this.Unsubscribe();
+
+            // Being disposed mid-open (the behavior switched off while the drop-down is showing)
+            // would otherwise leave our correction behind with no Closed handler left to clear it.
+            this.Popup.ClearValue(Popup.VerticalOffsetProperty);
         }
 
         private void OnPopupOpened(object? sender, EventArgs e)

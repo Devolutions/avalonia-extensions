@@ -10,6 +10,7 @@ using Avalonia.Themes.Fluent;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Devolutions.AvaloniaControls.Behaviors;
 using Devolutions.AvaloniaTheme.MacOS;
 using Devolutions.AvaloniaTheme.MacOS.Internal;
 using Xunit;
@@ -308,6 +309,33 @@ public class MacOsComboBoxPopupAlignmentTests
             Dispatcher.UIThread.RunJobs();
 
             combo.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(expected, popup.VerticalOffset, 3);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   Switching the behavior off while the drop-down is open must hand the offset back too, or
+    ///   the correction it had already applied would outlive it with nothing left to clear it.
+    /// </summary>
+    [AvaloniaFact]
+    public void Disabling_the_behavior_while_open_hands_the_offset_back()
+    {
+        double expected = BindingOffsetFor(selectedIndex: 500);
+
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 500, maxDropDownHeight: 200);
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            ComboBoxPopupAlignmentBehavior.SetEnable(combo, false);
             Dispatcher.UIThread.RunJobs();
 
             Assert.Equal(expected, popup.VerticalOffset, 3);

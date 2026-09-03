@@ -265,7 +265,7 @@
       <!--
         Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
-        menus end up wearing the light accent at the light opacity.
+        menus end up wearing the colour derived for the light variant.
 
         Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
         neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one
@@ -364,7 +364,7 @@
       <!--
         Declared per variant, not once at the dictionary root: a root-level StaticResource cannot see
         into ThemeDictionaries, so it silently binds the Default (light) AccentHighlight and dark
-        menus end up wearing the light accent at the light opacity.
+        menus end up wearing the colour derived for the light variant.
 
         Only the pointer-over state is accented. The :selected and :focus-visible states stay on the
         neutral brush so a submenu-open or keyboard-focused row remains distinguishable from the one

@@ -574,8 +574,9 @@ public class MacOsMenuPackContractTests
     }
 
     /// <summary>
-    ///   The pack pins its LiquidGlass values while the full theme derives them from its own
-    ///   resources, so this guards the two representations against drifting apart.
+    ///   The pack and the full theme derive the same tokens from separate files, so this guards the
+    ///   two against drifting apart - the accent-derived ones because the converter parameters are
+    ///   declared in both places, and the sampled ones because the pack repeats them as literals.
     /// </summary>
     [AvaloniaTheory]
     [InlineData(true, "Light")]
@@ -589,11 +590,11 @@ public class MacOsMenuPackContractTests
 
         var fullWindow = new Window { RequestedThemeVariant = variant };
 
-        // The pack cannot run the accent through OklchAdjustmentConverter, so its accent-derived
-        // tokens are pinned literals - and they are pinned to what macOS's default accent produces,
-        // which is what ships. Headless otherwise supplies Avalonia's fallback accent (#0078d7), so
-        // without this the parity check would compare against a colour no user ever sees and would
-        // demand pins that are wrong on a real Mac.
+        // Both sides run the accent through OklchAdjustmentConverter now, so they have to sit on the
+        // same accent for the comparison to mean anything. Pinned to what macOS actually reports for
+        // its default accent, which is what ships: headless otherwise supplies Avalonia's fallback
+        // accent (#0078d7), and the check would then compare two derivations of a colour no user ever
+        // sees.
         fullWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
 
         var fullTheme = new DevolutionsMacOsTheme();
@@ -603,8 +604,8 @@ public class MacOsMenuPackContractTests
 
         var packPage = new UserControl();
         var packWindow = new Window { Content = packPage, RequestedThemeVariant = variant };
-        // The classic pack pins follow SystemAccentColor rather than being literals, so both sides
-        // of the comparison have to sit on the same accent.
+        // Both packs derive their accent tokens from SystemAccentColor, so this side has to sit on
+        // the same accent as the full theme above.
         packWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
         packWindow.Styles.Add(new AvaloniaFluentTheme());
         packPage.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());

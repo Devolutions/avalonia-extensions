@@ -83,13 +83,30 @@ public class MacOsClassicAccentTests
     [InlineData("Dark")]
     public void Menu_hover_follows_a_late_accent_change(string variantName)
     {
-        // The known-good control: this brush reads {DynamicResource SystemAccentColor} directly, so
-        // it has always followed. If this one fails, the harness is wrong, not the theme.
+        // Assert the menu key itself. Menus hover on the accent gradient since it was unified with
+        // drop-down rows, so asserting ControlBackgroundAccentMidBrush - what they used before -
+        // would pass even if this token went missing or stale, because nothing consumes that brush
+        // any more.
         ThemeVariant variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         Window w = ShowClassicThenForceAccent(variant);
         try
         {
-            Assert.Equal(Accent, ColorOf(w, "ControlBackgroundAccentMidBrush", variant));
+            (Color top, Color bottom) = StopsOf(w, "MenuItemPointerOverBackgroundBrush", variant);
+            if (variant == ThemeVariant.Dark)
+            {
+                Assert.Equal(Accent, top);
+                Assert.Equal(AccentDark1, bottom);
+            }
+            else
+            {
+                Assert.Equal(AccentLight1, top);
+                Assert.Equal(Accent, bottom);
+            }
+
+            // And it is literally the brush drop-down rows use - that is the point of unifying them.
+            Assert.True(w.TryFindResource("MenuItemPointerOverBackgroundBrush", variant, out object? menu));
+            Assert.True(w.TryFindResource("ComboBoxItemPointerOverBackgroundBrush", variant, out object? row));
+            Assert.Same(menu, row);
         }
         finally
         {

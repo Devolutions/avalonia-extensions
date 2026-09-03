@@ -826,9 +826,10 @@
     StaticResource here would bind the Default (light) one for dark too.
 
     The standalone menu pack mirrors this in MenuResources.axaml, and it can express the gradient
-    honestly because the classic pack tokens follow SystemAccentColor through DynamicResource rather
-    than being pinned literals (only the LiquidGlass pack pins, because it cannot run the converter).
-    Pack parity compares gradient stops, not just brush type - see DescribeToken.
+    honestly because the pack tokens follow SystemAccentColor through DynamicResource rather than
+    being pinned literals - the LiquidGlass pack likewise instantiates OklchAdjustmentConverter and
+    derives its selection from the live accent. Pack parity compares gradient stops, not just brush
+    type - see DescribeToken.
   -->
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>

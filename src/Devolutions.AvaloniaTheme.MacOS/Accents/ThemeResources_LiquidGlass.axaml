@@ -21,8 +21,10 @@
   <OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
   <!--
-    Selection colour: the accent shifted in lightness only - hue and chroma pass through untouched.
-    Nothing more faithful is available. Apple ships hand-picked per-accent constants rather than a
+    Selection colour: the accent with its hue preserved, its lightness shifted and its chroma capped.
+    The cap only bites on accents more chromatic than the ceiling - vivid ones like red and pink -
+    so muted accents come through at their own chroma and a near-grey accent stays grey. Nothing more
+    faithful is available. Apple ships hand-picked per-accent constants rather than a
     formula (AppleHighlightColor holds explicit RGB per accent while AppleAccentColor is just an
     index), and macOS draws a menu highlight as an NSVisualEffectMaterial rather than a colour, so
     there is nothing to copy. Measuring Finder across four accents ruled out every simple model:

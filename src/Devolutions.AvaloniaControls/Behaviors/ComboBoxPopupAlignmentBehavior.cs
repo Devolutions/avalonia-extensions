@@ -57,6 +57,16 @@ public static class ComboBoxPopupAlignmentBehavior
     /// </summary>
     private const double MaxCorrection = 2000;
 
+    /// <summary>
+    /// How many consecutive passes must measure the same misalignment before the popup is treated
+    /// as clamped rather than merely not yet repositioned. Wayland's popup placement is
+    /// asynchronous: the compositor slides the popup to fit the screen after a <c>configure</c>
+    /// round-trip, so the first pass or two after opening can measure the pre-slide position, which
+    /// looks identical to being genuinely stuck against the edge. Requiring more than one repeat
+    /// before concluding "stuck" gives that round-trip a chance to land first.
+    /// </summary>
+    private const int StuckStreakThreshold = 3;
+
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
 
@@ -119,6 +129,11 @@ public static class ComboBoxPopupAlignmentBehavior
         private int pass;
 
         private double previousMisalignment;
+
+        /// <summary>
+        /// Consecutive passes in a row that measured the same misalignment as the one before them.
+        /// </summary>
+        private int stuckStreak;
 
         private bool passScheduled;
 
@@ -213,6 +228,7 @@ public static class ComboBoxPopupAlignmentBehavior
 
             this.pass = 0;
             this.previousMisalignment = double.NaN;
+            this.stuckStreak = 0;
             this.popupRoot = root;
             root.LayoutUpdated += this.OnLayoutUpdated;
             this.SchedulePass();
@@ -245,6 +261,7 @@ public static class ComboBoxPopupAlignmentBehavior
 
             this.pass = 0;
             this.previousMisalignment = double.NaN;
+            this.stuckStreak = 0;
 
             // The popup is not positioned yet at Opened time - measuring here would compare against
             // a stale location. The first layout pass after opening is the earliest useful moment.
@@ -337,15 +354,22 @@ public static class ComboBoxPopupAlignmentBehavior
                 // must not reach the popupIsStuck comparison either, or two identical bad readings
                 // in a row would look like a clamped popup and send TryScroll off to an endpoint.
                 this.previousMisalignment = double.NaN;
+                this.stuckStreak = 0;
                 this.SchedulePass();
                 return;
             }
 
-            // If the previous correction did not move the row, the popup is clamped - by the screen
-            // edge, or because the list is already scrolled to an end. Scrolling is the only lever
-            // left, and if that cannot help either we are as close as this ComboBox can get.
-            bool popupIsStuck = !double.IsNaN(this.previousMisalignment)
-                                && Math.Abs(misalignment - this.previousMisalignment) <= Tolerance;
+            // If several passes in a row measure the same misalignment, the popup is clamped - by
+            // the screen edge, or because the list is already scrolled to an end - and scrolling is
+            // the only lever left. A single repeat is not enough to conclude that: on Wayland, popup
+            // placement is asynchronous, and the compositor can still be about to slide the popup to
+            // its final, constrained position after this measurement. Treating that in-flight state
+            // as "stuck" made the very first opening of a far-down selection settle on the wrong row
+            // - scrolling to cover a gap that a moment later the popup would have closed on its own.
+            bool sameAsLastTime = !double.IsNaN(this.previousMisalignment)
+                                   && Math.Abs(misalignment - this.previousMisalignment) <= Tolerance;
+            this.stuckStreak = sameAsLastTime ? this.stuckStreak + 1 : 0;
+            bool popupIsStuck = this.stuckStreak >= StuckStreakThreshold;
 
             this.previousMisalignment = misalignment;
 

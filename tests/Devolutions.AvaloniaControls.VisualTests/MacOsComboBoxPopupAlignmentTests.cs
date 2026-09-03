@@ -47,8 +47,9 @@ public class MacOsComboBoxPopupAlignmentTests
         MacOSVersionDetector.SetTestOverride(liquidGlass);
 
         // The classic resources alias the accent colours with StaticResource, which resolves once as
-        // the theme loads - so the accent has to be in scope before that, not on the window.
-        if (Application.Current is { } app && !app.Resources.ContainsKey("SystemAccentColor"))
+        // the theme loads - so the accent has to be in scope before that, not on the window. The
+        // application is shared across the whole test run, so only ever add the fallback once.
+        if (Application.Current is { } app && !app.Styles.Any(style => style is FluentTheme))
         {
             app.Styles.Insert(0, new FluentTheme());
         }
@@ -63,6 +64,25 @@ public class MacOsComboBoxPopupAlignmentTests
     }
 
     private static Window ShowLiquidGlass(ThemeVariant variant) => ShowMacOs(variant);
+
+    /// <summary>
+    ///   The accent fallback goes into the application, which is shared by every test in the run, so
+    ///   it must be added once rather than once per window.
+    /// </summary>
+    [AvaloniaFact]
+    public void Accent_fallback_is_added_to_the_application_only_once()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            Window window = ShowMacOs(ThemeVariant.Light, liquidGlass: i % 2 == 0);
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+
+        Assert.Equal(1, Application.Current!.Styles.Count(style => style is FluentTheme));
+    }
 
     /// <summary>
     ///   Vertical distance between the centre of the closed ComboBox and the centre of the

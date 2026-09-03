@@ -102,12 +102,19 @@ public class MacOsComboBoxPopupAlignmentTests
     [AvaloniaFact]
     public void Accent_fallback_does_not_outlive_the_test()
     {
-        Window window = ShowMacOs(ThemeVariant.Light, liquidGlass: false);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.Close();
-        MacOSVersionDetector.SetTestOverride(null);
-        RemoveAccentFallback();
+        Window? window = null;
+        try
+        {
+            window = ShowMacOs(ThemeVariant.Light, liquidGlass: false);
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
+            window?.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
 
         foreach ((string key, _) in AccentFallback)
         {

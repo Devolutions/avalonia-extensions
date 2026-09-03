@@ -408,19 +408,65 @@ public class MacOsComboBoxPopupAlignmentTests
     }
 
     /// <summary>
-    ///   The offset the template's binding produces for <paramref name="selectedIndex" /> when the
-    ///   selection was made before the drop-down was ever opened.
+    ///   Reopening before a queued pass has run must not let that pass measure the new drop-down. It
+    ///   was queued against the previous opening, so it would run before the new popup has been
+    ///   positioned - the stale-coordinate reading the deferred timing exists to avoid.
+    /// </summary>
+    [AvaloniaFact]
+    public void A_pass_queued_for_a_previous_opening_does_not_disturb_the_next_one()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 700, maxDropDownHeight: 200);
+
+            // Close and reopen without draining the dispatcher, so any pass queued for the first
+            // opening is still pending when the second one starts.
+            combo.IsDropDownOpen = false;
+            combo.IsDropDownOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
+    }
+
+    /// <summary>
+    ///   The offset the template's binding produces for <paramref name="selectedIndex" />, sampled
+    ///   at <see cref="Popup.Opened" /> - before any correction has been applied, and without
+    ///   involving the close path at all. Reading it after a close would make this agree with a
+    ///   broken close path instead of checking it.
     /// </summary>
     private static double BindingOffsetFor(int selectedIndex)
     {
         Window window = ShowLiquidGlass(ThemeVariant.Light);
         try
         {
-            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: selectedIndex, maxDropDownHeight: 200);
-            combo.IsDropDownOpen = false;
+            var combo = new ComboBox
+            {
+                ItemsSource = Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList(),
+                SelectedIndex = selectedIndex,
+                MaxDropDownHeight = 200,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            };
+            window.Content = combo;
+            window.Show();
             Dispatcher.UIThread.RunJobs();
 
-            return Assert.Single(combo.GetVisualDescendants().OfType<Popup>()).VerticalOffset;
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            double captured = double.NaN;
+            popup.Opened += (_, _) => captured = popup.VerticalOffset;
+
+            combo.IsDropDownOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(double.IsNaN(captured), "The popup should have opened.");
+            return captured;
         }
         finally
         {

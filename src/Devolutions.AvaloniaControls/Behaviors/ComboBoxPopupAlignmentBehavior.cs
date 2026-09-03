@@ -122,6 +122,18 @@ public static class ComboBoxPopupAlignmentBehavior
 
         private bool passScheduled;
 
+        /// <summary>
+        /// Identifies one opening of the popup, so a pass queued for a previous opening can tell
+        /// that it is stale and do nothing.
+        /// </summary>
+        private int generation;
+
+        /// <summary>The most recent offset the template's binding produced.</summary>
+        private double bindingOffset;
+
+        /// <summary>Set while this behavior writes the offset, so it does not observe itself.</summary>
+        private bool applyingCorrection;
+
         internal Popup Popup { get; }
 
         internal Aligner(ComboBox comboBox, Popup popup)
@@ -129,19 +141,53 @@ public static class ComboBoxPopupAlignmentBehavior
             this.comboBox = comboBox;
             this.Popup = popup;
 
+            this.bindingOffset = popup.VerticalOffset;
+
+            popup.PropertyChanged += this.OnPopupPropertyChanged;
             popup.Opened += this.OnPopupOpened;
             popup.Closed += this.OnPopupClosed;
         }
 
         public void Dispose()
         {
+            this.Popup.PropertyChanged -= this.OnPopupPropertyChanged;
             this.Popup.Opened -= this.OnPopupOpened;
             this.Popup.Closed -= this.OnPopupClosed;
             this.Unsubscribe();
 
             // Being disposed mid-open (the behavior switched off while the drop-down is showing)
             // would otherwise leave our correction behind with no Closed handler left to clear it.
-            this.Popup.ClearValue(Popup.VerticalOffsetProperty);
+            this.RestoreBindingOffset();
+        }
+
+        /// <summary>
+        /// Remembers the offset the template's binding produces, as distinct from the corrections
+        /// this behavior writes over it. The binding re-evaluates whenever the selection changes -
+        /// including while the drop-down is open, which is the normal way a selection is made - so
+        /// the latest value it produced is the one to hand back on close.
+        /// </summary>
+        private void OnPopupPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property != Popup.VerticalOffsetProperty || this.applyingCorrection) return;
+
+            this.bindingOffset = this.Popup.VerticalOffset;
+        }
+
+        /// <summary>
+        /// Hands the offset back to the template's binding. <c>ClearValue</c> is not enough: it drops
+        /// the binding's contribution along with the correction and leaves the offset at zero.
+        /// </summary>
+        private void RestoreBindingOffset()
+        {
+            this.applyingCorrection = true;
+            try
+            {
+                this.Popup.SetCurrentValue(Popup.VerticalOffsetProperty, this.bindingOffset);
+            }
+            finally
+            {
+                this.applyingCorrection = false;
+            }
         }
 
         private void OnPopupOpened(object? sender, EventArgs e)
@@ -169,19 +215,20 @@ public static class ComboBoxPopupAlignmentBehavior
             // correction applied for the row we just aligned to would still be in place at the next
             // open, on top of a fresh estimate for a possibly different selection - which is what
             // made a re-open of a far-down selection land off by a row, or wildly below the
-            // ComboBox. Clearing rather than restoring a snapshot matters because the selection is
-            // usually changed *by* this drop-down, so a value captured at open time is already
-            // stale by the time we close.
-            this.Popup.ClearValue(Popup.VerticalOffsetProperty);
+            // ComboBox.
+            this.RestoreBindingOffset();
         }
 
         private void Unsubscribe()
         {
+            // Retire any queued pass, whether or not we are currently subscribed.
+            this.generation++;
+            this.passScheduled = false;
+
             if (this.popupRoot is null) return;
 
             this.popupRoot.LayoutUpdated -= this.OnLayoutUpdated;
             this.popupRoot = null;
-            this.passScheduled = false;
         }
 
         private void OnLayoutUpdated(object? sender, EventArgs e) => this.RunPass();
@@ -199,9 +246,16 @@ public static class ComboBoxPopupAlignmentBehavior
             if (this.passScheduled || this.popupRoot is null) return;
 
             this.passScheduled = true;
+            int scheduledFor = this.generation;
             Dispatcher.UIThread.Post(
                 () =>
                 {
+                    // A pass queued for one opening must not run against a later one. Without this,
+                    // closing and reopening before the callback ran would let it measure the new
+                    // popup before its first positioning layout - exactly the stale-coordinate
+                    // reading this timing code exists to avoid.
+                    if (scheduledFor != this.generation) return;
+
                     this.passScheduled = false;
                     if (this.popupRoot is not null) this.RunPass();
                 },
@@ -265,7 +319,16 @@ public static class ComboBoxPopupAlignmentBehavior
             }
 
             // SetCurrentValue keeps the template's VerticalOffset binding intact.
-            this.Popup.SetCurrentValue(Popup.VerticalOffsetProperty, this.Popup.VerticalOffset + misalignment);
+            this.applyingCorrection = true;
+            try
+            {
+                this.Popup.SetCurrentValue(Popup.VerticalOffsetProperty, this.Popup.VerticalOffset + misalignment);
+            }
+            finally
+            {
+                this.applyingCorrection = false;
+            }
+
             this.SchedulePass();
         }
 

@@ -21,6 +21,19 @@ public class OklchAdjustmentConverter : IValueConverter
   /// </summary>
   public double HueAdjustment { get; set; }
 
+  /// <summary>
+  ///   Upper bound for Chroma, applied after <see cref="ChromaAdjustment" />. Unbounded by default,
+  ///   so callers that only offset are unaffected.
+  /// </summary>
+  /// <remarks>
+  ///   A ceiling, not a fixed value. It only bites on vivid accents - red and pink - which are the
+  ///   ones that otherwise come out more saturated than native; muted accents pass through
+  ///   untouched, and a near-grey accent keeps its own near-zero chroma rather than being given a
+  ///   hue. Judging this by mean error across accents understates it: the mean barely moves while
+  ///   the visible failures are all at high chroma.
+  /// </remarks>
+  public double ChromaCap { get; set; } = double.PositiveInfinity;
+
   public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
   {
     if (value is Color color)
@@ -30,7 +43,7 @@ public class OklchAdjustmentConverter : IValueConverter
 
       // Adjust
       l = Math.Clamp(l + this.LightnessAdjustment, 0, 1);
-      c = Math.Max(0, c + this.ChromaAdjustment);
+      c = Math.Min(Math.Max(0, c + this.ChromaAdjustment), this.ChromaCap);
       h = (h + this.HueAdjustment) % 360.0;
       if (h < 0) h += 360.0;
 

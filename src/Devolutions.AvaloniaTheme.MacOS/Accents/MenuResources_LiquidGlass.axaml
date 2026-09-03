@@ -10,32 +10,40 @@
   window compositor, and that blur cannot be shaped to the menu's rounded corners, so translucent
   menus show sharp content straight through. These values are sampled from native macOS menus.
 
-  Only keys that actually differ from the classic values are listed. Values are pinned
-  literals mirroring Accents/ThemeResources_LiquidGlass.axaml; MacOsMenuPackContractTests
-  asserts pack/full-theme parity so the two cannot drift apart.
+  Only keys that actually differ from the classic values are listed. Sampled native constants are
+  literals; the accent-derived selection is derived from SystemAccentColor the same way the full
+  theme derives it, so the pack follows a custom accent. MacOsMenuPackContractTests asserts
+  pack/full-theme parity so the two cannot drift apart.
 
   NOTE: the full DevolutionsMacOsTheme does NOT merge this file. There the menu tokens are
   derived from the theme's own resources by MenuResourceAliasBuilder.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:Devolutions.AvaloniaTheme.MacOS.Converters">
+
+  <!--
+    The accent-derived selection follows the live system accent, exactly as the full theme does,
+    rather than being pinned to the default accent. The pack cannot reach the theme's resources,
+    but it does not need to: the converter ships in this same assembly, and the accent itself is
+    a platform resource any host provides. The accent has to be reached through a brush because
+    Binding.Source cannot take a DynamicResource - a SolidColorBrush resolves its Color
+    dynamically and StaticResource captures the live brush, so reading .Color off it stays
+    current. Keep these parameters in step with ThemeResources_LiquidGlass.axaml;
+    MacOsMenuPackContractTests compares the two.
+  -->
+  <SolidColorBrush x:Key="MacOsMenuAccentSource" Color="{DynamicResource SystemAccentColor}" />
+  <converters:OklchAdjustmentConverter x:Key="MacOsMenuLightSelectionConverter" LightnessAdjustment="0.020" ChromaCap="0.175" />
+  <converters:OklchAdjustmentConverter x:Key="MacOsMenuDarkSelectionConverter" LightnessAdjustment="-0.110" ChromaCap="0.180" />
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <SolidColorBrush x:Key="MacOsMenuPopupBackgroundBrush" Color="#f8f9f9" />
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#000000" Opacity="0.2" />
-      <!--
-        Pinned rather than derived from SystemAccentColor: the full theme runs the accent through
-        OklchAdjustmentConverter, which the pack cannot reuse without importing the theme
-        dictionaries. Per variant because the two adjustments differ.
-
-        The values are the converter's output for macOS's default accent (#007aff), so a stock Mac
-        renders the pack and the full theme identically. MacOsMenuPackContractTests pins
-        SystemAccentColor to that same accent, so the parity check measures what ships rather than
-        the headless fallback accent. With a custom macOS accent the pack's tint stays at default.
-      -->
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#005df1" Opacity="0.64" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" x:DataType="SolidColorBrush"
+                       Color="{ReflectionBinding Color, Source={StaticResource MacOsMenuAccentSource},
+                                                 Converter={StaticResource MacOsMenuLightSelectionConverter}}" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#d7d9d9" />
     </ResourceDictionary>
 
@@ -44,7 +52,9 @@
       <SolidColorBrush x:Key="MacOsMenuPopupInnerBorderHighlightBrush" Color="#22272a" />
       <SolidColorBrush x:Key="MacOsMenuPopupBorderBrush" Color="#ffffff" Opacity="0.26" />
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="#2960ff" Opacity="0.69" />
+      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" x:DataType="SolidColorBrush"
+                       Color="{ReflectionBinding Color, Source={StaticResource MacOsMenuAccentSource},
+                                                 Converter={StaticResource MacOsMenuDarkSelectionConverter}}" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#3d4243" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

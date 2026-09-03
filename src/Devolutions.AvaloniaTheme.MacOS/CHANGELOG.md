@@ -9,6 +9,20 @@ Please see commits if you're curious. However we will do our best to call out ke
   buttons, checkbox/radio fills and borders, the ComboBox button, drop-down row hover, the
   DropDownButton, ListBoxItem selection and the Expander chevron were pinned to Avalonia's fallback
   accent (`#0078d7`) instead of the platform accent.
+- Fixed: the LiquidGlass selection highlight read washed out, most visibly on drop-down rows in the
+  light variant. The brush was translucent, and at 0.64 opacity over a near-white popup surface an
+  accent's chroma is diluted toward the surface - measured across four accents the result was both
+  lighter and less chromatic than native every time (blue chroma 0.155 against native 0.177). The
+  brush is now **opaque**, and preserves the accent's hue while shifting lightness and capping
+  chroma, fitted against Finder's drop-down selection for four accents. Menus and drop-down rows
+  share the one colour. A grey (graphite) accent now stays grey, where the previous chroma offset
+  gave it a violet cast.
+- Changed: the standalone LiquidGlass menu pack now derives its selection colour from
+  `SystemAccentColor` instead of carrying literals pinned to the default accent, so pack-only
+  consumers follow a custom system accent. It needs `SystemAccentColor` from the host, as the
+  classic pack already did.
+- Added: `OklchAdjustmentConverter.ChromaCap`, an optional chroma ceiling. Unbounded by default, so
+  existing callers are unaffected.
 - Fixed: in the classic light variant, a pressed checked `RadioButton` kept its unpressed fill. The
   light dictionary spelled the key `RadioButtonPressedCheckedBackgroundBrush` while the control and
   the dark dictionary both use `RadioButtonCheckedPressedBackgroundBrush`, so nothing resolved.
@@ -17,6 +31,11 @@ Please see commits if you're curious. However we will do our best to call out ke
   0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The
   standalone menu pack mirrors the change, so `MacOsMenuItemPointerOverBackgroundBrush` is now a
   gradient rather than a solid brush.
+- Known issue (Avalonia, not this theme): `SystemAccentColor` is captured when the app starts and
+  is not refreshed when the macOS appearance changes, so after a light/dark switch accent-derived
+  colours are computed from the previous appearance's accent until restart. macOS reports a different
+  accent per appearance for some accents (red `#E0383E` light / `#FF5257` dark), so it is visible on
+  those and not on blue or green. Tracked at https://support.avaloniaui.net/support/tickets/1857
 - BREAKING (resource keys): the intermediate colour tokens `AccentButtonTopColor`,
   `AccentButtonBottomColor`, `ControlBackgroundAccentRecessedTopColor`,
   `ControlBackgroundAccentRecessedBottomColor` and `ControlBorderAccentColor` were removed. They

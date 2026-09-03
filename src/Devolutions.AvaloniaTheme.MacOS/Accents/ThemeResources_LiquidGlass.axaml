@@ -20,14 +20,44 @@
   <OklchAdjustmentConverter x:Key="LightModeAccentBackgroundWashConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" />
   <OklchAdjustmentConverter x:Key="DarkModeAccentBackgroundWashConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
 
-  <OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="-0.07" ChromaAdjustment="0.02" HueAdjustment="2" />
   <!--
-    Fitted so the macOS default accent (#007aff) lands the menu/ComboBox selection on #274fbe, the
-    colour AppKit uses for a selected dark menu row. Applied as a relative Oklch delta, so a custom
-    system accent shifts with it. The previous values moved lightness and chroma the other way, which
-    read as a washed-out cyan next to Finder's.
+    Selection colour: the accent shifted in lightness only - hue and chroma pass through untouched.
+    Nothing more faithful is available. Apple ships hand-picked per-accent constants rather than a
+    formula (AppleHighlightColor holds explicit RGB per accent while AppleAccentColor is just an
+    index), and macOS draws a menu highlight as an NSVisualEffectMaterial rather than a colour, so
+    there is nothing to copy. Measuring Finder across four accents ruled out every simple model:
+    constant Oklch/HSL offsets, compositing over any surface in sRGB or linear light, fixed-alpha
+    Oklab blending, gamut limiting, and Display P3 blending.
+
+    Fitted against Finder's DROP-DOWN selection for purple, red, green and blue, measured per
+    appearance - the drop-down target rather than the menu one because that is where the difference
+    shows, and Finder's two differ: its menu selection is lighter, so fitting that made drop-down
+    rows read washed out. Mean deviation dE(Oklab) 0.04 light, 0.04 dark.
+
+    Chroma is capped as well as lightness shifted. Judged on mean error the cap looks marginal
+    (0.03 against 0.04), but the mean hides where it acts: it does nothing to muted accents and is
+    the whole fix for vivid ones. Without it red in dark keeps the accent's chroma of 0.208 against
+    native 0.181, which reads as a purer, less orange red, and pink comes out hot. A ceiling also
+    leaves a graphite accent grey by construction, since only a chroma *offset* could tint it -
+    which is what the previous values did.
+
+    The dark offset is the part that cannot be dropped: native dark selection is far darker than the
+    accent, and leaving lightness alone scores dE 0.107 there.
+
+    Opacity is gone, and that is the fix for the washed-out look rather than any constant: at 0.64
+    over a near-white popup surface an accent's chroma is diluted toward the surface, so measured
+    across four accents the old setup came out lighter AND less chromatic than native every time
+    (blue chroma 0.155 against native 0.177). No constant can reach the target through that.
+
+    KNOWN UPSTREAM ISSUE: Avalonia captures SystemAccentColor when the app starts and does not
+    refresh it when the macOS appearance changes, so after a light/dark switch these per-variant
+    constants are applied to the *previous* appearance's accent until the app restarts. macOS reports
+    a different accent per appearance for some accents (red is #E0383E light / #FF5257 dark), so it
+    shows on those and not on blue or green. Nothing here can compensate - the input is wrong.
+    Tracked at https://support.avaloniaui.net/support/tickets/1857
   -->
-  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="-0.0422" ChromaAdjustment="0.0238" HueAdjustment="7.12" />
+  <OklchAdjustmentConverter x:Key="LightModeAccentHighlightConverter" LightnessAdjustment="0.020" ChromaCap="0.175" />
+  <OklchAdjustmentConverter x:Key="DarkModeAccentHighlightConverter" LightnessAdjustment="-0.110" ChromaCap="0.180" />
 
   <!-- MARK: Brushes -->
 
@@ -163,9 +193,15 @@
       <SolidColorBrush x:Key="AccentBackgroundWash" x:DataType="SolidColorBrush"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
+      <!--
+        Opaque. The colour it has to hit cannot be reached through opacity: compositing the light
+        target over the popup surface at 0.64 needs a base colour outside sRGB (one channel goes
+        negative), so the surface was diluting the selection into something no opacity could fix.
+        Opaque makes the rendered colour be the brush colour, which is also what the popup surface
+        itself does.
+      -->
       <SolidColorBrush x:Key="AccentHighlight" x:DataType="SolidColorBrush"
-                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentHighlightConverter}}"
-                       Opacity="0.64" />
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource LightModeAccentHighlightConverter}}" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 
@@ -263,9 +299,9 @@
       <SolidColorBrush x:Key="AccentBackgroundWash"
                        Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentBackgroundWashConverter}}"
                        Opacity="0.43" />
+      <!-- Opaque - see the light variant above for why opacity cannot reach the target colour. -->
       <SolidColorBrush x:Key="AccentHighlight"
-                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentHighlightConverter}}"
-                       Opacity="0.69" />
+                       Color="{ReflectionBinding Color, Source={StaticResource SystemAccent}, Converter={StaticResource DarkModeAccentHighlightConverter}}" />
 
       <!-- Generic resources shared across controls (use sparingly!) -->
 

@@ -166,11 +166,39 @@ public static class ComboBoxPopupAlignmentBehavior
         /// including while the drop-down is open, which is the normal way a selection is made - so
         /// the latest value it produced is the one to hand back on close.
         /// </summary>
+        /// <remarks>
+        /// A write from anywhere but this behavior also invalidates the alignment we had converged
+        /// on, so the measure/correct loop is re-armed. Without that, choosing a different item from
+        /// an open drop-down would leave the new selection sitting wherever the binding's arithmetic
+        /// estimate put it - which for a long list is the very error this behavior exists to correct
+        /// - until the popup was closed and reopened.
+        /// </remarks>
         private void OnPopupPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (e.Property != Popup.VerticalOffsetProperty || this.applyingCorrection) return;
 
             this.bindingOffset = this.Popup.VerticalOffset;
+            this.ReArm();
+        }
+
+        /// <summary>
+        /// Restarts the measure/correct loop for a drop-down that is already open, after something
+        /// outside this behavior moved the popup.
+        /// </summary>
+        private void ReArm()
+        {
+            if (!this.Popup.IsOpen) return;
+            if (this.Popup.Child is not { } child || !child.IsAttachedToVisualTree()) return;
+            if (TopLevel.GetTopLevel(child) is not { } root) return;
+
+            // Retires anything still queued against the alignment we are abandoning.
+            this.Unsubscribe();
+
+            this.pass = 0;
+            this.previousMisalignment = double.NaN;
+            this.popupRoot = root;
+            root.LayoutUpdated += this.OnLayoutUpdated;
+            this.SchedulePass();
         }
 
         /// <summary>

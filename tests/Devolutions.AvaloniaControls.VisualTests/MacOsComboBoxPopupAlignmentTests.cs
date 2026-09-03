@@ -198,6 +198,41 @@ public class MacOsComboBoxPopupAlignmentTests
         }
     }
 
+
+    /// <summary>
+    ///   A drop-down that is knocked out of alignment while open must be corrected without waiting
+    ///   to be closed and reopened.
+    /// </summary>
+    /// <remarks>
+    ///   The real trigger is choosing a different item from the open list: the template's binding
+    ///   re-evaluates and writes a fresh arithmetic estimate, which for a long list is exactly the
+    ///   error this behavior exists to correct. That cannot be asserted positionally here, because
+    ///   the headless overlay popup host leaves every index aligned on its own, so the offset is
+    ///   moved directly instead - the same external write the binding performs.
+    /// </remarks>
+    [AvaloniaFact]
+    public void Offset_moved_while_open_is_corrected_without_reopening()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 500, maxDropDownHeight: 200);
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            popup.SetCurrentValue(Popup.VerticalOffsetProperty, popup.VerticalOffset + 100);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
+    }
+
     /// <summary>The case that already worked: the whole list fits, no scrolling involved.</summary>
     [AvaloniaTheory]
     [InlineData("Light")]

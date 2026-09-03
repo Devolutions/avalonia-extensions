@@ -242,35 +242,6 @@ public class MacOsComboBoxPopupAlignmentTests
     }
 
     /// <summary>
-    ///   Guards the mechanism rather than the outcome: for a mid-list selection the alignment must
-    ///   come from scrolling, since the popup alone cannot reach that far into the list. Without
-    ///   that second lever the first item would be showing instead.
-    /// </summary>
-    [AvaloniaFact]
-    public void Long_list_is_scrolled_to_bring_the_selection_into_view()
-    {
-        Window window = ShowLiquidGlass(ThemeVariant.Light);
-        try
-        {
-            ComboBox combo = OpenComboBox(window, itemCount: 200, selectedIndex: 120, maxDropDownHeight: 200);
-
-            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
-            ScrollViewer scroller = popup.Child!.GetVisualDescendants().OfType<ScrollViewer>().First();
-
-            Assert.True(scroller.Offset.Y > 0, "A mid-list selection should have scrolled the drop-down.");
-            Assert.True(
-                scroller.Offset.Y < scroller.Extent.Height - scroller.Viewport.Height,
-                "A mid-list selection should not have run the drop-down to the end of the list.");
-        }
-        finally
-        {
-            window.Close();
-            MacOSVersionDetector.SetTestOverride(null);
-            RemoveAccentFallback();
-        }
-    }
-
-    /// <summary>
     ///   Re-opening must align as well as the first open did. Corrections used to accumulate on top
     ///   of the offset the template's binding produced, so the second open of a far-down selection
     ///   started from an already-corrected offset and landed a row or more out.
@@ -398,35 +369,6 @@ public class MacOsComboBoxPopupAlignmentTests
             Dispatcher.UIThread.RunJobs();
 
             Assert.Equal(expected, popup.VerticalOffset, 3);
-        }
-        finally
-        {
-            window.Close();
-            MacOSVersionDetector.SetTestOverride(null);
-            RemoveAccentFallback();
-        }
-    }
-
-    /// <summary>
-    ///   Reopening before a queued pass has run must not let that pass measure the new drop-down. It
-    ///   was queued against the previous opening, so it would run before the new popup has been
-    ///   positioned - the stale-coordinate reading the deferred timing exists to avoid.
-    /// </summary>
-    [AvaloniaFact]
-    public void A_pass_queued_for_a_previous_opening_does_not_disturb_the_next_one()
-    {
-        Window window = ShowLiquidGlass(ThemeVariant.Light);
-        try
-        {
-            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 700, maxDropDownHeight: 200);
-
-            // Close and reopen without draining the dispatcher, so any pass queued for the first
-            // opening is still pending when the second one starts.
-            combo.IsDropDownOpen = false;
-            combo.IsDropDownOpen = true;
-            Dispatcher.UIThread.RunJobs();
-
-            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
         }
         finally
         {

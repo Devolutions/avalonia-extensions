@@ -420,7 +420,11 @@ public static class ComboBoxPopupAlignmentBehavior
         {
             if (!this.comboBox.IsAttachedToVisualTree() || !container.IsAttachedToVisualTree()) return 0;
 
-            double scaling = TopLevel.GetTopLevel(this.comboBox)?.RenderScaling ?? 1;
+            // The result is spent in the popup's own units - its ScrollViewer offset and its
+            // VerticalOffset - so the popup root's scaling is the one that applies. A native popup
+            // can land on a monitor whose DPI differs from the owner window's, and using the owner
+            // scale there would over- or under-correct on every pass.
+            double scaling = (TopLevel.GetTopLevel(container) ?? TopLevel.GetTopLevel(this.comboBox))?.RenderScaling ?? 1;
             if (scaling <= 0) scaling = 1;
 
             double comboBoxCentre = this.comboBox.PointToScreen(new Point(0, this.comboBox.Bounds.Height / 2)).Y;

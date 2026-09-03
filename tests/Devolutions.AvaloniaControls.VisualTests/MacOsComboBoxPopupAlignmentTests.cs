@@ -246,4 +246,59 @@ public class MacOsComboBoxPopupAlignmentTests
             MacOSVersionDetector.SetTestOverride(null);
         }
     }
+
+    /// <summary>
+    ///   The everyday interaction: the user opens the list and picks a different item. The offset
+    ///   left behind must be the estimate for the item they picked, not the one that was selected
+    ///   when the drop-down opened - otherwise the next open starts from a stale position and is
+    ///   visibly dragged into place.
+    /// </summary>
+    [AvaloniaFact]
+    public void Choosing_a_different_item_leaves_the_offset_for_the_new_selection()
+    {
+        double expected = BindingOffsetFor(selectedIndex: 500);
+
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 0, maxDropDownHeight: 200);
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            // Pick a far-away item from inside the open drop-down, as a user would.
+            combo.SelectedIndex = 500;
+            Dispatcher.UIThread.RunJobs();
+
+            combo.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(expected, popup.VerticalOffset, 3);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
+
+    /// <summary>
+    ///   The offset the template's binding produces for <paramref name="selectedIndex" /> when the
+    ///   selection was made before the drop-down was ever opened.
+    /// </summary>
+    private static double BindingOffsetFor(int selectedIndex)
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: selectedIndex, maxDropDownHeight: 200);
+            combo.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+
+            return Assert.Single(combo.GetVisualDescendants().OfType<Popup>()).VerticalOffset;
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+        }
+    }
 }

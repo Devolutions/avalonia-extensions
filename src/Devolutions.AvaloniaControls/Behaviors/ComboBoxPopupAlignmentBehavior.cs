@@ -120,8 +120,6 @@ public static class ComboBoxPopupAlignmentBehavior
 
         private double previousMisalignment;
 
-        private double estimatedOffset = double.NaN;
-
         private bool passScheduled;
 
         internal Popup Popup { get; }
@@ -153,10 +151,6 @@ public static class ComboBoxPopupAlignmentBehavior
             this.pass = 0;
             this.previousMisalignment = double.NaN;
 
-            // Whatever the template's binding currently says is the estimate for this open. It is
-            // restored on close so a correction never becomes the starting point of the next open.
-            this.estimatedOffset = this.Popup.VerticalOffset;
-
             // The popup is not positioned yet at Opened time - measuring here would compare against
             // a stale location. The first layout pass after opening is the earliest useful moment.
             this.popupRoot = root;
@@ -167,15 +161,14 @@ public static class ComboBoxPopupAlignmentBehavior
         {
             this.Unsubscribe();
 
-            // Hand the offset back to the template's binding. Otherwise the correction applied for
-            // the row we just aligned to would still be in place at the next open, on top of a fresh
-            // estimate for a possibly different selection - which is what made a re-open of a
-            // far-down selection land off by a row, or wildly below the ComboBox.
-            if (!double.IsNaN(this.estimatedOffset))
-            {
-                this.Popup.SetCurrentValue(Popup.VerticalOffsetProperty, this.estimatedOffset);
-                this.estimatedOffset = double.NaN;
-            }
+            // Drop our correction so the template's binding owns the offset again. Otherwise the
+            // correction applied for the row we just aligned to would still be in place at the next
+            // open, on top of a fresh estimate for a possibly different selection - which is what
+            // made a re-open of a far-down selection land off by a row, or wildly below the
+            // ComboBox. Clearing rather than restoring a snapshot matters because the selection is
+            // usually changed *by* this drop-down, so a value captured at open time is already
+            // stale by the time we close.
+            this.Popup.ClearValue(Popup.VerticalOffsetProperty);
         }
 
         private void Unsubscribe()

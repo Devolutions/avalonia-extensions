@@ -276,6 +276,16 @@
                 </ItemsControl>
               </Grid>
             </Border>
+            <!--
+              PlacementConstraintAdjustment: the default (All) includes FlipY, which is wrong for a
+              macOS-style ComboBox. FlipY exists for menus, where a submenu that doesn't fit below
+              should open above instead. Here the popup is deliberately offset *upwards* so the
+              selected row lands on the ComboBox, so near the bottom of the screen the compositor
+              flips it as well - moving it a further popup-height up and leaving it floating well
+              above the control. Sliding is the correct adjustment: it keeps the popup on screen
+              without changing which side of the anchor it is on, which is what the alignment
+              behaviour then measures against.
+            -->
             <Popup
               Name="PART_Popup"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
@@ -286,6 +296,7 @@
               Placement="AnchorAndGravity"
               PlacementAnchor="Bottom"
               PlacementGravity="Bottom"
+              PlacementConstraintAdjustment="SlideX, SlideY, ResizeX, ResizeY"
               HorizontalOffset="-13">
               <Popup.MinWidth>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">

@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -152,6 +153,49 @@ public class MacOsComboBoxPopupAlignmentTests
         combo.IsDropDownOpen = true;
         Dispatcher.UIThread.RunJobs();
         return combo;
+    }
+
+    /// <summary>
+    ///   The drop-down must not be allowed to flip to the other side of the ComboBox.
+    /// </summary>
+    /// <remarks>
+    ///   <para>
+    ///     <see cref="Popup.PlacementConstraintAdjustment" /> defaults to
+    ///     <c>All</c>, which includes <c>FlipY</c>. That default suits menus - a submenu that does
+    ///     not fit below should open above - but not this drop-down, which is deliberately offset
+    ///     upwards so the selected row lands on the ComboBox. Near the bottom of the screen the
+    ///     compositor would flip it as well, moving it a further popup-height up and leaving it
+    ///     floating well above the control.
+    ///   </para>
+    ///   <para>
+    ///     This is a template assertion rather than a positional one because the flip is performed
+    ///     by the platform compositor, which the headless overlay popup host does not model - the
+    ///     misplacement it causes is not reproducible in-process.
+    ///   </para>
+    /// </remarks>
+    [AvaloniaFact]
+    public void Drop_down_is_not_allowed_to_flip_to_the_other_side()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 20, selectedIndex: 10, maxDropDownHeight: 200);
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            Assert.False(
+                popup.PlacementConstraintAdjustment.HasFlag(PopupPositionerConstraintAdjustment.FlipY),
+                "FlipY would send the drop-down to the far side of the ComboBox at the bottom of the screen.");
+
+            Assert.True(
+                popup.PlacementConstraintAdjustment.HasFlag(PopupPositionerConstraintAdjustment.SlideY),
+                "Without SlideY the drop-down could be positioned off-screen instead of being nudged back on.");
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
     }
 
     /// <summary>The case that already worked: the whole list fits, no scrolling involved.</summary>

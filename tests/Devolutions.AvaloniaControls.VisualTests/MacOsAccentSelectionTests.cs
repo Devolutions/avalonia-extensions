@@ -25,10 +25,9 @@ using Xunit;
 ///     gamut limiting, and Display P3 blending. So this is a deliberate approximation.
 ///   </para>
 ///   <para>
-///     Two things are therefore pinned: the exact output for the default accent, because the
-///     standalone pack has to carry it as a literal, and the distance from the recorded native
-///     colours, because that is the actual intent and a tightening of the model should not be free
-///     to drift away from Finder.
+///     Two things are therefore pinned: the exact output for the default accent, as a regression pin
+///     on the fitted derivation, and the distance from the recorded native colours, because that is
+///     the actual intent and a tightening of the model should not be free to drift away from Finder.
 ///   </para>
 ///   <para>
 ///     The derivation is <see cref="OklchAdjustmentConverter" />: hue preserved, lightness shifted,
@@ -42,8 +41,9 @@ public class MacOsAccentSelectionTests
     /// <summary>The accent macOS reports for its default "Blue", read from Avalonia per appearance.</summary>
     private const string DefaultAccent = "#007AFF";
 
-    // What the derivation produces for the default accent. MenuResources_LiquidGlass pins these same
-    // two literals, because the pack cannot run a converter.
+    // What the derivation produces for the default accent. The standalone pack runs the same
+    // converter with the same parameters, so pack and full theme move together; this pins the
+    // derivation itself rather than any literal.
     private const string DefaultSelectionLight = "#3884ED";
     private const string DefaultSelectionDark = "#005BC4";
 
@@ -106,10 +106,12 @@ public class MacOsAccentSelectionTests
     [Theory]
     [InlineData(false, DefaultSelectionLight)]
     [InlineData(true, DefaultSelectionDark)]
-    public void Default_accent_derives_the_literal_the_pack_pins(bool dark, string expected)
+    public void Default_accent_derives_the_fitted_colour(bool dark, string expected)
     {
-        // If this changes, MenuResources_LiquidGlass must be re-pinned in the same commit or
-        // Pack_menu_tokens_match_the_full_theme will fail.
+        // A regression pin on the fitted derivation: it fails if the constants move, whether or not
+        // that was intended. If the change is deliberate, update these expectations and keep the
+        // converter parameters in MenuResources_LiquidGlass in step, since the pack applies the same
+        // derivation and Pack_menu_tokens_match_the_full_theme compares the two.
         Assert.Equal(Color.Parse(expected), Derive(DefaultAccent, dark));
     }
 
@@ -123,6 +125,22 @@ public class MacOsAccentSelectionTests
 
         Assert.True(light <= MaxDeviation, $"{name} light: dE {light:F4} exceeds {MaxDeviation}");
         Assert.True(dark <= MaxDeviation, $"{name} dark: dE {dark:F4} exceeds {MaxDeviation}");
+    }
+
+    [Theory]
+    [InlineData(-0.1)]
+    [InlineData(0.0)]
+    public void A_non_positive_chroma_cap_greys_out_rather_than_flipping_hue(double cap)
+    {
+        // Negative chroma is a 180-degree hue rotation in Oklch, not an absence of colour, so an
+        // out-of-range cap has to clamp to grey rather than quietly producing the opposite hue.
+        var converter = new OklchAdjustmentConverter { ChromaCap = cap };
+        Color result = Assert.IsType<Color>(
+            converter.Convert(Color.Parse(DefaultAccent), typeof(Color), null, null!));
+
+        int spread = Math.Max(result.R, Math.Max(result.G, result.B))
+                     - Math.Min(result.R, Math.Min(result.G, result.B));
+        Assert.True(spread <= 2, $"cap {cap} should yield a grey, got {result}");
     }
 
     [Theory]

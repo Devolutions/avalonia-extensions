@@ -28,8 +28,9 @@ public class ColorToHexConverter : IValueConverter
 
     if (color is not { } resolved) return "<unresolved>";
 
-    // Alpha first matches Avalonia's own Color.ToString(); the trailing RGB hex is what a colour
-    // meter reports, so both forms are shown rather than making the reader convert.
+    // Plain #RRGGBB, which is what a colour meter reports, so readings can be compared directly.
+    // Avalonia's own Color.ToString() is alpha-first (#AARRGGBB) and would need converting by hand.
+    // Alpha is spelled out separately when it is not opaque, rather than folded into the hex.
     return resolved.A == 255
       ? $"#{resolved.R:X2}{resolved.G:X2}{resolved.B:X2}"
       : $"#{resolved.R:X2}{resolved.G:X2}{resolved.B:X2} (alpha {resolved.A})";

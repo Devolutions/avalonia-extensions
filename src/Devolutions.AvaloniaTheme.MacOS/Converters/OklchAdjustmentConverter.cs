@@ -43,7 +43,9 @@ public class OklchAdjustmentConverter : IValueConverter
 
       // Adjust
       l = Math.Clamp(l + this.LightnessAdjustment, 0, 1);
-      c = Math.Min(Math.Max(0, c + this.ChromaAdjustment), this.ChromaCap);
+      // Lower bound last: a negative ChromaCap would otherwise leave chroma negative, which is a
+      // 180-degree hue flip rather than the grey it reads as. Unchanged for any cap >= 0.
+      c = Math.Max(0, Math.Min(c + this.ChromaAdjustment, this.ChromaCap));
       h = (h + this.HueAdjustment) % 360.0;
       if (h < 0) h += 360.0;
 

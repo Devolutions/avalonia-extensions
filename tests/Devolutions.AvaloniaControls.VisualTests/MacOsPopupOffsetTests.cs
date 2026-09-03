@@ -65,6 +65,32 @@ public class MacOsPopupOffsetTests
         return Convert.ToInt32(value);
     }
 
+    /// <summary>
+    ///   Opens the drop-down and returns the offset the template's binding produced, sampled at
+    ///   <see cref="Popup.Opened" />.
+    /// </summary>
+    /// <remarks>
+    ///   <see cref="Devolutions.AvaloniaControls.Behaviors.ComboBoxPopupAlignmentBehavior" /> refines
+    ///   this value afterwards, on the popup's first layout pass, by measuring where the selected row
+    ///   actually landed - see <see cref="MacOsComboBoxPopupAlignmentTests" /> for that outcome.
+    ///   These tests are about the estimate the constants feed in, so they sample before that runs.
+    /// </remarks>
+    private static double OpenAndCaptureBoundOffset(Window window, ComboBox combo)
+    {
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+        double captured = double.NaN;
+        popup.Opened += (_, _) => captured = popup.VerticalOffset;
+
+        combo.IsDropDownOpen = true;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.False(double.IsNaN(captured), "The popup should have opened.");
+        return captured;
+    }
+
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]
@@ -83,13 +109,7 @@ public class MacOsPopupOffsetTests
 
         try
         {
-            window.Show();
-            Dispatcher.UIThread.RunJobs();
-
-            combo.IsDropDownOpen = true;
-            Dispatcher.UIThread.RunJobs();
-
-            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            double actualOffset = OpenAndCaptureBoundOffset(window, combo);
 
             // Derived from the geometry the constant is supposed to track, not from the constant.
             Avalonia.Thickness shadow = Thickness(window, "ComboBoxShadowMargin", variant);
@@ -97,7 +117,7 @@ public class MacOsPopupOffsetTests
             int rowHeight = Int(window, "ComboBoxItemHeight", variant);
             double expected = ((SelectedIndex + 1) * -rowHeight) - (shadow.Bottom + padding.Top);
 
-            Assert.Equal(expected, popup.VerticalOffset);
+            Assert.Equal(expected, actualOffset);
         }
         finally
         {
@@ -129,17 +149,11 @@ public class MacOsPopupOffsetTests
 
         try
         {
-            window.Show();
-            Dispatcher.UIThread.RunJobs();
-
-            combo.IsDropDownOpen = true;
-            Dispatcher.UIThread.RunJobs();
-
-            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            double actualOffset = OpenAndCaptureBoundOffset(window, combo);
 
             // PopupTrimHeight is meant to be PopupMargin's vertical total; derive it from there.
             Avalonia.Thickness margin = Thickness(window, "PopupMargin", variant);
-            Assert.Equal(-(maxDropDownHeight - (margin.Top + margin.Bottom)), popup.VerticalOffset);
+            Assert.Equal(-(maxDropDownHeight - (margin.Top + margin.Bottom)), actualOffset);
         }
         finally
         {

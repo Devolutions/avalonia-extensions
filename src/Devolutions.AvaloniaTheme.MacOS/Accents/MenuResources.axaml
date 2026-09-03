@@ -23,7 +23,13 @@
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#ffffff" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#12000000" />
       <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#1f000000" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
+      <!-- Mirrors the full theme's ControlBackgroundAccentRaisedBrush so menu and drop-down
+           hover match. Kept in step with ThemeResources.axaml; Pack_menu_tokens_match_the_full_theme
+           compares the stops. -->
+      <LinearGradientBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorLight1}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColor}" />
+      </LinearGradientBrush>
       <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33000000" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForeground" Color="#000000" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForegroundPointerOver" Color="#000000" />
@@ -45,7 +51,11 @@
       <SolidColorBrush x:Key="MacOsMenuAccentForegroundBrush" Color="#deecf9" />
       <SolidColorBrush x:Key="MacOsMenuSelectedBackgroundBrush" Color="#2bffffff" />
       <SolidColorBrush x:Key="MacOsMenuPressedBackgroundBrush" Color="#3dffffff" />
-      <SolidColorBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
+      <!-- Mirrors the full theme's dark ControlBackgroundAccentRaisedBrush. -->
+      <LinearGradientBrush x:Key="MacOsMenuItemPointerOverBackgroundBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColor}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColorDark1}" />
+      </LinearGradientBrush>
       <SolidColorBrush x:Key="MacOsMenuSeparatorBrush" Color="#33ffffff" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForeground" Color="#f5f5f5" />
       <SolidColorBrush x:Key="MacOsMenuScrollBarButtonArrowForegroundPointerOver" Color="#f5f5f5" />

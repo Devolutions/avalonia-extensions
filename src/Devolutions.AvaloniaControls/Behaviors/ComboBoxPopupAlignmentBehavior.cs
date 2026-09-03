@@ -146,6 +146,16 @@ public static class ComboBoxPopupAlignmentBehavior
             popup.PropertyChanged += this.OnPopupPropertyChanged;
             popup.Opened += this.OnPopupOpened;
             popup.Closed += this.OnPopupClosed;
+
+            // The offset alone is not a reliable signal that the selection moved: the converter
+            // clamps at -effectivePopupHeight, so every sufficiently large index produces the same
+            // value and stepping between two of them raises no property change at all.
+            comboBox.SelectionChanged += this.OnSelectionChanged;
+
+            // Enabling the behavior on an already-open drop-down (switching the attached property
+            // on at runtime, or a theme applied to a ComboBox that is showing its list) would
+            // otherwise wait for an Opened event that has already been and gone.
+            if (popup.IsOpen) this.ReArm();
         }
 
         public void Dispose()
@@ -153,6 +163,7 @@ public static class ComboBoxPopupAlignmentBehavior
             this.Popup.PropertyChanged -= this.OnPopupPropertyChanged;
             this.Popup.Opened -= this.OnPopupOpened;
             this.Popup.Closed -= this.OnPopupClosed;
+            this.comboBox.SelectionChanged -= this.OnSelectionChanged;
             this.Unsubscribe();
 
             // Being disposed mid-open (the behavior switched off while the drop-down is showing)
@@ -180,6 +191,12 @@ public static class ComboBoxPopupAlignmentBehavior
             this.bindingOffset = this.Popup.VerticalOffset;
             this.ReArm();
         }
+
+        /// <summary>
+        /// A selection made from the open drop-down moves the row that has to end up over the
+        /// ComboBox, so the alignment has to be worked out again.
+        /// </summary>
+        private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => this.ReArm();
 
         /// <summary>
         /// Restarts the measure/correct loop for a drop-down that is already open, after something

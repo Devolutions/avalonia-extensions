@@ -233,6 +233,90 @@ public class MacOsComboBoxPopupAlignmentTests
         }
     }
 
+
+    /// <summary>
+    ///   Stepping between two adjacent far-down selections in an open drop-down must re-align, even
+    ///   though the offset binding produces no new value.
+    /// </summary>
+    /// <remarks>
+    ///   <see cref="SelectedIndexToPopupOffsetConverter" /> clamps at the effective popup height, so
+    ///   every sufficiently large index yields the same offset. Watching
+    ///   <see cref="Popup.VerticalOffsetProperty" /> alone therefore cannot see this move: no
+    ///   property change is raised. The selection itself has to be observed.
+    /// </remarks>
+    [AvaloniaFact]
+    public void Stepping_between_clamped_selections_still_re_aligns()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 500, maxDropDownHeight: 200);
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            // Scroll the open list away from the selected row. The behavior has already converged
+            // and unsubscribed, so nothing corrects this on its own - the drop-down stays where the
+            // scroll left it.
+            ScrollViewer scroller = popup.Child!.GetVisualDescendants().OfType<ScrollViewer>().First();
+            scroller.SetCurrentValue(ScrollViewer.OffsetProperty, scroller.Offset.WithY(scroller.Offset.Y + 100));
+            Dispatcher.UIThread.RunJobs();
+
+            double displaced = SelectedRowOffsetFromComboBox(combo);
+            Assert.True(
+                Math.Abs(displaced) > Tolerance,
+                $"The row should be displaced before the selection changes, but it was off by {displaced}.");
+
+            // Step to the adjacent index. The converter clamps at the effective popup height, so
+            // both indices produce the same offset and the binding raises no property change at
+            // all - only SelectionChanged can reveal that the row to align to has moved.
+            Assert.Equal(BindingOffsetFor(selectedIndex: 500), BindingOffsetFor(selectedIndex: 501), 3);
+
+            combo.SelectedIndex = 501;
+            Dispatcher.UIThread.RunJobs();
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
+    }
+
+    /// <summary>
+    ///   Enabling the behavior while the drop-down is already showing must align that opening,
+    ///   rather than waiting for an <see cref="Popup.Opened" /> event that has already passed.
+    /// </summary>
+    [AvaloniaFact]
+    public void Enabling_the_behavior_on_an_open_drop_down_aligns_it()
+    {
+        Window window = ShowLiquidGlass(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 500, maxDropDownHeight: 200);
+
+            ComboBoxPopupAlignmentBehavior.SetEnable(combo, false);
+            Dispatcher.UIThread.RunJobs();
+
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+            popup.SetCurrentValue(Popup.VerticalOffsetProperty, popup.VerticalOffset + 100);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(
+                Math.Abs(SelectedRowOffsetFromComboBox(combo)) > Tolerance,
+                "The drop-down should be misaligned while the behavior is off, or this proves nothing.");
+
+            ComboBoxPopupAlignmentBehavior.SetEnable(combo, true);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.InRange(SelectedRowOffsetFromComboBox(combo), -Tolerance, Tolerance);
+        }
+        finally
+        {
+            window.Close();
+            MacOSVersionDetector.SetTestOverride(null);
+            RemoveAccentFallback();
+        }
+    }
+
     /// <summary>The case that already worked: the whole list fits, no scrolling involved.</summary>
     [AvaloniaTheory]
     [InlineData("Light")]

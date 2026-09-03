@@ -21,11 +21,6 @@ Please see commits if you're curious. However we will do our best to call out ke
   `SystemAccentColor` instead of carrying literals pinned to the default accent, so pack-only
   consumers follow a custom system accent. It needs `SystemAccentColor` from the host, as the
   classic pack already did.
-- Added: `OklchAdjustmentConverter.ChromaCap`, an optional chroma ceiling. Unbounded by default, so
-  existing callers are unaffected.
-- Fixed: in the classic light variant, a pressed checked `RadioButton` kept its unpressed fill. The
-  light dictionary spelled the key `RadioButtonPressedCheckedBackgroundBrush` while the control and
-  the dark dictionary both use `RadioButtonCheckedPressedBackgroundBrush`, so nothing resolved.
 - Changed: in the classic variant, menu hover now uses the accent gradient
   (`ControlBackgroundAccentRaisedBrush`), the same brush as drop-down rows. It was a flat accent at
   0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The

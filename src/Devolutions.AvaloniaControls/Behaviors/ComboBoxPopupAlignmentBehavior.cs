@@ -93,14 +93,6 @@ public static class ComboBoxPopupAlignmentBehavior
     /// </summary>
     private static readonly TimeSpan SettleVerificationDelay = TimeSpan.FromMilliseconds(120);
 
-    /// <summary>
-    /// Opt-in tracing, for diagnosing alignment on a real desktop where this loop cannot practically
-    /// be stepped through: set <c>DEVO_COMBOBOX_ALIGN_TRACE=1</c> to print one line per measuring
-    /// pass, recording the measurement, the levers applied and which exit path was taken.
-    /// </summary>
-    private static readonly bool TraceEnabled =
-        Environment.GetEnvironmentVariable("DEVO_COMBOBOX_ALIGN_TRACE") == "1";
-
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
 
@@ -350,7 +342,6 @@ public static class ComboBoxPopupAlignmentBehavior
                     double misalignment = this.Misalignment(container);
                     if (Math.Abs(misalignment) <= Tolerance) return;
 
-                    this.Trace($"settle check found {misalignment:F2} - re-aligning");
                     this.ReArm();
 
                     // ReArm resets this for the fresh loop it starts - correct when re-arming for a
@@ -447,22 +438,10 @@ public static class ComboBoxPopupAlignmentBehavior
                 DispatcherPriority.Loaded);
         }
 
-        /// <summary>
-        /// Writes one line of <see cref="TraceEnabled">opt-in</see> diagnostics for the current pass.
-        /// </summary>
-        private void Trace(string message)
-        {
-            if (!TraceEnabled) return;
-
-            Console.WriteLine(
-                $"[combo-align] gen {this.generation} pass {this.pass} sel {this.comboBox.SelectedIndex}: {message}");
-        }
-
         private void RunPass()
         {
             if (!this.Popup.IsOpen || this.pass++ >= MaxPasses)
             {
-                if (this.Popup.IsOpen) this.Trace($"giving up after {MaxPasses} passes");
                 this.Unsubscribe();
                 return;
             }
@@ -472,7 +451,6 @@ public static class ComboBoxPopupAlignmentBehavior
             {
                 // Not realized yet - ResolveSelectedContainer has asked for it, so try again rather
                 // than giving up on a list that is merely still virtualizing.
-                this.Trace("selected container not realized yet");
                 this.SchedulePass();
                 return;
             }
@@ -480,7 +458,6 @@ public static class ComboBoxPopupAlignmentBehavior
             double misalignment = this.Misalignment(container);
             if (Math.Abs(misalignment) <= Tolerance)
             {
-                this.Trace($"aligned ({misalignment:F2})");
                 this.Unsubscribe();
 
                 // Unsubscribe has dropped the layout listeners, so from here nothing would ever
@@ -498,7 +475,6 @@ public static class ComboBoxPopupAlignmentBehavior
                 // Reject the sample outright: it is almost certainly measured mid-reposition. It
                 // must not reach the popupIsStuck comparison either, or two identical bad readings
                 // in a row would look like a clamped popup and send TryScroll off to an endpoint.
-                this.Trace($"rejected outsized sample {misalignment:F2}");
                 this.previousMisalignment = double.NaN;
                 this.stuckStreak = 0;
                 this.SchedulePass();
@@ -507,16 +483,15 @@ public static class ComboBoxPopupAlignmentBehavior
 
             // If several passes in a row measure the same misalignment, the popup is clamped - by
             // the screen edge, or because the list is already scrolled to an end - and scrolling is
-            // the only lever left. A single repeat is not enough to conclude that, and neither is
-            // merely counting dispatcher passes: on X11 (including under a Wayland session via
-            // XWayland), the popup's real move lands asynchronously via ConfigureNotify, which can
-            // take longer than several Loaded-priority dispatcher passes fired back to back. Without
-            // also requiring StuckConfirmationDelay of genuine wall-clock time to have passed, this
-            // streak could be satisfied entirely from stale, pre-move readings - misreading "hasn't
-            // moved yet" as "clamped" and sending TryScroll off against a position that was never
-            // final. Treating an in-flight move as "stuck" made the very first opening of a far-down
-            // selection settle on the wrong row - scrolling to cover a gap that a moment later the
-            // popup would have closed on its own.
+            // the only lever left. Counting dispatcher passes is not enough to conclude that: on X11
+            // (including under a Wayland session via XWayland), the popup's real move lands
+            // asynchronously via ConfigureNotify, which can take longer than several Loaded-priority
+            // dispatcher passes fired back to back. Without also requiring StuckConfirmationDelay of
+            // genuine wall-clock time to have passed, this streak could be satisfied entirely from
+            // stale, pre-move readings - misreading "hasn't moved yet" as "clamped" and sending
+            // TryScroll off against a position that was never final. Treating an in-flight move as
+            // "stuck" made the very first opening of a far-down selection settle on the wrong row -
+            // scrolling to cover a gap that a moment later the popup would have closed on its own.
             bool sameAsLastTime = !double.IsNaN(this.previousMisalignment)
                                    && Math.Abs(misalignment - this.previousMisalignment) <= Tolerance;
             if (sameAsLastTime)
@@ -543,7 +518,6 @@ public static class ComboBoxPopupAlignmentBehavior
                 // sign, and the loop oscillates until it runs out of passes. Wait for real time to
                 // pass instead, so a pending ConfigureNotify can land and change the reading. Only an
                 // unchanged reading that survives that wait means the popup is genuinely clamped.
-                this.Trace($"misalign {misalignment:F2}, streak {this.stuckStreak} - awaiting time confirmation");
                 this.pass--; // Waiting for confirmation should not count against MaxPasses.
                 this.ScheduleStuckConfirmation();
                 return;
@@ -552,7 +526,6 @@ public static class ComboBoxPopupAlignmentBehavior
             if (popupIsStuck)
             {
                 bool scrolled = this.TryScroll(misalignment);
-                this.Trace($"misalign {misalignment:F2} - popup stuck, scroll {(scrolled ? "applied" : "unavailable")}");
 
                 if (scrolled)
                 {
@@ -566,7 +539,6 @@ public static class ComboBoxPopupAlignmentBehavior
                 return;
             }
 
-            this.Trace($"misalign {misalignment:F2} - moving popup (offset {this.Popup.VerticalOffset:F2} -> {this.Popup.VerticalOffset + misalignment:F2})");
 
             // SetCurrentValue keeps the template's VerticalOffset binding intact.
             this.applyingCorrection = true;

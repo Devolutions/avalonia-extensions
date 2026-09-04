@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Behaviors;
 
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -58,18 +59,29 @@ public static class ComboBoxPopupAlignmentBehavior
     private const double MaxCorrection = 2000;
 
     /// <summary>
-    /// How many consecutive passes must measure the same misalignment before the popup is treated
-    /// as clamped rather than merely not yet repositioned. <see cref="Aligner.Misalignment"/> uses
-    /// <c>PointToScreen</c>/<c>PointToClient</c>, which round-trip through the platform's window
-    /// position - and on Linux (X11, including under a Wayland session via XWayland) that position
-    /// is only updated when a <c>ConfigureNotify</c> event lands, asynchronously after the popup is
-    /// requested to move. The first pass or two after opening or repositioning can therefore measure
-    /// a stale, pre-move position that looks identical to being genuinely stuck against the screen
-    /// edge. Requiring more than one repeat before concluding "stuck" gives that round-trip a chance
-    /// to land first - see the macOS behavior's history for why one repeat was not enough there
-    /// either.
+    /// How many consecutive, time-spaced confirmations must measure the same misalignment before
+    /// the popup is treated as clamped rather than merely not yet repositioned. <see
+    /// cref="Aligner.Misalignment"/> uses <c>PointToScreen</c>/<c>PointToClient</c>, which round-trip
+    /// through the platform's window position - and on Linux (X11, including under a Wayland session
+    /// via XWayland) that position is only updated when a <c>ConfigureNotify</c> event lands,
+    /// asynchronously after the popup is requested to move. Counting consecutive *dispatcher* passes
+    /// is not enough of a gate on its own: a pass posted at <see cref="DispatcherPriority.Loaded"/>
+    /// runs again within a fraction of a millisecond, far faster than a round-trip through the X
+    /// server, so several such passes can measure the same stale, pre-move position and satisfy the
+    /// streak before <c>ConfigureNotify</c> ever lands - misreading "not moved yet" as "clamped" and
+    /// sending <see cref="Aligner.TryScroll"/> off against a reading that was never real. Requiring
+    /// the repeats to additionally be spaced by <see cref="StuckConfirmationDelay"/> of genuine wall
+    /// clock time (see <see cref="Aligner.ScheduleStuckConfirmation"/>) gives that round-trip a
+    /// chance to land and change the reading before it is trusted.
     /// </summary>
     private const int StuckStreakThreshold = 3;
+
+    /// <summary>
+    /// Real time to wait before re-measuring a misalignment that already looked unchanged, so a
+    /// pending <c>ConfigureNotify</c> (see <see cref="StuckStreakThreshold"/>) has a chance to land
+    /// and move the reading before another identical sample is allowed to count towards the streak.
+    /// </summary>
+    private static readonly TimeSpan StuckConfirmationDelay = TimeSpan.FromMilliseconds(60);
 
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
@@ -138,6 +150,16 @@ public static class ComboBoxPopupAlignmentBehavior
         /// Consecutive passes in a row that measured the same misalignment as the one before them.
         /// </summary>
         private int stuckStreak;
+
+        /// <summary>
+        /// <see cref="Environment.TickCount64"/> when the current <see cref="stuckStreak"/> began,
+        /// i.e. when <see cref="previousMisalignment"/> was first measured. Dispatcher passes at
+        /// <see cref="DispatcherPriority.Loaded"/> can repeat within a fraction of a millisecond, far
+        /// faster than the real, asynchronous window-move round-trip on X11 - so the streak alone is
+        /// not trustworthy evidence that the popup is genuinely stuck rather than merely not yet
+        /// repositioned. See <see cref="StuckConfirmationDelay"/>.
+        /// </summary>
+        private long streakStartTicks;
 
         private bool passScheduled;
 
@@ -314,6 +336,25 @@ public static class ComboBoxPopupAlignmentBehavior
         private void OnPopupRootPositionChanged(object? sender, PixelPointEventArgs e) => this.RunPass();
 
         /// <summary>
+        /// Re-measures after real time has passed, rather than after the next dispatcher tick, so a
+        /// pending <c>ConfigureNotify</c> gets a genuine chance to land first. <see
+        /// cref="SchedulePass"/> alone is not a substitute: it can fire again within a fraction of a
+        /// millisecond, which is what let a stuck streak build up entirely from stale, pre-move
+        /// readings (see <see cref="StuckStreakThreshold"/>).
+        /// </summary>
+        private void ScheduleStuckConfirmation()
+        {
+            int scheduledFor = this.generation;
+            DispatcherTimer.RunOnce(
+                () =>
+                {
+                    if (scheduledFor != this.generation) return;
+                    this.RunPass();
+                },
+                StuckConfirmationDelay);
+        }
+
+        /// <summary>
         /// Schedules another measuring pass under our own steam. Relying on
         /// <see cref="Layoutable.LayoutUpdated" /> alone is not enough: a pass can end with nothing
         /// laid out afterwards (a virtualized row that is not realized yet, or a correction the
@@ -379,17 +420,42 @@ public static class ComboBoxPopupAlignmentBehavior
 
             // If several passes in a row measure the same misalignment, the popup is clamped - by
             // the screen edge, or because the list is already scrolled to an end - and scrolling is
-            // the only lever left. A single repeat is not enough to conclude that: on Wayland, popup
-            // placement is asynchronous, and the compositor can still be about to slide the popup to
-            // its final, constrained position after this measurement. Treating that in-flight state
-            // as "stuck" made the very first opening of a far-down selection settle on the wrong row
-            // - scrolling to cover a gap that a moment later the popup would have closed on its own.
+            // the only lever left. A single repeat is not enough to conclude that, and neither is
+            // merely counting dispatcher passes: on X11 (including under a Wayland session via
+            // XWayland), the popup's real move lands asynchronously via ConfigureNotify, which can
+            // take longer than several Loaded-priority dispatcher passes fired back to back. Without
+            // also requiring StuckConfirmationDelay of genuine wall-clock time to have passed, this
+            // streak could be satisfied entirely from stale, pre-move readings - misreading "hasn't
+            // moved yet" as "clamped" and sending TryScroll off against a position that was never
+            // final. Treating an in-flight move as "stuck" made the very first opening of a far-down
+            // selection settle on the wrong row - scrolling to cover a gap that a moment later the
+            // popup would have closed on its own.
             bool sameAsLastTime = !double.IsNaN(this.previousMisalignment)
                                    && Math.Abs(misalignment - this.previousMisalignment) <= Tolerance;
-            this.stuckStreak = sameAsLastTime ? this.stuckStreak + 1 : 0;
-            bool popupIsStuck = this.stuckStreak >= StuckStreakThreshold;
+            if (sameAsLastTime)
+            {
+                this.stuckStreak++;
+            }
+            else
+            {
+                this.stuckStreak = 1;
+                this.streakStartTicks = Environment.TickCount64;
+            }
+
+            bool popupIsStuck = this.stuckStreak >= StuckStreakThreshold
+                                 && Environment.TickCount64 - this.streakStartTicks >= StuckConfirmationDelay.TotalMilliseconds;
 
             this.previousMisalignment = misalignment;
+
+            if (this.stuckStreak >= StuckStreakThreshold && !popupIsStuck)
+            {
+                // The streak is long enough, but not yet old enough to trust: wait for real time to
+                // pass rather than immediately re-sampling, so a pending ConfigureNotify has a chance
+                // to land and change the reading before another identical sample is taken.
+                this.pass--; // Waiting for confirmation should not count against MaxPasses.
+                this.ScheduleStuckConfirmation();
+                return;
+            }
 
             if (popupIsStuck)
             {

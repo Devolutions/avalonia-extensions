@@ -93,6 +93,22 @@ public static class ComboBoxPopupAlignmentBehavior
     /// </summary>
     private static readonly TimeSpan SettleVerificationDelay = TimeSpan.FromMilliseconds(120);
 
+    /// <summary>
+    /// Whether the list was scrolled between a settle check being scheduled and it running.
+    /// </summary>
+    /// <remarks>
+    /// A late compositor move repositions the popup without touching the list, so a changed scroll
+    /// offset means the user wheeled it. The settle check must then leave the drop-down alone: the
+    /// row is misaligned because they moved it there, and re-aligning would snap the list back from
+    /// under them. Kept separate from the timer callback so the decision can be tested directly -
+    /// dispatcher timers do not fire under the headless dispatcher, so a test that waited for the
+    /// real callback would pass whether or not this guard existed.
+    /// </remarks>
+    internal static bool UserScrolledSince(double? scrollAtSchedule, double? scrollNow) =>
+        scrollAtSchedule is not null
+        && scrollNow is not null
+        && Math.Abs(scrollNow.Value - scrollAtSchedule.Value) > Tolerance;
+
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
 
@@ -333,10 +349,21 @@ public static class ComboBoxPopupAlignmentBehavior
         {
             // Captured after Unsubscribe's bump, so a close/reopen in the meantime still retires it.
             int scheduledFor = this.generation;
+
+            // A late compositor move repositions the popup without touching the list, so the scroll
+            // offset tells the two apart: if it has changed by the time the check runs, the user
+            // wheeled the list and the row is misaligned because they moved it there. Re-aligning
+            // then would snap the list back from under them - the same scroll-fighting this check's
+            // one-shot design exists to avoid, just inside the delay window.
+            double? scrollAtSchedule = this.ResolveScroller()?.Offset.Y;
+
             DispatcherTimer.RunOnce(
                 () =>
                 {
                     if (scheduledFor != this.generation || !this.Popup.IsOpen) return;
+
+                    double? scrollNow = this.ResolveScroller()?.Offset.Y;
+                    if (UserScrolledSince(scrollAtSchedule, scrollNow)) return;
 
                     if (this.ResolveSelectedContainer() is not { } container) return;
                     double misalignment = this.Misalignment(container);
@@ -570,12 +597,17 @@ public static class ComboBoxPopupAlignmentBehavior
             return container?.IsAttachedToVisualTree() == true && container.Bounds.Height > 0 ? container : null;
         }
 
+        /// <summary>Finds the drop-down's scroller, if its list is scrollable at all.</summary>
+        private ScrollViewer? ResolveScroller() =>
+            this.Popup.Child is { } child
+                ? child.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()
+                : null;
+
         /// <summary>Scrolls the list to take up misalignment the popup itself could not.</summary>
         /// <returns><c>true</c> if the list moved, so another measuring pass is worthwhile.</returns>
         private bool TryScroll(double misalignment)
         {
-            if (this.Popup.Child is not { } child) return false;
-            if (child.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault() is not { } scroller) return false;
+            if (this.ResolveScroller() is not { } scroller) return false;
 
             double scrollable = Math.Max(0, scroller.Extent.Height - scroller.Viewport.Height);
             if (scrollable <= 0) return false;

@@ -295,4 +295,57 @@ public class LinuxComboBoxPopupAlignmentTests
             window.Close();
         }
     }
+
+    /// <summary>
+    ///   The delayed settle check exists to catch a popup whose asynchronous move landed after the
+    ///   loop had already unsubscribed. It must not mistake the user's own scrolling for that: if
+    ///   the list is wheeled inside the delay window, re-aligning would snap it back from under
+    ///   them.
+    /// </summary>
+    /// <remarks>
+    ///   This drives the decision directly rather than waiting for the real callback.
+    ///   <c>DispatcherTimer</c> does not fire under the headless dispatcher - it runs on a virtual
+    ///   clock that sleeping does not advance - so a test that scrolled and then waited would pass
+    ///   whether or not the guard existed, which an earlier version of this test did.
+    /// </remarks>
+    [Theory]
+    [InlineData(120.0, 120.0, false)]   // Untouched: a late compositor move leaves the list alone.
+    [InlineData(120.0, 220.0, true)]    // Wheeled down inside the delay window.
+    [InlineData(120.0, 20.0, true)]     // Wheeled up.
+    [InlineData(120.0, 120.3, false)]   // Sub-tolerance jitter is not a user scroll.
+    [InlineData(null, 120.0, false)]    // No scroller when scheduled: nothing to compare against.
+    [InlineData(120.0, null, false)]
+    public void Scrolling_within_the_settle_delay_is_recognized(double? atSchedule, double? now, bool expected) =>
+        Assert.Equal(expected, ComboBoxPopupAlignmentBehavior.UserScrolledSince(atSchedule, now));
+
+    /// <summary>
+    ///   Guards the premise of the test above: the row really is displaced by a scroll, and nothing
+    ///   in the behaviour puts it back on its own.
+    /// </summary>
+    [AvaloniaFact]
+    public void Scrolling_an_aligned_drop_down_is_not_undone()
+    {
+        Window window = ShowLinux(ThemeVariant.Light);
+        try
+        {
+            ComboBox combo = OpenComboBox(window, itemCount: 1000, selectedIndex: 500, maxDropDownHeight: 200);
+            Popup popup = Assert.Single(combo.GetVisualDescendants().OfType<Popup>());
+
+            ScrollViewer scroller = popup.Child!.GetVisualDescendants().OfType<ScrollViewer>().First();
+            scroller.SetCurrentValue(ScrollViewer.OffsetProperty, scroller.Offset.WithY(scroller.Offset.Y + 100));
+            Dispatcher.UIThread.RunJobs();
+
+            double displaced = SelectedRowOffsetFromComboBox(combo);
+            Assert.True(
+                Math.Abs(displaced) > Tolerance,
+                $"The row should be displaced by the scroll, but it was off by {displaced}.");
+
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(displaced, SelectedRowOffsetFromComboBox(combo), 3);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

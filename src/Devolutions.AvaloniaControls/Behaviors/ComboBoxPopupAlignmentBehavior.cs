@@ -235,6 +235,7 @@ public static class ComboBoxPopupAlignmentBehavior
             this.stuckStreak = 0;
             this.popupRoot = root;
             root.LayoutUpdated += this.OnLayoutUpdated;
+            if (root is WindowBase popupWindow) popupWindow.PositionChanged += this.OnPopupRootPositionChanged;
             this.SchedulePass();
         }
 
@@ -271,6 +272,7 @@ public static class ComboBoxPopupAlignmentBehavior
             // a stale location. The first layout pass after opening is the earliest useful moment.
             this.popupRoot = root;
             root.LayoutUpdated += this.OnLayoutUpdated;
+            if (root is WindowBase popupWindow) popupWindow.PositionChanged += this.OnPopupRootPositionChanged;
         }
 
         private void OnPopupClosed(object? sender, EventArgs e)
@@ -294,10 +296,22 @@ public static class ComboBoxPopupAlignmentBehavior
             if (this.popupRoot is null) return;
 
             this.popupRoot.LayoutUpdated -= this.OnLayoutUpdated;
+            if (this.popupRoot is WindowBase popupWindow) popupWindow.PositionChanged -= this.OnPopupRootPositionChanged;
             this.popupRoot = null;
         }
 
         private void OnLayoutUpdated(object? sender, EventArgs e) => this.RunPass();
+
+        /// <summary>
+        /// The popup's real on-screen position on X11 (including under a Wayland session, via
+        /// XWayland) only becomes known asynchronously - the compositor answers a move request with
+        /// a <c>ConfigureNotify</c> that can land after this behavior's own layout-driven passes have
+        /// already measured and corrected against a stale position. Reacting to
+        /// <see cref="WindowBase.PositionChanged"/> directly, rather than waiting for the next
+        /// unrelated layout pass or the dispatcher-post retry to notice, is what makes the popup
+        /// settle promptly instead of visibly jumping once the mouse happens to trigger layout.
+        /// </summary>
+        private void OnPopupRootPositionChanged(object? sender, PixelPointEventArgs e) => this.RunPass();
 
         /// <summary>
         /// Schedules another measuring pass under our own steam. Relying on

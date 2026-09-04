@@ -197,6 +197,12 @@ public static class ComboBoxPopupAlignmentBehavior
         private bool passScheduled;
 
         /// <summary>
+        /// Coalesces stuck-confirmation timers, so several re-entries into <see cref="RunPass"/>
+        /// within the delay cannot each queue one and then all apply the same scroll correction.
+        /// </summary>
+        private bool stuckConfirmationScheduled;
+
+        /// <summary>
         /// Identifies one opening of the popup, so a pass queued for a previous opening can tell
         /// that it is stale and do nothing.
         /// </summary>
@@ -396,6 +402,7 @@ public static class ComboBoxPopupAlignmentBehavior
             // Retire any queued pass, whether or not we are currently subscribed.
             this.generation++;
             this.passScheduled = false;
+            this.stuckConfirmationScheduled = false;
 
             if (this.popupRoot is null) return;
 
@@ -426,11 +433,21 @@ public static class ComboBoxPopupAlignmentBehavior
         /// </summary>
         private void ScheduleStuckConfirmation()
         {
+            // Coalesced like SchedulePass: LayoutUpdated and PositionChanged can both re-enter
+            // RunPass before the delay elapses, and without this each entry would queue its own
+            // timer against the same generation. They would all fire, and any that ran after the
+            // first one concluded the popup was stuck would apply TryScroll again on top of a
+            // correction the next measuring pass had not observed yet - overshooting the row.
+            if (this.stuckConfirmationScheduled) return;
+
+            this.stuckConfirmationScheduled = true;
             int scheduledFor = this.generation;
             DispatcherTimer.RunOnce(
                 () =>
                 {
                     if (scheduledFor != this.generation) return;
+
+                    this.stuckConfirmationScheduled = false;
                     this.RunPass();
                 },
                 StuckConfirmationDelay);

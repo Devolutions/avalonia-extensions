@@ -83,6 +83,24 @@ public static class ComboBoxPopupAlignmentBehavior
     /// </summary>
     private static readonly TimeSpan StuckConfirmationDelay = TimeSpan.FromMilliseconds(60);
 
+    /// <summary>
+    /// How long after the loop believes it is aligned to take one final look. The popup's real move
+    /// on X11 (including under a Wayland session, via XWayland) completes asynchronously, so the
+    /// reading that ended the loop can have been taken while the popup was still travelling and only
+    /// looked aligned in passing. Layout listeners are dropped as soon as the loop finishes - keeping
+    /// them would make the drop-down fight the user's own scrolling - so this single delayed check is
+    /// what distinguishes "aligned right now" from "settled", without re-reacting to everything else.
+    /// </summary>
+    private static readonly TimeSpan SettleVerificationDelay = TimeSpan.FromMilliseconds(120);
+
+    /// <summary>
+    /// Opt-in tracing, for diagnosing alignment on a real desktop where this loop cannot practically
+    /// be stepped through: set <c>DEVO_COMBOBOX_ALIGN_TRACE=1</c> to print one line per measuring
+    /// pass, recording the measurement, the levers applied and which exit path was taken.
+    /// </summary>
+    private static readonly bool TraceEnabled =
+        Environment.GetEnvironmentVariable("DEVO_COMBOBOX_ALIGN_TRACE") == "1";
+
     public static readonly AttachedProperty<bool> EnableProperty =
         AvaloniaProperty.RegisterAttached<ComboBox, bool>("Enable", typeof(ComboBoxPopupAlignmentBehavior));
 
@@ -160,6 +178,13 @@ public static class ComboBoxPopupAlignmentBehavior
         /// repositioned. See <see cref="StuckConfirmationDelay"/>.
         /// </summary>
         private long streakStartTicks;
+
+        /// <summary>
+        /// Set once the delayed settle check (see <see cref="SettleVerificationDelay"/>) has been
+        /// used for the current opening, so a popup that genuinely cannot be aligned re-verifies at
+        /// most once rather than rescheduling itself indefinitely.
+        /// </summary>
+        private bool settleVerified;
 
         private bool passScheduled;
 
@@ -255,6 +280,7 @@ public static class ComboBoxPopupAlignmentBehavior
             this.pass = 0;
             this.previousMisalignment = double.NaN;
             this.stuckStreak = 0;
+            this.settleVerified = false;
             this.popupRoot = root;
             root.LayoutUpdated += this.OnLayoutUpdated;
             if (root is WindowBase popupWindow) popupWindow.PositionChanged += this.OnPopupRootPositionChanged;
@@ -289,12 +315,50 @@ public static class ComboBoxPopupAlignmentBehavior
             this.pass = 0;
             this.previousMisalignment = double.NaN;
             this.stuckStreak = 0;
+            this.settleVerified = false;
 
             // The popup is not positioned yet at Opened time - measuring here would compare against
             // a stale location. The first layout pass after opening is the earliest useful moment.
             this.popupRoot = root;
             root.LayoutUpdated += this.OnLayoutUpdated;
             if (root is WindowBase popupWindow) popupWindow.PositionChanged += this.OnPopupRootPositionChanged;
+        }
+
+        /// <summary>
+        /// Takes one last look after <see cref="SettleVerificationDelay"/>, once the popup's
+        /// asynchronous move on X11 has had time to complete, and restarts the loop if the drop-down
+        /// turns out to have settled somewhere other than where the final reading suggested.
+        /// </summary>
+        /// <remarks>
+        /// This deliberately does not keep the layout listeners alive: re-reacting to every layout
+        /// pass makes the drop-down fight the user's own scrolling, which is a far worse bug than the
+        /// residual it would fix. A single delayed check gets the async move without that cost. It is
+        /// also guarded by <see cref="settleVerified"/>, so a drop-down that genuinely cannot be
+        /// aligned - clamped against a screen edge with the list already scrolled to its end - checks
+        /// once and stops, rather than re-arming itself for as long as it stays open.
+        /// </remarks>
+        private void ScheduleSettleVerification()
+        {
+            // Captured after Unsubscribe's bump, so a close/reopen in the meantime still retires it.
+            int scheduledFor = this.generation;
+            DispatcherTimer.RunOnce(
+                () =>
+                {
+                    if (scheduledFor != this.generation || !this.Popup.IsOpen) return;
+
+                    if (this.ResolveSelectedContainer() is not { } container) return;
+                    double misalignment = this.Misalignment(container);
+                    if (Math.Abs(misalignment) <= Tolerance) return;
+
+                    this.Trace($"settle check found {misalignment:F2} - re-aligning");
+                    this.ReArm();
+
+                    // ReArm resets this for the fresh loop it starts - correct when re-arming for a
+                    // genuine external change, but here it would let the settle check re-arm itself
+                    // for as long as the drop-down stayed open. Mark it after the fact instead.
+                    this.settleVerified = true;
+                },
+                SettleVerificationDelay);
         }
 
         private void OnPopupClosed(object? sender, EventArgs e)
@@ -383,10 +447,22 @@ public static class ComboBoxPopupAlignmentBehavior
                 DispatcherPriority.Loaded);
         }
 
+        /// <summary>
+        /// Writes one line of <see cref="TraceEnabled">opt-in</see> diagnostics for the current pass.
+        /// </summary>
+        private void Trace(string message)
+        {
+            if (!TraceEnabled) return;
+
+            Console.WriteLine(
+                $"[combo-align] gen {this.generation} pass {this.pass} sel {this.comboBox.SelectedIndex}: {message}");
+        }
+
         private void RunPass()
         {
             if (!this.Popup.IsOpen || this.pass++ >= MaxPasses)
             {
+                if (this.Popup.IsOpen) this.Trace($"giving up after {MaxPasses} passes");
                 this.Unsubscribe();
                 return;
             }
@@ -396,6 +472,7 @@ public static class ComboBoxPopupAlignmentBehavior
             {
                 // Not realized yet - ResolveSelectedContainer has asked for it, so try again rather
                 // than giving up on a list that is merely still virtualizing.
+                this.Trace("selected container not realized yet");
                 this.SchedulePass();
                 return;
             }
@@ -403,7 +480,16 @@ public static class ComboBoxPopupAlignmentBehavior
             double misalignment = this.Misalignment(container);
             if (Math.Abs(misalignment) <= Tolerance)
             {
+                this.Trace($"aligned ({misalignment:F2})");
                 this.Unsubscribe();
+
+                // Unsubscribe has dropped the layout listeners, so from here nothing would ever
+                // re-measure. That is deliberate - staying subscribed makes the drop-down fight the
+                // user's own scrolling - but it also means a reading taken while the popup was still
+                // travelling would be the last word, leaving a small permanent residual that
+                // reopening reproduces exactly. Take one delayed look to tell the two apart.
+                if (!this.settleVerified) this.ScheduleSettleVerification();
+
                 return;
             }
 
@@ -412,6 +498,7 @@ public static class ComboBoxPopupAlignmentBehavior
                 // Reject the sample outright: it is almost certainly measured mid-reposition. It
                 // must not reach the popupIsStuck comparison either, or two identical bad readings
                 // in a row would look like a clamped popup and send TryScroll off to an endpoint.
+                this.Trace($"rejected outsized sample {misalignment:F2}");
                 this.previousMisalignment = double.NaN;
                 this.stuckStreak = 0;
                 this.SchedulePass();
@@ -452,6 +539,7 @@ public static class ComboBoxPopupAlignmentBehavior
                 // The streak is long enough, but not yet old enough to trust: wait for real time to
                 // pass rather than immediately re-sampling, so a pending ConfigureNotify has a chance
                 // to land and change the reading before another identical sample is taken.
+                this.Trace($"misalign {misalignment:F2}, streak {this.stuckStreak} - awaiting time confirmation");
                 this.pass--; // Waiting for confirmation should not count against MaxPasses.
                 this.ScheduleStuckConfirmation();
                 return;
@@ -459,7 +547,10 @@ public static class ComboBoxPopupAlignmentBehavior
 
             if (popupIsStuck)
             {
-                if (this.TryScroll(misalignment))
+                bool scrolled = this.TryScroll(misalignment);
+                this.Trace($"misalign {misalignment:F2} - popup stuck, scroll {(scrolled ? "applied" : "unavailable")}");
+
+                if (scrolled)
                 {
                     this.SchedulePass();
                 }
@@ -470,6 +561,8 @@ public static class ComboBoxPopupAlignmentBehavior
 
                 return;
             }
+
+            this.Trace($"misalign {misalignment:F2} - moving popup (offset {this.Popup.VerticalOffset:F2} -> {this.Popup.VerticalOffset + misalignment:F2})");
 
             // SetCurrentValue keeps the template's VerticalOffset binding intact.
             this.applyingCorrection = true;

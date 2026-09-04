@@ -25,6 +25,11 @@
         </PackageReleaseNotes>
     </PropertyGroup>
 
+    <!-- Debug-only: lets the tests reach internals, without shipping the attribute in the package. -->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <InternalsVisibleTo Include="Devolutions.AvaloniaControls.VisualTests" />
+    </ItemGroup>
+
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>

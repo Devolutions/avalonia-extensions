@@ -534,11 +534,15 @@ public static class ComboBoxPopupAlignmentBehavior
 
             this.previousMisalignment = misalignment;
 
-            if (this.stuckStreak >= StuckStreakThreshold && !popupIsStuck)
+            if (sameAsLastTime && !popupIsStuck)
             {
-                // The streak is long enough, but not yet old enough to trust: wait for real time to
-                // pass rather than immediately re-sampling, so a pending ConfigureNotify has a chance
-                // to land and change the reading before another identical sample is taken.
+                // The reading has not changed since the last pass, so it cannot yet reflect the
+                // correction we already applied - the popup's move lands asynchronously. Acting on it
+                // again would apply the same correction twice, overshooting to roughly double what was
+                // needed; the misalignment then comes back with the same magnitude and the opposite
+                // sign, and the loop oscillates until it runs out of passes. Wait for real time to
+                // pass instead, so a pending ConfigureNotify can land and change the reading. Only an
+                // unchanged reading that survives that wait means the popup is genuinely clamped.
                 this.Trace($"misalign {misalignment:F2}, streak {this.stuckStreak} - awaiting time confirmation");
                 this.pass--; // Waiting for confirmation should not count against MaxPasses.
                 this.ScheduleStuckConfirmation();

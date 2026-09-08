@@ -1,0 +1,27 @@
+<!-- Retrieved from Avalonia Fluent main at 27c1ece36cbe17de3b8f95ae88223ba68702ae47:
+     https://github.com/AvaloniaUI/Avalonia/blob/27c1ece36cbe17de3b8f95ae88223ba68702ae47/src/Avalonia.Themes.Fluent/Controls/RefreshContainer.xaml -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:ClassModifier="internal">
+  <ControlTheme x:Key="{x:Type RefreshContainer}"
+                TargetType="RefreshContainer">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <ContentPresenter Name="PART_ContentPresenter"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              CornerRadius="{TemplateBinding CornerRadius}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              Padding="{TemplateBinding Padding}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}">
+          </ContentPresenter>
+          <Grid Name="PART_RefreshVisualizerPresenter"/>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

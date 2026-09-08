@@ -1,3 +1,5 @@
+<!-- Properties below imported from Avalonia Fluent main at 27c1ece36cbe17de3b8f95ae88223ba68702ae47:
+     https://github.com/AvaloniaUI/Avalonia/blob/27c1ece36cbe17de3b8f95ae88223ba68702ae47/src/Avalonia.Themes.Fluent/Controls/AutoCompleteBox.xaml -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
@@ -58,6 +60,7 @@
           <TextBox
             Name="PART_TextBox"
             PlaceholderText="{TemplateBinding PlaceholderText}"
+            PlaceholderForeground="{TemplateBinding PlaceholderForeground}"
             Width="{TemplateBinding Width}"
             Foreground="{TemplateBinding Foreground}"
             Background="{TemplateBinding Background}"
@@ -65,6 +68,7 @@
             BorderThickness="{TemplateBinding BorderThickness}"
             CornerRadius="{TemplateBinding CornerRadius}"
             CaretIndex="{TemplateBinding CaretIndex, Mode=TwoWay}"
+            ClearSelectionOnLostFocus="{TemplateBinding ClearSelectionOnLostFocus}"
             Padding="{TemplateBinding Padding}"
             Margin="0"
             DataValidationErrors.Errors="{TemplateBinding (DataValidationErrors.Errors)}"
@@ -100,5 +104,6 @@
         </Grid>
       </ControlTemplate>
     </Setter>
+
   </ControlTheme>
 </ResourceDictionary>

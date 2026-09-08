@@ -3,6 +3,8 @@
                     xmlns:sys="using:System"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
+  <!-- Append-safe Fluent semantics from https://github.com/AvaloniaUI/Avalonia/blob/27c1ece36cbe17de3b8f95ae88223ba68702ae47/src/Avalonia.Themes.Fluent/Controls/ComboBox.xaml -->
+
   <!-- 
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!

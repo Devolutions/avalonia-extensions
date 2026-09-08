@@ -1,6 +1,12 @@
+<!-- Properties below imported from Avalonia Fluent main at 27c1ece36cbe17de3b8f95ae88223ba68702ae47:
+     https://github.com/AvaloniaUI/Avalonia/blob/27c1ece36cbe17de3b8f95ae88223ba68702ae47/src/Avalonia.Themes.Fluent/Controls/AdornerLayer.xaml -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:devex="clr-namespace:Devolutions.AvaloniaTheme.DevExpress">
+
+  <Thickness x:Key="SystemControlFocusVisualMargin">0</Thickness>
+  <Thickness x:Key="SystemControlFocusVisualPrimaryThickness">2</Thickness>
+  <Thickness x:Key="SystemControlFocusVisualSecondaryThickness">1</Thickness>
 
   <ControlTheme x:Key="{x:Type AdornerLayer}" TargetType="AdornerLayer">
     <Setter Property="DefaultFocusAdorner">

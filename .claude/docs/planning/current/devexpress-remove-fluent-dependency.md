@@ -4,7 +4,7 @@
 
 Make `Devolutions.AvaloniaTheme.DevExpress` self-contained. Remove runtime and package dependency on `Avalonia.Themes.Fluent` without changing existing DevExpress-owned visual decisions.
 
-Import every Fluent control entry used by Fluent 12.1.2:
+Import every Fluent control entry currently listed on GitHub `main`:
 
 - No existing DevExpress `ControlTheme` for upstream target: vendor upstream theme as-is.
 - Existing DevExpress `ControlTheme`: retain DevExpress content. Append only upstream properties/styles/resources absent from corresponding DevExpress scope.
@@ -13,16 +13,16 @@ Import every Fluent control entry used by Fluent 12.1.2:
 
 ## Fixed Upstream Source
 
-Use Avalonia release `12.1.2`, commit `d3c867a9e2de379249b03dbeb3495bd7f076a81a` throughout. Do not use `master`, a branch URL, a floating tag URL, a newer package, or different source revision.
+Inspect source directly from `main` at https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls. For every import, resolve the source file's current GitHub commit SHA immediately before editing and use its permanent permalink in the AXAML/C# provenance comment. Do not read local NuGet assets or use a cloned checkout as source authority.
 
-- Controls directory: <https://github.com/AvaloniaUI/Avalonia/tree/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls>
-- Fluent root/load order: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
-- Control manifest/load order: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
-- Palette: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
-- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
-- Fluent control resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
-- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
-- Accent detector: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
+- Controls directory: <https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls>
+- Fluent root/load order: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
+- Control manifest/load order: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
+- Palette: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
+- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
+- Fluent control resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
+- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
+- Accent detector: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
 
 Current repository baseline: `3eb4763180dce7d1b2febdd4422caaaea724f5ea`. Current configured development Avalonia version: `12.0.5` in `Common.props`.
 
@@ -47,15 +47,15 @@ Current repository baseline: `3eb4763180dce7d1b2febdd4422caaaea724f5ea`. Current
 Every imported control file must have top-of-file XML comment before its root element:
 
 ```xml
-<!-- Retrieved from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+<!-- Retrieved from Avalonia Fluent main at <resolved-commit-sha>:
+     https://github.com/AvaloniaUI/Avalonia/blob/<resolved-commit-sha>/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
 ```
 
 Every existing DevExpress control file changed for upstream parity must retain DevExpress theme first. Append one final section inside each affected `ControlTheme`, after existing setters/styles and before closing tag:
 
 ```xml
-<!-- Properties below imported from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+<!-- Properties below imported from Avalonia Fluent main at <resolved-commit-sha>:
+     https://github.com/AvaloniaUI/Avalonia/blob/<resolved-commit-sha>/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
 <!-- Only source properties/styles absent from DevExpress theme scope. -->
 ```
 
@@ -214,7 +214,7 @@ Each file includes top-level fixed-SHA provenance comment pointing to its exact 
 
 Resource agent responsibilities:
 
-1. Start from matching upstream 12.1.2 file.
+1. Fetch matching source directly from GitHub `main`; record resolved source commit SHA in its provenance comment.
 2. Retain only resource keys unavailable from DevExpress at same resource lookup scope, including both `Default` and `Dark` dictionaries where applicable. Do not copy a whole resource merely because value differs.
 3. Keep upstream value/reference form for every included key. Do not translate Fluent brushes/colors to DevExpress look.
 4. Include all theme dictionary variants required by a retained dynamic resource. A key needed in default and dark needs both variants.
@@ -238,7 +238,7 @@ Do not import `DensityStyles/Compact.xaml` or Fluent `ColorPaletteResources*` cl
 
 ## Phase 5: Own Accent Detection
 
-Add DevExpress-owned `Accents/SystemAccentColors.cs`, based on upstream `SystemAccentColors.cs` at fixed SHA. Preserve behavior:
+Add DevExpress-owned `Accents/SystemAccentColors.cs`, based on upstream `SystemAccentColors.cs` fetched directly from GitHub `main`; resolve and record fixed source SHA before editing. Preserve behavior:
 
 - Publish seven keys: `SystemAccentColor`, dark shades `Dark1` through `Dark3`, light shades `Light1` through `Light3`.
 - Default main color `#0078D7` (`0, 120, 215`) when platform settings/accent unavailable.
@@ -275,7 +275,7 @@ Coordinator makes integration-only changes after agents finish:
 - No duplicate default `ControlTheme` key/target introduced.
 - Every `StaticResource`, `DynamicResource`, `BasedOn`, source URI, converter, control type, and compiled XAML namespace resolves without Fluent package.
 - Existing DevExpress default setters/selectors unchanged outside explicitly appended provenance sections.
-- All imported and appended source comments use `d3c867a9...`, never `master`.
+- All imported and appended source comments use their resolved source SHA, never `master`.
 
 ### Build and Tests
 
@@ -322,7 +322,7 @@ Each Luna agent returns:
 - Command run plus result. If no build due parallel conflicts, state that precisely.
 - No commit, staging, dependency upgrade, baseline update, or edits outside assigned files.
 
-Coordinator performs final three-way review against upstream 12.1.2, current DevExpress baseline, and manifest before claiming completion.
+Coordinator performs final three-way review against GitHub `main` files at recorded source SHAs, current DevExpress baseline, and manifest before claiming completion.
 
 ## Risks and Decisions
 
@@ -331,7 +331,7 @@ Coordinator performs final three-way review against upstream 12.1.2, current Dev
 - **Resource scope risk:** `StaticResource` resolves at XAML load; `DynamicResource` resolves at runtime. Preserve source form and test both variants.
 - **Platform feature risk:** File chooser, window decorations, selection handles, refresh, and notification controls may be platform conditional. Compile all; smoke test available paths.
 - **Parallel edit risk:** File-disjoint agents only. Coordinator alone integrates root/index/project changes.
-- **Upstream drift risk:** Fixed SHA prevents accidental import from later Avalonia code incompatible with `12.1.2`.
+- **Upstream drift risk:** Resolve one source SHA before each edit batch, record it in every changed file, and do not mix revisions within a batch.
 
 ## Confidence
 

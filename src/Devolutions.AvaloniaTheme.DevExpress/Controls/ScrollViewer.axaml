@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design">
 
+  <!-- Append-safe Fluent semantics from https://github.com/AvaloniaUI/Avalonia/blob/27c1ece36cbe17de3b8f95ae88223ba68702ae47/src/Avalonia.Themes.Fluent/Controls/ScrollViewer.xaml -->
+
   <Design.PreviewWith>
     <design:ThemePreviewer>
       <StackPanel Spacing="20" Margin="10">

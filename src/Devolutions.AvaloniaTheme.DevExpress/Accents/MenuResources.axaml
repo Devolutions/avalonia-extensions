@@ -116,11 +116,13 @@
   <Thickness x:Key="DevExMenuBarSeparatorMargin">0 4</Thickness>
   <x:Double x:Key="DevExMenuBarSeparatorWidth">1</x:Double>
 
-  <!-- Menu items -->
-  <x:Double x:Key="DevExMenuNestedItemMinHeight">26</x:Double>
-  <Thickness x:Key="DevExMenuNestedItemPadding">10,2</Thickness>
-  <Thickness x:Key="DevExMenuIconPresenterMargin">4 0 10 0</Thickness>
-  <Thickness x:Key="DevExMenuInputGestureTextMargin">15,0,0,0</Thickness>
+   <!-- Menu items -->
+    <x:Double x:Key="DevExMenuNestedItemMinHeight">26</x:Double>
+    <Thickness x:Key="DevExMenuNestedItemPadding">10,2</Thickness>
+    <Thickness x:Key="DevExMenuIconPresenterMargin">4 0 10 0</Thickness>
+    <Thickness x:Key="DevExMenuInputGestureTextMargin">15,0,0,0</Thickness>
+    <Thickness x:Key="DevExMenuHorizontalFlyoutItemPadding">8,4,8,7</Thickness>
+    <Thickness x:Key="DevExMenuHorizontalFlyoutItemMargin">2,0,2,0</Thickness>
 
   <ControlTheme x:Key="DevExMenuScrollViewer" TargetType="ScrollViewer">
     <Setter Property="Background" Value="Transparent" />

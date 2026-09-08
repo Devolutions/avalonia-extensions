@@ -23,6 +23,7 @@ using Devolutions.AvaloniaControls.Helpers;
 [TemplatePart("PART_ScrollViewer", typeof(ScrollViewer), IsRequired = true)]
 [TemplatePart("PART_SelectionRectangle", typeof(RectangleSelectionMarquee))]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator require preserved types")]
 public class GroupedTileListBox : TemplatedControl
 {
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
@@ -2204,7 +2205,7 @@ public class GroupedTileListBox : TemplatedControl
             }
 
             // Columns restart per group (each group has its own WrapLayout).
-            for (int i = 0; i < groupItems.Count; i++)
+            for (int i = 0; i < groupItems.Count; ++i)
             {
                 yield return (groupItems[i], i % itemsPerRow, baseY + ((i / itemsPerRow) * stepY));
             }

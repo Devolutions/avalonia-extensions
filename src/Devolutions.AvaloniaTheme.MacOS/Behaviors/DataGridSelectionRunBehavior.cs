@@ -195,8 +195,10 @@ internal static class DataGridSelectionRunBehavior
                 // A run needs at least two selected rows to exist at all, so anything less skips
                 // straight to clearing. Realized rows are always walked, never short-circuited: a
                 // recycled container must have any stale run class cleared before it is reused.
-                IList? view = GetUngroupedView(this.dataGrid);
-                bool merge = view is not null && (this.dataGrid.SelectedItems?.Count ?? 0) >= 2;
+                // Grouping is what decides whether runs apply at all; whether the view happens to
+                // support indexing only decides how far off-screen we can see.
+                bool merge = IsUngrouped(this.dataGrid) && (this.dataGrid.SelectedItems?.Count ?? 0) >= 2;
+                IList? view = GetIndexableView(this.dataGrid);
 
                 foreach (DataGridRow row in this.realizedRows)
                 {
@@ -207,8 +209,8 @@ internal static class DataGridSelectionRunBehavior
                     if (merge && row.IsSelected)
                     {
                         int index = row.Index;
-                        bool previousSelected = this.IsSelectedAt(view!, index - 1);
-                        bool nextSelected = this.IsSelectedAt(view!, index + 1);
+                        bool previousSelected = this.IsSelectedAt(view, index - 1);
+                        bool nextSelected = this.IsSelectedAt(view, index + 1);
 
                         first = !previousSelected && nextSelected;
                         middle = previousSelected && nextSelected;
@@ -230,14 +232,14 @@ internal static class DataGridSelectionRunBehavior
         ///   only happens for a neighbour outside the viewport, and it is that fallback — not the
         ///   realized path — that depends on how the item type defines equality.
         /// </summary>
-        private bool IsSelectedAt(IList view, int index)
+        private bool IsSelectedAt(IList? view, int index)
         {
             if (this.realizedSelection.TryGetValue(index, out bool isSelected))
             {
                 return isSelected;
             }
 
-            if (index < 0 || index >= view.Count)
+            if (view is null || index < 0 || index >= view.Count)
             {
                 return false;
             }
@@ -321,12 +323,23 @@ internal static class DataGridSelectionRunBehavior
             return this.selectedItemsCache;
         }
 
-        private static IList? GetUngroupedView(DataGrid dataGrid)
-        {
-            IDataGridCollectionView? view = dataGrid.CollectionView;
+        private static bool IsUngrouped(DataGrid dataGrid) => dataGrid.CollectionView is { IsGrouping: false };
 
-            return view is { IsGrouping: false } ? view as IList : null;
-        }
+        /// <summary>
+        ///   Returns the view as an indexable list, or <c>null</c> when it does not offer one.
+        ///
+        ///   <para>
+        ///   Only the off-viewport fallback needs random access by index.
+        ///   <see cref="IDataGridCollectionView"/> guarantees no more than
+        ///   <see cref="IEnumerable"/>, so a custom view need not be an <see cref="IList"/> even
+        ///   though the built-in <c>DataGridCollectionView</c> is. When it is not, an unrealized
+        ///   neighbour is treated as unselected and only the ends of a run at the edge of the
+        ///   viewport lose their squared corner -- run styling itself keeps working from the
+        ///   realized rows.
+        ///   </para>
+        /// </summary>
+        private static IList? GetIndexableView(DataGrid dataGrid) =>
+            dataGrid.CollectionView is { IsGrouping: false } view ? view as IList : null;
 
         /// <summary>
         ///   Builds the lookup set on reference identity rather than <see cref="object.Equals"/>.

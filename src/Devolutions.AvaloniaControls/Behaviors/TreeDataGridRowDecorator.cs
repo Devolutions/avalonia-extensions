@@ -50,6 +50,8 @@ internal sealed class TreeDataGridRowDecorator : IDisposable
 
     private readonly Dictionary<int, bool> selectionByRowIndex = new();
 
+    private readonly List<TreeDataGridRow> realizedRows = new();
+
     private DispatcherOperation? scheduledUpdate;
 
     private bool alternatingRows;
@@ -122,6 +124,7 @@ internal sealed class TreeDataGridRowDecorator : IDisposable
         this.treeDataGrid.LayoutUpdated -= this.OnLayoutUpdated;
         this.treeDataGrid.SelectionChanged -= this.OnSelectionChanged;
         this.selectionByRowIndex.Clear();
+        this.realizedRows.Clear();
     }
 
     private static TreeDataGridRowDecorator? Resolve(TreeDataGrid treeDataGrid, bool create)
@@ -179,53 +182,65 @@ internal sealed class TreeDataGridRowDecorator : IDisposable
         TreeDataGridRowsPresenter? presenter = this.treeDataGrid.RowsPresenter;
         if (presenter is null) return;
 
-        if (this.selectionRuns)
+        // A row's run position depends on neighbours that may come later in child order, so
+        // nothing can be decided until the whole viewport is known. Collect it once here and let
+        // the second phase work from that list rather than walking the children again.
+        //
+        // The list is a buffer reused across sweeps so that collecting the viewport does not
+        // allocate. It is emptied in the finally below rather than left populated, so it never
+        // holds rows between sweeps; the finally also means an aborted sweep cannot leave stale
+        // rows behind for the next one to reprocess.
+        this.selectionByRowIndex.Clear();
+        try
         {
-            // A row's neighbours decide its run position, so the whole viewport is mapped first.
-            this.selectionByRowIndex.Clear();
-
             foreach (Visual child in presenter.GetVisualChildren())
             {
-                if (child is TreeDataGridRow row && row.RowIndex >= 0)
+                if (child is not TreeDataGridRow row)
+                {
+                    continue;
+                }
+
+                this.realizedRows.Add(row);
+
+                if (this.selectionRuns && row.RowIndex >= 0)
                 {
                     this.selectionByRowIndex[row.RowIndex] = row.IsSelected;
                 }
             }
-        }
 
-        // Realized rows are always walked, never short-circuited on an empty selection: a
-        // recycled container must have any stale class cleared before it is reused.
-        foreach (Visual child in presenter.GetVisualChildren())
-        {
-            if (child is not TreeDataGridRow row)
+            // Realized rows are always walked, never short-circuited on an empty selection: a
+            // recycled container must have any stale class cleared before it is reused.
+            foreach (TreeDataGridRow row in this.realizedRows)
             {
-                continue;
-            }
-
-            if (this.alternatingRows)
-            {
-                SetClass(row, OddRowClass, row.RowIndex % 2 == 1);
-            }
-
-            if (this.selectionRuns)
-            {
-                bool first = false;
-                bool middle = false;
-                bool last = false;
-                int index = row.RowIndex;
-
-                if (index >= 0 && row.IsSelected)
+                if (this.alternatingRows)
                 {
-                    bool previousSelected = this.IsSelectedAt(index - 1);
-                    bool nextSelected = this.IsSelectedAt(index + 1);
-
-                    first = !previousSelected && nextSelected;
-                    middle = previousSelected && nextSelected;
-                    last = previousSelected && !nextSelected;
+                    SetClass(row, OddRowClass, row.RowIndex % 2 == 1);
                 }
 
-                SetRunClasses(row, first, middle, last);
+                if (this.selectionRuns)
+                {
+                    bool first = false;
+                    bool middle = false;
+                    bool last = false;
+                    int index = row.RowIndex;
+
+                    if (index >= 0 && row.IsSelected)
+                    {
+                        bool previousSelected = this.IsSelectedAt(index - 1);
+                        bool nextSelected = this.IsSelectedAt(index + 1);
+
+                        first = !previousSelected && nextSelected;
+                        middle = previousSelected && nextSelected;
+                        last = previousSelected && !nextSelected;
+                    }
+
+                    SetRunClasses(row, first, middle, last);
+                }
             }
+        }
+        finally
+        {
+            this.realizedRows.Clear();
         }
     }
 

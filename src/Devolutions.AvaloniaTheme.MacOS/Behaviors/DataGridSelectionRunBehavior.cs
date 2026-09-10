@@ -113,6 +113,7 @@ internal static class DataGridSelectionRunBehavior
     {
         private readonly DataGrid dataGrid;
         private readonly Dictionary<int, bool> realizedSelection = new();
+        private readonly List<DataGridRow> realizedRows = new();
         private DataGridRowsPresenter? rowsPresenter;
         private DispatcherOperation? scheduledUpdate;
         private HashSet<object>? selectedItemsCache;
@@ -157,46 +158,62 @@ internal static class DataGridSelectionRunBehavior
             if (presenter is null) return;
 
             // Map the viewport first: a row's neighbours decide its run position, and a realized
-            // neighbour answers for itself far more reliably than its item does.
+            // neighbour answers for itself far more reliably than its item does. Neighbours may
+            // come later in child order, so nothing can be decided during this walk -- collect
+            // the rows as we go and let the second phase iterate those instead of the children.
+            //
+            // The list is a buffer reused across sweeps so that collecting the viewport does not
+            // allocate. It is emptied in the finally below rather than left populated, so it
+            // never holds rows between sweeps; the finally also means an aborted sweep cannot
+            // leave stale rows behind for the next one to reprocess.
             this.realizedSelection.Clear();
 
-            foreach (Visual child in presenter.GetVisualChildren())
+            try
             {
-                if (child is DataGridRow row && row.Index >= 0)
+                foreach (Visual child in presenter.GetVisualChildren())
                 {
-                    this.realizedSelection[row.Index] = row.IsSelected;
+                    if (child is not DataGridRow row)
+                    {
+                        continue;
+                    }
+
+                    this.realizedRows.Add(row);
+
+                    if (row.Index >= 0)
+                    {
+                        this.realizedSelection[row.Index] = row.IsSelected;
+                    }
+                }
+
+                // A run needs at least two selected rows to exist at all, so anything less skips
+                // straight to clearing. Realized rows are always walked, never short-circuited: a
+                // recycled container must have any stale run class cleared before it is reused.
+                IList? view = GetUngroupedView(this.dataGrid);
+                bool merge = view is not null && (this.dataGrid.SelectedItems?.Count ?? 0) >= 2;
+
+                foreach (DataGridRow row in this.realizedRows)
+                {
+                    bool first = false;
+                    bool middle = false;
+                    bool last = false;
+
+                    if (merge && row.IsSelected)
+                    {
+                        int index = row.Index;
+                        bool previousSelected = this.IsSelectedAt(view!, index - 1);
+                        bool nextSelected = this.IsSelectedAt(view!, index + 1);
+
+                        first = !previousSelected && nextSelected;
+                        middle = previousSelected && nextSelected;
+                        last = previousSelected && !nextSelected;
+                    }
+
+                    SetRunClasses(row, first, middle, last);
                 }
             }
-
-            // A run needs at least two selected rows to exist at all, so anything less skips
-            // straight to clearing. Realized rows are always walked, never short-circuited: a
-            // recycled container must have any stale run class cleared before it is reused.
-            IList? view = GetUngroupedView(this.dataGrid);
-            bool merge = view is not null && (this.dataGrid.SelectedItems?.Count ?? 0) >= 2;
-
-            foreach (Visual child in presenter.GetVisualChildren())
+            finally
             {
-                if (child is not DataGridRow row)
-                {
-                    continue;
-                }
-
-                bool first = false;
-                bool middle = false;
-                bool last = false;
-
-                if (merge && row.IsSelected)
-                {
-                    int index = row.Index;
-                    bool previousSelected = this.IsSelectedAt(view!, index - 1);
-                    bool nextSelected = this.IsSelectedAt(view!, index + 1);
-
-                    first = !previousSelected && nextSelected;
-                    middle = previousSelected && nextSelected;
-                    last = previousSelected && !nextSelected;
-                }
-
-                SetRunClasses(row, first, middle, last);
+                this.realizedRows.Clear();
             }
         }
 
@@ -336,6 +353,7 @@ internal static class DataGridSelectionRunBehavior
             this.scheduledUpdate = null;
             this.selectedItemsCache = null;
             this.realizedSelection.Clear();
+            this.realizedRows.Clear();
 
             this.dataGrid.TemplateApplied -= this.OnTemplateApplied;
             this.dataGrid.LayoutUpdated -= this.OnLayoutUpdated;

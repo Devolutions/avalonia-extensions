@@ -38,10 +38,11 @@ public class DataGridSelectionRunTests
         App.SetTheme(new MacOsTheme());
     }
 
-    private static (Window Window, DataGrid Grid, IReadOnlyList<Row> Items) CreateGrid(int rowCount)
-    {
-        List<Row> items = [.. Enumerable.Range(0, rowCount).Select(i => new Row($"Row {i}"))];
+    private static (Window Window, DataGrid Grid, IReadOnlyList<Row> Items) CreateGrid(int rowCount) =>
+        CreateGrid([.. Enumerable.Range(0, rowCount).Select(i => new Row($"Row {i}"))]);
 
+    private static (Window Window, DataGrid Grid, IReadOnlyList<Row> Items) CreateGrid(List<Row> items)
+    {
         var grid = new DataGrid
         {
             ItemsSource = items,
@@ -149,6 +150,45 @@ public class DataGridSelectionRunTests
 
             Assert.Equal(FullyRounded, ItemBorderRadius(rows[1]));
             Assert.Equal(FullyRounded, ItemBorderRadius(rows[3]));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    ///   A neighbour that is realized must be judged by its own selection state, not by looking
+    ///   its item up in the selection. <c>Row</c> is a record, so two rows holding the same name
+    ///   are equal — an item lookup would report the unselected duplicate as selected and square
+    ///   off an end that should stay rounded.
+    /// </summary>
+    [AvaloniaFact]
+    public void DuplicateItemsDoNotJoinSeparateSelections()
+    {
+        ResetTheme();
+
+        // Index 1 and index 3 are distinct rows holding equal items.
+        List<Row> items = [new("X"), new("A"), new("Y"), new("A"), new("Z")];
+
+        (Window window, DataGrid grid, IReadOnlyList<Row> rowItems) = CreateGrid(items);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            // Neither selected row touches the other, so both are runs of one.
+            grid.SelectedItems.Add(rowItems[1]);
+            grid.SelectedItems.Add(rowItems[4]);
+            Dispatcher.UIThread.RunJobs();
+
+            IReadOnlyList<DataGridRow> rows = RealizedRows(grid);
+
+            // Row 3 is unselected, so row 4 has no neighbour and must stay fully rounded.
+            Assert.DoesNotContain(":sel-run-last", rows[4].Classes);
+            Assert.Equal(FullyRounded, ItemBorderRadius(rows[4]));
+            Assert.Equal(FullyRounded, ItemBorderRadius(rows[1]));
         }
         finally
         {

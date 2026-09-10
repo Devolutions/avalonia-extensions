@@ -22,9 +22,18 @@ using Avalonia.VisualTree;
 /// </para>
 ///
 /// <para>
-/// Neighbours are looked up through <see cref="DataGrid.CollectionView"/> instead of the realized
-/// rows, so a run continuing past the top or bottom of the viewport still keeps a squared-off end
-/// there rather than appearing to stop at the viewport edge.
+/// A neighbour that is realized is asked directly, through <see cref="DataGridRow.IsSelected"/>:
+/// the row is matched by index and no comparison between items takes place. Only a neighbour that
+/// is not realized — at most the row just above and the row just below the viewport — is resolved
+/// by looking its item up in the selection, so a run continuing past the edge of the viewport
+/// still keeps a squared-off end there rather than appearing to stop at the edge.
+/// </para>
+///
+/// <para>
+/// That fallback is the one place where items are compared, and it uses whatever equality the item
+/// type defines. An unselected row holding a value-equal duplicate of a selected item is therefore
+/// read as selected, but only in the row immediately outside the viewport, which is clipped by the
+/// scroll viewport anyway.
 /// </para>
 ///
 /// <para>
@@ -103,6 +112,7 @@ internal static class DataGridSelectionRunBehavior
     private sealed class SelectionRunState : IDisposable
     {
         private readonly DataGrid dataGrid;
+        private readonly Dictionary<int, bool> realizedSelection = new();
         private DataGridRowsPresenter? rowsPresenter;
         private DispatcherOperation? scheduledUpdate;
         private HashSet<object>? selectedItemsCache;
@@ -146,13 +156,23 @@ internal static class DataGridSelectionRunBehavior
             DataGridRowsPresenter? presenter = this.GetRowsPresenter();
             if (presenter is null) return;
 
+            // Map the viewport first: a row's neighbours decide its run position, and a realized
+            // neighbour answers for itself far more reliably than its item does.
+            this.realizedSelection.Clear();
+
+            foreach (Visual child in presenter.GetVisualChildren())
+            {
+                if (child is DataGridRow row && row.Index >= 0)
+                {
+                    this.realizedSelection[row.Index] = row.IsSelected;
+                }
+            }
+
             // A run needs at least two selected rows to exist at all, so anything less skips
             // straight to clearing. Realized rows are always walked, never short-circuited: a
             // recycled container must have any stale run class cleared before it is reused.
-            IList? selectedItems = this.dataGrid.SelectedItems;
             IList? view = GetUngroupedView(this.dataGrid);
-            HashSet<object>? selected = this.GetSelectedSet(selectedItems);
-            bool merge = view is not null && selected is not null;
+            bool merge = view is not null && (this.dataGrid.SelectedItems?.Count ?? 0) >= 2;
 
             foreach (Visual child in presenter.GetVisualChildren())
             {
@@ -168,8 +188,8 @@ internal static class DataGridSelectionRunBehavior
                 if (merge && row.IsSelected)
                 {
                     int index = row.Index;
-                    bool previousSelected = IsSelectedAt(view!, selected!, index - 1);
-                    bool nextSelected = IsSelectedAt(view!, selected!, index + 1);
+                    bool previousSelected = this.IsSelectedAt(view!, index - 1);
+                    bool nextSelected = this.IsSelectedAt(view!, index + 1);
 
                     first = !previousSelected && nextSelected;
                     middle = previousSelected && nextSelected;
@@ -178,6 +198,29 @@ internal static class DataGridSelectionRunBehavior
 
                 SetRunClasses(row, first, middle, last);
             }
+        }
+
+        /// <summary>
+        ///   Answers whether the row at <paramref name="index"/> is selected, preferring the
+        ///   realized row because it knows its own state exactly. Falling back to the item lookup
+        ///   only happens for a neighbour outside the viewport, and it is that fallback — not the
+        ///   realized path — that depends on how the item type defines equality.
+        /// </summary>
+        private bool IsSelectedAt(IList view, int index)
+        {
+            if (this.realizedSelection.TryGetValue(index, out bool isSelected))
+            {
+                return isSelected;
+            }
+
+            if (index < 0 || index >= view.Count)
+            {
+                return false;
+            }
+
+            HashSet<object>? selected = this.GetSelectedSet();
+
+            return selected is not null && view[index] is { } item && selected.Contains(item);
         }
 
         /// <summary>
@@ -214,14 +257,21 @@ internal static class DataGridSelectionRunBehavior
         ///   draw (fewer than two selected rows).
         ///
         ///   <para>
-        ///   The set is cached and rebuilt only when the selection changes. Rebuilding it on every
-        ///   pass would make the cost scale with the size of the selection rather than the
-        ///   viewport, which is measurable once a large grid is fully selected: at 20k selected
-        ///   rows it roughly doubled the per-layout cost during scrolling.
+        ///   Only <see cref="IsSelectedAt"/> calls this, and only for a neighbour outside the
+        ///   viewport, so a selection that does not run past the edge never builds the set at all
+        ///   and nothing is held on to.
+        ///   </para>
+        ///
+        ///   <para>
+        ///   When it is needed the set is cached and rebuilt only as the selection changes.
+        ///   Rebuilding it per pass would make the cost scale with the size of the selection
+        ///   rather than the viewport, which is measurable once a large grid is fully selected: at
+        ///   20k selected rows it roughly doubled the per-layout cost during scrolling.
         ///   </para>
         /// </summary>
-        private HashSet<object>? GetSelectedSet(IList? selectedItems)
+        private HashSet<object>? GetSelectedSet()
         {
+            IList? selectedItems = this.dataGrid.SelectedItems;
             int count = selectedItems?.Count ?? 0;
 
             if (count < 2)
@@ -269,9 +319,6 @@ internal static class DataGridSelectionRunBehavior
             return selected;
         }
 
-        private static bool IsSelectedAt(IList view, HashSet<object> selected, int index) =>
-            index >= 0 && index < view.Count && view[index] is { } item && selected.Contains(item);
-
         private static void SetRunClasses(DataGridRow row, bool first, bool middle, bool last)
         {
             var classes = (IPseudoClasses)row.Classes;
@@ -288,6 +335,7 @@ internal static class DataGridSelectionRunBehavior
             this.scheduledUpdate?.Abort();
             this.scheduledUpdate = null;
             this.selectedItemsCache = null;
+            this.realizedSelection.Clear();
 
             this.dataGrid.TemplateApplied -= this.OnTemplateApplied;
             this.dataGrid.LayoutUpdated -= this.OnLayoutUpdated;

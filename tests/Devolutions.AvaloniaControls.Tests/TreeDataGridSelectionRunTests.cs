@@ -1,5 +1,5 @@
 #if ENABLE_ACCELERATE
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -16,7 +16,7 @@ using SampleApp;
 ///   off. The pseudo-classes come from <c>TreeDataGridSelectionRunBehavior</c> and the radii from
 ///   the <c>TreeDataGridRow</c> control theme, so these tests exercise both halves together.
 /// </summary>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class TreeDataGridSelectionRunTests
 {
     private const double Radius = 5;

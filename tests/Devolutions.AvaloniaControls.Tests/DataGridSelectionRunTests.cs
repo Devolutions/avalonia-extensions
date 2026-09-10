@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -13,7 +13,7 @@ using SampleApp;
 ///   off. The pseudo-classes come from <c>DataGridSelectionRunBehavior</c> and the radii from the
 ///   <c>DataGridRow</c> control theme, so these tests exercise both halves together.
 /// </summary>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class DataGridSelectionRunTests
 {
     private const double Radius = 5;

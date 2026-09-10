@@ -51,6 +51,8 @@ internal static class DataGridSelectionRunBehavior
 
     private const string RunLastClass = ":sel-run-last";
 
+    private const string RowsPresenterName = "PART_RowsPresenter";
+
     private static readonly ConditionalWeakTable<DataGrid, SelectionRunState> States = new();
 
     static DataGridSelectionRunBehavior()
@@ -111,9 +113,13 @@ internal static class DataGridSelectionRunBehavior
         public SelectionRunState(DataGrid dataGrid)
         {
             this.dataGrid = dataGrid;
+            this.dataGrid.TemplateApplied += this.OnTemplateApplied;
             this.dataGrid.LayoutUpdated += this.OnLayoutUpdated;
             this.dataGrid.SelectionChanged += this.OnSelectionChanged;
         }
+
+        private void OnTemplateApplied(object? sender, TemplateAppliedEventArgs e) =>
+            this.rowsPresenter = e.NameScope.Find<DataGridRowsPresenter>(RowsPresenterName);
 
         private void OnLayoutUpdated(object? sender, EventArgs e) => this.ScheduleUpdate();
 
@@ -174,14 +180,34 @@ internal static class DataGridSelectionRunBehavior
             }
         }
 
+        /// <summary>
+        ///   Returns the rows presenter for the template currently in force.
+        ///
+        ///   <para>
+        ///   The control theme enables this behavior while styling, which runs before the template
+        ///   is applied, so <see cref="OnTemplateApplied"/> supplies the presenter and the common
+        ///   path here is a plain field read — no walking the visual tree once per layout pass.
+        ///   </para>
+        ///
+        ///   <para>
+        ///   Walking is the fallback for the two cases that leaves: a behavior enabled on a grid
+        ///   that is already templated, where TemplateApplied will not fire again, and a presenter
+        ///   that left the tree without a new template arriving. Both resolve on the first sweep
+        ///   that needs them, and until one does the grid has next to no visual children to walk.
+        ///   </para>
+        /// </summary>
         private DataGridRowsPresenter? GetRowsPresenter()
         {
-            // The presenter is created with the template, which may not have been applied yet the
-            // first time this runs, so resolve lazily and keep retrying until it appears.
-            this.rowsPresenter ??= this.dataGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
+            if (this.rowsPresenter is null || this.rowsPresenter.GetVisualParent() is null)
+            {
+                this.rowsPresenter = FindRowsPresenter(this.dataGrid);
+            }
 
             return this.rowsPresenter;
         }
+
+        private static DataGridRowsPresenter? FindRowsPresenter(DataGrid dataGrid) =>
+            dataGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
 
         /// <summary>
         ///   Returns the selected items as a lookup set, or <c>null</c> when there is no run to
@@ -263,6 +289,7 @@ internal static class DataGridSelectionRunBehavior
             this.scheduledUpdate = null;
             this.selectedItemsCache = null;
 
+            this.dataGrid.TemplateApplied -= this.OnTemplateApplied;
             this.dataGrid.LayoutUpdated -= this.OnLayoutUpdated;
             this.dataGrid.SelectionChanged -= this.OnSelectionChanged;
 

@@ -574,8 +574,10 @@ public class MacOsMenuPackContractTests
     }
 
     /// <summary>
-    ///   The pack pins its LiquidGlass values while the full theme derives them from its own
-    ///   resources, so this guards the two representations against drifting apart.
+    ///   The pack and the full theme build the same tokens from separate files, so this guards the two
+    ///   against drifting apart: the accent-derived ones because each side declares its own derivation
+    ///   (a converter under LiquidGlass, a gradient over the accent steps in classic), and the sampled
+    ///   ones because the pack repeats them as literals.
     /// </summary>
     [AvaloniaTheory]
     [InlineData(true, "Light")]
@@ -589,11 +591,16 @@ public class MacOsMenuPackContractTests
 
         var fullWindow = new Window { RequestedThemeVariant = variant };
 
-        // The pack cannot run the accent through OklchAdjustmentConverter, so its accent-derived
-        // tokens are pinned literals - and they are pinned to what macOS's default accent produces,
-        // which is what ships. Headless otherwise supplies Avalonia's fallback accent (#0078d7), so
-        // without this the parity check would compare against a colour no user ever sees and would
-        // demand pins that are wrong on a real Mac.
+        // Both windows have to resolve the same accent resources or the comparison means nothing.
+        // What each side does with them differs by variant: LiquidGlass runs the accent through
+        // OklchAdjustmentConverter, while classic builds a gradient from the base plus the
+        // Light1/Dark1 steps.
+        //
+        // Only the base is pinned, and only the base moves - Fluent derives the steps from the
+        // platform accent, so they keep their headless values. With the base at #007aff the classic
+        // gradient comes out #269fff -> #007aff: Light1 of the fallback accent (#0078d7) over the
+        // pinned base. Harmless here, because both sides see the identical mix, but this is a parity
+        // check between two representations of the same inputs - not a reproduction of what ships.
         fullWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
 
         var fullTheme = new DevolutionsMacOsTheme();
@@ -603,8 +610,8 @@ public class MacOsMenuPackContractTests
 
         var packPage = new UserControl();
         var packWindow = new Window { Content = packPage, RequestedThemeVariant = variant };
-        // The classic pack pins follow SystemAccentColor rather than being literals, so both sides
-        // of the comparison have to sit on the same accent.
+        // Both packs derive their accent tokens from SystemAccentColor, so this side has to sit on
+        // the same accent as the full theme above.
         packWindow.Resources["SystemAccentColor"] = Color.Parse("#007aff");
         packWindow.Styles.Add(new AvaloniaFluentTheme());
         packPage.Styles.Add(new Devolutions.AvaloniaTheme.MacOS.Controls.MacOsMenuPack());
@@ -655,9 +662,27 @@ public class MacOsMenuPackContractTests
                 brush.Color.G,
                 brush.Color.B,
                 brush.Color.A / 255d * brush.Opacity),
+        // Gradients are described down to their stops. Falling through to the type name below would
+        // make every gradient compare equal to every other gradient, so the pack could drift from
+        // the theme - different colours, different direction - and parity would still pass.
+        ILinearGradientBrush linear =>
+            $"linear({linear.StartPoint} -> {linear.EndPoint}, {DescribeStops(linear)})",
+        IGradientBrush gradient => $"{gradient.GetType().Name}({DescribeStops(gradient)})",
         null => "<null>",
         _ => $"{value.GetType().Name}|{value}",
     };
+
+    private static string DescribeStops(IGradientBrush brush) =>
+        string.Join(
+            " ",
+            brush.GradientStops.Select(stop => string.Format(
+                CultureInfo.InvariantCulture,
+                "{0:F2}:rgba({1},{2},{3},{4:F2})",
+                stop.Offset,
+                stop.Color.R,
+                stop.Color.G,
+                stop.Color.B,
+                stop.Color.A / 255d * brush.Opacity)));
 
 
     /// <summary>

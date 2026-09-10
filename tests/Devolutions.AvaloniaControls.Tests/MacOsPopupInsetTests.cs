@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -20,7 +20,7 @@ using Xunit;
 ///   "tidy" them into a symmetric pair, which silently puts the top and left 1pt out. These tests
 ///   pin the composed result instead of the raw values, so the intent survives that edit.
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsPopupInsetTests
 {
     private const double ExpectedInset = 4;

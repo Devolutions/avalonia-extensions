@@ -4,11 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Converters;assembly=Devolutions.AvaloniaTheme.MacOS"
+             xmlns:appConverters="clr-namespace:SampleApp.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.Experiments.SystemColoursDemo"
              x:Name="Root">
 
   <UserControl.Resources>
+    <appConverters:ColorToHexConverter x:Key="ColorToHex" />
+    <SolidColorBrush x:Key="SystemAccentColorLight3Readout" Color="{DynamicResource SystemAccentColorLight3}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight2Readout" Color="{DynamicResource SystemAccentColorLight2}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight1Readout" Color="{DynamicResource SystemAccentColorLight1}" />
+    <SolidColorBrush x:Key="SystemAccentColorReadout" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark1Readout" Color="{DynamicResource SystemAccentColorDark1}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark2Readout" Color="{DynamicResource SystemAccentColorDark2}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark3Readout" Color="{DynamicResource SystemAccentColorDark3}" />
     <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxLightConverter" LightnessAdjustment="-0.01" ChromaAdjustment="-0.01" HueAdjustment="5" /> <!-- correct!!! -->
     <converters:OklchAdjustmentConverter x:Key="OklchCheckBoxDarkConverter" LightnessAdjustment="0" ChromaAdjustment="-0.01" HueAdjustment="5.1" />
     <converters:OklchAdjustmentConverter x:Key="OklchFocusLightConverter" LightnessAdjustment="-0.03" ChromaAdjustment="0.04" HueAdjustment="7" />
@@ -38,7 +47,13 @@
                IsVisible="{ext:ThemeIsOneOf 'Linux'}">
       However, Linux does not support this method of retrieval, so the default orange accent colour is hard-coded in the ThemeRoot.axaml
     </TextBlock>
-    <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30">
+    <!--
+      The hex column reports what Avalonia actually resolved. macOS does not report the swatch
+      drawn in System Settings, and the reported value differs between the light and dark
+      appearance, so read the accent here rather than sampling a swatch or a native control -
+      AppKit draws accent surfaces with gradients, so a sampled pixel is not the accent.
+    -->
+    <Grid RowDefinitions="25, 25, 25, 25, 25, 25, 25" ColumnDefinitions="Auto, 30, Auto">
       <TextBlock Grid.Row="0" Grid.Column="0">SystemAccentColorLight3</TextBlock>
       <TextBlock Grid.Row="1" Grid.Column="0">SystemAccentColorLight2</TextBlock>
       <TextBlock Grid.Row="2" Grid.Column="0">SystemAccentColorLight1</TextBlock>
@@ -60,6 +75,27 @@
                  Height="20" />
       <Rectangle Grid.Row="6" Grid.Column="1" Fill="{DynamicResource SystemAccentColorDark3}" Width="20"
                  Height="20" />
+      <TextBlock Grid.Row="0" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorLight3Readout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="1" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorLight2Readout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="2" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorLight1Readout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="3" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorReadout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="4" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorDark1Readout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="5" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorDark2Readout},
+                                           Converter={StaticResource ColorToHex}}" />
+      <TextBlock Grid.Row="6" Grid.Column="2" Margin="8 0 0 0" FontFamily="monospace"
+                 Text="{ReflectionBinding Color, Source={StaticResource SystemAccentColorDark3Readout},
+                                           Converter={StaticResource ColorToHex}}" />
     </Grid>
 
     <TextBlock Classes="section-title" Margin="0 50 0 0">SystemAccentColor with Transparency (1-100%)</TextBlock>

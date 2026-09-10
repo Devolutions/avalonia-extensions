@@ -3,6 +3,37 @@
 **NOTE:** This theme is still in active development and we are currently not maintaining a detailed change log.
 Please see commits if you're curious. However we will do our best to call out key changes in this log.
 
+## Unreleased
+
+- Fixed: in the classic variant, accent-derived surfaces did not follow the system accent. Accent
+  buttons, checkbox/radio fills and borders, the ComboBox button, drop-down row hover, the
+  DropDownButton, ListBoxItem selection and the Expander chevron were pinned to Avalonia's fallback
+  accent (`#0078d7`) instead of the platform accent.
+- Fixed: the LiquidGlass selection highlight read washed out, most visibly on drop-down rows in the
+  light variant. The brush was translucent, and at 0.64 opacity over a near-white popup surface an
+  accent's chroma is diluted toward the surface - measured across four accents the result was both
+  lighter and less chromatic than native every time (blue chroma 0.155 against native 0.177). The
+  brush is now **opaque**, and preserves the accent's hue while shifting lightness and capping
+  chroma, fitted against Finder's drop-down selection for four accents. Menus and drop-down rows
+  share the one colour. A grey (graphite) accent now stays grey, where the previous chroma offset
+  gave it a violet cast.
+- Changed: the standalone LiquidGlass menu pack now derives its selection colour from
+  `SystemAccentColor` instead of carrying literals pinned to the default accent, so pack-only
+  consumers follow a custom system accent. It needs `SystemAccentColor` from the host, as the
+  classic pack already did.
+- Changed: in the classic variant, menu hover now uses the accent gradient
+  (`ControlBackgroundAccentRaisedBrush`), the same brush as drop-down rows. It was a flat accent at
+  0.63 opacity, which made menu selection and ComboBox popup selection two different colours. The
+  standalone menu pack mirrors the change, so `MacOsMenuItemPointerOverBackgroundBrush` is now a
+  gradient rather than a solid brush.
+- BREAKING (resource keys): the intermediate colour tokens `AccentButtonTopColor`,
+  `AccentButtonBottomColor`, `ControlBackgroundAccentRecessedTopColor`,
+  `ControlBackgroundAccentRecessedBottomColor` and `ControlBorderAccentColor` were removed. They
+  could only ever hold a stale accent, which was the cause of the bug above. Consume the brushes
+  instead - `ControlBackgroundAccentRaisedBrush`, `ButtonBackgroundAccentRecessedBrush`,
+  `ControlBorderAccentBrush`, `ButtonBorderAccentBrush` - or `SystemAccentColor` and its
+  `Light1`/`Dark1` steps directly, always through `DynamicResource`.
+
 ## v2026.6.23
 
 > **BREAKING:** This release line requires Avalonia 12. `2026.6.16` is the last stable release compatible with Avalonia 11.

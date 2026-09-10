@@ -91,7 +91,7 @@
       <StaticResource x:Key="CheckBoxDisabledBackgroundBrush" ResourceKey="ControlBackgroundDisabledHighBrush" />
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
+      <SolidColorBrush x:Key="CheckBoxCheckedPressedBackgroundBrush" Color="{DynamicResource SystemAccentColor}" />
       <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
 
       <!-- RadioButton Resources -->
@@ -107,7 +107,7 @@
       <StaticResource x:Key="RadioButtonDisabledBackgroundBrush" ResourceKey="CheckBoxDisabledBackgroundBrush" />
       <StaticResource x:Key="RadioButtonDisabledTextBrush" ResourceKey="CheckBoxDisabledTextBrush" />
       <StaticResource x:Key="RadioButtonPressedBackgroundBrush" ResourceKey="CheckBoxPressedBackgroundBrush" />
-      <StaticResource x:Key="RadioButtonPressedCheckedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
+      <StaticResource x:Key="RadioButtonCheckedPressedBackgroundBrush" ResourceKey="CheckBoxCheckedPressedBackgroundBrush" />
 
       <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.10" />
       <SolidColorBrush x:Key="TextBoxBottomBorderBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.20" />
@@ -160,16 +160,39 @@
       <StaticResource x:Key="ControlBorderRecessedTopColor" ResourceKey="ControlBorderMidColor" />
       <StaticResource x:Key="ControlBorderRecessedBottomColor" ResourceKey="ControlBorderLowColor" />
 
-      <StaticResource x:Key="AccentButtonTopColor" ResourceKey="SystemAccentColorLight1" />
-      <StaticResource x:Key="AccentButtonBottomColor" ResourceKey="SystemAccentColor" />
+      <!--
+        Accent-derived brushes are declared per variant and reach the accent through
+        DynamicResource. They must not go through an intermediate <StaticResource> colour alias: a
+        StaticResource resolves in the parse-time dictionary scope, which never contains the
+        platform accent, so the alias either fails to resolve outright or captures Avalonia's
+        fallback accent (#0078d7) at first build and can never follow a live accent change. Per
+        variant rather than at the dictionary root, because light and dark take different steps of
+        the accent and a root-level brush cannot vary by theme. MacOsClassicAccentTests guards this.
+      -->
+      <LinearGradientBrush x:Key="ControlBackgroundAccentRaisedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorLight1}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColor}" />
+      </LinearGradientBrush>
 
       <SolidColorBrush x:Key="ControlBackgroundActiveHighBrush" Color="{DynamicResource ForegroundColor}"
                        Opacity="0.05" />
 
-      <StaticResource x:Key="ControlBackgroundAccentRecessedTopColor" ResourceKey="SystemAccentColor" />
-      <StaticResource x:Key="ControlBackgroundAccentRecessedBottomColor" ResourceKey="SystemAccentColorDark1" />
+      <LinearGradientBrush x:Key="ButtonBackgroundAccentRecessedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColor}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColorDark1}" />
+      </LinearGradientBrush>
 
-      <StaticResource x:Key="ControlBorderAccentColor" ResourceKey="SystemAccentColor" />
+      <SolidColorBrush x:Key="ControlBorderAccentBrush" Color="{DynamicResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource SystemAccentColor}" />
+
+      <!-- Per variant because their targets are: a root-level StaticResource would bind the
+           Default (light) brush for dark as well. MenuItemPointerOverBackgroundBrush is here so
+           menus hover with the same accent gradient as drop-down rows - see the note at the menu
+           resources below. -->
+      <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
+      <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
 
       <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="TransparentBrush" />
       <Thickness x:Key="MenuFlyoutPresenterBorderThickness">0</Thickness>
@@ -327,7 +350,7 @@
       <StaticResource x:Key="ControlDisabledLabelBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxDisabledTextBrush" ResourceKey="ForegroundLowBrush" />
       <StaticResource x:Key="CheckBoxPressedBackgroundBrush" ResourceKey="ForegroundLowBrush" />
-      <StaticResource x:Key="CheckBoxCheckedPressedBackgroundBrush" ResourceKey="SystemAccentColor" />
+      <SolidColorBrush x:Key="CheckBoxCheckedPressedBackgroundBrush" Color="{DynamicResource SystemAccentColor}" />
 
       <!-- RadioButton Resources -->
       <StaticResource x:Key="RadioButtonBackgroundBrush" ResourceKey="CheckBoxBackgroundBrush" />
@@ -396,16 +419,39 @@
       <StaticResource x:Key="ControlBorderRecessedTopColor" ResourceKey="ControlBorderLowColor" />
       <StaticResource x:Key="ControlBorderRecessedBottomColor" ResourceKey="ControlBorderMidColor" />
 
-      <StaticResource x:Key="AccentButtonTopColor" ResourceKey="SystemAccentColor" />
-      <StaticResource x:Key="AccentButtonBottomColor" ResourceKey="SystemAccentColorDark1" />
+      <!--
+        Accent-derived brushes are declared per variant and reach the accent through
+        DynamicResource. They must not go through an intermediate <StaticResource> colour alias: a
+        StaticResource resolves in the parse-time dictionary scope, which never contains the
+        platform accent, so the alias either fails to resolve outright or captures Avalonia's
+        fallback accent (#0078d7) at first build and can never follow a live accent change. Per
+        variant rather than at the dictionary root, because light and dark take different steps of
+        the accent and a root-level brush cannot vary by theme. MacOsClassicAccentTests guards this.
+      -->
+      <LinearGradientBrush x:Key="ControlBackgroundAccentRaisedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColor}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColorDark1}" />
+      </LinearGradientBrush>
 
       <SolidColorBrush x:Key="ControlBackgroundActiveHighBrush" Color="{DynamicResource ForegroundColor}"
                        Opacity="0.37" />
 
-      <StaticResource x:Key="ControlBackgroundAccentRecessedTopColor" ResourceKey="SystemAccentColorLight1" />
-      <StaticResource x:Key="ControlBackgroundAccentRecessedBottomColor" ResourceKey="SystemAccentColor" />
+      <LinearGradientBrush x:Key="ButtonBackgroundAccentRecessedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorLight1}" />
+        <GradientStop Offset="1" Color="{DynamicResource SystemAccentColor}" />
+      </LinearGradientBrush>
 
-      <StaticResource x:Key="ControlBorderAccentColor" ResourceKey="SystemAccentColorLight1" />
+      <SolidColorBrush x:Key="ControlBorderAccentBrush" Color="{DynamicResource SystemAccentColorLight1}" />
+      <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource SystemAccentColorLight1}" />
+
+      <!-- Per variant because their targets are: a root-level StaticResource would bind the
+           Default (light) brush for dark as well. MenuItemPointerOverBackgroundBrush is here so
+           menus hover with the same accent gradient as drop-down rows - see the note at the menu
+           resources below. -->
+      <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
+      <StaticResource x:Key="ComboBoxItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
+      <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
 
       <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="ControlBorderBrush" />
       <Thickness x:Key="MenuFlyoutPresenterBorderThickness">1</Thickness>
@@ -505,15 +551,8 @@
     <GradientStop Offset="1" Color="{DynamicResource ControlBorderMidColor}" />
   </LinearGradientBrush>
 
-  <LinearGradientBrush x:Key="ControlBackgroundAccentRaisedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-    <GradientStop Offset="0" Color="{DynamicResource AccentButtonTopColor}" />
-    <GradientStop Offset="1" Color="{DynamicResource AccentButtonBottomColor}" />
-  </LinearGradientBrush>
-
-  <LinearGradientBrush x:Key="ButtonBackgroundAccentRecessedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-    <GradientStop Offset="0" Color="{DynamicResource ControlBackgroundAccentRecessedTopColor}" />
-    <GradientStop Offset="1" Color="{DynamicResource ControlBackgroundAccentRecessedBottomColor}" />
-  </LinearGradientBrush>
+  <!-- ControlBackgroundAccentRaisedBrush and ButtonBackgroundAccentRecessedBrush are declared
+       per variant in the ThemeDictionaries above, so they can follow the system accent. -->
 
   <LinearGradientBrush x:Key="ControlBorderRaisedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
     <GradientStop Offset="0" Color="{DynamicResource ControlBorderRaisedTopColor}" />
@@ -562,8 +601,6 @@
   <SolidColorBrush x:Key="ControlBackgroundAccentHighBrush" Color="{DynamicResource SystemAccentColor}" />
   <SolidColorBrush x:Key="ControlBackgroundAccentMidBrush" Color="{DynamicResource SystemAccentColor}" Opacity="0.63" />
 
-  <SolidColorBrush x:Key="ControlBorderAccentBrush" Color="{DynamicResource ControlBorderAccentColor}" />
-
   <BoxShadows x:Key="ControlBackgroundRaisedShadow">2 2 3 -2 #bfbfbf</BoxShadows>
 
   <SolidColorBrush x:Key="ControlBorderBrush" Color="{DynamicResource ControlBorderMidColor}" />
@@ -588,7 +625,7 @@
 
   <Thickness x:Key="ButtonPadding">10 0</Thickness>
   <FontWeight x:Key="ButtonFontWeight">400</FontWeight>
-  <SolidColorBrush x:Key="ButtonBorderAccentBrush" Color="{DynamicResource ControlBorderAccentColor}" />
+  <!-- ButtonBorderAccentBrush is declared per variant in the ThemeDictionaries above. -->
 
   <!-- TODO: To be replaced by templated button control (accent colour with hard-coded gradient overlay) -->
   <VisualBrush x:Key="TempButtonAccentBackgroundPrecise" Stretch="Fill">
@@ -660,15 +697,16 @@
 
   <!-- ComboBox Button (ToggleButton) -->
 
-  <StaticResource x:Key="ComboBoxButtonBackgroundBrush" ResourceKey="ControlBackgroundAccentRaisedBrush" />
-  <StaticResource x:Key="ComboBoxButtonBorderBrush" ResourceKey="ControlBorderAccentBrush" />
+  <!-- ComboBoxButtonBackgroundBrush and ComboBoxButtonBorderBrush are declared per variant in
+       the ThemeDictionaries above: their targets are accent-derived and per variant too. -->
   <StaticResource x:Key="ComboBoxButtonInactiveBorderBrush" ResourceKey="ControlBorderBrush" />
   <StaticResource x:Key="ComboBoxChevronBrush" ResourceKey="ControlForegroundAccentHighBrush" />
   <StaticResource x:Key="ComboBoxChevronInactiveBrush" ResourceKey="ControlForegroundAccentInactiveHighBrush" />
 
   <!-- Resources for ComboBoxItem.xaml -->
   <StaticResource x:Key='ComboBoxItemCornerRadius' ResourceKey='ControlCornerRadius' />
-  <StaticResource x:Key='ComboBoxItemPointerOverBackgroundBrush' ResourceKey='ControlBackgroundAccentRaisedBrush' />
+  <!-- ComboBoxItemPointerOverBackgroundBrush is declared per variant in the ThemeDictionaries
+       above, alongside the accent-raised gradient it points at. -->
   <x:Double x:Key="ComboBoxMinHeight">22</x:Double>
 
   <Thickness x:Key="ComboBoxItemMargin">2 0</Thickness>
@@ -778,32 +816,21 @@
   <Thickness x:Key="MenuItemIconPadding">0</Thickness>
   <StaticResource x:Key="MenuItemSelectedBackgroundBrush" ResourceKey="LayoutBackgroundMidBrush" />
   <!--
-    Classic menus hover flat here while drop-down rows use the ControlBackgroundAccentRaisedBrush
-    gradient - a long-standing inconsistency, not something LiquidGlass introduced.
+    Classic menu hover and drop-down row hover are the same brush: ControlBackgroundAccentRaisedBrush,
+    the accent gradient. Menus used to hover flat (ControlBackgroundAccentMidBrush, the accent at
+    0.63) while drop-down rows used the gradient - a long-standing inconsistency, not something
+    LiquidGlass introduced. The gradient is the classic-native look, so the menus moved to it.
 
-    They also differ in a way that is not stylistic: this brush follows the system accent and the
-    gradient does not. Verified by forcing the accent to red - menus went red, the gradient stayed
-    on #269fff -> #0078d7, Avalonia's fallback accent.
+    MenuItemPointerOverBackgroundBrush is therefore declared per variant, up in the ThemeDictionaries
+    alongside the gradient it points at: the gradient differs by variant, so a root-level
+    StaticResource here would bind the Default (light) one for dark too.
 
-    The gradient's stops read AccentButtonTopColor/BottomColor, which are declared as
-    <StaticResource ResourceKey="SystemAccentColorLight1" /> aliases. A StaticResource alias resolves
-    once at load, so it captures the fallback accent before the platform value arrives and can never
-    update - the same scope-and-timing trap as the variant bugs elsewhere in this theme, but freezing
-    a live platform value rather than a variant.
-
-    Observed to affect the LIGHT variant only; dark follows a changed accent correctly. Both variants
-    declare the stops the same way, so the reason for the difference is not yet established - the
-    light stops go through SystemAccentColorLight1 while dark's top stop is SystemAccentColor
-    itself, which may be why one survives and the other does not. Worth confirming before fixing.
-
-    Fixing it properly means declaring ControlBackgroundAccentRaisedBrush per variant with stops
-    bound through DynamicResource, since the light and dark variants use different stops and a
-    root-level brush cannot vary by theme. That reaches every accent-raised surface in the classic
-    theme, not just these rows, so it wants its own change. Unifying the two hover styles would
-    additionally need the standalone menu pack to pin a gradient literal (it pins a solid), and the
-    pack parity check compares gradients only by type, so it would not really verify them.
+    The standalone menu pack mirrors this in MenuResources.axaml, and it can express the gradient
+    honestly because the pack tokens follow SystemAccentColor through DynamicResource rather than
+    being pinned literals - the LiquidGlass pack likewise instantiates OklchAdjustmentConverter and
+    derives its selection from the live accent. Pack parity compares gradient stops, not just brush
+    type - see DescribeToken.
   -->
-  <StaticResource x:Key="MenuItemPointerOverBackgroundBrush" ResourceKey="ControlBackgroundAccentMidBrush" />
   <SolidColorBrush x:Key="SeparatorBrush" Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
   <Thickness x:Key="MenuFlyoutScrollerMargin">0,4,0,4</Thickness>
   <x:Double x:Key="MenuHeaderFontSizeSmall">10</x:Double>

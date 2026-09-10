@@ -145,7 +145,7 @@
                     BorderBrush="{TemplateBinding BorderBrush}">
               <Grid>
                 <Rectangle x:Name="TrackRect"
-                           Fill="{DynamicResource ScrollBarTrackFill}"
+                           Fill="{DynamicResource ScrollBarTrackFillPointerOver}"
                            Stroke="Transparent"
                            StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}"
                            Width="{DynamicResource ScrollBarThumbThickness}"
@@ -208,7 +208,7 @@
                     BorderBrush="{TemplateBinding BorderBrush}">
               <Grid>
                 <Rectangle x:Name="TrackRect"
-                           Fill="{DynamicResource ScrollBarTrackFill}"
+                           Fill="{DynamicResource ScrollBarTrackFillPointerOver}"
                            Stroke="Transparent"
                            StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}"
                            Height="{DynamicResource ScrollBarThumbThickness}"
@@ -263,7 +263,6 @@
 
     <Style Selector="^[IsExpanded=true], ^:veryshort">
       <Style Selector="^ /template/ Rectangle#TrackRect">
-        <Setter Property="Fill" Value="{DynamicResource ScrollBarTrackFillPointerOver}" />
         <Setter Property="Opacity" Value="1" />
       </Style>
       <Style Selector="^ /template/ Thumb">

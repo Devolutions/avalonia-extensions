@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
-                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:attachedProperties="clr-namespace:Devolutions.AvaloniaControls.AttachedProperties;assembly=Devolutions.AvaloniaControls">
 
   <!-- 
     Un-comment to allow auto-completion;
@@ -128,6 +129,9 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="ComboBoxValidationBehavior.Enable" Value="True" />
+    <!-- Corrects the VerticalOffset estimate below against the popup's real layout, so the selected
+         row still lands on the ComboBox once the option list is long enough to scroll. -->
+    <Setter Property="ComboBoxPopupAlignmentBehavior.Enable" Value="True" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -231,6 +235,16 @@
                     BorderThickness="{StaticResource FocusBorderThickness}"
                     BorderBrush="{WindowActiveResourceToggler InputFocusedBorder, InputFocusedInactiveBorder}"
                     CornerRadius="{TemplateBinding CornerRadius}" />
+            <!--
+              PlacementConstraintAdjustment: the default (All) includes FlipY, which is wrong for
+              this drop-down. FlipY exists for menus, where a submenu that doesn't fit below should
+              open above instead. Here the popup is deliberately offset *upwards* so the selected
+              row lands on the ComboBox, so near the bottom of the screen the compositor flips it as
+              well - moving it a further popup-height up and leaving it floating well above the
+              control. Sliding is the correct adjustment: it keeps the popup on screen without
+              changing which side of the anchor it is on, which is what the alignment behaviour then
+              measures against.
+            -->
             <Popup
               Name="PART_Popup"
               MaxHeight="{TemplateBinding MaxDropDownHeight}"
@@ -240,6 +254,7 @@
               Placement="AnchorAndGravity"
               PlacementAnchor="BottomLeft"
               PlacementGravity="BottomRight"
+              PlacementConstraintAdjustment="SlideX, SlideY, ResizeX, ResizeY"
               HorizontalOffset="-1">
               <Popup.MinWidth>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.TotalWidthConverter}">

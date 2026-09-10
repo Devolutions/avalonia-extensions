@@ -132,7 +132,7 @@
                       VerticalAlignment="Center"
                       Stretch="Uniform"
                       RenderTransformOrigin="50%,50%"
-                      Stroke="{DynamicResource ControlBorderAccentColor}"
+                      Stroke="{DynamicResource ControlBorderAccentBrush}"
                       StrokeThickness="2">
                   <Path.Transitions>
                     <Transitions>

@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Linq;
@@ -33,7 +33,7 @@ using Xunit;
 ///     still available.
 ///   </para>
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class MacOsComboBoxPopupAlignmentTests
 {
     /// <summary>Rounding across two coordinate spaces; a fraction of a row is invisible.</summary>

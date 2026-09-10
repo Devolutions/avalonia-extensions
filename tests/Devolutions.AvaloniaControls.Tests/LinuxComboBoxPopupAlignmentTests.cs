@@ -1,4 +1,4 @@
-namespace Devolutions.AvaloniaControls.VisualTests;
+namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Linq;
@@ -41,7 +41,7 @@ using Xunit;
 ///     is removed.
 ///   </para>
 /// </remarks>
-[Collection("VisualTests")]
+[Collection("StylesTest")]
 public class LinuxComboBoxPopupAlignmentTests
 {
     /// <summary>Rounding across two coordinate spaces; a fraction of a row is invisible.</summary>

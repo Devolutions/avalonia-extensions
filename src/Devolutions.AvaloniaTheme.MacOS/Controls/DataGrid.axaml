@@ -453,7 +453,11 @@
     <!-- A contiguous multi-row selection has to read as one shape, so only the two ends of the run
          stay rounded and everything between them is squared off. The pseudo-classes come from
          DataGridSelectionRunBehavior, which leaves grouped views alone. A lone selected row matches
-         none of these and keeps the fully rounded radius set above. -->
+         none of these and keeps the fully rounded radius set above.
+
+         Keep what these setters touch render-affecting. The behavior recomputes the run from
+         LayoutUpdated, so a setter that invalidates layout would schedule another pass, which
+         would invalidate layout again, a loop that pins the UI at Render priority. -->
     <Style Selector="^:selected:sel-run-first">
       <Setter Property="CornerRadius" Value="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource TopCornerRadiusFilterConverter}}" />
     </Style>

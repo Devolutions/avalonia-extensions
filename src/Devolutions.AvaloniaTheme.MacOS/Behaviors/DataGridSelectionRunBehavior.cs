@@ -30,10 +30,11 @@ using Avalonia.VisualTree;
 /// </para>
 ///
 /// <para>
-/// That fallback is the one place where items are compared, and it uses whatever equality the item
-/// type defines. An unselected row holding a value-equal duplicate of a selected item is therefore
-/// read as selected, but only in the row immediately outside the viewport, which is clipped by the
-/// scroll viewport anyway.
+/// That fallback is the one place where items are compared, and it compares them by reference
+/// rather than by <see cref="object.Equals"/>. The row that would pay for a wrong answer is the
+/// realized one at the edge of the viewport, and that row is fully visible whenever the scroll
+/// offset lands on a row boundary, so a value-equal duplicate just outside the viewport would put
+/// a visibly wrong corner on it.
 /// </para>
 ///
 /// <para>
@@ -136,6 +137,12 @@ internal static class DataGridSelectionRunBehavior
 
         private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            // Drop the old set here rather than leaving it for the next GetSelectedSet to
+            // replace. That only runs for an off-viewport neighbour, so a selection that stops
+            // needing one would otherwise keep the previous selection's items alive for as long
+            // as the grid lives.
+            this.selectedItemsCache = null;
+            this.selectedItemsCacheCount = -1;
             this.selectionDirty = true;
             this.ScheduleUpdate();
         }
@@ -321,9 +328,34 @@ internal static class DataGridSelectionRunBehavior
             return view is { IsGrouping: false } ? view as IList : null;
         }
 
+        /// <summary>
+        ///   Builds the lookup set on reference identity rather than <see cref="object.Equals"/>.
+        ///
+        ///   <para>
+        ///   Two distinct rows holding equal items are different instances, so identity is what
+        ///   actually answers "is the row at this index selected". Value equality cannot: items
+        ///   are frequently records, and an unselected row holding a duplicate of a selected item
+        ///   would be read as selected, squaring off an end that the run does not reach.
+        ///   </para>
+        ///
+        ///   <para>
+        ///   This is hardening rather than a fix for a reproducible failure. DataGrid resolves an
+        ///   item to a row by value equality itself, so asking it to select the second of two
+        ///   equal items selects the first instead, and the mismatch mostly cannot arise through
+        ///   <see cref="DataGrid.SelectedItems"/> at all. Whatever it does put in that collection
+        ///   comes from the view, so matching on identity costs nothing.
+        ///   </para>
+        ///
+        ///   <para>
+        ///   The trade-off is a view over boxed value types, where the indexer hands back a fresh
+        ///   box each call and no lookup can match. That degrades to treating an off-viewport
+        ///   neighbour as unselected, which is what TreeDataGrid does for every neighbour it
+        ///   cannot see -- a rounded end where a squared one belongs, rather than a wrong answer.
+        ///   </para>
+        /// </summary>
         private static HashSet<object> BuildSelectedSet(IList selectedItems)
         {
-            HashSet<object> selected = new(selectedItems.Count);
+            HashSet<object> selected = new(selectedItems.Count, ReferenceEqualityComparer.Instance);
 
             foreach (object? item in selectedItems)
             {

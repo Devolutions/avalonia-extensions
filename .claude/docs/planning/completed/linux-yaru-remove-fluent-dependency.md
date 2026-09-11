@@ -1,5 +1,10 @@
 # Linux Yaru: Remove Fluent Theme Dependency
 
+> Status: Completed 2026-09-11.
+>
+> Implementation: `5184449 [Linux] Remove Fluent theme dependency` and `252ac28 Cleanup`.
+> User completed manual runtime and visual validation. Result accepted.
+
 ## Goal
 
 Make `Devolutions.AvaloniaTheme.Linux` self-contained. Remove runtime and package dependency on `Avalonia.Themes.Fluent`; retain existing GTK Yaru visual decisions and fixed Yaru orange accent.

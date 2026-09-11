@@ -92,6 +92,8 @@
   <x:Double x:Key="MacOsMenuToolBarPopupVerticalOffset">-10</x:Double>
 
   <Thickness x:Key="MacOsMenuBarPadding">6</Thickness>
+  <Thickness x:Key="MacOsMenuHorizontalFlyoutItemPadding">8,4,8,7</Thickness>
+  <Thickness x:Key="MacOsMenuHorizontalFlyoutItemMargin">2,0,2,0</Thickness>
   <Thickness x:Key="MacOsMenuItemPadding">9 4 7 2</Thickness>
   <x:Double x:Key="MacOsMenuItemMinHeight">22</x:Double>
   <Thickness x:Key="MacOsMenuIconPresenterMargin">0 0 4 0</Thickness>

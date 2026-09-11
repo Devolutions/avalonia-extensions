@@ -23,7 +23,7 @@ using Devolutions.AvaloniaControls.Helpers;
 [TemplatePart("PART_ScrollViewer", typeof(ScrollViewer), IsRequired = true)]
 [TemplatePart("PART_SelectionRectangle", typeof(RectangleSelectionMarquee))]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
-[RequiresDynamicCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator requires preserved types")]
 public class GroupedTileListBox : TemplatedControl
 {
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =

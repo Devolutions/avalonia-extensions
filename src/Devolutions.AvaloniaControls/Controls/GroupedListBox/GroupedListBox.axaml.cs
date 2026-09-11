@@ -43,7 +43,7 @@ using Devolutions.AvaloniaControls.Helpers;
 /// </summary>
 [PseudoClasses(":empty")]
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
-[RequiresDynamicCode("BindingEvaluator require preserved types")]
+[RequiresDynamicCode("BindingEvaluator requires preserved types")]
 public class GroupedListBox : ListBox
 {
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =

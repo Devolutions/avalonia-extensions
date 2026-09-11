@@ -1,5 +1,9 @@
 # macOS: Remove Fluent Theme Dependency
 
+> Status: Implementation complete 2026-09-11. Visual validation pending baseline review.
+>
+> Implementation is uncommitted on branch `remove-fluent-dependency`. Debug and Release MacOS builds plus all 241 functional tests pass. Visual regression baselines were not updated.
+
 ## Goal
 
 Make `Devolutions.AvaloniaTheme.MacOS` self-contained. Remove runtime and package dependency on `Avalonia.Themes.Fluent`; preserve classic macOS and conditional Liquid Glass visuals, menu aliases, wallpaper tinting, and live system accent behavior.

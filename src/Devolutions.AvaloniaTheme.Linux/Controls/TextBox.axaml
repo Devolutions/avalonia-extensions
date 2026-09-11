@@ -1,7 +1,6 @@
-<!-- 
-    Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/TextBox.xaml
--->
+<!-- Properties below imported from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+     https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/TextBox.xaml -->
+<!-- Only source items absent from matching Linux/Yaru scope. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
@@ -10,7 +9,7 @@
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     x:ClassModifier="internal">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -252,6 +251,10 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^:touch-mode">
+      <Setter Property="ContextFlyout" Value="{StaticResource HorizontalTextBoxContextFlyout}" />
+    </Style>
 
     <Style Selector="^.borderless">
       <Setter Property="BorderThickness" Value="0" />

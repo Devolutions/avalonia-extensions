@@ -1,6 +1,6 @@
-<!-- 
-    Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/ButtonSpinner.xaml
+<!--
+    Based from:
+    https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/ButtonSpinner.xaml
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -53,7 +53,7 @@
   <avaloniaConverters:MarginMultiplierConverter x:Key="ButtonSpinnerRightThickness" Indent="1" Right="True" />
   <avaloniaConverters:MarginMultiplierConverter x:Key="ButtonSpinnerReverseBorderOffset" Indent="-1" Top="True" Bottom="True" />
 
-  <ControlTheme x:Key="ButtonSpinnerRepeatButtonPathIcon" TargetType="PathIcon" BasedOn="{StaticResource {x:Type PathIcon}}">
+  <ControlTheme x:Key="ButtonSpinnerRepeatButtonPathIcon" TargetType="PathIcon">
     <Setter Property="Template">
       <ControlTemplate>
         <Border

@@ -1,6 +1,6 @@
-<!-- 
-    Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/abe839e1c133b12524d8ba24fbc831e29e354a29/src/Avalonia.Themes.Fluent/Controls/MenuItem.xaml
+<!--
+    Based on Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+    https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/MenuItem.xaml
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -236,7 +236,7 @@
     </Style>
   </ControlTheme>
 
-  <ControlTheme x:Key="HorizontalMenuItem" TargetType="MenuItem" BasedOn="{StaticResource FluentTopLevelMenuItem}">
+  <ControlTheme x:Key="HorizontalMenuItem" TargetType="MenuItem" BasedOn="{StaticResource LinuxMenuTopLevelMenuItem}">
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuItemPadding}" />
     <Setter Property="Margin" Value="{DynamicResource LinuxMenuHorizontalItemMargin}" />
   </ControlTheme>

@@ -1,0 +1,24 @@
+<!-- Retrieved from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+     https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/GridSplitter.xaml -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type GridSplitter}" TargetType="GridSplitter">
+      <Setter Property="Focusable" Value="True" />
+      <Setter Property="MinWidth" Value="{DynamicResource GridSplitterThickness}" />
+      <Setter Property="MinHeight" Value="{DynamicResource GridSplitterThickness}" />
+      <Setter Property="Background" Value="{DynamicResource SystemAltMediumLowColor}" />
+      <Setter Property="PreviewContent">
+        <Template>
+          <Rectangle Fill="{DynamicResource SystemAccentColor}" />
+        </Template>
+      </Setter>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+      </Setter>
+    </ControlTheme>
+</ResourceDictionary>

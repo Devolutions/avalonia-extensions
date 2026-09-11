@@ -1,0 +1,61 @@
+<!-- Retrieved from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+     https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="AdornerLayer.axaml" />
+        <MergeResourceInclude Source="CommandBar.axaml" />
+        <MergeResourceInclude Source="CarouselPage.axaml" />
+        <MergeResourceInclude Source="ContentPage.axaml" />
+        <MergeResourceInclude Source="DrawerPage.axaml" />
+        <MergeResourceInclude Source="NavigationPage.axaml" />
+        <MergeResourceInclude Source="TabbedPage.axaml" />
+        <MergeResourceInclude Source="RadioButton.axaml" />
+        <MergeResourceInclude Source="ProgressBar.axaml" />
+        <MergeResourceInclude Source="AutoCompleteBox.axaml" />
+        <MergeResourceInclude Source="Carousel.axaml" />
+        <MergeResourceInclude Source="GroupBox.axaml" />
+        <MergeResourceInclude Source="GridSplitter.axaml" />
+        <MergeResourceInclude Source="ItemsControl.axaml" />
+        <MergeResourceInclude Source="Label.axaml" />
+        <MergeResourceInclude Source="ListBoxItem.axaml" />
+        <MergeResourceInclude Source="MenuScrollViewer.axaml" />
+        <MergeResourceInclude Source="NotificationCard.axaml" />
+        <MergeResourceInclude Source="OverlayPopupHost.axaml" />
+        <MergeResourceInclude Source="PopupRoot.axaml" />
+        <MergeResourceInclude Source="PathIcon.axaml" />
+        <MergeResourceInclude Source="PipsPager.axaml" />
+        <MergeResourceInclude Source="RepeatButton.axaml" />
+        <MergeResourceInclude Source="ScrollViewer.axaml" />
+        <MergeResourceInclude Source="SplitView.axaml" />
+        <MergeResourceInclude Source="TableView.axaml" />
+        <MergeResourceInclude Source="TableViewCell.axaml" />
+        <MergeResourceInclude Source="TableViewColumnHeader.axaml" />
+        <MergeResourceInclude Source="TableViewRow.axaml" />
+        <MergeResourceInclude Source="TabStrip.axaml" />
+        <MergeResourceInclude Source="TabStripItem.axaml" />
+        <MergeResourceInclude Source="ToggleButton.axaml" />
+        <MergeResourceInclude Source="ToggleSwitch.axaml" />
+        <MergeResourceInclude Source="ToolTip.axaml" />
+        <MergeResourceInclude Source="TransitioningContentControl.axaml" />
+        <MergeResourceInclude Source="TreeView.axaml" />
+        <MergeResourceInclude Source="TreeViewItem.axaml" />
+        <MergeResourceInclude Source="WindowNotificationManager.axaml" />
+        <MergeResourceInclude Source="WindowDrawnDecorations.axaml" />
+        <MergeResourceInclude Source="DateTimePickerShared.axaml" />
+        <MergeResourceInclude Source="DatePicker.axaml" />
+        <MergeResourceInclude Source="TimePicker.axaml" />
+        <MergeResourceInclude Source="Slider.axaml" />
+        <MergeResourceInclude Source="ManagedFileChooser.axaml" />
+        <MergeResourceInclude Source="SelectableTextBlock.axaml" />
+        <MergeResourceInclude Source="RefreshContainer.axaml" />
+        <MergeResourceInclude Source="RefreshVisualizer.axaml" />
+        <MergeResourceInclude Source="ThemeVariantScope.axaml" />
+        <MergeResourceInclude Source="HeaderedContentControl.axaml" />
+        <MergeResourceInclude Source="TextSelectionHandle.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

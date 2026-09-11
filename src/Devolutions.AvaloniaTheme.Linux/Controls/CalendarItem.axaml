@@ -1,6 +1,6 @@
 <!--
   Based off:
-  https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/CalendarItem.xaml
+  https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/CalendarItem.xaml
 -->
 
 <!--
@@ -14,7 +14,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="using:System">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -88,7 +88,7 @@
                 CornerRadius="{TemplateBinding CornerRadius}">
           <!-- To keep calendar from resizing when switching DisplayMode
                  In WinUI Min-Width from TemplateSettings
-                 basically...MinWidth of DayItem = 26 + 2x2 margin, 30 * 7 = 210 
+                 basically...MinWidth of DayItem = 26 + 2x2 margin, 30 * 7 = 210
                  Viewport height is set from # of rows displayed in Month mode, = ~130 for 6 weeks (+ day names)
                  -->
           <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RowDefinitions="Auto,*" MinWidth="210">

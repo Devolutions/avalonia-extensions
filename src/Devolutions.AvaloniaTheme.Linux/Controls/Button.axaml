@@ -3,7 +3,7 @@
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     x:ClassModifier="internal">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -124,6 +124,13 @@
           <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderDisabled}" />
         </Style>
       </Style>
+    </Style>
+
+    <!-- Properties below imported from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+         https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/Button.xaml -->
+    <!-- Only source items absent from matching Linux/Yaru scope. -->
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="RecognizesAccessKey" Value="True" />
     </Style>
   </ControlTheme>
 

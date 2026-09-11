@@ -1,3 +1,6 @@
+<!-- Properties below imported from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+     https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/ListBox.xaml -->
+<!-- Only source items absent from matching Linux/Yaru scope. -->
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -5,7 +8,7 @@
   xmlns:converters="clr-namespace:Devolutions.AvaloniaTheme.Linux.Converters"
   x:ClassModifier="internal">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -56,11 +59,13 @@
     </design:ThemePreviewer>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+  <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
     <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundColor}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderColor}" />
-         <Setter Property="Template">
+    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+    <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
+    <Setter Property="Template">
       <ControlTemplate>
         <Panel>
         <Border Name="border"

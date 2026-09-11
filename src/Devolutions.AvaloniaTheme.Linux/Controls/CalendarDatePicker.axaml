@@ -1,6 +1,6 @@
 <!--
   Based off:
-  https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml
+  https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml
 -->
 
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
@@ -8,7 +8,7 @@
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -58,8 +58,8 @@
                  ClipToBounds="False"
                  HorizontalAlignment="Stretch">
             <Panel ClipToBounds="False">
-              <!-- The TextBox#PART_TextBox is required by CalendarDatePicker to hold the selected date. 
-                    Since Yaru just displays a button, a custom button is placed in place of the hidden TextBox, 
+              <!-- The TextBox#PART_TextBox is required by CalendarDatePicker to hold the selected date.
+                    Since Yaru just displays a button, a custom button is placed in place of the hidden TextBox,
                     and bound to the TextBox properties set based on DatePicker state. -->
               <TextBox Name="PART_TextBox"
                        Focusable="False"
@@ -192,7 +192,7 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
-    
+
     <Style Selector="^:disabled /template/ TextBox#PART_TextBox">
       <Setter Property="Foreground" Value="{DynamicResource InputDisabledForeground}" />
     </Style>

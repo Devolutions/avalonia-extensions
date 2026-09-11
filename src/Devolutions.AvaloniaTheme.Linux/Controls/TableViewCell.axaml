@@ -1,0 +1,15 @@
+<!--
+  Imported from:
+  https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/TableViewCell.xaml
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:ClassModifier="internal">
+
+  <Thickness x:Key="TableViewCellPadding">6,0</Thickness>
+
+  <ControlTheme x:Key="{x:Type TableViewCell}" TargetType="TableViewCell">
+    <Setter Property="Padding" Value="{DynamicResource TableViewCellPadding}" />
+  </ControlTheme>
+
+</ResourceDictionary>

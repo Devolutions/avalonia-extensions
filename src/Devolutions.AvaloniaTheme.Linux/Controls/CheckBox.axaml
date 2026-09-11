@@ -1,6 +1,6 @@
-<!-- 
-    Based from: 
-    https://raw.githubusercontent.com/AvaloniaUI/Avalonia/603a2bdb43b7e8b2d1c8919f9d0669af7b33f117/src/Avalonia.Themes.Fluent/Controls/CheckBox.xaml
+<!--
+    Based from:
+    https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/CheckBox.xaml
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

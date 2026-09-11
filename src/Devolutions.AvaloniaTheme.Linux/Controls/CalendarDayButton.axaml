@@ -1,6 +1,6 @@
 <!--
   Based off:
-  https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/CalendarDayButton.xaml
+  https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/CalendarDayButton.xaml
 -->
 
 <!--
@@ -16,7 +16,7 @@
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -80,11 +80,11 @@
       </ControlTemplate>
     </Setter>
 
-      
+
     <Style Selector="^:today">
       <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
     </Style>
-    
+
     <Style Selector="^:selected">
       <Setter Property="Foreground" Value="{DynamicResource AccentForegroundHighBrush}" />
 

@@ -15,12 +15,12 @@
       </Menu>
     </Border>
   </Design.PreviewWith>
-  
-  <ControlTheme x:Key="LinuxMenuTopLevelMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+
+  <ControlTheme x:Key="LinuxMenuTopLevelMenuItem" TargetType="MenuItem">
     <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />
-    
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_LayoutRoot"
@@ -34,20 +34,20 @@
                                 SharedSizeGroup="MenuItemLeftContent" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-  
+
             <StackPanel Grid.Column="0" Orientation="Horizontal">
               <ContentControl Name="PART_ToggleIconPresenter"
                               IsVisible="False"
                               Theme="{StaticResource LinuxMenuItemIconTheme}"
                               Margin="{DynamicResource LinuxMenuTopLevelIconMargin}" />
-  
+
               <ContentControl Name="PART_IconPresenter"
                               IsVisible="False"
                               Theme="{StaticResource LinuxMenuItemIconTheme}"
                               Content="{TemplateBinding Icon}"
                               Margin="{DynamicResource LinuxMenuTopLevelIconMargin}" />
             </StackPanel>
-  
+
             <ContentPresenter Name="PART_HeaderPresenter"
                               Grid.Column="1"
                               Content="{TemplateBinding Header}"

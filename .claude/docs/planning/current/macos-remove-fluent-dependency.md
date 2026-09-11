@@ -4,33 +4,45 @@
 
 Make `Devolutions.AvaloniaTheme.MacOS` self-contained. Remove runtime and package dependency on `Avalonia.Themes.Fluent`; preserve classic macOS and conditional Liquid Glass visuals, menu aliases, wallpaper tinting, and live system accent behavior.
 
-For every Fluent 12.1.2 control loaded upstream:
+For every Fluent control currently loaded upstream GitHub `main`:
 
 - No MacOS `ControlTheme`: import upstream as-is.
 - Existing MacOS `ControlTheme`: retain MacOS implementation and append only absent upstream semantic items in a marked final section.
 - Vendor only upstream resources missing from MacOS resource scopes.
 - Port Fluent system accent detection into MacOS-owned source. No Fluent classes or resource URIs remain.
 
-## Fixed Source
+## Upstream Source
 
-Use only Avalonia `12.1.2`, commit `d3c867a9e2de379249b03dbeb3495bd7f076a81a`.
+Inspect sources directly from <https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls>. Resolve `main` to one commit SHA immediately before each implementation batch. Fetch source directly from GitHub at that SHA; do not inspect local NuGet assets or use a cloned upstream checkout as source authority.
 
-- Controls: <https://github.com/AvaloniaUI/Avalonia/tree/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls>
-- Control manifest: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
-- Root order: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
-- Base palette: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
-- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
-- Control resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
-- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
-- Accent provider: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
+- Controls: <https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls>
+- Control manifest: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
+- Root order: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
+- Base palette: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
+- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
+- Control resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
+- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
+- Accent provider: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
 
-No `master`, floating tag, raw, or other-version provenance URL.
+Each provenance comment must use permanent `blob/<resolved-sha>/...` URL. Never use `master`, `main`, a floating tag, raw URL, or a SHA different from that batch's resolved revision. Current package support remains Avalonia `12.x`; do not create a version gate or change package bounds as part of this removal.
 
-## Version Gate
+## Mandatory Control Headers
 
-Current Avalonia version is `12.0.5`; current package lower bound is `[12.0.2,)`. 12.1.2 source, notably TableView, requires matching package support.
+Every `Controls/*.axaml` file mapped to an Avalonia Fluent control, including existing MacOS themes and newly imported fallback controls, must begin with exactly one header comment in this form:
 
-Before implementation, coordinator must either raise supported Avalonia package/bounds to `12.1.2` or secure an approved older upstream source matching retained bounds. This plan assumes `12.1.2` support after that decision. No control agent edits dependency files.
+```xml
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+```
+
+Rules:
+
+- Header is first file content, before root element and other comments.
+- Use matching Fluent filename. `FluentFallbackControls.axaml` points to `FluentControls.xaml`.
+- Replace any prior top-level `Fluent source`, `Based on`, `Retrieved from`, `Properties below imported`, raw GitHub, `main`, or `master` provenance comment. Do not leave duplicate source headers.
+- Preserve interior provenance comments describing a specific appended section; they are not file headers.
+- Do not add this header to MacOS-only/custom control files, `*.styles.axaml`, or `_index.axaml`; false Fluent attribution is prohibited.
+- Header uses the fixed Avalonia `12.1.2` source SHA above even if implementation analysis consults GitHub `main` for current control inventory.
 
 ## MacOS Invariants
 
@@ -43,22 +55,15 @@ Before implementation, coordinator must either raise supported Avalonia package/
 
 ## Provenance And Comparison
 
-For each new imported AXAML file:
-
-```xml
-<!-- Retrieved from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
-```
-
 For each changed MacOS counterpart, append inside affected theme after all existing content:
 
 ```xml
-<!-- Properties below imported from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+<!-- Properties below imported from Avalonia Fluent main at <resolved-commit-sha>:
+     https://github.com/AvaloniaUI/Avalonia/blob/<resolved-commit-sha>/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
 <!-- Only source items absent from matching MacOS scope. -->
 ```
 
-Semantic comparison includes all themes, keys/targets, setters, templates, nested styles/selectors, pseudo-classes, transitions, animations, resources, `BasedOn`, template parts, source URIs, converters, and types. Existing MacOS choice wins even when Fluent differs. No duplicate default-key theme or Fluent `BasedOn` shortcut.
+Semantic comparison includes all themes, keys/targets, setters, templates, nested styles/selectors, pseudo-classes, transitions, animations, resources, `BasedOn`, template parts, source URIs, converters, and types. Existing MacOS choice wins even when Fluent differs. No duplicate default-key theme or Fluent `BasedOn` shortcut. File-level provenance always follows mandatory header form above; appended-section provenance uses its own fixed-SHA comment at insertion point.
 
 Replace stale `master` or old Fluent source comments in touched files with permanent-SHA form.
 
@@ -69,7 +74,7 @@ Coordinator writes `MacOsFluentImportManifest.md` beside this plan before modifi
 1. Record upstream target/key themes, local resources, namespaces, source includes, and all direct resource references.
 2. Map source to current MacOS control by actual `ControlTheme` target/key, not file name.
 3. Classify import, append, resource-only, or excluded-not-loaded.
-4. List exact missing semantic units and insertion scope for every append assignment.
+4. List exact missing semantic units and insertion scope for every append assignment, marking whether each changes existing classic or Liquid Glass visuals, layout, focus order, or interaction state.
 5. Map resource provider and variant/scope for every source reference.
 6. Preserve dependency order, especially date/time shared resources and supporting control themes.
 7. Flag every resource potentially consumed by `MenuResourceAliasBuilder` or changed by Liquid Glass overlay. These require coordinator review before addition.
@@ -90,7 +95,7 @@ No matching MacOS filename currently exists for:
 
 `FluentControls.xaml` is not imported. Convert extensions and local source URIs only. No visual/value substitution, inlining, Fluent namespace, or Fluent assembly URI.
 
-## Phase 3: Compatibility Resources
+## Phase 3: Fallback Resource Architecture
 
 Create separate source-owned layers:
 
@@ -99,21 +104,61 @@ Create separate source-owned layers:
 - `Accents/Fluent/FluentControlResources.axaml`
 - `Accents/Fluent/InvariantResources.axaml`
 
-Each receives exact fixed-SHA source header. Retain only source keys unavailable from MacOS at equivalent resource scope and theme variant. Preserve upstream source values/forms for retained keys.
+Each receives exact source-SHA header. Copy complete upstream resource content, preserving declaration form/order and every theme variant. Do not prune keys manually: source `StaticResource` aliases have delayed transitive dependencies and a partial layer causes runtime `KeyNotFoundException` failures.
+
+Mirror Fluent's two-scope topology. Never flatten Fluent-compatible resources into MacOS `ThemeRoot` resource dictionary, where they can conflict with classic/Liquid Glass values and aliases.
+
+```xml
+<Styles>
+  <!-- Child fallback scope: complete upstream-compatible resources and only controls MacOS does not own. -->
+  <Styles>
+    <Styles.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceInclude Source="/Accents/Fluent/BaseColorsPalette.axaml" />
+          <accents:SystemAccentColors />
+          <MergeResourceInclude Source="/Accents/Fluent/BaseResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/FluentControlResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/InvariantResources.axaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Styles.Resources>
+    <StyleInclude Source="/Controls/FluentFallbackControls.axaml" />
+  </Styles>
+
+  <!-- Outer MacOS scope: existing menu/icon resources and MacOS control index. -->
+  <!-- Preserve ResourceInclude and C# variant overlay lifecycle. -->
+</Styles>
+```
+
+`FluentFallbackControls.axaml` includes only imported controls without a MacOS default `ControlTheme`; existing MacOS controls stay in `_index.axaml`. Outer MacOS resources remain authoritative while fallback still resolves unowned controls and source-static resources.
 
 Rules:
 
 - Classic `ThemeResources.axaml` and Liquid Glass override resources remain visual authority. Do not overwrite values merely to match Fluent.
+- Complete source fallback resources exist only inside child fallback scope.
 - Retain matching Default/Light/Dark dictionaries for every dynamic key used by a vendored control.
 - Add only missing Cut/Copy/Paste text flyout strings. Existing MacOS Undo/Delete/Select All strings remain.
 - Keep `MenuResources.axaml`, `MenuResources_LiquidGlass.axaml`, and `MenuResourceAliasBuilder` isolated. Do not inject general compatibility tokens there or rebind their aliases to Fluent names.
 - Do not import compact density or Fluent palette collection/public palette API. MacOS has no equivalent public feature.
 
-Resource agent runs lookup tests for classic Light/Dark and Liquid Glass Light/Dark. Verify compatibility dictionaries do not shadow variant resources loaded dynamically from C# or computed menu aliases.
+Coordinator audits every fallback `StaticResource`, `DynamicResource`, `BasedOn`, converter, and source URI recursively for closure. Verify classic Light/Dark and Liquid Glass Light/Dark outer resources retain precedence over fallback resources and computed menu aliases.
+
+## Existing Theme Protection
+
+Existing classic and Liquid Glass templates are visual authority. Do not append upstream defaults merely because no equivalent MacOS setter exists.
+
+- Never append source padding, margin, minimum size, alignment, font, border, background, foreground, transform, transition, focus, or state setter when it changes rendered MacOS behavior.
+- Never append source selectors for template parts missing from current MacOS template. Dead selectors are not parity.
+- Never replace existing MacOS template with upstream template.
+- Add source units to existing MacOS files only when required to resolve an actual missing key/supporting theme/template part or preserve non-visual functional contract. Record omitted visual source items in manifest.
+- Imported controls remain as-is in fallback scope. Existing MacOS controls must not inherit imported default themes except for genuinely unowned child controls.
+
+This protects MacOS composition from fallback primitive themes, especially `RepeatButton`, `ToggleButton`, `PathIcon`, `ItemsControl`, `PopupRoot`, and `OverlayPopupHost`.
 
 ## Phase 4: Own System Accent Provider
 
-Add `Accents/SystemAccentColors.cs`, based on upstream 12.1.2 exact source with fixed-SHA C# provenance. Adapt namespace/visibility only.
+Add `Accents/SystemAccentColors.cs`, based on upstream GitHub source at resolved SHA with fixed-SHA C# provenance. Adapt namespace/visibility only.
 
 Required behavior:
 
@@ -123,7 +168,7 @@ Required behavior:
 - Subscribe/unsubscribe `ColorValuesChanged` with owner lifecycle.
 - Invalidate cache, calculate HSL shades using identical upstream deltas, and notify resource host on changes.
 
-Instantiate provider in `ThemeRoot.axaml` before classic/compatibility resources so current `DynamicResource` lookups resolve it. Keep provider instance under theme resource ownership; no app-global static cache.
+Instantiate provider in child fallback scope before complete fallback resources. Keep outer classic/Liquid Glass resource lifecycle and C# loaded overlays unchanged; provider remains under theme resource ownership with no app-global static cache.
 
 Regression requirements:
 
@@ -153,8 +198,8 @@ Each agent only changes assigned files from manifest. Existing custom MacOS cont
 
 Coordinator:
 
-1. Adds all imported files to `Controls/_index.axaml` once, preserving required source dependencies.
-2. Wires local base palette, accent provider, compatibility resource layers, existing menu resources, and control index in a precedence-tested order.
+1. Adds imported files only to `Controls/FluentFallbackControls.axaml` once, preserving required source dependencies. Existing MacOS controls remain in `_index.axaml`.
+2. Wires complete local fallback resource files and accent provider inside child fallback `Styles`; retains existing outer menu resources, control index, ResourceInclude semantics, and C# variant overlay lifecycle.
 3. Retains `ResourceInclude` classic menu semantics and C# variant/alias loading order.
 4. Removes direct `<FluentTheme />` and fallback comments from `ThemeRoot.axaml`.
 5. Removes `Avalonia.Themes.Fluent` package reference from MacOS csproj.
@@ -164,21 +209,16 @@ Coordinator:
 
 Static gates: complete upstream manifest; imports indexed once; resource/type/URI resolution without Fluent; no default theme duplicates; source comments fixed SHA; existing MacOS content changed only through manifest append sections/integration files.
 
-Run:
+Use C# LSP diagnostics only. Do not run build, restore, tests, SampleApp, or executables.
 
-```bash
-dotnet build src/Devolutions.AvaloniaTheme.MacOS/Devolutions.AvaloniaTheme.MacOS.csproj
-dotnet build src/Devolutions.AvaloniaTheme.MacOS/Devolutions.AvaloniaTheme.MacOS.csproj -c Release
-dotnet test tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj
-dotnet test tests/Devolutions.AvaloniaControls.VisualTests/Devolutions.AvaloniaControls.VisualTests.csproj
-```
+User performs visual/runtime validation. Review visual differences before baseline changes. Do not update baselines without user approval.
 
-SampleApp smoke test from binary directory. Exercise classic + Liquid Glass when host supports it; Light/Dark; accent change/override; menus/menu packs and aliases; wallpaper tint; new Fluent-derived controls; date/time picker; file chooser; focus/navigation; `GlobalStyles` true/false; TreeDataGrid availability. Review visual diffs before any baseline update. No baseline update without user approval.
+Keep Avalonia framework/package version upgrades separate from Fluent-removal visual triage. Framework changes can alter text fallback, selection, scrolling, popups, composition, and scale across every theme. A difference reproduced under classic, Liquid Glass, Linux, and DevExpress is framework/runtime evidence, not MacOS migration evidence.
 
 ## Agent Contract And Risks
 
 Agent response: files changed, exact source permalink, manifest items done, discovered dependencies, commands/result, no commit/staging/baseline/dependency work.
 
-Main risks: Avalonia version mismatch, compatibility resource precedence breaking Liquid Glass or menu aliases, stale explicit source references, HSL shade parity, and broad visual regressions from missing template scopes. Coordinator final-review compares upstream 12.1.2, MacOS baseline, manifest in both visual variants.
+Main risks: fallback resource precedence breaking Liquid Glass/menu aliases, partial-resource alias closure, stale explicit source references, HSL shade parity, fallback primitive themes affecting MacOS children, and broad visual regressions from missing template scopes. Coordinator final-review compares upstream source SHA, MacOS baseline, manifest in both visual variants.
 
-Confidence: 95%. Existing dynamic resource, Liquid Glass, wallpaper tint, menu alias, accent test boundaries identified. Version gate required before implementation.
+Confidence: 95%. Existing dynamic resource, fallback-scope boundary, Liquid Glass, wallpaper tint, menu alias, and accent test boundaries identified.

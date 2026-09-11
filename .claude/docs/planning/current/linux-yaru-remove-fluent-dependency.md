@@ -4,39 +4,30 @@
 
 Make `Devolutions.AvaloniaTheme.Linux` self-contained. Remove runtime and package dependency on `Avalonia.Themes.Fluent`; retain existing GTK Yaru visual decisions and fixed Yaru orange accent.
 
-For every Avalonia Fluent 12.1.2 control included by upstream:
+For every Avalonia Fluent control currently included by upstream GitHub `main`:
 
 - No existing Linux `ControlTheme`: import source as-is.
 - Existing Linux `ControlTheme`: keep Linux/Yaru theme first; append only missing upstream semantic items in a final marked section.
 - Vendor resource keys needed by imported source without replacing Linux-owned values.
 - Recreate upstream accent-provider mechanics locally, while preserving Linux's current explicit `#D85E33` palette override.
 
-## Fixed Source
+## Upstream Source
 
-Use only Avalonia `12.1.2`, commit `d3c867a9e2de379249b03dbeb3495bd7f076a81a`.
+Inspect sources directly from <https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls>. Resolve `main` to one commit SHA immediately before each implementation batch. Fetch source directly from GitHub at that SHA; do not inspect local NuGet assets or use a cloned upstream checkout as source authority.
 
-- Controls: <https://github.com/AvaloniaUI/Avalonia/tree/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls>
-- Upstream load manifest: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
-- Theme resource order: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
-- Base palette: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
-- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
-- Control resources: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
-- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
-- System accent provider: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
-- Palette provider: <https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/ColorPaletteResources.cs>
+- Controls: <https://github.com/AvaloniaUI/Avalonia/tree/main/src/Avalonia.Themes.Fluent/Controls>
+- Upstream load manifest: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Controls/FluentControls.xaml>
+- Theme resource order: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/FluentTheme.xaml>
+- Base palette: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseColorsPalette.xaml>
+- Base resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/BaseResources.xaml>
+- Control resources: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/FluentControlResources.xaml>
+- Invariant strings: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Strings/InvariantResources.xaml>
+- System accent provider: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/Accents/SystemAccentColors.cs>
+- Palette provider: <https://github.com/AvaloniaUI/Avalonia/blob/main/src/Avalonia.Themes.Fluent/ColorPaletteResources.cs>
 
-Do not use `master`, floating tags, raw URLs, or a different commit in source comments.
+Each provenance comment must use permanent `blob/<resolved-sha>/...` URL. Never use `master`, `main`, a floating tag, raw URL, or a SHA different from that batch's resolved revision.
 
-## Version Gate
-
-Current repository declares Avalonia `12.0.5` and theme package lower bound `[12.0.2,)`. Imported 12.1.2 XAML, especially `TableView`, can use types/properties unavailable in earlier releases.
-
-Before source implementation, coordinator must decide and record one supported contract:
-
-1. Raise shared/current package version and theme lower bound to `12.1.2`, then import complete 12.1.2 source set. Recommended.
-2. Keep package support below `12.1.2`, then stop and obtain user-approved source/version pairing. Do not claim 12.1.2 parity against earlier Avalonia runtime.
-
-No agent changes `Common.props` or dependency bounds without coordinator assignment. This plan assumes option 1 after approval.
+Current package support remains Avalonia `12.x`. Do not create a version gate or change package bounds as part of theme removal.
 
 ## Current Architecture And Invariants
 
@@ -52,15 +43,15 @@ No agent changes `Common.props` or dependency bounds without coordinator assignm
 New vendored file header:
 
 ```xml
-<!-- Retrieved from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+<!-- Retrieved from Avalonia Fluent main at <resolved-commit-sha>:
+     https://github.com/AvaloniaUI/Avalonia/blob/<resolved-commit-sha>/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
 ```
 
 Existing control final-section header:
 
 ```xml
-<!-- Properties below imported from Avalonia Fluent 12.1.2:
-     https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
+<!-- Properties below imported from Avalonia Fluent main at <resolved-commit-sha>:
+     https://github.com/AvaloniaUI/Avalonia/blob/<resolved-commit-sha>/src/Avalonia.Themes.Fluent/Controls/<Control>.xaml -->
 <!-- Only source items absent from matching Linux/Yaru scope. -->
 ```
 
@@ -75,7 +66,7 @@ Coordinator creates `LinuxYaruFluentImportManifest.md` beside this plan. For eve
 1. Record upstream file, all `ControlTheme` targets/keys, local resources, type namespaces, source includes, and direct resource references.
 2. Locate Linux coverage by actual target/key, not filename. A local custom theme does not count as an upstream control counterpart.
 3. Classify `import-as-is`, `append-missing`, `resource-only`, or `not-loaded-by-upstream`.
-4. For append work, list exact missing units and exact destination theme/resource scope.
+4. For append work, list exact missing units, exact destination scope, and whether it changes an existing Yaru default visual, layout, focus order, or interaction state.
 5. Inventory every retained `StaticResource`, `DynamicResource`, `BasedOn`, converter, type, and URI. Identify provider, theme variant, and lookup scope.
 6. Record control ordering dependencies, notably `DateTimePickerShared` before `DatePicker` and `TimePicker`.
 
@@ -101,7 +92,7 @@ No same-named Linux file currently exists for:
 
 Import source without visual substitutions. Mechanical changes only: `.xaml` to `.axaml`, local include URI conversion, removal of internal-only class modifier when compiler requires it, and provenance header. No `Avalonia.Themes.Fluent` namespace/type/resource URI remains.
 
-## Phase 3: Resource Layers
+## Phase 3: Fallback Resource Architecture
 
 Create separate compatibility layers under `Accents/Fluent/`:
 
@@ -110,18 +101,58 @@ Create separate compatibility layers under `Accents/Fluent/`:
 - `FluentControlResources.axaml`
 - `InvariantResources.axaml`
 
-Each file gets source header with exact source permalink. Resource agent starts with upstream file, retains only unavailable keys at correct scope, and preserves upstream declaration form/order for retained values. Include Default/Light/Dark variants required by retained dynamic lookups.
+Each file gets source header with exact source permalink. Copy each complete upstream resource file, preserving declaration form/order and all theme variants. Do not prune resources key-by-key: retained `StaticResource` aliases can require delayed transitive resources and otherwise cause runtime `KeyNotFoundException` failures.
+
+Mirror Fluent's two-scope topology. Do not merge Fluent-compatible resources into the same `ThemeRoot` resource dictionary as Yaru resources.
+
+```xml
+<Styles>
+  <!-- Child fallback scope: complete upstream-compatible resources and only controls Yaru does not own. -->
+  <Styles>
+    <Styles.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceInclude Source="/Accents/Fluent/BaseColorsPalette.axaml" />
+          <accents:SystemAccentColors />
+          <accents:YaruAccentColors />
+          <MergeResourceInclude Source="/Accents/Fluent/BaseResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/FluentControlResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/InvariantResources.axaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Styles.Resources>
+    <StyleInclude Source="/Controls/FluentFallbackControls.axaml" />
+  </Styles>
+
+  <!-- Outer Yaru scope: existing resources and owned control themes. -->
+  <!-- Existing ThemeRoot resource includes remain here. -->
+</Styles>
+```
+
+`FluentFallbackControls.axaml` includes only imported controls with no Yaru default `ControlTheme`; do not include controls Yaru already owns. This preserves Yaru resource precedence without flattening or duplicate-key collisions.
 
 Rules:
 
-- Existing Yaru keys in `ThemeResources.axaml` win, even if upstream has different value.
-- Do not copy full upstream resource files blindly.
+- Existing Yaru keys in outer `ThemeResources.axaml` win, even if upstream has different value.
+- Complete source fallback resources belong only in child fallback scope.
 - Add missing Cut/Copy/Paste strings in `Accents/Fluent/InvariantResources.axaml`; retain existing Yaru Undo/Delete/Select All strings.
 - Do not place compatibility entries in `MenuResources.axaml`.
 - Do not import `DensityStyles/Compact.xaml`; no Linux public density API exists.
 - Do not import Fluent `ColorPaletteResources*` as general public API. Only implement minimal local provider required to preserve current root palette behavior.
 
-Coordinator verifies resource precedence with a focused lookup test. `StaticResource` resolves at load time; `DynamicResource` resolves later. Both require validation in Light and Dark.
+Coordinator verifies resource precedence and resource closure before integration. Audit every `StaticResource`, `DynamicResource`, `BasedOn`, converter, and source URI in fallback files recursively. `StaticResource` resolves at load time; `DynamicResource` resolves later. Both require Light and Dark audit.
+
+## Existing Theme Protection
+
+Existing Yaru templates are visual authority. Do not append upstream defaults merely because no same-property Yaru setter exists.
+
+- Never append source `Padding`, `Margin`, `MinWidth`, `MinHeight`, alignment, font, border, background, foreground, transform, transition, focus, or state setter when it changes rendered Yaru behavior.
+- Never append source selectors for template parts absent from Yaru template. They are dead styles, not parity.
+- Never replace an existing Yaru template with upstream template.
+- Add to existing Yaru files only source units necessary to resolve an actual missing key/supporting theme/template part or preserve non-visual functional contract. Record omitted visual source units in manifest.
+- Imported controls remain as-is in fallback scope. Existing Yaru controls must not inherit their default themes unless source template explicitly needs an unowned child control.
+
+This rule prevents broad regressions through shared primitives such as `ScrollViewer`, `RepeatButton`, `ToggleButton`, `ItemsControl`, `PathIcon`, `PopupRoot`, and `OverlayPopupHost`.
 
 ## Phase 4: Accent Ownership
 
@@ -132,7 +163,7 @@ Implement locally:
 1. `Accents/SystemAccentColors.cs`, sourced from upstream provider. Keep owner attach/detach, platform settings lookup, cache invalidation, `PlatformColorValues` event, notification, default accent, seven names, and identical `CalculateAccentShades` algorithm.
 2. `Accents/YaruAccentColors.cs`, source-compatible minimal palette/override provider, returning `#D85E33` and all six calculated shades for Light and Dark. It must have precedence over system-detected provider, precisely replacing current nested Fluent `ColorPaletteResources` behavior.
 3. Fixed-SHA C# provenance comments on both local implementations, stating any adaptation.
-4. Instantiate providers from `ThemeRoot.axaml` in order: base palette, system detection, Yaru fixed-accent override, theme resources, compatibility resources, controls.
+4. Instantiate providers in child fallback scope: base palette, system detection, Yaru fixed-accent override, complete fallback resources, fallback controls. Keep outer Yaru resources and controls outside this child scope.
 
 Tests must prove default key resolves `#D85E33` in Light and Dark, expected shade calculations match upstream, a higher-scope app/window resource can still override each key, and no Fluent assembly is loaded. Do not change Yaru to live OS accent detection merely because generic provider is now owned locally.
 
@@ -156,8 +187,8 @@ Imported control agents receive manifest entries and modify only assigned new fi
 
 Coordinator:
 
-1. Adds imported controls to `Controls/_index.axaml` in dependency-safe upstream order.
-2. Adds local accent providers and compatibility resource layers to `ThemeRoot.axaml` with verified precedence.
+1. Adds imported controls only to `Controls/FluentFallbackControls.axaml` in dependency-safe upstream order; existing Yaru controls remain in `_index.axaml`.
+2. Adds local accent providers and complete compatibility resource layers to child fallback `Styles` in `ThemeRoot.axaml`; outer Yaru resource order remains unchanged.
 3. Removes `<FluentTheme>` plus nested `<FluentTheme.Palettes>`/`<ColorPaletteResources>` markup and fallback wording.
 4. Removes `Avalonia.Themes.Fluent` package reference from Linux csproj.
 5. Searches Linux project for `Avalonia.Themes.Fluent`, `<FluentTheme`, `<ColorPaletteResources`, `avares://Avalonia.Themes.Fluent`, `using:Avalonia.Themes.Fluent`, raw upstream URL, and `blob/master`. Expected source result: none, excluding user-facing README examples deliberately kept until separately updated.
@@ -167,21 +198,16 @@ Coordinator:
 
 Static: upstream 12.1.2 manifest complete; all imports indexed once; no unresolved source resource/type/URI; no duplicate default theme; Yaru source content unchanged except final provenance sections; all source links fixed SHA.
 
-Build/test:
+Use C# LSP diagnostics only. Do not run build, restore, tests, SampleApp, or executables.
 
-```bash
-dotnet build src/Devolutions.AvaloniaTheme.Linux/Devolutions.AvaloniaTheme.Linux.csproj
-dotnet build src/Devolutions.AvaloniaTheme.Linux/Devolutions.AvaloniaTheme.Linux.csproj -c Release
-dotnet test tests/Devolutions.AvaloniaControls.Tests/Devolutions.AvaloniaControls.Tests.csproj
-dotnet test tests/Devolutions.AvaloniaControls.VisualTests/Devolutions.AvaloniaControls.VisualTests.csproj
-```
+User performs visual/runtime validation. Capture and triage visual differences before baseline changes. Do not update baselines without user approval.
 
-Run SampleApp DevExpress-free Yaru selection from `samples/SampleApp/bin/Debug/net10.0`. Check Light/Dark, fixed orange seven-key palette, menus/flyouts, new standard controls, pickers, scroll, keyboard focus, `GlobalStyles` true/false, and Accelerate off/on when available. Review visual diffs; no baseline update without user approval.
+Keep Avalonia framework/package version changes separate from Fluent-removal visual triage. An Avalonia upgrade can alter every theme through text fallback, selection, scrolling, popup, composition, and scale behavior. A visual diff shared by Linux, MacClassic, LiquidGlass, and DevExpress is framework/runtime evidence, not Linux migration evidence.
 
 ## Agent Contract And Risks
 
 Each Luna agent returns changed files, upstream sources/SHAs, manifest entries done, unresolved dependencies, commands/results, and no commit/staging/baseline/dependency changes.
 
-Main risks: 12.1.2 API mismatch, resource precedence, `BasedOn` cycles, static versus dynamic lookup, and accidentally replacing fixed Yaru orange with system accent. Coordinator handles conflicts and validates three-way diff: upstream 12.1.2, Linux baseline, manifest.
+Main risks: resource precedence, partial-resource alias closure, `BasedOn` cycles, static versus dynamic lookup, fallback primitive themes affecting Yaru children, and accidentally replacing fixed Yaru orange with system accent. Coordinator handles conflicts and validates three-way diff: upstream source SHA, Linux baseline, manifest.
 
-Confidence: 95%. Root palette behavior and resource boundaries identified. Version gate must resolve before implementation.
+Confidence: 95%. Root palette behavior, fallback-scope boundary, and Yaru visual authority identified.

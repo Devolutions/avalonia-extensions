@@ -52,9 +52,9 @@
         <Panel>
           <!--
               Note: This double-border trick is for fixing clipping issue with rounded corners.
-                    remove once this issue is fixed: 
+                    remove once this issue is fixed:
                     https://github.com/AvaloniaUI/Avalonia/issues/2105
-                    - sbergerondrouin 2026/01/29 
+                    - sbergerondrouin 2026/01/29
           -->
           <Border Name="DataGridBorder"
                   Background="Transparent"
@@ -187,8 +187,8 @@
             <Panel HorizontalAlignment="Right" TabIndex="2">
               <Rectangle Fill="{TemplateBinding BorderBrush}"
                          HorizontalAlignment="Right"
-                         Width="{TemplateBinding BorderThickness, 
-                                           Converter={x:Static DevoConverters.ThicknessNumericExtractor}, 
+                         Width="{TemplateBinding BorderThickness,
+                                           Converter={x:Static DevoConverters.ThicknessNumericExtractor},
                                            ConverterParameter={x:Static ThicknessSide.Right}}" />
               <Thumb Name="PART_Resizer"
                      DockPanel.Dock="Right"
@@ -259,7 +259,7 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    
+
     <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
       <Setter Property="Fill" Value="{DynamicResource TreeDataGridSelectedCellBackgroundBrush}" />
     </Style>
@@ -278,7 +278,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
-    
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -306,7 +306,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
-    
+
     <Setter Property="Template">
       <ControlTemplate>
         <ContentPresenter Name="PART_ContentPresenter"
@@ -330,7 +330,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
-    
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"
@@ -379,7 +379,7 @@
 
   <ControlTheme x:Key="{x:Type TreeDataGridExpanderCell}" TargetType="TreeDataGridExpanderCell">
     <Setter Property="Background" Value="Transparent" />
-    
+
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="CellBorder"

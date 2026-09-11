@@ -5,7 +5,7 @@
                     >
 
   <PlacementMode x:Key="ColorPickerFlyoutPlacement">Top</PlacementMode>
-  
+
   <ControlTheme x:Key="{x:Type ColorPicker}"
                 TargetType="ColorPicker">
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />

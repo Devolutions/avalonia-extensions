@@ -37,7 +37,6 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(MinimumAvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(MinimumAvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(MinimumAvaloniaDataGridVersion)" />
         <PackageReference Include="Svg.Controls.Avalonia" Version="$(MinimumSvgVersion)" />

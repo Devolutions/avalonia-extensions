@@ -1,7 +1,5 @@
-<!-- 
-    Based from: 
-    https://github.com/AvaloniaUI/Avalonia/blob/603a2bdb43b7e8b2d1c8919f9d0669af7b33f117/src/Avalonia.Themes.Fluent/Controls/ContextMenu.xaml
--->
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/ContextMenu.xaml -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:behaviors="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Behaviors"
@@ -68,7 +66,7 @@
                 MinHeight="{TemplateBinding MinHeight}"
                 HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                 CornerRadius="{TemplateBinding CornerRadius}">
-          <ScrollViewer>
+          <ScrollViewer Theme="{StaticResource DevExMenuScrollViewer}">
             <ItemsPresenter Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}"
                             KeyboardNavigation.TabNavigation="Continue"

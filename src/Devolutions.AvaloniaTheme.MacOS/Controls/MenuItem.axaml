@@ -260,4 +260,11 @@
       </Setter>
     </Style>
   </ControlTheme>
+
+  <ControlTheme x:Key="HorizontalMenuItem"
+                TargetType="MenuItem"
+                BasedOn="{StaticResource DevolutionsMacOsTopLevelMenuItem}">
+    <Setter Property="Padding" Value="{DynamicResource MacOsMenuHorizontalFlyoutItemPadding}" />
+    <Setter Property="Margin" Value="{DynamicResource MacOsMenuHorizontalFlyoutItemMargin}" />
+  </ControlTheme>
 </ResourceDictionary>

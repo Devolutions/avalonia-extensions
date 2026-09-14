@@ -71,7 +71,7 @@
                     <ItemsPanelTemplate>
                       <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
                         <u:WrapPanelWithTrailingItem.TrailingItem>
-                          <TextBox VerticalAlignment="Center" 
+                          <TextBox VerticalAlignment="Center"
                                    MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
                                    Margin="4 0 0 0"
                                    Theme="{DynamicResource TagInputTextBoxTheme}" />

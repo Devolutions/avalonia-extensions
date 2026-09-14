@@ -14,10 +14,8 @@ by [@MikeCodesDotNET's earlier draft](https://github.com/AvaloniaUI/Avalonia/iss
 
 ![image](https://github.com/user-attachments/assets/33d9a103-936f-4db3-b5cc-520a5ccdaf60)
 
-This theme is currently based
-on [Avalonia.Themes.Fluent](https://github.com/AvaloniaUI/Avalonia/tree/759facea182b7771ce07baf173c52529f4871004/src/Avalonia.Themes.Fluent),
-both as a fallback for any controls not covered yet and as starting point for our (somewhat simplified)
-style definitions targeting AppKit macOS look.
+This theme is self-contained. It vendors Avalonia Fluent 12.1.2 fallbacks for controls not yet covered by
+its AppKit macOS style definitions.
 
 While we are prioritizing controls
 for [Devolutions Remote Desktop Manager](https://devolutions.net/remote-desktop-manager/) initially,

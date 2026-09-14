@@ -1,5 +1,5 @@
-<!-- 
-    Based from: 
+<!--
+    Based from:
     https://github.com/AvaloniaUI/Avalonia.Controls.DataGrid/blob/d5b3cae2a425fc890f845dbdeb9b868197c1894f/src/Avalonia.Controls.DataGrid/Themes/Fluent.xaml
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
@@ -568,7 +568,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CanUserResizeColumns" Value="True" />
     <Setter Property="CanUserReorderColumns" Value="True" />
-    
+
     <Setter Property="DropLocationIndicatorTemplate">
       <Template>
         <Rectangle Fill="{DynamicResource DataGridDropLocationIndicatorBackground}" Width="2" />

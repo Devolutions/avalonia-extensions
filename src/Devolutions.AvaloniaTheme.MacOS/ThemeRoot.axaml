@@ -1,10 +1,22 @@
 <Styles x:Class="Devolutions.AvaloniaTheme.MacOS.Internal.MacOsTheme"
-        xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- Using Fluent Theme as a fallback for anything not defined in MacOS theme
-       NOTE: the Simple Theme does not give access to System colours 
-       See https://github.com/AvaloniaUI/Avalonia/pull/11097 for how it's getting the colours (if we ever want to make this independent of Fluent) -->
-  <FluentTheme />
+         xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:accents="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Accents">
+  <!-- Fluent-compatible fallback scope. Outer MacOS resources and control themes remain authoritative. -->
+  <Styles>
+    <Styles.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceInclude Source="/Accents/Fluent/BaseColorsPalette.axaml" />
+          <accents:SystemAccentColors />
+          <MergeResourceInclude Source="/Accents/Fluent/BaseResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/FluentControlResources.axaml" />
+          <MergeResourceInclude Source="/Accents/Fluent/InvariantResources.axaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Styles.Resources>
+    <StyleInclude Source="/Controls/FluentFallbackControls.axaml" />
+  </Styles>
 
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
 

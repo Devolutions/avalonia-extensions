@@ -1,15 +1,50 @@
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/FlyoutPresenter.xaml -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <ControlTheme x:Key="{x:Type FlyoutPresenter}" TargetType="FlyoutPresenter"
-                BasedOn="{StaticResource {x:Type FlyoutPresenter}}">
+  <ControlTheme x:Key="{x:Type FlyoutPresenter}" TargetType="FlyoutPresenter">
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
     <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}" />
     <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
-    
+    <!-- Properties below imported from Avalonia Fluent main at cd3b218eb4f652905bfdab7a0e704a6139c5d332:
+         https://github.com/AvaloniaUI/Avalonia/blob/cd3b218eb4f652905bfdab7a0e704a6139c5d332/src/Avalonia.Themes.Fluent/Controls/FlyoutPresenter.xaml -->
+    <!-- Only source items absent from matching Linux/Yaru scope. -->
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Padding" Value="{DynamicResource FlyoutContentThemePadding}" />
+    <Setter Property="MinWidth" Value="{DynamicResource FlyoutThemeMinWidth}" />
+    <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
+    <Setter Property="MinHeight" Value="{DynamicResource FlyoutThemeMinHeight}" />
+    <Setter Property="MaxHeight" Value="{DynamicResource FlyoutThemeMaxHeight}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="LayoutRoot"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{DynamicResource FlyoutBorderThemePadding}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+            <ContentPresenter x:Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalContentAlignment="Stretch" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
     <Style Selector="^ /template/ Border#LayoutRoot">
       <Setter Property="BoxShadow" Value="{DynamicResource ComboBoxDropDownShadow}" />
       <Setter Property="Margin" Value="{DynamicResource ComboBoxPopupBorderMargin}" />

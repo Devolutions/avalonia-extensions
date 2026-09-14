@@ -1,10 +1,13 @@
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076a81a/src/Avalonia.Themes.Fluent/Controls/ComboBox.xaml -->
+<!-- Only source items absent from matching Linux/Yaru scope. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     xmlns:attachedProperties="clr-namespace:Devolutions.AvaloniaControls.AttachedProperties;assembly=Devolutions.AvaloniaControls">
 
-  <!-- 
+  <!--
     Un-comment to allow auto-completion;
     DO NOT INCLUDE WHEN PUBLISHING!
   -->
@@ -88,7 +91,6 @@
       </StackPanel>
     </design:ThemePreviewer>
   </Design.PreviewWith>
-
 
   <ControlTheme x:Key="PopUpToggleButton" TargetType="ToggleButton">
     <Setter Property="Template">
@@ -289,7 +291,7 @@
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
-    
+
     <Style Selector="^.borderless /template/ Border#BorderElement">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="BorderThickness" Value="0" />

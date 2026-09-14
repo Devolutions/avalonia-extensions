@@ -44,7 +44,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(MinimumAvaloniaVersion)" />
         <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="$(MinimumItemsRepeaterVersion)" />
-        <PackageReference Include="Xaml.Behaviors" Version="$(MinimumXamlBehaviorsVersion)" />
+        <PackageReference Include="Xaml.Behaviors.Avalonia" Version="$(MinimumXamlBehaviorsVersion)" />
 <!--        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />-->
         <PackageReference Include="System.Reactive" Version="*" />
 

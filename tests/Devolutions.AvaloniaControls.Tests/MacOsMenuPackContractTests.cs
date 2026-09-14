@@ -66,6 +66,8 @@ public class MacOsMenuPackContractTests
         "MacOsMenuPopupVerticalOffset",
         "MacOsMenuToolBarPopupVerticalOffset",
         "MacOsMenuBarPadding",
+        "MacOsMenuHorizontalFlyoutItemPadding",
+        "MacOsMenuHorizontalFlyoutItemMargin",
         "MacOsMenuItemPadding",
         "MacOsMenuItemMinHeight",
         "MacOsMenuIconPresenterMargin",

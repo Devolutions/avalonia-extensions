@@ -28,8 +28,10 @@
   </Design.PreviewWith>
 
   <x:Double x:Key="TabItemPipeThickness">3</x:Double>
+  <x:Double x:Key="TabItemVerticalPipeHeight">24</x:Double>
   <x:Double x:Key="TabItemMinHeight">30</x:Double>
   <x:Double x:Key="TabItemHeaderFontSize">12</x:Double>
+  <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 2</Thickness>
   <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{DynamicResource ForegroundColor}" />
   <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{DynamicResource ForegroundColor}" />
 

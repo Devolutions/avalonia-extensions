@@ -302,6 +302,24 @@ Rules:
   author metadata makes provenance clear.
 - When replying to a review thread, sign the reply even if the thread is on your own PR.
 
+# PR/Issue Monitoring Cadence
+
+**Do not schedule hourly (or slower) automations to poll a PR or issue for new review comments.** An hourly
+cadence is too slow to be useful, and automations keep firing long after the PR is merged/closed if no one
+remembers to clean them up (this has happened — an hourly "monitor PR" automation kept running for hours
+after its target PR had already merged).
+
+The built-in automation scheduler only supports `manual`/`hourly`/`daily`/`weekly` intervals — there's no
+native option finer than hourly. To actually get responsive (~5–10 minute) polling:
+
+- Prefer a **manual, agent-driven loop** within a single running session: e.g. a background `bash` loop that
+  `sleep`s 5–10 minutes between `gh pr view`/`gh api` checks, for the duration you actually need monitoring.
+- If you do use the scheduler for something long-lived, set it to a coarser interval (e.g. `daily`) rather
+  than `hourly`, and **delete it** as soon as the PR/issue it targets is merged or closed — don't just leave
+  it disabled indefinitely.
+- Before creating a new PR-monitoring automation, call `listAutomations` first to check whether a stale one
+  already exists for that PR/issue.
+
 # Releases & Versioning
 
 **This repository does NOT use git tags.** Do not use `git tag`, `git describe`, or `git tag --contains` to

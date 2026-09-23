@@ -77,7 +77,17 @@
       <TextBlock Margin="0 20 0 10">
         For more or less stand-alone Expanders size more generously with <TextBlock Classes="code">MinHeight</TextBlock>.
       </TextBlock>
-      <Expander VerticalAlignment="Top" Header="🌐 Internet Settings" MinHeight="48">
+      <Expander VerticalAlignment="Top" MinHeight="48">
+        <Expander.Header>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <!-- ClipToBounds="False": emoji glyphs are rendered via font-fallback (e.g. Apple Color
+                 Emoji), whose ink extents can exceed the advance width the text layout measured -
+                 with the TextBlock's default clipping, that overflow gets cropped, cutting off the
+                 right edge of the glyph. -->
+            <TextBlock Text="🌐" ClipToBounds="False" />
+            <TextBlock Text="Internet Settings" />
+          </StackPanel>
+        </Expander.Header>
         <StackPanel>
           <CheckBox IsChecked="False">Unchecked</CheckBox>
           <CheckBox IsChecked="True">Checked</CheckBox>

@@ -217,8 +217,9 @@ public sealed partial class BindingEvaluator
         return Expression.Lambda<Func<object, object?>>(access, param).Compile();
     }
 
+    // "." is the binding path for the source itself, so it resolves to the root with no member access.
     private static Expression BuildNullSafePropertyAccess(Expression root, string path) =>
-        BuildNullSafePropertyAccess(root, path.Split('.'), 0);
+        BuildNullSafePropertyAccess(root, path == "." ? [] : path.Split('.'), 0);
 
     private static Expression BuildNullSafePropertyAccess(Expression receiver, string[] propertyNames, int index)
     {
@@ -490,9 +491,17 @@ public sealed partial class BindingEvaluator
             return false;
         }
 
-        Func<object, string> getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, typeof(TDataContext));
-        expression = WrapObjectDelegateAsExpression<TDataContext>(getter);
-        return true;
+        try
+        {
+            Func<object, string> getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, typeof(TDataContext));
+            expression = WrapObjectDelegateAsExpression<TDataContext>(getter);
+            return true;
+        }
+        catch
+        {
+            expression = null;
+            return false;
+        }
     }
 
     private bool TryBuildIntermediateGetter(BindingBase binding, [NotNullWhen(true)] out Func<object, string>? getter)
@@ -504,8 +513,16 @@ public sealed partial class BindingEvaluator
             return false;
         }
 
-        getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, this.dataContextType);
-        return true;
+        try
+        {
+            getter = BuildIntermediateGetter(path, source, converter, converterParameter, converterCulture, stringFormat, fallbackValue, targetNullValue, this.dataContextType);
+            return true;
+        }
+        catch
+        {
+            getter = null;
+            return false;
+        }
     }
 
     private static Func<object, string> BuildIntermediateGetter(

@@ -3,6 +3,7 @@ namespace Devolutions.AvaloniaControls.Tests;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Headless.XUnit;
 using Devolutions.AvaloniaControls.Helpers;
 
@@ -202,6 +203,51 @@ public class BindingEvaluatorTests
         Assert.Equal("No city", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
     }
 
+    [AvaloniaFact]
+    public void ReflectionSelfPathWithConverterFormattedGetterPassesRowToConverter()
+    {
+        Binding binding = CreateReflectionSelfBindingWithConverter();
+        var row = new TestRow { Customer = new TestCustomer { Name = "Alice" } };
+
+        Assert.Equal("Alice", CreateEvaluator().BuildFormattedGetter(binding)!(row));
+        Assert.Equal("Alice", CreateTypedEvaluator().BuildFormattedGetterExpression(binding)!.Compile()(row));
+    }
+
+    [AvaloniaFact]
+    public void ReflectionSelfPathWithConverterRawGetterPassesRowToConverter()
+    {
+        Binding binding = CreateReflectionSelfBindingWithConverter();
+        var row = new TestRow { Customer = new TestCustomer { Name = "Alice" } };
+
+        Assert.Equal("Alice", CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Equal("Alice", CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [AvaloniaFact]
+    public void ReflectionSelfPathRawGetterReturnsRow()
+    {
+        Binding binding = new(".");
+        var row = new TestRow();
+
+        Assert.Same(row, CreateEvaluator().BuildRawGetter(binding)(row));
+        Assert.Same(row, CreateTypedEvaluator().BuildRawGetterExpression(binding).Compile()(row));
+    }
+
+    [AvaloniaFact]
+    public void ReflectionUnknownMemberWithConverterFormattedGetterDoesNotThrow()
+    {
+        Binding binding = new("Missing") { Converter = new FuncValueConverter<object?, string>(static _ => "Converted") };
+        var row = new TestRow();
+
+        Func<object, string>? getter = CreateEvaluator().BuildFormattedGetter(binding);
+        Func<TestRow, string>? typedGetter = CreateTypedEvaluator().BuildFormattedGetterExpression(binding)?.Compile();
+
+        Assert.NotNull(getter);
+        Assert.NotNull(typedGetter);
+        Assert.Null(Record.Exception(() => getter(row)));
+        Assert.Null(Record.Exception(() => typedGetter(row)));
+    }
+
     private static CompiledBinding CreateNameBinding() =>
         CompiledBinding.Create((TestRow row) => row.Customer!.Name);
 
@@ -211,6 +257,9 @@ public class BindingEvaluatorTests
     private static Binding CreateReflectionNameBinding() => new("Customer.Name");
 
     private static Binding CreateReflectionCityBinding() => new("Customer.Address.City");
+
+    private static Binding CreateReflectionSelfBindingWithConverter() =>
+        new(".") { Converter = new FuncValueConverter<TestRow?, string>(static row => row?.Customer?.Name ?? string.Empty) };
 
     private static BindingEvaluator CreateEvaluator() => new(new Control(), typeof(TestRow));
 

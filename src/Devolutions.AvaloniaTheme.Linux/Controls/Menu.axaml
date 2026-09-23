@@ -18,7 +18,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
     </Border>
   </Design.PreviewWith>
 
-  <ControlTheme x:Key="LinuxMenuTopLevelMenuItem" TargetType="MenuItem">
+  <ControlTheme x:Key="LinuxMenuTopLevelMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
     <Setter Property="Background" Value="{DynamicResource LinuxMenuItemBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource LinuxMenuItemForeground}" />
     <Setter Property="Padding" Value="{DynamicResource LinuxMenuTopLevelItemPadding}" />

@@ -81,7 +81,7 @@
       <SolidColorBrush x:Key="LinuxMenuScrollArrowForeground" Color="White" />
       <SolidColorBrush x:Key="LinuxMenuScrollArrowForegroundPointerOver" Color="White" />
 
-      <Thickness x:Key="LinuxMenuItemChevronMargin">0 0 7 0</Thickness>
+      <Thickness x:Key="LinuxMenuItemChevronMargin">2 0 10 0</Thickness>
 
       <x:String x:Key="LinuxMenuSvgItemDefaultCss">.st0{fill:#f5f5f5;}</x:String>
       <x:String x:Key="LinuxMenuSvgItemDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>

@@ -32,6 +32,7 @@ public class VisualRegressionTests
     ThemeId.LiquidGlass,
     ThemeId.Linux,
     ThemeId.DevExpress,
+    ThemeId.WinUi,
   ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
@@ -84,9 +85,17 @@ public class VisualRegressionTests
     // Ensure directories exist
     Directory.CreateDirectory(TestResultsDirectory);
 
-    // 1. Set Theme FIRST (Before creating any UI controls)
-    // Force theme reload to ensure fresh styles for every test
-    App.CurrentTheme = null;
+    if (themeName == "WinUI")
+    {
+      // WinUI classic (solid, Windows 10-era surfaces) and Win11 Mica (translucent
+      // surfaces) share one logical theme identity for catalog/applicability purposes
+      // (see App.SetTheme's WinUiTheme handling), but render different surface brushes.
+      // Capture both variants under the same "WinUI" baseline folder, mirroring how
+      // Light/Dark are captured as a pair below.
+      RunThemeCapture(pageType, viewModelType, pageName, themeName, new WinUiClassicTheme(), "");
+      RunThemeCapture(pageType, viewModelType, pageName, themeName, new WinUiMicaTheme(), "_mica");
+      return;
+    }
 
     Theme theme = themeName switch
     {
@@ -96,6 +105,21 @@ public class VisualRegressionTests
       "DevExpress" => new DevExpressTheme(),
       _ => throw new ArgumentException($"Unknown theme: {themeName}")
     };
+    RunThemeCapture(pageType, viewModelType, pageName, themeName, theme, "");
+  }
+
+  [System.Diagnostics.StackTraceHidden]
+  private static void RunThemeCapture(
+    Type pageType,
+    Type? viewModelType,
+    string pageName,
+    string themeName,
+    Theme theme,
+    string variantPrefix)
+  {
+    // 1. Set Theme FIRST (Before creating any UI controls)
+    // Force theme reload to ensure fresh styles for every test
+    App.CurrentTheme = null;
     App.SetTheme(theme);
 
     // 2. Instantiate the page
@@ -127,10 +151,10 @@ public class VisualRegressionTests
       Dispatcher.UIThread.RunJobs();
 
       // 4. Test Light Mode
-      CaptureAndCompare(window, pageName, themeName, "", ThemeVariant.Light);
+      CaptureAndCompare(window, pageName, themeName, variantPrefix, ThemeVariant.Light);
 
       // 5. Test Dark Mode
-      CaptureAndCompare(window, pageName, themeName, "_dark", ThemeVariant.Dark);
+      CaptureAndCompare(window, pageName, themeName, $"{variantPrefix}_dark", ThemeVariant.Dark);
     }
     finally
     {

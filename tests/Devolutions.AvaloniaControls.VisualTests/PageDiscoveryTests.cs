@@ -14,6 +14,7 @@ public class PageDiscoveryTests
     ThemeId.LiquidGlass,
     ThemeId.Linux,
     ThemeId.DevExpress,
+    ThemeId.WinUi,
   ];
 
   [Fact]

@@ -4,12 +4,17 @@
 
 `Devolutions.AvaloniaTheme.WinUI` has only the basic scaffolding from PR #564:
 project setup, the `DevolutionsWinUiTheme`/`DevolutionsWinUiThemeGlobalStyles`
-loaders, the classic/Win11-Mica split (`Windows11MicaDetector` +
-`ThemeResources.Windows11.axaml`), and light touches on three controls
-(`ListBox`, `ToggleButton`, partial `DataGrid`). No systematic per-control
-visual pass has happened — in `samples/SampleApp/PageCatalog/page-catalog.jsonc`
-every page is `"WinUI": "❌"` except two marked `"🚧"`, whereas MacOS,
-DevExpress, and Linux are `"✅"` almost everywhere.
+loaders, and the classic/Win11-Mica split (`Windows11MicaDetector` +
+`ThemeResources.Windows11.axaml`). Three controls (`ListBox`, `ToggleButton`,
+partial `DataGrid`) do have some existing styling in
+`src/Devolutions.AvaloniaTheme.WinUI/Controls/`, but it was copied from
+UniGetUI's Avalonia port and never verified against real WinUI — each of
+those files now carries a header comment saying so. Those three are
+therefore being treated as starting from scratch alongside everything else:
+in `samples/SampleApp/PageCatalog/page-catalog.jsonc` every page is
+`"WinUI": "❌"`, whereas MacOS, DevExpress, and Linux are `"✅"` almost
+everywhere. The old code is kept in place purely as a reference/starting
+point, not as a target look to preserve.
 
 "WinUI 3" (the actual Microsoft design system/toolkit) is not a fourth theme —
 it's the thing this theme is already emulating (see prior discussion in this
@@ -93,7 +98,9 @@ Experiments-only pages (ActiPro Controls, System Colours, Toggle Buttons,
 Search Highlights, Animated Icon, LG Wallpaper Tint), **~38 real control demo
 pages** need a WinUI pass:
 
-Already have *some* WinUI coverage today (verify/extend, don't restart):
+Already have existing (unverified, UniGetUI-derived) styling to treat as
+reference only — verify from scratch against WinUI-Gallery, don't assume
+correctness:
 `ListBox` (`Controls/ListBox.axaml`), `ToggleButton` (`Controls/ToggleButton.axaml`),
 `DataGrid` (`Controls/DataGrid.axaml`, partial — column header styling only).
 
@@ -157,15 +164,21 @@ header styling fixes", "Extract RectangleSelectionMarquee control"):
   baseline folder, using `App.SetTheme(new WinUiClassicTheme()/WinUiMicaTheme())`
   the same way the SampleApp dropdown does — no direct
   `Windows11MicaDetector` manipulation needed in the test.
-  **Baselines are deliberately NOT committed yet** for the 3 already-`🚧`
-  pages (DataGrid, ListBox, ToggleButton) — their current look was copied
-  from another Avalonia app's manual port and hasn't been verified against
-  real WinUI, so checking in baselines now would wrongly imply that look is
-  the target to preserve. Generate baselines (all 3 OSes, via
-  `UPDATE_BASELINES=true dotnet test ...`) as part of the PR that actually
-  verifies/fixes each control's styling, not before. Until then,
-  `TestPage`/WinUI will fail with "no baseline found" — expected, not a
-  harness bug.
+  **All 3 previously-`🚧` pages (DataGrid, ListBox, ToggleButton) were reset
+  to `"WinUI": "❌"`** and each control file
+  (`Controls/DataGrid.axaml`/`ListBox.axaml`/`ToggleButton.axaml`) now has a
+  header comment stating its styling was copied from UniGetUI's Avalonia
+  port, is unverified, and should not be assumed correct or complete. The
+  old code is kept only as a reference, not deleted. Because of this, the
+  WinUI harness currently discovers **zero** testable pages (all `❌`) —
+  `PageDiscoveryTests` was adjusted so its "every discovery theme has ≥1
+  page" guard only applies when the catalog actually has a qualifying page
+  for that theme, so a temporarily-empty WinUI doesn't fail that test. The
+  harness will pick up cases automatically once the first control in a
+  batch below is verified and flipped to `✅`/`🚧`.
+  Generate baselines (all 3 OSes, via `UPDATE_BASELINES=true dotnet test ...`)
+  as part of each control's own PR once its styling is verified — not
+  before, and not from the old UniGetUI-derived code.
   Note (observed while sanity-checking the harness, then discarded): classic
   vs. Mica captures were visually identical or near-identical on the current
   3 pages, because the only Mica-swapped brushes today

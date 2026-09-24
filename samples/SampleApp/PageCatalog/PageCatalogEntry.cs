@@ -89,6 +89,7 @@ public sealed class PageCatalogEntry
 
   public bool ShouldTest(ThemeId themeId) =>
     !PageRegistry.IsNotSupportedSymbol(this.GetStatusSymbol(themeId)) &&
+    !PageRegistry.IsInProgressSymbol(this.GetStatusSymbol(themeId)) &&
     !this.ExcludeFromTests.Contains(themeId);
 
   public static IReadOnlyList<string> Validate(IReadOnlyList<PageCatalogEntry> controls)

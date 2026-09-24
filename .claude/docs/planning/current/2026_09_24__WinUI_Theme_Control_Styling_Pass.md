@@ -10,11 +10,11 @@ partial `DataGrid`) do have some existing styling in
 `src/Devolutions.AvaloniaTheme.WinUI/Controls/`, but it was copied from
 UniGetUI's Avalonia port and never verified against real WinUI — each of
 those files now carries a header comment saying so. Those three are
-therefore being treated as starting from scratch alongside everything else:
-in `samples/SampleApp/PageCatalog/page-catalog.jsonc` every page is
-`"WinUI": "❌"`, whereas MacOS, DevExpress, and Linux are `"✅"` almost
-everywhere. The old code is kept in place purely as a reference/starting
-point, not as a target look to preserve.
+marked `"WinUI": "🚧"` (in progress, unverified, excluded from visual
+regression tests) in `samples/SampleApp/PageCatalog/page-catalog.jsonc`,
+same as everything else needing a pass — MacOS, DevExpress, and Linux are
+`"✅"` almost everywhere by comparison. The old code is kept in place purely
+as a reference/starting point, not as a target look to preserve.
 
 "WinUI 3" (the actual Microsoft design system/toolkit) is not a fourth theme —
 it's the thing this theme is already emulating (see prior discussion in this
@@ -144,11 +144,17 @@ header styling fixes", "Extract RectangleSelectionMarquee control"):
 7. Wire the new file into `Controls/_index.axaml`.
 8. Verify visually via the SampleApp (WinUI classic + WinUI Mica dropdown
    entries) and Avalonia DevTools MCP screenshots; then flip the page's
-   `"WinUI"` status in `page-catalog.jsonc` from `❌`/`🚧` to `✅` (or leave
-   `🚧` if only partially covered, with a note).
-9. Add/extend visual regression baselines for the control being styled (the
-   WinUI test harness is now wired up — see "Resolved" note below — so this
-   is just `UPDATE_BASELINES=true dotnet test ...` on each OS as usual).
+   `"WinUI"` status in `page-catalog.jsonc` from `❌`/`🚧` to `✅` (fully
+   verified) or `⚠️` (stable enough to guard, but not perfect — still
+   included in tests). Leave it `🚧` if the control genuinely isn't ready
+   to be held to a baseline yet.
+9. Add/extend visual regression baselines for the control being styled once
+   its status is `✅`/`⚠️` (`UPDATE_BASELINES=true dotnet test ...` on each
+   OS). If this is the **first** control to leave `🚧`, also add
+   `ThemeId.WinUi` to `VisualDiscoveryThemes` in
+   `tests/Devolutions.AvaloniaControls.VisualTests/PageDiscoveryTests.cs` in
+   the same PR (see "Resolved" note below for why it's deliberately absent
+   until then).
 10. Update `src/Devolutions.AvaloniaTheme.WinUI/CHANGELOG.md` per existing
     convention; confirm with the user whether an entry is warranted per the
     "substantial change" threshold noted in repo instructions, don't add
@@ -156,29 +162,41 @@ header styling fixes", "Extract RectangleSelectionMarquee control"):
 
 ## Resolved
 
-- **Visual regression harness now knows about WinUI.** `ThemeId.WinUi` was
-  added to `SupportedThemes` (`VisualRegressionTests.cs`) and
-  `VisualDiscoveryThemes` (`PageDiscoveryTests.cs`). Each WinUI page now
-  captures 4 screenshots per test (classic light/dark + Mica light/dark,
+- **Visual regression harness knows how to test WinUI, but stays inert
+  until a control is verified.** `ThemeId.WinUi` is in
+  `SupportedThemes` (`VisualRegressionTests.cs`); each WinUI page would
+  capture 4 screenshots per test (classic light/dark + Mica light/dark,
   suffixes `""`/`"_dark"`/`"_mica"`/`"_mica_dark"`) under one `WinUI`
   baseline folder, using `App.SetTheme(new WinUiClassicTheme()/WinUiMicaTheme())`
   the same way the SampleApp dropdown does — no direct
   `Windows11MicaDetector` manipulation needed in the test.
-  **All 3 previously-`🚧` pages (DataGrid, ListBox, ToggleButton) were reset
-  to `"WinUI": "❌"`** and each control file
-  (`Controls/DataGrid.axaml`/`ListBox.axaml`/`ToggleButton.axaml`) now has a
+  `PageDiscoveryTests.cs`'s strict per-theme discovery check
+  (`VisualDiscoveryThemes`) intentionally does **not** include `ThemeId.WinUi`
+  yet, since that check asserts every listed theme has ≥1 testable page —
+  add it there once the first control below is verified and flipped to
+  `✅`/`⚠️` (that PR should add `ThemeId.WinUi` to both
+  `VisualDiscoveryThemes` and generate its own baselines in the same
+  change).
+- **Status-symbol semantics for test inclusion were tightened.**
+  `🚧` (in progress / actively unverified) is now **excluded** from visual
+  regression tests via `PageCatalogEntry.ShouldTest`
+  (`PageRegistry.IsInProgressSymbol`), separate from `⚠️` (imperfect but
+  stable enough to guard existing coverage), which stays **included**. This
+  lets a control show a "some work has started" indicator without forcing a
+  baseline to be committed before it's ready. `IsNotSupportedSymbol`
+  (`""`/`❌`) is unchanged.
+  All 3 controls with existing UniGetUI-derived styling (DataGrid, ListBox,
+  ToggleButton) are marked `"WinUI": "🚧"` — visually indicating "something
+  is there" while being excluded from tests until each is actually verified
+  against real WinUI. Each control file
+  (`Controls/DataGrid.axaml`/`ListBox.axaml`/`ToggleButton.axaml`) also has a
   header comment stating its styling was copied from UniGetUI's Avalonia
   port, is unverified, and should not be assumed correct or complete. The
-  old code is kept only as a reference, not deleted. Because of this, the
-  WinUI harness currently discovers **zero** testable pages (all `❌`) —
-  `PageDiscoveryTests` was adjusted so its "every discovery theme has ≥1
-  page" guard only applies when the catalog actually has a qualifying page
-  for that theme, so a temporarily-empty WinUI doesn't fail that test. The
-  harness will pick up cases automatically once the first control in a
-  batch below is verified and flipped to `✅`/`🚧`.
+  old code is kept only as a reference, not deleted.
   Generate baselines (all 3 OSes, via `UPDATE_BASELINES=true dotnet test ...`)
-  as part of each control's own PR once its styling is verified — not
-  before, and not from the old UniGetUI-derived code.
+  as part of each control's own PR once its styling is verified and its
+  status flips to `✅`/`⚠️` — not before, and not from the old
+  UniGetUI-derived code.
   Note (observed while sanity-checking the harness, then discarded): classic
   vs. Mica captures were visually identical or near-identical on the current
   3 pages, because the only Mica-swapped brushes today

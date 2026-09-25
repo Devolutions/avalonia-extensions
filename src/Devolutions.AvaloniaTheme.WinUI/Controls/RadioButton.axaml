@@ -1,0 +1,85 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ported from real WinUI: microsoft/microsoft-ui-xaml
+       controls/dev/CommonStyles/RadioButton_themeresources.xaml (per-state resource-key
+       aliases) and Common_themeresources_any.xaml (underlying Control*/Text*/Accent* tokens,
+       shared via Accents/ThemeResources.axaml).
+
+       Avalonia's Fluent RadioButton.xaml ControlTheme already has the same template-part shape
+       as WinUI's (Border#RootBorder "capsule", Ellipse#OuterEllipse, Ellipse#CheckOuterEllipse,
+       Ellipse#CheckGlyph — cross-faded via Opacity rather than WinUI's visibility swap), so this
+       only overrides the ControlTheme's Setters/nested Styles — no template replacement needed.
+       Real WinUI's outer "capsule" (RootBorder) is always fully transparent regardless of
+       state, so it's set once at the top instead of being repeated per state. -->
+
+  <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton"
+                BasedOn="{StaticResource {x:Type RadioButton}}">
+    <Setter Property="Foreground"  Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    <Setter Property="Background"  Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}"/>
+    </Style>
+
+    <!-- Unchecked outer ring (OuterEllipse) -->
+    <Style Selector="^ /template/ Ellipse#OuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource ControlAltFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Ellipse#OuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource ControlAltFillColorTertiaryBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Ellipse#OuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource ControlAltFillColorQuarternaryBrush}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Ellipse#OuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource ControlAltFillColorDisabledBrush}"/>
+    </Style>
+
+    <!-- Checked outer ring (CheckOuterEllipse, cross-faded in over OuterEllipse) -->
+    <Style Selector="^ /template/ Ellipse#CheckOuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Ellipse#CheckOuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource AccentFillColorSecondaryBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource AccentFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Ellipse#CheckOuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource AccentFillColorTertiaryBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource AccentFillColorTertiaryBrush}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Ellipse#CheckOuterEllipse">
+      <Setter Property="Stroke" Value="{DynamicResource AccentFillColorDisabledBrush}"/>
+      <Setter Property="Fill"   Value="{DynamicResource AccentFillColorDisabledBrush}"/>
+    </Style>
+
+    <!-- Small center dot (CheckGlyph) -->
+    <Style Selector="^ /template/ Ellipse#CheckGlyph">
+      <Setter Property="Fill"   Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+      <Setter Property="Stroke" Value="{DynamicResource CircleElevationBorderBrush}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Ellipse#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Ellipse#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Ellipse#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+    </Style>
+    <!-- Checked state uses the accent-tinted elevation gradient for the dot's own outline -->
+    <Style Selector="^:checked /template/ Ellipse#CheckGlyph">
+      <Setter Property="Stroke" Value="{DynamicResource AccentControlElevationBorderBrush}"/>
+    </Style>
+    <Style Selector="^:checked:disabled /template/ Ellipse#CheckGlyph">
+      <Setter Property="Stroke" Value="{DynamicResource ControlElevationBorderBrush}"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

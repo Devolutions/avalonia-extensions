@@ -67,7 +67,7 @@
       "category": "Buttons",
       "demo": "ButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -87,7 +87,7 @@
       "demo": "CheckBoxDemo.axaml",
       "viewModel": "CheckboxViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -295,7 +295,7 @@
       "category": "Buttons",
       "demo": "RadioButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {

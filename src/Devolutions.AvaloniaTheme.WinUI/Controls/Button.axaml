@@ -1,61 +1,65 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <!-- Ported from real WinUI: microsoft/microsoft-ui-xaml
-       controls/dev/CommonStyles/Button_themeresources.xaml (per-state values) and
-       controls/dev/CommonStyles/Common_themeresources_any.xaml (underlying Control*/Text*/
-       Accent* tokens, shared via Accents/ThemeResources.axaml). WinUI's real Padding
-       ("11,5,11,6", vs. Fluent's "8,5,8,6") is overridden here too.
-
-       Avalonia's Fluent Button.xaml ControlTheme already has the same VisualState shape as
-       WinUI's (Normal/PointerOver/Pressed/Disabled via a single ContentPresenter, plus an
-       "accent" style class standing in for WinUI's AccentButtonStyle), so this only overrides
-       the ControlTheme's Setters/nested Styles — no template replacement needed. -->
+  <Thickness x:Key="ButtonBorderThemeThickness">1</Thickness>
+  <!-- Preserve WinUI's total vertical padding while compensating for Inter's higher text baseline. -->
+  <Thickness x:Key="ButtonPadding">11,6,11,5</Thickness>
+  <!-- Inter also measures two pixels shorter than WinUI's Segoe UI button. -->
+  <x:Double x:Key="ButtonMinHeight">32</x:Double>
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="Button"
                 BasedOn="{StaticResource {x:Type Button}}">
-    <Setter Property="Background"  Value="{DynamicResource ControlFillColorDefaultBrush}"/>
-    <Setter Property="Foreground"  Value="{DynamicResource TextFillColorPrimaryBrush}"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}"/>
-    <Setter Property="Padding"     Value="11,5,11,6"/>
+    <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ButtonMinHeight}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}"/>
+
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="BackgroundSizing" Value="InnerBorderEdge"/>
+    </Style>
 
     <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background"  Value="{DynamicResource ControlFillColorSecondaryBrush}"/>
-      <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}"/>
-      <Setter Property="Foreground"  Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}"/>
     </Style>
     <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background"  Value="{DynamicResource ControlFillColorTertiaryBrush}"/>
-      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
-      <Setter Property="Foreground"  Value="{DynamicResource TextFillColorSecondaryBrush}"/>
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPressed}"/>
     </Style>
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background"  Value="{DynamicResource ControlFillColorDisabledBrush}"/>
-      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
-      <Setter Property="Foreground"  Value="{DynamicResource TextFillColorDisabledBrush}"/>
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}"/>
     </Style>
 
-    <!-- WinUI AccentButtonStyle equivalent (Classes="accent") -->
     <Style Selector="^.accent">
       <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background"  Value="{DynamicResource AccentFillColorDefaultBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevationBorderBrush}"/>
-        <Setter Property="Foreground"  Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}"/>
+        <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}"/>
       </Style>
       <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background"  Value="{DynamicResource AccentFillColorSecondaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevationBorderBrush}"/>
-        <Setter Property="Foreground"  Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPointerOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPointerOver}"/>
       </Style>
       <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background"  Value="{DynamicResource AccentFillColorTertiaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}"/>
-        <Setter Property="Foreground"  Value="{DynamicResource TextOnAccentFillColorSecondaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPressed}"/>
       </Style>
       <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background"  Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}"/>
-        <Setter Property="Foreground"  Value="{DynamicResource TextOnAccentFillColorDisabledBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushDisabled}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}"/>
       </Style>
     </Style>
   </ControlTheme>

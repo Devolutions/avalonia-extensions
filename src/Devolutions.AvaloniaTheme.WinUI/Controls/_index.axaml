@@ -1,8 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <ResourceDictionary.MergedDictionaries>
+    <MergeResourceInclude Source="Button.axaml"/>
+    <MergeResourceInclude Source="CheckBox.axaml"/>
     <MergeResourceInclude Source="DataGrid.axaml"/>
     <MergeResourceInclude Source="ListBox.axaml"/>
+    <MergeResourceInclude Source="RadioButton.axaml"/>
     <MergeResourceInclude Source="ToggleButton.axaml"/>
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

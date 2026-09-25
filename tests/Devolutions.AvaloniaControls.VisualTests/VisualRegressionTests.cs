@@ -128,8 +128,57 @@ public class VisualRegressionTests
     string themeName,
     string referenceThemeName)
   {
+    List<string> mismatches = FindRenderMismatches(pageType, viewModelType, pageName, themeName, referenceThemeName, themeName);
+
+    if (mismatches.Count > 0)
+    {
+      Assert.Fail(
+        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently: " +
+        $"{string.Join(", ", mismatches)}. If the difference is intended, give {themeName} its own status symbol and baselines.");
+    }
+  }
+
+  // No catalog page uses ↔️ yet, so TestPage() doesn't reach AssertRendersSameAs(). These cases
+  // exercise the same comparison directly, independent of catalog statuses: identical input must
+  // match (no false positives from nondeterministic rendering), and visibly different themes must
+  // be reported as a mismatch in both Light and Dark.
+  [AvaloniaTheory]
+  [InlineData("WinUiMica", "WinUiMica", false)]
+  [InlineData("MacClassic", "DevExpress", true)]
+  public void RenderEqualityCheck_DetectsMatchesAndMismatches(string themeName, string referenceThemeName, bool expectMismatch)
+  {
+    Type pageType = typeof(SampleApp.DemoPages.ButtonDemo);
+    List<string> mismatches = FindRenderMismatches(
+      pageType, null, pageType.Name, themeName, referenceThemeName, $"_RenderEqualityCheck/{themeName}-vs-{referenceThemeName}");
+
+    if (expectMismatch)
+    {
+      Assert.Equal(2, mismatches.Count);
+      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Light), StringComparison.Ordinal));
+      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Dark), StringComparison.Ordinal));
+    }
+    else
+    {
+      Assert.Empty(mismatches);
+    }
+  }
+
+  /// <summary>
+  /// Renders the page in <paramref name="referenceThemeName"/> and <paramref name="themeName"/>
+  /// (Light and Dark) and returns one entry per variant whose output isn't pixel-identical.
+  /// Screenshots and diffs go under <paramref name="outputFolder"/>; no baselines are involved.
+  /// </summary>
+  [System.Diagnostics.StackTraceHidden]
+  private static List<string> FindRenderMismatches(
+    Type pageType,
+    Type? viewModelType,
+    string pageName,
+    string themeName,
+    string referenceThemeName,
+    string outputFolder)
+  {
     (string Suffix, ThemeVariant Variant)[] variants = [("", ThemeVariant.Light), ("_dark", ThemeVariant.Dark)];
-    string testDirectory = Path.Combine(TestResultsDirectory, themeName);
+    string testDirectory = Path.Combine(TestResultsDirectory, outputFolder);
     Directory.CreateDirectory(testDirectory);
 
     string ReferencePath(string suffix) => Path.Combine(testDirectory, $"{pageName}{suffix}__{referenceThemeName}-reference.png");
@@ -152,7 +201,7 @@ public class VisualRegressionTests
         using WriteableBitmap bitmap = CaptureVariant(window, variant, out _);
         bitmap.Save(TestPath(suffix));
 
-        string diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
+        string diffPath = Path.Combine(TestDiffsDirectory, outputFolder, $"{pageName}{suffix}_diff.png");
         if (!ImageComparer.CompareImages(ReferencePath(suffix), TestPath(suffix), diffPath))
         {
           mismatches.Add($"{variant} (diff saved to {Path.GetDirectoryName(diffPath)})");
@@ -160,12 +209,7 @@ public class VisualRegressionTests
       }
     });
 
-    if (mismatches.Count > 0)
-    {
-      Assert.Fail(
-        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently: " +
-        $"{string.Join(", ", mismatches)}. If the difference is intended, give {themeName} its own status symbol and baselines.");
-    }
+    return mismatches;
   }
 
   [System.Diagnostics.StackTraceHidden]

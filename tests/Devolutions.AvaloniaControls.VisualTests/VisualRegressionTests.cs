@@ -32,6 +32,7 @@ public class VisualRegressionTests
     ThemeId.LiquidGlass,
     ThemeId.Linux,
     ThemeId.DevExpress,
+    ThemeId.WinUi,
   ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
@@ -74,6 +75,41 @@ public class VisualRegressionTests
     }
   }
 
+  /// <summary>
+  /// The classic/Mica capture variants for the "WinUI" theme case in <see cref="TestPage"/>.
+  /// Extracted as a pure, image-free function so <c>WinUiCapturePlan_HasClassicAndMicaVariants</c>
+  /// can exercise this branch's shape even while no page qualifies for it in
+  /// <see cref="GetTestPages"/> (no WinUI page has been verified/baselined yet).
+  /// </summary>
+  internal static IReadOnlyList<(Theme Theme, string VariantPrefix)> GetWinUiCapturePlan() =>
+  [
+    (new WinUiClassicTheme(), ""),
+    (new WinUiMicaTheme(), "_mica"),
+  ];
+
+  // No WinUI page is verified/baselined yet, so GetTestPages() never yields "WinUI" and the
+  // branch above is unreachable via [MemberData]. This Fact exercises the capture plan's shape
+  // directly (no baseline images involved) so a change to it isn't silently invisible to the
+  // automated suite. Update once a WinUI page is baselined and reaches [MemberData] naturally.
+  [Fact]
+  public void WinUiCapturePlan_HasClassicAndMicaVariants()
+  {
+    IReadOnlyList<(Theme Theme, string VariantPrefix)> plan = GetWinUiCapturePlan();
+
+    Assert.Collection(
+      plan,
+      classic =>
+      {
+        Assert.IsType<WinUiClassicTheme>(classic.Theme);
+        Assert.Equal("", classic.VariantPrefix);
+      },
+      mica =>
+      {
+        Assert.IsType<WinUiMicaTheme>(mica.Theme);
+        Assert.Equal("_mica", mica.VariantPrefix);
+      });
+  }
+
   // TestPage() is called automatically by the xUnit Test Runner for each entry
   //   returned by GetTestPages() when you run the tests.
   [AvaloniaTheory]
@@ -84,9 +120,20 @@ public class VisualRegressionTests
     // Ensure directories exist
     Directory.CreateDirectory(TestResultsDirectory);
 
-    // 1. Set Theme FIRST (Before creating any UI controls)
-    // Force theme reload to ensure fresh styles for every test
-    App.CurrentTheme = null;
+    if (themeName == "WinUI")
+    {
+      // WinUI classic (solid, Windows 10-era surfaces) and Win11 Mica (translucent
+      // surfaces) share one logical theme identity for catalog/applicability purposes
+      // (see App.SetTheme's WinUiTheme handling), but render different surface brushes.
+      // Capture both variants under the same "WinUI" baseline folder, mirroring how
+      // Light/Dark are captured as a pair below.
+      foreach ((Theme planTheme, string variantPrefix) in GetWinUiCapturePlan())
+      {
+        RunThemeCapture(pageType, viewModelType, pageName, themeName, planTheme, variantPrefix);
+      }
+
+      return;
+    }
 
     Theme theme = themeName switch
     {
@@ -96,6 +143,21 @@ public class VisualRegressionTests
       "DevExpress" => new DevExpressTheme(),
       _ => throw new ArgumentException($"Unknown theme: {themeName}")
     };
+    RunThemeCapture(pageType, viewModelType, pageName, themeName, theme, "");
+  }
+
+  [System.Diagnostics.StackTraceHidden]
+  private static void RunThemeCapture(
+    Type pageType,
+    Type? viewModelType,
+    string pageName,
+    string themeName,
+    Theme theme,
+    string variantPrefix)
+  {
+    // 1. Set Theme FIRST (Before creating any UI controls)
+    // Force theme reload to ensure fresh styles for every test
+    App.CurrentTheme = null;
     App.SetTheme(theme);
 
     // 2. Instantiate the page
@@ -127,10 +189,10 @@ public class VisualRegressionTests
       Dispatcher.UIThread.RunJobs();
 
       // 4. Test Light Mode
-      CaptureAndCompare(window, pageName, themeName, "", ThemeVariant.Light);
+      CaptureAndCompare(window, pageName, themeName, variantPrefix, ThemeVariant.Light);
 
       // 5. Test Dark Mode
-      CaptureAndCompare(window, pageName, themeName, "_dark", ThemeVariant.Dark);
+      CaptureAndCompare(window, pageName, themeName, $"{variantPrefix}_dark", ThemeVariant.Dark);
     }
     finally
     {

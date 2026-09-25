@@ -12,6 +12,7 @@ public static class PageRegistry
 {
   public const string ControlDemosSection = "Control Demos";
   private const string NotSupportedSymbol = "❌";
+  private const string InProgressSymbol = "🚧";
   private const string CatalogResourceName = "SampleApp.PageCatalog.page-catalog.jsonc";
   private static readonly PageCatalogFile CatalogFile = LoadCatalogFile();
   private static readonly IReadOnlyList<PageCatalogEntry> Pages = CreatePages(CatalogFile);
@@ -54,6 +55,16 @@ public static class PageRegistry
   public static bool IsNotSupportedSymbol(string symbol) =>
     string.IsNullOrEmpty(symbol) ||
     string.Equals(symbol, NotSupportedSymbol, StringComparison.Ordinal);
+
+  /// <summary>
+  /// 🚧 marks a page as having some in-progress, unverified styling that isn't ready to be held
+  /// to a visual regression baseline yet — distinct from ⚠️, which is included in testing despite
+  /// known imperfections. Excluded from tests via <see cref="PageCatalogEntry.ShouldTest"/>, but
+  /// intentionally not treated as "not supported" (<see cref="IsNotSupportedSymbol"/>) since work
+  /// has genuinely started.
+  /// </summary>
+  public static bool IsInProgressSymbol(string symbol) =>
+    string.Equals(symbol, InProgressSymbol, StringComparison.Ordinal);
 
   private static PageCatalogFile LoadCatalogFile()
   {

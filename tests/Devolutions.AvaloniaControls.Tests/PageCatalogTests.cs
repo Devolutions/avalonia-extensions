@@ -77,6 +77,34 @@ public class PageCatalogTests
   }
 
   [Fact]
+  public void PageCatalog_InProgressSymbol_ExcludesFromTestsButNotFromApplicability()
+  {
+    Assert.False(PageRegistry.IsNotSupportedSymbol("🚧"));
+    Assert.True(PageRegistry.IsInProgressSymbol("🚧"));
+    Assert.False(PageRegistry.IsInProgressSymbol("⚠️"));
+
+    Dictionary<ThemeId, string> statuses = CreateValidStatuses();
+    statuses[ThemeId.MacClassic] = "🚧";
+    statuses[ThemeId.LiquidGlass] = "⚠️";
+
+    var entry = new PageCatalogEntry(
+      key: "InProgressDemo",
+      section: "Control Demos",
+      title: "In Progress",
+      pageType: typeof(UserControl),
+      source: ControlSource.Avalonia,
+      categoryPath: ["Input"],
+      statusByTheme: statuses);
+
+    // 🚧 (in progress, unverified) is excluded from tests...
+    Assert.False(entry.ShouldTest(ThemeId.MacClassic));
+    // ...while ⚠️ (imperfect but included) still guards existing coverage.
+    Assert.True(entry.ShouldTest(ThemeId.LiquidGlass));
+    // ...and 🚧 still counts as "applicable" (unlike ❌/""), since work has genuinely started.
+    Assert.Contains(ThemeId.MacClassic.ToThemeName(), entry.ApplicableToCsv.Split(", "));
+  }
+
+  [Fact]
   public void PageCatalog_CreatePages_HandlesCaseMismatchedSectionKeys()
   {
     PageCatalogFile catalog = new()

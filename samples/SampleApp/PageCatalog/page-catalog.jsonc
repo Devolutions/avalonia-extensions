@@ -13,10 +13,12 @@
     "": "No status",
     "✅": "Styled",
     "❌": "Not styled (yet) / not supported",
-    "🚧": "In Progress",
-    "⚠️": "Needs some work / updates"
+    "🚧": "In Progress (excluded from visual regression tests)",
+    "⚠️": "Needs some work / updates (included in tests)"
   },
-  // By default, statusSymbols determine test inclusion: "" and ❌ are excluded, all others included.
+  // By default, statusSymbols determine test inclusion: "", ❌, and 🚧 are excluded, ✅ and ⚠️
+  // are included. Use 🚧 while a control's styling is in flux / unverified; switch to ⚠️
+  // once it's stable enough that regressions should be caught, even if not perfect yet.
   // To override this, use "excludeFromTests" to explicitly exclude a control from tests in a specific theme:
   //
   //   "excludeFromTests": {

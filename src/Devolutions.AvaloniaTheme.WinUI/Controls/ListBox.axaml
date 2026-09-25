@@ -1,6 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+  <!-- NOTE: The styling below was copied from UniGetUI's Avalonia port before the WinUI theme
+       work was paused. It has NOT been verified against real WinUI/WinUI-Gallery and carries no
+       guarantee of accuracy or completeness. Kept only as a reference for the upcoming
+       control-by-control styling pass; do not assume it's the intended target look. -->
+
   <!-- WinUI NavigationViewItem-style ListBoxItem.
        Apply via Theme="{StaticResource WinUiNavItemTheme}" on ListBoxItem controls.
        Provides a neutral-fill hover/selected state with a vertical accent pill on the left edge,

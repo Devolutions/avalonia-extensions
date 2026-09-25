@@ -75,6 +75,41 @@ public class VisualRegressionTests
     }
   }
 
+  /// <summary>
+  /// The classic/Mica capture variants for the "WinUI" theme case in <see cref="TestPage"/>.
+  /// Extracted as a pure, image-free function so <c>WinUiCapturePlan_HasClassicAndMicaVariants</c>
+  /// can exercise this branch's shape even while no page qualifies for it in
+  /// <see cref="GetTestPages"/> (no WinUI page has been verified/baselined yet).
+  /// </summary>
+  internal static IReadOnlyList<(Theme Theme, string VariantPrefix)> GetWinUiCapturePlan() =>
+  [
+    (new WinUiClassicTheme(), ""),
+    (new WinUiMicaTheme(), "_mica"),
+  ];
+
+  // No WinUI page is verified/baselined yet, so GetTestPages() never yields "WinUI" and the
+  // branch above is unreachable via [MemberData]. This Fact exercises the capture plan's shape
+  // directly (no baseline images involved) so a change to it isn't silently invisible to the
+  // automated suite. Update once a WinUI page is baselined and reaches [MemberData] naturally.
+  [Fact]
+  public void WinUiCapturePlan_HasClassicAndMicaVariants()
+  {
+    IReadOnlyList<(Theme Theme, string VariantPrefix)> plan = GetWinUiCapturePlan();
+
+    Assert.Collection(
+      plan,
+      classic =>
+      {
+        Assert.IsType<WinUiClassicTheme>(classic.Theme);
+        Assert.Equal("", classic.VariantPrefix);
+      },
+      mica =>
+      {
+        Assert.IsType<WinUiMicaTheme>(mica.Theme);
+        Assert.Equal("_mica", mica.VariantPrefix);
+      });
+  }
+
   // TestPage() is called automatically by the xUnit Test Runner for each entry
   //   returned by GetTestPages() when you run the tests.
   [AvaloniaTheory]
@@ -92,8 +127,11 @@ public class VisualRegressionTests
       // (see App.SetTheme's WinUiTheme handling), but render different surface brushes.
       // Capture both variants under the same "WinUI" baseline folder, mirroring how
       // Light/Dark are captured as a pair below.
-      RunThemeCapture(pageType, viewModelType, pageName, themeName, new WinUiClassicTheme(), "");
-      RunThemeCapture(pageType, viewModelType, pageName, themeName, new WinUiMicaTheme(), "_mica");
+      foreach ((Theme planTheme, string variantPrefix) in GetWinUiCapturePlan())
+      {
+        RunThemeCapture(pageType, viewModelType, pageName, themeName, planTheme, variantPrefix);
+      }
+
       return;
     }
 

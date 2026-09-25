@@ -100,6 +100,8 @@ public class PageCatalogTests
     Assert.False(entry.ShouldTest(ThemeId.MacClassic));
     // ...while ⚠️ (imperfect but included) still guards existing coverage.
     Assert.True(entry.ShouldTest(ThemeId.LiquidGlass));
+    // ...and 🚧 still counts as "applicable" (unlike ❌/""), since work has genuinely started.
+    Assert.Contains(ThemeId.MacClassic.ToThemeName(), entry.ApplicableToCsv.Split(", "));
   }
 
   [Fact]

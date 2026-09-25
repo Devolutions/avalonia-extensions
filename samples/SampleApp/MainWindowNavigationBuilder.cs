@@ -13,18 +13,28 @@ internal static class MainWindowNavigationBuilder
   private static readonly IBrush AvaloniaProBadgeBackground = new SolidColorBrush(Color.Parse("#7C3AED"));
   private static readonly IBrush DevolutionsBadgeBackground = new SolidColorBrush(Color.Parse("#0068C3"));
 
-  public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
-    CreateHeader(
-      control,
-      string.IsNullOrWhiteSpace(App.EffectiveCatalogThemeName)
-        ? string.Empty
-        : control.GetEffectiveStatusSymbol(ThemeIds.Parse(App.EffectiveCatalogThemeName)));
+  public static SampleItemHeader CreateHeader(PageCatalogEntry control)
+  {
+    if (string.IsNullOrWhiteSpace(App.EffectiveCatalogThemeName))
+    {
+      return CreateHeader(control, string.Empty, null);
+    }
 
-  private static SampleItemHeader CreateHeader(PageCatalogEntry control, string statusSymbol)
+    ThemeId themeId = ThemeIds.Parse(App.EffectiveCatalogThemeName);
+    ThemeId? inheritedFrom = control.IsSameAsReference(themeId) ? themeId.GetSameAsReference() : null;
+    return CreateHeader(control, control.GetEffectiveStatusSymbol(themeId), inheritedFrom);
+  }
+
+  private static SampleItemHeader CreateHeader(PageCatalogEntry control, string statusSymbol, ThemeId? inheritedFrom)
   {
     string? statusTooltip = string.IsNullOrWhiteSpace(statusSymbol)
       ? null
       : PageRegistry.GetStatusDescription(statusSymbol);
+
+    if (statusTooltip != null && inheritedFrom is { } referenceTheme)
+    {
+      statusTooltip = $"{statusTooltip} (↔️ inherited: same as {referenceTheme.ToThemeName()})";
+    }
 
     (string? badgeText, IBrush? badgeBackground) = GetSourceBadge(control.Source);
 
@@ -33,6 +43,7 @@ internal static class MainWindowNavigationBuilder
       Title = control.Title,
       StatusSymbol = statusSymbol,
       StatusTooltip = statusTooltip,
+      IsStatusInherited = inheritedFrom != null,
       SourceBadgeText = badgeText,
       SourceBadgeBackground = badgeBackground,
     };

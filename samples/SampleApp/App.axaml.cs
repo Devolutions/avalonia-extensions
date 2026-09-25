@@ -29,8 +29,9 @@ public class App : Application
     internal const string LiquidGlassThemeName = "LiquidGlass";
 
     // WinUI theme name constants. All three WinUI variants share the same logical
-    // identity ("WinUI") for control applicability/visibility gating; the variant names
-    // are only used to distinguish dropdown entries and force the Mica override.
+    // identity ("WinUI") for XAML applicability/visibility gating (ThemeIsOneOf); the
+    // variant names distinguish dropdown entries, force the Mica override, and are the
+    // page-catalog status columns (see EffectiveCatalogThemeName).
     internal const string WinUiThemeName = "WinUI";
     internal const string WinUiClassicThemeName = "WinUiClassic";
     internal const string WinUiMicaThemeName = "WinUiMica";
@@ -70,6 +71,15 @@ public class App : Application
     ///   This is updated whenever the theme changes (in SetTheme()).
     /// </summary>
     public static string EffectiveCurrentThemeName { get; private set; } = "";
+
+    /// <summary>
+    ///   The page-catalog status column for the current theme. Same as <see cref="EffectiveCurrentThemeName"/>,
+    ///   except WinUI resolves to its classic or Mica variant (which have separate catalog columns).
+    /// </summary>
+    public static string EffectiveCatalogThemeName =>
+        EffectiveCurrentThemeName == WinUiThemeName
+            ? IsWinUiMicaTheme ? WinUiMicaThemeName : WinUiClassicThemeName
+            : EffectiveCurrentThemeName;
 
 
     public override void Initialize()
@@ -388,7 +398,7 @@ public class App : Application
             else if (theme is WinUiTheme)
             {
                 // All WinUI variants (automatic / classic / Win11) share the same logical
-                // identity for applicability gating; Mica only swaps surface translucency.
+                // identity for XAML applicability gating; Mica only swaps a few surface brushes.
                 EffectiveCurrentThemeName = WinUiThemeName;
             }
             else

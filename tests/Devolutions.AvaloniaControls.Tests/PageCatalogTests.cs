@@ -104,6 +104,73 @@ public class PageCatalogTests
     Assert.Contains(ThemeId.MacClassic.ToThemeName(), entry.ApplicableToCsv.Split(", "));
   }
 
+  [Theory]
+  [InlineData("✅", "✅", true)]
+  [InlineData("⚠️", "⚠️", true)]
+  [InlineData("🚧", "🚧", false)]
+  [InlineData("❌", "❌", false)]
+  public void PageCatalog_SameAsSymbol_InheritsReferenceThemeStatus(string micaStatus, string expectedClassicStatus, bool expectedShouldTest)
+  {
+    Assert.True(PageRegistry.IsSameAsReferenceSymbol("↔️"));
+    Assert.Equal(ThemeId.WinUiMica, ThemeId.WinUiClassic.GetSameAsReference());
+
+    Dictionary<ThemeId, string> statuses = CreateValidStatuses();
+    statuses[ThemeId.WinUiClassic] = "↔️";
+    statuses[ThemeId.WinUiMica] = micaStatus;
+    PageCatalogEntry entry = CreateEntry("SameAsDemo", statuses);
+
+    Assert.Equal("↔️", entry.GetStatusSymbol(ThemeId.WinUiClassic));
+    Assert.Equal(expectedClassicStatus, entry.GetEffectiveStatusSymbol(ThemeId.WinUiClassic));
+    Assert.True(entry.IsSameAsReference(ThemeId.WinUiClassic));
+    Assert.False(entry.IsSameAsReference(ThemeId.WinUiMica));
+    Assert.Equal(expectedShouldTest, entry.ShouldTest(ThemeId.WinUiClassic));
+    Assert.Equal(entry.ShouldTest(ThemeId.WinUiMica), entry.ShouldTest(ThemeId.WinUiClassic));
+  }
+
+  [Fact]
+  public void PageCatalog_SameAsSymbol_RespectsOwnExcludeFromTests()
+  {
+    Dictionary<ThemeId, string> statuses = CreateValidStatuses();
+    statuses[ThemeId.WinUiClassic] = "↔️";
+
+    var entry = new PageCatalogEntry(
+      key: "SameAsExcludedDemo",
+      section: "Control Demos",
+      title: "Same As Excluded",
+      pageType: typeof(UserControl),
+      source: ControlSource.Avalonia,
+      categoryPath: ["Input"],
+      statusByTheme: statuses,
+      excludeFromTests: [ThemeId.WinUiClassic]);
+
+    Assert.False(entry.ShouldTest(ThemeId.WinUiClassic));
+    Assert.True(entry.ShouldTest(ThemeId.WinUiMica));
+  }
+
+  [Fact]
+  public void PageCatalogValidation_RejectsSameAsSymbolWithoutReferenceTheme()
+  {
+    Dictionary<ThemeId, string> statuses = CreateValidStatuses();
+    statuses[ThemeId.WinUiClassic] = "↔️";
+    statuses[ThemeId.WinUiMica] = "↔️";
+    statuses[ThemeId.MacClassic] = "↔️";
+
+    IReadOnlyList<string> errors = PageCatalogEntry.Validate([CreateEntry("SameAsInvalidDemo", statuses)]);
+
+    Assert.Contains(errors, error => error.Contains($"theme '{ThemeId.WinUiMica}', which has no reference theme", StringComparison.Ordinal));
+    Assert.Contains(errors, error => error.Contains($"theme '{ThemeId.MacClassic}', which has no reference theme", StringComparison.Ordinal));
+    Assert.DoesNotContain(errors, error => error.Contains($"theme '{ThemeId.WinUiClassic}'", StringComparison.Ordinal));
+  }
+
+  [Fact]
+  public void PageCatalog_WinUiVariantsAreSeparateColumns()
+  {
+    Assert.Equal(ThemeId.WinUiClassic, ThemeIds.Parse("WinUIClassic"));
+    Assert.Equal(ThemeId.WinUiMica, ThemeIds.Parse("WinUIMica"));
+    // "WinUI" is the automatic theme's family name (XAML gating), not a catalog column.
+    Assert.False(ThemeIds.TryParse("WinUI", out _));
+  }
+
   [Fact]
   public void PageCatalog_CreatePages_HandlesCaseMismatchedSectionKeys()
   {
@@ -228,6 +295,16 @@ public class PageCatalogTests
     IReadOnlyList<string> errors = PageCatalogEntry.Validate([entry]);
     Assert.Contains(errors, error => error.Contains("must derive from Control", StringComparison.OrdinalIgnoreCase));
   }
+
+  private static PageCatalogEntry CreateEntry(string key, IReadOnlyDictionary<ThemeId, string> statuses) =>
+    new(
+      key: key,
+      section: "Control Demos",
+      title: key,
+      pageType: typeof(UserControl),
+      source: ControlSource.Avalonia,
+      categoryPath: ["Input"],
+      statusByTheme: statuses);
 
   private static Dictionary<ThemeId, string> CreateValidStatuses() =>
     ThemeIds.All.ToDictionary(static theme => theme, _ => "✅");

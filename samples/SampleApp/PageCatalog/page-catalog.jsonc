@@ -14,11 +14,21 @@
     "✅": "Styled",
     "❌": "Not styled (yet) / not supported",
     "🚧": "In Progress (excluded from visual regression tests)",
-    "⚠️": "Needs some work / updates (included in tests)"
+    "⚠️": "Needs some work / updates (included in tests)",
+    "↔️": "Same as WinUIMica (WinUIClassic column only, set deliberately after review): inherits its status, tested for pixel-identical rendering instead of own baselines"
   },
   // By default, statusSymbols determine test inclusion: "", ❌, and 🚧 are excluded, ✅ and ⚠️
   // are included. Use 🚧 while a control's styling is in flux / unverified; switch to ⚠️
   // once it's stable enough that regressions should be caught, even if not perfect yet.
+  // ↔️ is only valid in the WinUIClassic column: it means "renders identically to WinUIMica".
+  // The page inherits WinUIMica's status, stores no classic baselines, and is instead tested
+  // for pixel-identical output against a WinUIMica render. If a Mica overlay change makes the
+  // two diverge, that test fails — then give WinUIClassic its own status and baselines.
+  // ↔️ is a deliberate, manual decision — never a default. Only set it once a control is done in
+  // WinUIMica AND a review against the WinUI source/docs found nothing that should look different
+  // in classic. (The equality test can't catch a Mica-only look wrongly placed in the shared base
+  // resources — both variants would then match while being wrong.) Until then, keep WinUIClassic
+  // tracking the same status as WinUIMica (e.g. both 🚧).
   // To override this, use "excludeFromTests" to explicitly exclude a control from tests in a specific theme:
   //
   //   "excludeFromTests": {
@@ -48,7 +58,7 @@
       "category": "Input",
       "demo": "AutoCompleteBoxDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -57,7 +67,7 @@
       "category": "Buttons",
       "demo": "ButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -67,7 +77,7 @@
       "demo": "CalendarDatePickerDemo.axaml",
       "viewModel": "CalendarDatePickerViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -77,7 +87,7 @@
       "demo": "CheckBoxDemo.axaml",
       "viewModel": "CheckboxViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -87,7 +97,7 @@
       "demo": "CheckBoxListBoxDemo.axaml",
       "viewModel": "CheckBoxListBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -96,7 +106,7 @@
       "category": "Input",
       "demo": "ColorPickerDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -106,7 +116,7 @@
       "demo": "ComboBoxDemo.axaml",
       "viewModel": "ComboBoxViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -116,7 +126,7 @@
       "demo": "GroupedComboBoxDemo.axaml",
       "viewModel": "GroupedComboBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -125,7 +135,7 @@
       "category": "Navigation",
       "demo": "ContextMenuDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -135,7 +145,7 @@
       "demo": "DataGridDemo.axaml",
       "viewModel": "DataGridViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "🚧"
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -145,7 +155,7 @@
       "demo": "DataGridGroupedDemo.axaml",
       "viewModel": "DataGridGroupedViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -154,7 +164,7 @@
       "category": "Buttons",
       "demo": "DropDownButtonDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -164,7 +174,7 @@
       "demo": "EditableComboBoxDemo.axaml",
       "viewModel": "EditableComboBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -174,7 +184,7 @@
       "demo": "EnumPickerDemo.axaml",
       "viewModel": "EnumPickerViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -183,7 +193,7 @@
       "category": "Layout",
       "demo": "ExpanderDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -192,7 +202,7 @@
       "category": "Popups",
       "demo": "FlyoutPresenterDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -201,7 +211,7 @@
       "category": "Layout",
       "demo": "GridSplitterDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -211,7 +221,7 @@
       "demo": "GroupedListBoxDemo.axaml",
       "viewModel": "GroupedListBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -221,7 +231,7 @@
       "demo": "GroupedTileListBoxDemo.axaml",
       "viewModel": "GroupedTileListBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -230,7 +240,7 @@
       "category": "Buttons",
       "demo": "HyperlinkButtonDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -239,7 +249,7 @@
       "category": "Selectors",
       "demo": "ListBoxDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "🚧"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -248,7 +258,7 @@
       "category": "Navigation",
       "demo": "MenuDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -257,7 +267,7 @@
       "category": "Navigation",
       "demo": "MenuFlyoutDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -267,7 +277,7 @@
       "demo": "MultiComboBoxDemo.axaml",
       "viewModel": "MultiComboBoxViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -276,7 +286,7 @@
       "category": "Input",
       "demo": "NumericUpDownDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -285,7 +295,7 @@
       "category": "Buttons",
       "demo": "RadioButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -294,7 +304,7 @@
       "category": "Layout",
       "demo": "ScrollBarDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -303,7 +313,7 @@
       "category": "Layout",
       "demo": "ScrollViewerDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -312,7 +322,7 @@
       "category": "Text",
       "demo": "SearchHighlightTextBlockDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -321,7 +331,7 @@
       "category": "Layout",
       "demo": "SeparatorDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -330,7 +340,7 @@
       "category": "Buttons",
       "demo": "SplitButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -340,7 +350,7 @@
       "demo": "TabControlDemo.axaml",
       "viewModel": "TabControlViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -349,7 +359,7 @@
       "category": "Input",
       "demo": "TagInputDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -358,7 +368,7 @@
       "category": "Input",
       "demo": "TextBoxDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -368,7 +378,7 @@
       "demo": "TimePickerDemo.axaml",
       "viewModel": "TimePickerViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -378,7 +388,7 @@
       "demo": "TimePickerUpDownDemo.axaml",
       "viewModel": "TimePickerUpDownViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -387,7 +397,7 @@
       "category": "Buttons",
       "demo": "ToggleButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "🚧"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -396,7 +406,7 @@
       "category": "Buttons",
       "demo": "ToggleSwitchDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -405,7 +415,7 @@
       "category": "Popups",
       "demo": "ToolTipDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -415,7 +425,7 @@
       "demo": "TreeDataGridDemo.axaml",
       "viewModel": "TreeDataGridViewModel",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUI": "❌"
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {
@@ -424,7 +434,7 @@
       "category": "Navigation",
       "demo": "TreeViewDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUI": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     }
     ],
@@ -433,7 +443,7 @@
         "uniqueTitle": "Control Alignment",
         "demo": "ControlAlignment.axaml",
         "status": {
-          "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "⚠️", "WinUI": "❌"
+          "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "⚠️", "WinUIClassic": "❌", "WinUIMica": "❌"
         }
       }
     ],
@@ -540,7 +550,7 @@
         "uniqueTitle": "LG Wallpaper Tint",
         "demo": "LiquidGlassWallpaperTintDemo.axaml",
         "status": {
-          "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUI": "❌"
+          "Simple": "❌", "Fluent": "❌", "MacClassic": "❌", "LiquidGlass": "✅", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
         },
         "excludeFromTests": {
           "LiquidGlass": true

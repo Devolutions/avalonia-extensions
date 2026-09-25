@@ -32,7 +32,8 @@ public class VisualRegressionTests
     ThemeId.LiquidGlass,
     ThemeId.Linux,
     ThemeId.DevExpress,
-    ThemeId.WinUi,
+    ThemeId.WinUiClassic,
+    ThemeId.WinUiMica,
   ];
   private static readonly TimeSpan CaptureStabilizationTimeout = TimeSpan.FromMilliseconds(250);
   private static readonly TimeSpan CaptureStabilizationInterval = TimeSpan.FromMilliseconds(16);
@@ -70,90 +71,105 @@ public class VisualRegressionTests
           continue;
         }
 
-        yield return [page.PageType, themeId.ToThemeName(), page.ViewModelType];
+        // For ↔️ ("same as reference") pages, pass the reference theme so TestPage asserts
+        // pixel-identical rendering against it instead of comparing to stored baselines.
+        string? sameAsThemeName = page.IsSameAsReference(themeId)
+          ? themeId.GetSameAsReference()!.Value.ToThemeName()
+          : null;
+        yield return [page.PageType, themeId.ToThemeName(), page.ViewModelType, sameAsThemeName];
       }
     }
-  }
-
-  /// <summary>
-  /// The classic/Mica capture variants for the "WinUI" theme case in <see cref="TestPage"/>.
-  /// Extracted as a pure, image-free function so <c>WinUiCapturePlan_HasClassicAndMicaVariants</c>
-  /// can exercise this branch's shape even while no page qualifies for it in
-  /// <see cref="GetTestPages"/> (no WinUI page has been verified/baselined yet).
-  /// </summary>
-  internal static IReadOnlyList<(Theme Theme, string VariantPrefix)> GetWinUiCapturePlan() =>
-  [
-    (new WinUiClassicTheme(), ""),
-    (new WinUiMicaTheme(), "_mica"),
-  ];
-
-  // No WinUI page is verified/baselined yet, so GetTestPages() never yields "WinUI" and the
-  // branch above is unreachable via [MemberData]. This Fact exercises the capture plan's shape
-  // directly (no baseline images involved) so a change to it isn't silently invisible to the
-  // automated suite. Update once a WinUI page is baselined and reaches [MemberData] naturally.
-  [Fact]
-  public void WinUiCapturePlan_HasClassicAndMicaVariants()
-  {
-    IReadOnlyList<(Theme Theme, string VariantPrefix)> plan = GetWinUiCapturePlan();
-
-    Assert.Collection(
-      plan,
-      classic =>
-      {
-        Assert.IsType<WinUiClassicTheme>(classic.Theme);
-        Assert.Equal("", classic.VariantPrefix);
-      },
-      mica =>
-      {
-        Assert.IsType<WinUiMicaTheme>(mica.Theme);
-        Assert.Equal("_mica", mica.VariantPrefix);
-      });
   }
 
   // TestPage() is called automatically by the xUnit Test Runner for each entry
   //   returned by GetTestPages() when you run the tests.
   [AvaloniaTheory]
   [MemberData(nameof(GetTestPages))]
-  public void TestPage(Type pageType, string themeName, Type? viewModelType)
+  public void TestPage(Type pageType, string themeName, Type? viewModelType, string? sameAsThemeName)
   {
     string pageName = pageType.Name;
     // Ensure directories exist
     Directory.CreateDirectory(TestResultsDirectory);
 
-    if (themeName == "WinUI")
+    if (sameAsThemeName != null)
     {
-      // WinUI classic (solid, Windows 10-era surfaces) and Win11 Mica (translucent
-      // surfaces) share one logical theme identity for catalog/applicability purposes
-      // (see App.SetTheme's WinUiTheme handling), but render different surface brushes.
-      // Capture both variants under the same "WinUI" baseline folder, mirroring how
-      // Light/Dark are captured as a pair below.
-      foreach ((Theme planTheme, string variantPrefix) in GetWinUiCapturePlan())
-      {
-        RunThemeCapture(pageType, viewModelType, pageName, themeName, planTheme, variantPrefix);
-      }
-
+      AssertRendersSameAs(pageType, viewModelType, pageName, themeName, sameAsThemeName);
       return;
     }
 
-    Theme theme = themeName switch
+    RunThemeCapture(pageType, viewModelType, CreateTheme(themeName), window =>
     {
-      "MacClassic" => new MacOsClassicTheme(),
-      "LiquidGlass" => new MacOsLiquidGlassTheme(),
-      "Linux" => new LinuxYaruTheme(),
-      "DevExpress" => new DevExpressTheme(),
-      _ => throw new ArgumentException($"Unknown theme: {themeName}")
-    };
-    RunThemeCapture(pageType, viewModelType, pageName, themeName, theme, "");
+      CaptureAndCompare(window, pageName, themeName, "", ThemeVariant.Light);
+      CaptureAndCompare(window, pageName, themeName, "_dark", ThemeVariant.Dark);
+    });
   }
 
+  private static Theme CreateTheme(string themeName) => themeName switch
+  {
+    "MacClassic" => new MacOsClassicTheme(),
+    "LiquidGlass" => new MacOsLiquidGlassTheme(),
+    "Linux" => new LinuxYaruTheme(),
+    "DevExpress" => new DevExpressTheme(),
+    "WinUiClassic" => new WinUiClassicTheme(),
+    "WinUiMica" => new WinUiMicaTheme(),
+    _ => throw new ArgumentException($"Unknown theme: {themeName}")
+  };
+
+  /// <summary>
+  /// For ↔️ pages: renders the page in both the reference theme and <paramref name="themeName"/>
+  /// (Light and Dark) and asserts the output is pixel-identical. No baselines are read or written
+  /// for <paramref name="themeName"/>; the reference theme's own test case guards its baselines.
+  /// </summary>
   [System.Diagnostics.StackTraceHidden]
-  private static void RunThemeCapture(
+  private static void AssertRendersSameAs(
     Type pageType,
     Type? viewModelType,
     string pageName,
     string themeName,
-    Theme theme,
-    string variantPrefix)
+    string referenceThemeName)
+  {
+    (string Suffix, ThemeVariant Variant)[] variants = [("", ThemeVariant.Light), ("_dark", ThemeVariant.Dark)];
+    string testDirectory = Path.Combine(TestResultsDirectory, themeName);
+    Directory.CreateDirectory(testDirectory);
+
+    string ReferencePath(string suffix) => Path.Combine(testDirectory, $"{pageName}{suffix}__{referenceThemeName}-reference.png");
+    string TestPath(string suffix) => Path.Combine(testDirectory, $"{pageName}{suffix}.png");
+
+    RunThemeCapture(pageType, viewModelType, CreateTheme(referenceThemeName), window =>
+    {
+      foreach ((string suffix, ThemeVariant variant) in variants)
+      {
+        using WriteableBitmap bitmap = CaptureVariant(window, variant, out _);
+        bitmap.Save(ReferencePath(suffix));
+      }
+    });
+
+    var mismatches = new List<string>();
+    RunThemeCapture(pageType, viewModelType, CreateTheme(themeName), window =>
+    {
+      foreach ((string suffix, ThemeVariant variant) in variants)
+      {
+        using WriteableBitmap bitmap = CaptureVariant(window, variant, out _);
+        bitmap.Save(TestPath(suffix));
+
+        string diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
+        if (!ImageComparer.CompareImages(ReferencePath(suffix), TestPath(suffix), diffPath))
+        {
+          mismatches.Add($"{variant} (diff saved to {Path.GetDirectoryName(diffPath)})");
+        }
+      }
+    });
+
+    if (mismatches.Count > 0)
+    {
+      Assert.Fail(
+        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently: " +
+        $"{string.Join(", ", mismatches)}. If the difference is intended, give {themeName} its own status symbol and baselines.");
+    }
+  }
+
+  [System.Diagnostics.StackTraceHidden]
+  private static void RunThemeCapture(Type pageType, Type? viewModelType, Theme theme, Action<Window> captureVariants)
   {
     // 1. Set Theme FIRST (Before creating any UI controls)
     // Force theme reload to ensure fresh styles for every test
@@ -188,11 +204,8 @@ public class VisualRegressionTests
       window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
       Dispatcher.UIThread.RunJobs();
 
-      // 4. Test Light Mode
-      CaptureAndCompare(window, pageName, themeName, variantPrefix, ThemeVariant.Light);
-
-      // 5. Test Dark Mode
-      CaptureAndCompare(window, pageName, themeName, $"{variantPrefix}_dark", ThemeVariant.Dark);
+      // 4. Capture Light / Dark variants
+      captureVariants(window);
     }
     finally
     {
@@ -206,16 +219,7 @@ public class VisualRegressionTests
   [System.Diagnostics.StackTraceHidden]
   private static void CaptureAndCompare(Window window, string pageName, string themeName, string suffix, ThemeVariant variant)
   {
-    if (Application.Current != null)
-    {
-      Application.Current.RequestedThemeVariant = variant;
-    }
-
-    // Wait for layout and theme application
-    Dispatcher.UIThread.RunJobs();
-    double? cappedDesiredHeight = ResizeWindowForContentHeight(window);
-
-    using WriteableBitmap bitmap = CaptureStableFrame(window, variant);
+    using WriteableBitmap bitmap = CaptureVariant(window, variant, out double? cappedDesiredHeight);
 
     // Save and Compare
     var fileName = $"{pageName}{suffix}.png";
@@ -248,6 +252,20 @@ public class VisualRegressionTests
       string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
       Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Saved screenshot to {testPath}");
     }
+  }
+
+  private static WriteableBitmap CaptureVariant(Window window, ThemeVariant variant, out double? cappedDesiredHeight)
+  {
+    if (Application.Current != null)
+    {
+      Application.Current.RequestedThemeVariant = variant;
+    }
+
+    // Wait for layout and theme application
+    Dispatcher.UIThread.RunJobs();
+    cappedDesiredHeight = ResizeWindowForContentHeight(window);
+
+    return CaptureStableFrame(window, variant);
   }
 
   private static double? ResizeWindowForContentHeight(Window window)

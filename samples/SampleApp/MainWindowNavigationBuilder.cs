@@ -16,9 +16,9 @@ internal static class MainWindowNavigationBuilder
   public static SampleItemHeader CreateHeader(PageCatalogEntry control) =>
     CreateHeader(
       control,
-      string.IsNullOrWhiteSpace(App.EffectiveCurrentThemeName)
+      string.IsNullOrWhiteSpace(App.EffectiveCatalogThemeName)
         ? string.Empty
-        : control.GetStatusSymbol(App.EffectiveCurrentThemeName));
+        : control.GetEffectiveStatusSymbol(ThemeIds.Parse(App.EffectiveCatalogThemeName)));
 
   private static SampleItemHeader CreateHeader(PageCatalogEntry control, string statusSymbol)
   {

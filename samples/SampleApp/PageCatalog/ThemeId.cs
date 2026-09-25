@@ -12,7 +12,8 @@ public enum ThemeId
   Linux,
   Fluent,
   Simple,
-  WinUi,
+  WinUiClassic,
+  WinUiMica,
 }
 
 public static class ThemeIds
@@ -26,9 +27,8 @@ public static class ThemeIds
     ["Linux"] = ThemeId.Linux,
     ["Fluent"] = ThemeId.Fluent,
     ["Simple"] = ThemeId.Simple,
-    [App.WinUiThemeName] = ThemeId.WinUi,
-    [App.WinUiClassicThemeName] = ThemeId.WinUi,
-    [App.WinUiMicaThemeName] = ThemeId.WinUi,
+    [App.WinUiClassicThemeName] = ThemeId.WinUiClassic,
+    [App.WinUiMicaThemeName] = ThemeId.WinUiMica,
   };
 
   public static IReadOnlyList<ThemeId> All { get; } =
@@ -39,7 +39,8 @@ public static class ThemeIds
     ThemeId.Linux,
     ThemeId.Fluent,
     ThemeId.Simple,
-    ThemeId.WinUi,
+    ThemeId.WinUiClassic,
+    ThemeId.WinUiMica,
   ];
 
   public static string ToThemeName(this ThemeId themeId) =>
@@ -51,9 +52,19 @@ public static class ThemeIds
       ThemeId.Linux => "Linux",
       ThemeId.Fluent => "Fluent",
       ThemeId.Simple => "Simple",
-      ThemeId.WinUi => App.WinUiThemeName,
+      ThemeId.WinUiClassic => App.WinUiClassicThemeName,
+      ThemeId.WinUiMica => App.WinUiMicaThemeName,
       _ => throw new ArgumentOutOfRangeException(nameof(themeId), themeId, "Unknown theme id."),
     };
+
+  /// <summary>
+  /// The theme whose status (and rendering) a "same as" (↔️) status symbol defers to, or
+  /// <c>null</c> if <paramref name="themeId"/> can't use ↔️. WinUI classic and Mica share the
+  /// same control styling and only differ where the Mica overlay
+  /// (<c>ThemeResources.Windows11.axaml</c>) overrides a resource, so classic can defer to Mica.
+  /// </summary>
+  public static ThemeId? GetSameAsReference(this ThemeId themeId) =>
+    themeId == ThemeId.WinUiClassic ? ThemeId.WinUiMica : null;
 
   public static bool TryParse(string? themeName, out ThemeId themeId)
   {

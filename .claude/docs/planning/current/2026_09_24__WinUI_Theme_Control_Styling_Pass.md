@@ -221,3 +221,41 @@ header styling fixes", "Extract RectangleSelectionMarquee control"):
 Tracked in SQL (`todos` table) — one entry per batch above, plus a
 preliminary "confirm/add WinUI to visual regression harness" todo that
 should land before or alongside Batch 1.
+
+## Classic vs Mica: separate status columns and `↔️` (supersedes the single `"WinUI"` column above)
+
+Decided 2026-09-25. References to a single `"WinUI"` status column / one `WinUI` baseline folder
+with `_mica` suffixes elsewhere in this doc are superseded by this section.
+
+- **"Classic" = WinUI 3 on a solid backdrop, not Win10-native.** Real WinUI 3 uses the same
+  (translucent) control resources on Win10 and Win11; only the window backdrop differs (solid vs
+  Mica). Classic also covers Windows Server 2019/2022 and Win11 with Mica unavailable
+  (transparency effects off, RDP, battery saver). So differences are expected only on backdrop-like
+  surfaces (page/window backgrounds, cards/layers, possibly acrylic flyouts/menus).
+- **Separate catalog columns:** `WinUIClassic` and `WinUIMica` (`ThemeId.WinUiClassic` /
+  `ThemeId.WinUiMica`), mirroring `MacClassic`/`LiquidGlass`. Each has its own baseline folder
+  (`Baseline/<OS>/WinUiClassic/`, `.../WinUiMica/`). `"WinUI"` remains only the XAML
+  `ThemeIsOneOf` family name, not a catalog column.
+- **`↔️` = "same as WinUIMica"** (valid only in `WinUIClassic`): inherits Mica's status, stores no
+  classic baselines; the visual test renders both variants (Light + Dark) and fails if they aren't
+  pixel-identical. This catches later drift, but **cannot** catch a Mica-only look wrongly placed in
+  the shared base resources (both would match while being wrong).
+- **Therefore `↔️` is a deliberate, manual decision**, never a default: while a control is being
+  styled, both columns carry the same status (agents stop at `🚧`; upgrades are user-initiated).
+  Once the user considers Mica done, they ask for a classic review against the WinUI source/docs;
+  if nothing should differ, classic becomes `↔️`, otherwise classic gets its own work/status/
+  baselines.
+- **Guard when porting from Win11 Gallery screenshots:** trace each look to its source —
+  `*_themeresources.xaml` values go in the base `ThemeResources.axaml`; only backdrop-show-through
+  effects go in the Mica overlay. Documented in the `winui-control-theming` skill.
+- **Seeing classic on Win11:** turning off "Transparency effects" should make the Gallery fall back
+  to a solid backdrop (to verify per surface on the VM).
+- **Harness:** `PageDiscoveryTests.VisualDiscoveryThemes` gets `WinUiMica` (and `WinUiClassic`)
+  once the first WinUI page leaves `🚧`.
+- **Follow-up (not done):** `Windows11MicaDetector` only checks the OS build, not runtime
+  conditions (transparency effects off, RDP, battery saver) where real WinUI falls back to a solid
+  backdrop.
+- **Merging with #669:** #669 still uses the single `"WinUI"` column and `WinUI/…_mica*.png`
+  baselines. Whichever lands second must convert: `"WinUI": X` → `"WinUIClassic": X, "WinUIMica": X`,
+  move `WinUI/*_mica*.png` → `WinUiMica/*.png` (dropping the `_mica` infix), and move the non-mica
+  files to `WinUiClassic/` (or drop them if classic is `↔️`).

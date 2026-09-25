@@ -68,7 +68,7 @@ public sealed class PageCatalogEntry
   public string ApplicableToCsv =>
     ThemeIds.ToCsv(
       this.StatusByTheme
-        .Where(pair => !PageRegistry.IsNotSupportedSymbol(pair.Value))
+        .Where(pair => !PageRegistry.IsNotSupportedSymbol(this.GetEffectiveStatusSymbol(pair.Key)))
         .Select(static pair => pair.Key));
 
   public string GetStatusSymbol(ThemeId themeId)
@@ -87,10 +87,34 @@ public sealed class PageCatalogEntry
     return this.GetStatusSymbol(themeId);
   }
 
-  public bool ShouldTest(ThemeId themeId) =>
-    !PageRegistry.IsNotSupportedSymbol(this.GetStatusSymbol(themeId)) &&
-    !PageRegistry.IsInProgressSymbol(this.GetStatusSymbol(themeId)) &&
-    !this.ExcludeFromTests.Contains(themeId);
+  /// <summary>
+  /// The status symbol as written in the catalog, except that ↔️ ("same as") is resolved to the
+  /// reference theme's symbol (see <see cref="ThemeIds.GetSameAsReference"/>).
+  /// </summary>
+  public string GetEffectiveStatusSymbol(ThemeId themeId)
+  {
+    string symbol = this.GetStatusSymbol(themeId);
+    return PageRegistry.IsSameAsReferenceSymbol(symbol) && themeId.GetSameAsReference() is { } referenceTheme
+      ? this.GetStatusSymbol(referenceTheme)
+      : symbol;
+  }
+
+  /// <summary>
+  /// True when the page's status for <paramref name="themeId"/> is ↔️, i.e. it should be tested
+  /// by asserting it renders identically to <see cref="ThemeIds.GetSameAsReference"/> rather
+  /// than against its own baselines.
+  /// </summary>
+  public bool IsSameAsReference(ThemeId themeId) =>
+    PageRegistry.IsSameAsReferenceSymbol(this.GetStatusSymbol(themeId)) &&
+    themeId.GetSameAsReference() != null;
+
+  public bool ShouldTest(ThemeId themeId)
+  {
+    string symbol = this.GetEffectiveStatusSymbol(themeId);
+    return !PageRegistry.IsNotSupportedSymbol(symbol) &&
+      !PageRegistry.IsInProgressSymbol(symbol) &&
+      !this.ExcludeFromTests.Contains(themeId);
+  }
 
   public static IReadOnlyList<string> Validate(IReadOnlyList<PageCatalogEntry> controls)
   {
@@ -130,6 +154,10 @@ public sealed class PageCatalogEntry
         if (!PageRegistry.StatusDescriptions.ContainsKey(symbol))
         {
           errors.Add($"'{control.Key}' has unknown status symbol '{symbol}' for theme '{themeId}'.");
+        }
+        else if (PageRegistry.IsSameAsReferenceSymbol(symbol) && themeId.GetSameAsReference() == null)
+        {
+          errors.Add($"'{control.Key}' uses '{symbol}' for theme '{themeId}', which has no reference theme to be the same as.");
         }
       }
 

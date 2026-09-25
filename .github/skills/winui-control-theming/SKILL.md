@@ -140,6 +140,48 @@ drives the DWM system backdrop from that hint, so it lights up automatically on 
 extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. On macOS the visual approximation
 comes from the wallpaper preview layer, not a real compositor backdrop.
 
+### What "classic" means (and where a style belongs)
+
+Classic is **WinUI 3 on a solid backdrop** (Windows 10, Windows Server, or Win11 with transparency
+effects off / RDP / battery saver) — not a "Windows 10 native" look. Real WinUI 3 ships the *same*
+control resources on Win10 and Win11; control fills are translucent (alpha) on both, layered over
+whatever surface they sit on. Only the window backdrop changes: solid on classic, Mica on Win11.
+So classic and Mica are expected to differ only on backdrop-like surfaces (window/page
+backgrounds, cards/layers, possibly acrylic flyouts/menus) — most controls render identically.
+
+When porting a look (especially from a Win11 Gallery screenshot), **trace it to its source before
+deciding where it goes**:
+
+- The value comes from a `*_themeresources.xaml` / `Common_themeresources_any.xaml` entry → it is
+  the same on Win10 and Win11 → base `Accents/ThemeResources.axaml`.
+- The look only exists because the Mica backdrop shows through a surface → Mica overlay
+  (`ThemeResources.Windows11.axaml`).
+
+Don't guess: a Mica-only look placed in the base makes both variants wrong in the same way, and no
+test can catch that (see `↔️` below).
+
+### Catalog status: `WinUIClassic` / `WinUIMica` columns and `↔️`
+
+`page-catalog.jsonc` tracks the two variants as separate columns (like `MacClassic`/`LiquidGlass`).
+Lifecycle for a control:
+
+1. **While being styled:** both columns carry the same status. Agents set `🚧` after a first pass
+   and stop there; any upgrade (`🚧` → `⚠️` → `✅`) is initiated by the user.
+2. **Once the user considers Mica done**, they ask for a classic review: check the WinUI
+   source/docs for anything on that page that should look different on a solid backdrop.
+3. **Nothing should differ** → classic is set to `↔️` (only valid in `WinUIClassic`). It then
+   inherits Mica's status, stores no baselines of its own, and the visual tests assert the classic
+   render is pixel-identical to the Mica render (Light + Dark). If a later overlay change makes them
+   diverge, that test fails — at which point classic gets its own status and baselines.
+4. **Something should differ** → classic gets its own styling work, status, and baselines.
+
+`↔️` is always a deliberate decision after that review — never a default, and never set by an
+agent on its own.
+
+Tip: on a Win11 machine, turning off Settings → Personalization → Colors → "Transparency effects"
+makes WinUI apps (including the Gallery) fall back to a solid backdrop — a quick way to see the
+classic look side by side (verify per surface; not guaranteed for every one).
+
 ## Resource Audit Checklist
 
 After adding or changing a control:

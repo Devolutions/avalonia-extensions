@@ -13,6 +13,7 @@ public static class PageRegistry
   public const string ControlDemosSection = "Control Demos";
   private const string NotSupportedSymbol = "❌";
   private const string InProgressSymbol = "🚧";
+  private const string SameAsReferenceSymbol = "↔️";
   private const string CatalogResourceName = "SampleApp.PageCatalog.page-catalog.jsonc";
   private static readonly PageCatalogFile CatalogFile = LoadCatalogFile();
   private static readonly IReadOnlyList<PageCatalogEntry> Pages = CreatePages(CatalogFile);
@@ -65,6 +66,15 @@ public static class PageRegistry
   /// </summary>
   public static bool IsInProgressSymbol(string symbol) =>
     string.Equals(symbol, InProgressSymbol, StringComparison.Ordinal);
+
+  /// <summary>
+  /// ↔️ marks a page as rendering identically to its reference theme
+  /// (<see cref="ThemeIds.GetSameAsReference"/>), e.g. WinUI classic deferring to WinUI Mica. The
+  /// page inherits the reference theme's status, and instead of storing its own baselines the
+  /// visual regression tests assert that it renders pixel-identical to the reference theme.
+  /// </summary>
+  public static bool IsSameAsReferenceSymbol(string symbol) =>
+    string.Equals(symbol, SameAsReferenceSymbol, StringComparison.Ordinal);
 
   private static PageCatalogFile LoadCatalogFile()
   {

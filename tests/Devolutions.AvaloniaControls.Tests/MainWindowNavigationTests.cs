@@ -104,6 +104,49 @@ public class MainWindowNavigationTests
     Assert.NotNull(devoHeader.SourceBadgeBackground);
   }
 
+  [AvaloniaTheory]
+  [InlineData("WinUiClassic", "↔️", "⚠️", "⚠️", true)]
+  [InlineData("WinUiMica", "↔️", "⚠️", "⚠️", false)]
+  [InlineData("WinUiClassic", "🚧", "✅", "🚧", false)]
+  [InlineData("WinUiMica", "🚧", "✅", "✅", false)]
+  public void MainWindowNavigationBuilder_UsesWinUiVariantColumnAndMarksInheritedStatus(
+    string activeTheme,
+    string classicStatus,
+    string micaStatus,
+    string expectedSymbol,
+    bool expectedInherited)
+  {
+    Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+    try
+    {
+      App.SetTheme(activeTheme == "WinUiMica" ? new WinUiMicaTheme() : new WinUiClassicTheme());
+
+      Dictionary<ThemeId, string> statusByTheme = ThemeIds.All.ToDictionary(static themeId => themeId, _ => "❌");
+      statusByTheme[ThemeId.WinUiClassic] = classicStatus;
+      statusByTheme[ThemeId.WinUiMica] = micaStatus;
+      var entry = new PageCatalogEntry(
+        key: "Header WinUI",
+        section: "Control Demos",
+        title: "Header WinUI",
+        pageType: typeof(UserControl),
+        source: ControlSource.Avalonia,
+        categoryPath: ["Input"],
+        statusByTheme: statusByTheme);
+
+      SampleApp.Controls.SampleItemHeader header = CreateHeader(entry);
+
+      Assert.Equal(expectedSymbol, header.StatusSymbol);
+      Assert.Equal(expectedInherited, header.IsStatusInherited);
+      Assert.Equal(expectedInherited ? 0.3 : 1.0, header.StatusSymbolOpacity);
+      string description = PageRegistry.GetStatusDescription(expectedSymbol)!;
+      Assert.Equal(expectedInherited ? $"↔️ Identical to WinUIMica. {description}" : description, header.StatusTooltip);
+    }
+    finally
+    {
+      App.SetTheme(new MacOsClassicTheme());
+    }
+  }
+
   private static PageCatalogEntry CreateTestEntry(string key, ControlSource? source, string statusSymbol)
   {
     Dictionary<ThemeId, string> statusByTheme = ThemeIds.All.ToDictionary(static themeId => themeId, _ => statusSymbol);

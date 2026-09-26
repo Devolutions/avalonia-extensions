@@ -16,6 +16,13 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
   public static readonly StyledProperty<string?> StatusTooltipProperty =
     AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(StatusTooltip));
 
+  /// <summary>
+  /// True when the status symbol is inherited from a reference theme (↔️ in the catalog),
+  /// rather than set for the current theme directly. Rendered dimmed.
+  /// </summary>
+  public static readonly StyledProperty<bool> IsStatusInheritedProperty =
+    AvaloniaProperty.Register<SampleItemHeader, bool>(nameof(IsStatusInherited));
+
   public static readonly StyledProperty<string?> SourceBadgeTextProperty =
     AvaloniaProperty.Register<SampleItemHeader, string?>(nameof(SourceBadgeText));
 
@@ -47,6 +54,14 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     set => this.SetValue(StatusTooltipProperty, value);
   }
 
+  public bool IsStatusInherited
+  {
+    get => this.GetValue(IsStatusInheritedProperty);
+    set => this.SetValue(IsStatusInheritedProperty, value);
+  }
+
+  public double StatusSymbolOpacity => this.IsStatusInherited ? 0.3 : 1.0;
+
   public string? SourceBadgeText
   {
     get => this.GetValue(SourceBadgeTextProperty);
@@ -70,6 +85,11 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     if (change.Property == StatusSymbolProperty)
     {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HasStatusSymbol)));
+    }
+
+    if (change.Property == IsStatusInheritedProperty)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.StatusSymbolOpacity)));
     }
 
     if (change.Property == SourceBadgeTextProperty)

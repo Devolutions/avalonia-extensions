@@ -14,6 +14,8 @@ public class PageDiscoveryTests
     ThemeId.LiquidGlass,
     ThemeId.Linux,
     ThemeId.DevExpress,
+    // Add ThemeId.WinUiMica (and ThemeId.WinUiClassic, which follows it while ↔️) once the
+    // first WinUI page leaves 🚧 — until then no WinUI page is testable.
   ];
 
   [Fact]

@@ -13,6 +13,8 @@
       <!-- WinUI subtle fills (NavigationViewItem hover/selected backgrounds) -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#09000000"/>
       <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#06000000"/>
+      <StaticResource x:Key="LayoutBackgroundLowBrush"
+                      ResourceKey="SubtleFillColorSecondaryBrush"/>
 
       <!-- WinUI accent text -->
       <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorDark2}"/>
@@ -22,6 +24,35 @@
 
       <!-- WinUI hyperlink — fixed blue so links stay readable over accent-tinted backgrounds -->
       <SolidColorBrush x:Key="HyperlinkForeground" Color="#1C5FB8"/>
+
+      <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
+      <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#B3FFFFFF"/>
+      <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#80F9F9F9"/>
+      <SolidColorBrush x:Key="ControlFillColorTertiaryBrush"   Color="#4DF9F9F9"/>
+      <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#4DF9F9F9"/>
+
+      <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
+           counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
+           Color directly — GradientStop.Color cannot bind to a Brush resource. -->
+      <Color x:Key="ControlStrokeColorDefault">#0F000000</Color>
+      <Color x:Key="ControlStrokeColorSecondary">#29000000</Color>
+      <Color x:Key="ControlStrokeColorOnAccentDefault">#14FFFFFF</Color>
+      <Color x:Key="ControlStrokeColorOnAccentSecondary">#66000000</Color>
+      <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush"           Color="{DynamicResource ControlStrokeColorDefault}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorSecondaryBrush"         Color="{DynamicResource ControlStrokeColorSecondary}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorOnAccentDefaultBrush"   Color="{DynamicResource ControlStrokeColorOnAccentDefault}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorOnAccentSecondaryBrush" Color="{DynamicResource ControlStrokeColorOnAccentSecondary}"/>
+
+      <!-- WinUI "strong" control strokes (CheckBox/RadioButton unchecked glyph outline) and alt
+           fills (CheckBox/RadioButton glyph background) -->
+      <Color x:Key="ControlStrongStrokeColorDefault">#72000000</Color>
+      <Color x:Key="ControlStrongStrokeColorDisabled">#37000000</Color>
+      <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush"  Color="{DynamicResource ControlStrongStrokeColorDefault}"/>
+      <SolidColorBrush x:Key="ControlStrongStrokeColorDisabledBrush" Color="{DynamicResource ControlStrongStrokeColorDisabled}"/>
+      <SolidColorBrush x:Key="ControlAltFillColorSecondaryBrush"   Color="#06000000"/>
+      <SolidColorBrush x:Key="ControlAltFillColorTertiaryBrush"    Color="#0F000000"/>
+      <SolidColorBrush x:Key="ControlAltFillColorQuarternaryBrush" Color="#18000000"/>
+      <SolidColorBrush x:Key="ControlAltFillColorDisabledBrush"    Color="#00FFFFFF"/>
 
       <!-- WinUI text fill -->
       <SolidColorBrush x:Key="TextFillColorPrimaryBrush"    Color="#E4000000"/>
@@ -44,6 +75,53 @@
       <!-- WinUI DataGrid column header hover/press -->
       <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackgroundBrush"  Color="#05000000"/>
       <SolidColorBrush x:Key="DataGridColumnHeaderPressedBackgroundBrush"  Color="#14000000"/>
+
+      <!-- Keep the absolute 3px gradient and flip it around the brush center as WinUI does.
+           Reversing its endpoints would make the strong padded color cover both side edges. -->
+      <LinearGradientBrush x:Key="ControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,3"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrokeColorSecondary}" Offset="0.33"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="AccentControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,3"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentSecondary}" Offset="0.33"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+
+      <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
+      <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="ButtonForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ButtonBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="AccentButtonBackground" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundDisabled" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="AccentButtonForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundDisabled" ResourceKey="TextOnAccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrush" ResourceKey="AccentControlElevationBorderBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushPointerOver" ResourceKey="AccentControlElevationBorderBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushPressed" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush"/>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -58,6 +136,8 @@
       <!-- WinUI subtle fills -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#0FFFFFFF"/>
       <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#0AFFFFFF"/>
+      <StaticResource x:Key="LayoutBackgroundLowBrush"
+                      ResourceKey="SubtleFillColorSecondaryBrush"/>
 
       <!-- WinUI accent text -->
       <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorLight3}"/>
@@ -67,6 +147,35 @@
 
       <!-- WinUI hyperlink -->
       <SolidColorBrush x:Key="HyperlinkForeground" Color="#A6D4FF"/>
+
+      <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
+      <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#0FFFFFFF"/>
+      <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#15FFFFFF"/>
+      <SolidColorBrush x:Key="ControlFillColorTertiaryBrush"   Color="#08FFFFFF"/>
+      <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#0BFFFFFF"/>
+
+      <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
+           counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
+           Color directly — GradientStop.Color cannot bind to a Brush resource. -->
+      <Color x:Key="ControlStrokeColorDefault">#12FFFFFF</Color>
+      <Color x:Key="ControlStrokeColorSecondary">#18FFFFFF</Color>
+      <Color x:Key="ControlStrokeColorOnAccentDefault">#14FFFFFF</Color>
+      <Color x:Key="ControlStrokeColorOnAccentSecondary">#23000000</Color>
+      <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush"           Color="{DynamicResource ControlStrokeColorDefault}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorSecondaryBrush"         Color="{DynamicResource ControlStrokeColorSecondary}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorOnAccentDefaultBrush"   Color="{DynamicResource ControlStrokeColorOnAccentDefault}"/>
+      <SolidColorBrush x:Key="ControlStrokeColorOnAccentSecondaryBrush" Color="{DynamicResource ControlStrokeColorOnAccentSecondary}"/>
+
+      <!-- WinUI "strong" control strokes (CheckBox/RadioButton unchecked glyph outline) and alt
+           fills (CheckBox/RadioButton glyph background) -->
+      <Color x:Key="ControlStrongStrokeColorDefault">#8BFFFFFF</Color>
+      <Color x:Key="ControlStrongStrokeColorDisabled">#28FFFFFF</Color>
+      <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush"  Color="{DynamicResource ControlStrongStrokeColorDefault}"/>
+      <SolidColorBrush x:Key="ControlStrongStrokeColorDisabledBrush" Color="{DynamicResource ControlStrongStrokeColorDisabled}"/>
+      <SolidColorBrush x:Key="ControlAltFillColorSecondaryBrush"   Color="#19000000"/>
+      <SolidColorBrush x:Key="ControlAltFillColorTertiaryBrush"    Color="#0BFFFFFF"/>
+      <SolidColorBrush x:Key="ControlAltFillColorQuarternaryBrush" Color="#12FFFFFF"/>
+      <SolidColorBrush x:Key="ControlAltFillColorDisabledBrush"    Color="#00FFFFFF"/>
 
       <!-- WinUI text fill -->
       <SolidColorBrush x:Key="TextFillColorPrimaryBrush"    Color="#FFFFFFFF"/>
@@ -89,6 +198,51 @@
       <!-- WinUI DataGrid column header hover/press -->
       <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackgroundBrush"  Color="#0AFFFFFF"/>
       <SolidColorBrush x:Key="DataGridColumnHeaderPressedBackgroundBrush"  Color="#1FFFFFFF"/>
+
+      <LinearGradientBrush x:Key="ControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,3"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrokeColorSecondary}" Offset="0.33"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="AccentControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,3"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentSecondary}" Offset="0.33"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+
+      <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
+      <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="ButtonForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ButtonBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="AccentButtonBackground" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush"/>
+      <StaticResource x:Key="AccentButtonBackgroundDisabled" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="AccentButtonForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="AccentButtonForegroundDisabled" ResourceKey="TextOnAccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrush" ResourceKey="AccentControlElevationBorderBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushPointerOver" ResourceKey="AccentControlElevationBorderBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushPressed" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="AccentButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush"/>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -101,5 +255,17 @@
                    Color="{DynamicResource SystemAccentColor}" Opacity="0.2" />
   <SolidColorBrush x:Key="RectangleSelectionMarqueeBorderBrush"
                    Color="{DynamicResource SystemAccentColor}" Opacity="0.8" />
-  
+
+  <!-- WinUI shared control metrics — same value in every theme variant/colour scheme. -->
+  <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+  <SolidColorBrush x:Key="ControlFillColorTransparentBrush" Color="Transparent"/>
+
+  <!-- Circular counterpart of ControlElevationBorderBrush (used by RadioButton's small check
+       dot). Real WinUI maps this relative to the shape's own bounding box rather than an
+       absolute pixel height, so it stays proportional regardless of the ellipse size. -->
+  <LinearGradientBrush x:Key="CircleElevationBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="{DynamicResource ControlStrokeColorSecondary}" Offset="0.70"/>
+    <GradientStop Color="{DynamicResource ControlStrokeColorDefault}"   Offset="0.50"/>
+  </LinearGradientBrush>
+
 </ResourceDictionary>

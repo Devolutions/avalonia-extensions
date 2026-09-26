@@ -251,6 +251,12 @@ header styling fixes", "Extract RectangleSelectionMarquee control"):
 
 ## Handoff — 2026-09-25: Button/CheckBox/RadioButton need a fidelity pass on real Windows
 
+> **Outcome (2026-09-26):** Button completed this fidelity pass and shipped;
+> CheckBox and RadioButton did not and were moved to their own branches —
+> see "Split — 2026-09-26" below. The diagnosis in this section is what the
+> Button pass actually found, so it is the best starting point for the other
+> two controls.
+
 **Status:** PR #669 (`agents/winui-button-checkbox-radio` branch, pushed as
 draft) implements Button/CheckBox/RadioButton and is open for review, but
 the user's visual QA against real Windows (not yet the Gallery app — that
@@ -356,6 +362,49 @@ live Gallery app) is now the primary tool, not a rare tie-breaker.
   now resource 5 promoted to primary use for this refinement, not a
   replacement for reading `microsoft-ui-xaml` source for the exact resource
   keys/values to plug in.
+
+## Split — 2026-09-26: Button ships alone; CheckBox/RadioButton moved to their own branches
+
+The Button fidelity pass (see handoff above) succeeded, but CheckBox and
+RadioButton had not been through it yet. Rather than hold the Button work —
+and grow the PR — the branch was split so Button can merge on its own.
+
+**What happened:**
+
+- `agents/winui-button-checkbox-radio` now contains **Button only**. Its
+  `Controls/CheckBox.axaml` and `Controls/RadioButton.axaml` were deleted,
+  removed from `Controls/_index.axaml`, their eight baseline PNGs deleted,
+  and both pages set back to `❌` in **both** WinUI catalog columns.
+- The unverified first-pass ports were preserved on two new branches cut
+  from `master`: **`WinUI-CheckBox`** and **`WinUI-RadioButton`**, one
+  control file each, not wired into `_index.axaml`, catalog left at `❌`.
+
+**Read this before resuming either branch:**
+
+1. **Rebase onto master first.** Both control files reference shared tokens
+   that ship with the Button PR and do **not** exist on master until it
+   merges: `ControlFillColorTransparentBrush`,
+   `ControlStrongStrokeColorDefault`/`DisabledBrush`, and the four
+   `ControlAltFillColor*` brushes — plus, for RadioButton,
+   `CircleElevationBorderBrush`, `ControlElevationBorderBrush` and
+   `AccentControlElevationBorderBrush`. Unresolved keys don't fail the
+   build; the control silently falls back to Fluent, which is easy to
+   misread as "the port is wrong".
+2. **Expect the same defect classes Button had** — these files were written
+   by the same pass, from the same source, with the same assumptions. The
+   three root causes found on Button (gradient-flip mistranslation, missing
+   `BackgroundSizing`, Inter-vs-Segoe metric differences) are documented in
+   the handoff section above and are the first things to check.
+3. **Wire the file into `Controls/_index.axaml`** as part of the fidelity
+   pass — until then the theme is inert by design.
+
+**Deliberately left behind on the Button branch:** the seven tokens above
+that only CheckBox/RadioButton consumed are still defined in
+`Accents/ThemeResources.axaml` even though nothing on that branch references
+them. Removing them would only force an identical re-add (and a conflict) in
+both new branches. This is a conscious exception to the skill's "remove
+speculative tokens" rule, valid only because the consumers are known and
+already written.
 
 ## Risks / open questions
 

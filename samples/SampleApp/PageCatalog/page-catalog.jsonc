@@ -67,7 +67,7 @@
       "category": "Buttons",
       "demo": "ButtonDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "⚠️", "WinUIMica": "⚠️"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "✅", "WinUIMica": "✅"
       }
     },
     {
@@ -398,6 +398,15 @@
       "demo": "ToggleButtonDemo.axaml",
       "status": {
         "Simple": "✅", "Fluent": "✅", "MacClassic": "❌", "LiquidGlass": "❌", "DevExpress": "❌", "Linux": "❌", "WinUIClassic": "🚧", "WinUIMica": "🚧"
+      }
+    },
+    {
+      "uniqueTitle": "ToggleButtonGroup",
+      "source": "Devolutions",
+      "category": "Buttons",
+      "demo": "ToggleButtonGroupDemo.axaml",
+      "status": {
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
       }
     },
     {

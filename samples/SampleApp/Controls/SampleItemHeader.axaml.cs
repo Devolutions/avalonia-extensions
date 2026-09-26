@@ -60,7 +60,7 @@ public partial class SampleItemHeader : UserControl, INotifyPropertyChanged
     set => this.SetValue(IsStatusInheritedProperty, value);
   }
 
-  public double StatusSymbolOpacity => this.IsStatusInherited ? 0.6 : 1.0;
+  public double StatusSymbolOpacity => this.IsStatusInherited ? 0.3 : 1.0;
 
   public string? SourceBadgeText
   {

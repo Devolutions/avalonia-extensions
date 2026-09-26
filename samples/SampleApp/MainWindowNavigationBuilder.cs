@@ -33,7 +33,7 @@ internal static class MainWindowNavigationBuilder
 
     if (statusTooltip != null && inheritedFrom is { } referenceTheme)
     {
-      statusTooltip = $"{statusTooltip} (↔️ inherited: same as {referenceTheme.ToThemeName()})";
+      statusTooltip = $"↔️ Identical to {GetCatalogColumnName(referenceTheme)}. {statusTooltip}";
     }
 
     (string? badgeText, IBrush? badgeBackground) = GetSourceBadge(control.Source);
@@ -48,6 +48,15 @@ internal static class MainWindowNavigationBuilder
       SourceBadgeBackground = badgeBackground,
     };
   }
+
+  // Spelled as in page-catalog.jsonc's status columns, which differ in casing from the theme names.
+  private static string GetCatalogColumnName(ThemeId themeId) =>
+    themeId switch
+    {
+      ThemeId.WinUiClassic => "WinUIClassic",
+      ThemeId.WinUiMica => "WinUIMica",
+      _ => themeId.ToThemeName(),
+    };
 
   private static (string? badgeText, IBrush? badgeBackground) GetSourceBadge(ControlSource? source) =>
     source switch

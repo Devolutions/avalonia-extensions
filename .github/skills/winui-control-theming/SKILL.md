@@ -50,6 +50,7 @@ When adding or updating a WinUI control theme:
 5. **Place resources in the right layer**
    - Put reusable cross-control WinUI tokens in `src/Devolutions.AvaloniaTheme.WinUI/Accents/ThemeResources.axaml`
    - Put control-only resources in the relevant `src/Devolutions.AvaloniaTheme.WinUI/Controls/*.axaml`
+     unless they alias theme-dictionary-scoped tokens (see "Learnings" below)
    - Keep `SampleAppBackground` and similar development-only resources clearly marked
 
 6. **Prefer ControlTheme isolation**
@@ -191,6 +192,16 @@ After adding or changing a control:
 - Confirm each shared resource belongs in `ThemeResources.axaml` rather than the control file
 - Remove speculative tokens that were added "for later"
 - Keep comments short and factual, especially around development-only resources
+
+## Learnings
+
+- A root-level `<StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>`
+  in `Controls/Button.axaml` cannot resolve a token in the parent theme's Light/Dark
+  `ThemeDictionaries` at runtime (`KeyNotFoundException`, not a build error). Define each
+  control-specific alias **inside the corresponding Light and Dark dictionaries** in
+  `Accents/ThemeResources.axaml` alongside its semantic token, as Button does; consume it
+  with `{DynamicResource ButtonBackground}` from the control theme. Do not treat the
+  general "control resources belong in Controls/" rule as overriding resource scope.
 
 ## Repository-Specific Notes
 

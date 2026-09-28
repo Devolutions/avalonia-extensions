@@ -25,6 +25,11 @@
       <!-- WinUI hyperlink — fixed blue so links stay readable over accent-tinted backgrounds -->
       <SolidColorBrush x:Key="HyperlinkForeground" Color="#1C5FB8"/>
 
+      <!-- WinUI solid window backdrop (used when Mica is unavailable) -->
+      <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="#F3F3F3"/>
+      <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
+      <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
+
       <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
       <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#B3FFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#80F9F9F9"/>
@@ -148,6 +153,11 @@
       <!-- WinUI hyperlink -->
       <SolidColorBrush x:Key="HyperlinkForeground" Color="#A6D4FF"/>
 
+      <!-- WinUI solid window backdrop (used when Mica is unavailable) -->
+      <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="#202020"/>
+      <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
+      <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
+
       <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
       <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#0FFFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#15FFFFFF"/>
@@ -243,8 +253,6 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <!-- DEVELOPMENT ONLY -->
-  <SolidColorBrush x:Key="SampleAppBackground" Color="{DynamicResource SystemAltHighColor}" />
 
 
   <!-- RectangleSelectionMarquee colors -->

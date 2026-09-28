@@ -4,7 +4,9 @@ ai-review-approval:
   enabled: true
   authorized-authors: ["apman", "Samuel-B-D", "xfortin-devolutions"]
   human-review-paths:
-    - ".github/"
+    - ".github/CODEOWNERS"
+    - ".github/randy.yml"
+    - ".github/workflows/"
 
 pull-request-rules:
   - name: autoSquashMerge

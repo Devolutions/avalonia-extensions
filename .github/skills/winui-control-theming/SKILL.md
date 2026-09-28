@@ -127,8 +127,10 @@ to the same dictionary as the base will NOT win. The Mica overlay must therefore
 Styles level ABOVE the base theme — this is why it lives in `DevolutionsWinUiTheme.EndInit()`
 (above `WinUITheme`/`WinUIThemeWithGlobalStyles`), not inside `ThemeRoot.axaml`.
 
-`WinUiMicaProbe` in the visual tests project guards this behaviour for both the `GlobalStyles=false`
-(SampleApp) and `GlobalStyles=true` (simple consumer) paths. Keep it passing.
+`tests/Devolutions.AvaloniaControls.Tests/WinUiMicaProbe.cs` (unit tests, not the visual tests)
+guards this behaviour for both the `GlobalStyles=false` (SampleApp) and `GlobalStyles=true` (simple
+consumer) paths. Keep it passing:
+`dotnet test tests/Devolutions.AvaloniaControls.Tests --filter "FullyQualifiedName~WinUiMicaProbe"`.
 
 ### Testing the variants
 

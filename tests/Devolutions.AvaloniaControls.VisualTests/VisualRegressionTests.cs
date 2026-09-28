@@ -138,8 +138,9 @@ public class VisualRegressionTests
     }
   }
 
-  // No catalog page uses ↔️ yet, so TestPage() doesn't reach AssertRendersSameAs(). These cases
-  // exercise the same comparison directly, independent of catalog statuses: identical input must
+  // TestPage() reaches AssertRendersSameAs() only for pages the catalog marks ↔️, so that coverage
+  // comes and goes with catalog statuses. These cases exercise the comparison directly and
+  // independently of the catalog: identical input must
   // match (no false positives from nondeterministic rendering), and visibly different themes must
   // be reported as a mismatch in both Light and Dark.
   [AvaloniaTheory]

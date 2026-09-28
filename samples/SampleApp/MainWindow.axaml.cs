@@ -174,6 +174,22 @@ public partial class MainWindow : Window
     this.TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica };
   }
 
+  protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+  {
+    base.OnPropertyChanged(change);
+
+    // Clear the opaque window background only when the platform actually granted Mica, so the
+    // backdrop shows through the translucent surfaces. Forced Mica previews (macOS/Linux/Win10)
+    // and Win11 with transparency effects off keep the opaque fallback + wallpaper layer.
+    if (change.Property == ActualTransparencyLevelProperty)
+    {
+      if (this.ActualTransparencyLevel == WindowTransparencyLevel.Mica)
+        this.Background = Brushes.Transparent;
+      else
+        this.ClearValue(BackgroundProperty);
+    }
+  }
+
   private void UpdatePreviewBackground()
   {
     if (this.currentViewModel == null) return;

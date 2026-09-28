@@ -172,9 +172,22 @@ public partial class MainWindow : Window
     if (!App.IsWinUiMicaTheme) return;
 
     this.TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica };
-    // The window's default opaque background would otherwise hide the backdrop, making every
-    // translucent WinUI fill composite over black instead of Mica.
-    this.Background = Brushes.Transparent;
+  }
+
+  protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+  {
+    base.OnPropertyChanged(change);
+
+    // Clear the opaque window background only when the platform actually granted Mica, so the
+    // backdrop shows through the translucent surfaces. Forced Mica previews (macOS/Linux/Win10)
+    // and Win11 with transparency effects off keep the opaque fallback + wallpaper layer.
+    if (change.Property == ActualTransparencyLevelProperty)
+    {
+      if (this.ActualTransparencyLevel == WindowTransparencyLevel.Mica)
+        this.Background = Brushes.Transparent;
+      else
+        this.ClearValue(BackgroundProperty);
+    }
   }
 
   private void UpdatePreviewBackground()

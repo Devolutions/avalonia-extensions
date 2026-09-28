@@ -136,7 +136,7 @@ Styles level ABOVE the base theme — this is why it lives in `DevolutionsWinUiT
 `MacOSVersionDetector`. The SampleApp exposes three dropdown entries — WinUI (automatic), WinUI
 classic, WinUI (Win11 Mica) — so the translucent brushes can be previewed on macOS/Linux. The actual
 native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` sets
-`TransparencyLevelHint = WindowTransparencyLevel.Mica` when `App.IsWinUiMicaTheme` is true. Avalonia
+`TransparencyLevelHint = WindowTransparencyLevel.Mica` and a transparent window `Background` when `App.IsWinUiMicaTheme` is true. Avalonia
 drives the DWM system backdrop from that hint, so it lights up automatically on real Windows 11 (no
 extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. On macOS the visual approximation
 comes from the wallpaper preview layer, not a real compositor backdrop.
@@ -202,6 +202,15 @@ After adding or changing a control:
   `Accents/ThemeResources.axaml` alongside its semantic token, as Button does; consume it
   with `{DynamicResource ButtonBackground}` from the control theme. Do not treat the
   general "control resources belong in Controls/" rule as overriding resource scope.
+- WinUI's Light and Dark dictionaries are **not** always symmetric. Example: Light flips both
+  `ControlElevationBorderBrush` and `AccentControlElevationBorderBrush` (strong edge at the bottom,
+  a shadow), while Dark flips only the accent one (strong edge at the top, a highlight). Port each
+  dictionary from its own source; never "fix" a difference for consistency without checking.
+- When a colour looks off, measure the real composited pixels before touching opacities. WinUI fills
+  are translucent, so a wrong **surface underneath** looks like a wrong token. Under Mica, the
+  window background must be transparent (`MainWindow.ApplyWindowsMicaBackdrop()`), or everything
+  composites over the default opaque black `SystemRegionBrush`. DevTools screenshots don't include
+  the DWM backdrop, so capture the screen instead.
 
 ## Repository-Specific Notes
 

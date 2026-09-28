@@ -199,12 +199,9 @@
       <SolidColorBrush x:Key="DataGridColumnHeaderHoveredBackgroundBrush"  Color="#0AFFFFFF"/>
       <SolidColorBrush x:Key="DataGridColumnHeaderPressedBackgroundBrush"  Color="#1FFFFFFF"/>
 
-      <LinearGradientBrush x:Key="ControlElevationBorderBrush"
-                           StartPoint="0,0" EndPoint="0,3"
-                           TransformOrigin="50%,50%">
-        <LinearGradientBrush.Transform>
-          <ScaleTransform ScaleY="-1"/>
-        </LinearGradientBrush.Transform>
+      <!-- Deliberately NOT flipped, unlike Light and both accent brushes: WinUI's Dark dictionary
+           keeps the stronger stroke at the top, where it reads as a highlight on a dark surface. -->
+      <LinearGradientBrush x:Key="ControlElevationBorderBrush" StartPoint="0,0" EndPoint="0,3">
         <GradientStop Color="{DynamicResource ControlStrokeColorSecondary}" Offset="0.33"/>
         <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
       </LinearGradientBrush>

@@ -172,6 +172,9 @@ public partial class MainWindow : Window
     if (!App.IsWinUiMicaTheme) return;
 
     this.TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica };
+    // The window's default opaque background would otherwise hide the backdrop, making every
+    // translucent WinUI fill composite over black instead of Mica.
+    this.Background = Brushes.Transparent;
   }
 
   private void UpdatePreviewBackground()

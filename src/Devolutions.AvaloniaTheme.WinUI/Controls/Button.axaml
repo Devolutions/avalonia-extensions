@@ -28,6 +28,10 @@
       <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}"/>
       <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}"/>
     </Style>
+    <!-- WinUI's pressed state only swaps brushes; cancel Fluent's scale(0.98) press shrink. -->
+    <Style Selector="^:pressed">
+      <Setter Property="RenderTransform" Value="none"/>
+    </Style>
     <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}"/>
       <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}"/>

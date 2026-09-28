@@ -137,11 +137,13 @@ consumer) paths. Keep it passing:
 `Windows11MicaDetector.SetTestOverride(bool?)` forces the variant on/off regardless of OS, mirroring
 `MacOSVersionDetector`. The SampleApp exposes three dropdown entries — WinUI (automatic), WinUI
 classic, WinUI (Win11 Mica) — so the translucent brushes can be previewed on macOS/Linux. The actual
-native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` sets
-`TransparencyLevelHint = WindowTransparencyLevel.Mica` and a transparent window `Background` when `App.IsWinUiMicaTheme` is true. Avalonia
+native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` requests
+`TransparencyLevelHint = WindowTransparencyLevel.Mica` when `App.IsWinUiMicaTheme` is true. Avalonia
 drives the DWM system backdrop from that hint, so it lights up automatically on real Windows 11 (no
-extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. On macOS the visual approximation
-comes from the wallpaper preview layer, not a real compositor backdrop.
+extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. `MainWindow.OnPropertyChanged()`
+makes the window `Background` transparent only once `ActualTransparencyLevel` confirms Mica was
+granted. Forced previews and unsupported platforms deliberately keep the opaque fallback. On macOS
+the visual approximation comes from the wallpaper preview layer, not a real compositor backdrop.
 
 ### What "classic" means (and where a style belongs)
 
@@ -209,10 +211,10 @@ After adding or changing a control:
   a shadow), while Dark flips only the accent one (strong edge at the top, a highlight). Port each
   dictionary from its own source; never "fix" a difference for consistency without checking.
 - When a colour looks off, measure the real composited pixels before touching opacities. WinUI fills
-  are translucent, so a wrong **surface underneath** looks like a wrong token. Under Mica, the
-  window background must be transparent (`MainWindow.ApplyWindowsMicaBackdrop()`), or everything
-  composites over the default opaque black `SystemRegionBrush`. DevTools screenshots don't include
-  the DWM backdrop, so capture the screen instead.
+  are translucent, so a wrong **surface underneath** looks like a wrong token. When real Mica is
+  granted, the window background must be transparent (`MainWindow.OnPropertyChanged()` handles this),
+  or everything composites over the default opaque black `SystemRegionBrush`. DevTools screenshots
+  don't include the DWM backdrop, so capture the screen instead.
 
 ## Repository-Specific Notes
 

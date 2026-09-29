@@ -4,16 +4,6 @@
 
   <Styles.Resources>
     <ResourceDictionary>
-      <ResourceDictionary.ThemeDictionaries>
-        <ResourceDictionary x:Key="Default">
-          <SolidColorBrush x:Key="AlternativeBackgroundTabControlTabStripBrush" Color="#dfdfdf" />
-        </ResourceDictionary>
-        <ResourceDictionary x:Key="Dark">
-          <SolidColorBrush x:Key="AlternativeBackgroundTabControlTabStripBrush" Color="#3d3d3d" />
-        </ResourceDictionary>
-
-      </ResourceDictionary.ThemeDictionaries>
-
       <x:Double x:Key="H1FontSize">16</x:Double>
       <FontWeight x:Key="H1FontWeight">Bold</FontWeight>
       <Thickness x:Key="H1Margins">0,0,0,10</Thickness>

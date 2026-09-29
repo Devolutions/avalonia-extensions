@@ -50,6 +50,7 @@ When adding or updating a WinUI control theme:
 5. **Place resources in the right layer**
    - Put reusable cross-control WinUI tokens in `src/Devolutions.AvaloniaTheme.WinUI/Accents/ThemeResources.axaml`
    - Put control-only resources in the relevant `src/Devolutions.AvaloniaTheme.WinUI/Controls/*.axaml`
+     unless they alias theme-dictionary-scoped tokens (see "Learnings" below)
    - Keep `SampleAppBackground` and similar development-only resources clearly marked
 
 6. **Prefer ControlTheme isolation**
@@ -126,19 +127,23 @@ to the same dictionary as the base will NOT win. The Mica overlay must therefore
 Styles level ABOVE the base theme — this is why it lives in `DevolutionsWinUiTheme.EndInit()`
 (above `WinUITheme`/`WinUIThemeWithGlobalStyles`), not inside `ThemeRoot.axaml`.
 
-`WinUiMicaProbe` in the visual tests project guards this behaviour for both the `GlobalStyles=false`
-(SampleApp) and `GlobalStyles=true` (simple consumer) paths. Keep it passing.
+`tests/Devolutions.AvaloniaControls.Tests/WinUiMicaProbe.cs` (unit tests, not the visual tests)
+guards this behaviour for both the `GlobalStyles=false` (SampleApp) and `GlobalStyles=true` (simple
+consumer) paths. Keep it passing:
+`dotnet test tests/Devolutions.AvaloniaControls.Tests --filter "FullyQualifiedName~WinUiMicaProbe"`.
 
 ### Testing the variants
 
 `Windows11MicaDetector.SetTestOverride(bool?)` forces the variant on/off regardless of OS, mirroring
 `MacOSVersionDetector`. The SampleApp exposes three dropdown entries — WinUI (automatic), WinUI
 classic, WinUI (Win11 Mica) — so the translucent brushes can be previewed on macOS/Linux. The actual
-native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` sets
+native Mica backdrop is app-layer: `MainWindow.ApplyWindowsMicaBackdrop()` requests
 `TransparencyLevelHint = WindowTransparencyLevel.Mica` when `App.IsWinUiMicaTheme` is true. Avalonia
 drives the DWM system backdrop from that hint, so it lights up automatically on real Windows 11 (no
-extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. On macOS the visual approximation
-comes from the wallpaper preview layer, not a real compositor backdrop.
+extra UI toggle) and is an inert no-op on Windows 10 / non-Windows. `MainWindow.OnPropertyChanged()`
+makes the window `Background` transparent only once `ActualTransparencyLevel` confirms Mica was
+granted. Forced previews and unsupported platforms deliberately keep the opaque fallback. On macOS
+the visual approximation comes from the wallpaper preview layer, not a real compositor backdrop.
 
 ### What "classic" means (and where a style belongs)
 
@@ -191,6 +196,25 @@ After adding or changing a control:
 - Confirm each shared resource belongs in `ThemeResources.axaml` rather than the control file
 - Remove speculative tokens that were added "for later"
 - Keep comments short and factual, especially around development-only resources
+
+## Learnings
+
+- A root-level `<StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>`
+  in `Controls/Button.axaml` cannot resolve a token in the parent theme's Light/Dark
+  `ThemeDictionaries` at runtime (`KeyNotFoundException`, not a build error). Define each
+  control-specific alias **inside the corresponding Light and Dark dictionaries** in
+  `Accents/ThemeResources.axaml` alongside its semantic token, as Button does; consume it
+  with `{DynamicResource ButtonBackground}` from the control theme. Do not treat the
+  general "control resources belong in Controls/" rule as overriding resource scope.
+- WinUI's Light and Dark dictionaries are **not** always symmetric. Example: Light flips both
+  `ControlElevationBorderBrush` and `AccentControlElevationBorderBrush` (strong edge at the bottom,
+  a shadow), while Dark flips only the accent one (strong edge at the top, a highlight). Port each
+  dictionary from its own source; never "fix" a difference for consistency without checking.
+- When a colour looks off, measure the real composited pixels before touching opacities. WinUI fills
+  are translucent, so a wrong **surface underneath** looks like a wrong token. When real Mica is
+  granted, the window background must be transparent (`MainWindow.OnPropertyChanged()` handles this),
+  or everything composites over the default opaque black `SystemRegionBrush`. DevTools screenshots
+  don't include the DWM backdrop, so capture the screen instead.
 
 ## Repository-Specific Notes
 

@@ -24,7 +24,7 @@
             <ComboBoxItem>Option 4</ComboBoxItem>
           </ComboBox>
 
-          <TextBox Margin="0 0 10 10" Width="170" Watermark="TextBox" />
+          <TextBox Margin="0 0 10 10" Width="170" PlaceholderText="TextBox" />
 
           <CheckBox Margin="0 0 10 10" Content="CheckBox" IsChecked="True" />
         </WrapPanel>

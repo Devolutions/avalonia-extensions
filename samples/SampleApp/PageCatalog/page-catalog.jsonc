@@ -87,7 +87,7 @@
       "demo": "CheckBoxDemo.axaml",
       "viewModel": "CheckboxViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "↔️", "WinUIMica": "✅"
       }
     },
     {

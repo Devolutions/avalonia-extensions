@@ -9,6 +9,9 @@
       <SolidColorBrush x:Key="AccentFillColorTertiaryBrush"                 Color="{DynamicResource SystemAccentColorDark2}"/>
       <SolidColorBrush x:Key="AccentFillColorDisabledBrush"                 Color="#37000000"/>
       <SolidColorBrush x:Key="AccentFillColorSelectedTextBackgroundBrush"   Color="{DynamicResource SystemAccentColor}"/>
+      <!-- CheckBox hover/press fade the accent over the light surface rather than selecting a darker accent shade. -->
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{DynamicResource SystemAccentColor}" Opacity="0.93"/>
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed"     Color="{DynamicResource SystemAccentColor}" Opacity="0.85"/>
 
       <!-- WinUI subtle fills (NavigationViewItem hover/selected backgrounds) -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#09000000"/>
@@ -137,6 +140,8 @@
       <SolidColorBrush x:Key="AccentFillColorTertiaryBrush"                 Color="{DynamicResource SystemAccentColor}"/>
       <SolidColorBrush x:Key="AccentFillColorDisabledBrush"                 Color="#28FFFFFF"/>
       <SolidColorBrush x:Key="AccentFillColorSelectedTextBackgroundBrush"   Color="{DynamicResource SystemAccentColor}"/>
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.95"/>
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed"     Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.88"/>
 
       <!-- WinUI subtle fills -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#0FFFFFFF"/>

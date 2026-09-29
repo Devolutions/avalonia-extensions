@@ -6,11 +6,9 @@
     <ResourceDictionary>
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
-          <SolidColorBrush x:Key="AlternativeBackgroundBrush" Color="#f0f0f0" />
           <SolidColorBrush x:Key="AlternativeBackgroundTabControlTabStripBrush" Color="#dfdfdf" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-          <SolidColorBrush x:Key="AlternativeBackgroundBrush" Color="#2d2d2d" />
           <SolidColorBrush x:Key="AlternativeBackgroundTabControlTabStripBrush" Color="#3d3d3d" />
         </ResourceDictionary>
 
@@ -26,7 +24,7 @@
   </Styles.Resources>
 
   <Style Selector="Border.alternativeBackground">
-    <Setter Property="Background" Value="{DynamicResource AlternativeBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource LayoutBackgroundLowBrush}" />
   </Style>
 
   <Style Selector="Panel.mainControl">

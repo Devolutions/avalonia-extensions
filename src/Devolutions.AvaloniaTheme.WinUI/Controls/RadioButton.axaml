@@ -142,6 +142,8 @@
       <Setter Property="Stroke" Value="{DynamicResource AccentControlElevationBorderBrush}"/>
     </Style>
     <Style Selector="^:checked:disabled /template/ Ellipse#CheckGlyph">
+      <Setter Property="Width"  Value="{DynamicResource RadioButtonCheckGlyphPointerOverSize}"/>
+      <Setter Property="Height" Value="{DynamicResource RadioButtonCheckGlyphPointerOverSize}"/>
       <Setter Property="Stroke" Value="{DynamicResource ControlElevationBorderBrush}"/>
     </Style>
     <Style Selector="^:unchecked:pressed /template/ Ellipse#CheckGlyph">

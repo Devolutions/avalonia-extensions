@@ -61,7 +61,6 @@
     <Style Selector="^:unchecked:pressed /template/ Ellipse#OuterEllipse">
       <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
       <Setter Property="Fill"   Value="{DynamicResource ControlAltFillColorQuarternaryBrush}"/>
-      <Setter Property="Opacity" Value="0"/>
     </Style>
     <Style Selector="^:unchecked:disabled /template/ Ellipse#OuterEllipse">
       <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
@@ -84,11 +83,6 @@
     <Style Selector="^:checked:disabled /template/ Ellipse#CheckOuterEllipse">
       <Setter Property="Stroke" Value="{DynamicResource AccentFillColorDisabledBrush}"/>
       <Setter Property="Fill"   Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-    </Style>
-    <Style Selector="^:unchecked:pressed /template/ Ellipse#CheckOuterEllipse">
-      <Setter Property="Stroke" Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-      <Setter Property="Fill"   Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-      <Setter Property="Opacity" Value="1"/>
     </Style>
 
     <!-- Small center dot (CheckGlyph) -->

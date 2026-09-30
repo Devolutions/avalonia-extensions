@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Avalonia Fluent's template already has the WinUI checkbox parts and state selectors.
+       Override their brushes here; the indeterminate glyph needs a dash rather than Fluent's square. -->
+
+  <StreamGeometry x:Key="WinUiCheckBoxIndeterminateGlyph">M1 0.375 H7 A0.625 0.625 0 0 1 7.625 1 A0.625 0.625 0 0 1 7 1.625 H1 A0.625 0.625 0 0 1 0.375 1 A0.625 0.625 0 0 1 1 0.375 Z</StreamGeometry>
+  <StreamGeometry x:Key="WinUiCheckBoxCheckedGlyph">M1.5 6 L5 9.5 L12.5 2</StreamGeometry>
+
+  <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox"
+                BasedOn="{StaticResource {x:Type CheckBox}}">
+    <Setter Property="Foreground"  Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    <Setter Property="Background"  Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}"/>
+    </Style>
+
+    <!-- Unchecked: glyph box outline + fill (glyph itself is invisible in this state) -->
+    <Style Selector="^ /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}"/>
+      <Setter Property="Background"  Value="{DynamicResource ControlAltFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}"/>
+      <Setter Property="Background"  Value="{DynamicResource ControlAltFillColorTertiaryBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
+      <Setter Property="Background"  Value="{DynamicResource ControlAltFillColorQuarternaryBrush}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
+      <Setter Property="Background"  Value="{DynamicResource ControlAltFillColorDisabledBrush}"/>
+    </Style>
+
+    <!-- Checked/Indeterminate: glyph box + checkmark/dash glyph fill (WinUI uses identical
+         values for Checked and Indeterminate in every state) -->
+    <Style Selector="^:checked, ^:indeterminate">
+      <Style Selector="^ /template/ Border#PART_Border">
+        <Setter Property="Background"  Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}"/>
+      </Style>
+      <Style Selector="^ /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+        <Setter Property="Background"  Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+      </Style>
+      <Style Selector="^ /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+      </Style>
+
+      <Style Selector="^:pointerover /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}"/>
+        <Setter Property="Background"  Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}"/>
+      </Style>
+      <Style Selector="^:pressed /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPressed}"/>
+        <Setter Property="Background"  Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPressed}"/>
+      </Style>
+
+      <Style Selector="^:disabled /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
+        <Setter Property="Background"  Value="{DynamicResource AccentFillColorDisabledBrush}"/>
+      </Style>
+    </Style>
+
+    <Style Selector="^:checked /template/ Path#CheckGlyph">
+      <Setter Property="Data" Value="{StaticResource WinUiCheckBoxCheckedGlyph}"/>
+      <Setter Property="Width" Value="7"/>
+      <Setter Property="Fill" Value="{x:Null}"/>
+      <Setter Property="Stroke" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+      <Setter Property="StrokeThickness" Value="1.5"/>
+      <Setter Property="StrokeLineCap" Value="Round"/>
+      <Setter Property="StrokeJoin" Value="Round"/>
+      <!-- The dash gap hides the whole stroke at 0%, then reveals it from the first segment. -->
+      <Setter Property="StrokeDashArray" Value="16,16"/>
+      <Setter Property="StrokeDashOffset" Value="0"/>
+      <Style.Animations>
+        <Animation Duration="0:0:0.18" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="StrokeDashOffset" Value="16"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="StrokeDashOffset" Value="0"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="^:checked:pressed /template/ Path#CheckGlyph">
+      <Setter Property="Stroke" Value="{DynamicResource TextOnAccentFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:checked:disabled /template/ Path#CheckGlyph">
+      <Setter Property="Stroke" Value="{DynamicResource TextOnAccentFillColorDisabledBrush}"/>
+    </Style>
+
+    <Style Selector="^:indeterminate /template/ Path#CheckGlyph">
+      <Setter Property="Data" Value="{StaticResource WinUiCheckBoxIndeterminateGlyph}"/>
+      <Setter Property="Width" Value="7"/>
+    </Style>
+    <Style Selector="^:indeterminate:pressed /template/ Path#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:indeterminate:disabled /template/ Path#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorDisabledBrush}"/>
+    </Style>
+
+    <Style Selector="^:focus-visible /template/ Border#PART_Border">
+      <Setter Property="Margin" Value="-3"/>
+      <Setter Property="CornerRadius" Value="5"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

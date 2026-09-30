@@ -54,24 +54,14 @@
         <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}"/>
         <Setter Property="Background"  Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}"/>
       </Style>
-      <Style Selector="^:pointerover /template/ Path#CheckGlyph">
-        <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
-      </Style>
-
       <Style Selector="^:pressed /template/ Border#NormalRectangle">
         <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPressed}"/>
         <Setter Property="Background"  Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPressed}"/>
-      </Style>
-      <Style Selector="^:pressed /template/ Path#CheckGlyph">
-        <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorSecondaryBrush}"/>
       </Style>
 
       <Style Selector="^:disabled /template/ Border#NormalRectangle">
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}"/>
         <Setter Property="Background"  Value="{DynamicResource AccentFillColorDisabledBrush}"/>
-      </Style>
-      <Style Selector="^:disabled /template/ Path#CheckGlyph">
-        <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorDisabledBrush}"/>
       </Style>
     </Style>
 
@@ -107,6 +97,12 @@
     <Style Selector="^:indeterminate /template/ Path#CheckGlyph">
       <Setter Property="Data" Value="{StaticResource WinUiCheckBoxIndeterminateGlyph}"/>
       <Setter Property="Width" Value="7"/>
+    </Style>
+    <Style Selector="^:indeterminate:pressed /template/ Path#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorSecondaryBrush}"/>
+    </Style>
+    <Style Selector="^:indeterminate:disabled /template/ Path#CheckGlyph">
+      <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorDisabledBrush}"/>
     </Style>
 
     <Style Selector="^:focus-visible /template/ Border#PART_Border">

@@ -9,7 +9,8 @@
       <SolidColorBrush x:Key="AccentFillColorTertiaryBrush"                 Color="{DynamicResource SystemAccentColorDark2}"/>
       <SolidColorBrush x:Key="AccentFillColorDisabledBrush"                 Color="#37000000"/>
       <SolidColorBrush x:Key="AccentFillColorSelectedTextBackgroundBrush"   Color="{DynamicResource SystemAccentColor}"/>
-      <!-- CheckBox hover/press fade the accent over the light surface rather than selecting a darker accent shade. -->
+      <!-- CheckBox-specific opacity keeps light hover/press brighter than the default accent;
+           the shared secondary/tertiary accents darken here and are still used by Button. -->
       <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{DynamicResource SystemAccentColor}" Opacity="0.93"/>
       <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed"     Color="{DynamicResource SystemAccentColor}" Opacity="0.85"/>
 

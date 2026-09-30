@@ -149,8 +149,8 @@ Manual validation via SampleApp is still important for exploratory UI checks and
   2. Match the intended instance by process id; when agents/users work in parallel, correlate the
      PID with the process command line and expected worktree/output path rather than selecting the
      first client
-  3. Call `attach-to-app` again with that exact process id and verify the returned
-     `appBaseDirectory`
+  3. Call `attach-to-app` again with `id` set to that exact `processId` value, then verify the
+     returned `appBaseDirectory`
   4. Use `tree`, `search`, `props`, `styles`, `screenshot`, etc.
 - Each attach targets one client and invalidates cached node ids. Re-enumerate after an app restart,
   and stop only a specific process id that this agent launched—never all processes by name.

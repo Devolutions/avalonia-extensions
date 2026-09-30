@@ -49,8 +49,9 @@ process ID instead of attaching to whichever app happens to appear first.
    `Get-CimInstance Win32_Process` can correlate a `dotnet` PID with its command line; the window
    title alone is not unique.
 2. Call `attach-to-app` without an `id` only to enumerate `availableClients`.
-3. Match the recorded PID to `availableClients[].processId`, then call `attach-to-app` with that
-   exact `id`.
+3. Match the recorded PID to `availableClients[].processId`, then call `attach-to-app` with its
+   request field `id` set to that exact `processId` value (for example, `{"id": 24140}`). Do not
+   send a field named `processId`; that is a response field, not an attachment request field.
 4. Verify the response's `connectedClient.process.processId` and `appBaseDirectory`. The latter
    should point into the expected worktree/output directory.
 5. After attaching or switching clients, discard every cached node ID and reacquire the tree/search

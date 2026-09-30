@@ -10,7 +10,7 @@
       <TextBlock VerticalAlignment="Center">For automatic focus test:</TextBlock>
       <RadioButton GroupName="FocusTestGroup" Content="First Option" />
     </StackPanel>
-    <StackPanel Orientation="Horizontal" Margin="20" Spacing="10" Height="200" VerticalAlignment="Top">
+    <StackPanel Orientation="Horizontal" Margin="20" Spacing="10" VerticalAlignment="Top">
       <Border Padding="10">
         <StackPanel>
           <TextBlock Margin="0 0 0 5">Group A</TextBlock>
@@ -29,7 +29,7 @@
         </StackPanel>
       </Border>
 
-      <Border Background="{DynamicResource AlternativeBackgroundBrush}" Padding="10">
+      <Border Classes="alternativeBackground" Padding="10">
         <StackPanel>
           <TextBlock Margin="0 0 0 5">Group B (disabled)</TextBlock>
           <RadioButton GroupName="Group B"

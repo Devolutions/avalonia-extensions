@@ -302,6 +302,25 @@ Rules:
   author metadata makes provenance clear.
 - When replying to a review thread, sign the reply even if the thread is on your own PR.
 
+## Resolving PR Review Threads
+
+**After addressing a review comment, resolve its conversation** so reviewers can see what's still open:
+
+1. Push the fix (or decide to decline it).
+2. Post a signed reply stating the fixing commit, or explaining why the comment was declined.
+3. Resolve the thread. If your tooling mirrors PR comments into the session (e.g. a `resolveComments` tool),
+   resolving there also resolves the GitHub thread. Otherwise, use GraphQL (`gh` has no command for this):
+
+```bash
+gh api graphql -f query='{ repository(owner:"Devolutions", name:"avalonia-extensions") {
+  pullRequest(number:<N>) { reviewThreads(first:100) { nodes { id isResolved
+    comments(first:1) { nodes { databaseId body } } } } } } }'
+gh api graphql -f query='mutation { resolveReviewThread(input:{threadId:"<thread id>"}) { thread { isResolved } } }'
+```
+
+Leave a thread open when the remaining work belongs to the developer (e.g. baselines that must be generated
+on another OS), and say so in your reply.
+
 # PR/Issue Monitoring Cadence
 
 **Do not schedule hourly (or slower) automations to poll a PR or issue for new review comments.** An hourly

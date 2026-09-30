@@ -4,6 +4,7 @@
     <MergeResourceInclude Source="Button.axaml"/>
     <MergeResourceInclude Source="DataGrid.axaml"/>
     <MergeResourceInclude Source="ListBox.axaml"/>
+    <MergeResourceInclude Source="RadioButton.axaml"/>
     <MergeResourceInclude Source="ToggleButton.axaml"/>
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

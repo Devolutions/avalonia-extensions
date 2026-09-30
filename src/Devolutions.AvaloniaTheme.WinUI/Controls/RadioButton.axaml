@@ -122,7 +122,6 @@
     <Style Selector="^:checked /template/ Ellipse#CheckGlyph">
       <Setter Property="Width"  Value="{DynamicResource RadioButtonCheckGlyphSize}"/>
       <Setter Property="Height" Value="{DynamicResource RadioButtonCheckGlyphSize}"/>
-      <Setter Property="Fill"   Value="{DynamicResource RadioButtonCheckGlyphFill}"/>
       <Setter Property="Stroke" Value="{DynamicResource RadioButtonCheckGlyphStrokeChecked}"/>
     </Style>
     <Style Selector="^:checked:pointerover /template/ Ellipse#CheckGlyph">

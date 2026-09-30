@@ -146,8 +146,14 @@ Manual validation via SampleApp is still important for exploratory UI checks and
   - Keep DevTools instrumentation development-only (Debug), since MCP enables live inspection, runtime property mutation, and synthetic input.
 - Typical MCP flow for `attach-to-app`:
   1. `attach-to-app` with no id (enumerates available running clients)
-  2. Call `attach-to-app` again with selected process id
-  3. Use `tree`, `search`, `props`, `styles`, `screenshot`, etc.
+  2. Match the intended instance by process id; when agents/users work in parallel, correlate the
+     PID with the process command line and expected worktree/output path rather than selecting the
+     first client
+  3. Call `attach-to-app` again with `id` set to that exact `processId` value, then verify the
+     returned `appBaseDirectory`
+  4. Use `tree`, `search`, `props`, `styles`, `screenshot`, etc.
+- Each attach targets one client and invalidates cached node ids. Re-enumerate after an app restart,
+  and stop only a specific process id that this agent launched—never all processes by name.
 
 #### Important licensing note (observed in this repo/session)
 - We observed that forcing `AVALONIA_TOOLS_LICENSE_KEY` into MCP server env could cause:

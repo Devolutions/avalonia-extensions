@@ -39,10 +39,43 @@ Use this skill when the task involves validating or debugging runtime UI behavio
    - `input`, `action`, `set-prop`, `pseudo-class`
 5. `detach` when done
 
+## Multiple instances and parallel agents
+
+Assume other developers or agents may be running the same Avalonia app from other worktrees. It is
+safe for separate agents to inspect separate instances, but each agent must select its client by
+process ID instead of attaching to whichever app happens to appear first.
+
+1. When starting an app, record the new process ID and its worktree/output path. On Windows,
+   `Get-CimInstance Win32_Process` can correlate a `dotnet` PID with its command line; the window
+   title alone is not unique.
+2. Call `attach-to-app` without an `id` only to enumerate `availableClients`.
+3. Match the recorded PID to `availableClients[].processId`, then call `attach-to-app` with its
+   request field `id` set to that exact `processId` value (for example, `{"id": 24140}`). Do not
+   send a field named `processId`; that is a response field, not an attachment request field.
+4. Verify the response's `connectedClient.process.processId` and `appBaseDirectory`. The latter
+   should point into the expected worktree/output directory.
+5. After attaching or switching clients, discard every cached node ID and reacquire the tree/search
+   results. One MCP connection targets one client at a time, and a new attach invalidates nodes from
+   the previous client.
+6. If the app restarts, enumerate again: process IDs and node IDs are ephemeral.
+
+Two simultaneously running SampleApp processes were verified to appear as two distinct
+`availableClients` entries, and attaching by each `processId` selected the expected process. This is
+the required workflow whenever parallel work is possible.
+
+Parallel-work safety:
+
+- Never stop processes by name. Stop only the specific PID that this agent launched.
+- Do not kill another SampleApp merely because it locks the standard build output. Build/test to an
+  isolated `OutputPath` instead.
+- Do not reuse a PID from an earlier run without re-enumerating clients; the process may have exited
+  or been replaced.
+
 ## Important pitfalls
 
 - Do **not** tell users to press F12 for MCP connectivity. F12 opens standalone tools and does not establish MCP attach by itself.
 - `attach-to-app` commonly returns an app list first; a second call with selected `id` is expected.
+- Never select the first returned client merely because it is first; identify it by process ID.
 - Node IDs are ephemeral; reacquire via `tree/search` after UI changes.
 
 ## License/auth caveat observed in this repo

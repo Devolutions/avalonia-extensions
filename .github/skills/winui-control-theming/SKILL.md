@@ -61,6 +61,57 @@ When adding or updating a WinUI control theme:
    - Keep Fluent as the fallback for anything not explicitly overridden
    - Reuse Avalonia/Fluent built-in resources when they already represent the right concept
 
+## Inspecting the Target in WinUI 3 Gallery
+
+On Windows, use the installed WinUI 3 Gallery as the visual reference instead of relying only on
+screenshots supplied by the user. The Gallery is a native WinUI app, not an Avalonia app, so
+Avalonia DevTools MCP cannot attach to it. Use Windows UI Automation to find controls and real
+pointer input to inspect interaction states.
+
+### Locate controls without fixed coordinates
+
+1. Identify the Gallery process explicitly (normally `WinUIGallery.exe`) and keep its PID. Do not
+   assume it is the only Gallery window or close an instance you did not start.
+2. Get the window's root `AutomationElement` from that PID.
+3. Search descendants by stable automation properties such as `Name`, `AutomationId`, and
+   `ControlType`. For example, the CheckBox page exposes controls named `Two-state` and
+   `Three-state`.
+4. Read the selected element's `BoundingRectangle` and derive the input point from that rectangle.
+   Do not hard-code screen coordinates; window position, display scaling, and Gallery layout vary.
+
+Prefer UI Automation patterns (`InvokePattern`, `SelectionItemPattern`, `TogglePattern`, and so on)
+for navigation and discrete state changes. Reacquire elements after navigation because the page may
+replace its automation subtree.
+
+### Capture hover and held-press states
+
+UI Automation's invoke/toggle operations do not expose a sustained pressed state. Use ordinary
+pointer input for visual state inspection:
+
+1. Move the pointer outside the control and capture the resting state.
+2. Move it inside the target's `BoundingRectangle`, wait for the transition to settle, and capture
+   `PointerOver`.
+3. Send left-button down without releasing, wait briefly, and capture `Pressed`.
+4. To avoid activating/toggling the control, move the pointer outside its bounds before sending
+   left-button up. If activation is intentional, release over the control and restore its state
+   afterward through the relevant UI Automation pattern.
+
+This workflow was verified against the installed Gallery: moving the system pointer triggered the
+hover visual, and holding the left button exposed the pressed visual without user assistance.
+
+### Screenshot and measurement pitfalls
+
+- WinUI uses animations. A capture taken immediately after changing state can show the previous or
+  an intermediate frame; wait and confirm the state has settled.
+- On mixed-DPI or multi-monitor systems, UI Automation bounds, pointer coordinates, and screen
+  capture APIs may use different coordinate spaces. Make the automation process per-monitor
+  DPI-aware where possible, and verify that the pointer/crop actually lands on the named element.
+- `PrintWindow` can intermittently return incomplete DirectComposition content. Prefer a real
+  screen capture for final comparisons; if using `PrintWindow`, check the result and retry rather
+  than accepting a blank capture.
+- Compare at the same effective display scale and measure composited pixels before changing theme
+  tokens. Keep captures until animations have settled.
+
 ## Naming Rules
 
 Use these rules in order:
@@ -215,6 +266,9 @@ After adding or changing a control:
   granted, the window background must be transparent (`MainWindow.OnPropertyChanged()` handles this),
   or everything composites over the default opaque black `SystemRegionBrush`. DevTools screenshots
   don't include the DWM backdrop, so capture the screen instead.
+- The installed WinUI 3 Gallery can be inspected autonomously with Windows UI Automation plus real
+  pointer input. Use element names and bounds, not fixed coordinates, and hold mouse-down to capture
+  the pressed state; move outside before release when the control must not be activated.
 
 ## Repository-Specific Notes
 

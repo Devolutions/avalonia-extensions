@@ -118,7 +118,7 @@
       "demo": "ComboBoxDemo.axaml",
       "viewModel": "ComboBoxViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {

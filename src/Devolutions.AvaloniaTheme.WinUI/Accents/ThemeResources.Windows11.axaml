@@ -20,6 +20,12 @@
       <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#14000000"/>
       <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#99FFFFFF"/>
 
+      <!-- WinUI flyout/drop-down surface (ComboBox drop-down) — in-app acrylic rather than the
+           solid fallback used when transparency is off. The control-level alias has to be
+           restated: it is a StaticResource, so it captured the base dictionary's opaque brush. -->
+      <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#FCFCFC" Opacity="0.85"/>
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="AcrylicInAppFillColorDefaultBrush"/>
+
       <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
            reads through, approximating the Mica backdrop on non-Windows hosts. -->
       <SolidColorBrush x:Key="SampleAppBackground" Color="#F3F3F3" Opacity="0.8"/>
@@ -30,6 +36,12 @@
       <SolidColorBrush x:Key="SettingsCardBackground"       Color="#662D2D2D"/>
       <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#26FFFFFF"/>
       <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#66383838"/>
+
+      <!-- WinUI flyout/drop-down surface (ComboBox drop-down) — in-app acrylic rather than the
+           solid fallback used when transparency is off. The control-level alias has to be
+           restated: it is a StaticResource, so it captured the base dictionary's opaque brush. -->
+      <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#2C2C2C" Opacity="0.96"/>
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="AcrylicInAppFillColorDefaultBrush"/>
 
       <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
            reads through, approximating the Mica backdrop on non-Windows hosts. -->

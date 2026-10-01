@@ -3,6 +3,8 @@
   <ResourceDictionary.MergedDictionaries>
     <MergeResourceInclude Source="Button.axaml"/>
     <MergeResourceInclude Source="CheckBox.axaml"/>
+    <MergeResourceInclude Source="ComboBox.axaml"/>
+    <MergeResourceInclude Source="ComboBoxItem.axaml"/>
     <MergeResourceInclude Source="DataGrid.axaml"/>
     <MergeResourceInclude Source="ListBox.axaml"/>
     <MergeResourceInclude Source="RadioButton.axaml"/>

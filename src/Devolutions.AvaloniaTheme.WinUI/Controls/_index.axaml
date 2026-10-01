@@ -6,6 +6,7 @@
     <MergeResourceInclude Source="DataGrid.axaml"/>
     <MergeResourceInclude Source="ListBox.axaml"/>
     <MergeResourceInclude Source="RadioButton.axaml"/>
+    <MergeResourceInclude Source="TextBox.axaml"/>
     <MergeResourceInclude Source="ToggleButton.axaml"/>
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

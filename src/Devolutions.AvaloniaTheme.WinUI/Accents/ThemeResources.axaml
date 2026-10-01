@@ -59,6 +59,9 @@
       <Color x:Key="ControlStrongStrokeColorDisabled">#37000000</Color>
       <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush"  Color="{DynamicResource ControlStrongStrokeColorDefault}"/>
       <SolidColorBrush x:Key="ControlStrongStrokeColorDisabledBrush" Color="{DynamicResource ControlStrongStrokeColorDisabled}"/>
+      <!-- WinUI strong control fills (ScrollBar thumb/arrows) -->
+      <SolidColorBrush x:Key="ControlStrongFillColorDefaultBrush"  Color="#72000000"/>
+      <SolidColorBrush x:Key="ControlStrongFillColorDisabledBrush" Color="#51000000"/>
       <SolidColorBrush x:Key="ControlAltFillColorSecondaryBrush"   Color="#06000000"/>
       <SolidColorBrush x:Key="ControlAltFillColorTertiaryBrush"    Color="#0F000000"/>
       <SolidColorBrush x:Key="ControlAltFillColorQuarternaryBrush" Color="#18000000"/>
@@ -127,6 +130,16 @@
       </LinearGradientBrush>
 
       <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
+      <SolidColorBrush x:Key="ScrollViewerScrollBarSeparatorBackground" Color="#00000000"/>
+      <StaticResource x:Key="ScrollBarPanningThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarThumbFillDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
+      <!-- WinUI uses in-app acrylic here; without blur, a slightly translucent grey is less stark than the opaque fallback -->
+      <SolidColorBrush x:Key="ScrollBarTrackFill" Color="#E6EBEBEB"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForeground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
       <StaticResource x:Key="TextControlBackground" ResourceKey="ControlFillColorDefaultBrush"/>
       <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
       <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="ControlFillColorInputActiveBrush"/>
@@ -276,6 +289,9 @@
       <Color x:Key="ControlStrongStrokeColorDisabled">#28FFFFFF</Color>
       <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush"  Color="{DynamicResource ControlStrongStrokeColorDefault}"/>
       <SolidColorBrush x:Key="ControlStrongStrokeColorDisabledBrush" Color="{DynamicResource ControlStrongStrokeColorDisabled}"/>
+      <!-- WinUI strong control fills (ScrollBar thumb/arrows) -->
+      <SolidColorBrush x:Key="ControlStrongFillColorDefaultBrush"  Color="#8BFFFFFF"/>
+      <SolidColorBrush x:Key="ControlStrongFillColorDisabledBrush" Color="#3FFFFFFF"/>
       <SolidColorBrush x:Key="ControlAltFillColorSecondaryBrush"   Color="#19000000"/>
       <SolidColorBrush x:Key="ControlAltFillColorTertiaryBrush"    Color="#0BFFFFFF"/>
       <SolidColorBrush x:Key="ControlAltFillColorQuarternaryBrush" Color="#12FFFFFF"/>
@@ -339,6 +355,16 @@
       </LinearGradientBrush>
 
       <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
+      <SolidColorBrush x:Key="ScrollViewerScrollBarSeparatorBackground" Color="#00000000"/>
+      <StaticResource x:Key="ScrollBarPanningThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarThumbFillDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
+      <!-- WinUI uses in-app acrylic here; without blur, a slightly translucent grey is less stark than the opaque fallback -->
+      <SolidColorBrush x:Key="ScrollBarTrackFill" Color="#E62B2B2B"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForeground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ScrollBarButtonArrowForegroundDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
       <StaticResource x:Key="TextControlBackground" ResourceKey="ControlFillColorDefaultBrush"/>
       <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
       <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="ControlFillColorInputActiveBrush"/>

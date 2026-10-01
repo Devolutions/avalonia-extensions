@@ -174,7 +174,7 @@
       </Style>
     </Style>
 
-    <Style Selector="^:focus">
+    <Style Selector="^[IsReadOnly=False]:focus:not(.no-focus-border)">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundFocused}"/>
       <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForegroundFocused}"/>
       <Style Selector="^ /template/ Border#PART_BorderElement">

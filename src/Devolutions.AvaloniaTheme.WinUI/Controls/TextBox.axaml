@@ -41,15 +41,16 @@
                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                   Content="{TemplateBinding InnerLeftContent}"/>
                 <DockPanel Name="PART_InnerDockPanel"
-                           Grid.Column="1"
-                           Margin="{TemplateBinding Padding}">
+                           Grid.Column="1">
                   <TextBlock Name="PART_FloatingPlaceholder"
                              Foreground="{TemplateBinding PlaceholderForeground}"
                              IsVisible="False"
                              Text="{TemplateBinding PlaceholderText}"
                              DockPanel.Dock="Top"/>
-                  <ScrollViewer Name="PART_ScrollViewer"
-                                HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                    <!-- As in WinUI, Padding goes inside the ScrollViewer so its scrollbars sit against the border -->
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
                                 VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
                                 IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                                 AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
@@ -94,6 +95,16 @@
                         </TextPresenter.PasswordChar>
                       </TextPresenter>
                     </Panel>
+                    <ScrollViewer.Resources>
+                      <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                          <!-- A white track suits the light text field better than the general grey one -->
+                          <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush x:Key="ScrollBarTrackFill" Color="#E6FFFFFF"/>
+                          </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                      </ResourceDictionary>
+                    </ScrollViewer.Resources>
                     <ScrollViewer.Styles>
                       <Style Selector="ScrollContentPresenter#PART_ContentPresenter">
                         <Setter Property="Cursor" Value="IBeam"/>

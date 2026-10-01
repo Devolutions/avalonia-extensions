@@ -169,6 +169,17 @@
       <Setter Property="Margin" Value="0,0,6,0"/>
     </Style>
 
+    <!-- Cancels Fluent's base :focus visuals for read-only and .no-focus-border TextBoxes. -->
+    <Style Selector="^:focus">
+      <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}"/>
+      <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForeground}"/>
+      <Style Selector="^ /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{Binding $parent[TextBox].BorderThickness}"/>
+      </Style>
+    </Style>
+
     <Style Selector="^:pointerover">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundPointerOver}"/>
       <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForegroundPointerOver}"/>

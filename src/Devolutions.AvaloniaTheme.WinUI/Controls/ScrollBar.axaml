@@ -1,0 +1,287 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <StackPanel Orientation="Horizontal" Spacing="20">
+        <StackPanel Spacing="20" Width="120">
+          <ScrollBar Orientation="Horizontal" AllowAutoHide="False" ViewportSize="20" Maximum="100"/>
+          <ScrollBar Orientation="Horizontal" AllowAutoHide="True" ViewportSize="20" Maximum="100"/>
+          <ScrollBar Orientation="Horizontal" AllowAutoHide="False" ViewportSize="20" Maximum="100" IsEnabled="False"/>
+        </StackPanel>
+        <ScrollBar Orientation="Vertical" AllowAutoHide="False" Height="120" ViewportSize="20" Maximum="100"/>
+        <ScrollBar Orientation="Vertical" AllowAutoHide="True" Height="120" ViewportSize="20" Maximum="100"/>
+      </StackPanel>
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- WinUI ScrollBar metrics (ScrollBar_themeresources.xaml) -->
+  <x:Double x:Key="ScrollBarSize">12</x:Double>
+  <x:Double x:Key="ScrollBarVerticalThumbMinHeight">30</x:Double>
+  <x:Double x:Key="ScrollBarVerticalThumbMinWidth">8</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalThumbMinWidth">30</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalThumbMinHeight">8</x:Double>
+  <x:Double x:Key="ScrollBarButtonArrowIconFontSize">8</x:Double>
+  <CornerRadius x:Key="ScrollBarCornerRadius">3</CornerRadius>
+  <Thickness x:Key="ScrollBarHorizontalDecreaseMargin">4,0,0,0</Thickness>
+  <Thickness x:Key="ScrollBarHorizontalIncreaseMargin">0,0,4,0</Thickness>
+  <Thickness x:Key="ScrollBarVerticalDecreaseMargin">0,4,0,0</Thickness>
+  <Thickness x:Key="ScrollBarVerticalIncreaseMargin">0,0,0,4</Thickness>
+
+  <!-- Segoe Fluent Icons CaretUpSolid8 / CaretDownSolid8 / CaretLeftSolid8 / CaretRightSolid8 outlines -->
+  <StreamGeometry x:Key="WinUiScrollBarArrowUp">F1M0.99,-1C0.85,-1 0.73,-1.03 0.61,-1.08 0.49,-1.13 0.38,-1.21 0.29,-1.29 0.2,-1.38 0.13,-1.49 0.08,-1.61 0.03,-1.73 0,-1.86 0,-2 0,-2.11 0.01,-2.21 0.04,-2.3 0.07,-2.39 0.12,-2.48 0.18,-2.57L2.78,-6.36C2.85,-6.45 2.93,-6.54 3.02,-6.62 3.11,-6.69 3.21,-6.76 3.31,-6.81 3.42,-6.86 3.53,-6.9 3.65,-6.92 3.77,-6.95 3.88,-6.96 4,-6.96 4.12,-6.96 4.23,-6.95 4.35,-6.92 4.47,-6.9 4.58,-6.86 4.69,-6.81 4.79,-6.76 4.89,-6.69 4.98,-6.62 5.07,-6.54 5.15,-6.45 5.22,-6.36L7.82,-2.57C7.88,-2.48 7.93,-2.39 7.96,-2.3 7.99,-2.21 8,-2.11 8,-2 8,-1.86 7.97,-1.73 7.92,-1.61 7.87,-1.49 7.8,-1.38 7.71,-1.29 7.62,-1.21 7.52,-1.13 7.4,-1.08 7.28,-1.03 7.15,-1 7.01,-1z</StreamGeometry>
+  <StreamGeometry x:Key="WinUiScrollBarArrowDown">F1M0,-6C0,-6.14 0.03,-6.26 0.08,-6.39 0.13,-6.51 0.2,-6.62 0.29,-6.71 0.38,-6.79 0.49,-6.87 0.61,-6.92 0.73,-6.97 0.85,-7 0.99,-7L7.01,-7C7.15,-7 7.28,-6.97 7.4,-6.92 7.52,-6.87 7.62,-6.8 7.71,-6.71 7.8,-6.62 7.87,-6.51 7.92,-6.39 7.97,-6.27 8,-6.14 8,-6 8,-5.89 7.99,-5.79 7.96,-5.7 7.93,-5.61 7.88,-5.52 7.82,-5.43L5.22,-1.64C5.08,-1.44 4.9,-1.29 4.69,-1.17 4.47,-1.06 4.24,-1 4,-1 3.76,-1 3.53,-1.06 3.31,-1.17 3.1,-1.29 2.92,-1.44 2.78,-1.64L0.18,-5.43C0.12,-5.52 0.07,-5.61 0.04,-5.7 0.01,-5.79 0,-5.89 0,-6z</StreamGeometry>
+  <StreamGeometry x:Key="WinUiScrollBarArrowLeft">F1M1,-4C1,-4.24 1.06,-4.47 1.17,-4.69 1.29,-4.9 1.44,-5.08 1.64,-5.22L5.43,-7.82C5.52,-7.88 5.61,-7.93 5.7,-7.96 5.79,-7.99 5.89,-8 6,-8 6.14,-8 6.26,-7.97 6.39,-7.92 6.51,-7.87 6.62,-7.8 6.71,-7.71 6.79,-7.62 6.87,-7.51 6.92,-7.39 6.97,-7.27 7,-7.15 7,-7.01L7,-0.99C7,-0.85 6.97,-0.73 6.92,-0.61 6.87,-0.49 6.79,-0.38 6.71,-0.29 6.62,-0.2 6.51,-0.13 6.39,-0.08 6.26,-0.03 6.14,0 6,0 5.79,0 5.6,-0.06 5.43,-0.18L1.64,-2.78C1.44,-2.92 1.29,-3.1 1.17,-3.31 1.06,-3.53 1,-3.76 1,-4z</StreamGeometry>
+  <StreamGeometry x:Key="WinUiScrollBarArrowRight">F1M1,-0.99L1,-7.01C1,-7.15 1.03,-7.27 1.08,-7.39 1.13,-7.51 1.21,-7.62 1.29,-7.71 1.38,-7.8 1.49,-7.87 1.61,-7.92 1.73,-7.97 1.86,-8 2,-8 2.21,-8 2.4,-7.94 2.57,-7.82L6.36,-5.22C6.56,-5.08 6.72,-4.9 6.83,-4.69 6.94,-4.47 7,-4.24 7,-4 7,-3.76 6.94,-3.53 6.83,-3.31 6.72,-3.1 6.56,-2.92 6.36,-2.78L2.57,-0.18C2.4,-0.06 2.21,0 2,0 1.86,0 1.73,-0.03 1.61,-0.08 1.49,-0.13 1.38,-0.2 1.29,-0.29 1.21,-0.38 1.13,-0.49 1.08,-0.61 1.03,-0.73 1,-0.85 1,-0.99z</StreamGeometry>
+
+  <!-- WinUI draws the thumb as a Rectangle with a transparent 6px stroke, so the visible fill is
+       inset 3px on every side: 2px wide when collapsed (8px box), 6px wide when expanded (12px box). -->
+  <ControlTheme x:Key="WinUiScrollBarThumb" TargetType="Thumb">
+    <Setter Property="Background" Value="{DynamicResource ScrollBarPanningThumbBackground}"/>
+    <Setter Property="CornerRadius" Value="{StaticResource ScrollBarCornerRadius}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Background="Transparent">
+          <Border Name="ThumbVisual"
+                  Margin="3"
+                  Background="{TemplateBinding Background}"
+                  CornerRadius="{TemplateBinding CornerRadius}"/>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Width" Duration="0:0:0.167" Easing="0,0,0,1"/>
+        <DoubleTransition Property="Height" Duration="0:0:0.167" Easing="0,0,0,1"/>
+      </Transitions>
+    </Setter>
+    <Style Selector="^:disabled /template/ Border#ThumbVisual">
+      <Setter Property="Background" Value="{DynamicResource ScrollBarThumbFillDisabled}"/>
+      <Setter Property="Opacity" Value="0"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiScrollBarPageButton" TargetType="RepeatButton">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"/>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiScrollBarLineButton" TargetType="RepeatButton">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource ScrollBarButtonArrowForeground}"/>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="Opacity" Value="0"/>
+    <Setter Property="Interval" Value="50"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RenderTransformOrigin="50%,50%"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.083"/>
+      </Transitions>
+    </Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource ScrollBarButtonArrowForegroundPointerOver}"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Foreground" Value="{DynamicResource ScrollBarButtonArrowForegroundPressed}"/>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="RenderTransform" Value="scale(0.875)"/>
+      </Style>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource ScrollBarButtonArrowForegroundDisabled}"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
+    <Setter Property="MinWidth" Value="{StaticResource ScrollBarSize}"/>
+    <Setter Property="MinHeight" Value="{StaticResource ScrollBarSize}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="CornerRadius" Value="{StaticResource ScrollBarCornerRadius}"/>
+    <Setter Property="ShowDelay" Value="0:0:0.4"/>
+
+    <Style Selector="^:vertical">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Grid Name="Root" Background="{TemplateBinding Background}">
+            <Grid RowDefinitions="Auto,*,Auto">
+              <!-- CornerRadius 6 = WinUI's 2x ScrollBarCornerRadius (pill-shaped track). -->
+              <Border Name="TrackRect"
+                      Grid.RowSpan="3"
+                      Background="{DynamicResource ScrollBarTrackFill}"
+                      CornerRadius="6"
+                      Opacity="0">
+                <Border.Transitions>
+                  <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.083"/>
+                  </Transitions>
+                </Border.Transitions>
+              </Border>
+
+              <RepeatButton Name="PART_LineUpButton"
+                            Grid.Row="0"
+                            Theme="{StaticResource WinUiScrollBarLineButton}"
+                            HorizontalAlignment="Center"
+                            MinWidth="{StaticResource ScrollBarSize}"
+                            Height="{StaticResource ScrollBarSize}"
+                            Padding="{StaticResource ScrollBarVerticalDecreaseMargin}"
+                            AutomationProperties.Name="Line up">
+                <PathIcon Data="{StaticResource WinUiScrollBarArrowUp}"
+                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+              </RepeatButton>
+
+              <Track Grid.Row="1"
+                     Minimum="{TemplateBinding Minimum}"
+                     Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}"
+                     DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                     ViewportSize="{TemplateBinding ViewportSize}"
+                     Orientation="{TemplateBinding Orientation}"
+                     IsDirectionReversed="True">
+                <Track.DecreaseButton>
+                  <RepeatButton Name="PART_PageUpButton"
+                                Theme="{StaticResource WinUiScrollBarPageButton}"
+                                AutomationProperties.Name="Page up"/>
+                </Track.DecreaseButton>
+                <Track.IncreaseButton>
+                  <RepeatButton Name="PART_PageDownButton"
+                                Theme="{StaticResource WinUiScrollBarPageButton}"
+                                AutomationProperties.Name="Page down"/>
+                </Track.IncreaseButton>
+                <Thumb Name="Thumb"
+                       Theme="{StaticResource WinUiScrollBarThumb}"
+                       Width="{StaticResource ScrollBarVerticalThumbMinWidth}"
+                       MinHeight="{StaticResource ScrollBarVerticalThumbMinHeight}"
+                       HorizontalAlignment="Right"
+                       AutomationProperties.Name="Position"/>
+              </Track>
+
+              <RepeatButton Name="PART_LineDownButton"
+                            Grid.Row="2"
+                            Theme="{StaticResource WinUiScrollBarLineButton}"
+                            HorizontalAlignment="Center"
+                            MinWidth="{StaticResource ScrollBarSize}"
+                            Height="{StaticResource ScrollBarSize}"
+                            Padding="{StaticResource ScrollBarVerticalIncreaseMargin}"
+                            AutomationProperties.Name="Line down">
+                <PathIcon Data="{StaticResource WinUiScrollBarArrowDown}"
+                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+              </RepeatButton>
+            </Grid>
+          </Grid>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:horizontal">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Grid Name="Root" Background="{TemplateBinding Background}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Name="TrackRect"
+                      Grid.ColumnSpan="3"
+                      Background="{DynamicResource ScrollBarTrackFill}"
+                      CornerRadius="6"
+                      Opacity="0">
+                <Border.Transitions>
+                  <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.083"/>
+                  </Transitions>
+                </Border.Transitions>
+              </Border>
+
+              <RepeatButton Name="PART_LineUpButton"
+                            Grid.Column="0"
+                            Theme="{StaticResource WinUiScrollBarLineButton}"
+                            VerticalAlignment="Center"
+                            MinHeight="{StaticResource ScrollBarSize}"
+                            Width="{StaticResource ScrollBarSize}"
+                            Padding="{StaticResource ScrollBarHorizontalDecreaseMargin}"
+                            AutomationProperties.Name="Column left">
+                <PathIcon Data="{StaticResource WinUiScrollBarArrowLeft}"
+                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+              </RepeatButton>
+
+              <Track Grid.Column="1"
+                     Minimum="{TemplateBinding Minimum}"
+                     Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}"
+                     DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                     ViewportSize="{TemplateBinding ViewportSize}"
+                     Orientation="{TemplateBinding Orientation}">
+                <Track.DecreaseButton>
+                  <RepeatButton Name="PART_PageUpButton"
+                                Theme="{StaticResource WinUiScrollBarPageButton}"
+                                AutomationProperties.Name="Page left"/>
+                </Track.DecreaseButton>
+                <Track.IncreaseButton>
+                  <RepeatButton Name="PART_PageDownButton"
+                                Theme="{StaticResource WinUiScrollBarPageButton}"
+                                AutomationProperties.Name="Page right"/>
+                </Track.IncreaseButton>
+                <Thumb Name="Thumb"
+                       Theme="{StaticResource WinUiScrollBarThumb}"
+                       Height="{StaticResource ScrollBarHorizontalThumbMinHeight}"
+                       MinWidth="{StaticResource ScrollBarHorizontalThumbMinWidth}"
+                       VerticalAlignment="Bottom"
+                       AutomationProperties.Name="Position"/>
+              </Track>
+
+              <RepeatButton Name="PART_LineDownButton"
+                            Grid.Column="2"
+                            Theme="{StaticResource WinUiScrollBarLineButton}"
+                            VerticalAlignment="Center"
+                            MinHeight="{StaticResource ScrollBarSize}"
+                            Width="{StaticResource ScrollBarSize}"
+                            Padding="{StaticResource ScrollBarHorizontalIncreaseMargin}"
+                            AutomationProperties.Name="Column right">
+                <PathIcon Data="{StaticResource WinUiScrollBarArrowRight}"
+                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+              </RepeatButton>
+            </Grid>
+          </Grid>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+
+    <Style Selector="^[IsExpanded=true]">
+      <Style Selector="^ /template/ Border#TrackRect">
+        <Setter Property="Opacity" Value="1"/>
+      </Style>
+      <Style Selector="^ /template/ RepeatButton">
+        <Setter Property="Opacity" Value="1"/>
+      </Style>
+      <Style Selector="^ /template/ Thumb#Thumb">
+        <Setter Property="Background" Value="{DynamicResource ScrollBarThumbBackground}"/>
+      </Style>
+    </Style>
+    <Style Selector="^[IsExpanded=true]:vertical /template/ Thumb#Thumb">
+      <Setter Property="Width" Value="{StaticResource ScrollBarSize}"/>
+    </Style>
+    <Style Selector="^[IsExpanded=true]:horizontal /template/ Thumb#Thumb">
+      <Setter Property="Height" Value="{StaticResource ScrollBarSize}"/>
+    </Style>
+
+    <Style Selector="^:disabled /template/ Grid#Root">
+      <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

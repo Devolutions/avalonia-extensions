@@ -304,7 +304,7 @@
       "category": "Layout",
       "demo": "ScrollBarDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {
@@ -313,7 +313,7 @@
       "category": "Layout",
       "demo": "ScrollViewerDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {

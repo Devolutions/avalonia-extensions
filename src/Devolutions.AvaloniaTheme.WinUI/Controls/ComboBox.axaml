@@ -1,0 +1,358 @@
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/release/12.1.2/src/Avalonia.Themes.Fluent/Controls/ComboBox.xaml
+Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against the WinUI 3 Gallery. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:attachedProperties="clr-namespace:Devolutions.AvaloniaControls.AttachedProperties;assembly=Devolutions.AvaloniaControls">
+
+  <Thickness x:Key="ComboBoxBorderThemeThickness">1</Thickness>
+  <Thickness x:Key="ComboBoxBackgroundBorderThicknessFocused">2</Thickness>
+  <Thickness x:Key="ComboBoxDropdownBorderThickness">1</Thickness>
+  <Thickness x:Key="ComboBoxDropdownBorderPadding">0</Thickness>
+  <Thickness x:Key="ComboBoxDropdownContentMargin">0,4</Thickness>
+  <!-- WinUI uses 12,5,0,7 / 11,5,38,6; the vertical split is evened out because Inter sits higher
+       in its line box than Segoe UI (same compensation as ButtonPadding). -->
+  <Thickness x:Key="ComboBoxPadding">12,6,0,6</Thickness>
+  <Thickness x:Key="ComboBoxEditableTextPadding">11,6,38,6</Thickness>
+  <x:Double x:Key="ComboBoxMinHeight">32</x:Double>
+  <x:Double x:Key="ComboBoxThemeMinWidth">64</x:Double>
+  <!-- Width of the chevron column. WinUI reserves 38px so the 12px glyph keeps its 14px inset. -->
+  <x:Double x:Key="ComboBoxDropDownButtonWidth">38</x:Double>
+  <CornerRadius x:Key="ComboBoxHiglightBorderCornerRadius">7</CornerRadius>
+  <CornerRadius x:Key="ComboBoxDropDownButtonBackgroundCornerRadius">4</CornerRadius>
+
+  <!--
+    Drop-down geometry used to pre-position the popup so the selected row lands on the ComboBox,
+    the way WinUI does it natively (ComboBoxTemplateSettings.DropDownOffset). These are estimates;
+    ComboBoxPopupAlignmentBehavior corrects them against the popup's real layout once it is open.
+
+    ComboBoxItemHeight  = ComboBoxItemMinHeight (ComboBoxItem.axaml), i.e. row pitch including margin.
+    InitialFirstItemDistance = ComboBoxMinHeight (32) + PopupBorder thickness (1)
+                               + ComboBoxDropdownContentMargin.Top (4) + ComboBoxItemMargin.Top (2)
+                               - ComboBoxItemHeight (36).
+    PopupTrimHeight     = the popup chrome MaxDropDownHeight also covers:
+                          2 x PopupBorder thickness + 2 x ComboBoxDropdownContentMargin vertical.
+  -->
+  <x:Int32 x:Key="ComboBoxItemHeight">36</x:Int32>
+  <x:Int32 x:Key="InitialFirstItemDistance">3</x:Int32>
+  <x:Int32 x:Key="PopupTrimHeight">10</x:Int32>
+
+  <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
+    <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource ComboBoxBorderThemeThickness}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}"/>
+    <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ComboBoxMinHeight}"/>
+    <Setter Property="MaxDropDownHeight" Value="504"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+    <!-- The focus ring is drawn by HighlightBackground, outside the control's own bounds. -->
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="ComboBoxValidationBehavior.Enable" Value="True"/>
+    <Setter Property="ComboBoxPopupAlignmentBehavior.Enable" Value="True"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <!-- ClipToBounds is True by default on DataValidationErrors, which would clip the focus
+             ring that HighlightBackground deliberately draws outside the control's bounds. -->
+        <DataValidationErrors ClipToBounds="False">
+          <Panel ClipToBounds="False">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+              <Border x:Name="Background"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="5"
+                      Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      MinWidth="{DynamicResource ComboBoxThemeMinWidth}"/>
+
+              <ItemsControl x:Name="InnerLeftContent"
+                            Grid.Column="0"
+                            Margin="10,2,0,2"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerLeftContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
+
+              <TextBlock x:Name="PlaceholderTextBlock"
+                         Grid.Column="1"
+                         Margin="{TemplateBinding Padding}"
+                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                         Text="{TemplateBinding PlaceholderText}"
+                         Foreground="{TemplateBinding PlaceholderForeground}">
+                <TextBlock.IsVisible>
+                  <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}"
+                             Converter="{x:Static ObjectConverters.IsNull}"/>
+                    <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}"/>
+                  </MultiBinding>
+                </TextBlock.IsVisible>
+              </TextBlock>
+
+              <ContentControl x:Name="ContentPresenter"
+                              Grid.Column="1"
+                              Margin="{TemplateBinding Padding}"
+                              Foreground="{TemplateBinding Foreground}"
+                              Content="{TemplateBinding SelectionBoxItem}"
+                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}"/>
+
+              <TextBox x:Name="PART_EditableTextBox"
+                       Grid.Column="1"
+                       Padding="{TemplateBinding Padding}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="Stretch"
+                       VerticalContentAlignment="Center"
+                       MinHeight="0"
+                       Foreground="{TemplateBinding Foreground}"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       FocusAdorner="{x:Null}"
+                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                       PlaceholderText="{TemplateBinding PlaceholderText}"
+                       IsVisible="{TemplateBinding IsEditable}">
+                <TextBox.Resources>
+                  <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
+                  <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
+                  <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                </TextBox.Resources>
+              </TextBox>
+
+              <ItemsControl x:Name="InnerLeftOfDropDownArrowContent"
+                            Grid.Column="2"
+                            Margin="8,2,0,2"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerLeftOfDropDownArrowContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
+
+              <!-- Editable-only chevron chrome: with the text box owning the pointer, WinUI moves the
+                   hover/press feedback onto the drop-down button instead of the whole control. -->
+              <Panel Grid.Column="3" Width="{DynamicResource ComboBoxDropDownButtonWidth}">
+                <Border x:Name="DropDownOverlay"
+                        Margin="4"
+                        CornerRadius="{DynamicResource ComboBoxDropDownButtonBackgroundCornerRadius}"
+                        Background="Transparent"
+                        IsVisible="{TemplateBinding IsEditable}"/>
+                <!-- WinUI's 12px AnimatedChevronDownSmallVisualSource has a smaller visible mark
+                     than its layout box. A stroked path preserves that compact size without making
+                     the chevron as thin as scaling down the Fluent filled geometry would. -->
+                <Path x:Name="DropDownGlyph"
+                      Width="8"
+                      Height="5"
+                      Margin="0,0,14,0"
+                      UseLayoutRounding="False"
+                      IsHitTestVisible="False"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Stroke="{DynamicResource ComboBoxDropDownGlyphForeground}"
+                      StrokeThickness="1.25"
+                      StrokeLineCap="Round"
+                      StrokeJoin="Round"
+                      Data="M0,0.5 L4,4.5 L8,0.5"/>
+              </Panel>
+
+              <ItemsControl x:Name="InnerRightContent"
+                            Grid.Column="4"
+                            Margin="0,2,10,2"
+                            VerticalAlignment="Center"
+                            ItemsSource="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{Binding (ComboBoxContent.InnerRightContent), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static DevoConverters.IsNullOrEmptyConverter}, ConverterParameter={x:False}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
+            </Grid>
+
+            <!-- WinUI's focus rectangle sits outside the control, hence the negative margin and the
+                 larger corner radius; it is a sibling of the Grid so the columns keep their size. -->
+            <Border x:Name="HighlightBackground"
+                    Margin="-3"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    BorderThickness="{DynamicResource ComboBoxBackgroundBorderThicknessFocused}"
+                    BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushFocused}"
+                    CornerRadius="{DynamicResource ComboBoxHiglightBorderCornerRadius}"/>
+
+            <!--
+              PlacementConstraintAdjustment: the default (All) includes FlipY, which is wrong here.
+              The popup is deliberately offset upwards so the selected row lands on the ComboBox, so
+              near the bottom of the screen a flip would move it a further popup-height up and leave
+              it floating above the control. Sliding keeps it on screen without changing sides.
+            -->
+            <Popup x:Name="PART_Popup"
+                   WindowManagerAddShadowHint="False"
+                   IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                   PlacementTarget="Background"
+                   Placement="AnchorAndGravity"
+                   PlacementAnchor="BottomLeft"
+                   PlacementGravity="BottomRight"
+                   PlacementConstraintAdjustment="SlideX, SlideY, ResizeX, ResizeY"
+                   IsLightDismissEnabled="True"
+                   InheritsTransform="True">
+              <Popup.VerticalOffset>
+                <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex"/>
+                  <Binding Source="{StaticResource ComboBoxItemHeight}"/>
+                  <Binding Source="{StaticResource InitialFirstItemDistance}"/>
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight"/>
+                  <Binding Source="{StaticResource PopupTrimHeight}"/>
+                  <!-- Editable lists use ordinary below/above placement and therefore suppress the
+                       selected-row alignment offset. -->
+                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsEditable"/>
+                </MultiBinding>
+              </Popup.VerticalOffset>
+              <Border x:Name="PopupBorder"
+                      HorizontalAlignment="Stretch"
+                      Background="{DynamicResource ComboBoxDropDownBackground}"
+                      BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                      BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                      Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                      CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                              VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                              IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                              IsScrollChainingEnabled="False">
+                  <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                  Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}"/>
+                </ScrollViewer>
+              </Border>
+            </Popup>
+          </Panel>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- PointerOver state -->
+    <Style Selector="^:pointerover">
+      <Style Selector="^ /template/ Border#Background">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}"/>
+      </Style>
+      <Style Selector="^ /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundPointerOver}"/>
+      </Style>
+    </Style>
+
+    <!-- Pressed state -->
+    <Style Selector="^:pressed">
+      <Style Selector="^ /template/ Border#Background">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPressed}"/>
+      </Style>
+      <Style Selector="^ /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundPressed}"/>
+      </Style>
+    </Style>
+
+    <!-- Focused state -->
+    <Style Selector="^:focus-visible /template/ Border#HighlightBackground">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="^:focus-within">
+      <Style Selector="^ /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundFocused}"/>
+      </Style>
+      <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundFocused}"/>
+      </Style>
+      <Style Selector="^ /template/ Path#DropDownGlyph">
+        <Setter Property="Stroke" Value="{DynamicResource ComboBoxDropDownGlyphForegroundFocused}"/>
+      </Style>
+    </Style>
+
+    <!-- Focus Pressed state -->
+    <Style Selector="^:focus:pressed">
+      <Style Selector="^ /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundFocusedPressed}"/>
+      </Style>
+      <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxPlaceHolderForegroundFocusedPressed}"/>
+      </Style>
+      <Style Selector="^ /template/ Path#DropDownGlyph">
+        <Setter Property="Stroke" Value="{DynamicResource ComboBoxDropDownGlyphForegroundFocusedPressed}"/>
+      </Style>
+    </Style>
+
+    <!-- Disabled state -->
+    <Style Selector="^:disabled">
+      <Style Selector="^ /template/ Border#Background">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundDisabled}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushDisabled}"/>
+      </Style>
+      <Style Selector="^ /template/ ContentControl#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundDisabled}"/>
+      </Style>
+      <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundDisabled}"/>
+      </Style>
+      <Style Selector="^ /template/ Path#DropDownGlyph">
+        <Setter Property="Stroke" Value="{DynamicResource ComboBoxDropDownGlyphForegroundDisabled}"/>
+      </Style>
+    </Style>
+
+    <!-- Error state -->
+    <Style Selector="^:error /template/ Border#Background">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}"/>
+    </Style>
+
+    <!-- Editable: the drop-down button keeps its own hover/press feedback. -->
+    <Style Selector="^[IsEditable=true]">
+      <Setter Property="IsTabStop" Value="False"/>
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
+      <Setter Property="Padding" Value="{DynamicResource ComboBoxEditableTextPadding}"/>
+      <Setter Property="ComboBoxPopupAlignmentBehavior.Enable" Value="False"/>
+      <Style Selector="^ /template/ Path#DropDownGlyph">
+        <Setter Property="Stroke" Value="{DynamicResource ComboBoxEditableDropDownGlyphForeground}"/>
+      </Style>
+      <!-- Editable ComboBoxes keep the option list clear of the input, flipping above only when
+           there is not enough room below. Non-editable ComboBoxes continue to align the selected
+           row over the closed control. -->
+      <Style Selector="^ /template/ Popup#PART_Popup">
+        <Setter Property="Placement" Value="BottomEdgeAlignedLeft"/>
+        <Setter Property="PlacementConstraintAdjustment" Value="All"/>
+        <Setter Property="VerticalOffset" Value="0"/>
+      </Style>
+      <Style Selector="^ /template/ Border#DropDownOverlay:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerOver}"/>
+      </Style>
+      <!-- Border has no :pressed pseudo-class, so the press is read from the ComboBox itself. -->
+      <Style Selector="^:pressed /template/ Border#DropDownOverlay">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerPressed}"/>
+      </Style>
+    </Style>
+
+    <!-- Borderless: drops the chrome but keeps the focus ring and drop-down surface. -->
+    <Style Selector="^.borderless /template/ Border#Background">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

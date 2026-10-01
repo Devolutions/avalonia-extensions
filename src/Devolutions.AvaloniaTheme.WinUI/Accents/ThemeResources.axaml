@@ -39,6 +39,7 @@
       <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#80F9F9F9"/>
       <SolidColorBrush x:Key="ControlFillColorTertiaryBrush"   Color="#4DF9F9F9"/>
       <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#4DF9F9F9"/>
+      <SolidColorBrush x:Key="ControlFillColorInputActiveBrush" Color="#FFFFFFFF"/>
 
       <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
            counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
@@ -109,6 +110,25 @@
         <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentDefault}" Offset="1.0"/>
       </LinearGradientBrush>
 
+      <LinearGradientBrush x:Key="TextControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,2"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrongStrokeColorDefault}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush"
+                           StartPoint="0,0" EndPoint="0,2"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource SystemAccentColorDark1}" Offset="1.0"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+
       <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
       <SolidColorBrush x:Key="ScrollViewerScrollBarSeparatorBackground" Color="#00000000"/>
       <StaticResource x:Key="ScrollBarPanningThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
@@ -120,6 +140,32 @@
       <StaticResource x:Key="ScrollBarButtonArrowForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ScrollBarButtonArrowForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ScrollBarButtonArrowForegroundDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="ControlFillColorInputActiveBrush"/>
+      <StaticResource x:Key="TextControlBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlBorderBrush" ResourceKey="TextControlElevationBorderBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushPointerOver" ResourceKey="TextControlElevationBorderBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="TextControlForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundFocused" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlSelectionHighlightColor" ResourceKey="AccentFillColorSelectedTextBackgroundBrush"/>
+      <StaticResource x:Key="TextControlButtonBackground" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrush" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrushPointerOver" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrushPressed" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>
       <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
       <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
@@ -223,6 +269,7 @@
       <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#15FFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorTertiaryBrush"   Color="#08FFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#0BFFFFFF"/>
+      <SolidColorBrush x:Key="ControlFillColorInputActiveBrush" Color="#B31E1E1E"/>
 
       <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
            counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
@@ -288,6 +335,25 @@
         <GradientStop Color="{DynamicResource ControlStrokeColorOnAccentDefault}" Offset="1.0"/>
       </LinearGradientBrush>
 
+      <LinearGradientBrush x:Key="TextControlElevationBorderBrush"
+                           StartPoint="0,0" EndPoint="0,2"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource ControlStrongStrokeColorDefault}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+      <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush"
+                           StartPoint="0,0" EndPoint="0,2"
+                           TransformOrigin="50%,50%">
+        <LinearGradientBrush.Transform>
+          <ScaleTransform ScaleY="-1"/>
+        </LinearGradientBrush.Transform>
+        <GradientStop Color="{DynamicResource SystemAccentColorLight2}" Offset="1.0"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1.0"/>
+      </LinearGradientBrush>
+
       <!-- Control-specific aliases must share the theme dictionary with their semantic tokens. -->
       <SolidColorBrush x:Key="ScrollViewerScrollBarSeparatorBackground" Color="#00000000"/>
       <StaticResource x:Key="ScrollBarPanningThumbBackground" ResourceKey="ControlStrongFillColorDefaultBrush"/>
@@ -299,6 +365,32 @@
       <StaticResource x:Key="ScrollBarButtonArrowForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ScrollBarButtonArrowForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ScrollBarButtonArrowForegroundDisabled" ResourceKey="ControlStrongFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="ControlFillColorInputActiveBrush"/>
+      <StaticResource x:Key="TextControlBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlBorderBrush" ResourceKey="TextControlElevationBorderBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushPointerOver" ResourceKey="TextControlElevationBorderBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush"/>
+      <StaticResource x:Key="TextControlBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="TextControlForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundFocused" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="TextControlForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlPlaceholderForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="TextControlSelectionHighlightColor" ResourceKey="AccentFillColorSelectedTextBackgroundBrush"/>
+      <StaticResource x:Key="TextControlButtonBackground" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrush" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrushPointerOver" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonBorderBrushPressed" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="TextControlButtonForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="TextControlButtonForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>
       <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
       <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>

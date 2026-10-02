@@ -222,4 +222,41 @@ public class WinUiMenuFlyoutTests
             Windows11MicaDetector.SetTestOverride(null);
         }
     }
+
+    [AvaloniaFact]
+    public void Presenter_padding_max_width_and_min_height_overrides_flow_through_template()
+    {
+        var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+        theme.BeginInit();
+        theme.EndInit();
+
+        // Instance-level overrides must still apply: the template binds Padding/MaxWidth/MinHeight
+        // via TemplateBinding (rather than reading the theme resources directly), so a consumer
+        // overriding these properties isn't silently ignored by the rendered surface.
+        var presenter = new MenuFlyoutPresenter
+        {
+            Items = { new MenuItem { Header = "Item" } },
+            Padding = new Thickness(20),
+            MaxWidth = 300,
+            MinHeight = 64,
+        };
+        var window = new Window();
+        window.Styles.Add(theme);
+        window.Content = presenter;
+        window.Show();
+        try
+        {
+            presenter.ApplyTemplate();
+            Dispatcher.UIThread.RunJobs();
+            var surface = Assert.Single(presenter.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "LayoutRoot");
+            Assert.Equal(new Thickness(20), surface.Padding);
+            Assert.Equal(300, surface.MaxWidth);
+            Assert.Equal(64, surface.MinHeight);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

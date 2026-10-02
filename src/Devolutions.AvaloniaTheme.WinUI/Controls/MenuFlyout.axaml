@@ -17,6 +17,9 @@
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"/>
     <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}"/>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="LayoutRoot"
@@ -25,9 +28,9 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Margin="8"
-                Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
-                MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
-                MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+                Padding="{TemplateBinding Padding}"
+                MaxWidth="{TemplateBinding MaxWidth}"
+                MinHeight="{TemplateBinding MinHeight}"
                 BoxShadow="{StaticResource MenuFlyoutPresenterShadow}">
           <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                         VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"

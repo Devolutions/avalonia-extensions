@@ -1,0 +1,200 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ControlTheme x:Key="WinUiExpanderToggleButtonTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource FluentExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Width" Value="10"/>
+      <Setter Property="Height" Value="5"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiExpanderToggleButtonDownTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 0 0 L 5 5 L 10 0"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiExpanderToggleButtonUpTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 0 5 L 5 0 L 10 5"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiExpanderToggleButtonLeftTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Width" Value="5"/>
+      <Setter Property="Height" Value="10"/>
+      <Setter Property="Data" Value="M 5 0 L 0 5 L 5 10"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiExpanderToggleButtonRightTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Width" Value="5"/>
+      <Setter Property="Height" Value="10"/>
+      <Setter Property="Data" Value="M 0 0 L 5 5 L 0 10"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonDownTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonDownTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonUpTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonUpTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonLeftTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonLeftTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonRightTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonRightTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander"
+                BasedOn="{StaticResource {x:Type Expander}}">
+    <Setter Property="IsTabStop" Value="False"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ExpanderMinHeight}"/>
+    <Setter Property="Background" Value="{DynamicResource ExpanderContentBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ExpanderContentBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource ExpanderContentDownBorderThickness}"/>
+    <Setter Property="Padding" Value="{DynamicResource ExpanderContentPadding}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
+    <!-- Keep Fluent's template parts and direction styles, adding a clip for the slide-in. -->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel MinWidth="{TemplateBinding MinWidth}"
+                   MaxWidth="{TemplateBinding MaxWidth}">
+          <ToggleButton x:Name="ExpanderHeader"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        IsEnabled="{TemplateBinding IsEnabled}"
+                        Content="{TemplateBinding Header}"
+                        ContentTemplate="{TemplateBinding HeaderTemplate}"
+                        IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"/>
+          <Border x:Name="ExpanderContentClip"
+                  ClipToBounds="True"
+                  IsVisible="{TemplateBinding IsExpanded}">
+            <Border x:Name="ExpanderContent"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    MinHeight="{TemplateBinding MinHeight}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Padding="{TemplateBinding Padding}">
+              <Border.RenderTransform>
+                <TranslateTransform/>
+              </Border.RenderTransform>
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Foreground="{TemplateBinding Foreground}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Border>
+          </Border>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:down /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiExpanderToggleButtonDownTheme}"/>
+    </Style>
+    <Style Selector="^:up /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiExpanderToggleButtonUpTheme}"/>
+    </Style>
+    <Style Selector="^:left /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiExpanderToggleButtonLeftTheme}"/>
+    </Style>
+    <Style Selector="^:right /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiExpanderToggleButtonRightTheme}"/>
+    </Style>
+
+    <Style Selector="^:expanded:down /template/ Border#ExpanderContent">
+      <Style.Animations>
+        <Animation Duration="0:0:0.333" FillMode="Both" Easing="0,0,0,1">
+          <KeyFrame Cue="0%">
+            <Setter Property="TranslateTransform.Y"
+                    Value="{Binding Bounds.Height, RelativeSource={RelativeSource FindAncestor, AncestorType=Border, Tree=Visual}, Converter={x:Static DevoDoubleConverters.Negate}}"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="TranslateTransform.Y" Value="0"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="^:expanded:up /template/ Border#ExpanderContent">
+      <Style.Animations>
+        <Animation Duration="0:0:0.333" FillMode="Both" Easing="0,0,0,1">
+          <KeyFrame Cue="0%">
+            <Setter Property="TranslateTransform.Y"
+                    Value="{Binding Bounds.Height, RelativeSource={RelativeSource FindAncestor, AncestorType=Border, Tree=Visual}}"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="TranslateTransform.Y" Value="0"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+
+    <Style Selector="^.borderless">
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    <Style Selector="^.borderless /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Padding" Value="3,0,0,0"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="^.borderless:down /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonDownTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:up /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonUpTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:left /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonLeftTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:right /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonRightTheme}"/>
+    </Style>
+    <Style Selector="^.borderless /template/ Border#ExpanderContent">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ExpanderContentBorderBrush}"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="^.borderless:down /template/ Border#ExpanderContent">
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+    <Style Selector="^.borderless:up /template/ Border#ExpanderContent">
+      <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    </Style>
+    <Style Selector="^.borderless:left /template/ Border#ExpanderContent">
+      <Setter Property="BorderThickness" Value="1,0,0,0"/>
+    </Style>
+    <Style Selector="^.borderless:right /template/ Border#ExpanderContent">
+      <Setter Property="BorderThickness" Value="0,0,1,0"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

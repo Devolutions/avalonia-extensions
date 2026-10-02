@@ -86,6 +86,10 @@
       <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#4DF9F9F9"/>
       <SolidColorBrush x:Key="ControlFillColorInputActiveBrush" Color="#FFFFFFFF"/>
 
+      <!-- WinUI Expander card surfaces -->
+      <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush"   Color="#B3FFFFFF"/>
+      <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="#80F6F6F6"/>
+
       <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
            counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
            Color directly — GradientStop.Color cannot bind to a Brush resource. -->
@@ -93,10 +97,12 @@
       <Color x:Key="ControlStrokeColorSecondary">#29000000</Color>
       <Color x:Key="ControlStrokeColorOnAccentDefault">#14FFFFFF</Color>
       <Color x:Key="ControlStrokeColorOnAccentSecondary">#66000000</Color>
+      <Color x:Key="CardStrokeColorDefault">#0F000000</Color>
       <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush"           Color="{DynamicResource ControlStrokeColorDefault}"/>
       <SolidColorBrush x:Key="ControlStrokeColorSecondaryBrush"         Color="{DynamicResource ControlStrokeColorSecondary}"/>
       <SolidColorBrush x:Key="ControlStrokeColorOnAccentDefaultBrush"   Color="{DynamicResource ControlStrokeColorOnAccentDefault}"/>
       <SolidColorBrush x:Key="ControlStrokeColorOnAccentSecondaryBrush" Color="{DynamicResource ControlStrokeColorOnAccentSecondary}"/>
+      <SolidColorBrush x:Key="CardStrokeColorDefaultBrush"               Color="{DynamicResource CardStrokeColorDefault}"/>
 
       <!-- WinUI "strong" control strokes (CheckBox/RadioButton unchecked glyph outline) and alt
            fills (CheckBox/RadioButton glyph background) -->
@@ -276,6 +282,32 @@
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedPointerOver" ResourceKey="AccentControlElevationBorderBrush"/>
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedPressed" ResourceKey="AccentControlElevationBorderBrush"/>
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedDisabled" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackground" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundPointerOver" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundPressed" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundDisabled" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushPointerOver" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushPressed" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushDisabled" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushPointerOver" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushPressed" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -360,6 +392,10 @@
       <SolidColorBrush x:Key="ControlFillColorDisabledBrush"   Color="#0BFFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorInputActiveBrush" Color="#B31E1E1E"/>
 
+      <!-- WinUI Expander card surfaces -->
+      <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush"   Color="#0DFFFFFF"/>
+      <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="#08FFFFFF"/>
+
       <!-- WinUI control strokes (1px borders). Colors are named separately from their Brush
            counterparts so gradient stops (ControlElevationBorderBrush below) can reference the
            Color directly — GradientStop.Color cannot bind to a Brush resource. -->
@@ -367,10 +403,12 @@
       <Color x:Key="ControlStrokeColorSecondary">#18FFFFFF</Color>
       <Color x:Key="ControlStrokeColorOnAccentDefault">#14FFFFFF</Color>
       <Color x:Key="ControlStrokeColorOnAccentSecondary">#23000000</Color>
+      <Color x:Key="CardStrokeColorDefault">#19000000</Color>
       <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush"           Color="{DynamicResource ControlStrokeColorDefault}"/>
       <SolidColorBrush x:Key="ControlStrokeColorSecondaryBrush"         Color="{DynamicResource ControlStrokeColorSecondary}"/>
       <SolidColorBrush x:Key="ControlStrokeColorOnAccentDefaultBrush"   Color="{DynamicResource ControlStrokeColorOnAccentDefault}"/>
       <SolidColorBrush x:Key="ControlStrokeColorOnAccentSecondaryBrush" Color="{DynamicResource ControlStrokeColorOnAccentSecondary}"/>
+      <SolidColorBrush x:Key="CardStrokeColorDefaultBrush"               Color="{DynamicResource CardStrokeColorDefault}"/>
 
       <!-- WinUI "strong" control strokes (CheckBox/RadioButton unchecked glyph outline) and alt
            fills (CheckBox/RadioButton glyph background) -->
@@ -545,6 +583,32 @@
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedPointerOver" ResourceKey="AccentControlElevationBorderBrush"/>
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedPressed" ResourceKey="AccentControlElevationBorderBrush"/>
       <StaticResource x:Key="RadioButtonCheckGlyphStrokeCheckedDisabled" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackground" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundPointerOver" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundPressed" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBackgroundDisabled" ResourceKey="CardBackgroundFillColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderHeaderForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushPointerOver" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushPressed" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderHeaderBorderBrushDisabled" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ExpanderChevronForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushPointerOver" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushPressed" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -558,6 +622,17 @@
 
   <!-- WinUI shared control metrics — same value in every theme variant/colour scheme. -->
   <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+  <Thickness x:Key="ExpanderHeaderBorderThickness">1</Thickness>
+  <Thickness x:Key="ExpanderChevronBorderThickness">0</Thickness>
+  <Thickness x:Key="ExpanderHeaderPadding">16,0,0,0</Thickness>
+  <Thickness x:Key="ExpanderChevronMargin">20,0,8,0</Thickness>
+  <x:Double x:Key="ExpanderChevronButtonSize">32</x:Double>
+  <Thickness x:Key="ExpanderContentPadding">16</Thickness>
+  <Thickness x:Key="ExpanderContentDownBorderThickness">1,0,1,1</Thickness>
+  <Thickness x:Key="ExpanderContentUpBorderThickness">1,1,1,0</Thickness>
+  <Thickness x:Key="ExpanderContentLeftBorderThickness">1,1,0,1</Thickness>
+  <Thickness x:Key="ExpanderContentRightBorderThickness">0,1,1,1</Thickness>
+  <x:Double x:Key="ExpanderMinHeight">48</x:Double>
   <SolidColorBrush x:Key="ControlFillColorTransparentBrush" Color="Transparent"/>
 
   <!-- Circular counterpart of ControlElevationBorderBrush (used by RadioButton's small check

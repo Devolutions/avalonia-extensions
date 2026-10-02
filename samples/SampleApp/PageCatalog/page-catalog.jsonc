@@ -195,7 +195,7 @@
       "category": "Layout",
       "demo": "ExpanderDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "🚧", "WinUIMica": "🚧"
       }
     },
     {

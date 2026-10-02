@@ -8,6 +8,7 @@
   <StyleInclude Source="avares://Devolutions.AvaloniaControls/DefaultControlTemplates.axaml" />
   <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
   <StyleInclude Source="/Controls/MenuFlyoutSvg.styles.axaml" />
+  <StyleInclude Source="/Controls/MenuFlyoutSeparator.styles.axaml" />
 
   <Styles.Resources>
     <ResourceDictionary>

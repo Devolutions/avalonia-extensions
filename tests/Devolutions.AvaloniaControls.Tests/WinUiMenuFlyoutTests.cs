@@ -259,4 +259,43 @@ public class WinUiMenuFlyoutTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Separator_styling_is_scoped_to_menu_descendants()
+    {
+        // Regression guard: Separator styling must not leak into standalone/non-menu
+        // separators (e.g. SampleApp's SeparatorDemo, which WinUI does not style).
+        // See Controls/MenuFlyoutSeparator.styles.axaml for the scoped selector.
+        var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+        theme.BeginInit();
+        theme.EndInit();
+
+        var plainSeparator = new Separator();
+        var menuSeparator = new Separator();
+        var presenter = new MenuFlyoutPresenter
+        {
+            Items = { new MenuItem { Header = "Item" }, menuSeparator }
+        };
+        var panel = new StackPanel { Children = { plainSeparator, presenter } };
+        var window = new Window();
+        window.Styles.Add(theme);
+        window.Content = panel;
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.TryFindResource("MenuFlyoutSeparatorBackground", window.ActualThemeVariant,
+                out object? menuBackground));
+
+            Assert.NotEqual(menuBackground, plainSeparator.Background);
+
+            Assert.Equal(menuBackground, menuSeparator.Background);
+            Assert.Equal(1, menuSeparator.Height);
+            Assert.Equal(new Thickness(12, 4), menuSeparator.Margin);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

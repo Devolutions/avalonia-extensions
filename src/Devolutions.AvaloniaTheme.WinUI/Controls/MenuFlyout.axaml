@@ -25,7 +25,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Margin="8"
-                Padding="0,2"
+                Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
                 BoxShadow="{StaticResource MenuFlyoutPresenterShadow}">
           <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                         VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"

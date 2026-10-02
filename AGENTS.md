@@ -75,9 +75,9 @@ Key Development Workflows:
   critical alerts.
 - **Accelerate Controls:** Requires `.env` with `AVALONIA_LICENSE_KEY=your_key_here` at repository root.
 - **Testing:** `dotnet test` (Use `UPDATE_BASELINES=true dotnet test` on macOS/Linux to update baseline screenshots if
-  visual changes are intentional).
+  visual changes are intentional). Updates write personal, gitignored local baselines for all selected themes and temporarily publish tracked baselines only for native target-platform themes.
+- **Visual coverage / PR reviews:** Only target-platform baselines are canonical and required: DevExpress and WinUI variants on Windows, MacClassic/LiquidGlass on macOS, Linux/Yaru on Linux. Do not require macOS/Linux WinUI screenshots or other cross-platform baseline combinations; they are local developer conveniences. See the Testing section of `README.md`.
 
 Testing references:
 - **`README.md`** (`# Testing`) - Current `dotnet test` filters and baseline update commands
 - **`tests/Devolutions.AvaloniaControls.VisualTests/`** - Baselines and diff outputs used by visual regression tests
-

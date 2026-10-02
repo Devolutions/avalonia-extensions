@@ -24,7 +24,7 @@ public class VisualRegressionTests
   private const double CaptureHeightSlack = 1;
   private const double ResizeEpsilon = 0.5;
   private const string TestResultsDirectory = "../../../Screenshots/Test";
-  private static readonly string BaselinesDirectory = $"../../../Screenshots/Baseline/{GetCurrentOS()}";
+  private static readonly VisualBaselineStore Baselines = new("../../../Screenshots", GetCurrentOS());
   private static readonly string TestDiffsDirectory = $"../../../Screenshots/Test-Diffs/{DateTime.Now:yyyy-MM-dd__HH-mm}";
   private static readonly ThemeId[] SupportedThemes =
   [
@@ -55,7 +55,7 @@ public class VisualRegressionTests
       return "Linux";
     }
 
-    return "Unknown";
+    throw new PlatformNotSupportedException("Visual baselines require Windows, macOS, or Linux.");
   }
 
   public static IEnumerable<object?[]> GetTestPages()
@@ -286,19 +286,26 @@ public class VisualRegressionTests
 
     // Save and Compare
     var fileName = $"{pageName}{suffix}.png";
-    string baselinePath = Path.Combine(BaselinesDirectory, themeName, fileName);
     string testPath = Path.Combine(TestResultsDirectory, themeName, fileName);
     string diffPath = Path.Combine(TestDiffsDirectory, themeName, $"{pageName}{suffix}_diff.png");
 
     // Ensure subdirectories exist
-    Directory.CreateDirectory(Path.GetDirectoryName(baselinePath)!);
     Directory.CreateDirectory(Path.GetDirectoryName(testPath)!);
 
     bitmap.Save(testPath);
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
-      File.Copy(testPath, baselinePath, true);
+      Baselines.Update(testPath, themeName, fileName);
+    }
+
+    string baselinePath = Baselines.GetComparisonPath(themeName, fileName);
+    if (baselinePath == Baselines.GetCanonicalPath(themeName, fileName))
+    {
+      Console.Error.WriteLine(
+        $"[{themeName}] {fileName}: no personal baseline; comparing with the canonical " +
+        $"{VisualBaselineStore.GetTargetOS(themeName)} image. Machine-dependent differences may occur. " +
+        "Run ./devtest visual --update-baselines to establish local baselines.");
     }
 
     if (File.Exists(baselinePath))
@@ -307,13 +314,13 @@ public class VisualRegressionTests
       if (!passed)
       {
         string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Diff saved to {Path.GetDirectoryName(diffPath)}");
+        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Baseline: {baselinePath}. Diff saved to {Path.GetDirectoryName(diffPath)}");
       }
     }
     else
     {
       string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Saved screenshot to {testPath}");
+      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Expected: {baselinePath}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
     }
   }
 
@@ -427,7 +434,8 @@ internal static class TestInitializer
         TextWriter stderr = Console.Error;
         stderr.WriteLine("\n\n" + new string('_', 80));
         stderr.WriteLine("\u001b[33m\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
-        stderr.WriteLine("Visual regression baselines will be updated.");
+        stderr.WriteLine("Personal LocalBaselines will be updated for all selected themes.");
+        stderr.WriteLine("Tracked canonical baselines will ALSO be updated for themes targeting this OS.");
         stderr.WriteLine("If this was not intentional:");
         stderr.WriteLine("");
         stderr.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");

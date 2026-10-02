@@ -134,6 +134,9 @@ Automated tests are available and should be used:
 - The `devtest` presets are wrapper shorthands, not native `dotnet test` arguments. To target a project directly, pass its `.csproj` path to `dotnet test`.
 - Functional catalog and navigation behavior is covered in `tests/Devolutions.AvaloniaControls.Tests/` by tests such as `PageCatalogTests` and `MainWindowNavigationTests`.
 - Visual page discovery and screenshot regression behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` by `PageDiscoveryTests` and `VisualRegressionTests`.
+- Canonical visual coverage is target-platform-only: DevExpress and WinUI variants on Windows; MacClassic/LiquidGlass on macOS; Linux/Yaru on Linux. Do not request cross-platform baseline PNGs in PR reviews.
+- Personal `Screenshots/LocalBaselines/{OS}/{Theme}/` images are gitignored and preferred for local comparisons; otherwise the harness falls back to the theme's canonical target-platform image.
+- Until GitHub runners take over, `--update-baselines` updates personal images for all selected themes and also publishes tracked canonical images only for themes targeting the current OS. Review native canonical changes before committing. See `README.md` for the temporary publishing workflow.
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 

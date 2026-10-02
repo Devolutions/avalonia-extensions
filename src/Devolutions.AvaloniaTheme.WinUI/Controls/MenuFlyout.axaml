@@ -26,6 +26,8 @@
                 CornerRadius="{TemplateBinding CornerRadius}"
                 Margin="8"
                 Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+                MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
+                MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                 BoxShadow="{StaticResource MenuFlyoutPresenterShadow}">
           <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                         VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"

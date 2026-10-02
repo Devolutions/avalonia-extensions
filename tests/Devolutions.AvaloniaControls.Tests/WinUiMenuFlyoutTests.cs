@@ -176,6 +176,8 @@ public class WinUiMenuFlyoutTests
             Assert.Equal(new Thickness(8), surface.Margin);
             Assert.NotEqual(default, surface.BoxShadow);
             Assert.Equal(new Thickness(0, 2), surface.Padding);
+            Assert.Equal(456, surface.MaxWidth);
+            Assert.Equal(32, surface.MinHeight);
 
             var arrow = Assert.Single(submenu.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Path>(),
                 path => path.Name == "PART_ChevronPath");
@@ -195,6 +197,8 @@ public class WinUiMenuFlyoutTests
             Assert.Equal(new Thickness(0, 2), childSurface.Padding);
             Assert.Equal(new Thickness(8), childSurface.Margin);
             Assert.NotEqual(default, childSurface.BoxShadow);
+            Assert.Equal(456, childSurface.MaxWidth);
+            Assert.Equal(32, childSurface.MinHeight);
             Assert.Equal(-12, popup.HorizontalOffset);
             Assert.Equal(-4, popup.HorizontalOffset + childSurface.Margin.Left);
 

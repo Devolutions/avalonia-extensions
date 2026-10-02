@@ -1,133 +1,200 @@
 # Proposal: move visual regression testing onto GitHub Actions
 
-_Status: proposal — looking for feedback and a DevOps reviewer before we start
-implementing. Not yet built._
+_Status: proposal - looking for team feedback and a DevOps reviewer before
+workflow implementation starts. The local baseline separation is in place._
 
-## The problem, in one paragraph
+## Current local step
 
-We have an automated visual regression test suite (screenshot comparison for
-every themed control) that's been genuinely useful for catching accidental UI
-breakage. The catch: screenshot rendering is machine-dependent — different
-fonts, font-fallback, OS package versions, and rendering libraries all produce
-slightly different pixels, even between two machines running "the same" OS.
-Right now, one person (me) maintains baseline screenshots from three separate
-machines/VMs by hand, after each PR merges. That doesn't scale, it's slow, and
-it means nobody else can safely regenerate baselines themselves. I'd like to
-move that authority onto GitHub Actions so it's reproducible and doesn't
-depend on any one person's machine.
+The repository already separates personal, gitignored `LocalBaselines` from
+tracked, target-platform-only `Baseline` images. Cross-platform baselines are
+not required PR coverage, including for WinUI, whose canonical target is Windows.
 
-## What I'm proposing
+Until GitHub runners take over, `--update-baselines` updates personal images
+for every selected theme and also publishes tracked images for themes targeting
+the developer's current OS. This removes redundant committed coverage now,
+while retaining local feedback. The workflows proposed below replace that
+temporary local publishing responsibility with consistent CI generation.
 
-Two new GitHub Actions workflows, plus a change to how baseline images are
-organized:
+## The problem
 
-### 1. A PR check that renders in one fixed, pinned environment
+Our screenshot regression suite has been valuable for catching accidental UI
+changes, but its committed baselines are generated on individual
+developer machines. Screenshot rendering depends on the exact operating system,
+fonts, locale, rendering libraries, and runner image, so two machines running
+the same nominal OS can still produce different pixels.
 
-- Runs automatically on every pull request (and can be triggered manually via
-  `gh workflow run` for a branch that isn't in a PR yet).
-- Renders all themes on a single pinned Windows runner, with a fixed .NET SDK
-  version, fonts, locale/timezone, and Avalonia/Skia version — all pinned, so
-  the same input always produces the same pixels.
-- **Why Windows specifically, not Linux:** our DevExpress theme is by far our
-  most important target (Windows desktop), and it uses Microsoft's own system
-  fonts (Segoe UI, Tahoma). Those fonts are only licensed for use on Windows —
-  a Linux machine can never legitimately have them, so it would always be
-  rendering with a substitute font, no matter how carefully we pin everything
-  else. A real Windows runner avoids that problem entirely for our most
-  important theme, at the (smaller) cost of pinning a Windows runner *version*
-  rather than an exact container image the way we could on Linux.
-- On any pixel difference, it uploads the expected image, the new image, and
-  a highlighted diff as a downloadable artifact, plus a short summary of what
-  changed.
-- **To start**, this check would be informational only (not merge-blocking),
-  so we can see real-world flake rate for a couple of weeks before relying on
-  it.
-- We'd also like an occasional (scheduled or manually-triggered), non-blocking
-  job on real macOS and real Linux runners, purely to catch cases where our
-  lower-install-base themes look wrong on their actual native platform — see
-  "Questions for the team" below.
+Canonical coverage follows the platforms on which the themes are deployed:
 
-### 2. A maintainer-triggered "update baselines" workflow
+- DevExpress and WinUI primarily target Windows.
+- MacClassic and LiquidGlass primarily target macOS.
+- Linux/Yaru primarily targets Linux.
 
-- Manually triggered (`workflow_dispatch`), takes a branch name as input.
-- Only ever runs against branches in this repository — never against an
-  external fork's code with write access, for security reasons.
-- Regenerates screenshots in the same pinned Windows environment as the PR
-  check, commits only the affected baseline images (nothing else) back to
-  that branch under a bot identity, and pushes.
-- The resulting image changes show up as an ordinary file diff on the PR,
-  where GitHub already supports side-by-side / swipe / onion-skin image
-  comparison — so reviewing "is this appearance change intentional?" doesn't
-  need any new tooling.
+Even the reduced canonical set needs a consistent generation environment so
+another developer can reliably approve and regenerate it.
 
-### What doesn't change
+## Proposed model
 
-- Nothing about the actual test code (`Avalonia.Headless` + Skia rendering,
-  pixel comparison) needs to be rewritten. This is a change to *where
-  baselines are authoritative* and *how they're approved*, not a new testing
-  framework.
-- Local `dotnet test` / `./devtest visual` keeps working for fast day-to-day
-  feedback. It just stops being the thing that decides whether a PR is
-  correct — CI does.
-- Anyone (not just me) can still generate and keep their own personal
-  baseline set locally for day-to-day convenience, the same way I already do
-  on my Mac today. We're just moving that into an explicitly untracked,
-  personal folder (never committed) so it can never be mistaken for, or
-  accidentally overwrite, the one canonical set CI maintains.
+GitHub Actions becomes the authority for committed baselines. Each theme is
+tested on its real target platform rather than on every operating system.
 
-## Why this instead of a paid visual-testing SaaS (Percy/Chromatic/Applitools)?
+| GitHub-hosted runner | Canonical themes |
+| --- | --- |
+| Fixed Windows runner label | DevExpress, WinUiClassic, WinUiMica |
+| Fixed macOS runner label | MacClassic, LiquidGlass |
+| Fixed Linux runner label | Linux/Yaru |
 
-We looked at these. They're solid products, but they add an external
-account, billing owner, and access-token surface to maintain, mostly to solve
-a "review experience" problem we don't have yet — GitHub's built-in image
-diff view is already good enough for our current volume of screenshots. If
-reviewing artifacts by hand ever becomes a real bottleneck, adding one of
-these later is straightforward and doesn't require re-architecting anything
-above.
+Each theme has just one canonical platform, including both WinUI variants.
+This preserves the platform fidelity that matters:
 
-## What we'd like from DevOps
+- DevExpress and WinUI render with the Windows font and rendering environment.
+  DevExpress uses Microsoft system fonts
+  such as Segoe UI and Tahoma.
+- Mac themes render with the real macOS font and rendering environment.
+- Linux/Yaru renders with the Linux font and rendering environment it is
+  designed to represent.
 
-1. **Feedback on the approach** before we build it — anything you'd do
-   differently, any existing conventions in other repos we should follow.
-2. **Guidance on pinning a Windows runner** for the canonical renderer — is
-   there a preferred/maintained Windows runner label or image version we
-   should standardize on (we can't pin an exact container digest the way we
-   could on Linux, so we'd rely on your guidance for how to track GitHub's
-   periodic runner-image updates responsibly)?
-3. **Guidance on repo settings**: branch protection / required status checks,
-   `GITHUB_TOKEN` permissions for the bot-commit workflow, and artifact
-   retention policy.
-4. **A reviewer or pairing partner**, ideally someone comfortable with GitHub
-   Actions YAML, since I don't have much experience authoring/configuring
-   workflows myself and would like a second pair of eyes (or hands) once we
-   start implementing — particularly for the bot-commit workflow, since it
-   needs to be built carefully to avoid ever running with write credentials
-   against untrusted code.
+Cross-platform theme rendering remains available locally when useful, but it is
+not a release requirement and will not have committed CI baselines.
 
-## Rollout plan (high level)
+GitHub-hosted runner labels are versioned environments, not immutable machine
+images. We will use fixed labels rather than `-latest`, pin the .NET SDK and
+project dependencies, control other inputs such as locale and render scale,
+and treat runner-image changes as deliberate maintenance events.
 
-1. Stand up the PR check as report-only; watch it for a couple of weeks
-   across real PRs to measure flakiness and runtime.
-2. Consolidate today's three separate per-OS baseline sets into one canonical
-   set produced by the pinned Windows environment above.
-3. Add the maintainer-triggered baseline-update workflow.
-4. Once the check is reliably green/red (few false positives), make it a
-   required status check for merging.
-5. Write a short runbook so this isn't tribal knowledge — how to read a
-   failed check, how to approve an intentional appearance change, how to
-   reproduce a CI run locally.
+## Workflow 1: visual regression PR checks
 
-## Questions for the team
+A new workflow runs automatically for pull requests and can also be dispatched
+manually for a branch before a PR is opened.
 
-- Any objection to a report-only observation period before this becomes a
-  required/blocking check?
-- Should we keep a non-blocking "does this theme look right on its actual
-  target OS" job on real macOS/Linux runners (occasional, scheduled or
-  manual), given the single pinned Windows renderer becomes the one
-  merge-blocking source of truth?
-- Any concerns about committing screenshot PNGs to the repo long-term (current
-  size: roughly 50 MB across ~250 images for a single platform's worth of
-  baselines), versus moving to Git LFS or a hosted service later?
+The Windows, macOS, and Linux jobs run in parallel. Each job:
 
-Please reply here (or grab me directly) with thoughts — happy to walk through
-the reasoning behind any of the above in more detail.
+1. Checks out and builds the PR.
+2. Runs only the theme or themes assigned to that platform.
+3. Compares screenshots with the tracked canonical baselines for that platform.
+4. Publishes a concise job summary.
+5. On failure, uploads expected, actual, and highlighted-diff images as a
+   downloadable artifact.
+
+The jobs will initially be report-only while we observe real PRs for runtime,
+runner-image stability, and false positives. Once the checks are dependable,
+all three platform jobs should become required checks.
+
+Running three jobs does not triple the committed baseline count: each theme has
+one canonical platform. The jobs also run in parallel, so expected PR latency
+is approximately the duration of the slowest platform rather than the sum of
+all three.
+
+## Workflow 2: maintainer-triggered baseline updates
+
+A separate `workflow_dispatch` workflow handles intentional appearance changes.
+It accepts an in-repository target branch and uses the same platform definitions
+as the PR workflow.
+
+The update is coordinated so that multiple jobs cannot race to push:
+
+1. Validate that the target branch belongs to this repository, not a fork.
+2. Run Windows, macOS, and Linux baseline-generation jobs in parallel.
+3. Have each job upload only its assigned generated baselines as an artifact.
+4. Run one final aggregation job after all platform jobs succeed.
+5. Download and validate all three artifacts.
+6. Commit only the known canonical baseline directory under a bot identity and
+   push one complete baseline update to the target branch.
+
+The resulting PNG changes appear in the pull request like normal source changes.
+GitHub's image viewer supports side-by-side, swipe, and onion-skin comparison,
+so reviewers can decide whether the change is intentional before merging it.
+
+No workflow with write credentials will execute code from an external fork.
+
+## Local development
+
+Local visual testing remains a first-class development tool:
+
+- `./devtest visual` continues to run the visual test project.
+- `./devtest visual --update-baselines` writes personal screenshots to a new
+  gitignored `Screenshots/LocalBaselines/` tree. During the local transition,
+  it also publishes tracked images for native target-platform themes.
+- Local comparisons prefer a matching personal baseline when one exists.
+- If no personal baseline exists, the harness can fall back to the canonical
+  target-platform image with a clear warning that cross-platform pixel noise
+  may be expected.
+
+This lets any developer create stable cross-platform local feedback without
+publishing those cross-platform images. Once CI takes over, local updates will
+write only personal images and the GitHub baseline-update workflow will be the
+only writer to `Screenshots/Baseline/`.
+
+## Baseline layout
+
+The tracked baseline tree retains platform names because each directory now has
+a clear meaning:
+
+```text
+Screenshots/Baseline/
+|-- Windows/
+|   |-- DevExpress/
+|   |-- WinUiClassic/
+|   `-- WinUiMica/
+|-- macOS/
+|   |-- MacClassic/
+|   `-- LiquidGlass/
+`-- Linux/
+    `-- Linux/
+```
+
+Pages that compare directly against a reference theme do not need their own
+stored PNGs. The tracked tree contains no cross-platform combinations. CI will
+regenerate the retained target-platform sets when the workflows are introduced.
+
+Future themes must declare one canonical target platform when they are added to
+the suite. This prevents the matrix from growing automatically as themes and
+variants are introduced.
+
+## Why GitHub artifacts instead of a visual-testing service?
+
+Percy, Chromatic, Applitools, and similar services provide polished visual
+review experiences, but they also introduce an external account, billing
+ownership, access tokens, and another system the team must maintain.
+
+GitHub already provides:
+
+- required PR checks;
+- downloadable failure artifacts;
+- image comparison for committed PNG changes;
+- manual workflow dispatch; and
+- controlled bot permissions.
+
+We should start with GitHub-native tooling and revisit a hosted service only if
+artifact review becomes a demonstrated bottleneck.
+
+## What we need from DevOps
+
+1. **Review of the overall design**, including any existing workflow conventions
+   in other Devolutions repositories that we should follow.
+2. **Runner guidance** for fixed Windows, macOS, and Linux labels and how the
+   team normally handles scheduled GitHub runner-image updates.
+3. **Repository-setting guidance** for required checks, branch rules,
+   `GITHUB_TOKEN` permissions, fork safety, concurrency, and artifact retention.
+4. **A reviewer or pairing partner** for the initial workflow implementation,
+   particularly the multi-platform artifact aggregation and bot-commit steps.
+
+## Rollout
+
+1. Make the test harness deterministic and separate local from canonical
+   baseline writes.
+2. Add the three native-platform PR jobs as report-only checks.
+3. Regenerate and review the retained target-platform canonical sets on CI;
+   redundant cross-platform baselines are already removed by the local step.
+4. Add the secure, aggregated baseline-update workflow.
+5. Observe the checks across normal PR activity and address any instability.
+6. Make all three platform jobs required.
+7. Have a teammate complete an intentional visual change and baseline update
+   using only the documented workflow as a handoff test.
+
+## Questions for the team and DevOps
+
+- Which fixed GitHub-hosted runner labels should we standardize on?
+- How long should expected/actual/diff artifacts be retained?
+- Are there existing branch-rule and bot-permission patterns we should reuse?
+- Are there concerns with keeping the reduced canonical PNG set in normal Git,
+  rather than introducing Git LFS or an external service?

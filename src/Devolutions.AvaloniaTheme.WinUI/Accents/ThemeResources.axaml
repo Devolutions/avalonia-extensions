@@ -17,8 +17,53 @@
       <!-- WinUI subtle fills (NavigationViewItem hover/selected backgrounds) -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#09000000"/>
       <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#06000000"/>
+      <StaticResource x:Key="SubtleFillColorTransparentBrush" ResourceKey="ControlFillColorTransparentBrush"/>
       <StaticResource x:Key="LayoutBackgroundLowBrush"
                       ResourceKey="SubtleFillColorSecondaryBrush"/>
+
+      <!-- WinUI MenuFlyout resources. Desktop Acrylic is represented by its solid fallback
+           here; the Mica overlay below adds translucency when the backdrop is available. -->
+      <SolidColorBrush x:Key="DesktopAcrylicTransparentBrush" Color="#F9F9F9"/>
+      <StaticResource x:Key="DividerStrokeColorDefaultBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="SurfaceStrokeColorFlyoutBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="DesktopAcrylicTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="SurfaceStrokeColorFlyoutBrush"/>
+      <Thickness x:Key="MenuFlyoutPresenterBorderThemeThickness">1</Thickness>
+      <StaticResource x:Key="MenuFlyoutSeparatorBackground" ResourceKey="DividerStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <x:String x:Key="MenuFlyoutItemIconCss">.st0{fill:#010101;}</x:String>
+      <x:String x:Key="MenuFlyoutItemIconDisabledCss">.st0,.st1,.st2,.st3{fill:#bdbdbd;}</x:String>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundSubMenuOpened" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundSubMenuOpened" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevron" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronPressed" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronSubMenuOpened" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <Thickness x:Key="MenuFlyoutItemBorderThickness">0</Thickness>
 
       <!-- WinUI accent text -->
       <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorDark2}"/>
@@ -247,8 +292,52 @@
       <!-- WinUI subtle fills -->
       <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush"  Color="#0FFFFFFF"/>
       <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush"   Color="#0AFFFFFF"/>
+      <StaticResource x:Key="SubtleFillColorTransparentBrush" ResourceKey="ControlFillColorTransparentBrush"/>
       <StaticResource x:Key="LayoutBackgroundLowBrush"
                       ResourceKey="SubtleFillColorSecondaryBrush"/>
+
+      <!-- WinUI MenuFlyout resources; see the matching Light dictionary above. -->
+      <SolidColorBrush x:Key="DesktopAcrylicTransparentBrush" Color="#2D2D2D"/>
+      <StaticResource x:Key="DividerStrokeColorDefaultBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="SurfaceStrokeColorFlyoutBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="DesktopAcrylicTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutPresenterBorderBrush" ResourceKey="SurfaceStrokeColorFlyoutBrush"/>
+      <Thickness x:Key="MenuFlyoutPresenterBorderThemeThickness">1</Thickness>
+      <StaticResource x:Key="MenuFlyoutSeparatorBackground" ResourceKey="DividerStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <x:String x:Key="MenuFlyoutItemIconCss">.st0{fill:#f5f5f5;}</x:String>
+      <x:String x:Key="MenuFlyoutItemIconDisabledCss">.st0,.st1,.st2,.st3{fill:#656565;}</x:String>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ToggleMenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundSubMenuOpened" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundSubMenuOpened" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevron" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronPressed" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronSubMenuOpened" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="MenuFlyoutSubItemChevronDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <Thickness x:Key="MenuFlyoutItemBorderThickness">0</Thickness>
 
       <!-- WinUI accent text -->
       <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush"    Color="{DynamicResource SystemAccentColorLight3}"/>

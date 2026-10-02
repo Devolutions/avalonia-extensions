@@ -14,12 +14,14 @@
     "✅": "Styled",
     "❌": "Not styled (yet) / not supported",
     "🚧": "In Progress (excluded from visual regression tests)",
-    "⚠️": "Needs some work / updates (included in tests)",
+    "⚠️": "Needs work or validation (included in tests); for WinUIClassic, may mean its solid-backdrop appearance awaits review",
     "↔️": "Same as WinUIMica (WinUIClassic column only, set deliberately after review): inherits its status, tested for pixel-identical rendering instead of own baselines"
   },
   // By default, statusSymbols determine test inclusion: "", ❌, and 🚧 are excluded, ✅ and ⚠️
   // are included. Use 🚧 while a control's styling is in flux / unverified; switch to ⚠️
   // once it's stable enough that regressions should be caught, even if not perfect yet.
+  // WinUIClassic ⚠️ can also mean a working, independently baselined control still needs
+  // comparison with WinUI's solid-backdrop / acrylic-fallback appearance.
   // ↔️ is only valid in the WinUIClassic column: it means "renders identically to WinUIMica".
   // The page inherits WinUIMica's status, stores no classic baselines, and is instead tested
   // for pixel-identical output against a WinUIMica render. If a Mica overlay change makes the
@@ -267,7 +269,7 @@
       "category": "Navigation",
       "demo": "MenuFlyoutDemo.axaml",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "✅", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "⚠️", "WinUIMica": "✅"
       }
     },
     {

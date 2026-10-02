@@ -20,7 +20,8 @@ namespace Devolutions.AvaloniaControls.Tests;
 /// </summary>
 public class WinUiMicaProbe
 {
-    private static Color Resolve(bool globalStyles, bool? micaOverride, ThemeVariant variant)
+    private static Color Resolve(bool globalStyles, bool? micaOverride, ThemeVariant variant,
+        string resourceKey = "SettingsCardBackground")
     {
         Windows11MicaDetector.SetTestOverride(micaOverride);
 
@@ -34,8 +35,8 @@ public class WinUiMicaProbe
 
         try
         {
-            Assert.True(window.TryFindResource("SettingsCardBackground", variant, out var value),
-                $"SettingsCardBackground not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
+            Assert.True(window.TryFindResource(resourceKey, variant, out var value),
+                $"{resourceKey} not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
             return ((ISolidColorBrush)value!).Color;
         }
         finally
@@ -67,6 +68,26 @@ public class WinUiMicaProbe
 
         Assert.Equal(Color.Parse("#2D2D2D"), classic);
         Assert.Equal(Color.Parse("#662D2D2D"), mica);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Mica_overlay_translucifies_menuflyout_surface(bool globalStyles)
+    {
+        var classicLight = Resolve(globalStyles, false, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
+        var micaLight = Resolve(globalStyles, true, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
+        var micaLightBorder = Resolve(globalStyles, true, ThemeVariant.Light, "MenuFlyoutPresenterBorderBrush");
+        var classicDark = Resolve(globalStyles, false, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
+        var micaDark = Resolve(globalStyles, true, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
+        var micaDarkBorder = Resolve(globalStyles, true, ThemeVariant.Dark, "MenuFlyoutPresenterBorderBrush");
+
+        Assert.Equal(Color.Parse("#FFF9F9F9"), classicLight);
+        Assert.Equal(Color.Parse("#D9F9F9F9"), micaLight);
+        Assert.Equal(Color.Parse("#14000000"), micaLightBorder);
+        Assert.Equal(Color.Parse("#FF2D2D2D"), classicDark);
+        Assert.Equal(Color.Parse("#CC2D2D2D"), micaDark);
+        Assert.Equal(Color.Parse("#26FFFFFF"), micaDarkBorder);
     }
 
     [AvaloniaFact]

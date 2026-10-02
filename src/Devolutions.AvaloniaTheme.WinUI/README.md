@@ -41,3 +41,14 @@ To opt out of global styles:
 ```xaml
 <DevolutionsWinUiTheme GlobalStyles="False" />
 ```
+
+## Classic and Mica validation
+
+The page catalog tracks WinUI classic (solid backdrop) and WinUI Mica separately.
+When a Mica control is ready, review the classic variant against WinUI with a solid
+backdrop (for example, with Windows transparency effects disabled). Classic `⚠️`
+may indicate that this validation is still pending, not necessarily a known defect.
+Keep separate Light and Dark classic visual baselines when it differs from Mica;
+use `↔️` only after confirming that both variants should render identically.
+Once a basic set of controls is available, review the remaining classic `⚠️`
+pages together and promote each to `✅` or `↔️` as appropriate.

@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--
+    Scoped to menu descendants rather than shipped as an implicit `{x:Type Separator}`
+    ControlTheme in MenuFlyout.axaml: the latter would restyle every Separator in the
+    consuming app (e.g. SampleApp's standalone SeparatorDemo, which WinUI does not yet
+    style), not just the ones inside menus. See the Linux/macOS/DevExpress themes'
+    Separator.styles.axaml for the same convention.
+  -->
+  <Style Selector="ContextMenu Separator, MenuFlyoutPresenter Separator, Menu Separator, MenuItem Separator">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutSeparatorBackground}"/>
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Margin" Value="12,4"/>
+  </Style>
+</Styles>

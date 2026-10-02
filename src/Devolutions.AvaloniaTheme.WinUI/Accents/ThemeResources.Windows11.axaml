@@ -20,6 +20,10 @@
       <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#14000000"/>
       <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#99FFFFFF"/>
 
+      <!-- Translucent tint approximation for WinUI's Desktop Acrylic flyout surface. -->
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#D9F9F9F9"/>
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#14000000"/>
+
       <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
            reads through, approximating the Mica backdrop on non-Windows hosts. -->
       <SolidColorBrush x:Key="SampleAppBackground" Color="#F3F3F3" Opacity="0.8"/>
@@ -30,6 +34,10 @@
       <SolidColorBrush x:Key="SettingsCardBackground"       Color="#662D2D2D"/>
       <SolidColorBrush x:Key="SettingsCardBorderBrush"      Color="#26FFFFFF"/>
       <SolidColorBrush x:Key="SettingsCardHoverBackground"  Color="#66383838"/>
+
+      <!-- Translucent tint approximation for WinUI's Desktop Acrylic flyout surface. -->
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#CC2D2D2D"/>
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#26FFFFFF"/>
 
       <!-- DEVELOPMENT ONLY: translucent page surface so the SampleApp wallpaper preview
            reads through, approximating the Mica backdrop on non-Windows hosts. -->

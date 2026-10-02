@@ -42,15 +42,37 @@ To view and test Accelerate-licensed controls in the SampleApp:
 
 ## Testing
 
-There is limited visual regression testing available. DemoPages are compared against baseline screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline`. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`. 
+There is limited visual regression testing available. DemoPages are compared against personal screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines/{OS}/{Theme}` when available, otherwise against the theme's canonical target-platform image in `Screenshots/Baseline/{TargetOS}/{Theme}`. Personal baselines are gitignored. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`.
 Screenshots are captured at a fixed width (`1200`) with auto-calculated content height (capped at `3000`) to cover below-the-fold examples without requiring manual page-by-page configuration.
 
 ### Limitations
 - Interactive behaviours (e.g. pointerOver, popUpOpen, focus, etc.) are not tested
 - Accelerate controls that depend on a licence (e.g. TreeDataGrid) are not tested
 
-### Platform-Specific Baselines
-Baselines are maintained separately for each platform (`macOS`, `Windows`, `Linux`) due to rendering differences. When updating baselines, they only update for your current platform.
+### Canonical and Personal Baselines
+
+Only screenshots from a theme's target platform are canonical and required in PRs:
+
+| Theme | Canonical platform |
+| --- | --- |
+| DevExpress, WinUiClassic, WinUiMica | Windows |
+| MacClassic, LiquidGlass | macOS |
+| Linux/Yaru | Linux |
+
+Cross-platform screenshots are a local developer convenience, not required PR coverage. In particular, Windows WinUI changes do **not** require macOS or Linux baseline images. Adding a new control still requires appropriate target-platform visual coverage.
+
+Pages marked "same as reference" in the catalog compare the two themes' rendered output directly instead of storing a separate PNG for the delegating variant.
+
+Ordinary runs prefer a matching personal baseline for the current OS. If none exists, they use the canonical target-platform image and report that machine-dependent differences may occur. Run a deliberate baseline update to establish personal images on your machine; do not update merely to hide an unexplained regression. Personal snapshots do not automatically follow upstream changes, so refresh them deliberately when those changes are intentional.
+
+**Temporary local publishing workflow (until GitHub runners own canonical generation):**
+
+- `--update-baselines` generates personal images for all selected themes on your current OS.
+- It also copies images into the tracked canonical tree **only for themes whose target platform is your current OS**. For example, on macOS it publishes MacClassic/LiquidGlass, but leaves Windows and Linux canonical files untouched.
+- Review and commit only intentional target-platform changes in `Screenshots/Baseline/`. The rest remain in gitignored `LocalBaselines/`.
+- A new clone has no personal images. You can generate them with the existing update command; be aware that it also publishes your native themes to the tracked tree.
+
+The planned GitHub workflow will replace this temporary local publishing step. See [the CI proposal](docs/visual-regression-ci-proposal.md).
 
 > **Note:** We're showing single quotes here, since in interactive `bash`/`zsh` (Linux/Mac), `!` triggers history expansion, so the following term is interpreted as a history variable, unless the filter string is single-quoted (`'...'`) instead of double-quoted. However, on Windows only PowerShell supports the single quotes - so you might want to get used to double quotes if you're always on Windows.
 
@@ -79,7 +101,7 @@ The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT.
 - `./devtest --filter EditableCombo` - shorthand for (`DisplayName~EditableCombo`).
 
 **Updating baseline screenshots** when changes are intentional:
-- `./devtest visual --update-baselines` - updates baselines from VisualTests project.
+- `./devtest visual --update-baselines` - updates personal baselines for all selected visual tests and publishes only native target-platform images to the tracked canonical tree.
 - `./devtest --update-baselines` - runs all projects with baseline updates enabled.
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`
 - **Windows (PowerShell):** `$env:UPDATE_BASELINES="true"; dotnet test [filters]; Remove-Item env:UPDATE_BASELINES`

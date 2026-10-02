@@ -2,3 +2,4 @@ bin/
 obj/
 Screenshots/Test/
 Screenshots/Test-Diffs/
+Screenshots/LocalBaselines/

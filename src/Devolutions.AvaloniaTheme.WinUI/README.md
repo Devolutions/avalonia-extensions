@@ -42,6 +42,14 @@ To opt out of global styles:
 <DevolutionsWinUiTheme GlobalStyles="False" />
 ```
 
+## Expander
+
+Expanders stretch horizontally by default to align stacked headers, matching the
+other Devolutions themes. Set `HorizontalAlignment` explicitly to opt out.
+Content slides into a clipped region when expanding down or up; left and right
+expansion retain Fluent's behavior. The `borderless` class removes the card fill
+and retains a content edge in the expansion direction.
+
 ## Classic and Mica validation
 
 The page catalog tracks WinUI classic (solid backdrop) and WinUI Mica separately.

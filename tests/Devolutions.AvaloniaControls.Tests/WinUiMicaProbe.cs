@@ -18,6 +18,7 @@ namespace Devolutions.AvaloniaControls.Tests;
 /// These tests assert the overlay wins for both the GlobalStyles=false path (used by the
 /// SampleApp) and the GlobalStyles=true path (used by simple consumers).
 /// </summary>
+[Collection("StylesTest")]
 public class WinUiMicaProbe
 {
     private static Color Resolve(bool globalStyles, bool? micaOverride, ThemeVariant variant,

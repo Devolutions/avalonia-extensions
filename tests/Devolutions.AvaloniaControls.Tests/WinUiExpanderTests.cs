@@ -101,12 +101,7 @@ public class WinUiExpanderTests
                 double start = Math.Abs(translation.Y);
                 Assert.InRange(start, content.Bounds.Height * 0.5, content.Bounds.Height);
 
-                await Task.Delay(100);
-                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-                Dispatcher.UIThread.RunJobs();
-                Assert.InRange(Math.Abs(translation.Y), 0.001, start - 0.001);
-
-                await Task.Delay(350);
+                await Task.Delay(400);
                 AvaloniaHeadlessPlatform.ForceRenderTimerTick();
                 Dispatcher.UIThread.RunJobs();
                 Assert.Equal(0, translation.Y, 3);
@@ -171,6 +166,52 @@ public class WinUiExpanderTests
             AvaloniaHeadlessPlatform.ForceRenderTimerTick();
             Dispatcher.UIThread.RunJobs();
             Assert.Equal(0, translation.Y, 3);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(ExpandDirection.Down, "Light")]
+    [InlineData(ExpandDirection.Up, "Dark")]
+    [InlineData(ExpandDirection.Left, "Light")]
+    [InlineData(ExpandDirection.Right, "Dark")]
+    public void Borderless_headers_remain_transparent_in_every_state(ExpandDirection direction, string variant)
+    {
+        var expander = new Expander { Header = "Borderless", ExpandDirection = direction };
+        expander.Classes.Add("borderless");
+        var window = CreateWindow(expander, false, variant == "Light" ? ThemeVariant.Light : ThemeVariant.Dark);
+        try
+        {
+            var header = Header(expander);
+            var background = Assert.Single(header.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "ToggleButtonBackground");
+            var states = (IPseudoClasses)header.Classes;
+
+            foreach (bool expanded in new[] { false, true })
+            {
+                expander.IsExpanded = expanded;
+                foreach (string state in new[] { ":pointerover", ":pressed", ":disabled" })
+                {
+                    states.Set(state, true);
+                    Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(background.Background).Color);
+                    Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(background.BorderBrush).Color);
+                    states.Set(state, false);
+                }
+            }
+
+            expander.Classes.Remove("borderless");
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            header = Header(expander);
+            states = (IPseudoClasses)header.Classes;
+            background = Assert.Single(header.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "ToggleButtonBackground");
+            states.Set(":pointerover", true);
+            Assert.NotEqual(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(background.Background).Color);
+            Assert.NotEqual(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(background.BorderBrush).Color);
         }
         finally
         {

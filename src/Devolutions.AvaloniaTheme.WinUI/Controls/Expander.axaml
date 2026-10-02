@@ -38,6 +38,35 @@
     </Style>
   </ControlTheme>
 
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonDownTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonDownTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonUpTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonUpTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonLeftTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonLeftTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="WinUiBorderlessExpanderToggleButtonRightTheme" TargetType="ToggleButton"
+                BasedOn="{StaticResource WinUiExpanderToggleButtonRightTheme}">
+    <Style Selector="^:pointerover /template/ Border#ToggleButtonBackground, ^:pressed /template/ Border#ToggleButtonBackground, ^:disabled /template/ Border#ToggleButtonBackground">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+  </ControlTheme>
+
   <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander"
                 BasedOn="{StaticResource {x:Type Expander}}">
     <Setter Property="IsTabStop" Value="False"/>
@@ -136,6 +165,18 @@
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="BorderBrush" Value="Transparent"/>
       <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="^.borderless:down /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonDownTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:up /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonUpTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:left /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonLeftTheme}"/>
+    </Style>
+    <Style Selector="^.borderless:right /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource WinUiBorderlessExpanderToggleButtonRightTheme}"/>
     </Style>
     <Style Selector="^.borderless /template/ Border#ExpanderContent">
       <Setter Property="Background" Value="Transparent"/>

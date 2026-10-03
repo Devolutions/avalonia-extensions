@@ -85,15 +85,15 @@ public partial class MainWindowViewModel : ObservableObject
 
   public Theme[] AvailableThemes { get; } =
   [
+    new FluentTheme(),
+    new SimpleTheme(),
     new LinuxYaruTheme(),
-    new DevExpressTheme(),
-    new WinUiTheme(),
-    new WinUiClassicTheme(),
-    new WinUiMicaTheme(),
     new MacOsTheme(),
     new MacOsClassicTheme(),
     new MacOsLiquidGlassTheme(),
-    new FluentTheme(),
-    new SimpleTheme()
+    new DevExpressTheme(),
+    new WinUiTheme(),
+    new WinUiClassicTheme(),
+    new WinUiMicaTheme()
   ];
 }

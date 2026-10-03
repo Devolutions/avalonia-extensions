@@ -24,11 +24,15 @@
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
               <Border Grid.Column="0" Margin="8 8 0 8" BorderBrush="Gray" BorderThickness="0,0,1,0">
                 <TreeView x:Name="MainNavigationTree"
-                          Margin="0 0 8 0"
+                          Margin="0 0 2 0"
+                          Padding="0 0 4 0"
                           SelectionChanged="NavigationTree_OnSelectionChanged">
                   <TreeView.Styles>
                     <Style Selector="TreeViewItem">
                       <Setter Property="IsExpanded" Value="{ReflectionBinding IsExpanded, Mode=TwoWay}" />
+                    </Style>
+                    <Style Selector="TreeView /template/ ScrollViewer[AllowAutoHide=True] /template/ ScrollContentPresenter#PART_ContentPresenter">
+                      <Setter Property="Grid.ColumnSpan" Value="1" />
                     </Style>
                   </TreeView.Styles>
                   <TreeView.ItemTemplate>
@@ -74,12 +78,14 @@
                        </StackPanel>
               
                        <!-- ~1~ Theme Selector @1@ -->
-                       <ComboBox x:Name="Themes"
+                       <GroupedComboBox x:Name="Themes"
                                  Grid.Column="2"
+                                 MaxDropDownHeight="Infinity"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Center"
                                  DisplayMemberBinding="{Binding DisplayName, x:DataType=sampleApp:Theme}"
                                  ItemsSource="{Binding AvailableThemes}"
+                                 GroupBinding="{Binding GroupName, x:DataType=sampleApp:Theme}"
                                  SelectedItem="{Binding CurrentTheme}"
                                  SelectionChanged="Themes_OnSelectionChanged" />
               

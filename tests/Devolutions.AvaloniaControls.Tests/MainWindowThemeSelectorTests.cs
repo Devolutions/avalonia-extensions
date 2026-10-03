@@ -9,6 +9,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
+using Devolutions.AvaloniaTheme.WinUI.Internal;
 using SampleApp;
 using SampleApp.ViewModels;
 
@@ -125,6 +126,7 @@ public class MainWindowThemeSelectorTests
     {
       window.Close();
       Dispatcher.UIThread.RunJobs();
+      Windows11MicaDetector.SetTestOverride(null);
       App.SetTheme(new MacOsClassicTheme());
     }
   }
@@ -168,6 +170,7 @@ public class MainWindowThemeSelectorTests
     {
       window.Close();
       Dispatcher.UIThread.RunJobs();
+      Windows11MicaDetector.SetTestOverride(null);
       App.SetTheme(new MacOsClassicTheme());
     }
   }

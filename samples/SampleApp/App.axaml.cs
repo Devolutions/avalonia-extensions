@@ -568,6 +568,7 @@ public abstract class Theme
 {
     public abstract string Name { get; }
     public abstract string DisplayName { get; }
+    public virtual string GroupName => string.Empty;
 
     public override bool Equals(object? obj) =>
         ReferenceEquals(this, obj) || (obj is Theme other && this.Equals(other));
@@ -582,19 +583,22 @@ public abstract class Theme
 public class LinuxYaruTheme : Theme
 {
     public override string Name => "Linux";
-    public override string DisplayName => "Linux - Yaru";
+    public override string DisplayName => "Yaru";
+    public override string GroupName => "Linux";
 }
 
 public class DevExpressTheme : Theme
 {
     public override string Name => "DevExpress";
-    public override string DisplayName => "Windows - DevExpress";
+    public override string DisplayName => "DevExpress";
+    public override string GroupName => "Windows";
 }
 
 public class WinUiTheme : Theme
 {
     public override string Name => App.WinUiThemeName;
-    public override string DisplayName => "Windows - WinUI (automatic)";
+    public override string DisplayName => "WinUI (automatic)";
+    public override string GroupName => "Windows";
 
     /// <summary>
     ///   Mica override to apply before loading theme resources.
@@ -606,7 +610,7 @@ public class WinUiTheme : Theme
 public class WinUiClassicTheme : WinUiTheme
 {
     public override string Name => App.WinUiClassicThemeName;
-    public override string DisplayName => "Windows - WinUI classic";
+    public override string DisplayName => "WinUI (Win10)";
 
     /// <summary>
     ///   Force the classic (solid, Windows 10 era) surfaces by disabling Mica.
@@ -617,7 +621,7 @@ public class WinUiClassicTheme : WinUiTheme
 public class WinUiMicaTheme : WinUiTheme
 {
     public override string Name => App.WinUiMicaThemeName;
-    public override string DisplayName => "Windows - WinUI (Win11 Mica)";
+    public override string DisplayName => "WinUI (Win11 Mica)";
 
     /// <summary>
     ///   Force the Windows 11 Mica translucent surfaces.
@@ -628,7 +632,8 @@ public class WinUiMicaTheme : WinUiTheme
 public class MacOsTheme : Theme
 {
     public override string Name => "MacOS";
-    public override string DisplayName => "MacOS (automatic)";
+    public override string DisplayName => "Mac (automatic)";
+    public override string GroupName => "MacOS";
 
     /// <summary>
     ///   OS version override to apply before loading theme resources.
@@ -640,7 +645,7 @@ public class MacOsTheme : Theme
 public class MacOsClassicTheme : MacOsTheme
 {
     public override string Name => App.MacClassicThemeName;
-    public override string DisplayName => "MacOS - classic";
+    public override string DisplayName => "Mac Classic";
 
     /// <summary>
     ///   Force classic theme by simulating OS version &lt;= 26
@@ -651,7 +656,7 @@ public class MacOsClassicTheme : MacOsTheme
 public class MacOsLiquidGlassTheme : MacOsTheme
 {
     public override string Name => App.LiquidGlassThemeName;
-    public override string DisplayName => "MacOS - LiquidGlass";
+    public override string DisplayName => "Liquid Glass";
 
     /// <summary>
     ///   Force LiquidGlass theme by simulating OS version &gt;= 26

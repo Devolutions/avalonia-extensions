@@ -215,6 +215,9 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
                    PlacementConstraintAdjustment="SlideX, SlideY, ResizeX, ResizeY"
                    IsLightDismissEnabled="True"
                    InheritsTransform="True">
+              <Interaction.Behaviors>
+                <PositionedPopupBehavior PositionTo="{Binding #Background}"/>
+              </Interaction.Behaviors>
               <Popup.VerticalOffset>
                 <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
                   <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex"/>
@@ -346,6 +349,56 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
       <Style Selector="^:pressed /template/ Border#DropDownOverlay">
         <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerPressed}"/>
       </Style>
+      <Style Selector="^:focus-within /template/ Border#Background">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundFocused}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}"/>
+      </Style>
+    </Style>
+
+    <!-- The editable popup is fused to the input. Its actual placement is reported by
+         PositionedPopupBehavior after the platform positioner has applied FlipY. -->
+    <Style Selector="^[IsEditable=true]:dropdown-open-from-bottom /template/ Border#Background">
+      <Setter Property="CornerRadius" Value="4,4,0,0"/>
+    </Style>
+    <Style Selector="^[IsEditable=true]:dropdown-open-from-bottom /template/ Border#PopupBorder">
+      <Setter Property="CornerRadius" Value="0,0,8,8"/>
+      <Setter Property="RenderTransformOrigin" Value="50%,0%"/>
+      <Style.Animations>
+        <Animation Duration="0:0:0.167" Easing="QuadraticEaseOut" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="TranslateTransform.Y" Value="-8"/>
+            <Setter Property="ScaleTransform.ScaleY" Value="0.96"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="TranslateTransform.Y" Value="0"/>
+            <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="^[IsEditable=true]:dropdown-open-from-top /template/ Border#Background">
+      <Setter Property="CornerRadius" Value="0,0,4,4"/>
+    </Style>
+    <Style Selector="^[IsEditable=true]:dropdown-open-from-top /template/ Border#PopupBorder">
+      <Setter Property="CornerRadius" Value="8,8,0,0"/>
+      <Setter Property="RenderTransformOrigin" Value="50%,100%"/>
+      <Style.Animations>
+        <Animation Duration="0:0:0.167" Easing="QuadraticEaseOut" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="TranslateTransform.Y" Value="8"/>
+            <Setter Property="ScaleTransform.ScaleY" Value="0.96"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="TranslateTransform.Y" Value="0"/>
+            <Setter Property="ScaleTransform.ScaleY" Value="1"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
     </Style>
 
     <!-- Borderless: drops the chrome but keeps the focus ring and drop-down surface. -->

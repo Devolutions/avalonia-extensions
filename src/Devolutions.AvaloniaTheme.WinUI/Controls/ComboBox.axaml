@@ -254,7 +254,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
     </Setter>
 
     <!-- PointerOver state -->
-    <Style Selector="^:pointerover">
+    <Style Selector="^[IsEditable=false]:pointerover">
       <Style Selector="^ /template/ Border#Background">
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPointerOver}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPointerOver}"/>
@@ -265,13 +265,16 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
     </Style>
 
     <!-- Pressed state -->
-    <Style Selector="^:pressed">
+    <Style Selector="^[IsEditable=false]:pressed">
       <Style Selector="^ /template/ Border#Background">
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundPressed}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushPressed}"/>
       </Style>
       <Style Selector="^ /template/ ContentControl#ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundPressed}"/>
+      </Style>
+      <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxPlaceHolderForegroundPressed}"/>
       </Style>
     </Style>
 
@@ -284,7 +287,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundFocused}"/>
       </Style>
       <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundFocused}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxPlaceHolderForegroundFocused}"/>
       </Style>
       <Style Selector="^ /template/ Path#DropDownGlyph">
         <Setter Property="Stroke" Value="{DynamicResource ComboBoxDropDownGlyphForegroundFocused}"/>

@@ -10,6 +10,7 @@
   <Grid ColumnDefinitions="Auto,Auto,*,Auto"
         HorizontalAlignment="Stretch">
     <TextBlock Grid.Column="0"
+               FontFamily="{DynamicResource EmojiFontFamily}"
                Text="{Binding $parent[controls:SampleItemHeader].StatusSymbol}"
                ClipToBounds="False"
                IsVisible="{Binding $parent[controls:SampleItemHeader].HasStatusSymbol}"

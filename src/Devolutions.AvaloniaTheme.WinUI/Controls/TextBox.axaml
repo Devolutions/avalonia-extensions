@@ -16,7 +16,7 @@
     <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}"/>
     <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}"/>
-    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextControlSelectionForegroundBrush}"/>
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"/>
     <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForeground}"/>
     <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}"/>
     <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>

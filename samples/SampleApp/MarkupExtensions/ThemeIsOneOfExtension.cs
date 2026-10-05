@@ -10,6 +10,7 @@ namespace SampleApp.MarkupExtensions;
 /// </summary>
 /// <param name="themes">
 /// A comma-separated list of theme names to check against the current theme.
+/// WinUI also accepts the resolved WinUiClassic and WinUiMica variant names.
 /// </param>
 public class ThemeIsOneOfExtension : MarkupExtension
 {
@@ -22,10 +23,16 @@ public class ThemeIsOneOfExtension : MarkupExtension
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        return DevoConverters.IsOneOfConverter.Convert(
+        bool matchesTheme = Equals(true, DevoConverters.IsOneOfConverter.Convert(
             App.EffectiveCurrentThemeName,
             typeof(bool),
             this.Themes,
-            System.Globalization.CultureInfo.CurrentCulture);
+            System.Globalization.CultureInfo.CurrentCulture));
+
+        return matchesTheme || Equals(true, DevoConverters.IsOneOfConverter.Convert(
+            App.EffectiveCatalogThemeName,
+            typeof(bool),
+            this.Themes,
+            System.Globalization.CultureInfo.CurrentCulture));
     }
 }

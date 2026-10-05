@@ -8,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -111,6 +112,37 @@ public class WinUiComboBoxPopupTests
         Detach(window, combo);
     }
 
+    private static void VerifyEditableVisualStates(Window window)
+    {
+        var combo = new ComboBox
+        {
+            IsEditable = true,
+            IsEnabled = false,
+            PlaceholderText = "Required",
+        };
+        window.Content = combo;
+        Dispatcher.UIThread.RunJobs();
+
+        TextBox editor = Assert.Single(combo.GetVisualDescendants().OfType<TextBox>(),
+            textBox => textBox.Name == "PART_EditableTextBox");
+        Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(editor.Background).Color);
+
+        combo.IsEnabled = true;
+        var states = (IPseudoClasses)combo.Classes;
+        states.Set(":error", true);
+        states.Set(":focus-within", true);
+        Dispatcher.UIThread.RunJobs();
+
+        Border background = Assert.Single(combo.GetVisualDescendants().OfType<Border>(),
+            border => border.Name == "Background");
+        Assert.True(window.TryFindResource("SystemControlErrorTextForegroundBrush", out object? errorBrush));
+        Assert.Equal(
+            Assert.IsAssignableFrom<ISolidColorBrush>(errorBrush).Color,
+            Assert.IsAssignableFrom<ISolidColorBrush>(background.BorderBrush).Color);
+
+        Detach(window, combo);
+    }
+
     [AvaloniaFact]
     public void Popup_geometry_covers_noneditable_and_editable_paths()
     {
@@ -133,6 +165,7 @@ public class WinUiComboBoxPopupTests
             Dispatcher.UIThread.RunJobs();
             VerifyEditable(window, VerticalAlignment.Top, opensAbove: false);
             VerifyEditable(window, VerticalAlignment.Bottom, opensAbove: true);
+            VerifyEditableVisualStates(window);
         }
         finally
         {

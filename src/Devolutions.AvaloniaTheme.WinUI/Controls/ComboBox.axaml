@@ -131,6 +131,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
                 <TextBox.Resources>
                   <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
                   <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
+                  <SolidColorBrush x:Key="TextControlBackgroundDisabled">Transparent</SolidColorBrush>
                   <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
                 </TextBox.Resources>
               </TextBox>
@@ -364,6 +365,9 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}"/>
       </Style>
+    </Style>
+    <Style Selector="^[IsEditable=true]:error:focus-within /template/ Border#Background">
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}"/>
     </Style>
 
     <!-- The editable popup is fused to the input. Its actual placement is reported by

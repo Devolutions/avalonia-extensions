@@ -42,6 +42,12 @@ To opt out of global styles:
 <DevolutionsWinUiTheme GlobalStyles="False" />
 ```
 
+## HyperlinkButton
+
+HyperlinkButton uses accent-colored text without an underline, matching WinUI.
+Hover and pressed states use subtle background fills; visited links retain the
+same styling as unvisited links.
+
 ## Expander
 
 Expanders stretch horizontally by default to align stacked headers, matching the

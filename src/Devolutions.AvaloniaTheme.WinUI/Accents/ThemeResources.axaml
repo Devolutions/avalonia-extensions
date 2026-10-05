@@ -84,7 +84,6 @@
            that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
            (ThemeResources.Windows11.axaml) makes it translucent again. -->
       <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#F9F9F9"/>
-      <SolidColorBrush x:Key="SurfaceStrokeColorFlyoutBrush" Color="#0F000000"/>
 
       <!-- WinUI focus rectangle (outer ring) -->
       <SolidColorBrush x:Key="FocusStrokeColorOuterBrush" Color="#E4000000"/>
@@ -470,7 +469,6 @@
            that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
            (ThemeResources.Windows11.axaml) makes it translucent again. -->
       <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#2C2C2C"/>
-      <SolidColorBrush x:Key="SurfaceStrokeColorFlyoutBrush" Color="#33000000"/>
 
       <!-- WinUI focus rectangle (outer ring) -->
       <SolidColorBrush x:Key="FocusStrokeColorOuterBrush" Color="#FFFFFFFF"/>

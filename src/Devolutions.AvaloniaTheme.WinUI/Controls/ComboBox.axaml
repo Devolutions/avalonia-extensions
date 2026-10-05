@@ -11,9 +11,10 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
   <Thickness x:Key="ComboBoxDropdownBorderPadding">0</Thickness>
   <Thickness x:Key="ComboBoxDropdownContentMargin">0,4</Thickness>
   <!-- WinUI uses 12,5,0,7 / 11,5,38,6; the vertical split is evened out because Inter sits higher
-       in its line box than Segoe UI (same compensation as ButtonPadding). -->
+       in its line box than Segoe UI (same compensation as ButtonPadding). The editable TextBox
+       already ends before this template's separate 38px chevron column. -->
   <Thickness x:Key="ComboBoxPadding">12,6,0,6</Thickness>
-  <Thickness x:Key="ComboBoxEditableTextPadding">11,6,38,6</Thickness>
+  <Thickness x:Key="ComboBoxEditableTextPadding">11,6,0,6</Thickness>
   <x:Double x:Key="ComboBoxMinHeight">32</x:Double>
   <x:Double x:Key="ComboBoxThemeMinWidth">64</x:Double>
   <!-- Width of the chevron column. WinUI reserves 38px so the 12px glyph keeps its 14px inset. -->
@@ -345,9 +346,15 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
       <Style Selector="^ /template/ Border#DropDownOverlay:pointerover">
         <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerOver}"/>
       </Style>
+      <Style Selector="^:focus-within /template/ Border#DropDownOverlay:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxFocusedDropDownBackgroundPointerOver}"/>
+      </Style>
       <!-- Border has no :pressed pseudo-class, so the press is read from the ComboBox itself. -->
       <Style Selector="^:pressed /template/ Border#DropDownOverlay">
         <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerPressed}"/>
+      </Style>
+      <Style Selector="^:focus-within:pressed /template/ Border#DropDownOverlay">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxFocusedDropDownBackgroundPointerPressed}"/>
       </Style>
       <Style Selector="^:focus-within /template/ Border#Background">
         <Setter Property="Background" Value="{DynamicResource TextControlBackgroundFocused}"/>

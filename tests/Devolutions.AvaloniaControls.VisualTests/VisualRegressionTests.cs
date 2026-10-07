@@ -149,8 +149,9 @@ public class VisualRegressionTests
   public void RenderEqualityCheck_DetectsMatchesAndMismatches(string themeName, string referenceThemeName, bool expectMismatch)
   {
     Type pageType = typeof(SampleApp.DemoPages.ButtonDemo);
+    string outputFolder = $"_RenderEqualityCheck/{themeName}-vs-{referenceThemeName}";
     List<string> mismatches = FindRenderMismatches(
-      pageType, null, pageType.Name, themeName, referenceThemeName, $"_RenderEqualityCheck/{themeName}-vs-{referenceThemeName}");
+      pageType, null, pageType.Name, themeName, referenceThemeName, outputFolder);
 
     if (expectMismatch)
     {
@@ -161,6 +162,23 @@ public class VisualRegressionTests
     else
     {
       Assert.Empty(mismatches);
+    }
+
+    string diffDirectory = Path.Combine(TestDiffsDirectory, outputFolder);
+    if (Directory.Exists(diffDirectory))
+    {
+      Directory.Delete(diffDirectory, recursive: true);
+
+      string comparisonDirectory = Path.GetDirectoryName(diffDirectory)!;
+      if (!Directory.EnumerateFileSystemEntries(comparisonDirectory).Any())
+      {
+        Directory.Delete(comparisonDirectory);
+      }
+
+      if (!Directory.EnumerateFileSystemEntries(TestDiffsDirectory).Any())
+      {
+        Directory.Delete(TestDiffsDirectory);
+      }
     }
   }
 

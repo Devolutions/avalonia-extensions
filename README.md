@@ -100,6 +100,9 @@ The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT.
 - `./devtest functional` - alias for `nonvisual`.
 - `./devtest --filter EditableCombo` - shorthand for (`DisplayName~EditableCombo`).
 
+The wrapper prints a visual regression summary for screenshot mismatches and missing
+baselines, including the theme, page, variant, and output path.
+
 **Updating baseline screenshots** when changes are intentional:
 - `./devtest visual --update-baselines` - updates personal baselines for all selected visual tests and publishes only native target-platform images to the tracked canonical tree.
 - `./devtest --update-baselines` - runs all projects with baseline updates enabled.

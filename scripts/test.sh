@@ -260,16 +260,16 @@ print_progress
 
   normalized="${normalized#"${normalized%%[![:space:]]*}"}"
 
-  if [[ "$normalized" =~ ^Visual\ regression\ detected\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Diff\ saved\ to\ (.*)$ ]]; then
+  if [[ "$normalized" =~ ^Visual\ regression\ detected\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Baseline:\ .*\.)?\ Diff\ saved\ to\ (.*)$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Visual regression" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Visual regression" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi
 
-  if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Saved\ screenshot\ to\ (.*)$ ]]; then
+  if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Expected:\ .*\.)?\ Saved\ screenshot\ to\ (.+\.png)(\.\ Run\ \./devtest\ visual\ --update-baselines\ to\ generate\ personal\ baselines\.)?$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "No baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "No baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi

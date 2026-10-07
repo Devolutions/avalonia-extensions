@@ -372,14 +372,14 @@ $nextFlowerTick = [DateTime]::UtcNow.AddMilliseconds(350)
 
     $normalized = $normalized.TrimStart()
 
-    if ($normalized -match '^Visual regression detected for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Diff saved to (.*)$') {
+    if ($normalized -match '^Visual regression detected for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Baseline: .*\.)? Diff saved to (.*)$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
         $row = "Visual regression`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)
         return
     }
 
-    if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Saved screenshot to (.*)$') {
+    if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Expected: .*\.)? Saved screenshot to (.+\.png)(?:\. Run \./devtest visual --update-baselines to generate personal baselines\.)?$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
         $row = "No baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)

@@ -24,6 +24,8 @@ Custom Avalonia Themes developed by [Devolutions](https://devolutions.net/)
 
 Contributors can use the SampleApp to test, debug and document styles for the various controls under each theme.
 
+The theme selector groups themes under Linux, MacOS, and Windows. Avalonia Fluent and Avalonia Simple appear first without a group header. Its popup grows to fit the themes, limited only by the available screen space.
+
 ## Debugging
 
 The SampleApp attaches the Avalonia Dev Tools for inspecting controls (open with F12).

@@ -10,6 +10,10 @@
 
       <FontFamily x:Key="CodeFontFamily">"Courier New, Courier, monospace"</FontFamily>
       <Color x:Key="CodeFontColor">#3597A5</Color>
+      <OnPlatform x:Key="EmojiFontFamily" x:TypeArguments="FontFamily"
+                  Default="Noto Color Emoji"
+                  macOS="Apple Color Emoji"
+                  Windows="Segoe UI Emoji" />
     </ResourceDictionary>
   </Styles.Resources>
 

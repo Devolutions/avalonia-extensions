@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sampleApp="clr-namespace:SampleApp"
+             xmlns:ext="clr-namespace:SampleApp.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SampleApp.DemoPages.Overview">
 
@@ -88,9 +89,15 @@
 
     <TextBlock FontSize="15" LineSpacing="2" TextWrapping="Wrap" Margin="0 30 0 0">
       Check out the list on the left for a closer look at specific controls.<LineBreak />
-      ✅ styled for the current theme (or ⚠️ if they still need a bit more work)<LineBreak />
-      🚧 styling in progress<LineBreak />
-      ❌ not styled (yet) <LineBreak />
+      <Run FontFamily="{DynamicResource EmojiFontFamily}" Text="✅" /> styled for the current theme (or <Run FontFamily="{DynamicResource EmojiFontFamily}" Text="⚠️" /> if they still need a bit more work)
+    </TextBlock>
+    <TextBlock FontSize="15" LineSpacing="2" TextWrapping="Wrap" Margin="16 0 0 0"
+               IsVisible="{ext:ThemeIsOneOf 'WinUiClassic'}">
+      (a faded checkmark indicates that the control is done but identical to the Mica version (marked as <Run FontFamily="{DynamicResource EmojiFontFamily}" Text="↔️" /> in the page-catalog))
+    </TextBlock>
+    <TextBlock FontSize="15" LineSpacing="2" TextWrapping="Wrap">
+      <Run FontFamily="{DynamicResource EmojiFontFamily}" Text="🚧" /> styling in progress<LineBreak />
+      <Run FontFamily="{DynamicResource EmojiFontFamily}" Text="❌" /> not styled (yet) <LineBreak />
       <LineBreak />
       Use the tools below to select a different theme or switch modes.<LineBreak />
     </TextBlock>

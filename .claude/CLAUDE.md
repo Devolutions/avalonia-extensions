@@ -135,7 +135,7 @@ Automated tests are available and should be used:
 - Functional catalog and navigation behavior is covered in `tests/Devolutions.AvaloniaControls.Tests/` by tests such as `PageCatalogTests` and `MainWindowNavigationTests`.
 - Visual page discovery and screenshot regression behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` by `PageDiscoveryTests` and `VisualRegressionTests`.
 - Canonical visual coverage is target-platform-only: DevExpress and WinUI variants on Windows; MacClassic/LiquidGlass on macOS; Linux/Yaru on Linux. Do not request cross-platform baseline PNGs in PR reviews.
-- Personal `Screenshots/LocalBaselines/{OS}/{Theme}/` images are gitignored and preferred for local comparisons; otherwise the harness falls back to the theme's canonical target-platform image.
+- Personal `Screenshots/LocalBaselines/{Theme}/` images are gitignored, machine-local, and preferred for comparisons. Only same-OS tracked images may be used as a fallback. Missing personal images fail with "Missing baseline" if no same-OS tracked image exists, or "Missing local baseline" plus a "Visual regression" row if that tracked image differs.
 - Until GitHub runners take over, `--update-baselines` updates personal images for all selected themes and also publishes tracked canonical images only for themes targeting the current OS. Review native canonical changes before committing. See `README.md` for the temporary publishing workflow.
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.

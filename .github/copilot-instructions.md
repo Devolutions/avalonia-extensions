@@ -13,8 +13,10 @@
   rendered themes. They do not require a separate stored PNG for the delegating
   variant.
 - `Screenshots/Baseline/{TargetOS}/{Theme}/` holds tracked canonical images.
-  `Screenshots/LocalBaselines/{OS}/{Theme}/` holds gitignored personal images
-  for optional all-theme local development.
+  `Screenshots/LocalBaselines/{Theme}/` holds gitignored machine-local images
+  for optional all-theme local development. Comparisons never use other OS
+  images; missing local images fail explicitly, even when a same-OS tracked
+  image matches.
 - Until the planned GitHub workflows generate canonical images,
   `--update-baselines` updates personal images for every selected theme and
   copies only native target-platform images into the tracked canonical tree.

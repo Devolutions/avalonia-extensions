@@ -299,28 +299,26 @@ public class VisualRegressionTests
       Baselines.Update(testPath, themeName, fileName);
     }
 
-    string baselinePath = Baselines.GetComparisonPath(themeName, fileName);
-    if (baselinePath == Baselines.GetCanonicalPath(themeName, fileName))
+    BaselineComparison comparison = Baselines.Compare(testPath, themeName, fileName, diffPath);
+    string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
+    string caseDescription = $"[{themeName}] {pageName} - {variant}.{cappedHeightSuffix}";
+    if (comparison.MissingBaseline)
     {
-      Console.Error.WriteLine(
-        $"[{themeName}] {fileName}: no personal baseline; comparing with the canonical " +
-        $"{VisualBaselineStore.GetTargetOS(themeName)} image. Machine-dependent differences may occur. " +
-        "Run ./devtest visual --update-baselines to establish local baselines.");
+      Assert.Fail($"No baseline found for {caseDescription} Expected: {comparison.Path}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
     }
 
-    if (File.Exists(baselinePath))
+    var failures = new List<string>();
+    if (comparison.MissingLocal)
     {
-      bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
-      if (!passed)
-      {
-        string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Baseline: {baselinePath}. Diff saved to {Path.GetDirectoryName(diffPath)}");
-      }
+      failures.Add($"Missing local baseline for {caseDescription} Tracked baseline: {comparison.Path}");
     }
-    else
+    if (!comparison.Matches)
     {
-      string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Expected: {baselinePath}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
+      failures.Add($"Visual regression detected for {caseDescription} Baseline: {comparison.Path}. Diff saved to {Path.GetDirectoryName(diffPath)}");
+    }
+    if (failures.Count > 0)
+    {
+      Assert.Fail(string.Join(Environment.NewLine, failures));
     }
   }
 

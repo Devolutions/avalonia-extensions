@@ -269,7 +269,14 @@ print_progress
 
   if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Expected:\ .*\.)?\ Saved\ screenshot\ to\ (.+\.png)(\.\ Run\ \./devtest\ visual\ --update-baselines\ to\ generate\ personal\ baselines\.)?$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "No baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Missing baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
+    grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
+    continue
+  fi
+
+  if [[ "$normalized" =~ ^Missing\ local\ baseline\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Tracked\ baseline:\ (.*)$ ]]; then
+    capped_desired_height="${BASH_REMATCH[5]}"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Missing local baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi
@@ -566,9 +573,9 @@ fi
 if [[ -s "$summary_file" ]]; then
   printf '\n%s\n' "________________________________________________________________________________"
   printf '\033[33;1m%s\033[0m\n' "Visual regression summary"
-  printf '\033[33;1m%-18s %-14s %-34s %-10s %-8s %s\033[0m\n' "Status" "Theme" "Page" "Variant" "DesiredH" "Path"
+  printf '\033[33;1m%-22s %-14s %-34s %-10s %-8s %s\033[0m\n' "Status" "Theme" "Page" "Variant" "DesiredH" "Path"
   while IFS=$'\t' read -r status theme page variant path capped_desired_height; do
-    printf '\033[33;1m%-18s %-14s %-34s %-10s %-8s %s\033[0m\n' "$status" "[$theme]" "$page" "$variant" "${capped_desired_height:-}" "$path"
+    printf '\033[33;1m%-22s %-14s %-34s %-10s %-8s %s\033[0m\n' "$status" "[$theme]" "$page" "$variant" "${capped_desired_height:-}" "$path"
   done < "$summary_file"
   printf '%s\n\n' "________________________________________________________________________________"
 fi

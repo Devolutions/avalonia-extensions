@@ -42,7 +42,7 @@ To view and test Accelerate-licensed controls in the SampleApp:
 
 ## Testing
 
-There is limited visual regression testing available. DemoPages are compared against personal screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines/{OS}/{Theme}` when available, otherwise against the theme's canonical target-platform image in `Screenshots/Baseline/{TargetOS}/{Theme}`. Personal baselines are gitignored. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`.
+There is limited visual regression testing available. DemoPages are compared against personal screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines/{Theme}` when available, otherwise against a tracked image in `Screenshots/Baseline/{CurrentOS}/{Theme}`. Images from other operating systems are never compared. Personal baselines are gitignored and belong to this machine. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`.
 Screenshots are captured at a fixed width (`1200`) with auto-calculated content height (capped at `3000`) to cover below-the-fold examples without requiring manual page-by-page configuration.
 
 ### Limitations
@@ -63,7 +63,15 @@ Cross-platform screenshots are a local developer convenience, not required PR co
 
 Pages marked "same as reference" in the catalog compare the two themes' rendered output directly instead of storing a separate PNG for the delegating variant.
 
-Ordinary runs prefer a matching personal baseline for the current OS. If none exists, they use the canonical target-platform image and report that machine-dependent differences may occur. Run a deliberate baseline update to establish personal images on your machine; do not update merely to hide an unexplained regression. Personal snapshots do not automatically follow upstream changes, so refresh them deliberately when those changes are intentional.
+Ordinary runs prefer a personal baseline. If none exists, they compare only against a tracked image from the current OS, never the theme's target OS when it differs. Missing local baselines always fail explicitly:
+
+- **Missing baseline:** neither a personal image nor a same-OS tracked image exists.
+- **Missing local baseline:** the personal image is missing, but the screenshot matches a same-OS tracked image.
+- **Missing local baseline** and **Visual regression:** the personal image is missing and the same-OS tracked image differs; the summary shows both rows.
+
+With a personal image present, a mismatch is simply **Visual regression**. Run a deliberate baseline update to establish personal images on your machine; do not update merely to hide an unexplained regression. Personal snapshots do not automatically follow upstream changes, so refresh them deliberately when those changes are intentional.
+
+Personal images live directly under `LocalBaselines/{Theme}/`, with no OS subdirectory. When migrating an older local tree, remove the other OS trees **before** moving your current OS's theme folders up one level: `Linux` is both an OS directory name and a theme name. Do not reuse other OS images. Each machine generates its own personal set.
 
 **Temporary local publishing workflow (until GitHub runners own canonical generation):**
 

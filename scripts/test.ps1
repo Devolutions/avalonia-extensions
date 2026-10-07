@@ -381,7 +381,14 @@ $nextFlowerTick = [DateTime]::UtcNow.AddMilliseconds(350)
 
     if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Expected: .*\.)? Saved screenshot to (.+\.png)(?:\. Run \./devtest visual --update-baselines to generate personal baselines\.)?$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
-        $row = "No baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
+        $row = "Missing baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
+        [void]$summaryRows.Add($row)
+        return
+    }
+
+    if ($normalized -match '^Missing local baseline for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Tracked baseline: (.*)$') {
+        $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
+        $row = "Missing local baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)
         return
     }
@@ -611,11 +618,11 @@ if ($summaryRows.Count -gt 0) {
     Write-Host ""
     Write-Host "________________________________________________________________________________"
     Write-Host "Visual regression summary" -ForegroundColor Yellow
-    Write-Host ("{0,-18} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f "Status", "Theme", "Page", "Variant", "DesiredH", "Path") -ForegroundColor Yellow
+    Write-Host ("{0,-22} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f "Status", "Theme", "Page", "Variant", "DesiredH", "Path") -ForegroundColor Yellow
 
     foreach ($row in $summaryRows) {
         $parts = $row -split "`t", 6
-        Write-Host ("{0,-18} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f $parts[0], "[$($parts[1])]", $parts[2], $parts[3], $parts[5], $parts[4]) -ForegroundColor Yellow
+        Write-Host ("{0,-22} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f $parts[0], "[$($parts[1])]", $parts[2], $parts[3], $parts[5], $parts[4]) -ForegroundColor Yellow
     }
 
     Write-Host "________________________________________________________________________________"

@@ -47,12 +47,13 @@ representative than testing each theme across three operating systems.
 
 Before CI implementation, the local harness provides:
 
-- Gitignored `Screenshots/LocalBaselines/{OS}/{Theme}/`, seeded in this worktree
-  from all existing images before removing redundant tracked combinations.
+- Gitignored `Screenshots/LocalBaselines/{Theme}/`, containing only this
+  machine's personal images, with no intermediate OS directory.
 - Tracked `Screenshots/Baseline/{TargetOS}/{Theme}/` containing native
   target-platform coverage only.
-- Local comparisons that prefer personal images and otherwise fall back to
-  the theme's canonical target-platform image with a clear diagnostic.
+- Local comparisons that prefer personal images and otherwise compare only
+  with same-OS tracked images. Missing local images always fail explicitly;
+  cross-OS images are never compared.
 - `--update-baselines` / `UPDATE_BASELINES=true` updates that generate personal
   images for all selected themes and also publish tracked canonical images
   **only when the theme targets the current OS**.
@@ -179,7 +180,7 @@ for each baseline.
 
 ### Personal local baselines
 
-Add gitignored `Screenshots/LocalBaselines/{OS}/{Theme}/`.
+Use gitignored `Screenshots/LocalBaselines/{Theme}/` for this machine's images.
 
 The existing local command remains familiar:
 
@@ -195,9 +196,11 @@ updates never modify tracked canonical files.
 For local comparisons:
 
 1. Prefer the matching personal baseline when it exists.
-2. Otherwise resolve the theme's tracked target-platform baseline.
-3. Clearly report that cross-platform pixel differences may be expected when
-   the developer's current OS differs from that target platform.
+2. Otherwise look only for `Baseline/{CurrentOS}/{Theme}/`.
+3. If neither image exists, fail with "Missing baseline".
+4. If a same-OS tracked image exists, compare it but still fail with
+   "Missing local baseline". If it differs, add a "Visual regression" row.
+5. Never compare another operating system's images.
 
 Introduce a separate canonical-write variable such as
 `UPDATE_CANONICAL_BASELINES=true`. The harness must reject it unless
@@ -300,10 +303,10 @@ generation so those workflows cannot drift.
 ### Phase 2: Separate canonical and local baselines
 
 - [x] Add `Screenshots/LocalBaselines/` to the visual-test `.gitignore`.
-- [x] Make updates write all selected themes to `LocalBaselines/{OS}/{Theme}/`
+- [x] Make updates write all selected themes to `LocalBaselines/{Theme}/`
       and temporarily publish only native target-platform canonical images.
 - [x] Make local comparisons prefer a personal image, then fall back to the
-      theme's tracked target-platform baseline with a clear diagnostic.
+      same-OS tracked baseline, failing explicitly for missing local images.
 - [x] Preserve and byte-verify all 786 existing images in the local tree before
       pruning 520 cross-platform images; retain 266 unchanged native images.
 - [ ] Remove temporary local canonical publishing once CI generation works.

@@ -1,5 +1,7 @@
 namespace Devolutions.AvaloniaControls.VisualTests;
 
+using SkiaSharp;
+
 public sealed class VisualBaselineStoreTests : IDisposable
 {
   private readonly string directory = Path.Combine(Path.GetTempPath(), $"visual-baselines-{Guid.NewGuid():N}");
@@ -50,18 +52,18 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [InlineData("Windows")]
   [InlineData("macOS")]
   [InlineData("Linux")]
-  public void MissingLocalImageFallsBackToThemeTargetPlatform(string currentOS)
+  public void MissingLocalImageOnlyLooksOnCurrentPlatform(string currentOS)
   {
     var store = new VisualBaselineStore(directory, currentOS);
 
     Assert.Equal(
-      Path.Combine(directory, "Baseline", "Windows", "DevExpress", "page.png"),
+      Path.Combine(directory, "Baseline", currentOS, "DevExpress", "page.png"),
       store.GetComparisonPath("DevExpress", "page.png"));
     Assert.Equal(
-      Path.Combine(directory, "Baseline", "macOS", "LiquidGlass", "page.png"),
+      Path.Combine(directory, "Baseline", currentOS, "LiquidGlass", "page.png"),
       store.GetComparisonPath("LiquidGlass", "page.png"));
     Assert.Equal(
-      Path.Combine(directory, "Baseline", "Linux", "Linux", "page.png"),
+      Path.Combine(directory, "Baseline", currentOS, "Linux", "page.png"),
       store.GetComparisonPath("Linux", "page.png"));
   }
 
@@ -99,14 +101,80 @@ public sealed class VisualBaselineStoreTests : IDisposable
   }
 
   [Fact]
-  public void LocalBaselineFromAnotherOSIsNotUsed()
+  public void LocalPathHasNoPlatformSubdirectory()
   {
-    var windowsStore = new VisualBaselineStore(directory, "Windows");
-    var macStore = new VisualBaselineStore(directory, "macOS");
-    string source = WriteFile("actual.png", "screenshot");
-    windowsStore.Update(source, "DevExpress", "page.png");
+    var store = new VisualBaselineStore(directory, "macOS");
+    Assert.Equal(Path.Combine(directory, "LocalBaselines", "DevExpress", "page.png"), store.GetLocalPath("DevExpress", "page.png"));
+  }
 
-    Assert.Equal(macStore.GetCanonicalPath("DevExpress", "page.png"), macStore.GetComparisonPath("DevExpress", "page.png"));
+  [Theory]
+  [InlineData(true)]
+  [InlineData(false)]
+  public void MissingLocalBaselineComparesSamePlatformTrackedImage(bool matches)
+  {
+    var store = new VisualBaselineStore(directory, "macOS");
+    string actual = WriteImage("actual.png", SKColors.Blue);
+    string tracked = WriteImage(Path.Combine("Baseline", "macOS", "MacClassic", "page.png"), matches ? SKColors.Blue : SKColors.Red);
+    string diff = Path.Combine(directory, "diff.png");
+
+    BaselineComparison comparison = store.Compare(actual, "MacClassic", "page.png", diff);
+
+    Assert.Equal(tracked, comparison.Path);
+    Assert.True(comparison.MissingLocal);
+    Assert.False(comparison.MissingBaseline);
+    Assert.Equal(matches, comparison.Matches);
+    Assert.Equal(!matches, File.Exists(diff));
+  }
+
+  [Theory]
+  [InlineData("macOS", "WinUiMica")]
+  [InlineData("Linux", "WinUiClassic")]
+  [InlineData("Windows", "MacClassic")]
+  public void ForeignCanonicalImageIsNeverCompared(string currentOS, string theme)
+  {
+    var store = new VisualBaselineStore(directory, currentOS);
+    string actual = WriteImage("actual.png", SKColors.Blue);
+    WriteImage(Path.GetRelativePath(directory, store.GetCanonicalPath(theme, "page.png")), SKColors.Red);
+    string diff = Path.Combine(directory, "diff.png");
+
+    BaselineComparison comparison = store.Compare(actual, theme, "page.png", diff);
+
+    Assert.True(comparison.MissingLocal);
+    Assert.True(comparison.MissingBaseline);
+    Assert.False(comparison.Matches);
+    Assert.False(File.Exists(diff));
+  }
+
+  [Theory]
+  [InlineData(true)]
+  [InlineData(false)]
+  public void PersonalImageTakesPrecedenceOverTrackedImage(bool matches)
+  {
+    var store = new VisualBaselineStore(directory, "macOS");
+    string actual = WriteImage("actual.png", SKColors.Blue);
+    WriteImage(Path.Combine("Baseline", "macOS", "MacClassic", "page.png"), SKColors.Red);
+    string personal = WriteImage(Path.Combine("LocalBaselines", "MacClassic", "page.png"), matches ? SKColors.Blue : SKColors.Red);
+
+    BaselineComparison comparison = store.Compare(actual, "MacClassic", "page.png", Path.Combine(directory, "diff.png"));
+
+    Assert.Equal(personal, comparison.Path);
+    Assert.False(comparison.MissingLocal);
+    Assert.False(comparison.MissingBaseline);
+    Assert.Equal(matches, comparison.Matches);
+  }
+
+  private string WriteImage(string relativePath, SKColor color)
+  {
+    string path = Path.Combine(directory, relativePath);
+    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+    using var bitmap = new SKBitmap(10, 10);
+    using var canvas = new SKCanvas(bitmap);
+    canvas.Clear(color);
+    using var image = SKImage.FromBitmap(bitmap);
+    using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+    using var stream = File.Create(path);
+    data.SaveTo(stream);
+    return path;
   }
 
   private string WriteFile(string name, string contents)

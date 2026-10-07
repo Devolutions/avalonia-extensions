@@ -115,9 +115,13 @@ Local visual testing remains a first-class development tool:
   gitignored `Screenshots/LocalBaselines/` tree. During the local transition,
   it also publishes tracked images for native target-platform themes.
 - Local comparisons prefer a matching personal baseline when one exists.
-- If no personal baseline exists, the harness can fall back to the canonical
-  target-platform image with a clear warning that cross-platform pixel noise
-  may be expected.
+- Personal images live directly in `LocalBaselines/{Theme}/` and belong to
+  the current machine, without an OS subdirectory.
+- If no personal baseline exists, the harness compares only with a tracked
+  image from the current OS. It fails with "Missing baseline" when neither
+  image exists, or "Missing local baseline" when a tracked same-OS image
+  exists. A differing tracked image also produces a "Visual regression" row.
+  Images from another OS are never compared.
 
 This lets any developer create stable cross-platform local feedback without
 publishing those cross-platform images. Once CI takes over, local updates will

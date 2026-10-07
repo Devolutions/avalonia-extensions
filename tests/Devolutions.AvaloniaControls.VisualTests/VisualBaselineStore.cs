@@ -14,7 +14,7 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
     };
 
   public string GetLocalPath(string themeName, string fileName) =>
-    Path.Combine(screenshotsDirectory, "LocalBaselines", currentOS, themeName, fileName);
+    Path.Combine(screenshotsDirectory, "LocalBaselines", themeName, fileName);
 
   public string GetCanonicalPath(string themeName, string fileName) =>
     Path.Combine(screenshotsDirectory, "Baseline", GetTargetOS(themeName), themeName, fileName);
@@ -22,7 +22,18 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
   public string GetComparisonPath(string themeName, string fileName)
   {
     string localPath = GetLocalPath(themeName, fileName);
-    return File.Exists(localPath) ? localPath : GetCanonicalPath(themeName, fileName);
+    return File.Exists(localPath)
+      ? localPath
+      : Path.Combine(screenshotsDirectory, "Baseline", currentOS, themeName, fileName);
+  }
+
+  public BaselineComparison Compare(string screenshotPath, string themeName, string fileName, string diffPath)
+  {
+    string baselinePath = GetComparisonPath(themeName, fileName);
+    bool missingLocal = !File.Exists(GetLocalPath(themeName, fileName));
+    bool missingBaseline = !File.Exists(baselinePath);
+    bool matches = !missingBaseline && ImageComparer.CompareImages(baselinePath, screenshotPath, diffPath);
+    return new BaselineComparison(baselinePath, missingLocal, missingBaseline, matches);
   }
 
   public void Update(string screenshotPath, string themeName, string fileName)
@@ -43,3 +54,5 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
     File.Copy(sourcePath, destinationPath, overwrite: true);
   }
 }
+
+internal sealed record BaselineComparison(string Path, bool MissingLocal, bool MissingBaseline, bool Matches);

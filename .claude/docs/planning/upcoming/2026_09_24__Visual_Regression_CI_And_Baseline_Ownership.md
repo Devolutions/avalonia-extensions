@@ -57,9 +57,11 @@ Before CI implementation, the local harness provides:
 - `--update-baselines` / `UPDATE_BASELINES=true` updates that generate personal
   tracked images only for native themes and personal images only for
   non-native themes.
-- `--initialize-local-baselines` fills only missing non-native personal images,
-  preserves existing personal and tracked images, and tests native themes
-  without updating their baselines. Agents always ask once at session startup,
+- `--initialize-local-baselines` captures non-native personal images without
+  comparisons or WinUI identity checks and preserves tracked images. A non-empty
+  personal folder requires explicit `y` confirmation; agents must surface this
+  request and never approve overwrites automatically.
+  Agents always ask once at session startup,
   including for non-visual tasks, before generating from clean starting code.
 - Target-platform coverage guidance in `README.md`, `AGENTS.md`,
   `.claude/CLAUDE.md`, and `.github/copilot-instructions.md`, including Windows
@@ -204,10 +206,10 @@ For local comparisons:
 2. Non-native themes use only `LocalBaselines/{Theme}/`.
 3. Missing appropriate images fail with "Missing baseline"; differing images
    fail with "Visual regression". Never compare another OS's images.
-4. Initialize missing non-native images from clean starting code using
+4. Capture non-native images from clean starting code using
    `./devtest visual --initialize-local-baselines`, after asking the user.
-   Existing images and missing native canonical images are never filled or
-   overwritten by initialization.
+   Tracked images are never changed or compared; WinUI identity checks are
+   not run. A non-empty personal folder requires explicit overwrite approval.
 5. Once CI owns tracked images, change local initialization and comparison to
    use personal images for native themes too.
 
@@ -314,8 +316,9 @@ generation so those workflows cannot drift.
 - [x] Add `Screenshots/LocalBaselines/` to the visual-test `.gitignore`.
 - [x] Route updates and comparisons to tracked native images and personal
       non-native images, without duplicate native personal images.
-- [x] Add initialization of missing non-native personal images without writes
-      to tracked or existing personal images.
+- [x] Add capture-only initialization of non-native personal images, with no
+      tracked writes, comparisons, or WinUI identity checks. Require confirmation
+      before overwriting a non-empty personal set.
 - [x] Instruct agents to always ask once at new-session startup before
       initialization, including for non-visual tasks.
 - [x] Preserve and byte-verify all 786 existing images in the local tree before

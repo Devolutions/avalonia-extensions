@@ -22,7 +22,9 @@
 - At the start of a new agent session, always ask once whether to initialize
   a full development baseline set, even for non-visual tasks. If approved,
   run `./devtest visual --initialize-local-baselines` before editing. It
-  preserves tracked and existing personal images and fills missing non-native
-  personal images. Do not initialize modified code without explicit approval
+  captures non-native personal images without comparisons or WinUI identity
+  checks and preserves tracked images. If LocalBaselines is non-empty, surface
+  the overwrite confirmation to the user; never answer or pipe `y` without
+  explicit overwrite approval. Do not initialize modified code without explicit approval
   or automatically copy personal images across worktrees.
 - See the [Testing section](../README.md#testing) for commands and behavior.

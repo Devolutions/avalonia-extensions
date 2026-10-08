@@ -91,7 +91,7 @@ public class VisualRegressionTests
     // Ensure directories exist
     Directory.CreateDirectory(TestResultsDirectory);
 
-    if (sameAsThemeName != null)
+    if (sameAsThemeName != null && Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") != "true")
     {
       AssertRendersSameAs(pageType, viewModelType, pageName, themeName, sameAsThemeName);
       return;
@@ -294,13 +294,15 @@ public class VisualRegressionTests
 
     bitmap.Save(testPath);
 
+    if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      Baselines.InitializeLocal(testPath, themeName, fileName);
+      return;
+    }
+
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
       Baselines.Update(testPath, themeName, fileName);
-    }
-    else if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
-    {
-      Baselines.InitializeLocal(testPath, themeName, fileName);
     }
 
     BaselineComparison comparison = Baselines.Compare(testPath, themeName, fileName, diffPath);
@@ -420,7 +422,13 @@ internal static class TestInitializer
     }
     if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
     {
-      Console.Error.WriteLine("Initializing missing non-native personal baselines; existing personal and tracked baselines will not be changed.");
+      string localDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../Screenshots/LocalBaselines"));
+      if (Directory.Exists(localDirectory) && Directory.EnumerateFileSystemEntries(localDirectory).Any() &&
+          Environment.GetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES") != "true")
+      {
+        throw new InvalidOperationException("LocalBaselines is non-empty. Use ./devtest visual --initialize-local-baselines and confirm overwriting it.");
+      }
+      Console.Error.WriteLine("Capturing non-native personal baselines without comparisons. Tracked baselines will not be changed.");
     }
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")

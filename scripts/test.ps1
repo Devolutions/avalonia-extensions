@@ -228,6 +228,35 @@ if (-not $hasLoggerArg) {
     $dotnetArgs.Add("console;verbosity=normal")
 }
 
+$overwriteLocalBaselines = $false
+if ($initializeLocalBaselines) {
+    $localBaselines = Join-Path $PSScriptRoot "../tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines"
+    if ((Test-Path $localBaselines -PathType Container) -and
+        @(Get-ChildItem -LiteralPath $localBaselines -Force | Select-Object -First 1).Count -gt 0) {
+        $confirmation = Read-Host "WARNING: LocalBaselines is non-empty. Overwrite selected non-native screenshots? [y/N]"
+        if ($confirmation -cne "y") {
+            Write-Host "Capture cancelled; no baselines changed."
+            exit 1
+        }
+        $overwriteLocalBaselines = $true
+    }
+    $captureFilter = "FullyQualifiedName~VisualRegressionTests.TestPage"
+    if ($hasFilterArg) {
+        for ($index = 0; $index -lt $dotnetArgs.Count; $index++) {
+            if ($dotnetArgs[$index] -eq "--filter") {
+                $dotnetArgs[$index + 1] = "($($dotnetArgs[$index + 1]))&$captureFilter"
+            }
+            elseif ($dotnetArgs[$index].StartsWith("--filter=")) {
+                $dotnetArgs[$index] = "--filter=($($dotnetArgs[$index].Substring(9)))&$captureFilter"
+            }
+        }
+    }
+    else {
+        $dotnetArgs.Add("--filter")
+        $dotnetArgs.Add($captureFilter)
+    }
+}
+
 $summaryRows = [System.Collections.Generic.HashSet[string]]::new()
 $fallbackLines = [System.Collections.Generic.List[string]]::new()
 $functionalFailureRows = [System.Collections.Generic.List[string]]::new()
@@ -288,11 +317,13 @@ function Write-FlowerFrame {
 
 $previousUpdateBaselines = [Environment]::GetEnvironmentVariable("UPDATE_BASELINES", "Process")
 $previousInitializeLocalBaselines = [Environment]::GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "Process")
+$previousOverwriteLocalBaselines = [Environment]::GetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", "Process")
 if ($updateBaselines) {
     [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", "true", "Process")
 }
 if ($initializeLocalBaselines) {
     [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "true", "Process")
+    [Environment]::SetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", $overwriteLocalBaselines.ToString().ToLowerInvariant(), "Process")
 }
 
 try {
@@ -556,6 +587,7 @@ finally {
     }
     if ($initializeLocalBaselines) {
         [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", $previousInitializeLocalBaselines, "Process")
+        [Environment]::SetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", $previousOverwriteLocalBaselines, "Process")
     }
 }
 

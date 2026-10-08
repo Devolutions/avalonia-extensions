@@ -34,7 +34,7 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
 
   public void InitializeLocal(string screenshotPath, string themeName, string fileName)
   {
-    if (GetTargetOS(themeName) != currentOS && !File.Exists(GetLocalPath(themeName, fileName)))
+    if (GetTargetOS(themeName) != currentOS)
     {
       Copy(screenshotPath, GetLocalPath(themeName, fileName));
     }

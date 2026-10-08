@@ -144,6 +144,31 @@ if [[ "$has_logger_arg" -eq 0 ]]; then
   dotnet_args+=("--logger" "console;verbosity=normal")
 fi
 
+overwrite_local_baselines=0
+if [[ "$initialize_local_baselines" -eq 1 ]]; then
+  local_baselines="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines"
+  if [[ -d "$local_baselines" && -n "$(find "$local_baselines" -mindepth 1 -print -quit)" ]]; then
+    printf 'WARNING: LocalBaselines is non-empty. Overwrite selected non-native screenshots? [y/N] ' >&2
+    if ! IFS= read -r confirmation || [[ "$confirmation" != "y" ]]; then
+      printf '\nCapture cancelled; no baselines changed.\n' >&2
+      exit 1
+    fi
+    overwrite_local_baselines=1
+  fi
+  capture_filter='FullyQualifiedName~VisualRegressionTests.TestPage'
+  if [[ "$has_filter_arg" -eq 1 ]]; then
+    for ((index=0; index<${#dotnet_args[@]}; index++)); do
+      if [[ "${dotnet_args[index]}" == "--filter" ]]; then
+        dotnet_args[index+1]="(${dotnet_args[index+1]})&$capture_filter"
+      elif [[ "${dotnet_args[index]}" == --filter=* ]]; then
+        dotnet_args[index]="--filter=(${dotnet_args[index]#--filter=})&$capture_filter"
+      fi
+    done
+  else
+    dotnet_args+=("--filter" "$capture_filter")
+  fi
+fi
+
 summary_file="$(mktemp -t visual-regression-summary.XXXXXX)"
 result_line_file="$(mktemp -t visual-regression-result.XXXXXX)"
 fallback_file="$(mktemp -t visual-regression-fallback.XXXXXX)"
@@ -207,7 +232,7 @@ dotnet_env=()
 if [[ "$update_baselines" -eq 1 ]]; then
   dotnet_env=(env UPDATE_BASELINES=true)
 elif [[ "$initialize_local_baselines" -eq 1 ]]; then
-  dotnet_env=(env INITIALIZE_LOCAL_BASELINES=true)
+  dotnet_env=(env INITIALIZE_LOCAL_BASELINES=true OVERWRITE_LOCAL_BASELINES="$([[ "$overwrite_local_baselines" -eq 1 ]] && printf true || printf false)")
 fi
 
 spinner_frames=('⠋' '⠙' '⠸' '⠴' '⠦' '⠇')

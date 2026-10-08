@@ -11,9 +11,11 @@ not required PR coverage, including for WinUI, whose canonical target is Windows
 
 Until GitHub runners take over, native themes use and update tracked images
 only; non-native themes use and update personal images only. New worktrees
-inherit native images through Git. `--initialize-local-baselines` fills missing
-non-native personal images without rewriting tracked or existing personal
-images. Agents always ask before initialization at session startup, including
+inherit native images through Git. `--initialize-local-baselines` captures
+non-native personal images without comparisons or WinUI identity checks,
+never changing tracked images. A non-empty personal folder requires explicit
+overwrite confirmation, which agents must surface to the user.
+Agents always ask before initialization at session startup, including
 for initially non-visual tasks. This removes redundant committed coverage now,
 while retaining local feedback. The workflows proposed below replace that
 temporary local publishing responsibility with consistent CI generation.
@@ -124,8 +126,9 @@ Local visual testing remains a first-class development tool:
 - A missing image from the appropriate set produces "Missing baseline"; a
   mismatch produces "Visual regression". Other OS images are never compared.
 - On a clean starting revision, `./devtest visual --initialize-local-baselines`
-  creates missing non-native images, preserves all existing baselines, and
-  tests native images without updating them.
+  captures non-native images without comparisons, preserves tracked images,
+  and asks before overwriting a non-empty personal set. Ordinary testing is
+  a separate operation.
 
 This lets any developer create stable cross-platform local feedback without
 publishing those cross-platform images. Once CI takes over, local updates will

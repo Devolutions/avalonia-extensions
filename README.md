@@ -73,7 +73,8 @@ Personal images live directly under `LocalBaselines/{Theme}/`, with no OS subdir
 
 - `--update-baselines` approves intentional changes: native themes write only tracked images; non-native themes write only personal images. It does not create duplicate native personal images.
 - Review and commit only intentional target-platform changes in `Screenshots/Baseline/`. The rest remain in gitignored `LocalBaselines/`.
-- Initialize a new worktree with `./devtest visual --initialize-local-baselines`, on the clean starting revision before making changes. This generates only missing non-native personal images, preserves existing personal images, and never writes tracked images. Native themes are still tested against inherited tracked baselines; missing native baselines and existing regressions remain failures.
+- Initialize a new worktree with `./devtest visual --initialize-local-baselines`, on the clean starting revision before making changes. This is **capture-only**: it writes non-native personal screenshots without comparing images or running WinUI reference-theme identity checks. Tracked images are never written or tested in this operation.
+- If `LocalBaselines` is non-empty, the command warns and requires typing `y` before overwriting selected non-native images. Any other answer or end of input cancels before capture. Unselected images remain unchanged; use the unfiltered command for a full set. Agents must surface this overwrite confirmation to the user and must not answer it automatically or pipe `y` without explicit overwrite approval.
 - Agents always ask once at the start of a new session whether to initialize the full development set, even if the planned task is non-visual. Do not generate from an already modified tree without explicit user approval.
 - Personal images are worktree-specific: do not automatically copy or share them via worktree setup. Existing images are not refreshed automatically after a rebase or merge; review intentional changes before updating them.
 
@@ -109,7 +110,7 @@ The wrapper prints a visual regression summary for screenshot mismatches and mis
 baselines, including the theme, page, variant, and output path.
 
 **Updating baseline screenshots** when changes are intentional:
-- `./devtest visual --initialize-local-baselines` - fills missing non-native personal images without changing tracked or existing personal images.
+- `./devtest visual --initialize-local-baselines` - captures non-native personal images without comparisons; asks before overwriting a non-empty personal set.
 - `./devtest visual --update-baselines` - updates tracked native images and personal non-native images for intentional changes.
 - `./devtest --update-baselines` - runs all projects with baseline updates enabled.
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`

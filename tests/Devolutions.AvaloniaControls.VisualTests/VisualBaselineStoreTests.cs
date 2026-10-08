@@ -165,7 +165,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [InlineData("Windows")]
   [InlineData("macOS")]
   [InlineData("Linux")]
-  public void InitializationCreatesOnlyMissingNonNativeImagesAndPreservesAllExistingFiles(string currentOS)
+  public void InitializationOverwritesNonNativeImagesWithoutChangingTrackedFiles(string currentOS)
   {
     var store = new VisualBaselineStore(directory, currentOS);
     string actual = WriteFile("actual.png", "initial screenshot");
@@ -184,7 +184,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
       store.InitializeLocal(actual, theme, "page.png");
       if (!native)
       {
-        Assert.Equal("initial screenshot", File.ReadAllText(store.GetLocalPath(theme, "page.png")));
+        Assert.Equal("changed screenshot", File.ReadAllText(store.GetLocalPath(theme, "page.png")));
       }
       File.WriteAllText(actual, "initial screenshot");
     }

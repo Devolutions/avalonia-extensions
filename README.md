@@ -42,7 +42,7 @@ To view and test Accelerate-licensed controls in the SampleApp:
 
 ## Testing
 
-There is limited visual regression testing available. DemoPages are compared against personal screenshots in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines/{OS}/{Theme}` when available, otherwise against the theme's canonical target-platform image in `Screenshots/Baseline/{TargetOS}/{Theme}`. Personal baselines are gitignored. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`.
+There is limited visual regression testing available. Native themes use tracked images in `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Baseline/{CurrentOS}/{Theme}`; non-native themes use personal images in `Screenshots/LocalBaselines/{Theme}`. Images from other operating systems are never compared. Personal baselines are gitignored and belong to this machine and worktree. Diffs for failing tests are saved to `tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/Test-Diffs`.
 Screenshots are captured at a fixed width (`1200`) with auto-calculated content height (capped at `3000`) to cover below-the-fold examples without requiring manual page-by-page configuration.
 
 ### Limitations
@@ -63,14 +63,20 @@ Cross-platform screenshots are a local developer convenience, not required PR co
 
 Pages marked "same as reference" in the catalog compare the two themes' rendered output directly instead of storing a separate PNG for the delegating variant.
 
-Ordinary runs prefer a matching personal baseline for the current OS. If none exists, they use the canonical target-platform image and report that machine-dependent differences may occur. Run a deliberate baseline update to establish personal images on your machine; do not update merely to hide an unexplained regression. Personal snapshots do not automatically follow upstream changes, so refresh them deliberately when those changes are intentional.
+Before CI owns baseline generation, native themes always compare with tracked images; stale personal copies of those themes are ignored. Non-native themes compare only with personal images. For example, on macOS, MacClassic/LiquidGlass use tracked images, while DevExpress/WinUI/Linux use personal images.
+
+A missing image from the appropriate set fails with **Missing baseline**. A differing image fails with **Visual regression**. There is no missing-local failure for a native theme with a valid tracked image.
+
+Personal images live directly under `LocalBaselines/{Theme}/`, with no OS subdirectory. When migrating an older local tree, remove the other OS trees **before** moving your current OS's theme folders up one level: `Linux` is both an OS directory name and a theme name. Do not reuse other OS images. Each machine generates its own personal set.
 
 **Temporary local publishing workflow (until GitHub runners own canonical generation):**
 
-- `--update-baselines` generates personal images for all selected themes on your current OS.
-- It also copies images into the tracked canonical tree **only for themes whose target platform is your current OS**. For example, on macOS it publishes MacClassic/LiquidGlass, but leaves Windows and Linux canonical files untouched.
+- `--update-baselines` approves intentional changes: native themes write only tracked images; non-native themes write only personal images. It does not create duplicate native personal images.
 - Review and commit only intentional target-platform changes in `Screenshots/Baseline/`. The rest remain in gitignored `LocalBaselines/`.
-- A new clone has no personal images. You can generate them with the existing update command; be aware that it also publishes your native themes to the tracked tree.
+- Initialize a new worktree with `./devtest visual --initialize-local-baselines`, on the clean starting revision before making changes. This is **capture-only**: it writes non-native personal screenshots without comparing images or running WinUI reference-theme identity checks. Tracked images are never written or tested in this operation.
+- If `LocalBaselines` is non-empty, the command warns and requires typing `y` before overwriting selected non-native images. Any other answer or end of input cancels before capture. Unselected images remain unchanged; use the unfiltered command for a full set. Agents must surface this overwrite confirmation to the user and must not answer it automatically or pipe `y` without explicit overwrite approval.
+- Agents always ask once at the start of a new session whether to initialize the full development set, even if the planned task is non-visual. Do not generate from an already modified tree without explicit user approval.
+- Personal images are worktree-specific: do not automatically copy or share them via worktree setup. Existing images are not refreshed automatically after a rebase or merge; review intentional changes before updating them.
 
 The planned GitHub workflow will replace this temporary local publishing step. See [the CI proposal](docs/visual-regression-ci-proposal.md).
 
@@ -100,8 +106,14 @@ The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT.
 - `./devtest functional` - alias for `nonvisual`.
 - `./devtest --filter EditableCombo` - shorthand for (`DisplayName~EditableCombo`).
 
+The wrapper prints a visual regression summary for screenshot mismatches and missing
+baselines, including the theme, page, variant, and output path.
+Reference-theme equality failures also appear in this table, with one row per
+mismatching light/dark variant.
+
 **Updating baseline screenshots** when changes are intentional:
-- `./devtest visual --update-baselines` - updates personal baselines for all selected visual tests and publishes only native target-platform images to the tracked canonical tree.
+- `./devtest visual --initialize-local-baselines` - captures non-native personal images without comparisons; asks before overwriting a non-empty personal set.
+- `./devtest visual --update-baselines` - updates tracked native images and personal non-native images for intentional changes.
 - `./devtest --update-baselines` - runs all projects with baseline updates enabled.
 - **macOS/Linux:** `UPDATE_BASELINES=true dotnet test [filters]`
 - **Windows (PowerShell):** `$env:UPDATE_BASELINES="true"; dotnet test [filters]; Remove-Item env:UPDATE_BASELINES`

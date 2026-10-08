@@ -135,8 +135,9 @@ Automated tests are available and should be used:
 - Functional catalog and navigation behavior is covered in `tests/Devolutions.AvaloniaControls.Tests/` by tests such as `PageCatalogTests` and `MainWindowNavigationTests`.
 - Visual page discovery and screenshot regression behavior is covered in `tests/Devolutions.AvaloniaControls.VisualTests/` by `PageDiscoveryTests` and `VisualRegressionTests`.
 - Canonical visual coverage is target-platform-only: DevExpress and WinUI variants on Windows; MacClassic/LiquidGlass on macOS; Linux/Yaru on Linux. Do not request cross-platform baseline PNGs in PR reviews.
-- Personal `Screenshots/LocalBaselines/{OS}/{Theme}/` images are gitignored and preferred for local comparisons; otherwise the harness falls back to the theme's canonical target-platform image.
-- Until GitHub runners take over, `--update-baselines` updates personal images for all selected themes and also publishes tracked canonical images only for themes targeting the current OS. Review native canonical changes before committing. See `README.md` for the temporary publishing workflow.
+- Before CI takes over, native themes always compare with tracked images; non-native themes use only gitignored `Screenshots/LocalBaselines/{Theme}/` images. Missing appropriate images fail as "Missing baseline".
+- `--update-baselines` writes only tracked images for native themes and only personal images for non-native themes. Review native canonical changes before committing.
+- Always ask once at the beginning of every new session, including non-visual tasks, whether to initialize a full clean development baseline set. If approved, run `./devtest visual --initialize-local-baselines` before editing. It captures non-native personal images without comparisons or WinUI identity checks and never writes tracked images. A non-empty LocalBaselines requires typing `y`; surface that confirmation through the user-question tool, and never answer or pipe `y` without explicit overwrite approval. Never generate from modified code without explicit user approval, and do not automatically copy personal images across worktrees. See `README.md`.
 
 Manual validation via SampleApp is still important for exploratory UI checks and theme behavior.
 

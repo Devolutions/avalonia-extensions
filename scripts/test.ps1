@@ -124,9 +124,11 @@ $presetFilter = $null
 $presetToken = $null
 $presetProject = $null
 $updateBaselines = $false
-if ($args.Count -gt 0 -and $args[0] -eq "--update-baselines") {
-    $updateBaselines = $true
-    $args = if ($args.Count -gt 1) { $args[1..($args.Count - 1)] } else { @() }
+$initializeLocalBaselines = $false
+if ($args.Count -gt 0 -and $args[0] -in @("--update-baselines", "--initialize-local-baselines")) {
+    $updateBaselines = $args[0] -eq "--update-baselines"
+    $initializeLocalBaselines = $args[0] -eq "--initialize-local-baselines"
+    $args = @(if ($args.Count -gt 1) { $args[1..($args.Count - 1)] })
 }
 if ($args.Count -gt 0) {
     $resolvedPresetFilter = Resolve-PresetFilter -Preset $args[0]
@@ -148,6 +150,11 @@ for ($index = 0; $index -lt $args.Count; ) {
 
     if ($current -eq "--update-baselines") {
         $updateBaselines = $true
+        $index += 1
+        continue
+    }
+    if ($current -eq "--initialize-local-baselines") {
+        $initializeLocalBaselines = $true
         $index += 1
         continue
     }
@@ -199,6 +206,10 @@ for ($index = 0; $index -lt $args.Count; ) {
     $index += 1
 }
 
+if ($updateBaselines -and $initializeLocalBaselines) {
+    throw "Cannot combine --update-baselines and --initialize-local-baselines."
+}
+
 if ($hasFilterArg -and ($null -ne $presetProject -or -not [string]::IsNullOrEmpty($presetFilter))) {
     throw "Cannot combine preset '$presetToken' with an explicit --filter. Use one or the other."
 }
@@ -215,6 +226,35 @@ if (-not [string]::IsNullOrEmpty($presetProject)) {
 if (-not $hasLoggerArg) {
     $dotnetArgs.Add("--logger")
     $dotnetArgs.Add("console;verbosity=normal")
+}
+
+$overwriteLocalBaselines = $false
+if ($initializeLocalBaselines) {
+    $localBaselines = Join-Path $PSScriptRoot "../tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines"
+    if ((Test-Path $localBaselines -PathType Container) -and
+        @(Get-ChildItem -LiteralPath $localBaselines -Force | Select-Object -First 1).Count -gt 0) {
+        $confirmation = Read-Host "WARNING: LocalBaselines is non-empty. Overwrite selected non-native screenshots? [y/N]"
+        if ($confirmation -cne "y") {
+            Write-Host "Capture cancelled; no baselines changed."
+            exit 1
+        }
+        $overwriteLocalBaselines = $true
+    }
+    $captureFilter = "FullyQualifiedName~VisualRegressionTests.TestPage"
+    if ($hasFilterArg) {
+        for ($index = 0; $index -lt $dotnetArgs.Count; $index++) {
+            if ($dotnetArgs[$index] -eq "--filter") {
+                $dotnetArgs[$index + 1] = "($($dotnetArgs[$index + 1]))&$captureFilter"
+            }
+            elseif ($dotnetArgs[$index].StartsWith("--filter=")) {
+                $dotnetArgs[$index] = "--filter=($($dotnetArgs[$index].Substring(9)))&$captureFilter"
+            }
+        }
+    }
+    else {
+        $dotnetArgs.Add("--filter")
+        $dotnetArgs.Add($captureFilter)
+    }
 }
 
 $summaryRows = [System.Collections.Generic.HashSet[string]]::new()
@@ -276,8 +316,14 @@ function Write-FlowerFrame {
 }
 
 $previousUpdateBaselines = [Environment]::GetEnvironmentVariable("UPDATE_BASELINES", "Process")
+$previousInitializeLocalBaselines = [Environment]::GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "Process")
+$previousOverwriteLocalBaselines = [Environment]::GetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", "Process")
 if ($updateBaselines) {
     [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", "true", "Process")
+}
+if ($initializeLocalBaselines) {
+    [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "true", "Process")
+    [Environment]::SetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", $overwriteLocalBaselines.ToString().ToLowerInvariant(), "Process")
 }
 
 try {
@@ -372,16 +418,16 @@ $nextFlowerTick = [DateTime]::UtcNow.AddMilliseconds(350)
 
     $normalized = $normalized.TrimStart()
 
-    if ($normalized -match '^Visual regression detected for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Diff saved to (.*)$') {
+    if ($normalized -match '^Visual regression detected for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Baseline: .*\.)? Diff saved to (.*)$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
         $row = "Visual regression`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)
         return
     }
 
-    if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Saved screenshot to (.*)$') {
+    if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Expected: .*\.)? Saved screenshot to (.+\.png)(?:\. Run \./devtest visual --update-baselines to generate personal baselines\.)?$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
-        $row = "No baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
+        $row = "Missing baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)
         return
     }
@@ -539,6 +585,10 @@ finally {
     if ($updateBaselines) {
         [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", $previousUpdateBaselines, "Process")
     }
+    if ($initializeLocalBaselines) {
+        [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", $previousInitializeLocalBaselines, "Process")
+        [Environment]::SetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES", $previousOverwriteLocalBaselines, "Process")
+    }
 }
 
 if ($progressSeen) {
@@ -611,11 +661,11 @@ if ($summaryRows.Count -gt 0) {
     Write-Host ""
     Write-Host "________________________________________________________________________________"
     Write-Host "Visual regression summary" -ForegroundColor Yellow
-    Write-Host ("{0,-18} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f "Status", "Theme", "Page", "Variant", "DesiredH", "Path") -ForegroundColor Yellow
+    Write-Host ("{0,-22} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f "Status", "Theme", "Page", "Variant", "DesiredH", "Path") -ForegroundColor Yellow
 
     foreach ($row in $summaryRows) {
         $parts = $row -split "`t", 6
-        Write-Host ("{0,-18} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f $parts[0], "[$($parts[1])]", $parts[2], $parts[3], $parts[5], $parts[4]) -ForegroundColor Yellow
+        Write-Host ("{0,-22} {1,-14} {2,-34} {3,-10} {4,-8} {5}" -f $parts[0], "[$($parts[1])]", $parts[2], $parts[3], $parts[5], $parts[4]) -ForegroundColor Yellow
     }
 
     Write-Host "________________________________________________________________________________"

@@ -91,7 +91,7 @@ public class VisualRegressionTests
     // Ensure directories exist
     Directory.CreateDirectory(TestResultsDirectory);
 
-    if (sameAsThemeName != null)
+    if (sameAsThemeName != null && Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") != "true")
     {
       AssertRendersSameAs(pageType, viewModelType, pageName, themeName, sameAsThemeName);
       return;
@@ -128,13 +128,16 @@ public class VisualRegressionTests
     string themeName,
     string referenceThemeName)
   {
-    List<string> mismatches = FindRenderMismatches(pageType, viewModelType, pageName, themeName, referenceThemeName, themeName);
+    List<RenderMismatch> mismatches = FindRenderMismatches(pageType, viewModelType, pageName, themeName, referenceThemeName, themeName);
 
     if (mismatches.Count > 0)
     {
       Assert.Fail(
-        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently: " +
-        $"{string.Join(", ", mismatches)}. If the difference is intended, give {themeName} its own status symbol and baselines.");
+        string.Join(Environment.NewLine, mismatches.Select(mismatch =>
+          $"Visual regression detected for [{themeName}] {pageName} - {mismatch.Variant}. Diff saved to {mismatch.DiffDirectory}")) +
+        Environment.NewLine +
+        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently. " +
+        $"If the difference is intended, give {themeName} its own status symbol and baselines.");
     }
   }
 
@@ -150,14 +153,14 @@ public class VisualRegressionTests
   {
     Type pageType = typeof(SampleApp.DemoPages.ButtonDemo);
     string outputFolder = $"_RenderEqualityCheck/{themeName}-vs-{referenceThemeName}";
-    List<string> mismatches = FindRenderMismatches(
+    List<RenderMismatch> mismatches = FindRenderMismatches(
       pageType, null, pageType.Name, themeName, referenceThemeName, outputFolder);
 
     if (expectMismatch)
     {
       Assert.Equal(2, mismatches.Count);
-      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Light), StringComparison.Ordinal));
-      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Dark), StringComparison.Ordinal));
+      Assert.Contains(mismatches, m => m.Variant == ThemeVariant.Light);
+      Assert.Contains(mismatches, m => m.Variant == ThemeVariant.Dark);
     }
     else
     {
@@ -182,13 +185,15 @@ public class VisualRegressionTests
     }
   }
 
+  private sealed record RenderMismatch(ThemeVariant Variant, string DiffDirectory);
+
   /// <summary>
   /// Renders the page in <paramref name="referenceThemeName"/> and <paramref name="themeName"/>
   /// (Light and Dark) and returns one entry per variant whose output isn't pixel-identical.
   /// Screenshots and diffs go under <paramref name="outputFolder"/>; no baselines are involved.
   /// </summary>
   [System.Diagnostics.StackTraceHidden]
-  private static List<string> FindRenderMismatches(
+  private static List<RenderMismatch> FindRenderMismatches(
     Type pageType,
     Type? viewModelType,
     string pageName,
@@ -212,7 +217,7 @@ public class VisualRegressionTests
       }
     });
 
-    var mismatches = new List<string>();
+    var mismatches = new List<RenderMismatch>();
     RunThemeCapture(pageType, viewModelType, CreateTheme(themeName), window =>
     {
       foreach ((string suffix, ThemeVariant variant) in variants)
@@ -223,7 +228,7 @@ public class VisualRegressionTests
         string diffPath = Path.Combine(TestDiffsDirectory, outputFolder, $"{pageName}{suffix}_diff.png");
         if (!ImageComparer.CompareImages(ReferencePath(suffix), TestPath(suffix), diffPath))
         {
-          mismatches.Add($"{variant} (diff saved to {Path.GetDirectoryName(diffPath)})");
+          mismatches.Add(new RenderMismatch(variant, Path.GetDirectoryName(diffPath)!));
         }
       }
     });
@@ -294,33 +299,28 @@ public class VisualRegressionTests
 
     bitmap.Save(testPath);
 
+    if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      Baselines.InitializeLocal(testPath, themeName, fileName);
+      return;
+    }
+
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
       Baselines.Update(testPath, themeName, fileName);
     }
 
-    string baselinePath = Baselines.GetComparisonPath(themeName, fileName);
-    if (baselinePath == Baselines.GetCanonicalPath(themeName, fileName))
+    BaselineComparison comparison = Baselines.Compare(testPath, themeName, fileName, diffPath);
+    string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
+    string caseDescription = $"[{themeName}] {pageName} - {variant}.{cappedHeightSuffix}";
+    if (comparison.MissingBaseline)
     {
-      Console.Error.WriteLine(
-        $"[{themeName}] {fileName}: no personal baseline; comparing with the canonical " +
-        $"{VisualBaselineStore.GetTargetOS(themeName)} image. Machine-dependent differences may occur. " +
-        "Run ./devtest visual --update-baselines to establish local baselines.");
+      Assert.Fail($"No baseline found for {caseDescription} Expected: {comparison.Path}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
     }
 
-    if (File.Exists(baselinePath))
+    if (!comparison.Matches)
     {
-      bool passed = ImageComparer.CompareImages(baselinePath, testPath, diffPath);
-      if (!passed)
-      {
-        string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-        Assert.Fail($"Visual regression detected for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Baseline: {baselinePath}. Diff saved to {Path.GetDirectoryName(diffPath)}");
-      }
-    }
-    else
-    {
-      string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
-      Assert.Fail($"No baseline found for [{themeName}] {pageName} - {variant}.{cappedHeightSuffix} Expected: {baselinePath}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
+      Assert.Fail($"Visual regression detected for {caseDescription} Baseline: {comparison.Path}. Diff saved to {Path.GetDirectoryName(diffPath)}");
     }
   }
 
@@ -420,6 +420,21 @@ internal static class TestInitializer
   internal static void Run()
   {
     EnsureAvaloniaLicenseKeyIsLoaded();
+    if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true" &&
+        Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      throw new InvalidOperationException("Baseline initialization and updates cannot be enabled together.");
+    }
+    if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      string localDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../Screenshots/LocalBaselines"));
+      if (Directory.Exists(localDirectory) && Directory.EnumerateFileSystemEntries(localDirectory).Any() &&
+          Environment.GetEnvironmentVariable("OVERWRITE_LOCAL_BASELINES") != "true")
+      {
+        throw new InvalidOperationException("LocalBaselines is non-empty. Use ./devtest visual --initialize-local-baselines and confirm overwriting it.");
+      }
+      Console.Error.WriteLine("Capturing non-native personal baselines without comparisons. Tracked baselines will not be changed.");
+    }
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
@@ -434,8 +449,8 @@ internal static class TestInitializer
         TextWriter stderr = Console.Error;
         stderr.WriteLine("\n\n" + new string('_', 80));
         stderr.WriteLine("\u001b[33m\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
-        stderr.WriteLine("Personal LocalBaselines will be updated for all selected themes.");
-        stderr.WriteLine("Tracked canonical baselines will ALSO be updated for themes targeting this OS.");
+        stderr.WriteLine("Non-native themes will update personal LocalBaselines.");
+        stderr.WriteLine("Native themes will update tracked canonical baselines ONLY.");
         stderr.WriteLine("If this was not intentional:");
         stderr.WriteLine("");
         stderr.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");

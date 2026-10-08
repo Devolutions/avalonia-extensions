@@ -47,15 +47,22 @@ representative than testing each theme across three operating systems.
 
 Before CI implementation, the local harness provides:
 
-- Gitignored `Screenshots/LocalBaselines/{OS}/{Theme}/`, seeded in this worktree
-  from all existing images before removing redundant tracked combinations.
+- Gitignored `Screenshots/LocalBaselines/{Theme}/`, containing only this
+  machine's personal images, with no intermediate OS directory.
 - Tracked `Screenshots/Baseline/{TargetOS}/{Theme}/` containing native
   target-platform coverage only.
-- Local comparisons that prefer personal images and otherwise fall back to
-  the theme's canonical target-platform image with a clear diagnostic.
+- Native themes compare only with tracked images, and non-native themes
+  compare only with personal images. Missing appropriate images fail explicitly;
+  cross-OS images are never compared.
 - `--update-baselines` / `UPDATE_BASELINES=true` updates that generate personal
-  images for all selected themes and also publish tracked canonical images
-  **only when the theme targets the current OS**.
+  tracked images only for native themes and personal images only for
+  non-native themes.
+- `--initialize-local-baselines` captures non-native personal images without
+  comparisons or WinUI identity checks and preserves tracked images. A non-empty
+  personal folder requires explicit `y` confirmation; agents must surface this
+  request and never approve overwrites automatically.
+  Agents always ask once at session startup,
+  including for non-visual tasks, before generating from clean starting code.
 - Target-platform coverage guidance in `README.md`, `AGENTS.md`,
   `.claude/CLAUDE.md`, and `.github/copilot-instructions.md`, including Windows
   as the canonical target for WinUI variants.
@@ -179,7 +186,7 @@ for each baseline.
 
 ### Personal local baselines
 
-Add gitignored `Screenshots/LocalBaselines/{OS}/{Theme}/`.
+Use gitignored `Screenshots/LocalBaselines/{Theme}/` for this machine's images.
 
 The existing local command remains familiar:
 
@@ -187,17 +194,24 @@ The existing local command remains familiar:
 ./devtest visual --update-baselines
 ```
 
-It writes personal local baselines for every selected theme. During the local
-transition, it also publishes tracked native target-platform images. Once CI
+It writes personal local baselines only for non-native themes. During the local
+transition, native themes write only tracked target-platform images. Once CI
 generation is available, remove that temporary publishing step so local
 updates never modify tracked canonical files.
 
 For local comparisons:
 
-1. Prefer the matching personal baseline when it exists.
-2. Otherwise resolve the theme's tracked target-platform baseline.
-3. Clearly report that cross-platform pixel differences may be expected when
-   the developer's current OS differs from that target platform.
+1. Native themes always use `Baseline/{CurrentOS}/{Theme}/`, ignoring any
+   stale personal copies.
+2. Non-native themes use only `LocalBaselines/{Theme}/`.
+3. Missing appropriate images fail with "Missing baseline"; differing images
+   fail with "Visual regression". Never compare another OS's images.
+4. Capture non-native images from clean starting code using
+   `./devtest visual --initialize-local-baselines`, after asking the user.
+   Tracked images are never changed or compared; WinUI identity checks are
+   not run. A non-empty personal folder requires explicit overwrite approval.
+5. Once CI owns tracked images, change local initialization and comparison to
+   use personal images for native themes too.
 
 Introduce a separate canonical-write variable such as
 `UPDATE_CANONICAL_BASELINES=true`. The harness must reject it unless
@@ -300,10 +314,13 @@ generation so those workflows cannot drift.
 ### Phase 2: Separate canonical and local baselines
 
 - [x] Add `Screenshots/LocalBaselines/` to the visual-test `.gitignore`.
-- [x] Make updates write all selected themes to `LocalBaselines/{OS}/{Theme}/`
-      and temporarily publish only native target-platform canonical images.
-- [x] Make local comparisons prefer a personal image, then fall back to the
-      theme's tracked target-platform baseline with a clear diagnostic.
+- [x] Route updates and comparisons to tracked native images and personal
+      non-native images, without duplicate native personal images.
+- [x] Add capture-only initialization of non-native personal images, with no
+      tracked writes, comparisons, or WinUI identity checks. Require confirmation
+      before overwriting a non-empty personal set.
+- [x] Instruct agents to always ask once at new-session startup before
+      initialization, including for non-visual tasks.
 - [x] Preserve and byte-verify all 786 existing images in the local tree before
       pruning 520 cross-platform images; retain 266 unchanged native images.
 - [ ] Remove temporary local canonical publishing once CI generation works.

@@ -9,9 +9,14 @@ The repository already separates personal, gitignored `LocalBaselines` from
 tracked, target-platform-only `Baseline` images. Cross-platform baselines are
 not required PR coverage, including for WinUI, whose canonical target is Windows.
 
-Until GitHub runners take over, `--update-baselines` updates personal images
-for every selected theme and also publishes tracked images for themes targeting
-the developer's current OS. This removes redundant committed coverage now,
+Until GitHub runners take over, native themes use and update tracked images
+only; non-native themes use and update personal images only. New worktrees
+inherit native images through Git. `--initialize-local-baselines` captures
+non-native personal images without comparisons or WinUI identity checks,
+never changing tracked images. A non-empty personal folder requires explicit
+overwrite confirmation, which agents must surface to the user.
+Agents always ask before initialization at session startup, including
+for initially non-visual tasks. This removes redundant committed coverage now,
 while retaining local feedback. The workflows proposed below replace that
 temporary local publishing responsibility with consistent CI generation.
 
@@ -112,17 +117,25 @@ Local visual testing remains a first-class development tool:
 
 - `./devtest visual` continues to run the visual test project.
 - `./devtest visual --update-baselines` writes personal screenshots to a new
-  gitignored `Screenshots/LocalBaselines/` tree. During the local transition,
-  it also publishes tracked images for native target-platform themes.
-- Local comparisons prefer a matching personal baseline when one exists.
-- If no personal baseline exists, the harness can fall back to the canonical
-  target-platform image with a clear warning that cross-platform pixel noise
-  may be expected.
+  gitignored `Screenshots/LocalBaselines/` tree for non-native themes.
+  During the local transition, native themes update only tracked images.
+- Native themes compare with tracked images; non-native themes compare only
+  with personal images. Native personal copies are ignored.
+- Personal images live directly in `LocalBaselines/{Theme}/` and belong to
+  the current machine, without an OS subdirectory.
+- A missing image from the appropriate set produces "Missing baseline"; a
+  mismatch produces "Visual regression". Other OS images are never compared.
+- On a clean starting revision, `./devtest visual --initialize-local-baselines`
+  captures non-native images without comparisons, preserves tracked images,
+  and asks before overwriting a non-empty personal set. Ordinary testing is
+  a separate operation.
 
 This lets any developer create stable cross-platform local feedback without
 publishing those cross-platform images. Once CI takes over, local updates will
 write only personal images and the GitHub baseline-update workflow will be the
 only writer to `Screenshots/Baseline/`.
+At that point, initialization will need personal images for native themes too;
+today's tracked-native comparison rule is deliberately temporary.
 
 ## Baseline layout
 

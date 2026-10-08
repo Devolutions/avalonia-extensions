@@ -14,27 +14,35 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
     };
 
   public string GetLocalPath(string themeName, string fileName) =>
-    Path.Combine(screenshotsDirectory, "LocalBaselines", currentOS, themeName, fileName);
+    Path.Combine(screenshotsDirectory, "LocalBaselines", themeName, fileName);
 
   public string GetCanonicalPath(string themeName, string fileName) =>
     Path.Combine(screenshotsDirectory, "Baseline", GetTargetOS(themeName), themeName, fileName);
 
   public string GetComparisonPath(string themeName, string fileName)
+    => GetTargetOS(themeName) == currentOS
+      ? GetCanonicalPath(themeName, fileName)
+      : GetLocalPath(themeName, fileName);
+
+  public BaselineComparison Compare(string screenshotPath, string themeName, string fileName, string diffPath)
   {
-    string localPath = GetLocalPath(themeName, fileName);
-    return File.Exists(localPath) ? localPath : GetCanonicalPath(themeName, fileName);
+    string baselinePath = GetComparisonPath(themeName, fileName);
+    bool missingBaseline = !File.Exists(baselinePath);
+    bool matches = !missingBaseline && ImageComparer.CompareImages(baselinePath, screenshotPath, diffPath);
+    return new BaselineComparison(baselinePath, missingBaseline, matches);
+  }
+
+  public void InitializeLocal(string screenshotPath, string themeName, string fileName)
+  {
+    if (GetTargetOS(themeName) != currentOS)
+    {
+      Copy(screenshotPath, GetLocalPath(themeName, fileName));
+    }
   }
 
   public void Update(string screenshotPath, string themeName, string fileName)
   {
-    string targetOS = GetTargetOS(themeName);
-    Copy(screenshotPath, GetLocalPath(themeName, fileName));
-
-    // Until CI owns canonical generation, native-platform local updates publish both sets.
-    if (currentOS == targetOS)
-    {
-      Copy(screenshotPath, GetCanonicalPath(themeName, fileName));
-    }
+    Copy(screenshotPath, GetComparisonPath(themeName, fileName));
   }
 
   private static void Copy(string sourcePath, string destinationPath)
@@ -43,3 +51,5 @@ internal sealed class VisualBaselineStore(string screenshotsDirectory, string cu
     File.Copy(sourcePath, destinationPath, overwrite: true);
   }
 }
+
+internal sealed record BaselineComparison(string Path, bool MissingBaseline, bool Matches);

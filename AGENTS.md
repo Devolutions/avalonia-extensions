@@ -20,6 +20,23 @@ This copies gitignored local config (personal commands, `.vscode/` settings) fro
 
 ---
 
+## Development baseline initialization
+
+At the start of every new agent session, after local configuration setup and
+before implementation, always ask once whether the user wants a full clean
+development baseline set, including for non-visual tasks. Do not repeat the
+question within the same session.
+
+If approved, run `./devtest visual --initialize-local-baselines` on the clean
+starting revision. This captures non-native personal images without comparisons
+or WinUI identity checks, and never writes tracked images. If the command
+warns that LocalBaselines is non-empty, surface the overwrite confirmation
+through the user-question tool. Never automatically answer or pipe `y` unless
+the user explicitly approves overwriting the existing set.
+Never initialize from already modified code without explicit user approval;
+use a separate ordinary test run to check native images and regressions.
+Do not copy personal baselines automatically between worktrees.
+
 > **Note:** This file has been superseded by more comprehensive documentation in the `.claude/` directory.
 
 For detailed instructions on working with this repository as an AI assistant, please see:
@@ -75,7 +92,7 @@ Key Development Workflows:
   critical alerts.
 - **Accelerate Controls:** Requires `.env` with `AVALONIA_LICENSE_KEY=your_key_here` at repository root.
 - **Testing:** `dotnet test` (Use `UPDATE_BASELINES=true dotnet test` on macOS/Linux to update baseline screenshots if
-  visual changes are intentional). Updates write personal, gitignored local baselines for all selected themes and temporarily publish tracked baselines only for native target-platform themes.
+  visual changes are intentional). Updates write tracked native baselines and personal non-native baselines. Use `./devtest visual --initialize-local-baselines` for capture-only personal initialization without changing tracked images; a non-empty personal set requires overwrite confirmation.
 - **Visual coverage / PR reviews:** Only target-platform baselines are canonical and required: DevExpress and WinUI variants on Windows, MacClassic/LiquidGlass on macOS, Linux/Yaru on Linux. Do not require macOS/Linux WinUI screenshots or other cross-platform baseline combinations; they are local developer conveniences. See the Testing section of `README.md`.
 
 Testing references:

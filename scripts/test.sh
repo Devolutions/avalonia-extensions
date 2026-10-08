@@ -60,9 +60,10 @@ preset_filter=""
 preset_token=""
 preset_project=""
 update_baselines=0
+initialize_local_baselines=0
 
-if [[ $# -gt 0 && "$1" == "--update-baselines" ]]; then
-  update_baselines=1
+if [[ $# -gt 0 && ( "$1" == "--update-baselines" || "$1" == "--initialize-local-baselines" ) ]]; then
+  if [[ "$1" == "--update-baselines" ]]; then update_baselines=1; else initialize_local_baselines=1; fi
   shift
 fi
 
@@ -79,6 +80,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --update-baselines)
       update_baselines=1
+      shift
+      ;;
+    --initialize-local-baselines)
+      initialize_local_baselines=1
       shift
       ;;
     --filter)
@@ -118,6 +123,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$update_baselines" -eq 1 && "$initialize_local_baselines" -eq 1 ]]; then
+  printf '%s\n' "Cannot combine --update-baselines and --initialize-local-baselines." >&2
+  exit 1
+fi
 if [[ "$has_filter_arg" -eq 1 && ( -n "$preset_project" || -n "$preset_filter" ) ]]; then
   printf '%s\n' "Cannot combine preset '$preset_token' with an explicit --filter. Use one or the other." >&2
   exit 1
@@ -133,6 +142,31 @@ fi
 
 if [[ "$has_logger_arg" -eq 0 ]]; then
   dotnet_args+=("--logger" "console;verbosity=normal")
+fi
+
+overwrite_local_baselines=0
+if [[ "$initialize_local_baselines" -eq 1 ]]; then
+  local_baselines="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/Devolutions.AvaloniaControls.VisualTests/Screenshots/LocalBaselines"
+  if [[ -d "$local_baselines" && -n "$(find "$local_baselines" -mindepth 1 -print -quit)" ]]; then
+    printf 'WARNING: LocalBaselines is non-empty. Overwrite selected non-native screenshots? [y/N] ' >&2
+    if ! IFS= read -r confirmation || [[ "$confirmation" != "y" ]]; then
+      printf '\nCapture cancelled; no baselines changed.\n' >&2
+      exit 1
+    fi
+    overwrite_local_baselines=1
+  fi
+  capture_filter='FullyQualifiedName~VisualRegressionTests.TestPage'
+  if [[ "$has_filter_arg" -eq 1 ]]; then
+    for ((index=0; index<${#dotnet_args[@]}; index++)); do
+      if [[ "${dotnet_args[index]}" == "--filter" ]]; then
+        dotnet_args[index+1]="(${dotnet_args[index+1]})&$capture_filter"
+      elif [[ "${dotnet_args[index]}" == --filter=* ]]; then
+        dotnet_args[index]="--filter=(${dotnet_args[index]#--filter=})&$capture_filter"
+      fi
+    done
+  else
+    dotnet_args+=("--filter" "$capture_filter")
+  fi
 fi
 
 summary_file="$(mktemp -t visual-regression-summary.XXXXXX)"
@@ -197,6 +231,8 @@ test_run_target=""
 dotnet_env=()
 if [[ "$update_baselines" -eq 1 ]]; then
   dotnet_env=(env UPDATE_BASELINES=true)
+elif [[ "$initialize_local_baselines" -eq 1 ]]; then
+  dotnet_env=(env INITIALIZE_LOCAL_BASELINES=true OVERWRITE_LOCAL_BASELINES="$([[ "$overwrite_local_baselines" -eq 1 ]] && printf true || printf false)")
 fi
 
 spinner_frames=('⠋' '⠙' '⠸' '⠴' '⠦' '⠇')
@@ -252,7 +288,7 @@ print_progress
     continue
   fi
 
-  normalized="$line"
+  normalized="${line%$'\r'}"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then
     normalized="${BASH_REMATCH[1]}"
@@ -260,16 +296,16 @@ print_progress
 
   normalized="${normalized#"${normalized%%[![:space:]]*}"}"
 
-  if [[ "$normalized" =~ ^Visual\ regression\ detected\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Diff\ saved\ to\ (.*)$ ]]; then
+  if [[ "$normalized" =~ ^Visual\ regression\ detected\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Baseline:\ .*\.)?\ Diff\ saved\ to\ (.*)$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Visual regression" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Visual regression" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi
 
-  if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Saved\ screenshot\ to\ (.*)$ ]]; then
+  if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Expected:\ .*\.)?\ Saved\ screenshot\ to\ (.+\.png)(\.\ Run\ \./devtest\ visual\ --update-baselines\ to\ generate\ personal\ baselines\.)?$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "No baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
+    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Missing baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi
@@ -566,9 +602,9 @@ fi
 if [[ -s "$summary_file" ]]; then
   printf '\n%s\n' "________________________________________________________________________________"
   printf '\033[33;1m%s\033[0m\n' "Visual regression summary"
-  printf '\033[33;1m%-18s %-14s %-34s %-10s %-8s %s\033[0m\n' "Status" "Theme" "Page" "Variant" "DesiredH" "Path"
+  printf '\033[33;1m%-22s %-14s %-34s %-10s %-8s %s\033[0m\n' "Status" "Theme" "Page" "Variant" "DesiredH" "Path"
   while IFS=$'\t' read -r status theme page variant path capped_desired_height; do
-    printf '\033[33;1m%-18s %-14s %-34s %-10s %-8s %s\033[0m\n' "$status" "[$theme]" "$page" "$variant" "${capped_desired_height:-}" "$path"
+    printf '\033[33;1m%-22s %-14s %-34s %-10s %-8s %s\033[0m\n' "$status" "[$theme]" "$page" "$variant" "${capped_desired_height:-}" "$path"
   done < "$summary_file"
   printf '%s\n\n' "________________________________________________________________________________"
 fi

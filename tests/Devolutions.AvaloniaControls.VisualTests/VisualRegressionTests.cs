@@ -128,13 +128,16 @@ public class VisualRegressionTests
     string themeName,
     string referenceThemeName)
   {
-    List<string> mismatches = FindRenderMismatches(pageType, viewModelType, pageName, themeName, referenceThemeName, themeName);
+    List<RenderMismatch> mismatches = FindRenderMismatches(pageType, viewModelType, pageName, themeName, referenceThemeName, themeName);
 
     if (mismatches.Count > 0)
     {
       Assert.Fail(
-        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently: " +
-        $"{string.Join(", ", mismatches)}. If the difference is intended, give {themeName} its own status symbol and baselines.");
+        string.Join(Environment.NewLine, mismatches.Select(mismatch =>
+          $"Visual regression detected for [{themeName}] {pageName} - {mismatch.Variant}. Diff saved to {mismatch.DiffDirectory}")) +
+        Environment.NewLine +
+        $"[{themeName}] {pageName} is marked ↔️ (same as {referenceThemeName}) in page-catalog.jsonc, but renders differently. " +
+        $"If the difference is intended, give {themeName} its own status symbol and baselines.");
     }
   }
 
@@ -150,14 +153,14 @@ public class VisualRegressionTests
   {
     Type pageType = typeof(SampleApp.DemoPages.ButtonDemo);
     string outputFolder = $"_RenderEqualityCheck/{themeName}-vs-{referenceThemeName}";
-    List<string> mismatches = FindRenderMismatches(
+    List<RenderMismatch> mismatches = FindRenderMismatches(
       pageType, null, pageType.Name, themeName, referenceThemeName, outputFolder);
 
     if (expectMismatch)
     {
       Assert.Equal(2, mismatches.Count);
-      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Light), StringComparison.Ordinal));
-      Assert.Contains(mismatches, m => m.StartsWith(nameof(ThemeVariant.Dark), StringComparison.Ordinal));
+      Assert.Contains(mismatches, m => m.Variant == ThemeVariant.Light);
+      Assert.Contains(mismatches, m => m.Variant == ThemeVariant.Dark);
     }
     else
     {
@@ -182,13 +185,15 @@ public class VisualRegressionTests
     }
   }
 
+  private sealed record RenderMismatch(ThemeVariant Variant, string DiffDirectory);
+
   /// <summary>
   /// Renders the page in <paramref name="referenceThemeName"/> and <paramref name="themeName"/>
   /// (Light and Dark) and returns one entry per variant whose output isn't pixel-identical.
   /// Screenshots and diffs go under <paramref name="outputFolder"/>; no baselines are involved.
   /// </summary>
   [System.Diagnostics.StackTraceHidden]
-  private static List<string> FindRenderMismatches(
+  private static List<RenderMismatch> FindRenderMismatches(
     Type pageType,
     Type? viewModelType,
     string pageName,
@@ -212,7 +217,7 @@ public class VisualRegressionTests
       }
     });
 
-    var mismatches = new List<string>();
+    var mismatches = new List<RenderMismatch>();
     RunThemeCapture(pageType, viewModelType, CreateTheme(themeName), window =>
     {
       foreach ((string suffix, ThemeVariant variant) in variants)
@@ -223,7 +228,7 @@ public class VisualRegressionTests
         string diffPath = Path.Combine(TestDiffsDirectory, outputFolder, $"{pageName}{suffix}_diff.png");
         if (!ImageComparer.CompareImages(ReferencePath(suffix), TestPath(suffix), diffPath))
         {
-          mismatches.Add($"{variant} (diff saved to {Path.GetDirectoryName(diffPath)})");
+          mismatches.Add(new RenderMismatch(variant, Path.GetDirectoryName(diffPath)!));
         }
       }
     });

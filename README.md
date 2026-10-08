@@ -108,6 +108,8 @@ The xUnit/VSTest filter syntax uses `&` for AND, `|` for OR and `!` for NOT.
 
 The wrapper prints a visual regression summary for screenshot mismatches and missing
 baselines, including the theme, page, variant, and output path.
+Reference-theme equality failures also appear in this table, with one row per
+mismatching light/dark variant.
 
 **Updating baseline screenshots** when changes are intentional:
 - `./devtest visual --initialize-local-baselines` - captures non-native personal images without comparisons; asks before overwriting a non-empty personal set.

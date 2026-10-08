@@ -60,9 +60,10 @@ preset_filter=""
 preset_token=""
 preset_project=""
 update_baselines=0
+initialize_local_baselines=0
 
-if [[ $# -gt 0 && "$1" == "--update-baselines" ]]; then
-  update_baselines=1
+if [[ $# -gt 0 && ( "$1" == "--update-baselines" || "$1" == "--initialize-local-baselines" ) ]]; then
+  if [[ "$1" == "--update-baselines" ]]; then update_baselines=1; else initialize_local_baselines=1; fi
   shift
 fi
 
@@ -79,6 +80,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --update-baselines)
       update_baselines=1
+      shift
+      ;;
+    --initialize-local-baselines)
+      initialize_local_baselines=1
       shift
       ;;
     --filter)
@@ -118,6 +123,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$update_baselines" -eq 1 && "$initialize_local_baselines" -eq 1 ]]; then
+  printf '%s\n' "Cannot combine --update-baselines and --initialize-local-baselines." >&2
+  exit 1
+fi
 if [[ "$has_filter_arg" -eq 1 && ( -n "$preset_project" || -n "$preset_filter" ) ]]; then
   printf '%s\n' "Cannot combine preset '$preset_token' with an explicit --filter. Use one or the other." >&2
   exit 1
@@ -197,6 +206,8 @@ test_run_target=""
 dotnet_env=()
 if [[ "$update_baselines" -eq 1 ]]; then
   dotnet_env=(env UPDATE_BASELINES=true)
+elif [[ "$initialize_local_baselines" -eq 1 ]]; then
+  dotnet_env=(env INITIALIZE_LOCAL_BASELINES=true)
 fi
 
 spinner_frames=('⠋' '⠙' '⠸' '⠴' '⠦' '⠇')
@@ -270,13 +281,6 @@ print_progress
   if [[ "$normalized" =~ ^No\ baseline\ found\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?(\ Expected:\ .*\.)?\ Saved\ screenshot\ to\ (.+\.png)(\.\ Run\ \./devtest\ visual\ --update-baselines\ to\ generate\ personal\ baselines\.)?$ ]]; then
     capped_desired_height="${BASH_REMATCH[5]}"
     row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Missing baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[8]}" "$capped_desired_height")"
-    grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
-    continue
-  fi
-
-  if [[ "$normalized" =~ ^Missing\ local\ baseline\ for\ \[([^]]+)\]\ (.*)\ -\ ([^.]+)\.(\ DesiredH=([0-9]+(\.[0-9]+)?)\.)?\ Tracked\ baseline:\ (.*)$ ]]; then
-    capped_desired_height="${BASH_REMATCH[5]}"
-    row="$(printf '%s\t%s\t%s\t%s\t%s\t%s' "Missing local baseline" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[7]}" "$capped_desired_height")"
     grep -Fxq "$row" "$summary_file" || printf '%s\n' "$row" >> "$summary_file"
     continue
   fi

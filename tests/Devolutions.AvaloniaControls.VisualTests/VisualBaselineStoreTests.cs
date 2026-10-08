@@ -27,7 +27,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [InlineData("Windows")]
   [InlineData("macOS")]
   [InlineData("Linux")]
-  public void UpdateWritesAllLocalImagesButOnlyNativeCanonicalImages(string currentOS)
+  public void UpdateWritesNativeCanonicalAndNonNativePersonalImages(string currentOS)
   {
     var store = new VisualBaselineStore(directory, currentOS);
     string source = WriteFile("actual.png", "new screenshot");
@@ -40,11 +40,12 @@ public sealed class VisualBaselineStoreTests : IDisposable
 
       store.Update(source, theme, "page.png");
 
-      Assert.Equal("new screenshot", File.ReadAllText(store.GetLocalPath(theme, "page.png")));
+      bool native = VisualBaselineStore.GetTargetOS(theme) == currentOS;
+      Assert.Equal(!native, File.Exists(store.GetLocalPath(theme, "page.png")));
       Assert.Equal(
         VisualBaselineStore.GetTargetOS(theme) == currentOS ? "new screenshot" : "existing canonical",
         File.ReadAllText(canonical));
-      Assert.Equal(store.GetLocalPath(theme, "page.png"), store.GetComparisonPath(theme, "page.png"));
+      Assert.Equal(native ? canonical : store.GetLocalPath(theme, "page.png"), store.GetComparisonPath(theme, "page.png"));
     }
   }
 
@@ -52,18 +53,18 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [InlineData("Windows")]
   [InlineData("macOS")]
   [InlineData("Linux")]
-  public void MissingLocalImageOnlyLooksOnCurrentPlatform(string currentOS)
+  public void ComparisonSourceDependsOnThemeTargetPlatform(string currentOS)
   {
     var store = new VisualBaselineStore(directory, currentOS);
 
     Assert.Equal(
-      Path.Combine(directory, "Baseline", currentOS, "DevExpress", "page.png"),
+      currentOS == "Windows" ? store.GetCanonicalPath("DevExpress", "page.png") : store.GetLocalPath("DevExpress", "page.png"),
       store.GetComparisonPath("DevExpress", "page.png"));
     Assert.Equal(
-      Path.Combine(directory, "Baseline", currentOS, "LiquidGlass", "page.png"),
+      currentOS == "macOS" ? store.GetCanonicalPath("LiquidGlass", "page.png") : store.GetLocalPath("LiquidGlass", "page.png"),
       store.GetComparisonPath("LiquidGlass", "page.png"));
     Assert.Equal(
-      Path.Combine(directory, "Baseline", currentOS, "Linux", "page.png"),
+      currentOS == "Linux" ? store.GetCanonicalPath("Linux", "page.png") : store.GetLocalPath("Linux", "page.png"),
       store.GetComparisonPath("Linux", "page.png"));
   }
 
@@ -86,7 +87,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [InlineData("MacClassic")]
   [InlineData("LiquidGlass")]
   [InlineData("Linux")]
-  public void NativeUpdateCreatesBothBaselineTreesForLightAndDark(string theme)
+  public void NativeUpdateCreatesOnlyCanonicalImagesForLightAndDark(string theme)
   {
     var store = new VisualBaselineStore(directory, VisualBaselineStore.GetTargetOS(theme));
     string source = WriteFile("actual.png", "screenshot");
@@ -95,7 +96,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
     {
       store.Update(source, theme, fileName);
 
-      Assert.Equal("screenshot", File.ReadAllText(store.GetLocalPath(theme, fileName)));
+      Assert.False(File.Exists(store.GetLocalPath(theme, fileName)));
       Assert.Equal("screenshot", File.ReadAllText(store.GetCanonicalPath(theme, fileName)));
     }
   }
@@ -110,7 +111,7 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [Theory]
   [InlineData(true)]
   [InlineData(false)]
-  public void MissingLocalBaselineComparesSamePlatformTrackedImage(bool matches)
+  public void NativeThemeUsesTrackedImageWithoutRequiringPersonalImage(bool matches)
   {
     var store = new VisualBaselineStore(directory, "macOS");
     string actual = WriteImage("actual.png", SKColors.Blue);
@@ -120,7 +121,6 @@ public sealed class VisualBaselineStoreTests : IDisposable
     BaselineComparison comparison = store.Compare(actual, "MacClassic", "page.png", diff);
 
     Assert.Equal(tracked, comparison.Path);
-    Assert.True(comparison.MissingLocal);
     Assert.False(comparison.MissingBaseline);
     Assert.Equal(matches, comparison.Matches);
     Assert.Equal(!matches, File.Exists(diff));
@@ -139,7 +139,6 @@ public sealed class VisualBaselineStoreTests : IDisposable
 
     BaselineComparison comparison = store.Compare(actual, theme, "page.png", diff);
 
-    Assert.True(comparison.MissingLocal);
     Assert.True(comparison.MissingBaseline);
     Assert.False(comparison.Matches);
     Assert.False(File.Exists(diff));
@@ -148,19 +147,58 @@ public sealed class VisualBaselineStoreTests : IDisposable
   [Theory]
   [InlineData(true)]
   [InlineData(false)]
-  public void PersonalImageTakesPrecedenceOverTrackedImage(bool matches)
+  public void NativeThemeIgnoresStalePersonalImage(bool matches)
   {
     var store = new VisualBaselineStore(directory, "macOS");
     string actual = WriteImage("actual.png", SKColors.Blue);
-    WriteImage(Path.Combine("Baseline", "macOS", "MacClassic", "page.png"), SKColors.Red);
-    string personal = WriteImage(Path.Combine("LocalBaselines", "MacClassic", "page.png"), matches ? SKColors.Blue : SKColors.Red);
+    string tracked = WriteImage(Path.Combine("Baseline", "macOS", "MacClassic", "page.png"), matches ? SKColors.Blue : SKColors.Red);
+    WriteImage(Path.Combine("LocalBaselines", "MacClassic", "page.png"), SKColors.Blue);
 
     BaselineComparison comparison = store.Compare(actual, "MacClassic", "page.png", Path.Combine(directory, "diff.png"));
 
-    Assert.Equal(personal, comparison.Path);
-    Assert.False(comparison.MissingLocal);
+    Assert.Equal(tracked, comparison.Path);
     Assert.False(comparison.MissingBaseline);
     Assert.Equal(matches, comparison.Matches);
+  }
+
+  [Theory]
+  [InlineData("Windows")]
+  [InlineData("macOS")]
+  [InlineData("Linux")]
+  public void InitializationCreatesOnlyMissingNonNativeImagesAndPreservesAllExistingFiles(string currentOS)
+  {
+    var store = new VisualBaselineStore(directory, currentOS);
+    string actual = WriteFile("actual.png", "initial screenshot");
+
+    foreach (string theme in new[] { "DevExpress", "WinUiClassic", "WinUiMica", "MacClassic", "LiquidGlass", "Linux" })
+    {
+      string canonical = store.GetCanonicalPath(theme, "page.png");
+      Directory.CreateDirectory(Path.GetDirectoryName(canonical)!);
+      File.WriteAllText(canonical, "tracked");
+      store.InitializeLocal(actual, theme, "page.png");
+      bool native = VisualBaselineStore.GetTargetOS(theme) == currentOS;
+      Assert.Equal(!native, File.Exists(store.GetLocalPath(theme, "page.png")));
+      Assert.Equal("tracked", File.ReadAllText(canonical));
+
+      File.WriteAllText(actual, "changed screenshot");
+      store.InitializeLocal(actual, theme, "page.png");
+      if (!native)
+      {
+        Assert.Equal("initial screenshot", File.ReadAllText(store.GetLocalPath(theme, "page.png")));
+      }
+      File.WriteAllText(actual, "initial screenshot");
+    }
+  }
+
+  [Fact]
+  public void InitializationDoesNotFillMissingNativeCanonicalImage()
+  {
+    var store = new VisualBaselineStore(directory, "macOS");
+    string actual = WriteImage("actual.png", SKColors.Blue);
+    store.InitializeLocal(actual, "MacClassic", "page.png");
+
+    Assert.False(File.Exists(store.GetLocalPath("MacClassic", "page.png")));
+    Assert.True(store.Compare(actual, "MacClassic", "page.png", Path.Combine(directory, "diff.png")).MissingBaseline);
   }
 
   private string WriteImage(string relativePath, SKColor color)

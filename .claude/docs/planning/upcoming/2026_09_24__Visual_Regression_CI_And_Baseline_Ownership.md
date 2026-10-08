@@ -51,12 +51,16 @@ Before CI implementation, the local harness provides:
   machine's personal images, with no intermediate OS directory.
 - Tracked `Screenshots/Baseline/{TargetOS}/{Theme}/` containing native
   target-platform coverage only.
-- Local comparisons that prefer personal images and otherwise compare only
-  with same-OS tracked images. Missing local images always fail explicitly;
+- Native themes compare only with tracked images, and non-native themes
+  compare only with personal images. Missing appropriate images fail explicitly;
   cross-OS images are never compared.
 - `--update-baselines` / `UPDATE_BASELINES=true` updates that generate personal
-  images for all selected themes and also publish tracked canonical images
-  **only when the theme targets the current OS**.
+  tracked images only for native themes and personal images only for
+  non-native themes.
+- `--initialize-local-baselines` fills only missing non-native personal images,
+  preserves existing personal and tracked images, and tests native themes
+  without updating their baselines. Agents always ask once at session startup,
+  including for non-visual tasks, before generating from clean starting code.
 - Target-platform coverage guidance in `README.md`, `AGENTS.md`,
   `.claude/CLAUDE.md`, and `.github/copilot-instructions.md`, including Windows
   as the canonical target for WinUI variants.
@@ -188,19 +192,24 @@ The existing local command remains familiar:
 ./devtest visual --update-baselines
 ```
 
-It writes personal local baselines for every selected theme. During the local
-transition, it also publishes tracked native target-platform images. Once CI
+It writes personal local baselines only for non-native themes. During the local
+transition, native themes write only tracked target-platform images. Once CI
 generation is available, remove that temporary publishing step so local
 updates never modify tracked canonical files.
 
 For local comparisons:
 
-1. Prefer the matching personal baseline when it exists.
-2. Otherwise look only for `Baseline/{CurrentOS}/{Theme}/`.
-3. If neither image exists, fail with "Missing baseline".
-4. If a same-OS tracked image exists, compare it but still fail with
-   "Missing local baseline". If it differs, add a "Visual regression" row.
-5. Never compare another operating system's images.
+1. Native themes always use `Baseline/{CurrentOS}/{Theme}/`, ignoring any
+   stale personal copies.
+2. Non-native themes use only `LocalBaselines/{Theme}/`.
+3. Missing appropriate images fail with "Missing baseline"; differing images
+   fail with "Visual regression". Never compare another OS's images.
+4. Initialize missing non-native images from clean starting code using
+   `./devtest visual --initialize-local-baselines`, after asking the user.
+   Existing images and missing native canonical images are never filled or
+   overwritten by initialization.
+5. Once CI owns tracked images, change local initialization and comparison to
+   use personal images for native themes too.
 
 Introduce a separate canonical-write variable such as
 `UPDATE_CANONICAL_BASELINES=true`. The harness must reject it unless
@@ -303,10 +312,12 @@ generation so those workflows cannot drift.
 ### Phase 2: Separate canonical and local baselines
 
 - [x] Add `Screenshots/LocalBaselines/` to the visual-test `.gitignore`.
-- [x] Make updates write all selected themes to `LocalBaselines/{Theme}/`
-      and temporarily publish only native target-platform canonical images.
-- [x] Make local comparisons prefer a personal image, then fall back to the
-      same-OS tracked baseline, failing explicitly for missing local images.
+- [x] Route updates and comparisons to tracked native images and personal
+      non-native images, without duplicate native personal images.
+- [x] Add initialization of missing non-native personal images without writes
+      to tracked or existing personal images.
+- [x] Instruct agents to always ask once at new-session startup before
+      initialization, including for non-visual tasks.
 - [x] Preserve and byte-verify all 786 existing images in the local tree before
       pruning 520 cross-platform images; retain 266 unchanged native images.
 - [ ] Remove temporary local canonical publishing once CI generation works.

@@ -298,6 +298,10 @@ public class VisualRegressionTests
     {
       Baselines.Update(testPath, themeName, fileName);
     }
+    else if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      Baselines.InitializeLocal(testPath, themeName, fileName);
+    }
 
     BaselineComparison comparison = Baselines.Compare(testPath, themeName, fileName, diffPath);
     string cappedHeightSuffix = cappedDesiredHeight.HasValue ? $" DesiredH={cappedDesiredHeight.Value}." : string.Empty;
@@ -307,18 +311,9 @@ public class VisualRegressionTests
       Assert.Fail($"No baseline found for {caseDescription} Expected: {comparison.Path}. Saved screenshot to {testPath}. Run ./devtest visual --update-baselines to generate personal baselines.");
     }
 
-    var failures = new List<string>();
-    if (comparison.MissingLocal)
-    {
-      failures.Add($"Missing local baseline for {caseDescription} Tracked baseline: {comparison.Path}");
-    }
     if (!comparison.Matches)
     {
-      failures.Add($"Visual regression detected for {caseDescription} Baseline: {comparison.Path}. Diff saved to {Path.GetDirectoryName(diffPath)}");
-    }
-    if (failures.Count > 0)
-    {
-      Assert.Fail(string.Join(Environment.NewLine, failures));
+      Assert.Fail($"Visual regression detected for {caseDescription} Baseline: {comparison.Path}. Diff saved to {Path.GetDirectoryName(diffPath)}");
     }
   }
 
@@ -418,6 +413,15 @@ internal static class TestInitializer
   internal static void Run()
   {
     EnsureAvaloniaLicenseKeyIsLoaded();
+    if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true" &&
+        Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      throw new InvalidOperationException("Baseline initialization and updates cannot be enabled together.");
+    }
+    if (Environment.GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES") == "true")
+    {
+      Console.Error.WriteLine("Initializing missing non-native personal baselines; existing personal and tracked baselines will not be changed.");
+    }
 
     if (Environment.GetEnvironmentVariable("UPDATE_BASELINES") == "true")
     {
@@ -432,8 +436,8 @@ internal static class TestInitializer
         TextWriter stderr = Console.Error;
         stderr.WriteLine("\n\n" + new string('_', 80));
         stderr.WriteLine("\u001b[33m\u001b[1mWARNING: UPDATE_BASELINES environment variable is set to 'true'!\u001b[0m");
-        stderr.WriteLine("Personal LocalBaselines will be updated for all selected themes.");
-        stderr.WriteLine("Tracked canonical baselines will ALSO be updated for themes targeting this OS.");
+        stderr.WriteLine("Non-native themes will update personal LocalBaselines.");
+        stderr.WriteLine("Native themes will update tracked canonical baselines ONLY.");
         stderr.WriteLine("If this was not intentional:");
         stderr.WriteLine("");
         stderr.WriteLine(" 🚨 \u001b[1mYou may abort with Ctrl+C.\u001b[0m  🚨 ");

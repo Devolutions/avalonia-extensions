@@ -124,9 +124,11 @@ $presetFilter = $null
 $presetToken = $null
 $presetProject = $null
 $updateBaselines = $false
-if ($args.Count -gt 0 -and $args[0] -eq "--update-baselines") {
-    $updateBaselines = $true
-    $args = if ($args.Count -gt 1) { $args[1..($args.Count - 1)] } else { @() }
+$initializeLocalBaselines = $false
+if ($args.Count -gt 0 -and $args[0] -in @("--update-baselines", "--initialize-local-baselines")) {
+    $updateBaselines = $args[0] -eq "--update-baselines"
+    $initializeLocalBaselines = $args[0] -eq "--initialize-local-baselines"
+    $args = @(if ($args.Count -gt 1) { $args[1..($args.Count - 1)] })
 }
 if ($args.Count -gt 0) {
     $resolvedPresetFilter = Resolve-PresetFilter -Preset $args[0]
@@ -148,6 +150,11 @@ for ($index = 0; $index -lt $args.Count; ) {
 
     if ($current -eq "--update-baselines") {
         $updateBaselines = $true
+        $index += 1
+        continue
+    }
+    if ($current -eq "--initialize-local-baselines") {
+        $initializeLocalBaselines = $true
         $index += 1
         continue
     }
@@ -197,6 +204,10 @@ for ($index = 0; $index -lt $args.Count; ) {
 
     $dotnetArgs.Add($current)
     $index += 1
+}
+
+if ($updateBaselines -and $initializeLocalBaselines) {
+    throw "Cannot combine --update-baselines and --initialize-local-baselines."
 }
 
 if ($hasFilterArg -and ($null -ne $presetProject -or -not [string]::IsNullOrEmpty($presetFilter))) {
@@ -276,8 +287,12 @@ function Write-FlowerFrame {
 }
 
 $previousUpdateBaselines = [Environment]::GetEnvironmentVariable("UPDATE_BASELINES", "Process")
+$previousInitializeLocalBaselines = [Environment]::GetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "Process")
 if ($updateBaselines) {
     [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", "true", "Process")
+}
+if ($initializeLocalBaselines) {
+    [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", "true", "Process")
 }
 
 try {
@@ -382,13 +397,6 @@ $nextFlowerTick = [DateTime]::UtcNow.AddMilliseconds(350)
     if ($normalized -match '^No baseline found for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)?(?: Expected: .*\.)? Saved screenshot to (.+\.png)(?:\. Run \./devtest visual --update-baselines to generate personal baselines\.)?$') {
         $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
         $row = "Missing baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
-        [void]$summaryRows.Add($row)
-        return
-    }
-
-    if ($normalized -match '^Missing local baseline for \[([^\]]+)\] (.*) - ([^.]+)\.(?: DesiredH=([0-9]+(?:\.[0-9]+)?)\.)? Tracked baseline: (.*)$') {
-        $cappedHeight = if ($Matches.Count -gt 4) { $Matches[4] } else { "" }
-        $row = "Missing local baseline`t$($Matches[1])`t$($Matches[2])`t$($Matches[3])`t$($Matches[5])`t$cappedHeight"
         [void]$summaryRows.Add($row)
         return
     }
@@ -545,6 +553,9 @@ finally {
     }
     if ($updateBaselines) {
         [Environment]::SetEnvironmentVariable("UPDATE_BASELINES", $previousUpdateBaselines, "Process")
+    }
+    if ($initializeLocalBaselines) {
+        [Environment]::SetEnvironmentVariable("INITIALIZE_LOCAL_BASELINES", $previousInitializeLocalBaselines, "Process")
     }
 }
 

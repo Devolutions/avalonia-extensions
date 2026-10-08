@@ -14,10 +14,15 @@
   variant.
 - `Screenshots/Baseline/{TargetOS}/{Theme}/` holds tracked canonical images.
   `Screenshots/LocalBaselines/{Theme}/` holds gitignored machine-local images
-  for optional all-theme local development. Comparisons never use other OS
-  images; missing local images fail explicitly, even when a same-OS tracked
-  image matches.
+  for non-native theme development. Native themes always use tracked images
+  on their target OS; comparisons never use other OS images.
 - Until the planned GitHub workflows generate canonical images,
-  `--update-baselines` updates personal images for every selected theme and
-  copies only native target-platform images into the tracked canonical tree.
+  `--update-baselines` updates only tracked images for native themes and only
+  personal images for non-native themes.
+- At the start of a new agent session, always ask once whether to initialize
+  a full development baseline set, even for non-visual tasks. If approved,
+  run `./devtest visual --initialize-local-baselines` before editing. It
+  preserves tracked and existing personal images and fills missing non-native
+  personal images. Do not initialize modified code without explicit approval
+  or automatically copy personal images across worktrees.
 - See the [Testing section](../README.md#testing) for commands and behavior.

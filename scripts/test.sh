@@ -288,7 +288,7 @@ print_progress
     continue
   fi
 
-  normalized="$line"
+  normalized="${line%$'\r'}"
 
   if [[ "$normalized" =~ ^\[xUnit\.net[[:space:]][^]]+\][[:space:]]*(.*)$ ]]; then
     normalized="${BASH_REMATCH[1]}"

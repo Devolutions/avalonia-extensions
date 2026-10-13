@@ -80,6 +80,14 @@
       <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
       <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
 
+      <!-- WinUI flyout/drop-down surface. WinUI paints this with in-app acrylic; the value here is
+           that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
+           (ThemeResources.Windows11.axaml) makes it translucent again. -->
+      <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#F9F9F9"/>
+
+      <!-- WinUI focus rectangle (outer ring) -->
+      <SolidColorBrush x:Key="FocusStrokeColorOuterBrush" Color="#E4000000"/>
+
       <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
       <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#B3FFFFFF"/>
       <SolidColorBrush x:Key="ControlFillColorSecondaryBrush"  Color="#80F9F9F9"/>
@@ -322,6 +330,66 @@
       <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundUnfocused" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundFocused" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundBorderBrushFocused" ResourceKey="FocusStrokeColorOuterBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundBorderBrushUnfocused" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundFocused" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundFocusedPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxEditableDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="AcrylicInAppFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="SurfaceStrokeColorFlyoutBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackgroundPointerPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxFocusedDropDownBackgroundPointerOver" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxFocusedDropDownBackgroundPointerPressed" ResourceKey="ControlAltFillColorQuarternaryBrush"/>
+      <!-- ComboBoxItem: WinUI keeps the row neutral and signals selection with the accent pill. -->
+      <StaticResource x:Key="ComboBoxItemPillFillBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelected" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundDisabled" ResourceKey="SubtleFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushDisabled" ResourceKey="SubtleFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -399,6 +467,14 @@
       <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="#202020"/>
       <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
       <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
+
+      <!-- WinUI flyout/drop-down surface. WinUI paints this with in-app acrylic; the value here is
+           that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
+           (ThemeResources.Windows11.axaml) makes it translucent again. -->
+      <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#2C2C2C"/>
+
+      <!-- WinUI focus rectangle (outer ring) -->
+      <SolidColorBrush x:Key="FocusStrokeColorOuterBrush" Color="#FFFFFFFF"/>
 
       <!-- WinUI control fills (Button/CheckBox/RadioButton/TextBox default surfaces) -->
       <SolidColorBrush x:Key="ControlFillColorDefaultBrush"    Color="#0FFFFFFF"/>
@@ -637,6 +713,66 @@
       <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundUnfocused" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundFocused" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundBorderBrushFocused" ResourceKey="FocusStrokeColorOuterBrush"/>
+      <StaticResource x:Key="ComboBoxBackgroundBorderBrushUnfocused" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundFocused" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxForegroundFocusedPressed" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxEditableDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="AcrylicInAppFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="SurfaceStrokeColorFlyoutBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxDropDownBackgroundPointerPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxFocusedDropDownBackgroundPointerOver" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxFocusedDropDownBackgroundPointerPressed" ResourceKey="ControlAltFillColorQuarternaryBrush"/>
+      <!-- ComboBoxItem: WinUI keeps the row neutral and signals selection with the accent pill. -->
+      <StaticResource x:Key="ComboBoxItemPillFillBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelected" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedPointerOver" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemForegroundSelectedDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundDisabled" ResourceKey="SubtleFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBackgroundSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushDisabled" ResourceKey="SubtleFillColorDisabledBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ComboBoxItemBorderBrushSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -661,7 +797,12 @@
   <Thickness x:Key="ExpanderContentLeftBorderThickness">1,1,0,1</Thickness>
   <Thickness x:Key="ExpanderContentRightBorderThickness">0,1,1,1</Thickness>
   <x:Double x:Key="ExpanderMinHeight">48</x:Double>
+  <!-- Flyouts, drop-downs and other overlay surfaces. WinUI uses 8 here, Fluent only 5. -->
+  <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
   <SolidColorBrush x:Key="ControlFillColorTransparentBrush" Color="Transparent"/>
+  <!-- WinUI's subtle fill scale bottoms out at fully transparent in both colour schemes. -->
+  <SolidColorBrush x:Key="SubtleFillColorTransparentBrush" Color="Transparent"/>
+  <SolidColorBrush x:Key="SubtleFillColorDisabledBrush" Color="Transparent"/>
 
   <!-- Circular counterpart of ControlElevationBorderBrush (used by RadioButton's small check
        dot). Real WinUI maps this relative to the shape's own bounding box rather than an

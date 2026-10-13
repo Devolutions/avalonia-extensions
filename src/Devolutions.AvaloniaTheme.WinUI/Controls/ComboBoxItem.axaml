@@ -1,0 +1,131 @@
+<!-- Based off Avalonia Fluent 12.1.2:
+https://github.com/AvaloniaUI/Avalonia/blob/release/12.1.2/src/Avalonia.Themes.Fluent/Controls/ComboBoxItem.xaml
+Retemplated to add WinUI's accent selection pill, which Fluent's ComboBoxItem does not have. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Thickness x:Key="ComboBoxItemThemePadding">11,6,11,6</Thickness>
+  <!-- Inset of the highlight from the drop-down edges; also the gap between rows. -->
+  <Thickness x:Key="ComboBoxItemMargin">5,2</Thickness>
+  <!-- Row pitch: 32px highlight + ComboBoxItemMargin. Must match ComboBoxItemHeight (ComboBox.axaml). -->
+  <x:Double x:Key="ComboBoxItemMinHeight">36</x:Double>
+  <CornerRadius x:Key="ComboBoxItemCornerRadius">3</CornerRadius>
+  <CornerRadius x:Key="ComboBoxItemPillCornerRadius">1.5</CornerRadius>
+  <x:Double x:Key="ComboBoxItemPillHeight">16</x:Double>
+  <x:Double x:Key="ComboBoxItemPillWidth">3</x:Double>
+
+  <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
+    <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxItemCornerRadius}"/>
+    <Setter Property="Padding" Value="{DynamicResource ComboBoxItemThemePadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ComboBoxItemMinHeight}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <!-- WinUI draws the focus rectangle around the highlight, not around the full row. -->
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel x:Name="LayoutRoot" Margin="{DynamicResource ComboBoxItemMargin}">
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Foreground="{TemplateBinding Foreground}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Content="{TemplateBinding Content}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+          <Border x:Name="Pill"
+                  Width="{DynamicResource ComboBoxItemPillWidth}"
+                  Height="{DynamicResource ComboBoxItemPillHeight}"
+                  CornerRadius="{DynamicResource ComboBoxItemPillCornerRadius}"
+                  Background="{DynamicResource ComboBoxItemPillFillBrush}"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  IsHitTestVisible="False"
+                  Opacity="0"
+                  RenderTransform="scaleY(1)">
+            <Border.Transitions>
+              <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.167"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.167"/>
+              </Transitions>
+            </Border.Transitions>
+          </Border>
+          <Border x:Name="FocusRing"
+                  Margin="-2"
+                  IsVisible="False"
+                  IsHitTestVisible="False"
+                  BorderThickness="2"
+                  BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}"
+                  CornerRadius="5"/>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- PointerOver state -->
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPointerOver}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPointerOver}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundPointerOver}"/>
+    </Style>
+
+    <!-- Pressed state -->
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundPressed}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushPressed}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundPressed}"/>
+    </Style>
+
+    <!-- Disabled state -->
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundDisabled}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushDisabled}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundDisabled}"/>
+    </Style>
+
+    <!-- Selected state -->
+    <Style Selector="^:selected">
+      <Style Selector="^ /template/ Border#Pill">
+        <Setter Property="Opacity" Value="1"/>
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundSelected}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushSelected}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundSelected}"/>
+      </Style>
+
+      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundSelectedPointerOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushSelectedPointerOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundSelectedPointerOver}"/>
+      </Style>
+
+      <!-- WinUI squishes the pill while the selected row is held down. -->
+      <Style Selector="^:pressed /template/ Border#Pill">
+        <Setter Property="RenderTransform" Value="scaleY(0.625)"/>
+      </Style>
+      <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundSelectedPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushSelectedPressed}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundSelectedPressed}"/>
+      </Style>
+
+      <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackgroundSelectedDisabled}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxItemBorderBrushSelectedDisabled}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForegroundSelectedDisabled}"/>
+      </Style>
+    </Style>
+
+    <!-- Keyboard focus -->
+    <Style Selector="^:focus-visible /template/ Border#FocusRing">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

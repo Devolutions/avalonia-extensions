@@ -22,7 +22,14 @@ namespace Devolutions.AvaloniaControls.Tests;
 public class WinUiMicaProbe
 {
     private static Color Resolve(bool globalStyles, bool? micaOverride, ThemeVariant variant,
-        string resourceKey = "SettingsCardBackground")
+        string resourceKey = "SettingsCardBackground") =>
+        ResolveBrush(globalStyles, micaOverride, variant, resourceKey).Color;
+
+    private static (Color Color, double Opacity) ResolveBrush(
+        bool globalStyles,
+        bool? micaOverride,
+        ThemeVariant variant,
+        string resourceKey)
     {
         Windows11MicaDetector.SetTestOverride(micaOverride);
 
@@ -38,13 +45,30 @@ public class WinUiMicaProbe
         {
             Assert.True(window.TryFindResource(resourceKey, variant, out var value),
                 $"{resourceKey} not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
-            return ((ISolidColorBrush)value!).Color;
+            var brush = Assert.IsAssignableFrom<ISolidColorBrush>(value);
+            return (brush.Color, brush.Opacity);
         }
         finally
         {
             window.Close();
             Windows11MicaDetector.SetTestOverride(null);
         }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Mica_overlay_translucifies_combobox_surface(bool globalStyles)
+    {
+        var classicLight = ResolveBrush(globalStyles, false, ThemeVariant.Light, "ComboBoxDropDownBackground");
+        var micaLight = ResolveBrush(globalStyles, true, ThemeVariant.Light, "ComboBoxDropDownBackground");
+        var classicDark = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ComboBoxDropDownBackground");
+        var micaDark = ResolveBrush(globalStyles, true, ThemeVariant.Dark, "ComboBoxDropDownBackground");
+
+        Assert.Equal((Color.Parse("#FFF9F9F9"), 1.0), classicLight);
+        Assert.Equal((Color.Parse("#FFFCFCFC"), 0.85), micaLight);
+        Assert.Equal((Color.Parse("#FF2C2C2C"), 1.0), classicDark);
+        Assert.Equal((Color.Parse("#FF2C2C2C"), 0.96), micaDark);
     }
 
     [AvaloniaTheory]

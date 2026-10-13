@@ -94,7 +94,18 @@
                 <ColumnDefinition Width="Auto" MinWidth="1" />
               </Grid.ColumnDefinitions>
 
-              <!-- Column headers: add bottom grid line -->
+              <!-- Paints the header strip across the full width. TreeDataGrid (12.3+) insets PART_HeaderScrollViewer by
+                   the rows' vertical scroll bar width through its Margin, so this fills the gap above the scroll bar. -->
+              <Border Grid.Row="0"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      IsVisible="{TemplateBinding ShowColumnHeaders}"
+                      Background="{DynamicResource TreeDataGridHeaderBackground}"
+                      BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
+                      BorderThickness="0 0 0 1" />
+
+              <!-- Column headers: add bottom grid line.
+                   Don't set Margin here: TreeDataGrid overwrites it with the vertical scroll bar inset. -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
                             Grid.Row="0"
                             Grid.Column="0"
@@ -116,23 +127,6 @@
                                                       ItemContainerTheme="{TemplateBinding ColumnHeaderTheme}" />
                 </Border>
               </ScrollViewer>
-              <Border Grid.Row="0"
-                      Grid.Column="1"
-                      Background="{DynamicResource TreeDataGridHeaderBackground}"
-                      BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
-                      BorderThickness="0 0 0 1"/>
-              <ScrollBar Grid.Row="0"
-                         Grid.RowSpan="2"
-                         Grid.Column="1"
-                         Orientation="Vertical"
-                          Opacity="0"
-                          IsHitTestVisible="False"
-                          Focusable="False"
-                          Margin="0 0 1 0"
-                         IsVisible="{AndBinding 
-                            {ScrollBarVisibilityBinding #PART_ScrollViewer, Vertical},
-                            {TemplateBinding ShowColumnHeaders}
-                         }" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"

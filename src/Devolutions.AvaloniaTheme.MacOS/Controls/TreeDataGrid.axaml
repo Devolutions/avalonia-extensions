@@ -88,7 +88,17 @@
                   ZIndex="2"
                   Background="{TemplateBinding Background}">
 
-              <!-- Column headers -->
+              <!-- Draws the header's bottom line across the full width. TreeDataGrid (12.3+) insets
+                   PART_HeaderScrollViewer by the rows' vertical scroll bar width through its Margin, so this
+                   carries the line over the scroll bar. -->
+              <Border Grid.Row="0"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      IsVisible="{TemplateBinding ShowColumnHeaders}"
+                      BorderBrush="{DynamicResource DataGridGridLinesBrush}"
+                      BorderThickness="0 0 0 1" />
+
+              <!-- Column headers. Don't set Margin here: TreeDataGrid overwrites it with the vertical scroll bar inset. -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
                             Grid.Row="0"
                             Grid.Column="0"
@@ -109,21 +119,6 @@
                                                       ItemContainerTheme="{TemplateBinding ColumnHeaderTheme}" />
                 </Border>
               </ScrollViewer>
-              <Border Grid.Row="0"
-                      Grid.Column="1"
-                      BorderBrush="{DynamicResource DataGridGridLinesBrush}"
-                      BorderThickness="0 0 0 1" />
-              <ScrollBar Grid.Row="0"
-                         Grid.RowSpan="2"
-                         Grid.Column="1"
-                         Orientation="Vertical"
-                         Opacity="0"
-                         IsHitTestVisible="False"
-                         Focusable="False"
-                         IsVisible="{AndBinding 
-                            {ScrollBarVisibilityBinding #PART_ScrollViewer, Vertical},
-                            {TemplateBinding ShowColumnHeaders}
-                         }" />
 
               <!-- Rows -->
               <ScrollViewer Name="PART_ScrollViewer"

@@ -17,8 +17,8 @@
         
         <MinimumXamlBehaviorsVersion>[12.0.0,)</MinimumXamlBehaviorsVersion>
         
-        <AvaloniaTreeDataGridVersion>12.0.1</AvaloniaTreeDataGridVersion>
-        <MinimumAvaloniaTreeDataGridVersion>[12.0.1,)</MinimumAvaloniaTreeDataGridVersion>
+        <AvaloniaTreeDataGridVersion>12.3.2</AvaloniaTreeDataGridVersion>
+        <MinimumAvaloniaTreeDataGridVersion>[12.3.0,)</MinimumAvaloniaTreeDataGridVersion>
         
         <SvgVersion>12.0.0.13</SvgVersion>
         <MinimumSvgVersion>[12.0.0,)</MinimumSvgVersion>

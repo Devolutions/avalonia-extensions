@@ -104,7 +104,7 @@
                       BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
                       BorderThickness="0 0 0 1" />
 
-              <!-- Column headers: add bottom grid line.
+              <!-- Column headers. The strip above owns the background and bottom line, so neither is painted twice.
                    Don't set Margin here: TreeDataGrid overwrites it with the vertical scroll bar inset. -->
               <ScrollViewer Name="PART_HeaderScrollViewer"
                             Grid.Row="0"
@@ -114,9 +114,7 @@
                             VerticalScrollBarVisibility="Disabled"
                             BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
                 <Border Name="ColumnHeadersPresenterBorder"
-                        BorderThickness="0,0,0,1"
-                        BorderBrush="{DynamicResource TreeDataGridInnerGridBrush}"
-                        Background="{DynamicResource TreeDataGridHeaderBackground}"
+                        Padding="0,0,0,1"
                         CornerRadius="{TemplateBinding CornerRadius,
                                             Converter={x:Static DevoConverters.CornerRadiusExtractor},
                                             ConverterParameter={x:Static CornerRadiusSubset.Top}

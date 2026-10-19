@@ -1,0 +1,177 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:Avalonia.Controls.Converters">
+
+  <x:Double x:Key="SplitButtonPrimaryButtonSize">35</x:Double>
+  <x:Double x:Key="SplitButtonSecondaryButtonSize">35</x:Double>
+  <x:Double x:Key="SplitButtonSeparatorWidth">1</x:Double>
+  <x:Double x:Key="SplitButtonMinHeight">32</x:Double>
+  <Thickness x:Key="SplitButtonBorderThemeThickness">1</Thickness>
+  <!-- Match Button's Inter baseline compensation. -->
+  <Thickness x:Key="SplitButtonPadding">11,6,11,5</Thickness>
+
+  <converters:MarginMultiplierConverter x:Key="WinUiSplitButtonPrimaryBorderMultiplier"
+                                       Left="True" Top="True" Bottom="True" Indent="1"/>
+  <converters:MarginMultiplierConverter x:Key="WinUiSplitButtonSecondaryBorderMultiplier"
+                                       Right="True" Top="True" Bottom="True" Indent="1"/>
+
+  <ControlTheme x:Key="WinUiSplitButtonComponent" TargetType="Button">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter x:Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          BackgroundSizing="InnerBorderEdge"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          Foreground="{TemplateBinding Foreground}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Padding="{TemplateBinding Padding}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          RecognizesAccessKey="True"/>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundPointerOver}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushPointerOver}"/>
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundPointerOver}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundPressed}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushPressed}"/>
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundPressed}"/>
+    </Style>
+    <Style Selector="^.secondary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundSecondaryPressed}"/>
+    </Style>
+    <Style Selector="^[Tag=pressed] /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundPressed}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushPressed}"/>
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundPressed}"/>
+    </Style>
+    <Style Selector="^.secondary[Tag=pressed] /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundSecondaryPressed}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundDisabled}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushDisabled}"/>
+      <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundDisabled}"/>
+    </Style>
+
+    <Style Selector="^[Tag=checked], ^[Tag=checked-pressed]">
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundChecked}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushChecked}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundChecked}"/>
+      </Style>
+      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedPointerOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushCheckedPointerOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundCheckedPointerOver}"/>
+      </Style>
+      <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushChecked}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundCheckedPressed}"/>
+      </Style>
+      <Style Selector="^[Tag=checked-pressed] /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushCheckedPressed}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundCheckedPressed}"/>
+      </Style>
+      <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedDisabled}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushCheckedDisabled}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForegroundCheckedDisabled}"/>
+      </Style>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type SplitButton}" TargetType="SplitButton">
+    <Setter Property="Background" Value="{DynamicResource SplitButtonBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource SplitButtonForeground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource SplitButtonBorderThemeThickness}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource SplitButtonMinHeight}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="KeyboardNavigation.IsTabStop" Value="True"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="Padding" Value="{DynamicResource SplitButtonPadding}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="*,Auto,Auto">
+          <Button x:Name="PART_PrimaryButton"
+                  Grid.Column="0"
+                  Theme="{StaticResource WinUiSplitButtonComponent}"
+                  MinWidth="{DynamicResource SplitButtonPrimaryButtonSize}"
+                  Background="{TemplateBinding Background}"
+                  Foreground="{TemplateBinding Foreground}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource WinUiSplitButtonPrimaryBorderMultiplier}}"
+                  CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
+                  Content="{TemplateBinding Content}"
+                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                  Command="{TemplateBinding Command}"
+                  CommandParameter="{TemplateBinding CommandParameter}"
+                  Padding="{TemplateBinding Padding}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                  Focusable="False"
+                  KeyboardNavigation.IsTabStop="False"/>
+          <Border x:Name="DividerBackgroundGrid"
+                  Grid.Column="1"
+                  Width="{DynamicResource SplitButtonSeparatorWidth}"
+                  Background="{DynamicResource SplitButtonBorderBrushDivider}"/>
+          <Button x:Name="PART_SecondaryButton"
+                  Grid.Column="2"
+                  Classes="secondary"
+                  Theme="{StaticResource WinUiSplitButtonComponent}"
+                  MinWidth="{DynamicResource SplitButtonSecondaryButtonSize}"
+                  Background="{TemplateBinding Background}"
+                  Foreground="{DynamicResource SplitButtonForegroundSecondary}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource WinUiSplitButtonSecondaryBorderMultiplier}}"
+                  CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource RightCornerRadiusFilterConverter}}"
+                  Padding="0,0,12,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Right"
+                  VerticalContentAlignment="Center"
+                  Focusable="False"
+                  KeyboardNavigation.IsTabStop="False">
+            <PathIcon x:Name="DropDownGlyph"
+                      Width="10" Height="5"
+                      IsHitTestVisible="False"
+                      Data="M 0,0 L 5,5 L 10,0 L 9,0 L 5,4 L 1,0 Z"/>
+          </Button>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:pressed /template/ Button, ^:flyout-open /template/ Button">
+      <Setter Property="Tag" Value="pressed"/>
+    </Style>
+    <Style Selector="^.accent /template/ Button, ^:checked /template/ Button">
+      <Setter Property="Tag" Value="checked"/>
+    </Style>
+    <Style Selector="^.accent:pressed /template/ Button, ^.accent:flyout-open /template/ Button, ^:checked:pressed /template/ Button, ^:checked:flyout-open /template/ Button">
+      <Setter Property="Tag" Value="checked-pressed"/>
+    </Style>
+    <Style Selector="^.accent /template/ Border#DividerBackgroundGrid, ^:checked /template/ Border#DividerBackgroundGrid">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBorderBrushCheckedDivider}"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ToggleSplitButton}" TargetType="ToggleSplitButton"
+                BasedOn="{StaticResource {x:Type SplitButton}}"/>
+</ResourceDictionary>

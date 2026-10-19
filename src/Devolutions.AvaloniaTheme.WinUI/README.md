@@ -56,6 +56,14 @@ Content slides into a clipped region when expanding down or up; left and right
 expansion retain Fluent's behavior. The `borderless` class removes the card fill
 and retains a content edge in the expansion direction.
 
+## SplitButton
+
+SplitButton uses independent hover and pressed fills for each half, a full-height
+divider, and WinUI elevation borders. Keyboard activation and an open flyout press
+both halves. The `accent` class uses the accent palette; ToggleSplitButton shares
+the template and uses that palette when checked. Both controls retain Avalonia's
+command, focus, and flyout behavior.
+
 ## Classic and Mica validation
 
 The page catalog tracks WinUI classic (solid backdrop) and WinUI Mica separately.

@@ -69,8 +69,10 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
 
     private GroupedTileListBox? ListBox => this.Owner.FindAncestorOfType<GroupedTileListBox>();
 
+    // EnsureEnabled (Avalonia's, as ListBox items use): a disabled list refuses selection requests.
     public void Select()
     {
+        this.EnsureEnabled();
         if (this.Owner.Content is { } item)
         {
             this.ListBox?.SelectFromAssistiveTechnology(item);
@@ -79,6 +81,7 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
 
     public void AddToSelection()
     {
+        this.EnsureEnabled();
         if (this.Owner.Content is { } item)
         {
             this.ListBox?.SetSelectedFromAssistiveTechnology(item, true);
@@ -87,6 +90,7 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
 
     public void RemoveFromSelection()
     {
+        this.EnsureEnabled();
         if (this.Owner.Content is { } item)
         {
             this.ListBox?.SetSelectedFromAssistiveTechnology(item, false);
@@ -109,7 +113,8 @@ public class GroupedTileListBoxGroupHeaderAutomationPeer : ControlAutomationPeer
     {
         owner.PropertyChanged += (_, e) =>
         {
-            if (e.Property == GroupedTileListBoxGroupHeader.TextProperty)
+            // The text is the name only while the host sets none; a host-set name's changes are raised by the base peer.
+            if (e.Property == GroupedTileListBoxGroupHeader.TextProperty && string.IsNullOrEmpty(AutomationProperties.GetName(owner)))
             {
                 this.RaisePropertyChangedEvent(AutomationElementIdentifiers.NameProperty, e.OldValue, e.NewValue);
             }

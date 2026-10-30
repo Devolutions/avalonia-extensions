@@ -438,6 +438,51 @@ public class GroupedTileListBoxAccessibilityTests
     }
 
     [AvaloniaFact]
+    public void ADisabledListRefusesSelectionRequests()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            list.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Throws<ElementNotEnabledException>(() => TileProvider(list, tiles[1]).Select());
+            Assert.Throws<ElementNotEnabledException>(() => TileProvider(list, tiles[1]).AddToSelection());
+            Assert.Null(list.SelectedItem);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void AGroupHeaderWithAHostSetNameDoesNotAnnounceItsTextChanges()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, _) = Create();
+        try
+        {
+            GroupedTileListBoxGroupHeader header = list.GetVisualDescendants().OfType<GroupedTileListBoxGroupHeader>().First();
+            AutomationProperties.SetName(header, "Fresh fruit");
+            AutomationPeer peer = ControlAutomationPeer.CreatePeerForElement(header);
+            List<AutomationProperty> raised = [];
+            peer.PropertyChanged += (_, e) => raised.Add(e.Property);
+
+            header.Text = "Fruits and berries";
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.DoesNotContain(AutomationElementIdentifiers.NameProperty, raised);
+            Assert.Equal("Fresh fruit", peer.GetName());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void GroupHeadersAreHeadingsNamedAfterTheirGroup()
     {
         ResetTheme();

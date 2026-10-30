@@ -1,6 +1,8 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -14,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Metadata;
 using Avalonia.Metadata;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
@@ -99,6 +102,8 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, BindingBase?>(
             nameof(GroupOrderBinding));
 
+    private GroupedTileListBoxAutomationPeer? automationPeer;
+
     private double? cachedHeaderHeight;
     
     private int cachedItemsPerRow = -1;
@@ -153,6 +158,10 @@ public class GroupedTileListBox : TemplatedControl
 
     static GroupedTileListBox()
     {
+        // As a ListBox: Tab enters the list once, on its current tile (TabOnceActiveElement), and leaves it in one step.
+        KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<GroupedTileListBox>(KeyboardNavigationMode.Once);
+        IsTabStopProperty.OverrideDefaultValue<GroupedTileListBox>(false);
+
         ItemsSourceProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnItemsSourceChanged(e));
 
         ItemWidthProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnLayoutPropertyChanged(e));
@@ -570,6 +579,7 @@ public class GroupedTileListBox : TemplatedControl
         if (this.itemsRepeater is not null)
         {
             this.itemsRepeater.ElementPrepared -= this.OnElementPrepared;
+            this.itemsRepeater.ElementClearing -= this.OnElementClearing;
             this.itemsRepeater = null;
         }
 
@@ -603,11 +613,18 @@ public class GroupedTileListBox : TemplatedControl
 
                     if (!string.IsNullOrEmpty(group.Key))
                     {
+                        // Each group is a Group named after its key, as WPF's ListView exposes its groups
+                        // (GroupItemAutomationPeer), so screen readers announce it; its header would repeat the name.
+                        AutomationProperties.SetControlTypeOverride(groupContainer, AutomationControlType.Group);
+                        AutomationProperties.SetName(groupContainer, group.Key);
+                        AutomationProperties.SetIsControlElementOverride(groupContainer, true);
+
                         // Add group header (not virtualized)
                         GroupedTileListBoxGroupHeader headerControl = new()
                         {
                             Text = group.Key
                         };
+                        AutomationProperties.SetAccessibilityView(headerControl, AccessibilityView.Raw);
 
                         if (this.cachedHeaderHeight is null)
                         {
@@ -660,6 +677,7 @@ public class GroupedTileListBox : TemplatedControl
                     };
 
                     groupRepeater.ElementPrepared += this.OnElementPrepared;
+                    groupRepeater.ElementClearing += this.OnElementClearing;
 
                     groupContainer.Children.Add(groupRepeater);
                     stackPanel.Children.Add(groupContainer);
@@ -705,6 +723,7 @@ public class GroupedTileListBox : TemplatedControl
             };
 
             this.itemsRepeater.ElementPrepared += this.OnElementPrepared;
+            this.itemsRepeater.ElementClearing += this.OnElementClearing;
 
             this.content = this.itemsRepeater;
         }
@@ -719,6 +738,17 @@ public class GroupedTileListBox : TemplatedControl
     {
         this.InvalidateIndexMappings();
         this.UpdateItemsRepeater();
+    }
+
+    // VirtualizingStackPanel keeps a ListBox's Tab target realized; ItemsRepeater recycles it once it scrolls away, so
+    // the list itself is the Tab stop until the tile is back, and OnGotFocus hands focus to it.
+    private void OnElementClearing(object? sender, ItemsRepeaterElementClearingEventArgs e)
+    {
+        if (ReferenceEquals(KeyboardNavigation.GetTabOnceActiveElement(this), e.Element))
+        {
+            KeyboardNavigation.SetTabOnceActiveElement(this, null);
+            this.IsTabStop = true;
+        }
     }
 
     private void OnElementPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs e)
@@ -740,6 +770,13 @@ public class GroupedTileListBox : TemplatedControl
         container.Content = item;
         container.IsSelected = this.IsItemSelected(item);
         container.ItemIndex = e.Index;
+
+        // As SelectingItemsControl does for its anchor's container: Tab returns to the current tile once it's back.
+        if (item is not null && ReferenceEquals(item, this.GetCurrentItem()))
+        {
+            KeyboardNavigation.SetTabOnceActiveElement(this, container);
+            this.IsTabStop = false;
+        }
 
         // Wire up pointer pressed event
         container.PointerPressed -= this.OnContainerPointerPressed;
@@ -796,6 +833,8 @@ public class GroupedTileListBox : TemplatedControl
             this.SelectItem(item);
         }
 
+        // The clicked tile takes focus, as in a ListBox, so the next key press and a screen reader start from it.
+        this.FocusTile(item, NavigationMethod.Pointer);
         e.Handled = true;
     }
 
@@ -884,6 +923,8 @@ public class GroupedTileListBox : TemplatedControl
         this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
 
+        // The selection keeps its members, so no refresh runs, but Tab follows the new anchor.
+        this.UpdateTabOnceActiveElement();
         this.AutoScrollToSelectionIfEnabled();
     });
 
@@ -992,6 +1033,12 @@ public class GroupedTileListBox : TemplatedControl
             // Update selection in single ItemsRepeater (non-grouped)
             this.UpdateRepeaterSelection(this.itemsRepeater);
         }
+
+        this.UpdateTabOnceActiveElement();
+
+        // Every selection change ends here (marquee and bound SelectedItems included), and the peer reads the
+        // selection from the containers just updated.
+        this.automationPeer?.RaiseSelectionChanged();
     }
 
     /// <summary>
@@ -1041,10 +1088,138 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
+    protected override AutomationPeer OnCreateAutomationPeer() => this.automationPeer = new GroupedTileListBoxAutomationPeer(this);
+
+    // Assistive technology's selection requests on a tile, handled as ListItemAutomationPeer does on a ListBox: Select
+    // replaces the selection, AddToSelection and RemoveFromSelection change one item within the selection mode's rules.
+    internal void SelectFromAssistiveTechnology(object item) => this.SelectItem(item);
+
+    internal void SetSelectedFromAssistiveTechnology(object item, bool selected)
+    {
+        if (this.IsItemSelected(item) == selected)
+        {
+            return;
+        }
+
+        if (selected && !this.SelectionMode.HasFlag(SelectionMode.Multiple))
+        {
+            this.SelectItem(item);
+            return;
+        }
+
+        this.ToggleItemSelection(item);
+    }
+
+    internal ScrollViewer? ScrollViewerForAutomation => this.scrollViewer;
+
+    internal IEnumerable<GroupedTileListBoxItem> GetRealizedSelectedContainers() =>
+        this.SelectedItems?.Cast<object>().Select(this.FindRealizedContainer).OfType<GroupedTileListBoxItem>() ?? [];
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        this.HandleKeyDown(e);
 
+        // Navigation moves focus onto the tile it selects, as SelectingItemsControl.MoveSelection does: it's what a
+        // screen reader announces.
+        if (e.Handled && e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End
+            && this.IsKeyboardFocusWithin && this.selectedItem is { } selected)
+        {
+            this.FocusTile(selected, NavigationMethod.Directional);
+        }
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+
+        // As ItemsControl.OnGotFocus does: Tab comes back to the tile focused last.
+        if (e.Source is GroupedTileListBoxItem tile && tile.FindAncestorOfType<GroupedTileListBox>() == this)
+        {
+            KeyboardNavigation.SetTabOnceActiveElement(this, tile);
+        }
+        else if (ReferenceEquals(e.Source, this) && e.NavigationMethod == NavigationMethod.Tab && this.GetCurrentItem() is { } item)
+        {
+            // Only a Tab stop while the current tile is scrolled out of view (OnElementClearing): hand focus to it.
+            this.ScrollIntoView(this.GetIndexOfItem(item));
+            this.FocusTile(item, NavigationMethod.Tab);
+        }
+    }
+
+    // A tile scrolled into view right before is realized on the next layout pass, so a missing one is tried once more.
+    private void FocusTile(object item, NavigationMethod method)
+    {
+        if (this.FindRealizedContainer(item) is { } container)
+        {
+            container.Focus(method);
+            return;
+        }
+
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                if (this.IsKeyboardFocusWithin && this.FindRealizedContainer(item) is { } late)
+                {
+                    late.Focus(method);
+                }
+            },
+            DispatcherPriority.Background);
+    }
+
+    // Where keys act from, as SelectingItemsControl.MoveSelection: the focused tile, else the anchor (the tile clicked,
+    // toggled or navigated to last), else the primary selected tile.
+    private object? GetKeyboardCurrentItem() =>
+        TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is GroupedTileListBoxItem { Content: { } focused } tile
+        && tile.FindAncestorOfType<GroupedTileListBox>() == this
+            ? focused
+            : this.GetAnchor() ?? this.selectedItem;
+
+    // The tile Tab enters on: the anchor, else the primary selected tile, else the first, as in a ListBox.
+    private object? GetCurrentItem() => this.GetAnchor() ?? this.selectedItem ?? this.GetItemFromVisualIndex(0);
+
+    private object? GetAnchor() => this.anchorItem is { } anchor && this.GetIndexOfItem(anchor) >= 0 ? anchor : null;
+
+    // As SelectingItemsControl does when its anchor moves. A recycled current tile leaves the list as the Tab stop.
+    private void UpdateTabOnceActiveElement()
+    {
+        GroupedTileListBoxItem? container = this.GetCurrentItem() is { } item ? this.FindRealizedContainer(item) : null;
+        KeyboardNavigation.SetTabOnceActiveElement(this, container);
+        this.IsTabStop = container is null;
+    }
+
+    // The marquee focused the list itself, for Escape: Tab from there would enter the list, so a tile takes focus.
+    private void ReturnFocusToTile()
+    {
+        if (this.IsFocused && this.GetCurrentItem() is { } item)
+        {
+            this.FocusTile(item, NavigationMethod.Pointer);
+        }
+    }
+
+    private GroupedTileListBoxItem? FindRealizedContainer(object item) =>
+        this.GetRealizedContainers().FirstOrDefault(container => ReferenceEquals(container.Content, item));
+
+    private IEnumerable<GroupedTileListBoxItem> GetRealizedContainers()
+    {
+        IEnumerable<ItemsRepeater> repeaters = this.useGrouping && this.content is StackPanel stackPanel
+            ? GetAllItemsRepeaters(stackPanel)
+            : this.itemsRepeater is { } single ? [single] : [];
+
+        foreach (ItemsRepeater repeater in repeaters)
+        {
+            int count = GetItemCount(repeater.ItemsSource);
+            for (int i = 0; i < count; i++)
+            {
+                if (repeater.TryGetElement(i) is GroupedTileListBoxItem container)
+                {
+                    yield return container;
+                }
+            }
+        }
+    }
+
+    private void HandleKeyDown(KeyEventArgs e)
+    {
         // Escape aborts an in-progress marquee, restoring the pre-drag selection.
         if (this.marqueeActive && e.Key == Key.Escape)
         {
@@ -1058,7 +1233,10 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        int currentIndex = this.selectedIndex;
+        // Keys act from the focused tile, as in a ListBox: where a screen reader says the user is. In multiple
+        // selection it can differ from the primary selected tile (a Ctrl+click deselects the tile it focuses).
+        object? currentItem = this.GetKeyboardCurrentItem();
+        int currentIndex = currentItem is null ? -1 : this.GetIndexOfItem(currentItem);
         int itemCount = this.GetItemCount();
 
         if (itemCount == 0)
@@ -1072,9 +1250,9 @@ public class GroupedTileListBox : TemplatedControl
         if (multiple && e.Key == Key.Space
             && (HasToggleModifier(e.KeyModifiers) || this.SelectionMode.HasFlag(SelectionMode.Toggle)))
         {
-            if (this.selectedItem is not null)
+            if (currentItem is not null)
             {
-                this.ToggleItemSelection(this.selectedItem);
+                this.ToggleItemSelection(currentItem);
                 e.Handled = true;
             }
 
@@ -1096,7 +1274,6 @@ public class GroupedTileListBox : TemplatedControl
         // For Left/Right, use visual order navigation (respects grouping)
         if (e.Key is Key.Left or Key.Right)
         {
-            object? currentItem = this.selectedItem;
             int currentVisualIndex = this.GetVisualIndexFromItem(currentItem);
 
             // If mapping failed, fall back to source index as visual index
@@ -1981,6 +2158,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile();
     }
 
     private void CancelMarquee()
@@ -2004,6 +2182,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile();
     }
 
     /// <summary>

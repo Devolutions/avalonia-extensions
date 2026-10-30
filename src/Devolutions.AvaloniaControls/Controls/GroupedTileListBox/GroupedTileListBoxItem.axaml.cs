@@ -1,8 +1,10 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// Container for items in the GroupedTileListBox.
@@ -23,6 +25,9 @@ public class GroupedTileListBoxItem : ContentControl
     static GroupedTileListBoxItem()
     {
         IsSelectedProperty.Changed.AddClassHandler<GroupedTileListBoxItem>((x, e) => x.OnIsSelectedChanged(e));
+
+        // Keyboard focus moves onto the tiles, as onto ListBox items: screen readers announce the focused element.
+        FocusableProperty.OverrideDefaultValue<GroupedTileListBoxItem>(true);
     }
 
     /// <summary>
@@ -42,6 +47,10 @@ public class GroupedTileListBoxItem : ContentControl
         get => this.GetValue(ItemIndexProperty);
         set => this.SetValue(ItemIndexProperty, value);
     }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Only GroupedTileListBox, which carries the same requirement, creates its items.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Only GroupedTileListBox, which carries the same requirement, creates its items.")]
+    protected override AutomationPeer OnCreateAutomationPeer() => new GroupedTileListBoxItemAutomationPeer(this);
 
     private void OnIsSelectedChanged(AvaloniaPropertyChangedEventArgs e)
     {

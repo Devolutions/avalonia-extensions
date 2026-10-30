@@ -32,7 +32,8 @@ public class GroupedTileListBoxAccessibilityTests
         SelectionMode selectionMode = SelectionMode.Single,
         int extraTiles = 0,
         double windowHeight = 600,
-        bool grouped = true)
+        bool grouped = true,
+        Action<GroupedTileListBox, IReadOnlyList<Tile>>? beforeShow = null)
     {
         List<Tile> tiles =
         [
@@ -58,6 +59,7 @@ public class GroupedTileListBoxAccessibilityTests
 
         // At the default height every tile is realized.
         var window = new Window { Content = panel, Width = 800, Height = windowHeight };
+        beforeShow?.Invoke(list, tiles);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         return (window, before, list, tiles);
@@ -76,6 +78,22 @@ public class GroupedTileListBoxAccessibilityTests
 
     private static Button After(Window window) =>
         window.GetVisualDescendants().OfType<Button>().Single(static button => Equals(button.Content, "After"));
+
+    private static void Click(Window window, Control control)
+    {
+        Point center = control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(center, MouseButton.Left, RawInputModifiers.None);
+        window.MouseUp(center, MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+    }
+
+    private static void ScrollToEnd(Window window, GroupedTileListBox list)
+    {
+        ScrollViewer scrollViewer = list.GetVisualDescendants().OfType<ScrollViewer>().First();
+        scrollViewer.Offset = new Vector(0, scrollViewer.Extent.Height);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+    }
 
     private static void CtrlClick(Window window, Control control)
     {
@@ -411,6 +429,70 @@ public class GroupedTileListBoxAccessibilityTests
             Dispatcher.UIThread.RunJobs();
 
             Assert.Same(After(window), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabEntersOnASelectedTileThatStartedOutOfView()
+    {
+        ResetTheme();
+        (Window window, Button before, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(
+            extraTiles: 200,
+            windowHeight: 250,
+            grouped: false,
+            beforeShow: static (list, tiles) =>
+            {
+                list.AutoScrollToSelectedItem = false;
+                list.SelectedItem = tiles[180];
+            });
+        try
+        {
+            Assert.DoesNotContain(list.GetVisualDescendants().OfType<GroupedTileListBoxItem>(), item => ReferenceEquals(item.Content, tiles[180]));
+            before.Focus(NavigationMethod.Tab);
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(Container(list, tiles[180]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabReturnsToTheTileFocusedLastAfterItScrolledOutOfView()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple, extraTiles: 200, windowHeight: 250, grouped: false);
+        try
+        {
+            // Apple is the range anchor, Banana the tile focused last.
+            Click(window, Container(list, tiles[0]));
+            window.KeyPress(Key.Right, RawInputModifiers.Shift, PhysicalKey.ArrowRight, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(Container(list, tiles[1]), FocusedElement(window));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(After(window), FocusedElement(window));
+
+            ScrollToEnd(window, list);
+            Assert.DoesNotContain(list.GetVisualDescendants().OfType<GroupedTileListBoxItem>(), item => ReferenceEquals(item.Content, tiles[1]));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.Shift, PhysicalKey.Tab, null);
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(Container(list, tiles[1]), FocusedElement(window));
         }
         finally
         {

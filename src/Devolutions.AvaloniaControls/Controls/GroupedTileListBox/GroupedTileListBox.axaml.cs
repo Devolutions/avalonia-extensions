@@ -744,6 +744,14 @@ public class GroupedTileListBox : TemplatedControl
         container.IsSelected = this.IsItemSelected(item);
         container.ItemIndex = e.Index;
 
+        // A recycled container may have been the Tab stop for another item.
+        bool isTabStop = item is not null && ReferenceEquals(item, this.GetTabStopItem());
+        container.IsTabStop = isTabStop;
+        if (isTabStop)
+        {
+            this.IsTabStop = false;
+        }
+
         // Wire up pointer pressed event
         container.PointerPressed -= this.OnContainerPointerPressed;
         container.PointerPressed += this.OnContainerPointerPressed;
@@ -799,6 +807,8 @@ public class GroupedTileListBox : TemplatedControl
             this.SelectItem(item);
         }
 
+        // The clicked tile takes focus, as in a ListBox, so the next key press and a screen reader start from it.
+        container.Focus(NavigationMethod.Pointer);
         e.Handled = true;
     }
 
@@ -996,6 +1006,8 @@ public class GroupedTileListBox : TemplatedControl
             this.UpdateRepeaterSelection(this.itemsRepeater);
         }
 
+        this.UpdateTabStops();
+
         // Every selection change ends here (marquee and bound SelectedItems included), and the peer reads the
         // selection from the containers just updated.
         this.automationPeer?.RaiseSelectionChanged();
@@ -1050,12 +1062,12 @@ public class GroupedTileListBox : TemplatedControl
 
     protected override AutomationPeer OnCreateAutomationPeer() => this.automationPeer = new GroupedTileListBoxAutomationPeer(this);
 
-    // UI Automation's SelectionItem pattern: what a screen reader's default action on a tile does.
-    internal void SelectFromAutomation(object item) => this.SelectItem(item);
+    // A screen reader's (or other assistive technology's) Select on a tile: the same as clicking it.
+    internal void SelectFromAssistiveTechnology(object item) => this.SelectItem(item);
 
-    // AddToSelection / RemoveFromSelection, through the same toggle as Ctrl+click, in any mode. UIA's contract: an
-    // operation the selection mode doesn't allow fails rather than being ignored or replacing the selection.
-    internal void SetSelectedFromAutomation(object item, bool selected)
+    // AddToSelection / RemoveFromSelection, through the same toggle as Ctrl+click, in any mode. The accessibility
+    // contract: an operation the selection mode doesn't allow fails rather than being ignored or replacing the selection.
+    internal void SetSelectedFromAssistiveTechnology(object item, bool selected)
     {
         if (this.IsItemSelected(item) == selected)
         {
@@ -1079,7 +1091,93 @@ public class GroupedTileListBox : TemplatedControl
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        this.HandleKeyDown(e);
 
+        // Keyboard focus follows the selection onto its tile, as in a ListBox: it's what a screen reader announces.
+        if (e.Handled && this.IsKeyboardFocusWithin && this.selectedItem is { } item)
+        {
+            this.FocusTile(item, NavigationMethod.Directional);
+        }
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+
+        // The list itself is a Tab stop only while the tile that should be one isn't realized: hand focus to it.
+        if (ReferenceEquals(e.Source, this) && e.NavigationMethod == NavigationMethod.Tab && this.GetTabStopItem() is { } item)
+        {
+            this.ScrollIntoView(this.GetIndexOfItem(item));
+            this.FocusTile(item, NavigationMethod.Tab);
+        }
+    }
+
+    // A tile scrolled into view right before is realized on the next layout pass, so a missing one is tried once more.
+    private void FocusTile(object item, NavigationMethod method)
+    {
+        if (this.FindRealizedContainer(item) is { } container)
+        {
+            if (!container.IsFocused)
+            {
+                container.Focus(method);
+            }
+
+            return;
+        }
+
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                if (this.IsKeyboardFocusWithin && this.FindRealizedContainer(item) is { IsFocused: false } late)
+                {
+                    late.Focus(method);
+                }
+            },
+            DispatcherPriority.Background);
+    }
+
+    // The selected tile, or the first one when nothing is selected, as in a ListBox.
+    private object? GetTabStopItem() => this.selectedItem ?? this.GetItemFromVisualIndex(0);
+
+    private GroupedTileListBoxItem? FindRealizedContainer(object item) =>
+        this.GetRealizedContainers().FirstOrDefault(container => ReferenceEquals(container.Content, item));
+
+    private IEnumerable<GroupedTileListBoxItem> GetRealizedContainers()
+    {
+        IEnumerable<ItemsRepeater> repeaters = this.useGrouping && this.content is StackPanel stackPanel
+            ? GetAllItemsRepeaters(stackPanel)
+            : this.itemsRepeater is { } single ? [single] : [];
+
+        foreach (ItemsRepeater repeater in repeaters)
+        {
+            int count = GetItemCount(repeater.ItemsSource);
+            for (int i = 0; i < count; i++)
+            {
+                if (repeater.TryGetElement(i) is GroupedTileListBoxItem container)
+                {
+                    yield return container;
+                }
+            }
+        }
+    }
+
+    // One tile is the Tab stop, and the list itself only while that tile isn't realized (scrolled out of view).
+    private void UpdateTabStops()
+    {
+        object? tabStopItem = this.GetTabStopItem();
+        bool realized = false;
+        foreach (GroupedTileListBoxItem container in this.GetRealizedContainers())
+        {
+            bool isTabStop = tabStopItem is not null && ReferenceEquals(container.Content, tabStopItem);
+            container.IsTabStop = isTabStop;
+            realized |= isTabStop;
+        }
+
+        this.IsTabStop = !realized;
+    }
+
+    private void HandleKeyDown(KeyEventArgs e)
+    {
         // Escape aborts an in-progress marquee, restoring the pre-drag selection.
         if (this.marqueeActive && e.Key == Key.Escape)
         {

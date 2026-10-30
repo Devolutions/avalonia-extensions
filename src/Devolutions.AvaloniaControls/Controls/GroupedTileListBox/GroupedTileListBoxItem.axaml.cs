@@ -25,6 +25,11 @@ public class GroupedTileListBoxItem : ContentControl
     static GroupedTileListBoxItem()
     {
         IsSelectedProperty.Changed.AddClassHandler<GroupedTileListBoxItem>((x, e) => x.OnIsSelectedChanged(e));
+
+        // Keyboard focus moves onto the tiles, as screen readers announce the focused element. The list makes one
+        // tile at a time the Tab stop, so Tab enters and leaves the list in one step.
+        FocusableProperty.OverrideDefaultValue<GroupedTileListBoxItem>(true);
+        IsTabStopProperty.OverrideDefaultValue<GroupedTileListBoxItem>(false);
     }
 
     /// <summary>

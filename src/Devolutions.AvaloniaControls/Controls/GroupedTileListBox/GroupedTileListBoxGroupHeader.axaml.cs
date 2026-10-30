@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls.Primitives;
 
 /// <summary>
@@ -21,4 +22,6 @@ public class GroupedTileListBoxGroupHeader : TemplatedControl
         get => this.GetValue(TextProperty);
         set => this.SetValue(TextProperty, value);
     }
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new GroupedTileListBoxGroupHeaderAutomationPeer(this);
 }

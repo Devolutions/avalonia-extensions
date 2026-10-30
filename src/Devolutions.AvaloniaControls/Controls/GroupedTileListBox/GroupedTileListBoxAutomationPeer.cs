@@ -8,8 +8,9 @@ using Avalonia.VisualTree;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// Exposes a <see cref="GroupedTileListBox"/> to UI Automation as a list whose tiles are selectable list items, the
-/// way a ListBox is: a screen reader selects a tile, then the host's default button acts on the selection.
+/// Makes a <see cref="GroupedTileListBox"/> accessible to screen readers and other assistive technologies: a list
+/// whose tiles are selectable list items, the way a ListBox is, under headings for their groups. Each tile needs an
+/// accessible name: set <c>AutomationProperties.Name</c> on the tiles (a style on <see cref="GroupedTileListBoxItem"/>).
 /// </summary>
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 [RequiresDynamicCode("BindingEvaluator requires preserved types")]
@@ -72,7 +73,7 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
     {
         if (this.Owner.Content is { } item)
         {
-            this.ListBox?.SelectFromAutomation(item);
+            this.ListBox?.SelectFromAssistiveTechnology(item);
         }
     }
 
@@ -80,7 +81,7 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
     {
         if (this.Owner.Content is { } item)
         {
-            this.ListBox?.SetSelectedFromAutomation(item, true);
+            this.ListBox?.SetSelectedFromAssistiveTechnology(item, true);
         }
     }
 
@@ -88,11 +89,41 @@ public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer
     {
         if (this.Owner.Content is { } item)
         {
-            this.ListBox?.SetSelectedFromAutomation(item, false);
+            this.ListBox?.SetSelectedFromAssistiveTechnology(item, false);
         }
     }
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.ListItem;
+
+    protected override bool IsControlElementCore() => true;
+}
+
+/// <summary>
+/// A group's header as a heading named after the group, so screen readers announce the group and can move between
+/// groups. Its level comes from <c>AutomationProperties.HeadingLevel</c>, 2 unless a style sets another.
+/// </summary>
+public class GroupedTileListBoxGroupHeaderAutomationPeer : ControlAutomationPeer
+{
+    public GroupedTileListBoxGroupHeaderAutomationPeer(GroupedTileListBoxGroupHeader owner)
+        : base(owner)
+    {
+        owner.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == GroupedTileListBoxGroupHeader.TextProperty)
+            {
+                this.RaisePropertyChangedEvent(AutomationElementIdentifiers.NameProperty, e.OldValue, e.NewValue);
+            }
+        };
+    }
+
+    public new GroupedTileListBoxGroupHeader Owner => (GroupedTileListBoxGroupHeader)base.Owner;
+
+    protected override string? GetNameCore() => base.GetNameCore() is { Length: > 0 } name ? name : this.Owner.Text;
+
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Text;
+
+    // The header's own text block would read the name a second time.
+    protected override IReadOnlyList<AutomationPeer>? GetChildrenCore() => null;
 
     protected override bool IsControlElementCore() => true;
 }

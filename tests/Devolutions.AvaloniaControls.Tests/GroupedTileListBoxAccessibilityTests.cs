@@ -368,6 +368,16 @@ public class GroupedTileListBoxAccessibilityTests
             Assert.Equal(2, list.SelectedItems?.Count);
             Assert.Contains(tiles[0], list.SelectedItems!.Cast<Tile>());
             Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+
+            // Deselecting it again keeps it focused, and the Tab stop, so Tab leaves the list.
+            window.KeyPress(Key.Space, RawInputModifiers.Control, PhysicalKey.Space, " ");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal([tiles[3]], list.SelectedItems!.Cast<Tile>());
+            Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(After(window), FocusedElement(window));
         }
         finally
         {

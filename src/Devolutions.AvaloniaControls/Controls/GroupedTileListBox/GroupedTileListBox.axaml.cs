@@ -1114,12 +1114,24 @@ public class GroupedTileListBox : TemplatedControl
         base.OnKeyDown(e);
         this.HandleKeyDown(e);
 
-        // Keyboard focus follows navigation onto the tile it selects, as in a ListBox: it's what a screen reader
-        // announces. A toggle (Ctrl+Space) or Ctrl+A leaves it on the tile the user is on.
-        if (e.Handled && e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End
-            && this.IsKeyboardFocusWithin && this.selectedItem is { } item)
+        if (!e.Handled || !this.IsKeyboardFocusWithin)
         {
-            this.FocusTile(item, NavigationMethod.Directional);
+            return;
+        }
+
+        // Keyboard focus follows navigation onto the tile it selects, as in a ListBox: it's what a screen reader
+        // announces. A toggle (Ctrl+Space) or Ctrl+A leaves it on the tile the user is on, which stays the Tab stop
+        // although the selection change handed that to the primary tile.
+        if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End)
+        {
+            if (this.selectedItem is { } selected)
+            {
+                this.FocusTile(selected, NavigationMethod.Directional);
+            }
+        }
+        else if (this.GetFocusedTileItem() is { } focused)
+        {
+            this.SetFocusedTile(focused);
         }
     }
 
@@ -1172,11 +1184,13 @@ public class GroupedTileListBox : TemplatedControl
             DispatcherPriority.Background);
     }
 
-    private object? GetKeyboardCurrentItem() =>
+    private object? GetKeyboardCurrentItem() => this.GetFocusedTileItem() ?? this.selectedItem;
+
+    private object? GetFocusedTileItem() =>
         TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is GroupedTileListBoxItem { Content: { } item } tile
         && tile.FindAncestorOfType<GroupedTileListBox>() == this
             ? item
-            : this.selectedItem;
+            : null;
 
     // The marquee focused the list itself, for Escape: hand focus back to a tile, so the next Tab leaves the list.
     private void ReturnFocusToTile()

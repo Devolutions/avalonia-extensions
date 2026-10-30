@@ -34,7 +34,7 @@ public class GroupedTileListBoxAutomationPeer : ControlAutomationPeer, ISelectio
             .Select(ControlAutomationPeer.CreatePeerForElement)
             .ToList();
 
-    // The box calls this on every selection change, including those that keep SelectedItem (multiple selection).
+    // The box calls this once its containers reflect a selection change, including one that keeps SelectedItem.
     internal void RaiseSelectionChanged() => this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.List;

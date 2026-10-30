@@ -811,9 +811,6 @@ public class GroupedTileListBox : TemplatedControl
         // Update visual state of realized containers
         this.UpdateRealizedContainerSelection();
 
-        // After the containers: the peer's selection is read from them. Covers changes that keep SelectedItem.
-        this.automationPeer?.RaiseSelectionChanged();
-
         // Single scroll trigger for every selection change (internal or external).
         this.AutoScrollToSelectionIfEnabled();
     }
@@ -998,6 +995,10 @@ public class GroupedTileListBox : TemplatedControl
             // Update selection in single ItemsRepeater (non-grouped)
             this.UpdateRepeaterSelection(this.itemsRepeater);
         }
+
+        // Every selection change ends here (marquee and bound SelectedItems included), and the peer reads the
+        // selection from the containers just updated.
+        this.automationPeer?.RaiseSelectionChanged();
     }
 
     /// <summary>
@@ -1052,7 +1053,8 @@ public class GroupedTileListBox : TemplatedControl
     // UI Automation's SelectionItem pattern: what a screen reader's default action on a tile does.
     internal void SelectFromAutomation(object item) => this.SelectItem(item);
 
-    // AddToSelection / RemoveFromSelection. Toggling keeps AlwaysSelected's last item, in any mode.
+    // AddToSelection / RemoveFromSelection, through the same toggle as Ctrl+click, in any mode. UIA's contract: an
+    // operation the selection mode doesn't allow fails rather than being ignored or replacing the selection.
     internal void SetSelectedFromAutomation(object item, bool selected)
     {
         if (this.IsItemSelected(item) == selected)
@@ -1060,10 +1062,15 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        // UIA's contract: adding to a single selection that holds another item fails rather than replacing it.
-        if (selected && !this.SelectionMode.HasFlag(SelectionMode.Multiple) && (this.SelectedItems?.Count ?? 0) > 0)
+        int count = this.SelectedItems?.Count ?? 0;
+        if (selected && !this.SelectionMode.HasFlag(SelectionMode.Multiple) && count > 0)
         {
             throw new InvalidOperationException("The list allows a single selection, and another item is selected.");
+        }
+
+        if (!selected && this.SelectionMode.HasFlag(SelectionMode.AlwaysSelected) && count <= 1)
+        {
+            throw new InvalidOperationException("The list requires a selection, and this is its only selected item.");
         }
 
         this.ToggleItemSelection(item);

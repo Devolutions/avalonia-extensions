@@ -1183,12 +1183,15 @@ public class GroupedTileListBox : TemplatedControl
             ? focused
             : null;
 
-    private object? GetAnchor() => this.anchorItem is { } anchor && this.GetIndexOfItem(anchor) >= 0 ? anchor : null;
+    // Still in the list: checked through the cached visual index, as every tile prepared asks.
+    private bool IsInList(object item) => this.GetVisualIndexFromItem(item) >= 0;
+
+    private object? GetAnchor() => this.anchorItem is { } anchor && this.IsInList(anchor) ? anchor : null;
 
     // The tile Tab enters on, as in a ListBox: the one focused last, else the anchor, else the primary selected tile,
     // else the first.
     private object? GetTabTarget() =>
-        this.tabTargetItem is { } target && this.GetIndexOfItem(target) >= 0
+        this.tabTargetItem is { } target && this.IsInList(target)
             ? target
             : this.GetAnchor() ?? this.selectedItem ?? this.GetItemFromVisualIndex(0);
 
@@ -1215,10 +1218,20 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    // The marquee focused the list itself, for Escape: Tab from there would enter the list, so a tile takes focus.
-    private void ReturnFocusToTile()
+    // The marquee focused the list itself, for Escape: Tab from there would enter the list, so a tile takes focus. A
+    // committed drag picks one in view (its anchor may have auto-scrolled away); a cancelled one scrolls back.
+    private void ReturnFocusToTile(bool cancelled)
     {
-        if (this.IsFocused && this.GetTabTarget() is { } item)
+        if (!this.IsFocused)
+        {
+            return;
+        }
+
+        object? target = this.GetTabTarget();
+        object? item = cancelled || (target is not null && this.FindRealizedContainer(target) is not null)
+            ? target
+            : (this.GetRealizedSelectedContainers().FirstOrDefault() ?? this.GetRealizedContainers().FirstOrDefault())?.Content;
+        if (item is not null)
         {
             this.FocusTile(item, NavigationMethod.Pointer);
         }
@@ -2186,7 +2199,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
-        this.ReturnFocusToTile();
+        this.ReturnFocusToTile(cancelled: false);
     }
 
     private void CancelMarquee()
@@ -2210,7 +2223,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
-        this.ReturnFocusToTile();
+        this.ReturnFocusToTile(cancelled: true);
     }
 
     /// <summary>

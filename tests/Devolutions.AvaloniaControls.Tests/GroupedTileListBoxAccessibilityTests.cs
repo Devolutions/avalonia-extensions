@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Tests;
 
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
@@ -47,10 +48,13 @@ public class GroupedTileListBoxAccessibilityTests
             ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<Tile>((tile, _) => new TextBlock { Text = tile?.Name })
         };
         var before = new Button { Content = "Before" };
-        var panel = new DockPanel();
-        DockPanel.SetDock(before, Dock.Top);
+        var after = new Button { Content = "After" };
+        var panel = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto") };
+        Grid.SetRow(list, 1);
+        Grid.SetRow(after, 2);
         panel.Children.Add(before);
         panel.Children.Add(list);
+        panel.Children.Add(after);
 
         // At the default height every tile is realized.
         var window = new Window { Content = panel, Width = 800, Height = windowHeight };
@@ -66,6 +70,17 @@ public class GroupedTileListBoxAccessibilityTests
         (ISelectionItemProvider)ControlAutomationPeer.CreatePeerForElement(Container(list, tile));
 
     private static object? FocusedElement(Window window) => window.FocusManager?.GetFocusedElement();
+
+    private static Button After(Window window) =>
+        window.GetVisualDescendants().OfType<Button>().Single(static button => Equals(button.Content, "After"));
+
+    private static void CtrlClick(Window window, Control control)
+    {
+        Avalonia.Point center = control.TranslatePoint(new Avalonia.Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(center, MouseButton.Left, RawInputModifiers.Control);
+        window.MouseUp(center, MouseButton.Left, RawInputModifiers.Control);
+        Dispatcher.UIThread.RunJobs();
+    }
 
     [AvaloniaFact]
     public void ListAndTilesAreExposedAsASelectableList()
@@ -279,6 +294,33 @@ public class GroupedTileListBoxAccessibilityTests
             Dispatcher.UIThread.RunJobs();
 
             Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabLeavesTheListFromAFocusedTileThatIsNotSelected()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            CtrlClick(window, Container(list, tiles[0]));
+            CtrlClick(window, Container(list, tiles[3]));
+            Assert.Equal(2, list.SelectedItems?.Count);
+
+            // Deselects Apple, in the first group, and focuses it; Carrot, in the second group, stays selected.
+            CtrlClick(window, Container(list, tiles[0]));
+            Assert.Equal([tiles[3]], list.SelectedItems!.Cast<Tile>());
+            Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(After(window), FocusedElement(window));
         }
         finally
         {

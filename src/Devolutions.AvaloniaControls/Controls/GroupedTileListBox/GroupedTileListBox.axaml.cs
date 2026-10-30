@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Metadata;
 using Avalonia.Metadata;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
@@ -101,6 +102,9 @@ public class GroupedTileListBox : TemplatedControl
             nameof(GroupOrderBinding));
 
     private GroupedTileListBoxAutomationPeer? automationPeer;
+
+    // The tile focused last, the Tab stop until the selection next changes (null then: the primary tile is).
+    private object? focusedTileItem;
 
     private double? cachedHeaderHeight;
 
@@ -821,7 +825,7 @@ public class GroupedTileListBox : TemplatedControl
         }
 
         // The clicked tile takes focus, as in a ListBox, so the next key press and a screen reader start from it.
-        container.Focus(NavigationMethod.Pointer);
+        this.FocusTile(item, NavigationMethod.Pointer);
         e.Handled = true;
     }
 
@@ -911,6 +915,7 @@ public class GroupedTileListBox : TemplatedControl
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
 
         // The selection keeps its members, so no refresh runs, but the Tab stop follows the primary tile.
+        this.focusedTileItem = null;
         this.UpdateTabStops();
         this.AutoScrollToSelectionIfEnabled();
     });
@@ -1021,6 +1026,7 @@ public class GroupedTileListBox : TemplatedControl
             this.UpdateRepeaterSelection(this.itemsRepeater);
         }
 
+        this.focusedTileItem = null;
         this.UpdateTabStops();
 
         // Every selection change ends here (marquee and bound SelectedItems included), and the peer reads the
@@ -1119,6 +1125,14 @@ public class GroupedTileListBox : TemplatedControl
     {
         base.OnGotFocus(e);
 
+        // As in a ListBox, the focused tile is the Tab stop, so Tab leaves the list from it in one step even when
+        // it isn't selected (a Ctrl+click deselects the tile it focuses).
+        if (e.Source is GroupedTileListBoxItem { Content: { } focused } tile && tile.FindAncestorOfType<GroupedTileListBox>() == this)
+        {
+            this.SetFocusedTile(focused);
+            return;
+        }
+
         // The list itself is a Tab stop only while the tile that should be one isn't realized: hand focus to it.
         if (ReferenceEquals(e.Source, this) && e.NavigationMethod == NavigationMethod.Tab && this.GetTabStopItem() is { } item)
         {
@@ -1132,7 +1146,12 @@ public class GroupedTileListBox : TemplatedControl
     {
         if (this.FindRealizedContainer(item) is { } container)
         {
-            if (!container.IsFocused)
+            // Already focused, so no GotFocus: the selection change that led here reset the Tab stop to the primary.
+            if (container.IsFocused)
+            {
+                this.SetFocusedTile(item);
+            }
+            else
             {
                 container.Focus(method);
             }
@@ -1151,8 +1170,17 @@ public class GroupedTileListBox : TemplatedControl
             DispatcherPriority.Background);
     }
 
-    // The selected tile, or the first one when nothing is selected, as in a ListBox.
-    private object? GetTabStopItem() => this.selectedItem ?? this.GetItemFromVisualIndex(0);
+    private void SetFocusedTile(object item)
+    {
+        this.focusedTileItem = item;
+        this.UpdateTabStops();
+    }
+
+    // The tile focused last, else the primary selected tile, else the first one, as in a ListBox.
+    private object? GetTabStopItem() =>
+        this.focusedTileItem is { } focused && this.GetIndexOfItem(focused) >= 0
+            ? focused
+            : this.selectedItem ?? this.GetItemFromVisualIndex(0);
 
     private GroupedTileListBoxItem? FindRealizedContainer(object item) =>
         this.GetRealizedContainers().FirstOrDefault(container => ReferenceEquals(container.Content, item));

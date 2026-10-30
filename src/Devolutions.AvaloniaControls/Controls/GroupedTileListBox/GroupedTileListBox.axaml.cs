@@ -1,6 +1,7 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -1038,6 +1039,28 @@ public class GroupedTileListBox : TemplatedControl
         {
             this.cachedItemsPerRow = -1;
             this.lastKnownWidth = e.NewSize.Width;
+        }
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new GroupedTileListBoxAutomationPeer(this);
+
+    // UI Automation's SelectionItem pattern: what a screen reader's default action on a tile does.
+    internal void SelectFromAutomation(object item) => this.SelectItem(item);
+
+    internal void SetSelectedFromAutomation(object item, bool selected)
+    {
+        if (this.IsItemSelected(item) == selected)
+        {
+            return;
+        }
+
+        if (this.SelectionMode.HasFlag(SelectionMode.Multiple))
+        {
+            this.ToggleItemSelection(item);
+        }
+        else if (selected)
+        {
+            this.SelectItem(item);
         }
     }
 

@@ -329,6 +329,84 @@ public class GroupedTileListBoxAccessibilityTests
     }
 
     [AvaloniaFact]
+    public void ArrowKeysMoveFromTheFocusedTileWhenItIsNotTheSelectedOne()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            CtrlClick(window, Container(list, tiles[0]));
+            CtrlClick(window, Container(list, tiles[3]));
+            CtrlClick(window, Container(list, tiles[0]));
+
+            window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(tiles[1], list.SelectedItem);
+            Assert.Same(Container(list, tiles[1]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void CtrlSpaceTogglesTheFocusedTileAndKeepsFocusOnIt()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            CtrlClick(window, Container(list, tiles[0]));
+            CtrlClick(window, Container(list, tiles[3]));
+            CtrlClick(window, Container(list, tiles[0]));
+
+            window.KeyPress(Key.Space, RawInputModifiers.Control, PhysicalKey.Space, " ");
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(2, list.SelectedItems?.Count);
+            Assert.Contains(tiles[0], list.SelectedItems!.Cast<Tile>());
+            Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabLeavesTheListAfterADragSelection()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            // From empty space below the tiles, up across the second group.
+            GroupedTileListBoxItem carrot = Container(list, tiles[3]);
+            Point start = list.TranslatePoint(new Point(list.Bounds.Width - 10, list.Bounds.Height - 10), window)!.Value;
+            Point end = carrot.TranslatePoint(new Point(carrot.Bounds.Width / 2, carrot.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(start, MouseButton.Left, RawInputModifiers.None);
+            window.MouseMove(new Point(start.X - 20, start.Y - 20), RawInputModifiers.LeftMouseButton);
+            window.MouseMove(end, RawInputModifiers.LeftMouseButton);
+            window.MouseUp(end, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Contains(tiles[3], list.SelectedItems!.Cast<Tile>());
+            Assert.IsType<GroupedTileListBoxItem>(FocusedElement(window));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(After(window), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void TabLandsOnTheFirstTileWhenNothingIsSelected()
     {
         ResetTheme();

@@ -1114,8 +1114,10 @@ public class GroupedTileListBox : TemplatedControl
         base.OnKeyDown(e);
         this.HandleKeyDown(e);
 
-        // Keyboard focus follows the selection onto its tile, as in a ListBox: it's what a screen reader announces.
-        if (e.Handled && this.IsKeyboardFocusWithin && this.selectedItem is { } item)
+        // Keyboard focus follows navigation onto the tile it selects, as in a ListBox: it's what a screen reader
+        // announces. A toggle (Ctrl+Space) or Ctrl+A leaves it on the tile the user is on.
+        if (e.Handled && e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End
+            && this.IsKeyboardFocusWithin && this.selectedItem is { } item)
         {
             this.FocusTile(item, NavigationMethod.Directional);
         }
@@ -1168,6 +1170,21 @@ public class GroupedTileListBox : TemplatedControl
                 }
             },
             DispatcherPriority.Background);
+    }
+
+    private object? GetKeyboardCurrentItem() =>
+        TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is GroupedTileListBoxItem { Content: { } item } tile
+        && tile.FindAncestorOfType<GroupedTileListBox>() == this
+            ? item
+            : this.selectedItem;
+
+    // The marquee focused the list itself, for Escape: hand focus back to a tile, so the next Tab leaves the list.
+    private void ReturnFocusToTile()
+    {
+        if (this.IsFocused && this.GetTabStopItem() is { } item)
+        {
+            this.FocusTile(item, NavigationMethod.Pointer);
+        }
     }
 
     private void SetFocusedTile(object item)
@@ -1234,7 +1251,10 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        int currentIndex = this.selectedIndex;
+        // Keys act from the focused tile, as in a ListBox: where a screen reader says the user is. In multiple
+        // selection it can differ from the primary selected tile (a Ctrl+click deselects the tile it focuses).
+        object? currentItem = this.GetKeyboardCurrentItem();
+        int currentIndex = currentItem is null ? -1 : this.GetIndexOfItem(currentItem);
         int itemCount = this.GetItemCount();
 
         if (itemCount == 0)
@@ -1248,9 +1268,9 @@ public class GroupedTileListBox : TemplatedControl
         if (multiple && e.Key == Key.Space
             && (HasToggleModifier(e.KeyModifiers) || this.SelectionMode.HasFlag(SelectionMode.Toggle)))
         {
-            if (this.selectedItem is not null)
+            if (currentItem is not null)
             {
-                this.ToggleItemSelection(this.selectedItem);
+                this.ToggleItemSelection(currentItem);
                 e.Handled = true;
             }
 
@@ -1272,7 +1292,6 @@ public class GroupedTileListBox : TemplatedControl
         // For Left/Right, use visual order navigation (respects grouping)
         if (e.Key is Key.Left or Key.Right)
         {
-            object? currentItem = this.selectedItem;
             int currentVisualIndex = this.GetVisualIndexFromItem(currentItem);
 
             // If mapping failed, fall back to source index as visual index
@@ -2157,6 +2176,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile();
     }
 
     private void CancelMarquee()
@@ -2180,6 +2200,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile();
     }
 
     /// <summary>

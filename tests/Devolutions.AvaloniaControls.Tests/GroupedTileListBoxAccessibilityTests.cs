@@ -28,18 +28,22 @@ public class GroupedTileListBoxAccessibilityTests
     }
 
     private static (Window Window, Button Before, GroupedTileListBox List, IReadOnlyList<Tile> Tiles) Create(
-        SelectionMode selectionMode = SelectionMode.Single)
+        SelectionMode selectionMode = SelectionMode.Single,
+        int extraTiles = 0,
+        double windowHeight = 600,
+        bool grouped = true)
     {
         List<Tile> tiles =
         [
             new("Apple", "Fruits"), new("Banana", "Fruits"), new("Cherry", "Fruits"),
-            new("Carrot", "Vegetables"), new("Leek", "Vegetables")
+            new("Carrot", "Vegetables"), new("Leek", "Vegetables"),
+            .. Enumerable.Range(0, extraTiles).Select(static i => new Tile($"Grain {i}", "Grains"))
         ];
         var list = new GroupedTileListBox
         {
             ItemsSource = tiles,
             SelectionMode = selectionMode,
-            GroupSelector = static item => ((Tile)item).Group,
+            GroupSelector = grouped ? static item => ((Tile)item).Group : null,
             ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<Tile>((tile, _) => new TextBlock { Text = tile?.Name })
         };
         var before = new Button { Content = "Before" };
@@ -48,8 +52,8 @@ public class GroupedTileListBoxAccessibilityTests
         panel.Children.Add(before);
         panel.Children.Add(list);
 
-        // Large enough that every tile is realized.
-        var window = new Window { Content = panel, Width = 800, Height = 600 };
+        // At the default height every tile is realized.
+        var window = new Window { Content = panel, Width = 800, Height = windowHeight };
         window.Show();
         Dispatcher.UIThread.RunJobs();
         return (window, before, list, tiles);
@@ -218,6 +222,63 @@ public class GroupedTileListBoxAccessibilityTests
             window.KeyPress(Key.Tab, RawInputModifiers.Shift, PhysicalKey.Tab, null);
             Dispatcher.UIThread.RunJobs();
             Assert.Same(before, FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabStillEntersTheListAfterItsTabStopTileScrolledOutOfView()
+    {
+        ResetTheme();
+        (Window window, Button before, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(extraTiles: 200, windowHeight: 250, grouped: false);
+        try
+        {
+            list.SelectedItem = tiles[0];
+            Dispatcher.UIThread.RunJobs();
+            before.Focus(NavigationMethod.Tab);
+
+            ScrollViewer scrollViewer = list.GetVisualDescendants().OfType<ScrollViewer>().First();
+            scrollViewer.Offset = new Avalonia.Vector(0, scrollViewer.Extent.Height);
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            Assert.DoesNotContain(list.GetVisualDescendants().OfType<GroupedTileListBoxItem>(), item => ReferenceEquals(item.Content, tiles[0]));
+
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(Container(list, tiles[0]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void TabEntersOnTheNewPrimaryTileWhenAnotherSelectedTileIsPromoted()
+    {
+        ResetTheme();
+        (Window window, Button before, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
+        try
+        {
+            TileProvider(list, tiles[0]).AddToSelection();
+            TileProvider(list, tiles[3]).AddToSelection();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(tiles[3], list.SelectedItem);
+
+            list.SelectedItem = tiles[0];
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(2, list.SelectedItems?.Count);
+
+            before.Focus(NavigationMethod.Tab);
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Same(Container(list, tiles[0]), FocusedElement(window));
         }
         finally
         {

@@ -573,6 +573,7 @@ public class GroupedTileListBox : TemplatedControl
         if (this.itemsRepeater is not null)
         {
             this.itemsRepeater.ElementPrepared -= this.OnElementPrepared;
+            this.itemsRepeater.ElementClearing -= this.OnElementClearing;
             this.itemsRepeater = null;
         }
 
@@ -663,6 +664,7 @@ public class GroupedTileListBox : TemplatedControl
                     };
 
                     groupRepeater.ElementPrepared += this.OnElementPrepared;
+                    groupRepeater.ElementClearing += this.OnElementClearing;
 
                     groupContainer.Children.Add(groupRepeater);
                     stackPanel.Children.Add(groupContainer);
@@ -708,6 +710,7 @@ public class GroupedTileListBox : TemplatedControl
             };
 
             this.itemsRepeater.ElementPrepared += this.OnElementPrepared;
+            this.itemsRepeater.ElementClearing += this.OnElementClearing;
 
             this.content = this.itemsRepeater;
         }
@@ -722,6 +725,16 @@ public class GroupedTileListBox : TemplatedControl
     {
         this.InvalidateIndexMappings();
         this.UpdateItemsRepeater();
+    }
+
+    // The Tab stop tile scrolled out of view and was cleared (maybe for reuse): the list is the Tab stop until it's back.
+    private void OnElementClearing(object? sender, ItemsRepeaterElementClearingEventArgs e)
+    {
+        if (e.Element is GroupedTileListBoxItem { IsTabStop: true } container)
+        {
+            container.IsTabStop = false;
+            this.IsTabStop = true;
+        }
     }
 
     private void OnElementPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs e)
@@ -897,6 +910,8 @@ public class GroupedTileListBox : TemplatedControl
         this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
 
+        // The selection keeps its members, so no refresh runs, but the Tab stop follows the primary tile.
+        this.UpdateTabStops();
         this.AutoScrollToSelectionIfEnabled();
     });
 

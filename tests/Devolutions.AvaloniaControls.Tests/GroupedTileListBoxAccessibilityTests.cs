@@ -501,6 +501,33 @@ public class GroupedTileListBoxAccessibilityTests
     }
 
     [AvaloniaFact]
+    public void AKeyPressedBeforeFocusCatchesUpActsFromTheTileNavigatedTo()
+    {
+        ResetTheme();
+        (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(extraTiles: 200, windowHeight: 250, grouped: false);
+        try
+        {
+            list.SelectedItem = tiles[0];
+            Container(list, tiles[0]).Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+
+            // End goes to a tile that isn't realized yet; Left comes before layout realizes it.
+            window.KeyPress(Key.End, RawInputModifiers.None, PhysicalKey.End, null);
+            window.KeyPress(Key.Left, RawInputModifiers.None, PhysicalKey.ArrowLeft, null);
+            Assert.Same(tiles[^2], list.SelectedItem);
+
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(Container(list, tiles[^2]), FocusedElement(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void TabLandsOnTheFirstTileWhenNothingIsSelected()
     {
         ResetTheme();

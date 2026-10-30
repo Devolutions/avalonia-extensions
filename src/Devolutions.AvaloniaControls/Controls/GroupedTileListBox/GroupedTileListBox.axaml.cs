@@ -587,6 +587,8 @@ public class GroupedTileListBox : TemplatedControl
             this.itemsRepeater = null;
         }
 
+        // The tiles are rebuilt: the remembered target item stays, its container is gone until it's prepared again.
+        this.SetTabTargetContainer(null);
         this.content = null;
 
         if (this.useGrouping)
@@ -1158,25 +1160,17 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    // A tile out of view is scrolled in first, and realized on the next layout pass, so it's tried once more then.
+    // A tile out of view is scrolled in and laid out right away, as a ListBox's VirtualizingStackPanel does before it
+    // focuses one, so focus moves before the next key.
     private void FocusTile(object item, NavigationMethod method)
     {
-        if (this.FindRealizedContainer(item) is { } container)
+        if (this.FindRealizedContainer(item) is null)
         {
-            container.Focus(method);
-            return;
+            this.ScrollIntoView(this.GetIndexOfItem(item));
+            this.UpdateLayout();
         }
 
-        this.ScrollIntoView(this.GetIndexOfItem(item));
-        Dispatcher.UIThread.Post(
-            () =>
-            {
-                if (this.IsKeyboardFocusWithin && this.FindRealizedContainer(item) is { } late)
-                {
-                    late.Focus(method);
-                }
-            },
-            DispatcherPriority.Background);
+        this.FindRealizedContainer(item)?.Focus(method);
     }
 
     // Where keys act from, as SelectingItemsControl.MoveSelection: the focused tile, else the anchor (the tile clicked,

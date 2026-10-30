@@ -18,13 +18,6 @@ public class GroupedTileListBoxAutomationPeer : ControlAutomationPeer, ISelectio
     public GroupedTileListBoxAutomationPeer(GroupedTileListBox owner)
         : base(owner)
     {
-        owner.PropertyChanged += (_, e) =>
-        {
-            if (e.Property == GroupedTileListBox.SelectedItemProperty)
-            {
-                this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
-            }
-        };
     }
 
     public new GroupedTileListBox Owner => (GroupedTileListBox)base.Owner;
@@ -33,13 +26,16 @@ public class GroupedTileListBoxAutomationPeer : ControlAutomationPeer, ISelectio
 
     public bool IsSelectionRequired => this.Owner.SelectionMode.HasFlag(SelectionMode.AlwaysSelected);
 
-    // Only realized tiles have peers; the list virtualizes the rest.
+    // Only realized tiles have peers; the list virtualizes the rest. A list nested in a tile's template owns its own.
     public IReadOnlyList<AutomationPeer> GetSelection() =>
         this.Owner.GetVisualDescendants()
             .OfType<GroupedTileListBoxItem>()
-            .Where(static item => item.IsSelected)
+            .Where(item => item.IsSelected && item.FindAncestorOfType<GroupedTileListBox>() == this.Owner)
             .Select(ControlAutomationPeer.CreatePeerForElement)
             .ToList();
+
+    // The box calls this on every selection change, including those that keep SelectedItem (multiple selection).
+    internal void RaiseSelectionChanged() => this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.List;
 

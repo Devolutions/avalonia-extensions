@@ -100,8 +100,10 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, BindingBase?>(
             nameof(GroupOrderBinding));
 
+    private GroupedTileListBoxAutomationPeer? automationPeer;
+
     private double? cachedHeaderHeight;
-    
+
     private int cachedItemsPerRow = -1;
     private double lastKnownWidth = -1;
     
@@ -809,6 +811,9 @@ public class GroupedTileListBox : TemplatedControl
         // Update visual state of realized containers
         this.UpdateRealizedContainerSelection();
 
+        // After the containers: the peer's selection is read from them. Covers changes that keep SelectedItem.
+        this.automationPeer?.RaiseSelectionChanged();
+
         // Single scroll trigger for every selection change (internal or external).
         this.AutoScrollToSelectionIfEnabled();
     }
@@ -1042,11 +1047,12 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
-    protected override AutomationPeer OnCreateAutomationPeer() => new GroupedTileListBoxAutomationPeer(this);
+    protected override AutomationPeer OnCreateAutomationPeer() => this.automationPeer = new GroupedTileListBoxAutomationPeer(this);
 
     // UI Automation's SelectionItem pattern: what a screen reader's default action on a tile does.
     internal void SelectFromAutomation(object item) => this.SelectItem(item);
 
+    // AddToSelection / RemoveFromSelection. Toggling keeps AlwaysSelected's last item, in any mode.
     internal void SetSelectedFromAutomation(object item, bool selected)
     {
         if (this.IsItemSelected(item) == selected)
@@ -1054,14 +1060,13 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        if (this.SelectionMode.HasFlag(SelectionMode.Multiple))
+        // UIA's contract: adding to a single selection that holds another item fails rather than replacing it.
+        if (selected && !this.SelectionMode.HasFlag(SelectionMode.Multiple) && (this.SelectedItems?.Count ?? 0) > 0)
         {
-            this.ToggleItemSelection(item);
+            throw new InvalidOperationException("The list allows a single selection, and another item is selected.");
         }
-        else if (selected)
-        {
-            this.SelectItem(item);
-        }
+
+        this.ToggleItemSelection(item);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

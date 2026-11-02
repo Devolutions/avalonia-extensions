@@ -538,6 +538,10 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         // Directly sync SelectedItem since SetAndRaise won't fire OnPropertyChanged if the value is unchanged
         this.SelectedItem = selectedItem ?? (list.Count > 0 ? list[0] : null);
 
+        // The SelectedItem change can't be relied on to sync SelectedValue: the null the ComboBox pushes back while
+        // Items is swapped is ignored, so an empty result raises no change. SetAndRaise keeps this a no-op otherwise.
+        this.SelectedValue = (T?)this.SelectedItem?.EnumValue ?? default;
+
         this.isInitialValueSet = true;
     }
 
@@ -681,6 +685,15 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
             {
                 // Transient null fired by InvalidateStyles during logical-tree detach.
                 // Don't propagate — it would write default(T) back to the bound VM.
+                return;
+            }
+
+            if (this.updatingItems)
+            {
+                // Swapping Items makes the inner ComboBox drop its selection and push null back through the TwoWay
+                // template binding. UpdateValuesCore restores the matching item right after, so writing default(T)
+                // here would only flash a wrong value into the bound VM (e.g. when style-set TextProvider/CustomSort
+                // are re-applied on reattach and rebuild the list).
                 return;
             }
 

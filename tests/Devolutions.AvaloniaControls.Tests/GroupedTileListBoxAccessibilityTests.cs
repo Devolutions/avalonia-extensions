@@ -13,10 +13,6 @@ using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
-/// <summary>
-///   Covers what a screen reader relies on in <see cref="GroupedTileListBox"/>: the list and its tiles as selectable
-///   list items in a Group per group, keyboard focus on the tile the user is on, Tab, and scrolling.
-/// </summary>
 [Collection("StylesTest")]
 public class GroupedTileListBoxAccessibilityTests
 {
@@ -332,7 +328,6 @@ public class GroupedTileListBoxAccessibilityTests
             CtrlClick(window, Container(list, tiles[3]));
             Assert.Equal(2, list.SelectedItems?.Count);
 
-            // Deselects Apple, in the first group, and focuses it; Carrot, in the second group, stays selected.
             CtrlClick(window, Container(list, tiles[0]));
             Assert.Equal([tiles[3]], list.SelectedItems!.Cast<Tile>());
             Assert.Same(Container(list, tiles[0]), FocusedElement(window));
@@ -389,7 +384,6 @@ public class GroupedTileListBoxAccessibilityTests
             Assert.Contains(tiles[0], list.SelectedItems!.Cast<Tile>());
             Assert.Same(Container(list, tiles[0]), FocusedElement(window));
 
-            // Deselecting it again keeps it focused, and the Tab stop, so Tab leaves the list.
             window.KeyPress(Key.Space, RawInputModifiers.Control, PhysicalKey.Space, " ");
             Dispatcher.UIThread.RunJobs();
             Assert.Equal([tiles[3]], list.SelectedItems!.Cast<Tile>());
@@ -412,7 +406,6 @@ public class GroupedTileListBoxAccessibilityTests
         (Window window, _, GroupedTileListBox list, IReadOnlyList<Tile> tiles) = Create(SelectionMode.Multiple);
         try
         {
-            // From empty space below the tiles, up across the second group.
             GroupedTileListBoxItem carrot = Container(list, tiles[3]);
             Point start = list.TranslatePoint(new Point(list.Bounds.Width - 10, list.Bounds.Height - 10), window)!.Value;
             Point end = carrot.TranslatePoint(new Point(carrot.Bounds.Width / 2, carrot.Bounds.Height / 2), window)!.Value;
@@ -582,7 +575,6 @@ public class GroupedTileListBoxAccessibilityTests
             Assert.All(groups, static group => Assert.True(group.IsControlElement()));
             Assert.Contains(ControlAutomationPeer.CreatePeerForElement(Container(list, tiles[3])), Descendants(groups[1]));
 
-            // The header is in the raw view only, so the group's name isn't read twice.
             Assert.DoesNotContain(peers, static peer => peer.IsControlElement() && peer.GetAutomationControlType() == AutomationControlType.Text && peer.GetName() == "Fruits");
         }
         finally

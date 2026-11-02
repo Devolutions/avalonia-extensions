@@ -25,8 +25,6 @@ public class GroupedTileListBoxItem : ContentControl
     static GroupedTileListBoxItem()
     {
         IsSelectedProperty.Changed.AddClassHandler<GroupedTileListBoxItem>((x, e) => x.OnIsSelectedChanged(e));
-
-        // Keyboard focus moves onto the tiles, as onto ListBox items: screen readers announce the focused element.
         FocusableProperty.OverrideDefaultValue<GroupedTileListBoxItem>(true);
     }
 

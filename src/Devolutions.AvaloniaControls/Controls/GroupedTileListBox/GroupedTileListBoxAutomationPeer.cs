@@ -8,11 +8,9 @@ using Avalonia.VisualTree;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// Makes a <see cref="GroupedTileListBox"/> accessible to screen readers and other assistive technologies the way
-/// Avalonia's ListBox is (<c>SelectingItemsControlAutomationPeer</c>, <c>ItemsControlAutomationPeer</c>): a List with
-/// a selection, scrollable through its ScrollViewer, whose tiles are list items in a Group per group. Each tile needs
-/// an accessible name: set <c>AutomationProperties.Name</c> on the tiles (a style on <see cref="GroupedTileListBoxItem"/>),
-/// or Avalonia names a tile after its item's <c>ToString()</c>, as it does a ListBox item.
+/// Exposes a <see cref="GroupedTileListBox"/> to UI Automation as a selectable, scrollable List. Set
+/// <c>AutomationProperties.Name</c> on tiles with a style on <see cref="GroupedTileListBoxItem"/>; otherwise a tile is
+/// named after its item's <c>ToString()</c>.
 /// </summary>
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 [RequiresDynamicCode("BindingEvaluator requires preserved types")]
@@ -41,7 +39,6 @@ public class GroupedTileListBoxAutomationPeer : ControlAutomationPeer, ISelectio
 
     public double VerticalViewSize => this.Scroller?.VerticalViewSize ?? 0;
 
-    // As SelectingItemsControlAutomationPeer: the selected items whose tiles are realized (the list virtualizes).
     public IReadOnlyList<AutomationPeer> GetSelection() =>
         [.. this.Owner.GetRealizedSelectedContainers().Select(GetOrCreate)];
 
@@ -51,19 +48,17 @@ public class GroupedTileListBoxAutomationPeer : ControlAutomationPeer, ISelectio
     public void SetScrollPercent(double horizontalPercent, double verticalPercent) =>
         this.Scroller?.SetScrollPercent(horizontalPercent, verticalPercent);
 
-    // The list calls this once its tiles reflect a selection change, as Avalonia's peer does on SelectionChanged.
     internal void RaiseSelectionChanged() => this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.List;
 
     protected override bool IsControlElementCore() => true;
 
-    // As ItemsControlAutomationPeer: scrolling goes through the ScrollViewer's own peer.
     private IScrollProvider? Scroller =>
         this.Owner.ScrollViewerForAutomation is { } scrollViewer ? GetOrCreate(scrollViewer).GetProvider<IScrollProvider>() : null;
 }
 
-/// <summary>A <see cref="GroupedTileListBoxItem"/> as a selectable list item, as Avalonia's <c>ListItemAutomationPeer</c>.</summary>
+/// <summary>Exposes a <see cref="GroupedTileListBoxItem"/> to UI Automation as a selectable ListItem.</summary>
 [RequiresUnreferencedCode("BindingEvaluator require preserved types")]
 [RequiresDynamicCode("BindingEvaluator requires preserved types")]
 public class GroupedTileListBoxItemAutomationPeer : ContentControlAutomationPeer, ISelectionItemProvider

@@ -278,6 +278,68 @@ public class EnumPickerTests
         }
     }
 
+    [AvaloniaFact]
+    public void ExcludingEveryValueResetsBoundSelectedValue()
+    {
+        ResetTheme();
+
+        var viewModel = new SelectedValueViewModel { Value = PrimeTestEnum.Gamma };
+        var picker = new EnumPicker<PrimeTestEnum> { DataContext = viewModel };
+        picker.Bind(EnumPicker<PrimeTestEnum>.SelectedValueProperty, new ReflectionBinding(nameof(SelectedValueViewModel.Value)) { Mode = BindingMode.TwoWay });
+
+        var window = new Window { Content = picker };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(PrimeTestEnum.Gamma, picker.SelectedValue);
+
+            picker.ExcludedValues = [PrimeTestEnum.Alpha, PrimeTestEnum.Beta, PrimeTestEnum.Gamma];
+            Dispatcher.UIThread.RunJobs();
+
+            // An empty picker has nothing selected, so the bound value must fall back to default(T).
+            Assert.Empty(picker.Items);
+            Assert.Equal(default, picker.SelectedValue);
+            Assert.Equal(default, viewModel.Value);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ExcludingSelectedValueMovesBoundSelectedValueToFirstItem()
+    {
+        ResetTheme();
+
+        var viewModel = new SelectedValueViewModel { Value = PrimeTestEnum.Gamma };
+        var picker = new EnumPicker<PrimeTestEnum> { DataContext = viewModel };
+        picker.Bind(EnumPicker<PrimeTestEnum>.SelectedValueProperty, new ReflectionBinding(nameof(SelectedValueViewModel.Value)) { Mode = BindingMode.TwoWay });
+
+        var window = new Window { Content = picker };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            picker.ExcludedValues = [PrimeTestEnum.Alpha, PrimeTestEnum.Gamma];
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(PrimeTestEnum.Beta, picker.SelectedValue);
+            Assert.Equal(PrimeTestEnum.Beta, viewModel.Value);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
     private sealed class SelectedValueViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;

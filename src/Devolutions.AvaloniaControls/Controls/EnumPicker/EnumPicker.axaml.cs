@@ -538,6 +538,10 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         // Directly sync SelectedItem since SetAndRaise won't fire OnPropertyChanged if the value is unchanged
         this.SelectedItem = selectedItem ?? (list.Count > 0 ? list[0] : null);
 
+        // The SelectedItem change can't be relied on to sync SelectedValue: the null the ComboBox pushes back while
+        // Items is swapped is ignored, so an empty result raises no change. SetAndRaise keeps this a no-op otherwise.
+        this.SelectedValue = (T?)this.SelectedItem?.EnumValue ?? default;
+
         this.isInitialValueSet = true;
     }
 

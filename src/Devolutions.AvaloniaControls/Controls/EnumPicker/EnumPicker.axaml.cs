@@ -684,6 +684,15 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                 return;
             }
 
+            if (this.updatingItems)
+            {
+                // Swapping Items makes the inner ComboBox drop its selection and push null back through the TwoWay
+                // template binding. UpdateValuesCore restores the matching item right after, so writing default(T)
+                // here would only flash a wrong value into the bound VM (e.g. when style-set TextProvider/CustomSort
+                // are re-applied on reattach and rebuild the list).
+                return;
+            }
+
             this.SelectedValue = (T?)change.GetNewValue<EnumPickerItem?>()?.EnumValue ?? default;
         }
         else if (change.Property == SelectedValueProperty)

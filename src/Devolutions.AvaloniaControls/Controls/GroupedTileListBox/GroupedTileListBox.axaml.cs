@@ -1,6 +1,8 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -14,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Metadata;
 using Avalonia.Metadata;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Helpers;
 
 /// <summary>
@@ -99,6 +102,11 @@ public class GroupedTileListBox : TemplatedControl
         AvaloniaProperty.Register<GroupedTileListBox, BindingBase?>(
             nameof(GroupOrderBinding));
 
+    private GroupedTileListBoxAutomationPeer? automationPeer;
+
+    // Kept as an item: ItemsRepeater recycles the tile's container once it scrolls away.
+    private object? tabTargetItem;
+
     private double? cachedHeaderHeight;
     
     private int cachedItemsPerRow = -1;
@@ -153,6 +161,8 @@ public class GroupedTileListBox : TemplatedControl
 
     static GroupedTileListBox()
     {
+        KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<GroupedTileListBox>(KeyboardNavigationMode.Once);
+
         ItemsSourceProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnItemsSourceChanged(e));
 
         ItemWidthProperty.Changed.AddClassHandler<GroupedTileListBox>((x, e) => x.OnLayoutPropertyChanged(e));
@@ -570,9 +580,11 @@ public class GroupedTileListBox : TemplatedControl
         if (this.itemsRepeater is not null)
         {
             this.itemsRepeater.ElementPrepared -= this.OnElementPrepared;
+            this.itemsRepeater.ElementClearing -= this.OnElementClearing;
             this.itemsRepeater = null;
         }
 
+        this.SetTabTargetContainer(null);
         this.content = null;
 
         if (this.useGrouping)
@@ -603,11 +615,17 @@ public class GroupedTileListBox : TemplatedControl
 
                     if (!string.IsNullOrEmpty(group.Key))
                     {
+                        AutomationProperties.SetControlTypeOverride(groupContainer, AutomationControlType.Group);
+                        AutomationProperties.SetName(groupContainer, group.Key);
+                        AutomationProperties.SetIsControlElementOverride(groupContainer, true);
+
                         // Add group header (not virtualized)
                         GroupedTileListBoxGroupHeader headerControl = new()
                         {
                             Text = group.Key
                         };
+                        // The group carries the name; exposing the header too would read it twice.
+                        AutomationProperties.SetAccessibilityView(headerControl, AccessibilityView.Raw);
 
                         if (this.cachedHeaderHeight is null)
                         {
@@ -660,6 +678,8 @@ public class GroupedTileListBox : TemplatedControl
                     };
 
                     groupRepeater.ElementPrepared += this.OnElementPrepared;
+                    ExcludeFromTabGroups(groupRepeater);
+                    groupRepeater.ElementClearing += this.OnElementClearing;
 
                     groupContainer.Children.Add(groupRepeater);
                     stackPanel.Children.Add(groupContainer);
@@ -705,6 +725,8 @@ public class GroupedTileListBox : TemplatedControl
             };
 
             this.itemsRepeater.ElementPrepared += this.OnElementPrepared;
+            ExcludeFromTabGroups(this.itemsRepeater);
+            this.itemsRepeater.ElementClearing += this.OnElementClearing;
 
             this.content = this.itemsRepeater;
         }
@@ -720,6 +742,18 @@ public class GroupedTileListBox : TemplatedControl
         this.InvalidateIndexMappings();
         this.UpdateItemsRepeater();
     }
+
+    private void OnElementClearing(object? sender, ItemsRepeaterElementClearingEventArgs e)
+    {
+        if (ReferenceEquals(KeyboardNavigation.GetTabOnceActiveElement(this), e.Element))
+        {
+            this.SetTabTargetContainer(null, recycled: e.Element);
+        }
+    }
+
+    // ItemsRepeater defaults to TabNavigation Once, which hides the list from Shift+Tab while no tile is a Tab stop.
+    private static void ExcludeFromTabGroups(ItemsRepeater repeater) =>
+        KeyboardNavigation.SetTabNavigation(repeater, KeyboardNavigationMode.Continue);
 
     private void OnElementPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs e)
     {
@@ -740,6 +774,15 @@ public class GroupedTileListBox : TemplatedControl
         container.Content = item;
         container.IsSelected = this.IsItemSelected(item);
         container.ItemIndex = e.Index;
+
+        if (item is not null && ReferenceEquals(item, this.GetTabTarget()))
+        {
+            this.SetTabTargetContainer(container);
+        }
+        else
+        {
+            container.IsTabStop = !this.IsTabStop;
+        }
 
         // Wire up pointer pressed event
         container.PointerPressed -= this.OnContainerPointerPressed;
@@ -796,6 +839,7 @@ public class GroupedTileListBox : TemplatedControl
             this.SelectItem(item);
         }
 
+        this.FocusTile(item, NavigationMethod.Pointer);
         e.Handled = true;
     }
 
@@ -884,6 +928,8 @@ public class GroupedTileListBox : TemplatedControl
         this.SetCurrentValue(SelectedItemProperty, this.selectedItem);
         this.SetCurrentValue(SelectedIndexProperty, this.selectedIndex);
 
+        // The members don't change, so no refresh runs to move the Tab target.
+        this.UpdateTabOnceActiveElement();
         this.AutoScrollToSelectionIfEnabled();
     });
 
@@ -992,6 +1038,10 @@ public class GroupedTileListBox : TemplatedControl
             // Update selection in single ItemsRepeater (non-grouped)
             this.UpdateRepeaterSelection(this.itemsRepeater);
         }
+
+        this.UpdateTabOnceActiveElement();
+
+        this.automationPeer?.RaiseSelectionChanged();
     }
 
     /// <summary>
@@ -1041,10 +1091,151 @@ public class GroupedTileListBox : TemplatedControl
         }
     }
 
+    protected override AutomationPeer OnCreateAutomationPeer() => this.automationPeer = new GroupedTileListBoxAutomationPeer(this);
+
+    internal void SelectFromAssistiveTechnology(object item) => this.SelectItem(item);
+
+    internal void SetSelectedFromAssistiveTechnology(object item, bool selected)
+    {
+        if (this.IsItemSelected(item) == selected)
+        {
+            return;
+        }
+
+        if (selected && !this.SelectionMode.HasFlag(SelectionMode.Multiple))
+        {
+            this.SelectItem(item);
+            return;
+        }
+
+        this.ToggleItemSelection(item);
+    }
+
+    internal ScrollViewer? ScrollViewerForAutomation => this.scrollViewer;
+
+    internal IEnumerable<GroupedTileListBoxItem> GetRealizedSelectedContainers() =>
+        this.GetRealizedContainers().Where(static container => container.IsSelected);
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        this.HandleKeyDown(e);
 
+        if (e.Handled && e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End
+            && this.IsKeyboardFocusWithin && this.selectedItem is { } selected)
+        {
+            this.FocusTile(selected, NavigationMethod.Directional);
+        }
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+
+        if (e.Source is GroupedTileListBoxItem { Content: { } focused } tile && tile.FindAncestorOfType<GroupedTileListBox>() == this)
+        {
+            this.tabTargetItem = focused;
+            this.ApplyTabTarget();
+        }
+        else if (ReferenceEquals(e.Source, this) && e.NavigationMethod == NavigationMethod.Tab && this.GetTabTarget() is { } item)
+        {
+            // The list is only a Tab stop while its target tile isn't realized.
+            this.FocusTile(item, NavigationMethod.Tab);
+        }
+    }
+
+    private void FocusTile(object item, NavigationMethod method)
+    {
+        if (this.FindRealizedContainer(item) is null)
+        {
+            // Laid out now so focus moves before the next key is handled.
+            this.ScrollIntoView(this.GetIndexOfItem(item));
+            this.UpdateLayout();
+        }
+
+        this.FindRealizedContainer(item)?.Focus(method);
+    }
+
+    private object? GetKeyboardCurrentItem() => this.GetFocusedTileItem() ?? this.GetAnchor() ?? this.selectedItem;
+
+    private object? GetFocusedTileItem() =>
+        TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is GroupedTileListBoxItem { Content: { } focused } tile
+        && tile.FindAncestorOfType<GroupedTileListBox>() == this
+            ? focused
+            : null;
+
+    private bool IsInList(object item) => this.GetVisualIndexFromItem(item) >= 0;
+
+    private object? GetAnchor() => this.anchorItem is { } anchor && this.IsInList(anchor) ? anchor : null;
+
+    private object? GetTabTarget() =>
+        this.tabTargetItem is { } target && this.IsInList(target)
+            ? target
+            : this.GetAnchor() ?? this.selectedItem ?? this.GetItemFromVisualIndex(0);
+
+    // A focused tile stays the target: Ctrl+Space and Ctrl+A change the selection without moving focus.
+    private void UpdateTabOnceActiveElement()
+    {
+        this.tabTargetItem = this.GetFocusedTileItem() ?? this.GetAnchor() ?? this.selectedItem;
+        this.ApplyTabTarget();
+    }
+
+    private void ApplyTabTarget() =>
+        this.SetTabTargetContainer(this.GetTabTarget() is { } item ? this.FindRealizedContainer(item) : null);
+
+    // Without a realized target, the list itself is the only Tab stop, or Shift+Tab would land on the first tile.
+    private void SetTabTargetContainer(GroupedTileListBoxItem? container, Control? recycled = null)
+    {
+        KeyboardNavigation.SetTabOnceActiveElement(this, container);
+        this.IsTabStop = container is null;
+        foreach (GroupedTileListBoxItem tile in this.GetRealizedContainers())
+        {
+            tile.IsTabStop = container is not null || ReferenceEquals(tile, recycled);
+        }
+    }
+
+    // The marquee focuses the list (for Escape). A committed drag's anchor may have auto-scrolled away, so use a tile in view.
+    private void ReturnFocusToTile(bool cancelled)
+    {
+        if (!this.IsFocused)
+        {
+            return;
+        }
+
+        object? target = this.GetTabTarget();
+        object? item = cancelled || (target is not null && this.FindRealizedContainer(target) is not null)
+            ? target
+            : (this.GetRealizedSelectedContainers().FirstOrDefault() ?? this.GetRealizedContainers().FirstOrDefault())?.Content;
+        if (item is not null)
+        {
+            this.FocusTile(item, NavigationMethod.Pointer);
+        }
+    }
+
+    private GroupedTileListBoxItem? FindRealizedContainer(object item) =>
+        this.GetRealizedContainers().FirstOrDefault(container => ReferenceEquals(container.Content, item));
+
+    private IEnumerable<GroupedTileListBoxItem> GetRealizedContainers()
+    {
+        IEnumerable<ItemsRepeater> repeaters = this.useGrouping && this.content is StackPanel stackPanel
+            ? GetAllItemsRepeaters(stackPanel)
+            : this.itemsRepeater is { } single ? [single] : [];
+
+        foreach (ItemsRepeater repeater in repeaters)
+        {
+            int count = GetItemCount(repeater.ItemsSource);
+            for (int i = 0; i < count; i++)
+            {
+                if (repeater.TryGetElement(i) is GroupedTileListBoxItem container)
+                {
+                    yield return container;
+                }
+            }
+        }
+    }
+
+    private void HandleKeyDown(KeyEventArgs e)
+    {
         // Escape aborts an in-progress marquee, restoring the pre-drag selection.
         if (this.marqueeActive && e.Key == Key.Escape)
         {
@@ -1058,7 +1249,8 @@ public class GroupedTileListBox : TemplatedControl
             return;
         }
 
-        int currentIndex = this.selectedIndex;
+        object? currentItem = this.GetKeyboardCurrentItem();
+        int currentIndex = currentItem is null ? -1 : this.GetIndexOfItem(currentItem);
         int itemCount = this.GetItemCount();
 
         if (itemCount == 0)
@@ -1072,9 +1264,9 @@ public class GroupedTileListBox : TemplatedControl
         if (multiple && e.Key == Key.Space
             && (HasToggleModifier(e.KeyModifiers) || this.SelectionMode.HasFlag(SelectionMode.Toggle)))
         {
-            if (this.selectedItem is not null)
+            if (currentItem is not null)
             {
-                this.ToggleItemSelection(this.selectedItem);
+                this.ToggleItemSelection(currentItem);
                 e.Handled = true;
             }
 
@@ -1096,7 +1288,6 @@ public class GroupedTileListBox : TemplatedControl
         // For Left/Right, use visual order navigation (respects grouping)
         if (e.Key is Key.Left or Key.Right)
         {
-            object? currentItem = this.selectedItem;
             int currentVisualIndex = this.GetVisualIndexFromItem(currentItem);
 
             // If mapping failed, fall back to source index as visual index
@@ -1981,6 +2172,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile(cancelled: false);
     }
 
     private void CancelMarquee()
@@ -2004,6 +2196,7 @@ public class GroupedTileListBox : TemplatedControl
         this.marqueeOriginal = [];
         this.marqueeOriginalPrimary = null;
         this.marqueeOriginalAnchor = null;
+        this.ReturnFocusToTile(cancelled: true);
     }
 
     /// <summary>

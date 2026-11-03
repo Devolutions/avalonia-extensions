@@ -11,6 +11,7 @@
     <MergeResourceInclude Source="RadioButton.axaml"/>
     <MergeResourceInclude Source="ScrollBar.axaml"/>
     <MergeResourceInclude Source="ScrollViewer.axaml"/>
+    <MergeResourceInclude Source="SplitButton.axaml"/>
     <MergeResourceInclude Source="TextBox.axaml"/>
     <MergeResourceInclude Source="ToggleButton.axaml"/>
   </ResourceDictionary.MergedDictionaries>

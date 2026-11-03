@@ -5,10 +5,9 @@
   <x:Double x:Key="SplitButtonPrimaryButtonSize">35</x:Double>
   <x:Double x:Key="SplitButtonSecondaryButtonSize">35</x:Double>
   <x:Double x:Key="SplitButtonSeparatorWidth">1</x:Double>
-  <x:Double x:Key="SplitButtonMinHeight">32</x:Double>
+  <x:Double x:Key="SplitButtonMinHeight">29</x:Double>
   <Thickness x:Key="SplitButtonBorderThemeThickness">1</Thickness>
-  <!-- Match Button's Inter baseline compensation. -->
-  <Thickness x:Key="SplitButtonPadding">11,6,11,5</Thickness>
+  <Thickness x:Key="SplitButtonPadding">11,4,11,4</Thickness>
 
   <converters:MarginMultiplierConverter x:Key="WinUiSplitButtonPrimaryBorderMultiplier"
                                        Left="True" Top="True" Bottom="True" Indent="1"/>
@@ -131,7 +130,10 @@
           <Border x:Name="DividerBackgroundGrid"
                   Grid.Column="1"
                   Width="{DynamicResource SplitButtonSeparatorWidth}"
-                  Background="{DynamicResource SplitButtonBorderBrushDivider}"/>
+                  Background="{TemplateBinding Background}"
+                  BackgroundSizing="OuterBorderEdge"
+                  BorderThickness="1,0,0,0"
+                  BorderBrush="{DynamicResource SplitButtonBorderBrushDivider}"/>
           <Button x:Name="PART_SecondaryButton"
                   Grid.Column="2"
                   Classes="secondary"
@@ -150,9 +152,9 @@
                   Focusable="False"
                   KeyboardNavigation.IsTabStop="False">
             <PathIcon x:Name="DropDownGlyph"
-                      Width="10" Height="5"
+                      Width="9" Height="4.5"
                       IsHitTestVisible="False"
-                      Data="M 0,0 L 5,5 L 10,0 L 9,0 L 5,4 L 1,0 Z"/>
+                      Data="M 0,0.75 L 0.75,0 L 4.5,3.25 L 8.25,0 L 9,0.75 L 4.5,4.5 Z"/>
           </Button>
         </Grid>
       </ControlTemplate>
@@ -168,7 +170,20 @@
       <Setter Property="Tag" Value="checked-pressed"/>
     </Style>
     <Style Selector="^.accent /template/ Border#DividerBackgroundGrid, ^:checked /template/ Border#DividerBackgroundGrid">
-      <Setter Property="Background" Value="{DynamicResource SplitButtonBorderBrushCheckedDivider}"/>
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundChecked}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrushCheckedDivider}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Border#DividerBackgroundGrid, ^:flyout-open /template/ Border#DividerBackgroundGrid">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundPressed}"/>
+    </Style>
+    <Style Selector="^.accent:pressed /template/ Border#DividerBackgroundGrid, ^.accent:flyout-open /template/ Border#DividerBackgroundGrid, ^:checked:pressed /template/ Border#DividerBackgroundGrid, ^:checked:flyout-open /template/ Border#DividerBackgroundGrid">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedPressed}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Border#DividerBackgroundGrid">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundDisabled}"/>
+    </Style>
+    <Style Selector="^.accent:disabled /template/ Border#DividerBackgroundGrid, ^:checked:disabled /template/ Border#DividerBackgroundGrid">
+      <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundCheckedDisabled}"/>
     </Style>
   </ControlTheme>
 

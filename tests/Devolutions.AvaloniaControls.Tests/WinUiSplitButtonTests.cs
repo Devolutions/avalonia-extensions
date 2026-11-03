@@ -38,8 +38,13 @@ public class WinUiSplitButtonTests
             var primary = Part(button, "PART_PrimaryButton");
             var secondary = Part(button, "PART_SecondaryButton");
             string palette = accent ? "Checked" : "";
-            Assert.Equal(32, button.Bounds.Height);
+            Assert.Equal(29, button.Bounds.Height);
             Assert.Equal(35, secondary.Bounds.Width);
+            var glyph = Assert.Single(secondary.GetVisualDescendants().OfType<PathIcon>());
+            Assert.Equal(9, glyph.Width);
+            Assert.Equal(4.5, glyph.Height);
+            Assert.Equal(9, glyph.Data!.Bounds.Width);
+            Assert.Equal(4.5, glyph.Data.Bounds.Height);
             Assert.False(primary.Focusable);
             Assert.False(secondary.Focusable);
             Assert.True(button.Focusable);
@@ -48,7 +53,10 @@ public class WinUiSplitButtonTests
             var divider = Assert.Single(button.GetVisualDescendants().OfType<Border>(), b => b.Name == "DividerBackgroundGrid");
             Assert.Equal(1, divider.Bounds.Width);
             Assert.Equal(button.Bounds.Height, divider.Bounds.Height);
-            AssertBrush(window, divider.Background, $"SplitButtonBorderBrush{palette}Divider");
+            Assert.Equal(Avalonia.Media.BackgroundSizing.OuterBorderEdge, divider.BackgroundSizing);
+            Assert.Equal(new Thickness(1, 0, 0, 0), divider.BorderThickness);
+            AssertBrush(window, divider.Background, $"SplitButtonBackground{palette}");
+            AssertBrush(window, divider.BorderBrush, $"SplitButtonBorderBrush{palette}Divider");
             AssertPalette(window, primary, palette);
             AssertPalette(window, secondary, palette, foreground: accent ? "Checked" : "Secondary");
 
@@ -74,6 +82,7 @@ public class WinUiSplitButtonTests
             }
 
             button.IsEnabled = false;
+            AssertBrush(window, divider.Background, $"SplitButtonBackground{palette}Disabled");
             AssertPalette(window, primary, palette + "Disabled");
             AssertPalette(window, secondary, palette + "Disabled");
             button.IsEnabled = true;

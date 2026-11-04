@@ -223,6 +223,9 @@ Lifecycle for a control:
 
 1. **While being styled:** both columns carry the same status. Agents set `🚧` after a first pass
    and stop there; any upgrade (`🚧` → `⚠️` → `✅`) is initiated by the user.
+   Never create or update baselines for this unfinished appearance. Capture baselines only
+   after the user approves the look and asks to mark it done; use functional tests and
+   temporary screenshots while iterating.
 2. **Once the user considers Mica done**, they ask for a classic review: check the WinUI
    source/docs for anything on that page that should look different on a solid backdrop.
 3. **Nothing should differ** → classic is set to `↔️` (only valid in `WinUIClassic`). It then

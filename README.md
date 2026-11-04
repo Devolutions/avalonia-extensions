@@ -71,13 +71,20 @@ A missing image from the appropriate set fails with **Missing baseline**. A diff
 
 Personal images live directly under `LocalBaselines/{Theme}/`, with no OS subdirectory. When migrating an older local tree, remove the other OS trees **before** moving your current OS's theme folders up one level: `Linux` is both an OS directory name and a theme name. Do not reuse other OS images. Each machine generates its own personal set.
 
+**Baseline approval:** Never create or update tracked or personal baselines for
+unfinished styling. They preserve an approved, working appearance against
+unintended changes, not intermediate development states. Capture a control's
+baselines only after the user approves its appearance and asks to mark it done.
+During development, keep the control in progress and use functional tests and
+temporary inspection screenshots instead.
+
 **Temporary local publishing workflow (until GitHub runners own canonical generation):**
 
 - `--update-baselines` approves intentional changes: native themes write only tracked images; non-native themes write only personal images. It does not create duplicate native personal images.
 - Review and commit only intentional target-platform changes in `Screenshots/Baseline/`. The rest remain in gitignored `LocalBaselines/`.
-- Initialize a new worktree with `./devtest visual --initialize-local-baselines`, on the clean starting revision before making changes. This is **capture-only**: it writes non-native personal screenshots without comparing images or running WinUI reference-theme identity checks. Tracked images are never written or tested in this operation.
+- Only when explicitly requested for approved appearances, use `./devtest visual --initialize-local-baselines`. Do not initialize a full set containing unfinished controls. This is **capture-only**: it writes non-native personal screenshots without comparing images or running WinUI reference-theme identity checks. Tracked images are never written or tested in this operation.
 - If `LocalBaselines` is non-empty, the command warns and requires typing `y` before overwriting selected non-native images. Any other answer or end of input cancels before capture. Unselected images remain unchanged; use the unfiltered command for a full set. Agents must surface this overwrite confirmation to the user and must not answer it automatically or pipe `y` without explicit overwrite approval.
-- Agents always ask once at the start of a new session whether to initialize the full development set, even if the planned task is non-visual. Do not generate from an already modified tree without explicit user approval.
+- Agents must not ask to initialize the full development set at session startup or generate baselines while styling is still being revised.
 - Personal images are worktree-specific: do not automatically copy or share them via worktree setup. Existing images are not refreshed automatically after a rebase or merge; review intentional changes before updating them.
 
 The planned GitHub workflow will replace this temporary local publishing step. See [the CI proposal](docs/visual-regression-ci-proposal.md).

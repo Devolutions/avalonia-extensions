@@ -61,8 +61,9 @@ Before CI implementation, the local harness provides:
   comparisons or WinUI identity checks and preserves tracked images. A non-empty
   personal folder requires explicit `y` confirmation; agents must surface this
   request and never approve overwrites automatically.
-  Agents always ask once at session startup,
-  including for non-visual tasks, before generating from clean starting code.
+  Baseline generation is only for approved, working appearances, after the user
+  asks to mark the control done. Agents must not ask at session startup or
+  generate baselines for unfinished styling.
 - Target-platform coverage guidance in `README.md`, `AGENTS.md`,
   `.claude/CLAUDE.md`, and `.github/copilot-instructions.md`, including Windows
   as the canonical target for WinUI variants.
@@ -206,8 +207,8 @@ For local comparisons:
 2. Non-native themes use only `LocalBaselines/{Theme}/`.
 3. Missing appropriate images fail with "Missing baseline"; differing images
    fail with "Visual regression". Never compare another OS's images.
-4. Capture non-native images from clean starting code using
-   `./devtest visual --initialize-local-baselines`, after asking the user.
+4. Only when explicitly requested, capture approved non-native appearances using
+   `./devtest visual --initialize-local-baselines`. Never capture unfinished styling.
    Tracked images are never changed or compared; WinUI identity checks are
    not run. A non-empty personal folder requires explicit overwrite approval.
 5. Once CI owns tracked images, change local initialization and comparison to
@@ -319,8 +320,8 @@ generation so those workflows cannot drift.
 - [x] Add capture-only initialization of non-native personal images, with no
       tracked writes, comparisons, or WinUI identity checks. Require confirmation
       before overwriting a non-empty personal set.
-- [x] Instruct agents to always ask once at new-session startup before
-      initialization, including for non-visual tasks.
+- [x] Restrict baseline generation to approved, working appearances after the
+      user requests completion; do not prompt at session startup.
 - [x] Preserve and byte-verify all 786 existing images in the local tree before
       pruning 520 cross-platform images; retain 266 unchanged native images.
 - [ ] Remove temporary local canonical publishing once CI generation works.

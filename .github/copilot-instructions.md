@@ -1,5 +1,10 @@
 # Visual regression coverage
 
+- Never create or update tracked or personal baselines for unfinished styling.
+  Baselines preserve an approved, working appearance against unintended changes.
+  Capture a control's baselines only after the user approves its look and asks
+  to mark it done. Do not ask to initialize baselines at session startup.
+  Functional tests and temporary inspection screenshots still apply during development.
 - Canonical screenshot coverage is required only on each theme's target platform:
   - Windows: DevExpress, WinUiClassic, and WinUiMica.
   - macOS: MacClassic and LiquidGlass.

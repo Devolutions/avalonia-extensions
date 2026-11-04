@@ -11,12 +11,13 @@ using Avalonia.Controls.Mixins;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Extensions;
-using Irihi.Avalonia.Shared.Common;
-using Irihi.Avalonia.Shared.Helpers;
 
 [PseudoClasses(PC_Grouped)]
 public class MultiComboBoxItem : ContentControl
 {
+    /// <summary>Set while the item is selected; themes select on it as <c>^:selected</c>.</summary>
+    public const string PC_Selected = ":selected";
+
     /// <summary>Set on drop-down items while grouping is active, so themes can indent them under the group header.</summary>
     public const string PC_Grouped = ":grouped";
 
@@ -37,7 +38,7 @@ public class MultiComboBoxItem : ContentControl
 
     static MultiComboBoxItem()
     {
-        IsSelectedProperty.AffectsPseudoClass<MultiComboBoxItem>(PseudoClassName.PC_Selected);
+        IsSelectedProperty.AffectsPseudoClass<MultiComboBoxItem>(PC_Selected);
         PressedMixin.Attach<MultiComboBoxItem>();
         FocusableProperty.OverrideDefaultValue<MultiComboBoxItem>(true);
         IsSelectedProperty.Changed.AddClassHandler<MultiComboBoxItem, bool>((item, args) => item.OnSelectionChanged(args));

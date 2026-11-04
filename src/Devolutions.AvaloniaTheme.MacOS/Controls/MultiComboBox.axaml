@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design"
   xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
@@ -127,7 +126,7 @@
       {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronBrush, ForegroundLowBrush}, 
       {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronInactiveBrush, ForegroundLowBrush}}" />
                 <Border
-                  Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
+                  Name="{x:Static MultiComboBox.PART_BackgroundBorder}"
                   Grid.Column="0"
                   Grid.ColumnSpan="4"
                   DockPanel.Dock="Right"
@@ -174,7 +173,7 @@
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">
-                  <u:MultiComboBoxSelectedItemList
+                  <MultiComboBoxSelectedItemList
                     Name="PART_SelectedItemsList"
                     VerticalAlignment="Center"
                     ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"

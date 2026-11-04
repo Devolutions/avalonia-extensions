@@ -6,7 +6,6 @@
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
         <LangVersion>14</LangVersion>
         <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
-        <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
         <IsTrimmable>true</IsTrimmable>
         <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
@@ -48,7 +47,6 @@
 <!--        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />-->
         <PackageReference Include="System.Reactive" Version="*" />
 
-        <PackageReference Include="Irihi.Ursa" Version="$(MinimumUrsaVersion)" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">

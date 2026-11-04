@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
@@ -98,7 +97,7 @@
           <Panel Name="PART_Root">
             <Grid ColumnDefinitions="Auto, *, Auto, Auto, Auto, AUto">
               <Border
-                Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
+                Name="{x:Static MultiComboBox.PART_BackgroundBorder}"
                 Grid.Column="0"
                 Grid.ColumnSpan="6"
                 Background="{TemplateBinding Background}"
@@ -167,7 +166,7 @@
                 VerticalScrollBarVisibility="Disabled"
                 HorizontalWheelBehavior.Enable="True"
                 Margin="1">
-                <u:MultiComboBoxSelectedItemList
+                <MultiComboBoxSelectedItemList
                   Name="PART_SelectedItemsList"
                   VerticalAlignment="Center"
                   ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
@@ -488,9 +487,9 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type u:MultiComboBoxSelectedItemList}" TargetType="u:MultiComboBoxSelectedItemList">
+  <ControlTheme x:Key="{x:Type MultiComboBoxSelectedItemList}" TargetType="MultiComboBoxSelectedItemList">
     <Setter Property="Template">
-      <ControlTemplate TargetType="u:MultiComboBoxSelectedItemList">
+      <ControlTemplate TargetType="MultiComboBoxSelectedItemList">
         <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
       </ControlTemplate>
     </Setter>

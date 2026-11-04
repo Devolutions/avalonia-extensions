@@ -3,18 +3,17 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
   <Design.PreviewWith>
     <StackPanel Height="300" Width="400" Margin="20">
-      <u:TagInput PlaceholderText="Enter tags..." />
+      <TagInput PlaceholderText="Enter tags..." />
       <TagInput PlaceholderText="Wrapper test..." />
     </StackPanel>
   </Design.PreviewWith>
 
   <!-- Default theme for Ursa TagInput control -->
-  <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
+  <ControlTheme x:Key="{x:Type TagInput}" TargetType="TagInput">
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="MinHeight" Value="30" />
@@ -24,14 +23,14 @@
     <Setter Property="Padding" Value="8,4" />
     <Setter Property="ItemTemplate">
       <DataTemplate>
-        <u:ClosableTag 
+        <ClosableTag 
           x:DataType="sys:Object"
           Content="{Binding}"
-          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=u:TagInput}}" />
+          Command="{Binding Close, RelativeSource={RelativeSource FindAncestor, AncestorType=TagInput}}" />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">
-      <ControlTemplate TargetType="u:TagInput">
+      <ControlTemplate TargetType="TagInput">
         <Border
           Name="PART_RootBorder"
           MinHeight="30"
@@ -43,7 +42,7 @@
           CornerRadius="{DynamicResource TextBoxDefaultCornerRadius}">
           <Panel HorizontalAlignment="Stretch">
             <TextBlock
-              Name="{x:Static u:TagInput.PART_Placeholder}"
+              Name="{x:Static TagInput.PART_Placeholder}"
               Opacity="0.5"
               IsVisible="False"
               VerticalAlignment="Center"
@@ -57,14 +56,14 @@
 
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
-                    <u:WrapPanelWithTrailingItem.TrailingItem>
+                  <WrapPanelWithTrailingItem TrailingWrapWidth="30">
+                    <WrapPanelWithTrailingItem.TrailingItem>
                       <TextBox VerticalAlignment="Center" 
                                MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
                                Margin="{DynamicResource TextBoxContentPadding}"
                                Theme="{DynamicResource TagInputTextBoxTheme}" />
-                    </u:WrapPanelWithTrailingItem.TrailingItem>
-                  </u:WrapPanelWithTrailingItem>
+                    </WrapPanelWithTrailingItem.TrailingItem>
+                  </WrapPanelWithTrailingItem>
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -130,6 +129,5 @@
   </ControlTheme>
 
   <!-- Alias for wrapper type -->
-  <StaticResource x:Key="{x:Type TagInput}" ResourceKey="{x:Type u:TagInput}" />
 
 </ResourceDictionary>

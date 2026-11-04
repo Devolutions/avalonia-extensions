@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.Linux.Design">
 
   <Design.PreviewWith>
@@ -20,7 +19,7 @@
   </Design.PreviewWith>
 
   <!-- Linux theme for Ursa TagInput control -->
-  <ControlTheme x:Key="{x:Type u:TagInput}" TargetType="u:TagInput">
+  <ControlTheme x:Key="{x:Type TagInput}" TargetType="TagInput">
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Margin" Value="0" />
@@ -34,7 +33,7 @@
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Template">
-      <ControlTemplate TargetType="u:TagInput">
+      <ControlTemplate TargetType="TagInput">
         <DataValidationErrors>
           <Panel Name="ReservedSpaceForFocus"
                  ClipToBounds="False">
@@ -48,7 +47,7 @@
               <Panel>
                 <!-- Watermark -->
                 <TextBlock
-                  Name="{x:Static u:TagInput.PART_Placeholder}"
+                  Name="{x:Static TagInput.PART_Placeholder}"
                   Text="{TemplateBinding PlaceholderText}"
                   Margin="{DynamicResource TextInputTextPadding}"
                   Foreground="{DynamicResource TextControlPlaceholderForeground}"
@@ -59,7 +58,7 @@
 
                 <!-- Tags and input -->
                 <!-- MaxWidth and HorizontalAlignment=Left constrain measurement to prevent errors in horizontal Auto layouts -->
-                <u:MultiComboBoxSelectedItemList
+                <MultiComboBoxSelectedItemList
                   Name="PART_ItemsControl"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Center"
@@ -69,14 +68,14 @@
                   ItemsSource="{TemplateBinding Tags}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <u:WrapPanelWithTrailingItem TrailingWrapWidth="30">
-                        <u:WrapPanelWithTrailingItem.TrailingItem>
+                      <WrapPanelWithTrailingItem TrailingWrapWidth="30">
+                        <WrapPanelWithTrailingItem.TrailingItem>
                           <TextBox VerticalAlignment="Center"
                                    MinHeight="{AddBinding {TemplateBinding MinHeight}, -4}"
                                    Margin="4 0 0 0"
                                    Theme="{DynamicResource TagInputTextBoxTheme}" />
-                        </u:WrapPanelWithTrailingItem.TrailingItem>
-                      </u:WrapPanelWithTrailingItem>
+                        </WrapPanelWithTrailingItem.TrailingItem>
+                      </WrapPanelWithTrailingItem>
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                   <ItemsControl.Styles>
@@ -85,7 +84,7 @@
                       <Setter Property="Margin" Value="0,0,4,0" />
                     </Style>
                   </ItemsControl.Styles>
-                </u:MultiComboBoxSelectedItemList>
+                </MultiComboBoxSelectedItemList>
               </Panel>
             </Border>
             <Border Name="FocusBorderElement"
@@ -167,5 +166,4 @@
   </ControlTheme>
 
   <!-- Alias for wrapper type -->
-  <StaticResource x:Key="{x:Type TagInput}" ResourceKey="{x:Type u:TagInput}" />
 </ResourceDictionary>

@@ -1,7 +1,6 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.DevExpress.Design"
   xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
@@ -168,7 +167,7 @@
                   HorizontalScrollBarVisibility="{TemplateBinding ScrollbarVisibility}"
                   HorizontalWheelBehavior.Enable="True"
                   VerticalScrollBarVisibility="Disabled">
-                  <u:MultiComboBoxSelectedItemList
+                  <MultiComboBoxSelectedItemList
                     Name="PART_SelectedItemsList"
                     VerticalAlignment="Center"
                     ItemTemplate="{TemplateBinding EffectiveSelectedItemTemplate}"
@@ -184,7 +183,7 @@
                   IsVisible="{TemplateBinding InnerRightContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
                 <Border
-                  Name="{x:Static u:MultiComboBox.PART_BackgroundBorder}"
+                  Name="{x:Static MultiComboBox.PART_BackgroundBorder}"
                   Grid.Column="3"
                   Background="Transparent"
                   IsHitTestVisible="True"

@@ -343,9 +343,10 @@ public class WinUiCalendarDatePickerTests
                                            (date < today.AddDays(-7) || date > today.AddDays(7))),
                 button => Assert.False(button.IsEnabled));
 
-            var nextDay = Assert.Single(days, button => button.DataContext is DateTime date && date == today.AddDays(2));
-            Click(nextDay);
-            Assert.Equal(today.AddDays(2), picker.SelectedDate);
+            var otherDate = today.AddDays(today.Day > 2 ? -2 : 2);
+            var otherDay = Assert.Single(days, button => button.DataContext is DateTime date && date == otherDate);
+            Click(otherDay);
+            Assert.Equal(otherDate, picker.SelectedDate);
             Assert.False(picker.IsDropDownOpen);
 
             picker.IsDropDownOpen = true;

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -223,6 +224,67 @@ public class WinUiListBoxTests
             window.MouseUp(Center(item, window), MouseButton.Left);
             item.IsEnabled = false;
             AssertBrush(window, indicator.Background, "AccentFillColorDisabledBrush");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Realized_panel_tracks_bound_and_changing_orientation(bool bound)
+    {
+        var source = new WrapPanel { Orientation = Orientation.Vertical };
+        int buildCount = 0;
+        var list = new ListBox
+        {
+            DataContext = source,
+            Height = 105,
+            ItemsSource = Enumerable.Range(1, 12).Select(i => $"Item {i}").ToArray(),
+            ItemsPanel = new FuncTemplate<Panel?>(() =>
+            {
+                buildCount++;
+                var panel = new WrapPanel();
+                if (bound)
+                    panel.Bind(WrapPanel.OrientationProperty, new Binding("Orientation"));
+                return panel;
+            })
+        };
+        var window = CreateWindow(list, "Light", false);
+        try
+        {
+            var panel = Assert.IsType<WrapPanel>(list.ItemsPanelRoot);
+            Assert.Equal(1, buildCount);
+            if (!bound)
+                panel.Orientation = Orientation.Vertical;
+            window.UpdateLayout();
+            Assert.Equal(Orientation.Vertical, panel.Orientation);
+            Assert.Equal(ScrollBarVisibility.Auto, Viewer(list).HorizontalScrollBarVisibility);
+            Assert.Equal(ScrollBarVisibility.Disabled, Viewer(list).VerticalScrollBarVisibility);
+            var items = list.GetRealizedContainers().Cast<ListBoxItem>().ToArray();
+            Assert.True(items.Select(i => i.TranslatePoint(default, list)!.Value.X).Distinct().Count() > 1);
+            Assert.True(items.Select(i => i.TranslatePoint(default, list)!.Value.Y).Distinct().Count() > 1);
+
+            if (bound)
+                source.Orientation = Orientation.Horizontal;
+            else
+                panel.Orientation = Orientation.Horizontal;
+            window.UpdateLayout();
+            Assert.Equal(ScrollBarVisibility.Disabled, Viewer(list).HorizontalScrollBarVisibility);
+            Assert.Equal(ScrollBarVisibility.Auto, Viewer(list).VerticalScrollBarVisibility);
+
+            list.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
+            list.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
+            if (bound)
+                source.Orientation = Orientation.Vertical;
+            else
+                panel.Orientation = Orientation.Vertical;
+            window.UpdateLayout();
+            Assert.Equal(ScrollBarVisibility.Hidden, Viewer(list).HorizontalScrollBarVisibility);
+            Assert.Equal(ScrollBarVisibility.Visible, Viewer(list).VerticalScrollBarVisibility);
+            Assert.Equal(1, buildCount);
         }
         finally
         {

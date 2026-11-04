@@ -16,12 +16,12 @@
     <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorder}"/>
     <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="IsTabStop" Value="False"/>
-    <!-- Match the WrapPanel's constrained axis so vertical panels can form columns.
-         Like the other themes, inspect its template; bindings also track panel replacement. -->
+    <Setter Property="internal:ListBoxScrollBehavior.IsEnabled" Value="True"/>
+    <!-- Observe the realized WrapPanel so bound orientations and panel replacement stay in sync. -->
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
-            Value="{Binding ItemsPanel, RelativeSource={RelativeSource Self}, Converter={x:Static internal:ListBoxConverters.HorizontalScrollBarVisibility}}"/>
+            Value="{Binding (internal:ListBoxScrollBehavior.RealizedWrapPanel).Orientation, RelativeSource={RelativeSource Self}, Converter={x:Static internal:ListBoxConverters.HorizontalScrollBarVisibility}, FallbackValue=Disabled}"/>
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
-            Value="{Binding ItemsPanel, RelativeSource={RelativeSource Self}, Converter={x:Static internal:ListBoxConverters.VerticalScrollBarVisibility}}"/>
+            Value="{Binding (internal:ListBoxScrollBehavior.RealizedWrapPanel).Orientation, RelativeSource={RelativeSource Self}, Converter={x:Static internal:ListBoxConverters.VerticalScrollBarVisibility}, FallbackValue=Auto}"/>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">

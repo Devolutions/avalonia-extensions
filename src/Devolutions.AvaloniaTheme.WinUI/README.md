@@ -95,7 +95,9 @@ Single- and multi-column lists share the same item states. Avalonia's existing
 selection modes and keyboard behavior are retained, including multiple
 selection without adding WinUI's checkbox selection mode.
 Vertical WrapPanels scroll horizontally by default so their constrained height
-can form columns; other panels retain vertical scrolling. Explicit
+can form columns; other panels retain vertical scrolling. These defaults track
+the realized panel, including data-bound orientation changes and panel replacement.
+Explicit
 `ScrollViewer.HorizontalScrollBarVisibility` and
 `ScrollViewer.VerticalScrollBarVisibility` values override these defaults.
 The existing `WinUiNavItemTheme` key now reuses the default leading indicator;

@@ -1,0 +1,301 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:Devolutions.AvaloniaTheme.WinUI.Converters"
+                    xmlns:globalization="using:System.Globalization">
+
+  <BoxShadows x:Key="CalendarViewShadow">0 4 12 0 #40000000</BoxShadows>
+  <StreamGeometry x:Key="CalendarViewPreviousGlyph">M .8,5.5 Q 0,5.5 .5,4.7 L 3.2,.7 Q 4,-.5 4.8,.7 L 7.5,4.7 Q 8,5.5 7.2,5.5 Z</StreamGeometry>
+  <StreamGeometry x:Key="CalendarViewNextGlyph">M .8,0 Q 0,0 .5,.8 L 3.2,4.8 Q 4,6 4.8,4.8 L 7.5,.8 Q 8,0 7.2,0 Z</StreamGeometry>
+
+  <ControlTheme x:Key="WinUiCalendarNavigationButton" TargetType="Button">
+    <Setter Property="Background" Value="{DynamicResource CalendarViewNavigationButtonBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource CalendarViewForeground}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+          <Border Name="FocusBorder" BorderThickness="2" CornerRadius="6"
+                  Margin="-2" IsHitTestVisible="False" IsVisible="False"
+                  BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"/>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewNavigationButtonBackgroundPointerOver}"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewNavigationButtonBackgroundPressed}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewPressedForeground}"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewDisabledForeground}"/>
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#FocusBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiCalendarDayButton" TargetType="CalendarDayButton">
+    <Setter Property="MinWidth" Value="40"/>
+    <Setter Property="MinHeight" Value="40"/>
+    <Setter Property="Margin" Value="1"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource CalendarViewCalendarItemForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewCalendarItemBorderBrush}"/>
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="Root" Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                  CornerRadius="100">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"/>
+          </Border>
+          <Rectangle Name="BlackoutStrikethrough" Width="18" Height="1"
+                     Fill="{DynamicResource CalendarViewBlackoutStrikethroughBrush}"
+                     IsVisible="False" IsHitTestVisible="False"/>
+          <Border Name="FocusBorder" BorderThickness="2" CornerRadius="100"
+                  Margin="2" IsHitTestVisible="False" IsVisible="False"
+                  BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"/>
+          <Border Name="TodaySelectedBorder" BorderThickness="1" CornerRadius="100"
+                  Margin="2" IsHitTestVisible="False" IsVisible="False"
+                  BorderBrush="{DynamicResource CalendarViewTodaySelectedInnerBorderBrush}"/>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:inactive">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewOutOfScopeForeground}"/>
+    </Style>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemHoverBackground}"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemPressedBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewPressedForeground}"/>
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewSelectedBorderBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewSelectedForeground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover">
+      <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewSelectedHoverBorderBrush}"/>
+    </Style>
+    <Style Selector="^:selected:pressed">
+      <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewSelectedPressedBorderBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewSelectedPressedForeground}"/>
+    </Style>
+    <Style Selector="^:today">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewTodayForeground}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:today:pointerover">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayHoverBackground}"/>
+    </Style>
+    <Style Selector="^:today:pressed">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayPressedBackground}"/>
+    </Style>
+    <Style Selector="^:today:selected, ^:today:selected:pointerover, ^:today:selected:pressed">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewTodayForeground}"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="^:today:selected /template/ Border#TodaySelectedBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="^:blackout">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewBlackoutForeground}"/>
+    </Style>
+    <Style Selector="^:today:blackout">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewTodayBlackoutForeground}"/>
+    </Style>
+    <Style Selector="^:blackout /template/ Rectangle#BlackoutStrikethrough">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="^:today:blackout /template/ Rectangle#BlackoutStrikethrough">
+      <Setter Property="Fill" Value="{DynamicResource CalendarViewTodayBlackoutForeground}"/>
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#FocusBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewDisabledForeground}"/>
+    </Style>
+    <Style Selector="^:selected:disabled">
+      <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewSelectedDisabledBorderBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewSelectedDisabledForeground}"/>
+    </Style>
+    <Style Selector="^:today:disabled">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayDisabledBackground}"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiCalendarMonthYearButton" TargetType="CalendarButton">
+    <Setter Property="Margin" Value="1"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource CalendarViewCalendarItemForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemBackground}"/>
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="Root" Width="56" Height="56" CornerRadius="28"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  Background="{TemplateBinding Background}">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"/>
+          </Border>
+          <Border Name="FocusBorder" Width="62" Height="62" CornerRadius="31"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  BorderThickness="2" IsHitTestVisible="False" IsVisible="False"
+                  BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"/>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:inactive">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewOutOfScopeForeground}"/>
+    </Style>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemHoverBackground}"/>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemPressedBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewPressedForeground}"/>
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewTodayForeground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayHoverBackground}"/>
+    </Style>
+    <Style Selector="^:selected:pressed">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayPressedBackground}"/>
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#FocusBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarViewDisabledForeground}"/>
+    </Style>
+    <Style Selector="^:selected:disabled">
+      <Setter Property="Background" Value="{DynamicResource CalendarViewTodayDisabledBackground}"/>
+    </Style>
+  </ControlTheme>
+
+  <!-- Keep Avalonia's generated cells and template-part contracts for navigation and ranges. -->
+  <ControlTheme x:Key="WinUiCalendarItem" TargetType="CalendarItem">
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="DayTitleTemplate">
+      <Template x:DataType="x:String">
+        <TextBlock FontSize="12" FontWeight="SemiBold"
+                   HorizontalAlignment="Center" VerticalAlignment="Center">
+          <TextBlock.Text>
+            <MultiBinding Converter="{x:Static converters:CalendarWeekDayConverter.Instance}"
+                          ConverterCulture="{x:Static globalization:CultureInfo.CurrentCulture}">
+              <Binding Path="(Grid.Column)" RelativeSource="{RelativeSource Self}"/>
+              <Binding Path="FirstDayOfWeek" RelativeSource="{RelativeSource AncestorType=Calendar}"/>
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+      </Template>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="CalendarSurface"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                BoxShadow="{StaticResource CalendarViewShadow}">
+          <Grid MinWidth="298" Height="350" RowDefinitions="50,300">
+            <Grid ColumnDefinitions="*,40,40">
+              <Button Name="PART_HeaderButton" Theme="{StaticResource WinUiCalendarNavigationButton}"
+                      Foreground="{TemplateBinding Foreground}" FontWeight="SemiBold"
+                      HorizontalContentAlignment="Left" Padding="8,0" Margin="7,6,3,7"/>
+              <Button Name="PART_PreviousButton" Grid.Column="1"
+                      Theme="{StaticResource WinUiCalendarNavigationButton}" Margin="3,6,3,7">
+                <PathIcon Width="8" Height="6" Data="{StaticResource CalendarViewPreviousGlyph}"/>
+              </Button>
+              <Button Name="PART_NextButton" Grid.Column="2"
+                      Theme="{StaticResource WinUiCalendarNavigationButton}" Margin="3,6,7,7">
+                <PathIcon Width="8" Height="6" Data="{StaticResource CalendarViewNextGlyph}"/>
+              </Button>
+              <Border Height="1" VerticalAlignment="Bottom" Grid.ColumnSpan="3"
+                      Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
+            </Grid>
+            <Grid Name="PART_MonthView" Grid.Row="1"
+                  Margin="2" IsVisible="False"
+                  RowDefinitions="44,42,42,42,42,42,42"
+                  ColumnDefinitions="*,*,*,*,*,*,*"/>
+            <Grid Name="PART_YearView" Grid.Row="1"
+                  Margin="2" IsVisible="False"
+                  RowDefinitions="*,*,*" ColumnDefinitions="*,*,*,*"/>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinUiCalendar" TargetType="Calendar">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="Foreground" Value="{DynamicResource CalendarViewForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource CalendarViewBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Name="PART_Root">
+          <!-- Calendar requires CalendarItem to be PART_Root's first direct child. -->
+          <CalendarItem Name="PART_CalendarItem" Theme="{StaticResource WinUiCalendarItem}"
+                        Margin="16,12,16,20" Background="{TemplateBinding Background}"
+                        Foreground="{TemplateBinding Foreground}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        HeaderBackground="{TemplateBinding HeaderBackground}">
+            <CalendarItem.Resources>
+              <StaticResource x:Key="{x:Type CalendarDayButton}" ResourceKey="WinUiCalendarDayButton"/>
+              <StaticResource x:Key="{x:Type CalendarButton}" ResourceKey="WinUiCalendarMonthYearButton"/>
+            </CalendarItem.Resources>
+            <CalendarItem.Styles>
+              <Style Selector="Calendar:focus-visible /template/ CalendarItem /template/ Grid#PART_MonthView CalendarDayButton:dayfocused /template/ Border#FocusBorder">
+                <Setter Property="IsVisible" Value="True"/>
+              </Style>
+              <Style Selector="Calendar:focus-visible /template/ CalendarItem /template/ Grid#PART_YearView CalendarButton:btnfocused /template/ Border#FocusBorder">
+                <Setter Property="IsVisible" Value="True"/>
+              </Style>
+            </CalendarItem.Styles>
+          </CalendarItem>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type Calendar}" TargetType="Calendar"
+                BasedOn="{StaticResource WinUiCalendar}"/>
+
+</ResourceDictionary>

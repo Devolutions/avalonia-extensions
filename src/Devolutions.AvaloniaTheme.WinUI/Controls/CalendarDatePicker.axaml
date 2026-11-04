@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Thickness x:Key="CalendarDatePickerBorderThemeThickness">1</Thickness>
+  <Thickness x:Key="CalendarDatePickerPadding">12,4,8,4</Thickness>
+  <x:Double x:Key="CalendarDatePickerMinHeight">32</x:Double>
+
+  <StreamGeometry x:Key="CalendarDatePickerCalendarGlyph">
+    M 2,0 H 10 A 2,2 0 0 1 12,2 V 10 A 2,2 0 0 1 10,12 H 2 A 2,2 0 0 1 0,10 V 2 A 2,2 0 0 1 2,0 Z
+    M 2,.75 A 1.25,1.25 0 0 0 .75,2 V 2.25 H 11.25 V 2 A 1.25,1.25 0 0 0 10,.75 Z
+    M .75,3 V 10 A 1.25,1.25 0 0 0 2,11.25 H 10 A 1.25,1.25 0 0 0 11.25,10 V 3 Z
+    M 3.5,4 A .75,.75 0 1 1 3.5,5.5 A .75,.75 0 1 1 3.5,4 Z
+    M 6,4 A .75,.75 0 1 1 6,5.5 A .75,.75 0 1 1 6,4 Z
+    M 8.5,4 A .75,.75 0 1 1 8.5,5.5 A .75,.75 0 1 1 8.5,4 Z
+    M 3.5,6.25 A .75,.75 0 1 1 3.5,7.75 A .75,.75 0 1 1 3.5,6.25 Z
+    M 6,6.25 A .75,.75 0 1 1 6,7.75 A .75,.75 0 1 1 6,6.25 Z
+    M 8.5,6.25 A .75,.75 0 1 1 8.5,7.75 A .75,.75 0 1 1 8.5,6.25 Z
+    M 3.5,8.25 A .75,.75 0 1 1 3.5,9.75 A .75,.75 0 1 1 3.5,8.25 Z
+  </StreamGeometry>
+
+  <ControlTheme x:Key="{x:Type CalendarDatePicker}" TargetType="CalendarDatePicker"
+                BasedOn="{StaticResource {x:Type CalendarDatePicker}}">
+    <Setter Property="Background" Value="{DynamicResource CalendarDatePickerBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource CalendarDatePickerForeground}"/>
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource TextFillColorTertiaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource CalendarDatePickerBorderThemeThickness}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource CalendarDatePickerMinHeight}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="{DynamicResource CalendarDatePickerPadding}"/>
+    <Setter Property="IsTodayHighlighted" Value="True"/>
+
+    <Style Selector="^ /template/ Calendar#PART_Calendar">
+      <Setter Property="Theme" Value="{StaticResource WinUiCalendar}"/>
+    </Style>
+    <Style Selector="^ /template/ Popup#PART_Popup">
+      <Setter Property="Placement" Value="BottomEdgeAlignedLeft"/>
+      <Setter Property="HorizontalOffset" Value="-16"/>
+      <Setter Property="VerticalOffset" Value="-8"/>
+      <Setter Property="WindowManagerAddShadowHint" Value="False"/>
+    </Style>
+
+    <Style Selector="^ /template/ Button#PART_Button">
+      <Setter Property="Width" Value="32"/>
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForeground}"/>
+      <!-- Replace Fluent's current-day icon with a cross-platform WinUI-style static glyph. -->
+      <Setter Property="Template">
+        <ControlTemplate>
+          <PathIcon Name="CalendarGlyph"
+                    Width="14" Height="14"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="{StaticResource CalendarDatePickerCalendarGlyph}"
+                    Foreground="{TemplateBinding Foreground}"/>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="^:pointerover /template/ Button#PART_Button">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForegroundPointerOver}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Button#PART_Button">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForegroundPressed}"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource CalendarDatePickerForegroundDisabled}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Button#PART_Button">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForegroundDisabled}"/>
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

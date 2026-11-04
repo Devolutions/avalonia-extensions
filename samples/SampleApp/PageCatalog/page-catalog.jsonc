@@ -79,7 +79,7 @@
       "demo": "CalendarDatePickerDemo.axaml",
       "viewModel": "CalendarDatePickerViewModel",
       "status": {
-        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "❌", "WinUIMica": "❌"
+        "Simple": "✅", "Fluent": "✅", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "✅", "WinUIClassic": "✅", "WinUIMica": "✅"
       }
     },
     {

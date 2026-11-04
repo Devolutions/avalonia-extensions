@@ -577,7 +577,7 @@ public abstract class Theme
         this.Name == other.Name;
 
     public override int GetHashCode() =>
-        this.Name.GetHashCode();
+        this.Name.GetHashCode(StringComparison.Ordinal);
 }
 
 public class LinuxYaruTheme : Theme

@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Controls;
 
 using System.Collections;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using Avalonia;
@@ -402,12 +403,12 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
                     case EnumPickerFormattedTextOverride<T> proxiedTextOverride:
                         try
                         {
-                            return string.Format(proxiedTextOverride.Format, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
+                            return string.Format(CultureInfo.InvariantCulture, proxiedTextOverride.Format, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
                         }
                         catch
                         {
                             // Fall back to default format if configured format is invalid
-                            return string.Format(DefaultFormat,  this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
+                            return string.Format(CultureInfo.InvariantCulture, DefaultFormat, this.GetEnumText(proxiedTextOverride.Enum, []), this.GetEnumText(proxiedTextOverride.EnumOverride, []));
                         }
                     default:
                             // Should not happen
@@ -560,6 +561,10 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         }
 
         SortOrder order = this.alphabeticalOrderSnapshot;
+        // CA1309 suppressed deliberately: this sorts text the user reads, so it wants linguistic
+        // ordering (accented letters next to their base letter), not code-point ordering. Invariant
+        // rather than current culture, so the order does not change with the machine's locale.
+#pragma warning disable CA1309
         if (order == SortOrder.Ascending)
         {
             return string.Compare(a.Text, b.Text, StringComparison.InvariantCultureIgnoreCase);
@@ -569,6 +574,7 @@ public class EnumPicker<T> : EnumPicker where T : struct, Enum
         {
             return string.Compare(b.Text, a.Text, StringComparison.InvariantCultureIgnoreCase);
         }
+#pragma warning restore CA1309
 
         return 0;
     }

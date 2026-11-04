@@ -170,12 +170,12 @@ public class MacOsMenuPackContractTests
         Assert.Equal(12d, Assert.IsType<double>(packSize));
 
         string xaml = System.IO.File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "../../../../../src/Devolutions.AvaloniaTheme.MacOS/Accents/MenuResources.axaml"));
-        Assert.Contains("MacOsMenuScrollBarButtonArrowForeground", xaml);
-        Assert.Contains("MacOsMenuScrollBarButtonArrowForegroundPointerOver", xaml);
-        Assert.Contains("MacOsMenuScrollBarButtonArrowIconFontSize", xaml);
-        Assert.DoesNotContain("ScrollBarButtonArrowForeground", xaml.Replace("MacOsMenuScrollBarButtonArrowForeground", ""));
-        Assert.DoesNotContain("ScrollBarButtonArrowForegroundPointerOver", xaml.Replace("MacOsMenuScrollBarButtonArrowForegroundPointerOver", ""));
-        Assert.DoesNotContain("ScrollBarButtonArrowIconFontSize", xaml.Replace("MacOsMenuScrollBarButtonArrowIconFontSize", ""));
+        Assert.Contains("MacOsMenuScrollBarButtonArrowForeground", xaml, StringComparison.Ordinal);
+        Assert.Contains("MacOsMenuScrollBarButtonArrowForegroundPointerOver", xaml, StringComparison.Ordinal);
+        Assert.Contains("MacOsMenuScrollBarButtonArrowIconFontSize", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("ScrollBarButtonArrowForeground", xaml.Replace("MacOsMenuScrollBarButtonArrowForeground", "", StringComparison.Ordinal), StringComparison.Ordinal);
+        Assert.DoesNotContain("ScrollBarButtonArrowForegroundPointerOver", xaml.Replace("MacOsMenuScrollBarButtonArrowForegroundPointerOver", "", StringComparison.Ordinal), StringComparison.Ordinal);
+        Assert.DoesNotContain("ScrollBarButtonArrowIconFontSize", xaml.Replace("MacOsMenuScrollBarButtonArrowIconFontSize", "", StringComparison.Ordinal), StringComparison.Ordinal);
     }
 
     [AvaloniaFact]
@@ -709,7 +709,7 @@ public class MacOsMenuPackContractTests
 
             List<Style> topLevelStyles = Flatten(pack)
                 .Where(style => style.Selector?.ToString() is { } selector
-                                && selector.Contains("Menu > MenuItem:not(:separator)"))
+                                && selector.Contains("Menu > MenuItem:not(:separator)", StringComparison.Ordinal))
                 .ToList();
 
             Assert.True(

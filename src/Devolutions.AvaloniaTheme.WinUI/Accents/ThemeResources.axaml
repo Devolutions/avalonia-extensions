@@ -402,14 +402,19 @@
       <!-- ListBox and ListBoxItem -->
       <StaticResource x:Key="ListBoxForeground" ResourceKey="TextFillColorPrimaryBrush"/>
       <StaticResource x:Key="ListBoxBackground" ResourceKey="ControlFillColorTransparentBrush"/>
-      <StaticResource x:Key="ListBoxBorder" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="ListBoxBorder" ResourceKey="ControlStrongStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ListBoxItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
       <StaticResource x:Key="ListBoxItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
       <StaticResource x:Key="ListBoxItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
       <StaticResource x:Key="ListBoxItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelected" Color="{DynamicResource SystemAccentColor}" Opacity="0.16"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPointerOver" Color="{DynamicResource SystemAccentColor}" Opacity="0.24"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPressed" Color="{DynamicResource SystemAccentColor}" Opacity="0.32"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListViewItemBackgroundSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListViewItemSelectionIndicatorBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="ListViewItemSelectionIndicatorDisabledBrush" ResourceKey="AccentFillColorDisabledBrush"/>
+      <SolidColorBrush x:Key="ListViewItemFocusVisualPrimaryBrush" Color="#E4000000"/>
+      <SolidColorBrush x:Key="ListViewItemFocusVisualSecondaryBrush" Color="#B3FFFFFF"/>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -805,14 +810,19 @@
       <!-- ListBox and ListBoxItem -->
       <StaticResource x:Key="ListBoxForeground" ResourceKey="TextFillColorPrimaryBrush"/>
       <StaticResource x:Key="ListBoxBackground" ResourceKey="ControlFillColorTransparentBrush"/>
-      <StaticResource x:Key="ListBoxBorder" ResourceKey="ControlFillColorTransparentBrush"/>
+      <StaticResource x:Key="ListBoxBorder" ResourceKey="ControlStrongStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ListBoxItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
       <StaticResource x:Key="ListBoxItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
       <StaticResource x:Key="ListBoxItemBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
       <StaticResource x:Key="ListBoxItemBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelected" Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.24"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPointerOver" Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.32"/>
-      <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPressed" Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.40"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelected" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="ListBoxItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListViewItemBackgroundSelectedDisabled" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="ListViewItemSelectionIndicatorBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="ListViewItemSelectionIndicatorDisabledBrush" ResourceKey="AccentFillColorDisabledBrush"/>
+      <SolidColorBrush x:Key="ListViewItemFocusVisualPrimaryBrush" Color="White"/>
+      <SolidColorBrush x:Key="ListViewItemFocusVisualSecondaryBrush" Color="#B3000000"/>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

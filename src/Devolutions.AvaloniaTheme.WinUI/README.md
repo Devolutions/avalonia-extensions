@@ -79,6 +79,33 @@ ToggleSplitButton palette; native WinUI does not provide an accent SplitButton s
 The default text button is 29 pixels high, matching the Gallery's text sample;
 custom content and padding can increase its height.
 
+## ListBox
+
+ListBox uses WinUI **ListView** as its visual reference: 40-pixel minimum rows,
+inset rounded neutral highlights, and a leading accent selection indicator that
+shortens while pressed. Selection remains visible without focus; disabled
+selection uses the disabled accent. Keyboard focus has a two-tone outline.
+Classic and Mica share these control visuals.
+The list has a one-pixel outline using `ControlStrongStrokeColorDefaultBrush`,
+matching the [Gallery samples](https://github.com/microsoft/WinUI-Gallery/blob/main/WinUIGallery/Samples/ListView/ListViewPage.xaml).
+This is translucent black (`#72000000`) in Light and translucent white
+(`#8BFFFFFF`) in Dark, so the rendered shade adapts to the background.
+
+Single- and multi-column lists share the same item states. Avalonia's existing
+selection modes and keyboard behavior are retained, including multiple
+selection without adding WinUI's checkbox selection mode.
+Vertical WrapPanels scroll horizontally by default so their constrained height
+can form columns; other panels retain vertical scrolling. Explicit
+`ScrollViewer.HorizontalScrollBarVisibility` and
+`ScrollViewer.VerticalScrollBarVisibility` values override these defaults.
+The existing `WinUiNavItemTheme` key now reuses the default leading indicator;
+`WinUiSegmentItemTheme` places it along the bottom. Both retain the same
+disabled and keyboard-focus states.
+
+Metrics and state brushes follow WinUI's
+[ListViewItem resources](https://github.com/microsoft/microsoft-ui-xaml/blob/main/controls/dev/CommonStyles/ListViewItem_themeresources.xaml)
+and [ListViewBaseItemChrome](https://github.com/microsoft/microsoft-ui-xaml/blob/main/dxaml/xcp/core/core/elements/ListViewBaseItemChrome.cpp).
+
 ## Classic and Mica validation
 
 The page catalog tracks WinUI classic (solid backdrop) and WinUI Mica separately.

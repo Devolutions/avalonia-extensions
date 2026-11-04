@@ -13,7 +13,7 @@ public class DynamicResourceTogglerExtension : MarkupExtension
 
     public DynamicResourceTogglerExtension(object conditionBinding, object whenTrueResourceKey, object whenFalseResourceKey)
     {
-        this.ConditionBinding = MarkupExtensionHelpers.GetBinding<bool>(conditionBinding);
+        this.ConditionBinding = MarkupExtensionHelpers.GetParsableBinding<bool>(conditionBinding);
         this.weakConditionBinding = new WeakReference<BindingBase?>(this.ConditionBinding);
         this.WhenTrueResourceKey = whenTrueResourceKey;
         this.WhenFalseResourceKey = whenFalseResourceKey;

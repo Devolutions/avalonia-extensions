@@ -130,6 +130,9 @@
     <Style Selector="^:today:blackout /template/ Rectangle#BlackoutStrikethrough">
       <Setter Property="Fill" Value="{DynamicResource CalendarViewTodayBlackoutForeground}"/>
     </Style>
+    <Style Selector="^:focus-visible /template/ Border#FocusBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
     <Style Selector="^:disabled">
       <Setter Property="Background" Value="{DynamicResource CalendarViewCalendarItemBackground}"/>
       <Setter Property="Foreground" Value="{DynamicResource CalendarViewDisabledForeground}"/>
@@ -188,6 +191,9 @@
     <Style Selector="^:selected:pressed">
       <Setter Property="Background" Value="{DynamicResource CalendarViewTodayPressedBackground}"/>
     </Style>
+    <Style Selector="^:focus-visible /template/ Border#FocusBorder">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource CalendarViewDisabledForeground}"/>
     </Style>
@@ -198,6 +204,7 @@
 
   <!-- Keep Avalonia's generated cells and template-part contracts for navigation and ranges. -->
   <ControlTheme x:Key="WinUiCalendarItem" TargetType="CalendarItem">
+    <Setter Property="ClipToBounds" Value="False"/>
     <Setter Property="DayTitleTemplate">
       <Template x:DataType="x:String">
         <TextBlock FontSize="12" FontWeight="SemiBold"
@@ -250,6 +257,8 @@
   </ControlTheme>
 
   <ControlTheme x:Key="WinUiCalendar" TargetType="Calendar">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
     <Setter Property="Focusable" Value="True"/>
     <Setter Property="Foreground" Value="{DynamicResource CalendarViewForeground}"/>
     <Setter Property="Background" Value="{DynamicResource CalendarViewBackground}"/>
@@ -262,7 +271,7 @@
         <Panel Name="PART_Root">
           <!-- Calendar requires CalendarItem to be PART_Root's first direct child. -->
           <CalendarItem Name="PART_CalendarItem" Theme="{StaticResource WinUiCalendarItem}"
-                        Margin="8" Background="{TemplateBinding Background}"
+                        Margin="16,12,16,20" Background="{TemplateBinding Background}"
                         Foreground="{TemplateBinding Foreground}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"

@@ -25,8 +25,13 @@ public sealed class CalendarWeekDayConverter : IMultiValueConverter
         }
 
         var day = (DayOfWeek)((column + (int)firstDay) % 7);
-        var label = culture.DateTimeFormat.GetAbbreviatedDayName(day);
-        var textElements = new StringInfo(label);
-        return textElements.SubstringByTextElements(0, Math.Min(2, textElements.LengthInTextElements));
+        var labels = culture.DateTimeFormat.AbbreviatedDayNames.Select(label =>
+        {
+            var textElements = new StringInfo(label);
+            return textElements.SubstringByTextElements(0, Math.Min(2, textElements.LengthInTextElements));
+        }).ToArray();
+        return labels.Distinct(StringComparer.Ordinal).Count() == 7
+            ? labels[(int)day]
+            : culture.DateTimeFormat.GetShortestDayName(day);
     }
 }

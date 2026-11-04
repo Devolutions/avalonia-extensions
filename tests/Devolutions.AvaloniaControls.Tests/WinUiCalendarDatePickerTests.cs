@@ -7,6 +7,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -107,6 +108,18 @@ public class WinUiCalendarDatePickerTests
 
             var item = Assert.Single(calendar.GetVisualDescendants().OfType<CalendarItem>());
             Assert.Equal(new Size(300, 352), item.Bounds.Size);
+            Assert.False(item.ClipToBounds);
+            Assert.Equal(new Thickness(16, 12, 16, 20), item.Margin);
+            Assert.Equal(new Size(332, 384), calendar.Bounds.Size);
+            Assert.Equal(-16, popup.HorizontalOffset);
+            Assert.Equal(-8, popup.VerticalOffset);
+            var surface = Assert.Single(item.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "CalendarSurface");
+            var surfaceOrigin = surface.TranslatePoint(default, calendar);
+            Assert.NotNull(surfaceOrigin);
+            var shadowBounds = surface.BoxShadow.TransformBounds(new Rect(surfaceOrigin.Value, surface.Bounds.Size));
+            Assert.True(new Rect(calendar.Bounds.Size).Contains(shadowBounds),
+                $"Shadow {shadowBounds} must fit inside the popup calendar {calendar.Bounds.Size}.");
             Assert.Equal(new CornerRadius(8), item.CornerRadius);
             Assert.True(calendar.TryFindResource("CalendarViewBackground", calendar.ActualThemeVariant, out var background));
             Assert.Equal(((ISolidColorBrush)background!).Color, ((ISolidColorBrush)item.Background!).Color);
@@ -196,6 +209,8 @@ public class WinUiCalendarDatePickerTests
         var other = new Button { Content = "Other focus target" };
         var window = new Window
         {
+            Width = 900,
+            Height = 700,
             Content = new StackPanel { Children = { calendar, other } },
             RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light
         };
@@ -207,6 +222,14 @@ public class WinUiCalendarDatePickerTests
         window.Show();
         try
         {
+            Assert.Equal(HorizontalAlignment.Left, calendar.HorizontalAlignment);
+            Assert.Equal(VerticalAlignment.Center, calendar.VerticalAlignment);
+            Assert.Equal(new Size(332, 384), calendar.Bounds.Size);
+            var item = Assert.Single(calendar.GetVisualDescendants().OfType<CalendarItem>());
+            Assert.Equal(new Size(300, 352), item.Bounds.Size);
+            Assert.All(calendar.GetVisualDescendants().OfType<CalendarDayButton>(), day =>
+                Assert.Equal(new Size(40, 40),
+                    Assert.Single(day.GetVisualDescendants().OfType<Border>(), border => border.Name == "Root").Bounds.Size));
             var selected = Assert.Single(calendar.GetVisualDescendants().OfType<CalendarDayButton>(),
                 day => day.DataContext is DateTime value && value == date);
             var focusBorder = Assert.Single(selected.GetVisualDescendants().OfType<Border>(),
@@ -352,6 +375,60 @@ public class WinUiCalendarDatePickerTests
     {
         Assert.Equal(expected, CalendarWeekDayConverter.Instance.Convert(
             [column, firstDay], typeof(string), null, CultureInfo.GetCultureInfo(culture)));
+    }
+
+    [Fact]
+    public void Weekday_labels_fall_back_to_culture_shortest_names_when_prefixes_collide()
+    {
+        var culture = CultureInfo.GetCultureInfo("ar-SA");
+        var labels = Enumerable.Range(0, 7).Select(column => Assert.IsType<string>(
+            CalendarWeekDayConverter.Instance.Convert(
+                [column, DayOfWeek.Sunday], typeof(string), null, culture))).ToArray();
+        Assert.Equal(culture.DateTimeFormat.ShortestDayNames, labels);
+        Assert.True(labels.Distinct(StringComparer.Ordinal).Count() > 1);
+        Assert.Equal(labels[1], CalendarWeekDayConverter.Instance.Convert(
+            [0, DayOfWeek.Monday], typeof(string), null, culture));
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void Cells_show_focus_indicator_when_focused_directly(bool monthYear, bool dark)
+    {
+        var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+        theme.BeginInit();
+        theme.EndInit();
+        Button cell = monthYear ? new CalendarButton() : new CalendarDayButton();
+        var other = new Button { Content = "Other focus target" };
+        var window = new Window
+        {
+            Content = new StackPanel { Children = { cell, other } },
+            RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light
+        };
+        window.Styles.Add(theme);
+        Assert.True(window.TryFindResource(monthYear ? "WinUiCalendarMonthYearButton" : "WinUiCalendarDayButton", out var cellTheme));
+        cell.Theme = Assert.IsType<ControlTheme>(cellTheme);
+        window.Show();
+        try
+        {
+            var focusBorder = Assert.Single(cell.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "FocusBorder");
+            Assert.True(cell.Focus(NavigationMethod.Pointer));
+            Assert.False(focusBorder.IsVisible);
+            Assert.True(other.Focus(NavigationMethod.Tab));
+            Assert.True(cell.Focus(NavigationMethod.Tab));
+            Assert.Contains(":focus-visible", cell.Classes);
+            Assert.True(focusBorder.IsVisible);
+            Assert.True(other.Focus(NavigationMethod.Pointer));
+            Assert.True(cell.Focus(NavigationMethod.Pointer));
+            Assert.False(focusBorder.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [Fact]

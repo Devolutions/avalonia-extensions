@@ -18,6 +18,9 @@ WinUI's scrolling 16-item viewport.
 Today is highlighted by default (disable with `IsTodayHighlighted="False"`).
 Selected days use an accent outline; an inset day focus ring appears only for keyboard navigation.
 Month and year focus rings also appear only for keyboard navigation.
+Standalone calendars keep their natural size by default, and popup bounds reserve
+space for the surface shadow. Weekday labels fall back to the culture's shortest
+names when two-character abbreviations would be ambiguous.
 
 ## Installation
 

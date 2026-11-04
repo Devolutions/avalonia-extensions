@@ -12,6 +12,13 @@ Custom Avalonia Themes developed by [Devolutions](https://devolutions.net/)
 This theme is based on [Avalonia.Themes.Fluent](https://github.com/AvaloniaUI/Avalonia/tree/master/src/Avalonia.Themes.Fluent)
 as fallback for controls not explicitly overridden yet.
 
+Calendar and the CalendarDatePicker popup share WinUI-style day, month, and year
+views. Avalonia's month/year navigation uses 12 items per page rather than
+WinUI's scrolling 16-item viewport.
+Today is highlighted by default (disable with `IsTodayHighlighted="False"`).
+Selected days use an accent outline; an inset day focus ring appears only for keyboard navigation.
+Month and year focus rings also appear only for keyboard navigation.
+
 ## Installation
 
 Install the Devolutions.AvaloniaTheme.WinUI package via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.WinUI):

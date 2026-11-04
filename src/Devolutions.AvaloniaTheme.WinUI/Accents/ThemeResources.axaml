@@ -351,6 +351,54 @@
       <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+
+      <!-- CalendarDatePicker state resources from WinUI's CalendarDatePicker_themeresources.xaml -->
+      <StaticResource x:Key="CalendarDatePickerBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+
+      <StaticResource x:Key="CalendarViewBackground" ResourceKey="ControlFillColorInputActiveBrush"/>
+      <StaticResource x:Key="CalendarViewBorderBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemHoverBackground" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemPressedBackground" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewOutOfScopeForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewPressedForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewDisabledForeground" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedBorderBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedHoverBorderBrush" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedPressedBorderBrush" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedDisabledBorderBrush" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedForeground" ResourceKey="AccentTextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedPressedForeground" ResourceKey="AccentTextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedDisabledForeground" ResourceKey="AccentTextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewTodayBackground" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewTodayHoverBackground" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayPressedBackground" ResourceKey="AccentFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayDisabledBackground" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewTodayForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayBlackoutForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodaySelectedInnerBorderBrush" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewBlackoutForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewBlackoutStrikethroughBrush" ResourceKey="ControlStrongStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
@@ -695,6 +743,54 @@
       <StaticResource x:Key="ExpanderChevronBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="CardBackgroundFillColorSecondaryBrush"/>
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="CardStrokeColorDefaultBrush"/>
+
+      <!-- CalendarDatePicker state resources from WinUI's CalendarDatePicker_themeresources.xaml -->
+      <StaticResource x:Key="CalendarDatePickerBackground" ResourceKey="ControlFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBackgroundDisabled" ResourceKey="ControlFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerTextForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarDatePickerCalendarGlyphForegroundDisabled" ResourceKey="TextFillColorDisabledBrush"/>
+
+      <StaticResource x:Key="CalendarViewBackground" ResourceKey="ControlFillColorInputActiveBrush"/>
+      <StaticResource x:Key="CalendarViewBorderBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemBorderBrush" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemHoverBackground" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewCalendarItemPressedBackground" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewOutOfScopeForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewPressedForeground" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewDisabledForeground" ResourceKey="TextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedBorderBrush" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedHoverBorderBrush" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedPressedBorderBrush" ResourceKey="SubtleFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedDisabledBorderBrush" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedForeground" ResourceKey="AccentTextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedPressedForeground" ResourceKey="AccentTextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewSelectedDisabledForeground" ResourceKey="AccentTextFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewTodayBackground" ResourceKey="AccentFillColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewTodayHoverBackground" ResourceKey="AccentFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayPressedBackground" ResourceKey="AccentFillColorTertiaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayDisabledBackground" ResourceKey="AccentFillColorDisabledBrush"/>
+      <StaticResource x:Key="CalendarViewTodayForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodayBlackoutForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewTodaySelectedInnerBorderBrush" ResourceKey="TextOnAccentFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewBlackoutForeground" ResourceKey="TextFillColorPrimaryBrush"/>
+      <StaticResource x:Key="CalendarViewBlackoutStrikethroughBrush" ResourceKey="ControlStrongStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackground" ResourceKey="SubtleFillColorTransparentBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush"/>
+      <StaticResource x:Key="CalendarViewNavigationButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush"/>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

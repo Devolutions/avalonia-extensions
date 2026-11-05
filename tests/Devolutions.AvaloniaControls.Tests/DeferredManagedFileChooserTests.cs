@@ -1,10 +1,12 @@
 namespace Devolutions.AvaloniaControls.Tests;
 
 using System.IO;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Devolutions.AvaloniaControls.Styling;
 using Devolutions.AvaloniaTheme.DevExpress;
 
@@ -19,7 +21,7 @@ using Devolutions.AvaloniaTheme.DevExpress;
 /// <c>AppDomain.CurrentDomain.GetAssemblies()</c>. Assembly loading is process-wide, and this test host
 /// loads Actipro's ModernTheme, which pulls in Avalonia.Themes.Fluent, whose own ManagedFileChooser styles
 /// load Avalonia.Dialogs before any test runs. Such an assertion would permanently skip and prove nothing,
-/// so <see cref="DeferredResourceInclude.IsLoaded"/> observes our own deferral directly instead.
+/// so this suite observes our own deferral directly instead, via <c>IsMaterialised</c> below.
 /// </para>
 /// </summary>
 public class DeferredManagedFileChooserTests
@@ -59,15 +61,15 @@ public class DeferredManagedFileChooserTests
             TriggerNamespace = "Avalonia.Dialogs",
         };
 
-        Assert.False(provider.IsLoaded, "Nothing has been asked for yet.");
+        Assert.False(IsMaterialised(provider), "Nothing has been asked for yet.");
 
         Assert.False(provider.TryGetResource("SomeUnrelatedStringKey", ThemeVariant.Light, out _));
         Assert.False(provider.TryGetResource(typeof(Button), ThemeVariant.Light, out _));
-        Assert.False(provider.IsLoaded, "Keys outside the trigger namespace must not materialise the dictionary.");
+        Assert.False(IsMaterialised(provider), "Keys outside the trigger namespace must not materialise the dictionary.");
 
         Type chooser = ResolveDialogType("Avalonia.Dialogs.ManagedFileChooser");
         Assert.True(provider.TryGetResource(chooser, ThemeVariant.Light, out object? value));
-        Assert.True(provider.IsLoaded, "A key in the trigger namespace should have materialised the dictionary.");
+        Assert.True(IsMaterialised(provider), "A key in the trigger namespace should have materialised the dictionary.");
 
         var controlTheme = Assert.IsType<ControlTheme>(value);
         Assert.Equal(chooser, controlTheme.TargetType);
@@ -83,16 +85,23 @@ public class DeferredManagedFileChooserTests
     {
         Window window = ShowWithFullTheme(ThemeVariant.Light);
 
-        DeferredResourceInclude provider = Assert.Single(FindDeferred(window.Styles).ToArray());
+        try
+        {
+            DeferredResourceInclude provider = Assert.Single(FindDeferred(window.Styles).ToArray());
 
-        Assert.False(provider.IsLoaded,
-            "Constructing DevolutionsDevExpressTheme populated the managed file chooser dictionary. It is " +
-            "being merged eagerly again, which loads Avalonia.Dialogs during application startup.");
+            Assert.False(IsMaterialised(provider),
+                "Constructing DevolutionsDevExpressTheme populated the managed file chooser dictionary. It is " +
+                "being merged eagerly again, which loads Avalonia.Dialogs during application startup.");
 
-        Assert.True(window.TryFindResource(ResolveDialogType("Avalonia.Dialogs.ManagedFileChooser"),
-            ThemeVariant.Light, out _));
+            Assert.True(window.TryFindResource(ResolveDialogType("Avalonia.Dialogs.ManagedFileChooser"),
+                ThemeVariant.Light, out _));
 
-        Assert.True(provider.IsLoaded, "Resolving a dialogs key should have materialised the dictionary.");
+            Assert.True(IsMaterialised(provider), "Resolving a dialogs key should have materialised the dictionary.");
+        }
+        finally
+        {
+            Close(window);
+        }
     }
 
     /// <summary>Both ControlThemes the dictionary contributes must survive the move off the merge path.</summary>
@@ -102,14 +111,22 @@ public class DeferredManagedFileChooserTests
     public void Managed_file_chooser_themes_still_resolve_on_demand(string typeName)
     {
         Window window = ShowWithFullTheme(ThemeVariant.Light);
-        Type target = ResolveDialogType(typeName);
 
-        Assert.True(window.TryFindResource(target, ThemeVariant.Light, out object? value),
-            $"No ControlTheme resolved for {typeName}; the deferred provider did not materialise.");
+        try
+        {
+            Type target = ResolveDialogType(typeName);
 
-        var controlTheme = Assert.IsType<ControlTheme>(value);
-        Assert.Equal(target, controlTheme.TargetType);
-        Assert.NotEmpty(controlTheme.Setters);
+            Assert.True(window.TryFindResource(target, ThemeVariant.Light, out object? value),
+                $"No ControlTheme resolved for {typeName}; the deferred provider did not materialise.");
+
+            var controlTheme = Assert.IsType<ControlTheme>(value);
+            Assert.Equal(target, controlTheme.TargetType);
+            Assert.NotEmpty(controlTheme.Setters);
+        }
+        finally
+        {
+            Close(window);
+        }
     }
 
     /// <summary>Resolved by name so the test does not reference Avalonia.Dialogs until it means to.</summary>
@@ -163,6 +180,29 @@ public class DeferredManagedFileChooserTests
 
                 break;
         }
+    }
+
+    /// <summary>
+    /// Whether the provider has populated its dictionary yet. Read by reflection rather than through an
+    /// internal member: InternalsVisibleTo is granted only in Debug, so a member would not compile here in
+    /// Release, and the library should not carry a property that exists purely for a test.
+    /// </summary>
+    private static bool IsMaterialised(DeferredResourceInclude provider)
+    {
+        FieldInfo field = typeof(DeferredResourceInclude)
+                              .GetField("resources", BindingFlags.NonPublic | BindingFlags.Instance)
+                          ?? throw new InvalidOperationException(
+                              "DeferredResourceInclude.resources is gone; update this probe to match.");
+
+        return field.GetValue(provider) is not null;
+    }
+
+    /// <summary>Mirrors the cleanup the other style tests do, so a failed assertion still releases the window.</summary>
+    private static void Close(Window window)
+    {
+        window.Close();
+        window.Content = null;
+        Dispatcher.UIThread.RunJobs();
     }
 
     private static Window ShowWithFullTheme(ThemeVariant variant)

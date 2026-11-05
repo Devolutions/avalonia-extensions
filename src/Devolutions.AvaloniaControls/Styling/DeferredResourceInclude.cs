@@ -53,13 +53,6 @@ public sealed class DeferredResourceInclude : ResourceProvider
 
     public override bool HasResources => true;
 
-    /// <summary>
-    /// Whether <see cref="Source"/> has actually been populated yet. Exposed for tests: assembly-load state
-    /// is process-wide and other themes (Avalonia's own Fluent, for one) load the same assemblies, so this
-    /// is the only reliable way to observe that the deferral is working.
-    /// </summary>
-    internal bool IsLoaded => this.resources is not null;
-
     public override bool TryGetResource(object key, ThemeVariant? theme, out object? value)
     {
         if (!this.IsTriggerKey(key))

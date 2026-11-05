@@ -31,6 +31,10 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <!-- MIT requires the notice to travel with the code: this package carries vendored
+             Ursa.Avalonia sources, so consumers must receive its copyright and permission
+             notice. PackageLicenseExpression only states our own licence. -->
+        <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>

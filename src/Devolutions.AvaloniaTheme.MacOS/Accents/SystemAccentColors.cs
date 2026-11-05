@@ -33,49 +33,49 @@ public sealed class SystemAccentColors : ResourceProvider
     {
         if (key is string strKey)
         {
-            if (strKey.Equals(AccentKey, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentKey, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColor;
                 return true;
             }
 
-            if (strKey.Equals(AccentDark1Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentDark1Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorDark1;
                 return true;
             }
 
-            if (strKey.Equals(AccentDark2Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentDark2Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorDark2;
                 return true;
             }
 
-            if (strKey.Equals(AccentDark3Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentDark3Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorDark3;
                 return true;
             }
 
-            if (strKey.Equals(AccentLight1Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentLight1Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorLight1;
                 return true;
             }
 
-            if (strKey.Equals(AccentLight2Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentLight2Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorLight2;
                 return true;
             }
 
-            if (strKey.Equals(AccentLight3Key, StringComparison.InvariantCulture))
+            if (strKey.Equals(AccentLight3Key, StringComparison.Ordinal))
             {
                 EnsureColors();
                 value = _systemAccentColorLight3;

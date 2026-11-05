@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Tests;
 
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -89,7 +90,7 @@ public class MacOsPopupInsetTests
             Thickness padding = Get(w, "PopupPadding", variant);
             Assert.True(w.TryFindResource("InitialFirstItemDistance", variant, out object? distance));
 
-            Assert.Equal(shadow.Bottom + padding.Top, System.Convert.ToDouble(distance));
+            Assert.Equal(shadow.Bottom + padding.Top, System.Convert.ToDouble(distance, CultureInfo.InvariantCulture));
         }
         finally
         {
@@ -168,7 +169,7 @@ public class MacOsPopupInsetTests
         {
             Thickness margin = Get(w, "PopupMargin", variant);
             Assert.True(w.TryFindResource("PopupTrimHeight", variant, out object? trim));
-            Assert.Equal(margin.Top + margin.Bottom, System.Convert.ToDouble(trim));
+            Assert.Equal(margin.Top + margin.Bottom, System.Convert.ToDouble(trim, CultureInfo.InvariantCulture));
         }
         finally
         {

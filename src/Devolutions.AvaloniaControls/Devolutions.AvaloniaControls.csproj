@@ -6,7 +6,6 @@
         <TargetFrameworks>$(LibFrameworks)</TargetFrameworks>
         <LangVersion>14</LangVersion>
         <RootNamespace>Devolutions.AvaloniaControls</RootNamespace>
-        <DevolutionsAvaloniaIncludeUrsa>true</DevolutionsAvaloniaIncludeUrsa>
         <IsTrimmable>true</IsTrimmable>
         <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
@@ -32,6 +31,10 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <!-- MIT requires the notice to travel with the code: this package carries vendored
+             Ursa.Avalonia sources, so consumers must receive its copyright and permission
+             notice. PackageLicenseExpression only states our own licence. -->
+        <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,7 +51,6 @@
 <!--        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="*" />-->
         <PackageReference Include="System.Reactive" Version="*" />
 
-        <PackageReference Include="Irihi.Ursa" Version="$(MinimumUrsaVersion)" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(EnableAccelerate)' != 'true'">

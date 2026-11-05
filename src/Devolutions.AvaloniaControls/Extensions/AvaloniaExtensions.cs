@@ -5,6 +5,16 @@ using Avalonia.Controls;
 
 public static class AvaloniaExtensions
 {
+    /// <summary>
+    /// Keeps <paramref name="pseudoClass"/> in sync with a boolean property, so a theme can select on it.
+    /// Replaces Irihi.Avalonia.Shared's AvaloniaPropertyExtension.AffectsPseudoClass, which was one of the
+    /// last two things tying us to that package.
+    /// </summary>
+    public static void AffectsPseudoClass<TControl>(this AvaloniaProperty<bool> property, string pseudoClass)
+        where TControl : Control =>
+        property.Changed.AddClassHandler<TControl, bool>((control, args) =>
+            ((IPseudoClasses)control.Classes).Set(pseudoClass, args.NewValue.GetValueOrDefault()));
+
     public enum HorizontalScrollDirection
     {
         Left,

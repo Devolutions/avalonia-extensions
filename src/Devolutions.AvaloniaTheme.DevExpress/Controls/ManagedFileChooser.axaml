@@ -4,8 +4,10 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dialogs="using:Avalonia.Dialogs"
         xmlns:internal="using:Avalonia.Dialogs.Internal"
-        xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
-        x:ClassModifier="internal">
+        xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- NOTE: no x:ClassModifier. It suppresses the standalone loader the XAML compiler emits for this
+       file, and DeferredResourceInclude loads this dictionary by URI at runtime rather than merging it
+       at compile time; with the modifier that load fails with "No precompiled XAML found". -->
   <Design.PreviewWith>
     <Border Padding="20" Width="800" Height="500">
       <dialogs:ManagedFileChooser/>

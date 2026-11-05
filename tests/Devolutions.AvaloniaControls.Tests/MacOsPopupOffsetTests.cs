@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Tests;
 
+using System.Globalization;
 using System;
 using System.Linq;
 using Avalonia;
@@ -62,7 +63,7 @@ public class MacOsPopupOffsetTests
     private static int Int(Window w, string key, ThemeVariant variant)
     {
         Assert.True(w.TryFindResource(key, variant, out object? value), $"'{key}' should resolve.");
-        return Convert.ToInt32(value);
+        return Convert.ToInt32(value, CultureInfo.InvariantCulture);
     }
 
     /// <summary>

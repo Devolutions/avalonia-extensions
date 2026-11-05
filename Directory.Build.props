@@ -1,5 +1,21 @@
 <Project>
   <PropertyGroup>
+    <!-- Ship and build against English resources only. Dependencies that carry localized
+         satellite assemblies (the Microsoft test platform packages, today) otherwise copy a
+         culture directory per language into every output folder. Nothing in this solution reads
+         them: our own strings are not localized, and culture-sensitive behaviour is pinned to the
+         invariant culture (see the globalization rules in .editorconfig). -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+    <!-- Run without ICU: every culture resolves to the invariant culture, so behaviour cannot drift
+         with the machine's locale. This is a runtime switch and only takes effect for executables
+         (SampleApp and the two test hosts); in the packaged libraries it is inert, because the
+         consuming application's own runtimeconfig decides. Culture-correctness inside the libraries
+         is enforced at build time instead, by the globalization rules in .editorconfig. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!-- Attempt to read .env file from the solution root -->
     <DotEnvFile>$(MSBuildThisFileDirectory).env</DotEnvFile>
   </PropertyGroup>

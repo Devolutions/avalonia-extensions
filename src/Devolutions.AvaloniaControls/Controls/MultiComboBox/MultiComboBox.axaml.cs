@@ -23,9 +23,6 @@ using Avalonia.Metadata;
 using Avalonia.VisualTree;
 using Helpers;
 using static Extensions.AvaloniaExtensions;
-using AvaloniaPropertyExtension = Irihi.Avalonia.Shared.Helpers.AvaloniaPropertyExtension;
-using ObservableExtension = Irihi.Avalonia.Shared.Helpers.ObservableExtension;
-using RoutedEventExtension = Irihi.Avalonia.Shared.Helpers.RoutedEventExtension;
 
 public enum MultiComboBoxOverflowMode
 {
@@ -212,7 +209,7 @@ public partial class MultiComboBox : SelectingItemsControl
     {
         FocusableProperty.OverrideDefaultValue<MultiComboBox>(true);
         ItemsPanelProperty.OverrideDefaultValue<MultiComboBox>(DefaultPanel);
-        AvaloniaPropertyExtension.AffectsPseudoClass<MultiComboBox>(IsDropDownOpenProperty, PC_DropDownOpen);
+        IsDropDownOpenProperty.AffectsPseudoClass<MultiComboBox>(PC_DropDownOpen);
         SelectedItemsProperty.Changed.AddClassHandler<MultiComboBox, IList?>(static (box, args) => box.OnSelectedItemsChanged(args));
 
         GroupSelectorProperty.Changed.AddClassHandler<MultiComboBox>((x, _) => x.ApplyFilter(null));
@@ -239,14 +236,13 @@ public partial class MultiComboBox : SelectingItemsControl
             [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],
         };
 
-        ObservableExtension.Subscribe(this.GetObservable(OverflowModeProperty),
-            _ =>
+        this.GetObservable(OverflowModeProperty).Subscribe(_ =>
             {
                 this.RaiseDirectPropertyChanged(ScrollbarVisibilityProperty);
                 this.RaiseDirectPropertyChanged(EffectiveSelectedItemsPanelProperty);
             });
-        ObservableExtension.Subscribe(this.GetObservable(SelectedItemTemplateProperty), _ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
-        ObservableExtension.Subscribe(this.GetObservable(ItemTemplateProperty), _ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        this.GetObservable(SelectedItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
+        this.GetObservable(ItemTemplateProperty).Subscribe(_ => this.RaiseDirectPropertyChanged(EffectiveSelectedItemTemplateProperty));
         this.GetObservable(ItemCountProperty).Subscribe(_ =>
         {
             this.RaiseDirectPropertyChanged(IsFilterEnabledProperty);
@@ -254,7 +250,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.ItemsView.CollectionChanged += (_, _) => this.ApplyFilter(null);
 
-        ObservableExtension.Subscribe(IsDropDownOpenProperty.Changed, args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
+        IsDropDownOpenProperty.Changed.Subscribe(args => this.OnDropDownOpenChanged(args.GetOldAndNewValue<bool>()));
 
 #pragma warning disable CS0618 // Watermark is kept for back-compat; forward to PlaceholderText
         this.GetObservable(WatermarkProperty).Subscribe(value => this.PlaceholderText = value);
@@ -806,8 +802,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         if (this.selectAllItem is { } sai)
         {
-            ObservableExtension.Subscribe(sai.GetObservable(IsSelectedProperty),
-                isSelected =>
+            sai.GetObservable(IsSelectedProperty).Subscribe(isSelected =>
                 {
                     if (this.updateInternal) return;
 

@@ -223,9 +223,16 @@ public class TimePickerUpDown : TemplatedControl
       return false;
     }
 
-    return designator.Equals(text, StringComparison.CurrentCultureIgnoreCase)
-           || designator.StartsWith(text, StringComparison.CurrentCultureIgnoreCase)
-           || text.StartsWith(designator, StringComparison.CurrentCultureIgnoreCase);
+    // The designator itself is localized (GetAmDesignator reads it from the current culture), but the
+    // *comparison* must not also depend on the ambient culture, or the same keystroke matches on one
+    // machine and not another. CA1309 suppressed: matching what the user typed against a localized
+    // designator is linguistic, so case folding should be too — ordinal would mis-fold non-ASCII
+    // designators.
+#pragma warning disable CA1309
+    return designator.Equals(text, StringComparison.InvariantCultureIgnoreCase)
+           || designator.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)
+           || text.StartsWith(designator, StringComparison.InvariantCultureIgnoreCase);
+#pragma warning restore CA1309
   }
 
   private static TimeSpan Normalize(TimeSpan value)
@@ -401,7 +408,8 @@ public class TimePickerUpDown : TemplatedControl
       return false;
     }
 
-    normalizedText = $"0{value}";
+    // Invariant: this string is re-parsed as a time segment, it is not display text.
+    normalizedText = "0" + value.ToString(CultureInfo.InvariantCulture);
     return true;
   }
 

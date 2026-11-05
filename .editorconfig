@@ -14,3 +14,28 @@ indent_size = 2
 resharper_local_variable_hides_member_highlighting = hint
 resharper_redundant_default_member_initializer_highlighting = hint
 resharper_class_with_virtual_members_never_inherited_local_highlighting = hint
+
+# ---------------------------------------------------------------------------
+# Globalization
+#
+# Everything in this solution must behave identically under every thread
+# culture: themes are parsed from XAML literals, resource keys are matched as
+# identifiers, and tests read values back out of resource dictionaries. A
+# machine running under fr-CA must not read "0.25" as 25.
+#
+# These are errors rather than warnings on purpose — a culture bug is silent
+# and only shows up on someone else's machine.
+#
+# Deliberately NOT enabled here:
+#   CA1308 - prefers ToUpperInvariant over ToLowerInvariant. That is a
+#            round-tripping/security rule, not a culture-correctness one;
+#            ToLowerInvariant is already culture-independent.
+#   CA2101 - P/Invoke string marshaling. Lives in the globalization category
+#            but is unrelated to culture; see WallpaperTintApplier.
+# ---------------------------------------------------------------------------
+dotnet_diagnostic.CA1304.severity = error
+dotnet_diagnostic.CA1305.severity = error
+dotnet_diagnostic.CA1307.severity = error
+dotnet_diagnostic.CA1309.severity = error
+dotnet_diagnostic.CA1310.severity = error
+dotnet_diagnostic.CA1311.severity = error

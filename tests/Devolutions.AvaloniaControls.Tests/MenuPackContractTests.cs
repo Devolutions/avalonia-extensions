@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Platform;
@@ -319,7 +320,7 @@ public class MenuPackContractTests
             // is what the full theme renders for bar items too - NOT DevExMenuBarHeight, which
             // sizes the bar itself (see MenuPack.Sealing.styles.axaml).
             Assert.True(window.TryFindResource("DevExMenuBarItemMinHeight", ThemeVariant.Light, out object? minHeight));
-            Assert.Equal(Convert.ToDouble(minHeight), item.MinHeight, 3);
+            Assert.Equal(Convert.ToDouble(minHeight, CultureInfo.InvariantCulture), item.MinHeight, 3);
             Assert.True(double.IsNaN(item.GetValue(TextBlock.LineHeightProperty)));
         }
         finally
@@ -421,7 +422,7 @@ public class MenuPackContractTests
             Assert.Equal(fullHeight, packHeight, 1);
 
             Assert.True(packWindow.TryFindResource("DevExMenuBarHeight", ThemeVariant.Light, out object? barHeight));
-            double bar = Convert.ToDouble(barHeight);
+            double bar = Convert.ToDouble(barHeight, CultureInfo.InvariantCulture);
 
             // The item plus its margins must fit within the bar it lives in.
             Assert.True(packOccupied <= bar,

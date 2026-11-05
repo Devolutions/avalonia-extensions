@@ -657,7 +657,7 @@ public class LinuxMenuPackContractTests
         string actual = DescribeMenuSvgCss(usePack: true, variant);
 
         Assert.Equal(expected, actual);
-        Assert.DoesNotContain("<null>", actual);
+        Assert.DoesNotContain("<null>", actual, StringComparison.Ordinal);
     }
 
     /// <summary>

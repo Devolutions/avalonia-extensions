@@ -15,7 +15,11 @@ public class IsOneOfConverter : IValueConverter
         if (value == null || parameter is not string paramString)
             return false;
 
-        var valueString = value.ToString();
+        // The options come from a XAML ConverterParameter, so the value has to be rendered the same way
+        // on every machine. Formatting a double under fr-CA would produce "0,5" and never match "0.5".
+        string? valueString = value is IFormattable formattable
+            ? formattable.ToString(null, CultureInfo.InvariantCulture)
+            : value.ToString();
         if (string.IsNullOrEmpty(valueString))
             return false;
 

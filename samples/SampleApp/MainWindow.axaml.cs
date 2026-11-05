@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ using ViewModels;
 
 public partial class MainWindow : Window
 {
-  private static readonly string LaunchTime = DateTime.Now.ToString("MMM d, HH:mm");
+  private static readonly string LaunchTime = DateTime.Now.ToString("MMM d, HH:mm", CultureInfo.InvariantCulture);
   private static readonly Lazy<Task<string?>> LaunchBranch = new(GetGitBranchAsync);
   private readonly IBrush tieDyeBrush;
   private MainWindowViewModel? currentViewModel;

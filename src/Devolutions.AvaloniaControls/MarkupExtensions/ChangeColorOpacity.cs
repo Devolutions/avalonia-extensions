@@ -31,7 +31,7 @@ public class ChangeColorOpacity(object color, object opacity) : MarkupExtension
 
   protected readonly BindingBase color = MarkupExtensionHelpers.GetBinding<Color>(color)!;
 
-  protected readonly BindingBase opacity = MarkupExtensionHelpers.GetBinding<double>(opacity)!;
+  protected readonly BindingBase opacity = MarkupExtensionHelpers.GetParsableBinding<double>(opacity)!;
 
   public override object ProvideValue(IServiceProvider serviceProvider) =>
     new MultiBinding

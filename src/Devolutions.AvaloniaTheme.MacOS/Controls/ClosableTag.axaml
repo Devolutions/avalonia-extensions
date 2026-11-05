@@ -1,13 +1,12 @@
 <ResourceDictionary
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:u="https://irihi.tech/ursa"
   xmlns:design="clr-namespace:Devolutions.AvaloniaTheme.MacOS.Design">
 
   <Design.PreviewWith>
     <design:ThemePreviewer Padding="20" Height="100" Width="300">
       <StackPanel>
-        <u:ClosableTag>test</u:ClosableTag>
+        <ClosableTag>test</ClosableTag>
         <ClosableTag>test 2</ClosableTag>
       </StackPanel>
     </design:ThemePreviewer>
@@ -19,7 +18,7 @@
   <SolidColorBrush x:Key="ClosableTagBackground" Color="{DynamicResource ClosableTagBackgroundColor}" />
   <SolidColorBrush x:Key="ClosableTagForeground" Color="{DynamicResource TextForegroundColor}" />
 
-  <ControlTheme x:Key="{x:Type u:ClosableTag}" TargetType="u:ClosableTag">
+  <ControlTheme x:Key="{x:Type ClosableTag}" TargetType="ClosableTag">
     <Setter Property="VerticalAlignment" Value="Stretch" />
     <Setter Property="Foreground" Value="{DynamicResource ClosableTagForeground}" />
     <Setter Property="Background" Value="{DynamicResource ClosableTagBackground}" />
@@ -28,7 +27,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">
-      <ControlTemplate TargetType="u:ClosableTag">
+      <ControlTemplate TargetType="ClosableTag">
         <Border
           Margin="1 0"
           Padding="8,0,4,0"
@@ -38,7 +37,7 @@
           CornerRadius="3">
           <DockPanel LastChildFill="True">
             <Button
-              Name="{x:Static u:ClosableTag.PART_CloseButton}"
+              Name="{x:Static ClosableTag.PART_CloseButton}"
               Theme="{DynamicResource InnerIconButton}"
               DockPanel.Dock="Right"
               IsTabStop="False"
@@ -66,5 +65,4 @@
       </Style>
     </Style>
   </ControlTheme>
-  <StaticResource x:Key="{x:Type ClosableTag}" ResourceKey="{x:Type u:ClosableTag}" />
 </ResourceDictionary>

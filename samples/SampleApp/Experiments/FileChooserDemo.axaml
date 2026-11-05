@@ -1,0 +1,50 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="520"
+  x:Class="SampleApp.Experiments.FileChooserDemo">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="16" MaxWidth="760" HorizontalAlignment="Left">
+
+      <TextBlock Classes="h1" Text="Managed file chooser" FontSize="20" FontWeight="SemiBold" />
+
+      <TextBlock TextWrapping="Wrap">
+        These buttons open Avalonia's <Run FontWeight="SemiBold">managed</Run> file dialogs — the ones this
+        theme styles through ManagedFileChooser.axaml — rather than the operating system's own.
+        SampleApp opts into them with UseManagedSystemDialogs() so the styling can be inspected on every
+        platform; a host that keeps the native dialogs never shows these at all.
+      </TextBlock>
+
+      <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+              CornerRadius="4" Padding="12">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Open the dialog" FontWeight="SemiBold" />
+          <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <Button Name="OpenFileButton" Content="Open file…" Click="OnOpenFile" />
+            <Button Name="OpenFilesButton" Content="Open multiple files…" Click="OnOpenFiles" />
+            <Button Name="SaveFileButton" Content="Save file…" Click="OnSaveFile" />
+            <Button Name="OpenFolderButton" Content="Select folder…" Click="OnOpenFolder" />
+          </WrapPanel>
+          <TextBlock TextWrapping="Wrap" Opacity="0.75" FontSize="12">
+            "Open file…" and "Save file…" carry file-type filters, so the filter drop-down is styled too.
+            Saving over a file that already exists raises ManagedFileChooserOverwritePrompt — the second
+            control theme this dictionary contributes, and the easiest one to forget to check.
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Spacing="6">
+        <TextBlock Text="Result" FontWeight="SemiBold" />
+        <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+                CornerRadius="4" Padding="12" MinHeight="90">
+          <SelectableTextBlock Name="ResultText" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFontFamily}"
+                               Text="Nothing picked yet." />
+        </Border>
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,6 +1,5 @@
 namespace Devolutions.AvaloniaControls.MarkupExtensions;
 
-using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -8,7 +7,14 @@ using Avalonia.Markup.Xaml;
 using Extensions;
 using Helpers;
 
-public abstract class AbstractMultipleValueBinding<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods)] TIn> : MarkupExtension
+/// <remarks>
+/// <typeparamref name="TIn"/> is constrained to <c>IParsable&lt;TIn&gt;</c> so that XAML literals
+/// (the <c>-1</c> in <c>{MultiplyBinding {Binding Width}, -1}</c>) resolve through a constrained
+/// <c>TIn.Parse</c> call instead of a runtime lookup. All four shipped subclasses close it over
+/// <see cref="double"/> or <see cref="bool"/>.
+/// </remarks>
+public abstract class AbstractMultipleValueBinding<TIn> : MarkupExtension
+    where TIn : IParsable<TIn>
 {
     private readonly WeakReference<BindingBase>[]? bindings;
 
@@ -50,5 +56,5 @@ public abstract class AbstractMultipleValueBinding<[DynamicallyAccessedMembers(D
         };
     }
 
-    private static BindingBase? GetBinding(object? v) => MarkupExtensionHelpers.GetBinding<TIn>(v);
+    private static BindingBase? GetBinding(object? v) => MarkupExtensionHelpers.GetParsableBinding<TIn>(v);
 }

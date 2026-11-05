@@ -525,7 +525,7 @@ public static class SegmentedDateInputBehavior
             {
                 Segment s = this.segments[i];
                 if (s.kind != SegmentKind.Literal) return false;
-                if (!string.IsNullOrEmpty(s.literalText) && s.literalText!.IndexOf(c) >= 0) return true;
+                if (!string.IsNullOrEmpty(s.literalText) && s.literalText!.IndexOf(c, StringComparison.Ordinal) >= 0) return true;
             }
             return false;
         }

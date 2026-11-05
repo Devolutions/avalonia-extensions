@@ -20,22 +20,21 @@ This copies gitignored local config (personal commands, `.vscode/` settings) fro
 
 ---
 
-## Development baseline initialization
+## Visual baseline approval
 
-At the start of every new agent session, after local configuration setup and
-before implementation, always ask once whether the user wants a full clean
-development baseline set, including for non-visual tasks. Do not repeat the
-question within the same session.
+Never create or update baselines for unfinished styling. Baselines preserve an
+approved, working appearance against unintended changes; they are not progress
+captures while a control is deliberately being redesigned or fixed.
 
-If approved, run `./devtest visual --initialize-local-baselines` on the clean
-starting revision. This captures non-native personal images without comparisons
-or WinUI identity checks, and never writes tracked images. If the command
-warns that LocalBaselines is non-empty, surface the overwrite confirmation
-through the user-question tool. Never automatically answer or pipe `y` unless
-the user explicitly approves overwriting the existing set.
-Never initialize from already modified code without explicit user approval;
-use a separate ordinary test run to check native images and regressions.
-Do not copy personal baselines automatically between worktrees.
+Do not ask to initialize baselines at session startup. Capture a control's
+baselines only after the user approves its appearance and asks to mark it done.
+Keep unfinished controls marked in progress, and continue functional testing
+and temporary screenshot inspection without baseline generation.
+
+This approval rule applies to tracked and personal baselines, including
+`--initialize-local-baselines`. Only initialize an approved set when explicitly
+requested; never automatically overwrite existing personal images or copy them
+between worktrees.
 
 > **Note:** This file has been superseded by more comprehensive documentation in the `.claude/` directory.
 

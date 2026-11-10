@@ -2,6 +2,7 @@ namespace Devolutions.AvaloniaControls.Tests;
 
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -9,6 +10,8 @@ using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -135,6 +138,7 @@ public class WinUiComboBoxPopupTests
 
         Border background = Assert.Single(combo.GetVisualDescendants().OfType<Border>(),
             border => border.Name == "Background");
+        Assert.Equal(BackgroundSizing.CenterBorder, background.BackgroundSizing);
         Assert.True(window.TryFindResource("SystemControlErrorTextForegroundBrush", out object? errorBrush));
         Assert.Equal(
             Assert.IsAssignableFrom<ISolidColorBrush>(errorBrush).Color,
@@ -166,6 +170,82 @@ public class WinUiComboBoxPopupTests
             VerifyEditable(window, VerticalAlignment.Top, opensAbove: false);
             VerifyEditable(window, VerticalAlignment.Bottom, opensAbove: true);
             VerifyEditableVisualStates(window);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(1.0)]
+    [InlineData(1.5)]
+    [InlineData(2.0)]
+    public void Dark_border_renders_subtle_sides_without_double_compositing(double scale)
+    {
+        var combo = new ComboBox
+        {
+            Width = 200,
+            Height = 32,
+            Margin = new Thickness(10),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        var panel = new Panel
+        {
+            Background = new SolidColorBrush(Color.Parse("#202020")),
+            Children = { combo },
+        };
+        var window = new Window
+        {
+            Width = 240,
+            Height = 52,
+            RequestedThemeVariant = ThemeVariant.Dark,
+            Content = panel,
+        };
+        window.Styles.Add(CreateTheme());
+        Assert.True(window.TryFindResource(typeof(ComboBox), out var comboTheme));
+        combo.Theme = Assert.IsType<ControlTheme>(comboTheme);
+        window.Show();
+        try
+        {
+            foreach (bool hovered in new[] { false, true })
+            {
+                ((IPseudoClasses)combo.Classes).Set(":pointerover", hovered);
+                ((IPseudoClasses)combo.Classes).Set(":focus-visible", false);
+                Dispatcher.UIThread.RunJobs();
+                Assert.Equal(ThemeVariant.Dark, combo.ActualThemeVariant);
+                Assert.Equal(new Rect(10, 10, 200, 32), combo.Bounds);
+
+                var size = new PixelSize((int)(240 * scale), (int)(52 * scale));
+                using var rendered = new RenderTargetBitmap(size, new Vector(96 * scale, 96 * scale));
+                rendered.Render(panel);
+                using var pixels = new WriteableBitmap(size, new Vector(96, 96),
+                    PixelFormat.Rgba8888, AlphaFormat.Premul);
+                using var buffer = pixels.Lock();
+                rendered.CopyPixels(buffer);
+
+                byte Gray(int x, int y)
+                {
+                    int offset = y * buffer.RowBytes + x * 4;
+                    byte red = Marshal.ReadByte(buffer.Address, offset);
+                    Assert.Equal(red, Marshal.ReadByte(buffer.Address, offset + 1));
+                    Assert.Equal(red, Marshal.ReadByte(buffer.Address, offset + 2));
+                    return red;
+                }
+
+                int centreX = (int)(110 * scale);
+                int centreY = (int)(26 * scale);
+                Assert.InRange(Gray(centreX, (int)(10 * scale)), 59, 61);
+                Assert.InRange(Gray((int)(10 * scale), centreY), 47, 49);
+                Assert.InRange(Gray((int)(210 * scale) - 1, centreY), 47, 49);
+                Assert.InRange(Gray(centreX, (int)(42 * scale) - 1), 47, 49);
+                if (scale == 1.5)
+                {
+                    // The fractional inner row blends the 48-gray stroke with the 45-gray fill.
+                    Assert.InRange(Gray(centreX, (int)(42 * scale) - 2), 45, 49);
+                }
+            }
         }
         finally
         {

@@ -70,6 +70,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
                       Grid.Column="0"
                       Grid.ColumnSpan="5"
                       Background="{TemplateBinding Background}"
+                      BackgroundSizing="{DynamicResource ComboBoxBackgroundSizing}"
                       BorderBrush="{TemplateBinding BorderBrush}"
                       BorderThickness="{TemplateBinding BorderThickness}"
                       CornerRadius="{TemplateBinding CornerRadius}"

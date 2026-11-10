@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
@@ -31,6 +32,17 @@ public class WinUiMicaProbe
         ThemeVariant variant,
         string resourceKey)
     {
+        var brush = Assert.IsAssignableFrom<ISolidColorBrush>(
+            ResolveBrushValue(globalStyles, micaOverride, variant, resourceKey));
+        return (brush.Color, brush.Opacity);
+    }
+
+    private static IBrush ResolveBrushValue(
+        bool globalStyles,
+        bool? micaOverride,
+        ThemeVariant variant,
+        string resourceKey)
+    {
         Windows11MicaDetector.SetTestOverride(micaOverride);
 
         var theme = new DevolutionsWinUiTheme { GlobalStyles = globalStyles };
@@ -45,8 +57,7 @@ public class WinUiMicaProbe
         {
             Assert.True(window.TryFindResource(resourceKey, variant, out var value),
                 $"{resourceKey} not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
-            var brush = Assert.IsAssignableFrom<ISolidColorBrush>(value);
-            return (brush.Color, brush.Opacity);
+            return Assert.IsAssignableFrom<IBrush>(value);
         }
         finally
         {
@@ -74,12 +85,24 @@ public class WinUiMicaProbe
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Combobox_dark_border_uses_a_uniform_stroke(bool globalStyles)
+    public void Combobox_dark_border_keeps_top_highlight_and_subtle_sides(bool globalStyles)
     {
-        var border = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ComboBoxBorderBrush");
-        var stroke = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ControlStrokeColorDefaultBrush");
+        foreach (bool mica in new[] { false, true })
+        {
+            foreach (string key in new[] { "ComboBoxBorderBrush", "ComboBoxBorderBrushPointerOver" })
+            {
+                var border = Assert.IsAssignableFrom<ILinearGradientBrush>(
+                    ResolveBrushValue(globalStyles, mica, ThemeVariant.Dark, key));
 
-        Assert.Equal(stroke, border);
+                Assert.Equal(new RelativePoint(0, 0, RelativeUnit.Absolute), border.StartPoint);
+                Assert.Equal(new RelativePoint(0, 3, RelativeUnit.Absolute), border.EndPoint);
+                Assert.Equal(2, border.GradientStops.Count);
+                Assert.Equal(Color.Parse("#20FFFFFF"), border.GradientStops[0].Color);
+                Assert.Equal(0.33, border.GradientStops[0].Offset);
+                Assert.Equal(Color.Parse("#12FFFFFF"), border.GradientStops[1].Color);
+                Assert.Equal(1, border.GradientStops[1].Offset);
+            }
+        }
     }
 
     [AvaloniaTheory]

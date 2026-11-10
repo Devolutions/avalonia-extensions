@@ -441,6 +441,7 @@
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
+      <BackgroundSizing x:Key="ComboBoxBackgroundSizing">CenterBorder</BackgroundSizing>
       <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
@@ -917,8 +918,13 @@
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
-      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
-      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <BackgroundSizing x:Key="ComboBoxBackgroundSizing">InnerBorderEdge</BackgroundSizing>
+      <!-- #20 preserves the previous #12 stroke composited over the #0F control fill. -->
+      <LinearGradientBrush x:Key="ComboBoxBorderBrush" StartPoint="0,0" EndPoint="0,3">
+        <GradientStop Color="#20FFFFFF" Offset="0.33"/>
+        <GradientStop Color="{DynamicResource ControlStrokeColorDefault}" Offset="1"/>
+      </LinearGradientBrush>
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ComboBoxBorderBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>

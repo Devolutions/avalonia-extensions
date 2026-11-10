@@ -917,8 +917,8 @@
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocused" ResourceKey="TextFillColorSecondaryBrush"/>
       <StaticResource x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" ResourceKey="TextFillColorSecondaryBrush"/>
-      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlElevationBorderBrush"/>
-      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ComboBoxBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="TextFillColorSecondaryBrush"/>

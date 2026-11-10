@@ -74,6 +74,17 @@ public class WinUiMicaProbe
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
+    public void Combobox_dark_border_uses_a_uniform_stroke(bool globalStyles)
+    {
+        var border = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ComboBoxBorderBrush");
+        var stroke = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ControlStrokeColorDefaultBrush");
+
+        Assert.Equal(stroke, border);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
     public void Mica_overlay_swaps_settingscard_light(bool globalStyles)
     {
         var classic = Resolve(globalStyles, false, ThemeVariant.Light);

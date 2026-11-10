@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
+using Avalonia.Controls.Shapes;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -130,7 +131,16 @@ public class WinUiComboBoxPopupTests
             textBox => textBox.Name == "PART_EditableTextBox");
         Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(editor.Background).Color);
 
+        Path glyph = Assert.Single(combo.GetVisualDescendants().OfType<Path>(),
+            path => path.Name == "DropDownGlyph");
+        Assert.True(glyph.TryFindResource("ComboBoxDropDownGlyphForegroundDisabled", glyph.ActualThemeVariant, out object? disabledGlyph));
+        Assert.Same(disabledGlyph, glyph.Stroke);
+
         combo.IsEnabled = true;
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(glyph.TryFindResource("ComboBoxEditableDropDownGlyphForeground", glyph.ActualThemeVariant, out object? editableGlyph));
+        Assert.Same(editableGlyph, glyph.Stroke);
+
         var states = (IPseudoClasses)combo.Classes;
         states.Set(":error", true);
         states.Set(":focus-within", true);

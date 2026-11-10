@@ -337,7 +337,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
       <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
       <Setter Property="Padding" Value="{DynamicResource ComboBoxEditableTextPadding}"/>
       <Setter Property="ComboBoxPopupAlignmentBehavior.Enable" Value="False"/>
-      <Style Selector="^ /template/ Path#DropDownGlyph">
+      <Style Selector="^:not(:disabled) /template/ Path#DropDownGlyph">
         <Setter Property="Stroke" Value="{DynamicResource ComboBoxEditableDropDownGlyphForeground}"/>
       </Style>
       <!-- Editable ComboBoxes keep the option list clear of the input, flipping above only when

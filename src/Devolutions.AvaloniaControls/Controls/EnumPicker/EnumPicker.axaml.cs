@@ -758,6 +758,9 @@ public class EnumPickerItem
     public required object EnumValue { get; init; }
 
     public required string Text { get; init; }
+
+    // ComboBoxAutomationPeer reads a closed ComboBox's value from the selected item's ToString().
+    public override string ToString() => this.Text;
 }
 
 internal sealed class EnumPickerItem<T> : EnumPickerItem where T : struct, Enum

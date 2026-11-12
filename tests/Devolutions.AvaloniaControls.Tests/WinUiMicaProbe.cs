@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
@@ -22,7 +23,25 @@ namespace Devolutions.AvaloniaControls.Tests;
 public class WinUiMicaProbe
 {
     private static Color Resolve(bool globalStyles, bool? micaOverride, ThemeVariant variant,
-        string resourceKey = "SettingsCardBackground")
+        string resourceKey = "SettingsCardBackground") =>
+        ResolveBrush(globalStyles, micaOverride, variant, resourceKey).Color;
+
+    private static (Color Color, double Opacity) ResolveBrush(
+        bool globalStyles,
+        bool? micaOverride,
+        ThemeVariant variant,
+        string resourceKey)
+    {
+        var brush = Assert.IsAssignableFrom<ISolidColorBrush>(
+            ResolveBrushValue(globalStyles, micaOverride, variant, resourceKey));
+        return (brush.Color, brush.Opacity);
+    }
+
+    private static IBrush ResolveBrushValue(
+        bool globalStyles,
+        bool? micaOverride,
+        ThemeVariant variant,
+        string resourceKey)
     {
         Windows11MicaDetector.SetTestOverride(micaOverride);
 
@@ -38,12 +57,51 @@ public class WinUiMicaProbe
         {
             Assert.True(window.TryFindResource(resourceKey, variant, out var value),
                 $"{resourceKey} not found (globalStyles={globalStyles}, mica={micaOverride}, variant={variant})");
-            return ((ISolidColorBrush)value!).Color;
+            return Assert.IsAssignableFrom<IBrush>(value);
         }
         finally
         {
             window.Close();
             Windows11MicaDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Mica_overlay_translucifies_combobox_surface(bool globalStyles)
+    {
+        var classicLight = ResolveBrush(globalStyles, false, ThemeVariant.Light, "ComboBoxDropDownBackground");
+        var micaLight = ResolveBrush(globalStyles, true, ThemeVariant.Light, "ComboBoxDropDownBackground");
+        var classicDark = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "ComboBoxDropDownBackground");
+        var micaDark = ResolveBrush(globalStyles, true, ThemeVariant.Dark, "ComboBoxDropDownBackground");
+
+        Assert.Equal((Color.Parse("#FFF9F9F9"), 1.0), classicLight);
+        Assert.Equal((Color.Parse("#FFFCFCFC"), 0.85), micaLight);
+        Assert.Equal((Color.Parse("#FF2C2C2C"), 1.0), classicDark);
+        Assert.Equal((Color.Parse("#FF2C2C2C"), 0.96), micaDark);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Combobox_dark_border_keeps_top_highlight_and_subtle_sides(bool globalStyles)
+    {
+        foreach (bool mica in new[] { false, true })
+        {
+            foreach (string key in new[] { "ComboBoxBorderBrush", "ComboBoxBorderBrushPointerOver" })
+            {
+                var border = Assert.IsAssignableFrom<ILinearGradientBrush>(
+                    ResolveBrushValue(globalStyles, mica, ThemeVariant.Dark, key));
+
+                Assert.Equal(new RelativePoint(0, 0, RelativeUnit.Absolute), border.StartPoint);
+                Assert.Equal(new RelativePoint(0, 3, RelativeUnit.Absolute), border.EndPoint);
+                Assert.Equal(2, border.GradientStops.Count);
+                Assert.Equal(Color.Parse("#20FFFFFF"), border.GradientStops[0].Color);
+                Assert.Equal(0.33, border.GradientStops[0].Offset);
+                Assert.Equal(Color.Parse("#12FFFFFF"), border.GradientStops[1].Color);
+                Assert.Equal(1, border.GradientStops[1].Offset);
+            }
         }
     }
 

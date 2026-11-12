@@ -1,11 +1,14 @@
 namespace Devolutions.AvaloniaControls.Tests;
 
 using System.ComponentModel;
+using Avalonia.Automation.Peers;
+using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
@@ -220,6 +223,35 @@ public class EnumPickerTests
 
             // The fallback includes everything, so every value is listed again.
             Assert.Equal(2, picker.Items.Count);
+        }
+        finally
+        {
+            window.Close();
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ClosedComboBoxExposesSelectedItemTextToScreenReaders()
+    {
+        ResetTheme();
+
+        var picker = new EnumPicker<PrimeTestEnum>
+        {
+            TextProvider = value => $"Text {value}",
+            SelectedValue = PrimeTestEnum.Beta
+        };
+        var window = new Window { Content = picker };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var comboBox = Assert.Single(picker.GetVisualDescendants().OfType<ComboBox>());
+            var valueProvider = Assert.IsAssignableFrom<IValueProvider>(ControlAutomationPeer.CreatePeerForElement(comboBox));
+
+            Assert.Equal("Text Beta", valueProvider.Value);
         }
         finally
         {

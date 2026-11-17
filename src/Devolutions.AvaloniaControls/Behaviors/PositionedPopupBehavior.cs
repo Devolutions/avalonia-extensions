@@ -108,6 +108,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
     private void OnClosed(object? sender, EventArgs e)
     {
         this.RemovePseudoClass(":dropdown-open-from-top");
+        this.RemovePseudoClass(":dropdown-open-from-bottom");
         this.RemovePseudoClass(":dropdown-overflow-left");
         this.RemovePseudoClass(":dropdown-overflow-right");
 
@@ -177,6 +178,7 @@ public class PositionedPopupBehavior : AttachedToVisualTreeBehavior<Popup>
 
         this.isOpenedFromTop = this.AssociatedObject.PointToScreen(new Point(0, 0)).Y > this.AssociatedObject.Child.PointToScreen(new Point(0, 0)).Y;
         this.TogglePseudoClass(":dropdown-open-from-top", this.isOpenedFromTop);
+        this.TogglePseudoClass(":dropdown-open-from-bottom", !this.isOpenedFromTop);
     }
 
     private void CalculatePopupBorderMask(Thickness? newFocusBorderThickness, Rect? newBounds, int? offsetLeft = null)

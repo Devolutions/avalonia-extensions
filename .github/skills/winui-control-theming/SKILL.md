@@ -250,6 +250,18 @@ After adding or changing a control:
 
 ## Learnings
 
+- WinUI acrylic is a blur/tint/luminosity/noise material, not a translucent solid fill, and is
+  independent of the window's Mica backdrop. Never copy `TintLuminosityOpacity` to a
+  `SolidColorBrush.Opacity`: without blur this exposes readable content behind popups.
+  Until real acrylic is implemented, use its opaque `FallbackColor` in both Classic and Mica
+  (for `AcrylicInAppFillColorDefaultBrush`, Light `#F9F9F9`, Dark `#2C2C2C`), as defined in
+  [WinUI's acrylic resources](https://github.com/microsoft/microsoft-ui-xaml/blob/main/controls/dev/Materials/Acrylic/AcrylicBrush_themeresources.xaml).
+- Avalonia's native `PopupRoot` inherits `TopLevel.TransparencyLevelHint`; requesting
+  `AcrylicBlur` there was verified on Windows to blur parent-window text while retaining
+  background colors. This is a whole-popup-window backdrop, so rounded clipping, transparent
+  shadow gutters, and content-only opening animations must be handled before shipping it;
+  check `ActualTransparencyLevel` and retain opaque fallbacks when blur is unavailable.
+  `ExperimentalAcrylicBorder` alone adds material/tint/noise, not an in-app backdrop blur.
 - A root-level `<StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorDefaultBrush"/>`
   in `Controls/Button.axaml` cannot resolve a token in the parent theme's Light/Dark
   `ThemeDictionaries` at runtime (`KeyNotFoundException`, not a build error). Define each

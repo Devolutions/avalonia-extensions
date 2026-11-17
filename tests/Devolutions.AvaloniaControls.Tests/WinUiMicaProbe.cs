@@ -69,7 +69,7 @@ public class WinUiMicaProbe
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Mica_overlay_translucifies_combobox_surface(bool globalStyles)
+    public void Combobox_surface_keeps_opaque_acrylic_fallback_with_or_without_mica(bool globalStyles)
     {
         var classicLight = ResolveBrush(globalStyles, false, ThemeVariant.Light, "ComboBoxDropDownBackground");
         var micaLight = ResolveBrush(globalStyles, true, ThemeVariant.Light, "ComboBoxDropDownBackground");
@@ -77,9 +77,9 @@ public class WinUiMicaProbe
         var micaDark = ResolveBrush(globalStyles, true, ThemeVariant.Dark, "ComboBoxDropDownBackground");
 
         Assert.Equal((Color.Parse("#FFF9F9F9"), 1.0), classicLight);
-        Assert.Equal((Color.Parse("#FFFCFCFC"), 0.85), micaLight);
+        Assert.Equal(classicLight, micaLight);
         Assert.Equal((Color.Parse("#FF2C2C2C"), 1.0), classicDark);
-        Assert.Equal((Color.Parse("#FF2C2C2C"), 0.96), micaDark);
+        Assert.Equal(classicDark, micaDark);
     }
 
     [AvaloniaTheory]

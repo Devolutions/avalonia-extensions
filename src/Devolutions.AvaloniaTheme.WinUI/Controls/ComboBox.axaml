@@ -10,6 +10,7 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
   <Thickness x:Key="ComboBoxDropdownBorderThickness">1</Thickness>
   <Thickness x:Key="ComboBoxDropdownBorderPadding">0</Thickness>
   <Thickness x:Key="ComboBoxDropdownContentMargin">0,4</Thickness>
+  <BoxShadows x:Key="ComboBoxDropDownShadow">0 4 12 0 #40000000</BoxShadows>
   <!-- WinUI uses 12,5,0,7 / 11,5,38,6; the vertical split is evened out because Inter sits higher
        in its line box than Segoe UI (same compensation as ButtonPadding). The editable TextBox
        already ends before this template's separate 38px chevron column. -->
@@ -28,14 +29,15 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
     ComboBoxPopupAlignmentBehavior corrects them against the popup's real layout once it is open.
 
     ComboBoxItemHeight  = ComboBoxItemMinHeight (ComboBoxItem.axaml), i.e. row pitch including margin.
-    InitialFirstItemDistance = ComboBoxMinHeight (32) + PopupBorder thickness (1)
+    InitialFirstItemDistance = ComboBoxMinHeight (32) + shadow gutter (8) + PopupBorder thickness (1)
                                + ComboBoxDropdownContentMargin.Top (4) + ComboBoxItemMargin.Top (2)
                                - ComboBoxItemHeight (36).
     PopupTrimHeight     = the popup chrome MaxDropDownHeight also covers:
                           2 x PopupBorder thickness + 2 x ComboBoxDropdownContentMargin vertical.
+    Shadow gutters are added separately to the popup's MinWidth and MaxHeight.
   -->
   <x:Int32 x:Key="ComboBoxItemHeight">36</x:Int32>
-  <x:Int32 x:Key="InitialFirstItemDistance">3</x:Int32>
+  <x:Int32 x:Key="InitialFirstItemDistance">11</x:Int32>
   <x:Int32 x:Key="PopupTrimHeight">10</x:Int32>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
@@ -209,8 +211,9 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
             <Popup x:Name="PART_Popup"
                    WindowManagerAddShadowHint="False"
                    IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                   MinWidth="{AddBinding {Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}, 16}"
+                   MaxHeight="{AddBinding {Binding MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}, 16}"
+                   HorizontalOffset="-8"
                    PlacementTarget="Background"
                    Placement="AnchorAndGravity"
                    PlacementAnchor="BottomLeft"
@@ -221,19 +224,9 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
               <Interaction.Behaviors>
                 <PositionedPopupBehavior PositionTo="{Binding #Background}"/>
               </Interaction.Behaviors>
-              <Popup.VerticalOffset>
-                <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
-                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex"/>
-                  <Binding Source="{StaticResource ComboBoxItemHeight}"/>
-                  <Binding Source="{StaticResource InitialFirstItemDistance}"/>
-                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight"/>
-                  <Binding Source="{StaticResource PopupTrimHeight}"/>
-                  <!-- Editable lists use ordinary below/above placement and therefore suppress the
-                       selected-row alignment offset. -->
-                  <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsEditable"/>
-                </MultiBinding>
-              </Popup.VerticalOffset>
               <Border x:Name="PopupBorder"
+                      Margin="8"
+                      BoxShadow="{StaticResource ComboBoxDropDownShadow}"
                       HorizontalAlignment="Stretch"
                       Background="{DynamicResource ComboBoxDropDownBackground}"
                       BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
@@ -254,6 +247,23 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
         </DataValidationErrors>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^ /template/ Popup#PART_Popup">
+      <Setter Property="VerticalOffset">
+        <MultiBinding Converter="{x:Static DevoMultiConverters.SelectedIndexToPopupOffsetConverter}">
+          <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="SelectedIndex"/>
+          <Binding Source="{StaticResource ComboBoxItemHeight}"/>
+          <Binding Source="{StaticResource InitialFirstItemDistance}"/>
+          <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="MaxDropDownHeight"/>
+          <Binding Source="{StaticResource PopupTrimHeight}"/>
+        </MultiBinding>
+      </Setter>
+    </Style>
+
+    <!-- Offset the shadow gutter without changing the visible surface's placement or size. -->
+    <Style Selector="^[SelectedIndex=-1] /template/ Popup#PART_Popup">
+      <Setter Property="VerticalOffset" Value="-8"/>
+    </Style>
 
     <!-- PointerOver state -->
     <Style Selector="^[IsEditable=false]:pointerover">
@@ -345,8 +355,8 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
            row over the closed control. -->
       <Style Selector="^ /template/ Popup#PART_Popup">
         <Setter Property="Placement" Value="BottomEdgeAlignedLeft"/>
-        <Setter Property="PlacementConstraintAdjustment" Value="All"/>
-        <Setter Property="VerticalOffset" Value="0"/>
+        <Setter Property="PlacementConstraintAdjustment" Value="FlipY, SlideX, SlideY, ResizeX, ResizeY"/>
+        <Setter Property="VerticalOffset" Value="-8"/>
       </Style>
       <Style Selector="^ /template/ Border#DropDownOverlay:pointerover">
         <Setter Property="Background" Value="{DynamicResource ComboBoxDropDownBackgroundPointerOver}"/>
@@ -373,6 +383,9 @@ Re-skinned against WinUI 3's ComboBox_themeresources.xaml and verified against t
 
     <!-- The editable popup is fused to the input. Its actual placement is reported by
          PositionedPopupBehavior after the platform positioner has applied FlipY. -->
+    <Style Selector="^[IsEditable=true]:dropdown-open-from-top /template/ Popup#PART_Popup">
+      <Setter Property="VerticalOffset" Value="8"/>
+    </Style>
     <Style Selector="^[IsEditable=true]:dropdown-open-from-bottom /template/ Border#Background">
       <Setter Property="CornerRadius" Value="4,4,0,0"/>
     </Style>

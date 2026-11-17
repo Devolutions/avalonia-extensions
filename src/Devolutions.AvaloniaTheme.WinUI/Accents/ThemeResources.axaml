@@ -80,9 +80,8 @@
       <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
       <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
 
-      <!-- WinUI flyout/drop-down surface. WinUI paints this with in-app acrylic; the value here is
-           that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
-           (ThemeResources.Windows11.axaml) makes it translucent again. -->
+      <!-- WinUI's in-app acrylic fallback. Keep opaque in both backdrop variants:
+           plain alpha cannot reproduce acrylic blur and would expose underlying text. -->
       <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#F9F9F9"/>
 
       <!-- WinUI focus rectangle (outer ring) -->
@@ -562,9 +561,8 @@
       <!-- DEVELOPMENT ONLY: classic SampleApp page surface -->
       <StaticResource x:Key="SampleAppBackground" ResourceKey="SolidBackgroundFillColorBaseBrush"/>
 
-      <!-- WinUI flyout/drop-down surface. WinUI paints this with in-app acrylic; the value here is
-           that brush's FallbackColor, which is what ships when transparency is off. The Mica overlay
-           (ThemeResources.Windows11.axaml) makes it translucent again. -->
+      <!-- WinUI's in-app acrylic fallback. Keep opaque in both backdrop variants:
+           plain alpha cannot reproduce acrylic blur and would expose underlying text. -->
       <SolidColorBrush x:Key="AcrylicInAppFillColorDefaultBrush" Color="#2C2C2C"/>
 
       <!-- WinUI focus rectangle (outer ring) -->

@@ -132,20 +132,20 @@ public class WinUiMicaProbe
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Mica_overlay_translucifies_menuflyout_surface(bool globalStyles)
+    public void Menuflyout_surface_keeps_opaque_acrylic_fallback_with_or_without_mica(bool globalStyles)
     {
-        var classicLight = Resolve(globalStyles, false, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
-        var micaLight = Resolve(globalStyles, true, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
+        var classicLight = ResolveBrush(globalStyles, false, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
+        var micaLight = ResolveBrush(globalStyles, true, ThemeVariant.Light, "MenuFlyoutPresenterBackground");
         var micaLightBorder = Resolve(globalStyles, true, ThemeVariant.Light, "MenuFlyoutPresenterBorderBrush");
-        var classicDark = Resolve(globalStyles, false, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
-        var micaDark = Resolve(globalStyles, true, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
+        var classicDark = ResolveBrush(globalStyles, false, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
+        var micaDark = ResolveBrush(globalStyles, true, ThemeVariant.Dark, "MenuFlyoutPresenterBackground");
         var micaDarkBorder = Resolve(globalStyles, true, ThemeVariant.Dark, "MenuFlyoutPresenterBorderBrush");
 
-        Assert.Equal(Color.Parse("#FFF9F9F9"), classicLight);
-        Assert.Equal(Color.Parse("#D9F9F9F9"), micaLight);
+        Assert.Equal((Color.Parse("#FFF9F9F9"), 1.0), classicLight);
+        Assert.Equal(classicLight, micaLight);
         Assert.Equal(Color.Parse("#14000000"), micaLightBorder);
-        Assert.Equal(Color.Parse("#FF2D2D2D"), classicDark);
-        Assert.Equal(Color.Parse("#CC2D2D2D"), micaDark);
+        Assert.Equal((Color.Parse("#FF2D2D2D"), 1.0), classicDark);
+        Assert.Equal(classicDark, micaDark);
         Assert.Equal(Color.Parse("#26FFFFFF"), micaDarkBorder);
     }
 

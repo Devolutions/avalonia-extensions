@@ -1,7 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
+using Avalonia.Input.Raw;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -17,6 +20,150 @@ namespace Devolutions.AvaloniaControls.Tests;
 [Collection("StylesTest")]
 public class WinUiMenuFlyoutTests
 {
+    [AvaloniaTheory]
+    [InlineData("Light", false)]
+    [InlineData("Dark", false)]
+    [InlineData("Light", true)]
+    [InlineData("Dark", true)]
+    public void Pointer_open_does_not_highlight_first_item_but_hover_and_keyboard_do(string variantName, bool mica)
+    {
+        Windows11MicaDetector.SetTestOverride(mica);
+        Window? window = null;
+        var flyout = new MenuFlyout();
+        try
+        {
+            var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+            theme.BeginInit();
+            theme.EndInit();
+            var first = new MenuItem { Header = "First" };
+            var second = new MenuItem { Header = "Second" };
+            flyout.Items.Add(first);
+            flyout.Items.Add(second);
+            var button = new DropDownButton
+            {
+                Content = "Open", Flyout = flyout,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+                Margin = new Thickness(30)
+            };
+            window = new Window
+            {
+                Content = button, Width = 600, Height = 400,
+                RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light
+            };
+            window.Styles.Add(theme);
+            window.Show();
+            var point = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(point);
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(flyout.IsOpen);
+            Assert.False(first.IsSelected);
+            Assert.False(second.IsSelected);
+            Assert.False(first.IsPointerOver);
+            var firstSurface = Assert.Single(first.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "PART_LayoutRoot");
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+
+            var root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
+            root.MouseMove(first.TranslatePoint(new Point(first.Bounds.Width / 2, first.Bounds.Height / 2), root)!.Value);
+            Assert.True(first.IsPointerOver);
+            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+            root.MouseMove(new Point(-10, -10));
+            root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            var focused = new[] { first, second }.Single(item => item.IsFocused);
+            Assert.True(focused.IsSelected);
+            var focusedSurface = Assert.Single(focused.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "PART_LayoutRoot");
+            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(focusedSurface.Background).Color.A);
+            int clicks = 0;
+            focused.Click += (_, _) => clicks++;
+            root.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            root.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            Assert.Equal(1, clicks);
+            Assert.False(flyout.IsOpen);
+
+            button.Focus(NavigationMethod.Tab);
+            window.KeyPress(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
+            window.KeyRelease(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(flyout.IsOpen);
+            root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
+            root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            Assert.True(first.IsSelected);
+            Assert.True(first.IsFocused);
+            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+            root.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+            root.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+            Assert.False(flyout.IsOpen);
+        }
+        finally
+        {
+            flyout.Hide();
+            window?.Close();
+            Windows11MicaDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("Light", false)]
+    [InlineData("Dark", false)]
+    [InlineData("Light", true)]
+    [InlineData("Dark", true)]
+    public void Dropdownbutton_flyout_and_submenu_use_opaque_fallback(string variantName, bool mica)
+    {
+        Windows11MicaDetector.SetTestOverride(mica);
+        Window? window = null;
+        var flyout = new MenuFlyout();
+        try
+        {
+            var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+            theme.BeginInit();
+            theme.EndInit();
+            var submenu = new MenuItem { Header = "More", Items = { new MenuItem { Header = "Child" } } };
+            flyout.Items.Add(submenu);
+            var button = new DropDownButton { Content = "Open", Flyout = flyout };
+            window = new Window
+            {
+                Content = button,
+                Width = 600,
+                Height = 400,
+                RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light
+            };
+            window.Styles.Add(theme);
+            window.Show();
+            flyout.ShowAt(button);
+            Dispatcher.UIThread.RunJobs();
+
+            var presenter = Assert.IsType<MenuFlyoutPresenter>(flyout.Popup.Child);
+            var surface = Assert.Single(presenter.GetVisualDescendants().OfType<Border>(),
+                border => border.Name == "LayoutRoot");
+            submenu.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var popup = Assert.Single(submenu.GetVisualDescendants().OfType<Popup>(),
+                control => control.Name == "PART_Popup");
+            Assert.True(popup.IsOpen);
+            var childSurface = Assert.IsType<Border>(popup.Child);
+            var expected = Color.Parse(variantName == "Dark" ? "#FF2D2D2D" : "#FFF9F9F9");
+            foreach (var border in new[] { surface, childSurface })
+            {
+                var brush = Assert.IsAssignableFrom<ISolidColorBrush>(border.Background);
+                Assert.Equal(expected, brush.Color);
+                Assert.Equal(1.0, brush.Opacity);
+                Assert.NotEqual(default, border.BoxShadow);
+            }
+        }
+        finally
+        {
+            flyout.Hide();
+            window?.Close();
+            Windows11MicaDetector.SetTestOverride(null);
+        }
+    }
+
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]

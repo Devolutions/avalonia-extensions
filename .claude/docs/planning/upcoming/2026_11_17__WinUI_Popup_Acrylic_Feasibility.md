@@ -70,15 +70,16 @@ solution is available through Avalonia's public APIs.
   Width, maximum height, and placement compensate for that gutter.
 - Editable ComboBox uses different vertical compensation above and below the
   input. Its joined corners and animations depend on actual popup placement.
-- MenuFlyout still has its existing plain-alpha Mica approximation; it was not
-  converted to native blur by this work. That remains a known limitation.
+- MenuFlyout (including DropDownButton menus and submenus) also retains its opaque
+  Desktop Acrylic fallback in Classic and Mica. The plain-alpha Mica approximation
+  was removed because it exposed readable underlying content without blur.
 - Approved Windows baselines protect the current appearance. They do not prove
   native blur correctness: ordinary page captures do not open these popups, and
   headless rendering does not validate the Windows compositor backdrop.
 
 ## Agreed boundaries
 
-- Keep the working fallback; do not reintroduce translucent ComboBox fills
+- Keep the working fallback; do not reintroduce translucent ComboBox or MenuFlyout fills
   before clean native blur has been demonstrated.
 - Start with a bounded investigation, not a commitment to a large implementation.
   Agree a time budget before active work and stop with evidence at the decision gate.
@@ -129,7 +130,7 @@ solution is available through Avalonia's public APIs.
 - [ ] Add focused functional tests for lifecycle and fallback decisions, plus
   native compositor verification for blur and clipping. Do not claim headless
   brush or screenshot tests prove native backdrop correctness.
-- [ ] Revisit MenuFlyout's existing alpha approximation and tune real material
+- [ ] Replace MenuFlyout's opaque fallback only with proven blur and tune real material
   tint/luminosity against the installed WinUI Gallery.
 - [ ] Obtain appearance approval before changing catalog status or baselines.
 - [ ] Update theme guidance, commit the approved implementation, and move this

@@ -13,6 +13,8 @@
   <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter"
                 BasedOn="{StaticResource {x:Type MenuFlyoutPresenter}}">
     <Setter Property="controls:MenuFlyoutEntrance.IsEnabled" Value="True"/>
+    <!-- Focus the menu on opening; items are selected by hover or keyboard navigation. -->
+    <Setter Property="Focusable" Value="True"/>
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"/>

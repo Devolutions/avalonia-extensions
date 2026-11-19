@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Platform;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -161,6 +162,7 @@ public class WinUiMenuFlyoutTests
     {
         Windows11MicaDetector.SetTestOverride(mica);
         Window? window = null;
+        var originalMenuShowDelay = DefaultMenuInteractionHandler.MenuShowDelay;
         try
         {
             var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
@@ -201,14 +203,99 @@ public class WinUiMenuFlyoutTests
             Assert.False(first.IsSubMenuOpen);
             Assert.True(first.IsFocused);
             Assert.True(Assert.Single(first.GetVisualDescendants().OfType<Border>(), b => b.Name == "FocusRing").IsVisible);
+            window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+            window.KeyRelease(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(child.IsFocused);
+            DefaultMenuInteractionHandler.MenuShowDelay = TimeSpan.Zero;
+            var second = Assert.IsType<MenuItem>(presenter.ContainerFromIndex(1));
+            window.MouseMove(second.TranslatePoint(new Point(second.Bounds.Width / 2, second.Bounds.Height / 2), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(first.IsSubMenuOpen);
+            Assert.True(second.IsFocused);
+            window.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            window.KeyRelease(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            Assert.True(first.IsFocused);
             outside.Focus(NavigationMethod.Tab);
             Assert.True(outside.IsFocused);
             Assert.False(outside.IsSet(Control.FocusAdornerProperty));
         }
         finally
         {
+            DefaultMenuInteractionHandler.MenuShowDelay = originalMenuShowDelay;
             window?.Close();
             Windows11MicaDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Data_bound_menu_keyboard_navigation_selects_source_items(bool submenu)
+    {
+        Window? window = null;
+        var flyout = new MenuFlyout();
+        try
+        {
+            var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+            theme.BeginInit();
+            theme.EndInit();
+            var items = new[] { "First", "Second", "Third" };
+            var parent = new MenuItem { Header = "More", ItemsSource = items };
+            if (submenu)
+                flyout.Items.Add(parent);
+            else
+                flyout.ItemsSource = items;
+            var button = new DropDownButton { Content = "Open", Flyout = flyout };
+            window = new Window { Width = 600, Height = 400 };
+            window.Styles.Add(theme);
+            window.Content = button;
+            window.Show();
+            flyout.ShowAt(button);
+            Dispatcher.UIThread.RunJobs();
+            var presenter = Assert.IsType<MenuFlyoutPresenter>(flyout.Popup.Child);
+            var root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(presenter));
+            if (submenu)
+            {
+                Assert.True(parent.Focus(NavigationMethod.Tab));
+                root.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+                root.KeyRelease(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            SelectingItemsControl menu = submenu ? parent : presenter;
+            var first = Assert.IsType<MenuItem>(menu.ContainerFromIndex(0));
+            var second = Assert.IsType<MenuItem>(menu.ContainerFromIndex(1));
+            var third = Assert.IsType<MenuItem>(menu.ContainerFromIndex(2));
+            root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
+            Assert.True(first.Focus(NavigationMethod.Tab));
+            Assert.True(first.IsFocused);
+            Assert.Equal(items[0], menu.SelectedItem);
+            root.KeyPress(Key.LeftShift, RawInputModifiers.Shift, PhysicalKey.ShiftLeft, null);
+            root.KeyRelease(Key.LeftShift, RawInputModifiers.None, PhysicalKey.ShiftLeft, null);
+            Assert.Equal(items[0], menu.SelectedItem);
+            root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            Assert.True(second.IsFocused);
+            Assert.Equal(items[1], menu.SelectedItem);
+            root.MouseMove(third.TranslatePoint(new Point(third.Bounds.Width / 2, third.Bounds.Height / 2), root)!.Value);
+            Assert.True(second.IsFocused);
+            Assert.Equal(items[2], menu.SelectedItem);
+            root.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            root.KeyRelease(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            Assert.True(first.IsFocused);
+            Assert.Equal(items[0], menu.SelectedItem);
+            var clicks = 0;
+            first.Click += (_, _) => clicks++;
+            root.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            root.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            Assert.Equal(1, clicks);
+            Assert.False(flyout.IsOpen);
+        }
+        finally
+        {
+            flyout.Hide();
+            window?.Close();
         }
     }
 

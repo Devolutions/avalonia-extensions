@@ -78,11 +78,12 @@ public class MenuFlyoutInput
     private static void GettingFocus(object? sender, FocusChangingEventArgs args)
     {
         var presenter = (MenuFlyoutPresenter)sender!;
-        // MenuItem otherwise focuses itself whenever pointer hover changes its selection.
+        // Preserve sibling focus on hover, but allow focus to leave a closing submenu.
         if (presenter.GetValue(IsPointerSelectionProperty) &&
             args.NavigationMethod == NavigationMethod.Unspecified &&
-            args.OldFocusedElement is MenuItem &&
-            args.NewFocusedElement is MenuItem { IsPointerOver: true })
+            args.OldFocusedElement is MenuItem { Parent: SelectingItemsControl parent } &&
+            args.NewFocusedElement is MenuItem { IsPointerOver: true } next &&
+            ReferenceEquals(parent, next.Parent))
             args.TryCancel();
     }
 
@@ -101,7 +102,7 @@ public class MenuFlyoutInput
         SetIsKeyboardNavigation(presenter, true);
         if (TopLevel.GetTopLevel(presenter)?.FocusManager?.GetFocusedElement() is MenuItem focused &&
             focused.Parent is SelectingItemsControl parent)
-            parent.SelectedItem = focused;
+            parent.SelectedIndex = parent.IndexFromContainer(focused);
     }
 
     private static void PointerPressed(object? sender, PointerPressedEventArgs args)

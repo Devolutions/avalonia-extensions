@@ -9,12 +9,11 @@
   <x:Double x:Key="MenuFlyoutSubItemPopupHorizontalOffset">-12</x:Double>
 
   <!-- Fluent assigns popup padding and chevron dimensions in its templates, so those
-       parts are ported here; the item state styles still come from the base theme. -->
+       parts are ported here; item states inherit Fluent except for independent hover and focus. -->
   <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter"
                 BasedOn="{StaticResource {x:Type MenuFlyoutPresenter}}">
     <Setter Property="controls:MenuFlyoutEntrance.IsEnabled" Value="True"/>
-    <!-- Focus the menu on opening; items are selected by hover or keyboard navigation. -->
-    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="controls:MenuFlyoutInput.IsEnabled" Value="True"/>
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
     <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"/>
@@ -117,6 +116,12 @@
                     VerticalAlignment="Center"/>
             </Grid>
           </Border>
+          <Border Name="FocusRing"
+                  IsVisible="False"
+                  IsHitTestVisible="False"
+                  BorderThickness="2"
+                  BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}"
+                  CornerRadius="{TemplateBinding CornerRadius}"/>
           <Popup Name="PART_Popup"
                  controls:MenuFlyoutEntrance.IsEnabled="True"
                  WindowManagerAddShadowHint="False"
@@ -145,6 +150,43 @@
         </Panel>
       </ControlTemplate>
     </Setter>
+
+    <Style Selector="^[(controls|MenuFlyoutInput.IsEnabled)=True]">
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <!-- Fluent uses :selected for both pointer and keyboard selection. WinUI keeps them independent. -->
+      <Style Selector="^:selected:not(:pointerover):not(:open):not(:disabled)">
+        <Style Selector="^ /template/ Border#PART_LayoutRoot">
+          <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"/>
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+          <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
+          <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
+        </Style>
+        <Style Selector="^ /template/ Path#PART_ChevronPath">
+          <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevron}"/>
+        </Style>
+      </Style>
+      <Style Selector="^:pointerover:not(:pressed):not(:disabled)">
+        <Style Selector="^ /template/ Border#PART_LayoutRoot">
+          <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackgroundPointerOver}"/>
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+          <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemForegroundPointerOver}"/>
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
+          <Setter Property="Foreground" Value="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver}"/>
+        </Style>
+        <Style Selector="^ /template/ Path#PART_ChevronPath">
+          <Setter Property="Fill" Value="{DynamicResource MenuFlyoutSubItemChevronPointerOver}"/>
+        </Style>
+      </Style>
+      <Style Selector="^:focus /template/ Border#FocusRing">
+        <Setter Property="IsVisible"
+                Value="{Binding (controls:MenuFlyoutInput.IsKeyboardNavigation), RelativeSource={RelativeSource TemplatedParent}}"/>
+      </Style>
+    </Style>
   </ControlTheme>
 
   <!-- Separator styling is scoped to menu descendants via Controls/MenuFlyoutSeparator.styles.axaml

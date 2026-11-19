@@ -21,11 +21,15 @@ namespace Devolutions.AvaloniaControls.Tests;
 public class WinUiMenuFlyoutTests
 {
     [AvaloniaTheory]
-    [InlineData("Light", false)]
-    [InlineData("Dark", false)]
-    [InlineData("Light", true)]
-    [InlineData("Dark", true)]
-    public void Pointer_open_does_not_highlight_first_item_but_hover_and_keyboard_do(string variantName, bool mica)
+    [InlineData("Light", false, false)]
+    [InlineData("Dark", false, false)]
+    [InlineData("Light", true, false)]
+    [InlineData("Dark", true, false)]
+    [InlineData("Light", false, true)]
+    [InlineData("Dark", false, true)]
+    [InlineData("Light", true, true)]
+    [InlineData("Dark", true, true)]
+    public void Flyout_item_keyboard_focus_is_independent_of_pointer_highlight(string variantName, bool mica, bool ordinaryButton)
     {
         Windows11MicaDetector.SetTestOverride(mica);
         Window? window = null;
@@ -39,19 +43,18 @@ public class WinUiMenuFlyoutTests
             var second = new MenuItem { Header = "Second" };
             flyout.Items.Add(first);
             flyout.Items.Add(second);
-            var button = new DropDownButton
-            {
-                Content = "Open", Flyout = flyout,
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-                Margin = new Thickness(30)
-            };
+            Button button = ordinaryButton ? new Button() : new DropDownButton();
+            button.Content = "Open";
+            button.Flyout = flyout;
+            button.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            var anchor = new Button { Content = "Before" };
             window = new Window
             {
-                Content = button, Width = 600, Height = 400,
+                Width = 600, Height = 400,
                 RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light
             };
             window.Styles.Add(theme);
+            window.Content = new StackPanel { Margin = new Thickness(30), Children = { anchor, button } };
             window.Show();
             var point = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), window)!.Value;
             window.MouseMove(point);
@@ -59,25 +62,27 @@ public class WinUiMenuFlyoutTests
             window.MouseUp(point, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
             Assert.True(flyout.IsOpen);
-            Assert.False(first.IsSelected);
-            Assert.False(second.IsSelected);
+            Assert.True(first.IsFocused);
+            Assert.False(Assert.IsType<MenuFlyoutPresenter>(flyout.Popup.Child).Focusable);
             Assert.False(first.IsPointerOver);
-            var firstSurface = Assert.Single(first.GetVisualDescendants().OfType<Border>(),
-                border => border.Name == "PART_LayoutRoot");
+            Border Part(MenuItem item, string name) =>
+                Assert.Single(item.GetVisualDescendants().OfType<Border>(), border => border.Name == name);
+            var firstSurface = Part(first, "PART_LayoutRoot");
             Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+            Assert.False(Part(first, "FocusRing").IsVisible);
 
             var root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
             root.MouseMove(first.TranslatePoint(new Point(first.Bounds.Width / 2, first.Bounds.Height / 2), root)!.Value);
             Assert.True(first.IsPointerOver);
             Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
             root.MouseMove(new Point(-10, -10));
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
             root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
             root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
             var focused = new[] { first, second }.Single(item => item.IsFocused);
-            Assert.True(focused.IsSelected);
-            var focusedSurface = Assert.Single(focused.GetVisualDescendants().OfType<Border>(),
-                border => border.Name == "PART_LayoutRoot");
-            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(focusedSurface.Background).Color.A);
+            Assert.Same(second, focused);
+            Assert.True(Part(focused, "FocusRing").IsVisible);
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(Part(focused, "PART_LayoutRoot").Background).Color.A);
             int clicks = 0;
             focused.Click += (_, _) => clicks++;
             root.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
@@ -85,24 +90,123 @@ public class WinUiMenuFlyoutTests
             Assert.Equal(1, clicks);
             Assert.False(flyout.IsOpen);
 
-            button.Focus(NavigationMethod.Tab);
-            window.KeyPress(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
-            window.KeyRelease(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
+            anchor.Focus();
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            window.KeyRelease(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Assert.Contains(":focus-visible", button.Classes);
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            window.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
             Dispatcher.UIThread.RunJobs();
             Assert.True(flyout.IsOpen);
             root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
+            Assert.True(first.IsFocused);
+            Assert.True(Part(first, "FocusRing").IsVisible);
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+
+            root.MouseMove(second.TranslatePoint(new Point(second.Bounds.Width / 2, second.Bounds.Height / 2), root)!.Value);
+            Assert.True(Part(first, "FocusRing").IsVisible);
+            Assert.False(Part(second, "FocusRing").IsVisible);
+            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(Part(second, "PART_LayoutRoot").Background).Color.A);
             root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
             root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
-            Assert.True(first.IsSelected);
+            Assert.True(second.IsFocused);
+            Assert.True(Part(second, "FocusRing").IsVisible);
+            root.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            root.KeyRelease(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
             Assert.True(first.IsFocused);
-            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+            Assert.True(Part(first, "FocusRing").IsVisible);
+            Assert.NotEqual(0, Assert.IsAssignableFrom<ISolidColorBrush>(Part(second, "PART_LayoutRoot").Background).Color.A);
+            root.MouseMove(new Point(-10, -10));
+            root.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            root.KeyRelease(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Assert.True(second.IsFocused);
+            Assert.True(Part(second, "FocusRing").IsVisible);
+            Assert.False(Part(first, "FocusRing").IsVisible);
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(Part(second, "PART_LayoutRoot").Background).Color.A);
             root.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
             root.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+            Assert.False(flyout.IsOpen);
+
+            window.MouseMove(point);
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(flyout.IsOpen);
+            Assert.True(first.IsFocused);
+            Assert.False(Part(first, "FocusRing").IsVisible);
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(firstSurface.Background).Color.A);
+            root = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(first));
+            var secondPoint = second.TranslatePoint(new Point(second.Bounds.Width / 2, second.Bounds.Height / 2), root)!.Value;
+            root.MouseMove(secondPoint);
+            Assert.True(first.IsFocused);
+            root.MouseDown(secondPoint, MouseButton.Left);
+            root.MouseUp(secondPoint, MouseButton.Left);
+            Assert.Equal(2, clicks);
             Assert.False(flyout.IsOpen);
         }
         finally
         {
             flyout.Hide();
+            window?.Close();
+            Windows11MicaDetector.SetTestOverride(null);
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("Light", false)]
+    [InlineData("Dark", false)]
+    [InlineData("Light", true)]
+    [InlineData("Dark", true)]
+    public void Inline_presenter_keeps_focus_on_items_instead_of_the_entire_menu(string variantName, bool mica)
+    {
+        Windows11MicaDetector.SetTestOverride(mica);
+        Window? window = null;
+        try
+        {
+            var theme = new DevolutionsWinUiTheme { GlobalStyles = false };
+            theme.BeginInit();
+            theme.EndInit();
+            var anchor = new Button { Content = "Before" };
+            var child = new MenuItem { Header = "Child" };
+            var first = new MenuItem { Header = "First", Items = { child } };
+            var outside = new MenuItem { Header = "Outside the flyout" };
+            var presenter = new MenuFlyoutPresenter { Items = { first, new MenuItem { Header = "Second" } } };
+            window = new Window
+            {
+                Width = 600, Height = 400,
+                RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light
+            };
+            window.Styles.Add(theme);
+            window.Content = new StackPanel { Children = { anchor, presenter, outside } };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            anchor.Focus();
+            Assert.False(presenter.IsFocused);
+            Assert.False(presenter.Focus());
+            window.KeyPress(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            window.KeyRelease(Key.Tab, RawInputModifiers.None, PhysicalKey.Tab, null);
+            Assert.True(first.IsFocused);
+            Assert.True(Assert.Single(first.GetVisualDescendants().OfType<Border>(), b => b.Name == "FocusRing").IsVisible);
+            var surface = Assert.Single(first.GetVisualDescendants().OfType<Border>(), b => b.Name == "PART_LayoutRoot");
+            Assert.Equal(0, Assert.IsAssignableFrom<ISolidColorBrush>(surface.Background).Color.A);
+            window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+            window.KeyRelease(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(first.IsSubMenuOpen);
+            Assert.True(child.IsFocused);
+            Assert.True(Assert.Single(child.GetVisualDescendants().OfType<Border>(), b => b.Name == "FocusRing").IsVisible);
+            var childRoot = Assert.IsAssignableFrom<TopLevel>(TopLevel.GetTopLevel(child));
+            childRoot.KeyPress(Key.Left, RawInputModifiers.None, PhysicalKey.ArrowLeft, null);
+            childRoot.KeyRelease(Key.Left, RawInputModifiers.None, PhysicalKey.ArrowLeft, null);
+            Assert.False(first.IsSubMenuOpen);
+            Assert.True(first.IsFocused);
+            Assert.True(Assert.Single(first.GetVisualDescendants().OfType<Border>(), b => b.Name == "FocusRing").IsVisible);
+            outside.Focus(NavigationMethod.Tab);
+            Assert.True(outside.IsFocused);
+            Assert.False(outside.IsSet(Control.FocusAdornerProperty));
+        }
+        finally
+        {
             window?.Close();
             Windows11MicaDetector.SetTestOverride(null);
         }

@@ -22,8 +22,8 @@
       <StaticResource x:Key="LayoutBackgroundLowBrush"
                       ResourceKey="SubtleFillColorSecondaryBrush"/>
 
-      <!-- WinUI MenuFlyout resources. Desktop Acrylic is represented by its solid fallback
-           here; the Mica overlay below adds translucency when the backdrop is available. -->
+      <!-- WinUI MenuFlyout resources. Keep Desktop Acrylic's solid fallback in Classic
+           and Mica: plain alpha exposes underlying text without popup backdrop blur. -->
       <SolidColorBrush x:Key="DesktopAcrylicTransparentBrush" Color="#F9F9F9"/>
       <StaticResource x:Key="DividerStrokeColorDefaultBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
       <StaticResource x:Key="SurfaceStrokeColorFlyoutBrush" ResourceKey="ControlStrokeColorDefaultBrush"/>
@@ -279,6 +279,9 @@
       <StaticResource x:Key="HyperlinkButtonBorderBrushPressed" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="HyperlinkButtonBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <Thickness x:Key="HyperlinkButtonBorderThemeThickness">1</Thickness>
+      <StaticResource x:Key="DropDownButtonForegroundSecondary" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="DropDownButtonForegroundSecondaryPointerOver" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="DropDownButtonForegroundSecondaryPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="AccentButtonBackground" ResourceKey="AccentFillColorDefaultBrush"/>
       <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush"/>
       <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush"/>
@@ -755,6 +758,9 @@
       <StaticResource x:Key="HyperlinkButtonBorderBrushPressed" ResourceKey="SubtleFillColorTransparentBrush"/>
       <StaticResource x:Key="HyperlinkButtonBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush"/>
       <Thickness x:Key="HyperlinkButtonBorderThemeThickness">1</Thickness>
+      <StaticResource x:Key="DropDownButtonForegroundSecondary" ResourceKey="TextFillColorSecondaryBrush"/>
+      <StaticResource x:Key="DropDownButtonForegroundSecondaryPointerOver" ResourceKey="TextFillColorTertiaryBrush"/>
+      <StaticResource x:Key="DropDownButtonForegroundSecondaryPressed" ResourceKey="TextFillColorTertiaryBrush"/>
       <StaticResource x:Key="AccentButtonBackground" ResourceKey="AccentFillColorDefaultBrush"/>
       <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush"/>
       <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush"/>

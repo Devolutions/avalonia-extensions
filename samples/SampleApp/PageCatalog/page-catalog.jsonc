@@ -166,7 +166,8 @@
       "category": "Buttons",
       "demo": "DropDownButtonDemo.axaml",
       "status": {
-        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "❌", "WinUIMica": "❌"
+        // WinUI uses an opaque flyout fallback until clean backdrop blur is available.
+        "Simple": "❌", "Fluent": "❌", "MacClassic": "✅", "LiquidGlass": "❌", "DevExpress": "✅", "Linux": "❌", "WinUIClassic": "⚠️", "WinUIMica": "⚠️"
       }
     },
     {

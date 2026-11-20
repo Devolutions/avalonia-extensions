@@ -573,7 +573,7 @@
                        Grid.Column="2"
                        Grid.Row="1"
                        Background="{DynamicResource SystemRegionColor}"
-                       Width="{DynamicResource ScrollBarSize}" />
+                       Width="{DynamicResource ScrollBarVerticalSize}" />
 
             <Grid Name="HorizontalScrollbarGrid"
                   Grid.Column="1"
@@ -584,7 +584,7 @@
                          Grid.Column="1"
                          Orientation="Horizontal"
                          Background="{DynamicResource SystemRegionColor}"
-                         Height="{DynamicResource ScrollBarSize}" />
+                         Height="{DynamicResource ScrollBarHorizontalSize}" />
             </Grid>
             <Border Name="PART_DisabledVisualElement"
                     Grid.ColumnSpan="3" Grid.Column="0"

@@ -37,6 +37,7 @@ public class DevolutionsDevExpressTheme : Styles, ISupportInitialize
 
     public void EndInit()
     {
+        global::Devolutions.AvaloniaTheme.Internal.WindowsScrollBarPreferences.Apply(this.Resources, 17, 7);
         this.Add(this.GlobalStyles
             ? new DevExpressThemeWithGlobalStyles(this.sp)
             : new DevExpressTheme(this.sp));

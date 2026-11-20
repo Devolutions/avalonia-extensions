@@ -16,6 +16,12 @@
 
   <!-- WinUI ScrollBar metrics (ScrollBar_themeresources.xaml) -->
   <x:Double x:Key="ScrollBarSize">12</x:Double>
+  <x:Double x:Key="ScrollBarVerticalSize">12</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalSize">12</x:Double>
+  <Thickness x:Key="ScrollBarVerticalThumbMargin">3</Thickness>
+  <Thickness x:Key="ScrollBarHorizontalThumbMargin">3</Thickness>
+  <x:Double x:Key="ScrollBarVerticalArrowSize">8</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalArrowSize">8</x:Double>
   <x:Double x:Key="ScrollBarVerticalThumbMinHeight">30</x:Double>
   <x:Double x:Key="ScrollBarVerticalThumbMinWidth">8</x:Double>
   <x:Double x:Key="ScrollBarHorizontalThumbMinWidth">30</x:Double>
@@ -57,6 +63,12 @@
     <Style Selector="^:disabled /template/ Border#ThumbVisual">
       <Setter Property="Background" Value="{DynamicResource ScrollBarThumbFillDisabled}"/>
       <Setter Property="Opacity" Value="0"/>
+    </Style>
+    <Style Selector="^.vertical /template/ Border#ThumbVisual">
+      <Setter Property="Margin" Value="{DynamicResource ScrollBarVerticalThumbMargin}"/>
+    </Style>
+    <Style Selector="^.horizontal /template/ Border#ThumbVisual">
+      <Setter Property="Margin" Value="{DynamicResource ScrollBarHorizontalThumbMargin}"/>
     </Style>
   </ControlTheme>
 
@@ -142,6 +154,7 @@
     <Setter Property="ShowDelay" Value="0:0:0.4"/>
 
     <Style Selector="^:vertical">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarVerticalSize}"/>
       <Setter Property="ContextFlyout" Value="{StaticResource VerticalScrollBarContextFlyout}"/>
       <Setter Property="Template">
         <ControlTemplate>
@@ -164,12 +177,12 @@
                             Grid.Row="0"
                             Theme="{StaticResource WinUiScrollBarLineButton}"
                             HorizontalAlignment="Center"
-                            MinWidth="{StaticResource ScrollBarSize}"
+                            MinWidth="{DynamicResource ScrollBarVerticalSize}"
                             Height="{StaticResource ScrollBarSize}"
                             Padding="{StaticResource ScrollBarVerticalDecreaseMargin}"
                             AutomationProperties.Name="Line up">
                 <PathIcon Data="{StaticResource WinUiScrollBarArrowUp}"
-                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Width="{DynamicResource ScrollBarVerticalArrowSize}"
                           Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
               </RepeatButton>
 
@@ -192,8 +205,9 @@
                                 AutomationProperties.Name="Page down"/>
                 </Track.IncreaseButton>
                 <Thumb Name="Thumb"
+                       Classes="vertical"
                        Theme="{StaticResource WinUiScrollBarThumb}"
-                       Width="{StaticResource ScrollBarVerticalThumbMinWidth}"
+                       Width="{DynamicResource ScrollBarVerticalThumbMinWidth}"
                        MinHeight="{StaticResource ScrollBarVerticalThumbMinHeight}"
                        HorizontalAlignment="Right"
                        AutomationProperties.Name="Position"/>
@@ -203,12 +217,12 @@
                             Grid.Row="2"
                             Theme="{StaticResource WinUiScrollBarLineButton}"
                             HorizontalAlignment="Center"
-                            MinWidth="{StaticResource ScrollBarSize}"
+                            MinWidth="{DynamicResource ScrollBarVerticalSize}"
                             Height="{StaticResource ScrollBarSize}"
                             Padding="{StaticResource ScrollBarVerticalIncreaseMargin}"
                             AutomationProperties.Name="Line down">
                 <PathIcon Data="{StaticResource WinUiScrollBarArrowDown}"
-                          Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
+                          Width="{DynamicResource ScrollBarVerticalArrowSize}"
                           Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
               </RepeatButton>
             </Grid>
@@ -218,6 +232,7 @@
     </Style>
 
     <Style Selector="^:horizontal">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarHorizontalSize}"/>
       <Setter Property="ContextFlyout" Value="{StaticResource HorizontalScrollBarContextFlyout}"/>
       <Setter Property="Template">
         <ControlTemplate>
@@ -239,13 +254,13 @@
                             Grid.Column="0"
                             Theme="{StaticResource WinUiScrollBarLineButton}"
                             VerticalAlignment="Center"
-                            MinHeight="{StaticResource ScrollBarSize}"
+                            MinHeight="{DynamicResource ScrollBarHorizontalSize}"
                             Width="{StaticResource ScrollBarSize}"
                             Padding="{StaticResource ScrollBarHorizontalDecreaseMargin}"
                             AutomationProperties.Name="Column left">
                 <PathIcon Data="{StaticResource WinUiScrollBarArrowLeft}"
                           Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
-                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+                          Height="{DynamicResource ScrollBarHorizontalArrowSize}"/>
               </RepeatButton>
 
               <Track Grid.Column="1"
@@ -266,8 +281,9 @@
                                 AutomationProperties.Name="Page right"/>
                 </Track.IncreaseButton>
                 <Thumb Name="Thumb"
+                       Classes="horizontal"
                        Theme="{StaticResource WinUiScrollBarThumb}"
-                       Height="{StaticResource ScrollBarHorizontalThumbMinHeight}"
+                       Height="{DynamicResource ScrollBarHorizontalThumbMinHeight}"
                        MinWidth="{StaticResource ScrollBarHorizontalThumbMinWidth}"
                        VerticalAlignment="Bottom"
                        AutomationProperties.Name="Position"/>
@@ -277,13 +293,13 @@
                             Grid.Column="2"
                             Theme="{StaticResource WinUiScrollBarLineButton}"
                             VerticalAlignment="Center"
-                            MinHeight="{StaticResource ScrollBarSize}"
+                            MinHeight="{DynamicResource ScrollBarHorizontalSize}"
                             Width="{StaticResource ScrollBarSize}"
                             Padding="{StaticResource ScrollBarHorizontalIncreaseMargin}"
                             AutomationProperties.Name="Column right">
                 <PathIcon Data="{StaticResource WinUiScrollBarArrowRight}"
                           Width="{StaticResource ScrollBarButtonArrowIconFontSize}"
-                          Height="{StaticResource ScrollBarButtonArrowIconFontSize}"/>
+                          Height="{DynamicResource ScrollBarHorizontalArrowSize}"/>
               </RepeatButton>
             </Grid>
           </Grid>
@@ -303,10 +319,10 @@
       </Style>
     </Style>
     <Style Selector="^[IsExpanded=true]:vertical /template/ Thumb#Thumb">
-      <Setter Property="Width" Value="{StaticResource ScrollBarSize}"/>
+      <Setter Property="Width" Value="{DynamicResource ScrollBarVerticalSize}"/>
     </Style>
     <Style Selector="^[IsExpanded=true]:horizontal /template/ Thumb#Thumb">
-      <Setter Property="Height" Value="{StaticResource ScrollBarSize}"/>
+      <Setter Property="Height" Value="{DynamicResource ScrollBarHorizontalSize}"/>
     </Style>
 
     <Style Selector="^:disabled /template/ Grid#Root">

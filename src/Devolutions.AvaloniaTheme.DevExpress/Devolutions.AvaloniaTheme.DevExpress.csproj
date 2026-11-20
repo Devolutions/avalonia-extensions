@@ -27,6 +27,7 @@
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <Compile Include="..\Shared\WindowsScrollBarPreferences.cs" Link="Internal\WindowsScrollBarPreferences.cs" />
         <AvaloniaResource Include="Accents/Assets/**" />
     </ItemGroup>
 

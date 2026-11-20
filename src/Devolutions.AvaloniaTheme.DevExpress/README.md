@@ -59,6 +59,18 @@ the Avalonia community to add more DevExpress-style controls.
   - 🔮 Next on the road map ...
     - vertical tabs
 
+## Windows scrollbar accessibility
+
+On Windows, scrollbar thickness follows `ScrollWidth` (vertical) and `ScrollHeight`
+(horizontal) under `HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics`.
+The preference scales the track/hit area and visible thumb independently for each
+orientation, relative to the standard `-255` value, which preserves the theme's
+existing appearance. For example, `-480` makes them approximately 1.88 times wider.
+Dimensions remain Avalonia logical units; normal display scaling still applies.
+Preferences are read when the theme initializes; restart the app after changing
+them (Windows itself may require signing out/in). Missing or invalid values and
+non-Windows platforms retain the theme defaults. Auto-hide behavior is unchanged.
+
 ## Installation
 
 > **Avalonia 12 required.** Packages `2026.6.17-avalonia12` and later require Avalonia 12. The last stable release compatible with Avalonia 11 is [`2026.6.16`](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.DevExpress/2026.6.16).

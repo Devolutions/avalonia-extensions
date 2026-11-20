@@ -81,11 +81,11 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
       </Transitions>
     </Setter>
     <Style Selector="^.vertical /template/ Border#ThumbVisual">
-      <Setter Property="Width" Value="7" />
+      <Setter Property="Width" Value="{DynamicResource ScrollBarVerticalThumbSize}" />
       <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
     <Style Selector="^.horizontal /template/ Border#ThumbVisual">
-      <Setter Property="Height" Value="7" />
+      <Setter Property="Height" Value="{DynamicResource ScrollBarHorizontalThumbSize}" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
   </ControlTheme>
@@ -129,6 +129,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
     <Setter Property="controlsBehaviors:ScrollBarShortBehavior.ShortScrollBarMaxSize" Value="43" />
 
     <Style Selector="^:vertical">
+      <Setter Property="MinWidth" Value="{DynamicResource ScrollBarVerticalSize}" />
       <Setter Property="ContextFlyout" Value="{StaticResource VerticalScrollBarContextFlyout}" />
       <Setter Property="Template">
         <ControlTemplate>
@@ -143,7 +144,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                               HorizontalAlignment="Center"
                               Theme="{StaticResource FluentScrollBarLineButton}"
                               Focusable="False"
-                              MinWidth="{DynamicResource ScrollBarSize}"
+                              MinWidth="{DynamicResource ScrollBarVerticalSize}"
                               Height="{DynamicResource ScrollBarSize}">
                   <PathIcon Name="UpArrow"
                             Data="{DynamicResource ScrollBarLineButtonPath}"
@@ -174,7 +175,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                   </Track.IncreaseButton>
                   <Thumb Classes="vertical"
                          Theme="{StaticResource FluentScrollBarThumb}"
-                         Width="{DynamicResource ScrollBarSize}"
+                         Width="{DynamicResource ScrollBarVerticalSize}"
                          MinHeight="{DynamicResource ScrollBarThumbMinLength}"
                          Tag="{StaticResource VerticalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="50%,100%" />
@@ -185,7 +186,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                               Theme="{StaticResource FluentScrollBarLineButton}"
                               HorizontalAlignment="Center"
                               Focusable="False"
-                              MinWidth="{DynamicResource ScrollBarSize}"
+                              MinWidth="{DynamicResource ScrollBarVerticalSize}"
                               Height="{DynamicResource ScrollBarSize}">
                   <PathIcon Name="DownArrow"
                             Data="{DynamicResource ScrollBarLineButtonPath}"
@@ -209,6 +210,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
     <!-- </Style> -->
 
     <Style Selector="^:horizontal">
+      <Setter Property="MinHeight" Value="{DynamicResource ScrollBarHorizontalSize}" />
       <Setter Property="ContextFlyout" Value="{StaticResource HorizontalScrollBarContextFlyout}" />
       <Setter Property="Template">
         <ControlTemplate>
@@ -223,7 +225,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                               VerticalAlignment="Center"
                               Theme="{StaticResource FluentScrollBarLineButton}"
                               Focusable="False"
-                              MinHeight="{DynamicResource ScrollBarSize}"
+                              MinHeight="{DynamicResource ScrollBarHorizontalSize}"
                               Width="{DynamicResource ScrollBarSize}">
                   <PathIcon Name="LeftArrow"
                             Data="{DynamicResource ScrollBarLineButtonPath}"
@@ -257,7 +259,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                   </Track.IncreaseButton>
                   <Thumb Classes="horizontal"
                          Theme="{StaticResource FluentScrollBarThumb}"
-                         Height="{DynamicResource ScrollBarSize}"
+                         Height="{DynamicResource ScrollBarHorizontalSize}"
                          MinWidth="{DynamicResource ScrollBarThumbMinLength}"
                          Tag="{StaticResource HorizontalScrollThumbShrinkTransform}"
                          RenderTransformOrigin="100%,50%" />
@@ -268,7 +270,7 @@ https://github.com/AvaloniaUI/Avalonia/blob/d3c867a9e2de379249b03dbeb3495bd7f076
                               Theme="{StaticResource FluentScrollBarLineButton}"
                               VerticalAlignment="Center"
                               Focusable="False"
-                              MinHeight="{DynamicResource ScrollBarSize}"
+                              MinHeight="{DynamicResource ScrollBarHorizontalSize}"
                               Width="{DynamicResource ScrollBarSize}">
                   <PathIcon Name="RightArrow"
                             Data="{DynamicResource ScrollBarLineButtonPath}"

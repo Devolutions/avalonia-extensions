@@ -340,6 +340,10 @@
   <x:Double x:Key="OpacityHidden">0</x:Double>
 
   <x:Double x:Key="ScrollBarSize">17</x:Double>
+  <x:Double x:Key="ScrollBarVerticalSize">17</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalSize">17</x:Double>
+  <x:Double x:Key="ScrollBarVerticalThumbSize">7</x:Double>
+  <x:Double x:Key="ScrollBarHorizontalThumbSize">7</x:Double>
   <x:Double x:Key="ScrollBarThumbMinLength">17</x:Double>
   <x:Double x:Key="ScrollBarShortThumbMinLength">7</x:Double>
   <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="Transparent" />

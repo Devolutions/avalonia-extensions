@@ -22,6 +22,19 @@ Standalone calendars keep their natural size by default, and popup bounds reserv
 space for the surface shadow. Weekday labels fall back to the culture's shortest
 names when two-character abbreviations would be ambiguous.
 
+## Windows scrollbar accessibility
+
+On Windows, scrollbar thickness follows `ScrollWidth` (vertical) and `ScrollHeight`
+(horizontal) under `HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics`.
+The preference scales the track/hit area and visible thumb independently for each
+orientation, relative to the standard `-255` value, which preserves the theme's
+existing appearance. For example, `-480` makes them approximately 1.88 times wider.
+Dimensions remain Avalonia logical units; normal display scaling still applies.
+Preferences are read when the theme initializes; restart the app after changing
+them (Windows itself may require signing out/in). Missing or invalid values and
+non-Windows platforms retain the theme defaults. Auto-hide behavior is unchanged.
+This applies to both classic and Mica variants.
+
 ## Installation
 
 Install the Devolutions.AvaloniaTheme.WinUI package via [NuGet](https://www.nuget.org/packages/Devolutions.AvaloniaTheme.WinUI):

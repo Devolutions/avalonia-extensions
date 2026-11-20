@@ -40,6 +40,7 @@ public class DevolutionsWinUiTheme : Styles, ISupportInitialize
 
     public void EndInit()
     {
+        global::Devolutions.AvaloniaTheme.Internal.WindowsScrollBarPreferences.Apply(this.Resources, 12, 8, insetThumb: true);
         // Conditionally apply the Windows 11 Mica surface overrides above the base theme.
         // This sits one level above WinUITheme/WinUIThemeWithGlobalStyles so it reliably
         // overrides the base ThemeResources (which are flattened into the theme's own

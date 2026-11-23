@@ -155,6 +155,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private bool syncingSelectedItemFromInnerCombo;
 
+    private bool openingFromTextEdit;
+
     private readonly InnerComboBox innerComboBox;
 
     private readonly InnerTextBox innerTextBox;
@@ -201,10 +203,11 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         this.innerTextBox.TextChanged += this.OnTextChanged;
 
-        // Tunnel handlers run before the TextBox applies the edit, so the drop-down opens (and fills) first,
-        // then the resulting Value change filters it through the regular FilterItems path.
+        // These run before the TextBox applies the edit, so the drop-down opens (filtered by the current text) first,
+        // then the resulting Value change re-filters it through the regular FilterItems path.
+        // PastingFromClipboard is bubble-only, but it is raised before the clipboard text is inserted.
         this.innerTextBox.AddHandler(TextInputEvent, (_, _) => this.OpenDropDownForTextEdit(), RoutingStrategies.Tunnel);
-        this.innerTextBox.AddHandler(TextBox.PastingFromClipboardEvent, (_, _) => this.OpenDropDownForTextEdit(), RoutingStrategies.Tunnel);
+        this.innerTextBox.AddHandler(TextBox.PastingFromClipboardEvent, (_, _) => this.OpenDropDownForTextEdit(), RoutingStrategies.Bubble);
         this.innerTextBox.AddHandler(KeyDownEvent, this.OnInnerTextBoxPreviewKeyDown, RoutingStrategies.Tunnel);
         this.GetObservable(PlaceholderTextProperty).Subscribe(value => this.innerTextBox.PlaceholderText = value);
 #pragma warning disable CS0618 // Watermark is kept for back-compat; forward to PlaceholderText
@@ -1063,13 +1066,23 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         if (this.Mode == EditableComboBoxMode.Filter && this.OpenDropDownOnTextInput && !this.IsDropDownOpen && this.IsEffectivelyEnabled)
         {
-            this.IsDropDownOpen = true;
+            // Open already filtered by the current text: an edit that doesn't change the text (e.g. Delete at the
+            // end) would otherwise leave the full list showing.
+            this.openingFromTextEdit = true;
+            try
+            {
+                this.IsDropDownOpen = true;
+            }
+            finally
+            {
+                this.openingFromTextEdit = false;
+            }
         }
     }
 
     private void OnOpenMenu()
     {
-        this.FillItems();
+        this.FillItems(filter: this.openingFromTextEdit);
         if (this.ClearOnOpen)
         {
             this.innerComboBox.SelectedIndex = -1;

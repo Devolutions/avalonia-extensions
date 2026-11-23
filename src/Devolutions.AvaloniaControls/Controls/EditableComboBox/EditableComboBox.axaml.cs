@@ -14,6 +14,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
@@ -110,6 +111,13 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     public static readonly StyledProperty<bool> AllowCustomValueProperty =
         AvaloniaProperty.Register<EditableComboBox, bool>(nameof(AllowCustomValue), true);
 
+    /// <summary>
+    /// When <c>true</c> (default) and <see cref="Mode"/> is <see cref="EditableComboBoxMode.Filter"/>, editing the text
+    /// (typing, deleting or pasting) opens the drop-down so it immediately shows the filtered items.
+    /// </summary>
+    public static readonly StyledProperty<bool> OpenDropDownOnTextInputProperty =
+        AvaloniaProperty.Register<EditableComboBox, bool>(nameof(OpenDropDownOnTextInput), true);
+
     public static readonly StyledProperty<Func<object, string>?> GroupSelectorProperty =
         AvaloniaProperty.Register<EditableComboBox, Func<object, string>?>("GroupSelector");
 
@@ -192,6 +200,12 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         };
 
         this.innerTextBox.TextChanged += this.OnTextChanged;
+
+        // Tunnel handlers run before the TextBox applies the edit, so the drop-down opens (and fills) first,
+        // then the resulting Value change filters it through the regular FilterItems path.
+        this.innerTextBox.AddHandler(TextInputEvent, (_, _) => this.OpenDropDownForTextEdit(), RoutingStrategies.Tunnel);
+        this.innerTextBox.AddHandler(TextBox.PastingFromClipboardEvent, (_, _) => this.OpenDropDownForTextEdit(), RoutingStrategies.Tunnel);
+        this.innerTextBox.AddHandler(KeyDownEvent, this.OnInnerTextBoxPreviewKeyDown, RoutingStrategies.Tunnel);
         this.GetObservable(PlaceholderTextProperty).Subscribe(value => this.innerTextBox.PlaceholderText = value);
 #pragma warning disable CS0618 // Watermark is kept for back-compat; forward to PlaceholderText
         this.GetObservable(WatermarkProperty).Subscribe(value => this.PlaceholderText = value);
@@ -328,6 +342,12 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     {
         get => this.GetValue(AllowCustomValueProperty);
         set => this.SetValue(AllowCustomValueProperty, value);
+    }
+
+    public bool OpenDropDownOnTextInput
+    {
+        get => this.GetValue(OpenDropDownOnTextInputProperty);
+        set => this.SetValue(OpenDropDownOnTextInputProperty, value);
     }
 
     [Obsolete("Use GroupBinding instead for XAML-friendly, type-checked group selection.")]
@@ -1028,6 +1048,22 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         if (!this.IsDropDownOpen)
         {
             this.RevertToSelectedItemIfNeeded();
+        }
+    }
+
+    private void OnInnerTextBoxPreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        if ((e.Key == Key.Back || e.Key == Key.Delete) && !string.IsNullOrEmpty(this.innerTextBox.Text))
+        {
+            this.OpenDropDownForTextEdit();
+        }
+    }
+
+    private void OpenDropDownForTextEdit()
+    {
+        if (this.Mode == EditableComboBoxMode.Filter && this.OpenDropDownOnTextInput && !this.IsDropDownOpen && this.IsEffectivelyEnabled)
+        {
+            this.IsDropDownOpen = true;
         }
     }
 

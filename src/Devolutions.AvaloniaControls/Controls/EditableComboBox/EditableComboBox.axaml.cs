@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -176,6 +177,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         InputElement.FocusableProperty.OverrideDefaultValue<EditableComboBox>(true);
 
+        // Assistive technology meets one combo box: the inner combo box speaks for the field (see ForwardAccessibility),
+        // so this container stays out of the accessibility tree instead of reporting itself as a list.
+        AutomationProperties.AccessibilityViewProperty.OverrideDefaultValue<EditableComboBox>(AccessibilityView.Raw);
+
         GroupSelectorProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
         GroupBindingProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
         GroupOrderAlphabeticalProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
@@ -239,6 +244,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             [!InnerComboBox.FocusedBorderThicknessProperty] = this[!FocusedBorderThicknessProperty],
             [!InnerComboBox.MaxDropDownWidthProperty] = this[!MaxDropDownWidthProperty],
         };
+
+        this.ForwardAccessibility();
 
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
@@ -479,6 +486,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         {
             this.selectedValueEvaluatorDirty = true;
         }
+        else if (change.Property == AutomationProperties.AutomationIdProperty)
+        {
+            this.ForwardAutomationId();
+        }
     }
 
     protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
@@ -564,6 +575,25 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return false;
     }
 
+    // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
+    // the edit inside takes the same name, as a native editable combo box's edit does. At style priority, the lowest a
+    // binding can take, so an app's own values on the inner parts still win.
+    private void ForwardAccessibility()
+    {
+        this.innerComboBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(AutomationProperties.HelpTextProperty, this.GetObservable(AutomationProperties.HelpTextProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
+        this.innerTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+    }
+
+    // The field's id, else its Name, as UI Automation falls back; without either the combo box keeps its own. Name has no
+    // change notification and is fixed once the control is styled, so it is read here rather than observed.
+    private void ForwardAutomationId()
+    {
+        string? id = AutomationProperties.GetAutomationId(this);
+        this.innerComboBox.SetValue(AutomationProperties.AutomationIdProperty, string.IsNullOrEmpty(id) ? this.Name : id, BindingPriority.Style);
+    }
+
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         if (e.Handled) return;
@@ -577,6 +607,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     protected override void OnInitialized()
     {
         this.innerTextBox.PlaceholderText = this.PlaceholderText;
+        this.ForwardAutomationId();
 
         this.FillItems();
 

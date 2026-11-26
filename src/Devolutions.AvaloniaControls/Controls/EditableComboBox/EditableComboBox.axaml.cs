@@ -576,14 +576,15 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     }
 
     // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
-    // the edit inside takes the same name, as a native editable combo box's edit does. At style priority, the lowest a
-    // binding can take, so an app's own values on the inner parts still win.
+    // the edit inside is named the same way (by name or label), as a native editable combo box's edit is. At style
+    // priority, the lowest a binding can take, so an app's own values on the inner parts still win.
     private void ForwardAccessibility()
     {
         this.innerComboBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
         this.innerComboBox.Bind(AutomationProperties.HelpTextProperty, this.GetObservable(AutomationProperties.HelpTextProperty), BindingPriority.Style);
         this.innerComboBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
         this.innerTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerTextBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
     }
 
     // The field's id, else its Name, as UI Automation falls back; without either the combo box keeps its own. Name has no

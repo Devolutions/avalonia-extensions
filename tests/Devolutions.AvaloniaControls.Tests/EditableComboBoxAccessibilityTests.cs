@@ -121,6 +121,34 @@ public class EditableComboBoxAccessibilityTests
             AutomationPeer combo = ComboPeer(field);
             Assert.Equal("Where the entry is saved", combo.GetHelpText());
             Assert.Same(ControlAutomationPeer.CreatePeerForElement(label), combo.GetLabeledBy());
+
+            // Named by the label alone: the combo box and the edit both take its name.
+            Assert.Equal("Folder", combo.GetName());
+            Assert.Equal("Folder", ControlChildren(combo)[0].GetName());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void FocusingTheComboBoxFocusesItsEdit(string themeName)
+    {
+        (Window window, EditableComboBox field, _) = Create(themeName, static field => AutomationProperties.SetName(field, "Folder"));
+
+        try
+        {
+            AutomationPeer combo = ComboPeer(field);
+            Assert.True(combo.IsKeyboardFocusable());
+
+            combo.SetFocus();
+            Dispatcher.UIThread.RunJobs();
+            Assert.IsType<EditableComboBox.InnerTextBox>(window.FocusManager?.GetFocusedElement());
         }
         finally
         {

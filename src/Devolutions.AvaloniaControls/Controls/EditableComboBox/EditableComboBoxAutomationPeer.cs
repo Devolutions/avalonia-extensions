@@ -26,6 +26,11 @@ internal sealed class EditableComboBoxAutomationPeer : ComboBoxAutomationPeer, I
 
     bool IValueProvider.IsReadOnly => this.textBox.IsReadOnly || !this.textBox.IsEffectivelyEnabled;
 
+    // The combo box itself never takes focus; focusing the field means focusing its edit, as keyboard focus does.
+    protected override bool IsKeyboardFocusableCore() => this.textBox.Focusable;
+
+    protected override void SetFocusCore() => this.textBox.Focus();
+
     string? IValueProvider.Value => this.textBox.Text;
 
     // Through the text box, as typing does, so filtering and custom-value rules apply the same way.

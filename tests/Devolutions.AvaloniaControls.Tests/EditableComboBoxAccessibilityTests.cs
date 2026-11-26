@@ -11,8 +11,6 @@ using Avalonia.VisualTree;
 using Devolutions.AvaloniaControls.Controls;
 using SampleApp;
 
-// An EditableComboBox is one field: assistive technology should meet one named, editable combo box holding its edit,
-// not the parts the control is built from. Each theme has its own template for the inner parts, so each is covered.
 [Collection("StylesTest")]
 public class EditableComboBoxAccessibilityTests
 {
@@ -122,7 +120,6 @@ public class EditableComboBoxAccessibilityTests
             Assert.Equal("Where the entry is saved", combo.GetHelpText());
             Assert.Same(ControlAutomationPeer.CreatePeerForElement(label), combo.GetLabeledBy());
 
-            // Named by the label alone: the combo box and the edit both take its name.
             Assert.Equal("Folder", combo.GetName());
             Assert.Equal("Folder", ControlChildren(combo)[0].GetName());
         }
@@ -375,7 +372,6 @@ public class EditableComboBoxAccessibilityTests
     private static AutomationPeer ComboPeer(EditableComboBox field) =>
         ControlAutomationPeer.CreatePeerForElement(field.GetVisualDescendants().OfType<EditableComboBox.InnerComboBox>().Single());
 
-    // The children assistive technology sees: elements left out of the tree are skipped, their children promoted.
     private static IReadOnlyList<AutomationPeer> ControlChildren(AutomationPeer peer)
     {
         List<AutomationPeer> result = [];

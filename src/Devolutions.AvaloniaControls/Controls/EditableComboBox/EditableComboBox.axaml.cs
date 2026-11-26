@@ -160,7 +160,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private bool openingFromTextEdit;
 
-    // One binding for the combo box's id, so a later change updates it in place instead of outranking an app's style.
     private readonly BehaviorSubject<string?> forwardedAutomationId = new(null);
 
     private readonly InnerComboBox innerComboBox;
@@ -182,8 +181,6 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
         InputElement.FocusableProperty.OverrideDefaultValue<EditableComboBox>(true);
 
-        // Assistive technology meets one combo box: the inner combo box speaks for the field (see ForwardAccessibility),
-        // so this container stays out of the accessibility tree instead of reporting itself as a list.
         AutomationProperties.AccessibilityViewProperty.OverrideDefaultValue<EditableComboBox>(AccessibilityView.Raw);
 
         GroupSelectorProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
@@ -580,14 +577,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return false;
     }
 
-    // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
-    // the edit inside is named the same way (by name or label), as a native editable combo box's edit is. At style
-    // priority, the lowest a binding can take, so an app's own values on the inner parts still win.
-    // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
-    // the edit inside is named the same way (by name or label), as a native editable combo box's edit is. At style
-    // priority, the lowest a binding can take, so an app's own values on the inner parts still win. Help text falls back
-    // to the field's validation errors, as Avalonia does for a control's own: they are set on this control, which is out
-    // of the tree, so the combo box would otherwise lose them.
+    // Style priority, the lowest a binding can take, so an app's own values on the inner parts still win.
     private void ForwardAccessibility()
     {
         this.innerComboBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
@@ -605,8 +595,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         this.innerTextBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
     }
 
-    // The field's id, else its Name, as UI Automation falls back; without either the combo box keeps its own. Name has no
-    // change notification and is fixed once the control is styled, so it is read here rather than observed.
+    // Name has no change notification, so it is read here rather than observed.
     private void ForwardAutomationId()
     {
         string? id = AutomationProperties.GetAutomationId(this);

@@ -179,8 +179,6 @@ public partial class EditableComboBox
             this.innerLeftOfDropDownArrowContentControl = e.NameScope.Find<ItemsControl>("PART_InnerLeftOfDropDownArrowContent");
             this.innerRightContentControl = e.NameScope.Get<ItemsControl>("PART_InnerRightContent");
 
-            // The slots only hold an app's buttons: their containers stay out of the accessibility tree, so the buttons
-            // sit directly in the combo box instead of inside an unnamed list.
             foreach (ItemsControl? slot in new[] { this.innerLeftContentControl, this.innerLeftOfDropDownArrowContentControl, this.innerRightContentControl })
             {
                 if (slot is not null)

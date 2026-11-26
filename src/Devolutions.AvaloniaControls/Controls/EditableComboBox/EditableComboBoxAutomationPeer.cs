@@ -6,8 +6,6 @@ using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Input;
 
-// The combo box that represents an EditableComboBox. Expand/collapse and selection stay ComboBox's; the value is the
-// field's text, as for an editable ComboBox, so a typed entry is reported and can be set, not only a selected item.
 internal sealed class EditableComboBoxAutomationPeer : ComboBoxAutomationPeer, IValueProvider
 {
     private readonly TextBox textBox;
@@ -36,7 +34,6 @@ internal sealed class EditableComboBoxAutomationPeer : ComboBoxAutomationPeer, I
 
     private bool IsTextReadOnly() => this.textBox.IsReadOnly || !this.textBox.IsEffectivelyEnabled;
 
-    // Clients cache whether the value can be edited, so a change after the peer exists is announced.
     private void UpdateReadOnly()
     {
         bool wasReadOnly = this.isReadOnly;
@@ -47,14 +44,13 @@ internal sealed class EditableComboBoxAutomationPeer : ComboBoxAutomationPeer, I
         }
     }
 
-    // The combo box itself never takes focus; focusing the field means focusing its edit, as keyboard focus does.
     protected override bool IsKeyboardFocusableCore() => this.textBox.Focusable;
 
     protected override void SetFocusCore() => this.textBox.Focus();
 
     string? IValueProvider.Value => this.textBox.Text;
 
-    // Through the text box, as typing does, so filtering and custom-value rules apply the same way.
+    // Through the text box, so typing's filtering and custom-value rules apply.
     void IValueProvider.SetValue(string? value)
     {
         if (((IValueProvider)this).IsReadOnly)

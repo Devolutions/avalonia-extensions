@@ -457,6 +457,22 @@
           </MultiComboBox.ItemTemplate>
         </MultiComboBox>
       </StackPanel>
+
+      <Border Margin="0" Padding="20" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Width="460" Spacing="8">
+          <TextBlock FontWeight="Bold">Drop-down width with a few long items</TextBlock>
+          <TextBlock TextWrapping="Wrap">200 items, with a much longer one every 40 (040, 080, 120, 160, 200). Open the drop-down and scroll: it widens as the long items come into view and narrows again when they scroll away.</TextBlock>
+          <!-- Large lists set a virtualizing panel (see the 1000-item example), which is what makes the width change. -->
+          <MultiComboBox ItemsSource="{Binding ManyItemsWithLongOnes}" SelectedItems="{Binding ManyItemsWithLongOnesSelectedItems}"
+                         PlaceholderText="Scroll the list" MinWidth="200" HorizontalAlignment="Left">
+            <MultiComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </MultiComboBox.ItemsPanel>
+          </MultiComboBox>
+        </StackPanel>
+      </Border>
     </StackPanel>
   </Border>
 </UserControl>

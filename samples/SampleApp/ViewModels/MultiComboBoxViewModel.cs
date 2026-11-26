@@ -8,6 +8,7 @@ using System.Linq;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Devolutions.AvaloniaControls.Controls;
+using SampleApp.Models;
 
 public enum MultiComboBoxDemoEnum
 {
@@ -68,6 +69,10 @@ public partial class MultiComboBoxViewModel : ObservableValidator
     public string InlineSelectedItemsText => this.InlineSelectedItems.Count > 0 ? string.Join(", ", this.InlineSelectedItems) : "None";
     
     public AvaloniaList<Item> LotOfItems { get; } = [];
+
+    public IReadOnlyList<string> ManyItemsWithLongOnes => LongItemsSample.Names;
+
+    public AvaloniaList<string> ManyItemsWithLongOnesSelectedItems { get; } = [];
     
     public AvaloniaList<Item> LotOfItemsSelectedItems { get; } = [];
     

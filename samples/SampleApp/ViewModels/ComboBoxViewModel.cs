@@ -3,6 +3,7 @@ namespace SampleApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SampleApp.Models;
 
 public partial class ComboBoxViewModel : ObservableValidator
 {
@@ -13,6 +14,8 @@ public partial class ComboBoxViewModel : ObservableValidator
 
     public IReadOnlyList<string> LargeItemsList { get; } =
         Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList();
+
+    public IReadOnlyList<string> ManyItemsWithLongOnes => LongItemsSample.Names;
 
     public ComboBoxViewModel()
     {

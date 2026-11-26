@@ -2,11 +2,13 @@ namespace SampleApp.ViewModels;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Avalonia;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SampleApp.Models;
 
 /// <summary>
 /// View model for the <see cref="SampleApp.DemoPages.GroupedComboBoxDemo"/> page.
@@ -81,6 +83,10 @@ public partial class GroupedComboBoxViewModel : ObservableObject
     };
 
     public List<FoodItem> LargeItems { get; } = GenerateLargeItems();
+
+    public List<FoodItem> ManyItemsWithLongOnes { get; } = LongItemsSample.Names
+        .Select(static (name, index) => new FoodItem(name, index < 100 ? "First half" : "Second half"))
+        .ToList();
 
     public ObservableCollection<DynamicFoodItem> DynamicItems { get; } = new()
     {

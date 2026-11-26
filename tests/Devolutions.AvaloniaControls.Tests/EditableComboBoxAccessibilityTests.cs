@@ -259,6 +259,100 @@ public class EditableComboBoxAccessibilityTests
         }
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void ValidationErrorsAreReadAsHelpText(string themeName)
+    {
+        (Window window, EditableComboBox field, _) = Create(themeName, static _ => { });
+
+        try
+        {
+            AutomationPeer combo = ComboPeer(field);
+            DataValidationErrors.SetError(field, new Exception("Choose a folder"));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains("Choose a folder", combo.GetHelpText());
+
+            AutomationProperties.SetHelpText(field, "Where the entry is saved");
+            Assert.Equal("Where the entry is saved", combo.GetHelpText());
+
+            AutomationProperties.SetHelpText(field, null);
+            DataValidationErrors.SetError(field, null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(string.IsNullOrEmpty(combo.GetHelpText()));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void AnAppStyledInnerIdSurvivesALaterFieldIdChange(string themeName)
+    {
+        (Window window, EditableComboBox field, _) = Create(themeName, static field =>
+        {
+            AutomationProperties.SetAutomationId(field, "Folder");
+            field.Styles.Add(new Style(static x => x.OfType<EditableComboBox.InnerComboBox>())
+            {
+                Setters = { new Setter(AutomationProperties.AutomationIdProperty, "StyledFolder") },
+            });
+        });
+
+        try
+        {
+            Assert.Equal("StyledFolder", ComboPeer(field).GetAutomationId());
+
+            AutomationProperties.SetAutomationId(field, "Destination");
+            Assert.Equal("StyledFolder", ComboPeer(field).GetAutomationId());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void AReadOnlyChangeIsAnnounced(string themeName)
+    {
+        (Window window, EditableComboBox field, _) = Create(themeName, static _ => { });
+
+        try
+        {
+            AutomationPeer combo = ComboPeer(field);
+            List<(object? Old, object? New)> changes = [];
+            combo.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == ValuePatternIdentifiers.IsReadOnlyProperty)
+                {
+                    changes.Add((e.OldValue, e.NewValue));
+                }
+            };
+
+            field.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(Assert.IsAssignableFrom<IValueProvider>(combo).IsReadOnly);
+
+            field.IsEnabled = true;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal([(false, true), (true, false)], changes);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static (Window Window, EditableComboBox Field, Button Button) Create(string themeName, Action<EditableComboBox> configure)
     {
         SetTheme(themeName);

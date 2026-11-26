@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;
@@ -157,6 +159,9 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private bool syncingSelectedItemFromInnerCombo;
 
     private bool openingFromTextEdit;
+
+    // One binding for the combo box's id, so a later change updates it in place instead of outranking an app's style.
+    private readonly BehaviorSubject<string?> forwardedAutomationId = new(null);
 
     private readonly InnerComboBox innerComboBox;
 
@@ -578,11 +583,24 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
     // the edit inside is named the same way (by name or label), as a native editable combo box's edit is. At style
     // priority, the lowest a binding can take, so an app's own values on the inner parts still win.
+    // What an app sets on the EditableComboBox describes the field, so the combo box that represents it reports it, and
+    // the edit inside is named the same way (by name or label), as a native editable combo box's edit is. At style
+    // priority, the lowest a binding can take, so an app's own values on the inner parts still win. Help text falls back
+    // to the field's validation errors, as Avalonia does for a control's own: they are set on this control, which is out
+    // of the tree, so the combo box would otherwise lose them.
     private void ForwardAccessibility()
     {
         this.innerComboBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
-        this.innerComboBox.Bind(AutomationProperties.HelpTextProperty, this.GetObservable(AutomationProperties.HelpTextProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(
+            AutomationProperties.HelpTextProperty,
+            this.GetObservable(AutomationProperties.HelpTextProperty).CombineLatest(
+                this.GetObservable(DataValidationErrors.ErrorsProperty),
+                static (helpText, errors) => !string.IsNullOrWhiteSpace(helpText) || errors is null
+                    ? helpText
+                    : string.Join(Environment.NewLine, errors.Select(static error => error?.ToString()))),
+            BindingPriority.Style);
         this.innerComboBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(AutomationProperties.AutomationIdProperty, this.forwardedAutomationId, BindingPriority.Style);
         this.innerTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
         this.innerTextBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
     }
@@ -592,7 +610,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     private void ForwardAutomationId()
     {
         string? id = AutomationProperties.GetAutomationId(this);
-        this.innerComboBox.SetValue(AutomationProperties.AutomationIdProperty, string.IsNullOrEmpty(id) ? this.Name : id, BindingPriority.Style);
+        this.forwardedAutomationId.OnNext(string.IsNullOrEmpty(id) ? this.Name : id);
     }
 
     protected override void OnGotFocus(FocusChangedEventArgs e)

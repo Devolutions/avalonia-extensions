@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SampleApp.Models;
 
 public partial class EditableComboBoxViewModel : ObservableValidator
 {
@@ -26,6 +27,8 @@ public partial class EditableComboBoxViewModel : ObservableValidator
 
     public IReadOnlyList<string> LargeItemsList { get; } =
         Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList();
+
+    public IReadOnlyList<string> ManyItemsWithLongOnes => LongItemsSample.Names;
 
     // --- Grouping demo (mirrors the GroupedComboBox demo set, adapted for EditableComboBox) ---
 

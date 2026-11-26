@@ -164,5 +164,14 @@
         </StackPanel>
       </StackPanel>
     </Grid>
+
+    <Border Margin="20" Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+      <StackPanel Width="460" Spacing="8">
+        <TextBlock FontWeight="Bold">Drop-down width with a few long items</TextBlock>
+        <TextBlock TextWrapping="Wrap">200 items, with a much longer one every 40 (040, 080, 120, 160, 200). Open the drop-down and scroll: it widens as the long items come into view and narrows again when they scroll away.</TextBlock>
+        <ComboBox ItemsSource="{Binding ManyItemsWithLongOnes}" PlaceholderText="Scroll the list" MinWidth="200"
+                  HorizontalAlignment="Left" />
+      </StackPanel>
+    </Border>
   </StackPanel>
 </UserControl>

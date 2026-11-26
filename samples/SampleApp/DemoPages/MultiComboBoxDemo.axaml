@@ -13,450 +13,468 @@
   </Design.DataContext>
 
   <Border Margin="10" Padding="10">
-    <StackPanel Orientation="Horizontal" Spacing="30">
-      <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
-        <MultiComboBox PlaceholderText="select..." ShowFilter="True">
-          <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
-          <MultiComboBoxItem>Item 4</MultiComboBoxItem>
-          <MultiComboBoxItem>Item 5</MultiComboBoxItem>
-        </MultiComboBox>
+    <StackPanel Spacing="30">
+      <StackPanel Orientation="Horizontal" Spacing="30">
+        <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
+          <MultiComboBox PlaceholderText="select..." ShowFilter="True">
+            <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
+            <MultiComboBoxItem IsEnabled="False">Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsEnabled="False" IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 4</MultiComboBoxItem>
+            <MultiComboBoxItem>Item 5</MultiComboBoxItem>
+          </MultiComboBox>
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <TextBlock>OverflowMode = Scroll (Default)</TextBlock>
-        <TextBlock Margin="10 0 0 0">
-          <Italic> - Scroll wheel can scroll without shift</Italic>
-        </TextBlock>
-        <TextBlock Margin="10 0 0 0">
-          <Italic> - Left/Right arrows when focused to scroll</Italic>
-        </TextBlock>
-        <MultiComboBox PlaceholderText="select...">
-          <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 4</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
-        </MultiComboBox>
+          <TextBlock>OverflowMode = Scroll (Default)</TextBlock>
+          <TextBlock Margin="10 0 0 0">
+            <Italic> - Scroll wheel can scroll without shift</Italic>
+          </TextBlock>
+          <TextBlock Margin="10 0 0 0">
+            <Italic> - Left/Right arrows when focused to scroll</Italic>
+          </TextBlock>
+          <MultiComboBox PlaceholderText="select...">
+            <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 4</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
+          </MultiComboBox>
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <TextBlock>OverflowMode = Wrap</TextBlock>
-        <MultiComboBox PlaceholderText="select..." OverflowMode="Wrap" SelectAllText="Select All">
-          <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 4</MultiComboBoxItem>
-          <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
-        </MultiComboBox>
+          <TextBlock>OverflowMode = Wrap</TextBlock>
+          <MultiComboBox PlaceholderText="select..." OverflowMode="Wrap" SelectAllText="Select All">
+            <MultiComboBoxItem IsSelected="True">Item 1</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 2</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 3</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 4</MultiComboBoxItem>
+            <MultiComboBoxItem IsSelected="True">Item 5</MultiComboBoxItem>
+          </MultiComboBox>
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          ItemsSource="{Binding Items}"
-          SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            ItemsSource="{Binding Items}"
+            SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
 
-        <StackPanel Orientation="Horizontal">
-          <TextBlock Text="Selected: " />
-          <TextBlock Text="{Binding SelectedText}" />
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Selected: " />
+            <TextBlock Text="{Binding SelectedText}" />
+          </StackPanel>
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>"Select All" feature</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="With select all"
+            SelectAllText="Select All"
+            ItemsSource="{Binding Items}"
+            SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
         </StackPanel>
 
-        <Separator Margin="-10 10" />
+        <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
+          <TextBlock>LOT of values</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="LOT of values"
+            SelectAllText="Select All"
+            AllSelectedText="All"
+            FilterText="Find an option..."
+            ItemsSource="{Binding LotOfItems}">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate>
+                <SearchHighlightTextBlock Content="{Binding Text}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
 
-        <TextBlock>"Select All" feature</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="With select all"
-          SelectAllText="Select All"
-          ItemsSource="{Binding Items}"
-          SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
-      </StackPanel>
+          <Separator Margin="-10 10" />
 
-      <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
-        <TextBlock>LOT of values</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="LOT of values"
-          SelectAllText="Select All"
-          AllSelectedText="All"
-          FilterText="Find an option..."
-          ItemsSource="{Binding LotOfItems}">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate>
-              <SearchHighlightTextBlock Content="{Binding Text}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
+          <TextBlock>Disabled</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="disabled"
+            IsEnabled="False"
+            ItemsSource="{Binding Items}"
+            SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <TextBlock>Disabled</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="disabled"
-          IsEnabled="False"
-          ItemsSource="{Binding Items}"
-          SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+          <TextBlock>Custom Item Template</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Custom Item Template"
+            ItemsSource="{Binding Items}"
+            SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <Border Width="12" Height="12" Background="Green" Margin="0 0 5 0" />
+                  <TextBlock Text="{Binding}" />
+                </StackPanel>
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+            <MultiComboBox.SelectedItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <Border Width="12" Height="12" Background="Blue" Margin="0 0 5 0" />
+                  <TextBlock Text="{Binding}" />
+                </StackPanel>
+              </DataTemplate>
+            </MultiComboBox.SelectedItemTemplate>
+          </MultiComboBox>
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <TextBlock>Custom Item Template</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Custom Item Template"
-          ItemsSource="{Binding Items}"
-          SelectedItems="{Binding SelectedItems, Mode=TwoWay}">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal">
-                <Border Width="12" Height="12" Background="Green" Margin="0 0 5 0" />
-                <TextBlock Text="{Binding}" />
-              </StackPanel>
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-          <MultiComboBox.SelectedItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal">
-                <Border Width="12" Height="12" Background="Blue" Margin="0 0 5 0" />
-                <TextBlock Text="{Binding}" />
-              </StackPanel>
-            </DataTemplate>
-          </MultiComboBox.SelectedItemTemplate>
-        </MultiComboBox>
+          <TextBlock>Enum Values</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Enum Values"
+            ItemsSource="{Binding EnumValues}"
+            SelectedItems="{Binding SelectedEnumValues, Mode=TwoWay}" />
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Selected: " />
+            <TextBlock Text="{Binding SelectedEnumValuesText}" />
+          </StackPanel>
 
-        <Separator Margin="-10 10" />
+          <Separator Margin="-10 10" />
 
-        <TextBlock>Enum Values</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Enum Values"
-          ItemsSource="{Binding EnumValues}"
-          SelectedItems="{Binding SelectedEnumValues, Mode=TwoWay}" />
-        <StackPanel Orientation="Horizontal">
-          <TextBlock Text="Selected: " />
-          <TextBlock Text="{Binding SelectedEnumValuesText}" />
+          <TextBlock>Left and Right Inner Content</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Inner Content">
+            <MultiComboBox.InnerLeftContent>
+              <Border Width="12" Height="12" Background="Green" />
+            </MultiComboBox.InnerLeftContent>
+            <MultiComboBox.InnerRightContent>
+              <Border Width="12" Height="12" Background="Blue" />
+            </MultiComboBox.InnerRightContent>
+          </MultiComboBox>
+
+          <TextBlock>Required</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            SelectedItems="{Binding RequiredValues}"
+            ItemsSource="{Binding Items}"
+            PlaceholderText="Required" />
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>Inside Flyout</TextBlock>
+          <Button Content="Open Flyout">
+            <Button.Flyout>
+              <Flyout>
+                <StackPanel Width="200" Spacing="10">
+                  <TextBlock Text="MultiComboBox in Flyout" />
+                  <MultiComboBox
+                    HorizontalAlignment="Stretch"
+                    PlaceholderText="Flyout options"
+                    ItemsSource="{Binding Items}"
+                    SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+                </StackPanel>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
         </StackPanel>
 
-        <Separator Margin="-10 10" />
+        <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
+          <TextBlock>100 Inline Items (virtualization test)</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="100 inline items"
+            SelectAllText="Select All"
+            ShowFilter="True"
+            SelectedItems="{Binding InlineSelectedItems}">
+            <MultiComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </MultiComboBox.ItemsPanel>
+            <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 2</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 3</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 4</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 5</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 6</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 7</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 8</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 9</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 10</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 11</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 12</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 13</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 14</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 15</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 16</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 17</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 18</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 19</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 20</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 21</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 22</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 23</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 24</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 25</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 26</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 27</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 28</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 29</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 30</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 31</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 32</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 33</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 34</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 35</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 36</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 37</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 38</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 39</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 40</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 41</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 42</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 43</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 44</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 45</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 46</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 47</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 48</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 49</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 50</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 51</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 52</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 53</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 54</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 55</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 56</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 57</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 58</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 59</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 60</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 61</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 62</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 63</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 64</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 65</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 66</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 67</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 68</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 69</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 70</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 71</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 72</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 73</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 74</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 75</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 76</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 77</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 78</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 79</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 80</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 81</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 82</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 83</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 84</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 85</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 86</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 87</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 88</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 89</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 90</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 91</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 92</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 93</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 94</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 95</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 96</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 97</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 98</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 99</MultiComboBoxItem>
+            <MultiComboBoxItem>Inline 100</MultiComboBoxItem>
+          </MultiComboBox>
+          <TextBlock Text="{Binding InlineSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding InlineSelectedItemsText}" />
 
-        <TextBlock>Left and Right Inner Content</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Inner Content">
-          <MultiComboBox.InnerLeftContent>
-            <Border Width="12" Height="12" Background="Green" />
-          </MultiComboBox.InnerLeftContent>
-          <MultiComboBox.InnerRightContent>
-            <Border Width="12" Height="12" Background="Blue" />
-          </MultiComboBox.InnerRightContent>
-        </MultiComboBox>
+          <Separator Margin="-10 10" />
 
-        <TextBlock>Required</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          SelectedItems="{Binding RequiredValues}"
-          ItemsSource="{Binding Items}"
-          PlaceholderText="Required" />
+          <TextBlock>1000 Bound Items (virtualization test)</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="1000 bound items"
+            SelectAllText="Select All"
+            ShowFilter="True"
+            ItemsSource="{Binding LotOfItems}"
+            SelectedItems="{Binding LotOfItemsSelectedItems}">
+            <MultiComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </MultiComboBox.ItemsPanel>
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate>
+                <SearchHighlightTextBlock Content="{Binding Text}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+          <TextBlock Text="{Binding LotOfItemsSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding LotOfItemsSelectedItemsText}" />
+        </StackPanel>
 
-        <Separator Margin="-10 10" />
+        <StackPanel Width="240" HorizontalAlignment="Left" Spacing="10">
+          <TextBlock FontWeight="Bold" FontSize="16">Grouping</TextBlock>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
+            Items are grouped under headers. Each header has a leading tri-state check box that
+            selects/deselects the whole group (mixed = only some selected). Grouping is data-driven
+            via GroupBinding/GroupSelector.
+          </TextBlock>
 
-        <TextBlock>Inside Flyout</TextBlock>
-        <Button Content="Open Flyout">
-          <Button.Flyout>
-            <Flyout>
-              <StackPanel Width="200" Spacing="10">
-                <TextBlock Text="MultiComboBox in Flyout" />
-                <MultiComboBox
-                  HorizontalAlignment="Stretch"
-                  PlaceholderText="Flyout options"
-                  ItemsSource="{Binding Items}"
-                  SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
-              </StackPanel>
-            </Flyout>
-          </Button.Flyout>
-        </Button>
+          <TextBlock>Named groups + Select All</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Grouped"
+            SelectAllText="Select All"
+            ItemsSource="{Binding GroupedItems}"
+            SelectedItems="{Binding GroupedSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+            GroupOrderAlphabetical="True">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+          <TextBlock Text="{Binding GroupedSelectedText, StringFormat='Selected: {0}'}" TextWrapping="Wrap" />
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>GroupOrderBinding (Group.SortOrder)</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Ordered by SortOrder"
+            SelectAllText="Select All"
+            ItemsSource="{Binding GroupedItems}"
+            SelectedItems="{Binding GroupedOrderBindingSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderBinding="{Binding Group.SortOrder}">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>Empty group (headerless)</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Empty group unset"
+            SelectAllText="Select All"
+            ItemsSource="{Binding EmptyGroupItems}"
+            SelectedItems="{Binding EmptyGroupSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderSelector="{Binding EmptyGroupFirstSelector}">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>Empty group named + HeaderForeground</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Empty group named"
+            SelectAllText="Select All"
+            ItemsSource="{Binding EmptyGroupItems}"
+            SelectedItems="{Binding EmptyGroupNamedSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
+            EmptyGroupName="NO GROUP"
+            HeaderForeground="#266FD2">
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>Large grouped (virtualization + filter)</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="1500 grouped items"
+            SelectAllText="Select All"
+            ShowFilter="True"
+            FilterText="Find an option..."
+            ItemsSource="{Binding LargeGroupedItems}"
+            SelectedItems="{Binding LargeGroupedSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderAlphabetical="True">
+            <MultiComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </MultiComboBox.ItemsPanel>
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+
+          <Separator Margin="-10 10" />
+
+          <TextBlock>Custom HeaderTemplate</TextBlock>
+          <MultiComboBox
+            HorizontalAlignment="Left"
+            PlaceholderText="Custom headers"
+            SelectAllText="Select All"
+            ItemsSource="{Binding GroupedItems}"
+            SelectedItems="{Binding HeaderTemplateSelectedItems}"
+            GroupBinding="{Binding Category}"
+            GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
+            GroupOrderAlphabetical="True">
+            <MultiComboBox.HeaderTemplate>
+              <DataTemplate>
+                <Border
+                  Background="{DynamicResource SystemControlForegroundAccentBrush}"
+                  CornerRadius="3"
+                  Padding="6 2"
+                  HorizontalAlignment="Left">
+                  <TextBlock Text="{Binding}" Foreground="White" FontWeight="Bold" FontSize="11" />
+                </Border>
+              </DataTemplate>
+            </MultiComboBox.HeaderTemplate>
+            <MultiComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FoodItem">
+                <SearchHighlightTextBlock Content="{Binding Name}" />
+              </DataTemplate>
+            </MultiComboBox.ItemTemplate>
+          </MultiComboBox>
+        </StackPanel>
       </StackPanel>
 
-      <StackPanel Width="200" HorizontalAlignment="Left" Spacing="10">
-        <TextBlock>100 Inline Items (virtualization test)</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="100 inline items"
-          SelectAllText="Select All"
-          ShowFilter="True"
-          SelectedItems="{Binding InlineSelectedItems}">
-          <MultiComboBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <VirtualizingStackPanel />
-            </ItemsPanelTemplate>
-          </MultiComboBox.ItemsPanel>
-          <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 1</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 2</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 3</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 4</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 5</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 6</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 7</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 8</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 9</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 10</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 11</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 12</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 13</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 14</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 15</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 16</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 17</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 18</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 19</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 20</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 21</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 22</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 23</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 24</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 25</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 26</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 27</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 28</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 29</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 30</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 31</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 32</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 33</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 34</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 35</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 36</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 37</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 38</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 39</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 40</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 41</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 42</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 43</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 44</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 45</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 46</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 47</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 48</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 49</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 50</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 51</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 52</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 53</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 54</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 55</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 56</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 57</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 58</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 59</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 60</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 61</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 62</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 63</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 64</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 65</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 66</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 67</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 68</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 69</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 70</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 71</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 72</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 73</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 74</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 75</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 76</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 77</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 78</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 79</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 80</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 81</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 82</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 83</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 84</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 85</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 86</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 87</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 88</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 89</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 90</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 91</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 92</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 93</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 94</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 95</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 96</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 97</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 98</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 99</MultiComboBoxItem>
-          <MultiComboBoxItem>Inline 100</MultiComboBoxItem>
-        </MultiComboBox>
-        <TextBlock Text="{Binding InlineSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding InlineSelectedItemsText}" />
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>1000 Bound Items (virtualization test)</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="1000 bound items"
-          SelectAllText="Select All"
-          ShowFilter="True"
-          ItemsSource="{Binding LotOfItems}"
-          SelectedItems="{Binding LotOfItemsSelectedItems}">
-          <MultiComboBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <VirtualizingStackPanel />
-            </ItemsPanelTemplate>
-          </MultiComboBox.ItemsPanel>
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate>
-              <SearchHighlightTextBlock Content="{Binding Text}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-        <TextBlock Text="{Binding LotOfItemsSelectedItemsText, StringFormat='Selection: {0}'}" ToolTip.Tip="{Binding LotOfItemsSelectedItemsText}" />
-      </StackPanel>
-
-      <StackPanel Width="240" HorizontalAlignment="Left" Spacing="10">
-        <TextBlock FontWeight="Bold" FontSize="16">Grouping</TextBlock>
-        <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextControlPlaceholderForeground}">
-          Items are grouped under headers. Each header has a leading tri-state check box that
-          selects/deselects the whole group (mixed = only some selected). Grouping is data-driven
-          via GroupBinding/GroupSelector.
-        </TextBlock>
-
-        <TextBlock>Named groups + Select All</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Grouped"
-          SelectAllText="Select All"
-          ItemsSource="{Binding GroupedItems}"
-          SelectedItems="{Binding GroupedSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
-          GroupOrderAlphabetical="True">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-        <TextBlock Text="{Binding GroupedSelectedText, StringFormat='Selected: {0}'}" TextWrapping="Wrap" />
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>GroupOrderBinding (Group.SortOrder)</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Ordered by SortOrder"
-          SelectAllText="Select All"
-          ItemsSource="{Binding GroupedItems}"
-          SelectedItems="{Binding GroupedOrderBindingSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderBinding="{Binding Group.SortOrder}">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>Empty group (headerless)</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Empty group unset"
-          SelectAllText="Select All"
-          ItemsSource="{Binding EmptyGroupItems}"
-          SelectedItems="{Binding EmptyGroupSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderSelector="{Binding EmptyGroupFirstSelector}">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>Empty group named + HeaderForeground</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Empty group named"
-          SelectAllText="Select All"
-          ItemsSource="{Binding EmptyGroupItems}"
-          SelectedItems="{Binding EmptyGroupNamedSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderSelector="{Binding EmptyGroupFirstSelector}"
-          EmptyGroupName="NO GROUP"
-          HeaderForeground="#266FD2">
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>Large grouped (virtualization + filter)</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="1500 grouped items"
-          SelectAllText="Select All"
-          ShowFilter="True"
-          FilterText="Find an option..."
-          ItemsSource="{Binding LargeGroupedItems}"
-          SelectedItems="{Binding LargeGroupedSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderAlphabetical="True">
-          <MultiComboBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <VirtualizingStackPanel />
-            </ItemsPanelTemplate>
-          </MultiComboBox.ItemsPanel>
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-
-        <Separator Margin="-10 10" />
-
-        <TextBlock>Custom HeaderTemplate</TextBlock>
-        <MultiComboBox
-          HorizontalAlignment="Left"
-          PlaceholderText="Custom headers"
-          SelectAllText="Select All"
-          ItemsSource="{Binding GroupedItems}"
-          SelectedItems="{Binding HeaderTemplateSelectedItems}"
-          GroupBinding="{Binding Category}"
-          GroupOrderSelector="{Binding CategoryGroupOrderSelector}"
-          GroupOrderAlphabetical="True">
-          <MultiComboBox.HeaderTemplate>
-            <DataTemplate>
-              <Border
-                Background="{DynamicResource SystemControlForegroundAccentBrush}"
-                CornerRadius="3"
-                Padding="6 2"
-                HorizontalAlignment="Left">
-                <TextBlock Text="{Binding}" Foreground="White" FontWeight="Bold" FontSize="11" />
-              </Border>
-            </DataTemplate>
-          </MultiComboBox.HeaderTemplate>
-          <MultiComboBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:FoodItem">
-              <SearchHighlightTextBlock Content="{Binding Name}" />
-            </DataTemplate>
-          </MultiComboBox.ItemTemplate>
-        </MultiComboBox>
-      </StackPanel>
+      <Border Padding="20" HorizontalAlignment="Left" Background="{DynamicResource LayoutBackgroundLowBrush}">
+        <StackPanel Width="460" Spacing="8">
+          <TextBlock FontWeight="Bold">Drop-down width with a few long items</TextBlock>
+          <TextBlock TextWrapping="Wrap">200 items, with a much longer one every 40 (040, 080, 120, 160, 200). Open the drop-down and scroll: it widens as the long items come into view and narrows again when they scroll away.</TextBlock>
+          <!-- Large lists set a virtualizing panel (see the 1000-item example), which is what makes the width change. -->
+          <MultiComboBox ItemsSource="{Binding ManyItemsWithLongOnes}" SelectedItems="{Binding ManyItemsWithLongOnesSelectedItems}"
+                         PlaceholderText="Scroll the list" MinWidth="200" HorizontalAlignment="Left">
+            <MultiComboBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </MultiComboBox.ItemsPanel>
+          </MultiComboBox>
+        </StackPanel>
+      </Border>
     </StackPanel>
   </Border>
 </UserControl>

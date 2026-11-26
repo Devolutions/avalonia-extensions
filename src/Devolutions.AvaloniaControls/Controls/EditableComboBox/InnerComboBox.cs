@@ -3,6 +3,8 @@ namespace Devolutions.AvaloniaControls.Controls;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -169,11 +171,21 @@ public partial class EditableComboBox
             return true;
         }
 
+        protected override AutomationPeer OnCreateAutomationPeer() => new EditableComboBoxAutomationPeer(this, this.InnerTextBox);
+
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             this.innerLeftContentControl = e.NameScope.Get<ItemsControl>("PART_InnerLeftContent");
             this.innerLeftOfDropDownArrowContentControl = e.NameScope.Find<ItemsControl>("PART_InnerLeftOfDropDownArrowContent");
             this.innerRightContentControl = e.NameScope.Get<ItemsControl>("PART_InnerRightContent");
+
+            foreach (ItemsControl? slot in new[] { this.innerLeftContentControl, this.innerLeftOfDropDownArrowContentControl, this.innerRightContentControl })
+            {
+                if (slot is not null)
+                {
+                    AutomationProperties.SetAccessibilityView(slot, AccessibilityView.Raw);
+                }
+            }
 
             this.textboxContentPresenter = e.NameScope.Get<ContentPresenter>("PART_TextBoxPresenter");
             this.textboxContentPresenter.Content = this.InnerTextBox;

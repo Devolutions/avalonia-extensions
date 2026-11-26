@@ -6,7 +6,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -157,6 +160,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
 
     private bool openingFromTextEdit;
 
+    private readonly BehaviorSubject<string?> forwardedAutomationId = new(null);
+
     private readonly InnerComboBox innerComboBox;
 
     private readonly InnerTextBox innerTextBox;
@@ -175,6 +180,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         ItemsControl.IsTabStopProperty.Unregister(typeof(EditableComboBox));
 
         InputElement.FocusableProperty.OverrideDefaultValue<EditableComboBox>(true);
+
+        AutomationProperties.AccessibilityViewProperty.OverrideDefaultValue<EditableComboBox>(AccessibilityView.Raw);
 
         GroupSelectorProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
         GroupBindingProperty.Changed.AddClassHandler<EditableComboBox>((x, _) => x.FillItems());
@@ -239,6 +246,8 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
             [!InnerComboBox.FocusedBorderThicknessProperty] = this[!FocusedBorderThicknessProperty],
             [!InnerComboBox.MaxDropDownWidthProperty] = this[!MaxDropDownWidthProperty],
         };
+
+        this.ForwardAccessibility();
 
         this.GetObservable(ModeProperty).Subscribe(mode => this.innerComboBox.ValueFilterDropdown = mode == EditableComboBoxMode.Filter);
         this.innerComboBox.SelectionChanged += this.OnSelectionChanged;
@@ -479,6 +488,10 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         {
             this.selectedValueEvaluatorDirty = true;
         }
+        else if (change.Property == AutomationProperties.AutomationIdProperty)
+        {
+            this.ForwardAutomationId();
+        }
     }
 
     protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
@@ -564,6 +577,31 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
         return false;
     }
 
+    // Style priority, the lowest a binding can take, so an app's own values on the inner parts still win.
+    private void ForwardAccessibility()
+    {
+        this.innerComboBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(
+            AutomationProperties.HelpTextProperty,
+            this.GetObservable(AutomationProperties.HelpTextProperty).CombineLatest(
+                this.GetObservable(DataValidationErrors.ErrorsProperty),
+                static (helpText, errors) => !string.IsNullOrWhiteSpace(helpText) || errors is null
+                    ? helpText
+                    : string.Join(Environment.NewLine, errors.Select(static error => error?.ToString()))),
+            BindingPriority.Style);
+        this.innerComboBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
+        this.innerComboBox.Bind(AutomationProperties.AutomationIdProperty, this.forwardedAutomationId, BindingPriority.Style);
+        this.innerTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerTextBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
+    }
+
+    // Name has no change notification, so it is read here rather than observed.
+    private void ForwardAutomationId()
+    {
+        string? id = AutomationProperties.GetAutomationId(this);
+        this.forwardedAutomationId.OnNext(string.IsNullOrEmpty(id) ? this.Name : id);
+    }
+
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         if (e.Handled) return;
@@ -577,6 +615,7 @@ public partial class EditableComboBox : SelectingItemsControl, IInputElement
     protected override void OnInitialized()
     {
         this.innerTextBox.PlaceholderText = this.PlaceholderText;
+        this.ForwardAutomationId();
 
         this.FillItems();
 

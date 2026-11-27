@@ -525,10 +525,20 @@ public partial class MultiComboBox : SelectingItemsControl
         return this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
-    internal IEnumerable<string> GetSelectedItemNames() =>
-        this.selectedItemsList?.GetRealizedContainers().OfType<ClosableTag>().Select(AccessibleContentText.Get).OfType<string>() ?? [];
+    internal MultiComboBoxItem? GetRealizedItemContainer(object? item) => this.GetMultiComboBoxItemContainer(item);
 
-    internal IReadOnlyList<AutomationPeer> GetSelectedItemPeers() => MultiComboBoxListAutomationPeer.SelectedItemPeers(this.innerList);
+    // The shown chip's text when realized (chips virtualize), else what the filter matches against.
+    internal string? GetItemText(object? item)
+    {
+        if (this.selectedItemsList?.GetRealizedContainers().OfType<ClosableTag>()
+                .FirstOrDefault(chip => Equals(chip.DataContext, item) || Equals(chip.Content, item)) is { } chip
+            && AccessibleContentText.Get(chip) is { Length: > 0 } shown)
+        {
+            return shown;
+        }
+
+        return item is Control control ? ControlAutomationPeer.CreatePeerForElement(control).GetName() : item?.ToString();
+    }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new MultiComboBoxAutomationPeer(this);
 

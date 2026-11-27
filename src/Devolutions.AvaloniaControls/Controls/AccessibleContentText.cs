@@ -37,5 +37,5 @@ internal static class AccessibleContentText
     }
 
     private static bool IsInsideButton(Visual block, Visual owner) =>
-        block.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, owner)).Any(static ancestor => ancestor is Button or ToggleButton);
+        block.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, owner)).Any(static ancestor => ancestor is Button and not ToggleButton);
 }

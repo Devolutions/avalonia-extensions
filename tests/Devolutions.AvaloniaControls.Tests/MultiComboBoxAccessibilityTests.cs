@@ -6,6 +6,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -292,6 +293,122 @@ public class MultiComboBoxAccessibilityTests
         }
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void ItemsShownThroughATemplateAreNamedByWhatTheyShow(string themeName)
+    {
+        Level[] levels = [new("Error"), new("Warning")];
+        (Window window, MultiComboBox box) = Create(themeName, box =>
+        {
+            box.SelectedItems!.Clear();
+            box.ItemsSource = levels;
+            box.ItemTemplate = new FuncDataTemplate<Level>(static (level, _) => new TextBlock { Text = level?.Name });
+            box.SelectedItems.Add(levels[0]);
+        });
+
+        try
+        {
+            Assert.Equal("Error", ControlChildren(ControlAutomationPeer.CreatePeerForElement(box))[0].GetName());
+
+            Open(box);
+            AutomationPeer list = ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<ItemsControl>().Single(static list => list.Name == "PART_ItemsList"));
+            Assert.Equal(["Error", "Warning"], ControlChildren(list).Select(static item => item.GetName()));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void TheValueListsEverySelectedItemWhenChipsScrollOutOfView(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName, static box =>
+        {
+            box.Width = 90;
+            box.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            box.SelectedItems!.Add("Info");
+            box.SelectedItems.Add("Debug");
+        });
+
+        try
+        {
+            Assert.True(box.GetVisualDescendants().OfType<ClosableTag>().Count() < 4);
+            Assert.Equal("Error, Warning, Info, Debug", Assert.IsAssignableFrom<IValueProvider>(ControlAutomationPeer.CreatePeerForElement(box)).Value);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void AValueChangeAnnouncesTheNewValue(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName, static box => box.SelectAllText = "Select all");
+
+        try
+        {
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            List<(object? Old, object? New)> changes = [];
+            combo.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == ValuePatternIdentifiers.ValueProperty)
+                {
+                    changes.Add((e.OldValue, e.NewValue));
+                }
+            };
+
+            Open(box);
+            ((IToggleProvider)ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<MultiComboBoxSelectAllItem>().Single())).Toggle();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(("Error, Warning", "Error, Warning, Info, Debug"), changes.Last());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void AClosedFieldReportsItsWholeSelection(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName);
+
+        try
+        {
+            ISelectionProvider selection = Assert.IsAssignableFrom<ISelectionProvider>(ControlAutomationPeer.CreatePeerForElement(box));
+            IReadOnlyList<AutomationPeer> selected = selection.GetSelection();
+            Assert.Equal(["Error", "Warning"], selected.Select(static item => item.GetName()));
+            Assert.Same(selected[0], selection.GetSelection()[0]);
+
+            ISelectionItemProvider error = Assert.IsAssignableFrom<ISelectionItemProvider>(selected[0]);
+            Assert.True(error.IsSelected);
+            error.RemoveFromSelection();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(["Warning"], box.SelectedItems!.Cast<string>());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     // TagInput shares the chips.
     [AvaloniaTheory]
     [InlineData("MacClassic")]
@@ -318,6 +435,8 @@ public class MultiComboBoxAccessibilityTests
             window.Close();
         }
     }
+
+    private sealed record Level(string Name);
 
     private static (Window Window, MultiComboBox Box) Create(string themeName, Action<MultiComboBox>? configure = null)
     {

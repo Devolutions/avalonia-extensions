@@ -122,6 +122,7 @@
                   Padding="3"
                   IsHitTestVisible="False"
                   Focusable="False"
+                  AutomationProperties.AccessibilityView="Raw"
                   Foreground="{WindowActiveBindingToggler 
       {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronBrush, ForegroundLowBrush}, 
       {DynamicResourceToggler {Binding $parent[MultiComboBox].IsEnabled}, ComboBoxChevronInactiveBrush, ForegroundLowBrush}}" />

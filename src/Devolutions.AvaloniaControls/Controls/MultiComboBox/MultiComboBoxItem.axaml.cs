@@ -4,12 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Mixins;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 using Extensions;
 
 [PseudoClasses(PC_Grouped)]
@@ -171,7 +174,13 @@ public class MultiComboBoxItem : ContentControl
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() =>
-        new ListItemAutomationPeer(this);
+        new MultiComboBoxItemAutomationPeer(this);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        this.HideTemplateCheckBoxes();
+    }
 }
 
 public class MultiComboBoxSelectAllItem : ContentControl
@@ -238,6 +247,15 @@ public class MultiComboBoxSelectAllItem : ContentControl
 
         this.IsSelected = this.IsSelected is null or false;
         e.Handled = true;
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new MultiComboBoxTriStateItemAutomationPeer(this, IsSelectedProperty);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        this.HideTemplateCheckBoxes();
     }
 
     internal void BeginUpdate()
@@ -363,7 +381,13 @@ public class MultiComboBoxGroupHeaderItem : ContentControl
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() =>
-        new ListItemAutomationPeer(this);
+        new MultiComboBoxTriStateItemAutomationPeer(this, IsSelectedProperty);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        this.HideTemplateCheckBoxes();
+    }
 
     private void OnSelectionChanged(AvaloniaPropertyChangedEventArgs<bool?> args)
     {
@@ -390,6 +414,18 @@ public class MultiComboBoxGroupHeaderItem : ContentControl
         else
         {
             this.parent?.DeselectGroup(items);
+        }
+    }
+}
+
+internal static class TemplateCheckBoxes
+{
+    // The item itself is the checkable node; its template's checkbox would announce it a second time.
+    public static void HideTemplateCheckBoxes(this TemplatedControl control)
+    {
+        foreach (CheckBox box in control.GetVisualDescendants().OfType<CheckBox>().Where(box => ReferenceEquals(box.TemplatedParent, control)))
+        {
+            AutomationProperties.SetAccessibilityView(box, AccessibilityView.Raw);
         }
     }
 }

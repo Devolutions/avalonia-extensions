@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -235,6 +237,8 @@ public partial class MultiComboBox : SelectingItemsControl
             [!ScrollViewer.HorizontalScrollBarVisibilityProperty] = this[!ScrollViewer.HorizontalScrollBarVisibilityProperty],
             [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],
         };
+        this.innerList.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerList.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
 
         this.GetObservable(OverflowModeProperty).Subscribe(_ =>
             {
@@ -522,6 +526,29 @@ public partial class MultiComboBox : SelectingItemsControl
         return this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
+    internal MultiComboBoxItem? GetRealizedItemContainer(object? item) => this.GetMultiComboBoxItemContainer(item);
+
+    // The shown chip's text when realized (chips virtualize), else what the filter matches against.
+    internal string? GetItemText(object? item)
+    {
+        // Chips show an item control's content, not the control.
+        object? shownItem = item is MultiComboBoxItem itemControl ? itemControl.Content : item;
+        if (this.selectedItemsList?.GetRealizedContainers().OfType<ClosableTag>()
+                .FirstOrDefault(chip => Equals(chip.DataContext, shownItem) || Equals(chip.Content, shownItem)) is { } chip
+            && AccessibleContentText.Get(chip) is { Length: > 0 } shown)
+        {
+            return shown;
+        }
+
+        return item is Control control ? ControlAutomationPeer.CreatePeerForElement(control).GetName() : item?.ToString();
+    }
+
+    internal ItemsControl InnerList => this.innerList;
+
+    internal void OnChipTextChanged() => (ControlAutomationPeer.CreatePeerForElement(this) as MultiComboBoxAutomationPeer)?.RefreshAfterLayout(selectionChanged: false);
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new MultiComboBoxAutomationPeer(this);
+
     public void Remove(object? o)
     {
         if (o is not Control chip || this.selectedItemsList is null) return;
@@ -785,6 +812,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.selectedItemsList = e.NameScope.Get<ItemsControl>("PART_SelectedItemsList");
         this.selectedItemsList.ItemsSource = this.displaySelectedItems;
+        AutomationProperties.SetAccessibilityView(this.selectedItemsList, AccessibilityView.Raw);
 
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
@@ -794,6 +822,7 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             partFilterTextBox[!!TextBox.TextProperty] = this[!!FilterValueProperty];
             partFilterTextBox.GetObservable(TextBox.TextProperty).Subscribe(this.ApplyFilter);
+            partFilterTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(FilterTextProperty), BindingPriority.Style);
         }
 
         this.selectAllItem?.UpdateSelection();

@@ -1,5 +1,6 @@
 namespace Devolutions.AvaloniaControls.Controls;
 
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -23,6 +24,8 @@ public partial class MultiComboBox
         {
             this.parent = parent;
         }
+
+        protected override AutomationPeer OnCreateAutomationPeer() => new MultiComboBoxListAutomationPeer(this);
 
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
             recycleKey == HeaderRecycleKey

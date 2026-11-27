@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -235,6 +237,7 @@ public partial class MultiComboBox : SelectingItemsControl
             [!ScrollViewer.HorizontalScrollBarVisibilityProperty] = this[!ScrollViewer.HorizontalScrollBarVisibilityProperty],
             [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],
         };
+        this.innerList.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
 
         this.GetObservable(OverflowModeProperty).Subscribe(_ =>
             {
@@ -522,6 +525,13 @@ public partial class MultiComboBox : SelectingItemsControl
         return this.innerList.ContainerFromItem(item) as MultiComboBoxItem;
     }
 
+    internal IEnumerable<string> GetSelectedItemNames() =>
+        this.selectedItemsList?.GetRealizedContainers().OfType<ClosableTag>().Select(AccessibleContentText.Get).OfType<string>() ?? [];
+
+    internal IReadOnlyList<AutomationPeer> GetSelectedItemPeers() => MultiComboBoxListAutomationPeer.SelectedItemPeers(this.innerList);
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new MultiComboBoxAutomationPeer(this);
+
     public void Remove(object? o)
     {
         if (o is not Control chip || this.selectedItemsList is null) return;
@@ -785,6 +795,7 @@ public partial class MultiComboBox : SelectingItemsControl
 
         this.selectedItemsList = e.NameScope.Get<ItemsControl>("PART_SelectedItemsList");
         this.selectedItemsList.ItemsSource = this.displaySelectedItems;
+        AutomationProperties.SetAccessibilityView(this.selectedItemsList, AccessibilityView.Raw);
 
         this.selectionScrollViewer = e.NameScope.Find<ScrollViewer>("PART_SelectionScrollViewer");
         this.selectAllItem = e.NameScope.Find<MultiComboBoxSelectAllItem>("PART_SelectAllItem");
@@ -794,6 +805,7 @@ public partial class MultiComboBox : SelectingItemsControl
         {
             partFilterTextBox[!!TextBox.TextProperty] = this[!!FilterValueProperty];
             partFilterTextBox.GetObservable(TextBox.TextProperty).Subscribe(this.ApplyFilter);
+            partFilterTextBox.Bind(AutomationProperties.NameProperty, this.GetObservable(FilterTextProperty), BindingPriority.Style);
         }
 
         this.selectAllItem?.UpdateSelection();

@@ -7,6 +7,7 @@ using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -373,7 +374,7 @@ public class MultiComboBoxAccessibilityTests
             Open(box);
             ((IToggleProvider)ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<MultiComboBoxSelectAllItem>().Single())).Toggle();
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(("Error, Warning", "Error, Warning, Info, Debug"), changes.Last());
+            Assert.Equal(("Error, Warning", "Error, Warning, Info, Debug"), Assert.Single(changes));
         }
         finally
         {
@@ -409,6 +410,126 @@ public class MultiComboBoxAccessibilityTests
         }
     }
 
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void ASelectionChangeIsAnnouncedWhileClosed(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName);
+
+        try
+        {
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            int selectionChanges = 0;
+            combo.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == SelectionPatternIdentifiers.SelectionProperty)
+                {
+                    selectionChanges++;
+                }
+            };
+
+            box.SelectedItems!.Add("Info");
+            box.SelectedItems.Remove("Error");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(1, selectionChanges);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void ItemsKeepTheirNamesWhileTheFilterHighlightsThem(string themeName)
+    {
+        // Data items shown by the default template, which highlights matches as inline runs.
+        (Window window, MultiComboBox box) = Create(themeName, static box =>
+        {
+            box.ShowFilter = true;
+            box.SelectedItems!.Clear();
+            box.ItemsSource = new[] { new ShownLevel("Error"), new ShownLevel("Warning") };
+        });
+
+        try
+        {
+            Open(box);
+            box.FilterValue = "rr";
+            Dispatcher.UIThread.RunJobs();
+            AutomationPeer list = ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<ItemsControl>().Single(static list => list.Name == "PART_ItemsList"));
+            Assert.Equal(["Error"], ControlChildren(list).Select(static item => item.GetName()));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void AFieldLabelledByAnotherControlNamesItsList(string themeName)
+    {
+        TextBlock label = new() { Text = "Severity" };
+        (Window window, MultiComboBox box) = Create(themeName, box =>
+        {
+            AutomationProperties.SetName(box, null);
+            AutomationProperties.SetLabeledBy(box, label);
+        });
+
+        try
+        {
+            Assert.Equal("Severity", ControlAutomationPeer.CreatePeerForElement(box).GetName());
+            Open(box);
+            AutomationPeer list = ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<ItemsControl>().Single(static list => list.Name == "PART_ItemsList"));
+            Assert.Equal("Severity", list.GetName());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void TheRemoveButtonFollowsABoundLabel(string themeName)
+    {
+        RenamableLevel level = new() { Name = "Error" };
+        (Window window, MultiComboBox box) = Create(themeName, box =>
+        {
+            box.SelectedItems!.Clear();
+            box.ItemsSource = new[] { level };
+            box.ItemTemplate = new FuncDataTemplate<RenamableLevel>(static (_, _) => new TextBlock { [!TextBlock.TextProperty] = new Binding(nameof(RenamableLevel.Name)) });
+            box.SelectedItems.Add(level);
+        });
+
+        try
+        {
+            AutomationPeer chip = ControlChildren(ControlAutomationPeer.CreatePeerForElement(box))[0];
+            Assert.Equal("Remove Error", ControlChildren(chip)[0].GetName());
+
+            level.Name = "Critical";
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Critical", chip.GetName());
+            Assert.Equal("Remove Critical", ControlChildren(chip)[0].GetName());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     // TagInput shares the chips.
     [AvaloniaTheory]
     [InlineData("MacClassic")]
@@ -437,6 +558,26 @@ public class MultiComboBoxAccessibilityTests
     }
 
     private sealed record Level(string Name);
+
+    private sealed class ShownLevel(string name)
+    {
+        public override string ToString() => name;
+    }
+
+    private sealed class RenamableLevel : System.ComponentModel.INotifyPropertyChanged
+    {
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+        public string Name
+        {
+            get;
+            set
+            {
+                field = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(this.Name)));
+            }
+        } = "";
+    }
 
     private static (Window Window, MultiComboBox Box) Create(string themeName, Action<MultiComboBox>? configure = null)
     {

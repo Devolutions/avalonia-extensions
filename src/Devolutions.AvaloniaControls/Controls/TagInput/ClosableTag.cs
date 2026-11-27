@@ -20,6 +20,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace Devolutions.AvaloniaControls.Controls;
 
@@ -35,6 +36,8 @@ public class ClosableTag : ContentControl
         nameof(RemoveText), "Remove {0}");
 
     private Button? closeButton;
+
+    private TextBlock[] watchedText = [];
 
     internal Button? CloseButton => closeButton;
 
@@ -75,9 +78,31 @@ public class ClosableTag : ContentControl
 
     private void NameCloseButton()
     {
-        if (closeButton is not null)
+        if (closeButton is null)
         {
-            AutomationProperties.SetName(closeButton, string.Format(CultureInfo.CurrentCulture, RemoveText, AccessibleContentText.Get(this)));
+            return;
+        }
+
+        AutomationProperties.SetName(closeButton, string.Format(CultureInfo.CurrentCulture, RemoveText, AccessibleContentText.Get(this)));
+
+        // A bound label can change without the content changing.
+        foreach (TextBlock block in watchedText)
+        {
+            block.PropertyChanged -= OnShownTextChanged;
+        }
+
+        watchedText = [.. this.GetVisualDescendants().OfType<TextBlock>()];
+        foreach (TextBlock block in watchedText)
+        {
+            block.PropertyChanged += OnShownTextChanged;
+        }
+    }
+
+    private void OnShownTextChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == TextBlock.TextProperty || e.Property == TextBlock.InlinesProperty)
+        {
+            NameCloseButtonAfterLayout();
         }
     }
 }

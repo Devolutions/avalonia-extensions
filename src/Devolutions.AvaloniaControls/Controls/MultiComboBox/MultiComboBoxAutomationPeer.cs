@@ -18,6 +18,8 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
 
     private string? announcedValue;
 
+    private bool selectionChangePending;
+
     public MultiComboBoxAutomationPeer(MultiComboBox owner)
         : base(owner)
     {
@@ -111,18 +113,29 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
 
     private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => this.RaiseValueChangedAfterLayout();
 
-    // The chips update after SelectedItems does, and they supply the shown text.
-    private void RaiseValueChangedAfterLayout() => Dispatcher.UIThread.Post(
-        () =>
+    // After the chips update, as they supply the shown text; once per batch, as select all changes items one by one.
+    private void RaiseValueChangedAfterLayout()
+    {
+        if (this.selectionChangePending)
         {
-            string? value = this.Value;
-            if (value != this.announcedValue)
+            return;
+        }
+
+        this.selectionChangePending = true;
+        Dispatcher.UIThread.Post(
+            () =>
             {
-                this.RaisePropertyChangedEvent(ValuePatternIdentifiers.ValueProperty, this.announcedValue, value);
-                this.announcedValue = value;
-            }
-        },
-        DispatcherPriority.Loaded);
+                this.selectionChangePending = false;
+                this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
+                string? value = this.Value;
+                if (value != this.announcedValue)
+                {
+                    this.RaisePropertyChangedEvent(ValuePatternIdentifiers.ValueProperty, this.announcedValue, value);
+                    this.announcedValue = value;
+                }
+            },
+            DispatcherPriority.Loaded);
+    }
 
     private static ExpandCollapseState ToState(bool isOpen) => isOpen ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
 

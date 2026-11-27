@@ -21,8 +21,9 @@ internal static class AccessibleContentText
             " ",
             control.GetVisualDescendants()
                 .OfType<TextBlock>()
-                .Where(block => !string.IsNullOrWhiteSpace(block.Text) && !IsInsideButton(block, control))
-                .Select(static block => block.Text));
+                .Select(block => (Block: block, Text: block.Inlines is { Count: > 0 } inlines ? inlines.Text : block.Text))
+                .Where(shown => !string.IsNullOrWhiteSpace(shown.Text) && !IsInsideButton(shown.Block, control))
+                .Select(static shown => shown.Text));
         if (text.Length > 0)
         {
             return text;

@@ -238,6 +238,7 @@ public partial class MultiComboBox : SelectingItemsControl
             [!ScrollViewer.VerticalScrollBarVisibilityProperty] = this[!ScrollViewer.VerticalScrollBarVisibilityProperty],
         };
         this.innerList.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty), BindingPriority.Style);
+        this.innerList.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty), BindingPriority.Style);
 
         this.GetObservable(OverflowModeProperty).Subscribe(_ =>
             {

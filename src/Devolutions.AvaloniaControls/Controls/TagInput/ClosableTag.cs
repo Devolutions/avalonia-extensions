@@ -39,6 +39,8 @@ public class ClosableTag : ContentControl
 
     private TextBlock[] watchedText = [];
 
+    private string? shownName;
+
     internal Button? CloseButton => closeButton;
 
     public ICommand? Command
@@ -83,7 +85,15 @@ public class ClosableTag : ContentControl
             return;
         }
 
-        AutomationProperties.SetName(closeButton, string.Format(CultureInfo.CurrentCulture, RemoveText, AccessibleContentText.Get(this)));
+        string? name = AccessibleContentText.Get(this);
+        AutomationProperties.SetName(closeButton, string.Format(CultureInfo.CurrentCulture, RemoveText, name));
+        if (shownName is not null && name != shownName)
+        {
+            ControlAutomationPeer.CreatePeerForElement(this).RaisePropertyChangedEvent(AutomationElementIdentifiers.NameProperty, shownName, name);
+            this.FindAncestorOfType<MultiComboBox>()?.OnChipTextChanged();
+        }
+
+        shownName = name;
 
         // A bound label can change without the content changing.
         foreach (TextBlock block in watchedText)

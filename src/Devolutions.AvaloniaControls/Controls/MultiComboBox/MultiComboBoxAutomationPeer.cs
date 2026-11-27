@@ -18,7 +18,9 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
 
     private string? announcedValue;
 
-    private bool selectionChangePending;
+    private bool refreshPending;
+
+    private bool selectionChanged;
 
     public MultiComboBoxAutomationPeer(MultiComboBox owner)
         : base(owner)
@@ -35,7 +37,7 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
             else if (e.Property == MultiComboBox.SelectedItemsProperty)
             {
                 this.WatchSelectedItems();
-                this.RaiseValueChangedAfterLayout();
+                this.RefreshAfterLayout(selectionChanged: true);
             }
         };
     }
@@ -84,7 +86,8 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.ComboBox;
 
-    private IEnumerable<object> SelectedItems() => this.owner.SelectedItems?.Cast<object>() ?? [];
+    // A null in the selection has nothing to show or select.
+    private IEnumerable<object> SelectedItems() => this.owner.SelectedItems?.OfType<object>() ?? [];
 
     private AutomationPeer UnrealizedPeer(object item)
     {
@@ -111,22 +114,27 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
         }
     }
 
-    private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => this.RaiseValueChangedAfterLayout();
-
     // After the chips update, as they supply the shown text; once per batch, as select all changes items one by one.
-    private void RaiseValueChangedAfterLayout()
+    internal void RefreshAfterLayout(bool selectionChanged)
     {
-        if (this.selectionChangePending)
+        this.selectionChanged |= selectionChanged;
+        if (this.refreshPending)
         {
             return;
         }
 
-        this.selectionChangePending = true;
+        this.refreshPending = true;
         Dispatcher.UIThread.Post(
             () =>
             {
-                this.selectionChangePending = false;
-                this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
+                this.refreshPending = false;
+                if (this.selectionChanged)
+                {
+                    this.selectionChanged = false;
+                    this.RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
+                    CreatePeerForElement(this.owner.InnerList).RaisePropertyChangedEvent(SelectionPatternIdentifiers.SelectionProperty, null, null);
+                }
+
                 string? value = this.Value;
                 if (value != this.announcedValue)
                 {
@@ -136,6 +144,8 @@ internal sealed class MultiComboBoxAutomationPeer : ControlAutomationPeer, IExpa
             },
             DispatcherPriority.Loaded);
     }
+
+    private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => this.RefreshAfterLayout(selectionChanged: true);
 
     private static ExpandCollapseState ToState(bool isOpen) => isOpen ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
 

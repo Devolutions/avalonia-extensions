@@ -531,8 +531,10 @@ public partial class MultiComboBox : SelectingItemsControl
     // The shown chip's text when realized (chips virtualize), else what the filter matches against.
     internal string? GetItemText(object? item)
     {
+        // Chips show an item control's content, not the control.
+        object? shownItem = item is MultiComboBoxItem itemControl ? itemControl.Content : item;
         if (this.selectedItemsList?.GetRealizedContainers().OfType<ClosableTag>()
-                .FirstOrDefault(chip => Equals(chip.DataContext, item) || Equals(chip.Content, item)) is { } chip
+                .FirstOrDefault(chip => Equals(chip.DataContext, shownItem) || Equals(chip.Content, shownItem)) is { } chip
             && AccessibleContentText.Get(chip) is { Length: > 0 } shown)
         {
             return shown;
@@ -540,6 +542,10 @@ public partial class MultiComboBox : SelectingItemsControl
 
         return item is Control control ? ControlAutomationPeer.CreatePeerForElement(control).GetName() : item?.ToString();
     }
+
+    internal ItemsControl InnerList => this.innerList;
+
+    internal void OnChipTextChanged() => (ControlAutomationPeer.CreatePeerForElement(this) as MultiComboBoxAutomationPeer)?.RefreshAfterLayout(selectionChanged: false);
 
     protected override AutomationPeer OnCreateAutomationPeer() => new MultiComboBoxAutomationPeer(this);
 

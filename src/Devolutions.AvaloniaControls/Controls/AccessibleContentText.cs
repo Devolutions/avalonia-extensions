@@ -17,12 +17,18 @@ internal static class AccessibleContentText
             return name;
         }
 
+        if (AutomationProperties.GetLabeledBy(control) is { } label
+            && ControlAutomationPeer.CreatePeerForElement(label).GetName() is { Length: > 0 } labelled)
+        {
+            return labelled;
+        }
+
         string text = string.Join(
             " ",
             control.GetVisualDescendants()
                 .OfType<TextBlock>()
                 .Select(block => (Block: block, Text: block.Inlines is { Count: > 0 } inlines ? inlines.Text : block.Text))
-                .Where(shown => !string.IsNullOrWhiteSpace(shown.Text) && !IsInsideButton(shown.Block, control))
+                .Where(shown => !string.IsNullOrWhiteSpace(shown.Text) && IsShown(shown.Block, control) && !IsInsideButton(shown.Block, control))
                 .Select(static shown => shown.Text));
         if (text.Length > 0)
         {
@@ -36,6 +42,9 @@ internal static class AccessibleContentText
 
         return control.Content as string;
     }
+
+    private static bool IsShown(Visual block, Visual owner) =>
+        block.IsVisible && block.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, owner)).All(static ancestor => ancestor.IsVisible);
 
     private static bool IsInsideButton(Visual block, Visual owner) =>
         block.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, owner)).Any(static ancestor => ancestor is Button and not ToggleButton);

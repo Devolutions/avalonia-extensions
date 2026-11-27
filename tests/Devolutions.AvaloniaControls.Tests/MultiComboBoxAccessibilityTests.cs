@@ -516,13 +516,142 @@ public class MultiComboBoxAccessibilityTests
 
         try
         {
-            AutomationPeer chip = ControlChildren(ControlAutomationPeer.CreatePeerForElement(box))[0];
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            AutomationPeer chip = ControlChildren(combo)[0];
             Assert.Equal("Remove Error", ControlChildren(chip)[0].GetName());
+            List<object?> names = [];
+            List<object?> values = [];
+            chip.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == AutomationElementIdentifiers.NameProperty)
+                {
+                    names.Add(e.NewValue);
+                }
+            };
+            combo.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == ValuePatternIdentifiers.ValueProperty)
+                {
+                    values.Add(e.NewValue);
+                }
+            };
 
             level.Name = "Critical";
             Dispatcher.UIThread.RunJobs();
             Assert.Equal("Critical", chip.GetName());
             Assert.Equal("Remove Critical", ControlChildren(chip)[0].GetName());
+            Assert.Equal(["Critical"], names);
+            Assert.Equal(["Critical"], values);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void HiddenTextIsLeftOutOfNames(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName, static box => box.SelectedItemTemplate = new FuncDataTemplate<string>(static (text, _) => new StackPanel
+        {
+            Children =
+            {
+                new TextBlock { Text = text },
+                new Border { IsVisible = false, Child = new TextBlock { Text = "(default)" } },
+                new TextBlock { Text = "(new)", IsVisible = false },
+            },
+        }));
+
+        try
+        {
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            Assert.Equal(["Error", "Warning"], ControlChildren(combo).Select(static chip => chip.GetName()));
+            Assert.Equal("Error, Warning", Assert.IsAssignableFrom<IValueProvider>(combo).Value);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void TheValueOfItemControlsIsWhatTheirChipsShow(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName, static box =>
+        {
+            box.ItemsSource = null;
+            box.SelectedItems!.Clear();
+            box.Items.Add(new MultiComboBoxItem { Content = "Error", IsSelected = true });
+            box.SelectedItemTemplate = new FuncDataTemplate<string>(static (text, _) => new TextBlock { Text = $"Level {text}" });
+        });
+
+        try
+        {
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            Assert.Equal("Level Error", Assert.IsAssignableFrom<IValueProvider>(combo).Value);
+            Assert.Equal(["Level Error"], Assert.IsAssignableFrom<ISelectionProvider>(combo).GetSelection().Select(static item => item.GetName()));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void ANullInTheSelectionIsSkipped(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName, static box => box.SelectedItems!.Add(null));
+
+        try
+        {
+            AutomationPeer combo = ControlAutomationPeer.CreatePeerForElement(box);
+            Assert.Equal(["Error", "Warning"], Assert.IsAssignableFrom<ISelectionProvider>(combo).GetSelection().Select(static item => item.GetName()));
+            Assert.Equal("Error, Warning", Assert.IsAssignableFrom<IValueProvider>(combo).Value);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData("MacClassic")]
+    [InlineData("DevExpress")]
+    [InlineData("Linux")]
+    [InlineData("WinUI")]
+    public void TheListAnnouncesSelectionChanges(string themeName)
+    {
+        (Window window, MultiComboBox box) = Create(themeName);
+
+        try
+        {
+            Open(box);
+            AutomationPeer list = ControlAutomationPeer.CreatePeerForElement(DropDown(box).OfType<ItemsControl>().Single(static list => list.Name == "PART_ItemsList"));
+            int selectionChanges = 0;
+            list.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == SelectionPatternIdentifiers.SelectionProperty)
+                {
+                    selectionChanges++;
+                }
+            };
+
+            box.SelectedItems!.Add("Info");
+            box.SelectedItems.Remove("Error");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(1, selectionChanges);
         }
         finally
         {
@@ -550,6 +679,9 @@ public class MultiComboBoxAccessibilityTests
             Assert.Equal(["urgent", "billing"], tags.Select(static tag => ControlAutomationPeer.CreatePeerForElement(tag).GetName()));
             AutomationPeer remove = Assert.Single(ControlChildren(ControlAutomationPeer.CreatePeerForElement(tags[0])));
             Assert.Equal("Remove urgent", remove.GetName());
+
+            AutomationProperties.SetLabeledBy(tags[1], new TextBlock { Text = "Billing team" });
+            Assert.Equal("Billing team", ControlAutomationPeer.CreatePeerForElement(tags[1]).GetName());
         }
         finally
         {
